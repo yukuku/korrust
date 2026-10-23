@@ -1,0 +1,167 @@
+[
+  {
+    "id": "val_reassignment",
+    "source": "fun f(): Int { val x = 1; x = 2; return x }",
+    "message": "Cannot reassign"
+  },
+  {
+    "id": "parameter_reassignment",
+    "source": "fun f(x: Int): Int { x = 2; return x }",
+    "message": "Cannot reassign"
+  },
+  {
+    "id": "unknown_local",
+    "source": "fun f(): Int = missing",
+    "message": "Unresolved"
+  },
+  {
+    "id": "boolean_arithmetic",
+    "source": "fun f(): Int = true + 1",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "return_type",
+    "source": "fun f(): Boolean = 1",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "missing_return",
+    "source": "fun f(): Int { val x = 1 }",
+    "message": "return on all paths"
+  },
+  {
+    "id": "escaped_block_local",
+    "source": "fun f(): Int { if (true) { val x = 1 }; return x }",
+    "message": "Unresolved"
+  },
+  {
+    "id": "wrong_argument_count",
+    "source": "fun f(x: Int): Int = x\nfun g(): Int = f()",
+    "message": "argument count"
+  },
+  {
+    "id": "duplicate_local",
+    "source": "fun f(): Int { val x = 1; val x = 2; return x }",
+    "message": "Conflicting"
+  },
+  {
+    "id": "integer_overflow_literal",
+    "source": "fun f(): Int = 2147483648",
+    "message": "out of range"
+  },
+  {
+    "id": "missing_statement_separator",
+    "source": "fun f(): Int { val x = 1 val y = 2; return x }",
+    "message": "newline or semicolon"
+  },
+  {
+    "id": "reserved_underscore",
+    "source": "fun f(): Int { val _ = 1; return _ }",
+    "message": "reserved"
+  },
+  {
+    "id": "string_argument_type",
+    "source": "fun f(x: String): String = x.substring(true)",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "string_return_type",
+    "source": "fun f(x: String): Int = x",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "string_escape",
+    "source": "fun f(): String = \"\\q\"",
+    "message": "Illegal string escape"
+  },
+  {
+    "id": "string_arity",
+    "source": "fun f(x: String): String = x.removePrefix()",
+    "message": "argument count"
+  },
+  {
+    "id": "string_unterminated",
+    "source": "fun f(): String = \"missing",
+    "message": "Unterminated string literal"
+  },
+  {
+    "id": "char_return_mismatch",
+    "source": "fun f(): Int = 'a'",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "char_equality_mismatch",
+    "source": "fun f(c: Char): Boolean = c == 65",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "char_array_index_type",
+    "source": "fun f(a: CharArray): Char = a[true]",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "char_array_return_mismatch",
+    "source": "fun f(a: CharArray): Int = a[0]",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "compound_val_assignment",
+    "source": "fun f(): Int { val x = 1; x += 2; return x }",
+    "message": "Cannot reassign"
+  },
+  {
+    "id": "compound_char_assignment",
+    "source": "fun f(): Char { var c = 'a'; c += 'b'; return c }",
+    "message": "+= supports only mutable Int locals"
+  },
+  {
+    "id": "when_condition_type",
+    "source": "fun f(c: Char): Int { when (c) { 1 -> return 1; else -> return 0 } }",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "when_missing_return",
+    "source": "fun f(c: Char): Int { when (c) { 'a' -> return 1 } }",
+    "message": "return on all paths"
+  },
+  {
+    "id": "when_branch_scope",
+    "source": "fun f(n: Int): Int { when (n) { 1 -> { val result = 2 }; else -> { val result = 3 } }; return result }",
+    "message": "Unresolved"
+  },
+  {
+    "id": "char_empty_literal",
+    "source": "fun f(): Char = ''",
+    "message": "exactly one UTF-16 code unit"
+  },
+  {
+    "id": "char_multiple_units",
+    "source": "fun f(): Char = 'ab'",
+    "message": "exactly one UTF-16 code unit"
+  },
+  {
+    "id": "char_supplementary_literal",
+    "source": "fun f(): Char = '\ud83d\ude00'",
+    "message": "exactly one UTF-16 code unit"
+  },
+  {
+    "id": "char_invalid_escape",
+    "source": "fun f(): Char = '\\q'",
+    "message": "Illegal Char escape"
+  },
+  {
+    "id": "char_incomplete_unicode",
+    "source": "fun f(): Char = '\\u123'",
+    "message": "four hexadecimal digits"
+  },
+  {
+    "id": "invalid_postfix_sequence",
+    "source": "fun f(n: Int): Int { return n ++ 2 }",
+    "message": "newline or semicolon"
+  },
+  {
+    "id": "when_else_not_last",
+    "source": "fun f(n: Int): Int { when (n) { else -> return 1; 1 -> return 2 } }",
+    "message": "last"
+  }
+]

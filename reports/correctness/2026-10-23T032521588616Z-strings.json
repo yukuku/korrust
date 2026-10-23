@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-23T03:25:21.588616+00:00",
+  "status": "failed",
+  "compiler": {
+    "version": "kurtlin 0.1.0",
+    "binary_sha256": "c136dac75ece32c1674080ce5262108fb2d2275a84422fd0d045180958bbce38",
+    "source_files_sha256": {
+      "Cargo.lock": "8fa23e59911a5a8af7372ed895018f008efde41141267c68ac68382aa590fc2c",
+      "Cargo.toml": "bc20777e5822571268bb4bc2f4af96b4e781f45d0fe1d11ed436088840c19503",
+      "src/bytecode.rs": "dabe9899838ec16bccfc7164a3df4e581066e175a2de65d3b777ea4d36fc77e9",
+      "src/check.rs": "65cc873db8c7f3c3328e41b0a08401fe999fa3be78aab47bec8857f305867b86",
+      "src/lib.rs": "58ca289b65f00ebdd7e8a0529d84531987aaff42546e089fc90d3671ea0f144f",
+      "src/main.rs": "a7797244b727c7638176cd5a533588dfc81faa7b164885af9e76ed521fa5750e",
+      "src/syntax.rs": "c344ef9a8404adfadc34fb36d121288b7ab5b7776822cd93936ecc772eb8aea2",
+      "tests/diagnostics.json": "4391aa27b14009f981fa48242abe9192108bba8adbd0415a32318d3675453bc5",
+      "tests/features.json": "7eafa2fdcfa89fc69094cab6fa8f390eda37011a94aa3f5c44e560d9f00a66d4",
+      "tests/fixtures/Arithmetic.kt": "9c374e03fc80901322d8cf18077359c30d01fda24bc483d0b08f3db665e2806f",
+      "tests/fixtures/ArithmeticCheck.java": "85711d139f91b532f9661973880bbf120d66f3e687c7cbf1b8abbd4467d95d44",
+      "tests/fixtures/BinarySearchCheck.java": "fb318c19290ba2a9eb928c83154c5b4a982dce44fbf908d70fdb74d6a702c50e",
+      "tests/fixtures/Strings.kt": "61715bd2d3a3cd6eaf40be5b3b6f78cc0117276096929c69b71096cd1856069d",
+      "tests/fixtures/StringsCheck.java": "18a157e885c23f7b5296e316eaedbf12cfefa07d3bcae6cab1ef9d1883965121",
+      "tests/frontend.rs": "3e01d8ea4edb83d1a443c3a799b090a400b6961236246d166dcf546875723df5",
+      "tests/test_reports.py": "3bb9702230a594fb4a7a750f586777b8417fa4fb70feee6a14797e29fc0e1a28",
+      "tests/unsupported.json": "11c307f1b7f34ab64207050f19bf7639603b88930542cd4af491ef7d25aa5d0a",
+      "tools/check.py": "fe3ed7b49c55b3f63d3322834dc83a4237292eb5199b6a72a454c1de31c3fb5f",
+      "tools/corpus.py": "259d3eb822b273e75752c399935a98121cbe698df8d9fab6ddcd489a1164b510",
+      "tools/reports.py": "4d3ec5ee869a3c9780c6d009b0e1d811beae71261640b7a67ffcc351f922fbc8",
+      "tools/setup_reference.py": "deafd96f0176c389a8fb6e81d90f03ba7d4cc9c25361d1fc0edd44a883e7d572"
+    },
+    "classfile_major_version": 49,
+    "kotlin_metadata": false,
+    "incremental_compilation": false
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "inputs": {
+    "audio_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+    "audio_source_sha256": "2a5e79d26cef180c4f40542dd94f81bada672a4c755f01f0187bedef24e50098",
+    "source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+    "source_sha256": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+    "reference_commit": "fea1ad8c18995b80d1ca0e3917056104613d23db",
+    "androidbible_commit": "624629093af37d0d7f85699bfa0caa562fc41e61"
+  },
+  "environment": {
+    "os": "macOS-26.7.1-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "rustc": "rustc 1.92.0 (ded5c06cf 2025-12-08)",
+    "java": "openjdk version \"21.0.11\" 2026-04-21\nOpenJDK Runtime Environment Homebrew (build 21.0.11)\nOpenJDK 64-Bit Server VM Homebrew (build 21.0.11, mixed mode, sharing)"
+  },
+  "commands": [
+    {
+      "label": "Rust version",
+      "argv": [
+        "/Users/yuku/.cargo/bin/rustc",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T032521588616Z-strings/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T032521588616Z-strings/000-stderr.txt"
+    },
+    {
+      "label": "Java version",
+      "argv": [
+        "/usr/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T032521588616Z-strings/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T032521588616Z-strings/001-stderr.txt"
+    },
+    {
+      "label": "Reference compiler version",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T032521588616Z-strings/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T032521588616Z-strings/002-stderr.txt"
+    },
+    {
+      "label": "Rust tests",
+      "argv": [
+        "/Users/yuku/.cargo/bin/cargo",
+        "test",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T032521588616Z-strings/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T032521588616Z-strings/003-stderr.txt"
+    },
+    {
+      "label": "Release build",
+      "argv": [
+        "/Users/yuku/.cargo/bin/cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T032521588616Z-strings/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T032521588616Z-strings/004-stderr.txt"
+    },
+    {
+      "label": "Kurtlin version",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T032521588616Z-strings/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T032521588616Z-strings/005-stderr.txt"
+    },
+    {
+      "label": "Compile fixtures with official Kotlin",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+        "/Users/yuku/f/git/kurtlin/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/Strings.kt",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/Arithmetic.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T032521588616Z-strings/official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T032521588616Z-strings/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T032521588616Z-strings/006-stderr.txt"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-23T032521588616Z-strings/000-stdout.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/000-stderr.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/001-stdout.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/001-stderr.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/002-stdout.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/002-stderr.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/003-stdout.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/003-stderr.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/004-stdout.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/004-stderr.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/005-stdout.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/005-stderr.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/006-stdout.txt",
+    "reports/correctness/2026-10-23T032521588616Z-strings/006-stderr.txt"
+  ],
+  "selection": "AndroidBible unsignedIntBinarySearch and AudioErrorCode, JVM arithmetic/control-flow and UTF-16 String probes, invalid and unsupported syntax. No upstream Kotlin fixture adapter or whole-app tests.",
+  "cases": [
+    {
+      "id": "rust_frontend",
+      "outcome": "pass",
+      "scope": "Frontend diagnostics and boundary tests; see command log"
+    },
+    {
+      "id": "harness_failure",
+      "outcome": "fail",
+      "message": "Compile fixtures with official Kotlin exited 1: tests/fixtures/Strings.kt:17:9: error: conflicting overloads:\nfun divide(a: Int, b: Int): Int\nprivate fun divide(a: Int, b: Int): Int = a / b\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/fixtures/Strings.kt:18:87: error: overload resolution ambiguity between candidates:\nfun divide(a: Int, b: Int): Int\nfun divide(a: Int, b: Int): Int\nfun order(value: String, start: Int, divisor: Int): String = value.substring(start) + divide(1, divisor)\n                                                                                      ^^^^^^\n"
+    }
+  ],
+  "counts": {
+    "pass": 1,
+    "fail": 1
+  },
+  "finished_at": "2026-10-23T03:25:32.029238+00:00"
+}

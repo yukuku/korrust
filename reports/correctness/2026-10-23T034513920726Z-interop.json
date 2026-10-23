@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-23T03:45:13.920726+00:00",
+  "status": "failed",
+  "compiler": null,
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "inputs": {
+    "int_list_extension_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+    "int_list_extension_source_sha256": "96ce558706cd736ba496aa95311243931f4c12494a4723fe06a80b2295bdca9c",
+    "int_list_java_source": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java",
+    "int_list_java_source_sha256": "b5cbcca6e5c785a3b96bb9d56091a13fe23fc95318506d28af0503a5b68db88c",
+    "audio_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+    "audio_source_sha256": "2a5e79d26cef180c4f40542dd94f81bada672a4c755f01f0187bedef24e50098",
+    "source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+    "source_sha256": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+    "reference_commit": "fea1ad8c18995b80d1ca0e3917056104613d23db",
+    "androidbible_commit": "624629093af37d0d7f85699bfa0caa562fc41e61"
+  },
+  "environment": {
+    "os": "macOS-26.7.1-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "rustc": "rustc 1.92.0 (ded5c06cf 2025-12-08)",
+    "java": "openjdk version \"21.0.11\" 2026-04-21\nOpenJDK Runtime Environment Homebrew (build 21.0.11)\nOpenJDK 64-Bit Server VM Homebrew (build 21.0.11, mixed mode, sharing)"
+  },
+  "commands": [
+    {
+      "label": "Rust version",
+      "argv": [
+        "/Users/yuku/.cargo/bin/rustc",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034513920726Z-interop/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034513920726Z-interop/000-stderr.txt"
+    },
+    {
+      "label": "Java version",
+      "argv": [
+        "/usr/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034513920726Z-interop/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034513920726Z-interop/001-stderr.txt"
+    },
+    {
+      "label": "Reference compiler version",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034513920726Z-interop/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034513920726Z-interop/002-stderr.txt"
+    },
+    {
+      "label": "Rust tests",
+      "argv": [
+        "/Users/yuku/.cargo/bin/cargo",
+        "test",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 101,
+      "stdout": "reports/correctness/2026-10-23T034513920726Z-interop/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034513920726Z-interop/003-stderr.txt"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-23T034513920726Z-interop/000-stdout.txt",
+    "reports/correctness/2026-10-23T034513920726Z-interop/000-stderr.txt",
+    "reports/correctness/2026-10-23T034513920726Z-interop/001-stdout.txt",
+    "reports/correctness/2026-10-23T034513920726Z-interop/001-stderr.txt",
+    "reports/correctness/2026-10-23T034513920726Z-interop/002-stdout.txt",
+    "reports/correctness/2026-10-23T034513920726Z-interop/002-stderr.txt",
+    "reports/correctness/2026-10-23T034513920726Z-interop/003-stdout.txt",
+    "reports/correctness/2026-10-23T034513920726Z-interop/003-stderr.txt"
+  ],
+  "selection": "AndroidBible unsignedIntBinarySearch, AudioErrorCode and unchanged IntArrayListUtil using the original Java IntArrayList; JVM arithmetic/control-flow, UTF-16 String and scoped Java interop probes, invalid and unsupported syntax. Android classes are test-only type stubs; no parcel runtime, upstream Kotlin fixture adapter or whole-app tests.",
+  "cases": [
+    {
+      "id": "harness_failure",
+      "outcome": "fail",
+      "message": "Rust tests exited 101: warning: field `name` is never read\n  --> src/classpath.rs:12:9\n   |\n11 | pub(crate) struct JavaClass {\n   |                   --------- field in this struct\n12 |     pub name: String,\n   |         ^^^^\n   |\n   = note: `JavaClass` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis\n   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: `kurtlin` (lib) generated 1 warning\n   Compiling kurtlin v0.1.0 (/Users/yuku/f/git/kurtlin)\nwarning: `kurtlin` (lib test) generated 1 warning (1 duplicate)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.90s\n     Running unittests src/lib.rs (target/debug/deps/kurtlin-8500f08cf9ef566d)\n     Running unittests src/main.rs (target/debug/deps/kurtlin-1a3fe20edd50b28f)\n     Running tests/frontend.rs (target/debug/deps/frontend-42f3927f543c9924)\nerror: test failed, to rerun pass `--test frontend`\n"
+    }
+  ],
+  "counts": {
+    "fail": 1
+  },
+  "finished_at": "2026-10-23T03:45:18.166009+00:00"
+}

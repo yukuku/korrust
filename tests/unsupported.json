@@ -1,0 +1,62 @@
+[
+  {
+    "id": "string_templates",
+    "source": "fun f(x: Int): String = \"value=$x\""
+  },
+  {
+    "id": "classes",
+    "source": "class Example(val value: Int)"
+  },
+  {
+    "id": "nullable_types",
+    "source": "fun f(x: Int?): Int? = x"
+  },
+  {
+    "id": "overloads",
+    "source": "fun f(): Int = 0\nfun f(x: Int): Int = x"
+  },
+  {
+    "id": "unconditional_loop_analysis",
+    "source": "fun f(): Int { while (true) {} }"
+  },
+  {
+    "id": "escaped_string_template",
+    "source": "fun f(x: Int): String = \"$`x`\""
+  },
+  {
+    "id": "when_expression",
+    "source": "fun f(n: Int): Int = when (n) { 1 -> 2; else -> 3 }"
+  },
+  {
+    "id": "when_subjectless",
+    "source": "fun f(n: Int): Int { when { n > 0 -> return 1; else -> return 0 } }"
+  },
+  {
+    "id": "when_range",
+    "source": "fun f(n: Int): Int { when (n) { in 1..3 -> return 1; else -> return 0 } }"
+  },
+  {
+    "id": "when_subject_variable",
+    "source": "fun f(n: Int): Int { when (val v = n) { 1 -> return v; else -> return 0 } }"
+  },
+  {
+    "id": "char_arithmetic",
+    "source": "fun f(c: Char): Char = c + 1"
+  },
+  {
+    "id": "char_array_construction",
+    "source": "fun f(n: Int): CharArray = CharArray(n)"
+  },
+  {
+    "id": "char_array_write",
+    "source": "fun f(a: CharArray) { a[0] = 'a' }"
+  },
+  {
+    "id": "when_boolean_subject",
+    "source": "fun f(b: Boolean): Int { when (b) { true -> return 1; false -> return 0 } }"
+  },
+  {
+    "id": "when_trailing_condition_comma",
+    "source": "fun f(n: Int): Int { when (n) { 1, -> return 1; else -> return 0 } }"
+  }
+]

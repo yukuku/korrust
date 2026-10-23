@@ -1,0 +1,46 @@
+[
+  {
+    "id": "java_overload",
+    "source": "import fixtures.ForeignMethods\nfun f(value: ForeignMethods): Int = value.overloaded(1)"
+  },
+  {
+    "id": "java_static",
+    "source": "import fixtures.ForeignMethods\nfun f(): Int = ForeignMethods.staticValue()"
+  },
+  {
+    "id": "java_generic_method",
+    "source": "import fixtures.ForeignMethods\nfun f(value: ForeignMethods): String = value.generic(\"x\")"
+  },
+  {
+    "id": "java_annotated_method",
+    "source": "import fixtures.ForeignMethods\nfun f(value: ForeignMethods): Int = value.annotated()"
+  },
+  {
+    "id": "java_field",
+    "source": "import fixtures.ForeignMethods\nfun f(value: ForeignMethods): Int = value.field"
+  },
+  {
+    "id": "java_inherited_member",
+    "source": "import fixtures.ForeignMethods\nfun f(value: ForeignMethods): Int = value.hashCode()"
+  },
+  {
+    "id": "kotlin_metadata_class",
+    "source": "import fixtures.MetadataForeign\nfun f(value: MetadataForeign): Int = value.value()"
+  },
+  {
+    "id": "java_hierarchy_overload",
+    "source": "import fixtures.ChildMethods\nfun f(value: ChildMethods): Int = value.value(1)"
+  },
+  {
+    "id": "java_interface",
+    "source": "import fixtures.ForeignInterface\nfun f(value: ForeignInterface): Int = value.value()"
+  },
+  {
+    "id": "java_annotated_class",
+    "source": "import fixtures.AnnotatedForeign\nfun f(value: AnnotatedForeign): Int = value.value()"
+  },
+  {
+    "id": "java_annotated_package",
+    "source": "import fixtures.annotated.PackageForeign\nfun f(value: PackageForeign): Int = value.value()"
+  }
+]

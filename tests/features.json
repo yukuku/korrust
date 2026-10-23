@@ -1,0 +1,96 @@
+[
+  {
+    "name": "integer_expressions",
+    "scope": "Int arithmetic, bitwise operations, shifts, comparisons, unary operators, and tested Boolean short-circuit expressions.",
+    "evidence_cases": [
+      "jvm_semantics",
+      "androidbible_unsigned_search"
+    ],
+    "restrictions": [
+      "No Long, floating-point, unsigned types, operator overloading, or general constant folding."
+    ]
+  },
+  {
+    "name": "functions_and_control_flow",
+    "scope": "Single-file top-level functions with explicit supported signatures, scoped Java extension receivers, Unit bodies/returns, local val/var, block if/else, while, returns, direct calls, Int local += and statement when with Int/Char subjects, ordered comma conditions, single-statement or braced branches, nesting, no-else and empty bodies.",
+    "evidence_cases": [
+      "androidbible_unsigned_search",
+      "jvm_semantics",
+      "rust_frontend",
+      "character_when_semantics"
+    ],
+    "restrictions": [
+      "No Kotlin overload resolution, default/named arguments, function values, or cross-file Kotlin linking; imports resolve only supported Java class files from directory classpaths.",
+      "if/while bodies require braces; when branches accept one statement or a block. Functions must pass the conservative return-path check; when proves a return only with an else and every branch returning.",
+      "Compiler resource limits and the nesting limit intentionally reject larger constructs.",
+      "No when expressions, subject declarations, subjectless when, in/is/range/guard conditions or trailing condition commas; supported subjects and equality conditions are Int or Char."
+    ]
+  },
+  {
+    "name": "int_arrays",
+    "scope": "Non-null IntArray parameters/returns, IntArray(size), indexed reads, size, explicit four-argument copyInto, returned destination identity, overlaps, bounds failures and public parameter null checks.",
+    "evidence_cases": [
+      "jvm_semantics",
+      "androidbible_unsigned_search",
+      "java_interop_semantics"
+    ],
+    "restrictions": [
+      "No nullable declarations, indexed array writes, generic arrays, collection construction, or default/named copyInto arguments."
+    ]
+  },
+  {
+    "name": "jvm_java_interop",
+    "scope": "Java callers compiled against official Kotlin run against Korrust classes; selected JVM signatures match including unchanged AndroidBible IntArrayListUtil extension against the original Java IntArrayList. Directory classpaths, explicit Java imports, declared public instance calls, scoped platform results, void calls and receiver checks are exercised.",
+    "evidence_cases": [
+      "androidbible_unsigned_search",
+      "jvm_semantics",
+      "jvm_signatures/yuku.alkitab.yes2.util.UnsignedBinarySearchKt",
+      "jvm_signatures/korrust.probes.ArithmeticKt",
+      "string_semantics",
+      "jvm_signatures/korrust.probes.StringsKt",
+      "jvm_signatures/yuku.alkitab.base.audio.AudioErrorCodeKt",
+      "java_interop_semantics",
+      "jvm_signatures/yuku.alkitab.base.util.IntArrayListUtilKt",
+      "jvm_signatures/korrust.probes.InteropKt",
+      "interop_diagnostics/missing_classpath",
+      "character_when_semantics",
+      "jvm_signatures/korrust.probes.CharactersKt",
+      "jvm_signatures/yuku.alkitab.base.widget.VerseNumberPlacementKt"
+    ],
+    "restrictions": [
+      "Emits class-file version 49; requires kotlin-stdlib for non-null reference parameter checks and selected String operations.",
+      "No Kotlin metadata or module metadata, source line/local-variable tables, class declarations, JAR packaging, or Gradle integration.",
+      "Kotlin consumers, Android/D8, and full application builds have not been validated.",
+      "Java support is deliberately bounded: no JAR classpaths, Java construction, fields, static/interface/inherited calls, overloads, generics, varargs, annotated methods or Kotlin metadata classes; unsupported surfaces fail closed.",
+      "Test-only Android Parcel/Parcelable and NonNull stubs provide javac types only; Android parcel behavior and full Java nullability annotation semantics are unvalidated."
+    ]
+  },
+  {
+    "name": "strings",
+    "scope": "Non-null UTF-16 String parameters, returns, locals, escaped ordinary literals, structural equality, String-left concatenation with String/Int/Boolean, length, isEmpty, startsWith, endsWith, removePrefix, substring, compareTo; unchanged AndroidBible internal stripErrorCodePrefix source.",
+    "evidence_cases": [
+      "string_semantics",
+      "rust_frontend",
+      "jvm_signatures/yuku.alkitab.base.audio.AudioErrorCodeKt"
+    ],
+    "restrictions": [
+      "No string templates, raw strings, nullable declarations, String extension declarations, overloads, or general String API support.",
+      "No Kotlin metadata or module metadata; Kotlin consumers and Android/D8 remain unvalidated."
+    ]
+  },
+  {
+    "name": "characters_and_char_arrays",
+    "scope": "UTF-16 Char literals, parameters, returns, locals and comparisons; non-null CharArray parameters/returns, identity, size and indexed reads. Every UTF-16 code unit and unchanged AndroidBible startsWithGutterParagraph are exercised against official Kotlin and independent Java assertions.",
+    "evidence_cases": [
+      "character_when_semantics",
+      "rust_frontend",
+      "jvm_signatures/korrust.probes.CharactersKt",
+      "jvm_signatures/yuku.alkitab.base.widget.VerseNumberPlacementKt"
+    ],
+    "restrictions": [
+      "No Char arithmetic, conversions, String concatenation with Char, CharArray construction/copyInto/indexed writes, nullable declarations or other Char/CharArray APIs.",
+      "Non-BMP characters require surrogate code units; a Char literal must contain exactly one UTF-16 code unit.",
+      "Java Char/CharArray method descriptors and general character APIs remain outside the supported interop subset."
+    ]
+  }
+]

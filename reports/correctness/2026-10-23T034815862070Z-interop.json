@@ -1,0 +1,2759 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-23T03:48:15.862070+00:00",
+  "status": "completed",
+  "compiler": {
+    "version": "kurtlin 0.1.0",
+    "binary_sha256": "f109da6dad5aa49dcc6ee3bdfce7a8c12c0791a9189bb01b784d7489d67bc697",
+    "source_files_sha256": {
+      "Cargo.lock": "8fa23e59911a5a8af7372ed895018f008efde41141267c68ac68382aa590fc2c",
+      "Cargo.toml": "bc20777e5822571268bb4bc2f4af96b4e781f45d0fe1d11ed436088840c19503",
+      "src/bytecode.rs": "22b704cc12410aa2e4441463ed50f687ef51f069a5e54f6b01bbeaef59e40e0e",
+      "src/check.rs": "3d79ba5291b2191d2bfa3e796c1f52f3d604cef6dc91cc9e9eae2577c61e35a0",
+      "src/classpath.rs": "ed78de9ea477657330fdec735551c1f4932e9daae9ebe64356e45e955918a7d6",
+      "src/lib.rs": "7111c35c62066a0318800b21f3e2dfc0ecf13d825521523a489b6368cfdc5f02",
+      "src/main.rs": "1292bb3e568f2030842e5e06fbda5a3de34bc86ac15f73adc78b71fe9c310db5",
+      "src/syntax.rs": "6ac5ca2559655141c44010c75db71b93957603eb49c016beccb5077a515c1db6",
+      "tests/diagnostics.json": "809b4d74914ad13ed2b33ac808ba4b7e8c0a13fc516c78bf5ab2e876c560654e",
+      "tests/features.json": "c13a26435b4adcee53e199f5c72660549fe39cb72c664f2d90b9c5c12e8c2635",
+      "tests/fixtures/Arithmetic.kt": "9c374e03fc80901322d8cf18077359c30d01fda24bc483d0b08f3db665e2806f",
+      "tests/fixtures/ArithmeticCheck.java": "85711d139f91b532f9661973880bbf120d66f3e687c7cbf1b8abbd4467d95d44",
+      "tests/fixtures/BinarySearchCheck.java": "fb318c19290ba2a9eb928c83154c5b4a982dce44fbf908d70fdb74d6a702c50e",
+      "tests/fixtures/Interop.kt": "dfe7ba0fba817834c39577da64ac14d2f51423d68f3250ca10ff3b662eab6ef5",
+      "tests/fixtures/InteropCheck.java": "a3f619b39d1f73e8271f19c63d12380b66583ddd48a285ab23484d7c6b592302",
+      "tests/fixtures/MetadataForeign.kt": "139cded38b67b2165163e9ecface2f341de9a4be1d8eaf53b3a71328e82ad89e",
+      "tests/fixtures/Strings.kt": "0861e9620b7068df49fade98e2af40b73f50f8c2fbbc051761525e70088d15f9",
+      "tests/fixtures/StringsCheck.java": "1e02ce2f18527c249f941ad900147b8c43adf1c0f503b5b03460b4a3030f3546",
+      "tests/fixtures/interop/AnnotatedForeign.java": "a3874882c01772c9f51de0bd7735f829f56fb8290d8a24118529680ca0a50b4e",
+      "tests/fixtures/interop/ChildMethods.java": "ce64b6fa2a07429a6ff1261b94a16cd434fe17eef7d72deab87814d4455f133d",
+      "tests/fixtures/interop/ForeignInterface.java": "4db1cc4ae2b081ea1e840b50c82b9ff8fbd260235e6687e56d0e355ec8579c65",
+      "tests/fixtures/interop/ForeignMethods.java": "da172b22fc5abd194562a9c050e5c9f360f583a8631fe28535e0b62720f5e243",
+      "tests/fixtures/interop/ParentMethods.java": "4ad132dfd047e2a1e87f02039222779b3c9d0090b7afa8a6703a51cfe823436c",
+      "tests/fixtures/interop/android/os/Parcel.java": "d120badab7f8813973d6b148df41e085a859205f8f06d98fea1dd01463482f06",
+      "tests/fixtures/interop/android/os/Parcelable.java": "5057df7e618630b6719d80138603a6915f6060b79640dd52de62df50077e992c",
+      "tests/fixtures/interop/androidx/annotation/NonNull.java": "feb1e800204acdaa66e9792e34cbd43c834fa7d730feb40c2812fdb4d673ea59",
+      "tests/fixtures/interop/annotated/PackageForeign.java": "2d01c814c9251718e616ae420b89af49a598f154d96dcda0125db606dd9c72ce",
+      "tests/fixtures/interop/annotated/package-info.java": "6be1633993f2c8f0a04b192fc6da0740b7504c1928166e5da22ad8bff90e0492",
+      "tests/frontend.rs": "8a28e7d1848a2d417cb67006bbe9170655bbf6ffaecc17b62fa488bfdf716b87",
+      "tests/interop_diagnostics.json": "daec8bfd1219109339574f665396e4bab71bd9e0a6572bf3465b35d6a2316cb7",
+      "tests/interop_unsupported.json": "3d5f42508c3ec1cf23b846f604ee42988a2ae8254620f3d5a4e1d4b0ebba459c",
+      "tests/test_reports.py": "3bb9702230a594fb4a7a750f586777b8417fa4fb70feee6a14797e29fc0e1a28",
+      "tests/unsupported.json": "3275151d6493a1da28d8d66245e38b0ea7b33911bf68df170878128903e4f797",
+      "tools/check.py": "0d20eb131ae2670a1784a6a4fd51c52f9a84fdae0c42cb6165da2f6eb3c4a05d",
+      "tools/corpus.py": "259d3eb822b273e75752c399935a98121cbe698df8d9fab6ddcd489a1164b510",
+      "tools/reports.py": "4d3ec5ee869a3c9780c6d009b0e1d811beae71261640b7a67ffcc351f922fbc8",
+      "tools/setup_reference.py": "deafd96f0176c389a8fb6e81d90f03ba7d4cc9c25361d1fc0edd44a883e7d572"
+    },
+    "classfile_major_version": 49,
+    "kotlin_metadata": false,
+    "incremental_compilation": false
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "inputs": {
+    "int_list_extension_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+    "int_list_extension_source_sha256": "96ce558706cd736ba496aa95311243931f4c12494a4723fe06a80b2295bdca9c",
+    "int_list_java_source": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java",
+    "int_list_java_source_sha256": "b5cbcca6e5c785a3b96bb9d56091a13fe23fc95318506d28af0503a5b68db88c",
+    "audio_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+    "audio_source_sha256": "2a5e79d26cef180c4f40542dd94f81bada672a4c755f01f0187bedef24e50098",
+    "source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+    "source_sha256": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+    "reference_commit": "fea1ad8c18995b80d1ca0e3917056104613d23db",
+    "androidbible_commit": "624629093af37d0d7f85699bfa0caa562fc41e61"
+  },
+  "environment": {
+    "os": "macOS-26.7.1-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "rustc": "rustc 1.92.0 (ded5c06cf 2025-12-08)",
+    "java": "openjdk version \"21.0.11\" 2026-04-21\nOpenJDK Runtime Environment Homebrew (build 21.0.11)\nOpenJDK 64-Bit Server VM Homebrew (build 21.0.11, mixed mode, sharing)"
+  },
+  "commands": [
+    {
+      "label": "Rust version",
+      "argv": [
+        "/Users/yuku/.cargo/bin/rustc",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/000-stderr.txt"
+    },
+    {
+      "label": "Java version",
+      "argv": [
+        "/usr/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/001-stderr.txt"
+    },
+    {
+      "label": "Reference compiler version",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/002-stderr.txt"
+    },
+    {
+      "label": "Rust tests",
+      "argv": [
+        "/Users/yuku/.cargo/bin/cargo",
+        "test",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/003-stderr.txt"
+    },
+    {
+      "label": "Release build",
+      "argv": [
+        "/Users/yuku/.cargo/bin/cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/004-stderr.txt"
+    },
+    {
+      "label": "Kurtlin version",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/005-stderr.txt"
+    },
+    {
+      "label": "Compile original Java IntArrayList with test-only Android type stubs",
+      "argv": [
+        "/usr/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "/Users/yuku/f/git/kurtlin/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/interop/AnnotatedForeign.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/interop/ChildMethods.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/interop/ForeignInterface.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/interop/ForeignMethods.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/interop/ParentMethods.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/interop/android/os/Parcel.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/interop/android/os/Parcelable.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/interop/androidx/annotation/NonNull.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/interop/annotated/PackageForeign.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/interop/annotated/package-info.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/006-stderr.txt"
+    },
+    {
+      "label": "Compile Kotlin metadata rejection fixture",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/MetadataForeign.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/007-stderr.txt"
+    },
+    {
+      "label": "Compile fixtures with official Kotlin",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+        "/Users/yuku/f/git/kurtlin/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+        "/Users/yuku/f/git/kurtlin/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/Strings.kt",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/Arithmetic.kt",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/Interop.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/008-stderr.txt"
+    },
+    {
+      "label": "Compile unsignedBinarySearch.kt with Kurtlin",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/009-stderr.txt"
+    },
+    {
+      "label": "Compile AudioErrorCode.kt with Kurtlin",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/010-stderr.txt"
+    },
+    {
+      "label": "Compile IntArrayListUtil.kt with Kurtlin",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/011-stderr.txt"
+    },
+    {
+      "label": "Compile Arithmetic.kt with Kurtlin",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/Arithmetic.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/012-stderr.txt"
+    },
+    {
+      "label": "Compile Strings.kt with Kurtlin",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/Strings.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/013-stderr.txt"
+    },
+    {
+      "label": "Compile Interop.kt with Kurtlin",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/Interop.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/014-stderr.txt"
+    },
+    {
+      "label": "Compile Java callers against official Kotlin",
+      "argv": [
+        "/usr/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign:/Users/yuku/f/git/kurtlin/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/drivers",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/BinarySearchCheck.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/ArithmeticCheck.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/StringsCheck.java",
+        "/Users/yuku/f/git/kurtlin/tests/fixtures/InteropCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/015-stderr.txt"
+    },
+    {
+      "label": "Run official BinarySearchCheck",
+      "argv": [
+        "/usr/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/drivers:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign:/Users/yuku/f/git/kurtlin/references/kotlinc/lib/kotlin-stdlib.jar",
+        "BinarySearchCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/016-stderr.txt"
+    },
+    {
+      "label": "Run Kurtlin BinarySearchCheck",
+      "argv": [
+        "/usr/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/drivers:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign:/Users/yuku/f/git/kurtlin/references/kotlinc/lib/kotlin-stdlib.jar",
+        "BinarySearchCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/017-stderr.txt"
+    },
+    {
+      "label": "Run official ArithmeticCheck",
+      "argv": [
+        "/usr/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/drivers:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign:/Users/yuku/f/git/kurtlin/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ArithmeticCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/018-stderr.txt"
+    },
+    {
+      "label": "Run Kurtlin ArithmeticCheck",
+      "argv": [
+        "/usr/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/drivers:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign:/Users/yuku/f/git/kurtlin/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ArithmeticCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/019-stderr.txt"
+    },
+    {
+      "label": "Run official StringsCheck",
+      "argv": [
+        "/usr/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/drivers:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign:/Users/yuku/f/git/kurtlin/references/kotlinc/lib/kotlin-stdlib.jar",
+        "StringsCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/020-stderr.txt"
+    },
+    {
+      "label": "Run Kurtlin StringsCheck",
+      "argv": [
+        "/usr/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/drivers:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign:/Users/yuku/f/git/kurtlin/references/kotlinc/lib/kotlin-stdlib.jar",
+        "StringsCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/021-stderr.txt"
+    },
+    {
+      "label": "Run official InteropCheck",
+      "argv": [
+        "/usr/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/drivers:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign:/Users/yuku/f/git/kurtlin/references/kotlinc/lib/kotlin-stdlib.jar",
+        "InteropCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/022-stderr.txt"
+    },
+    {
+      "label": "Run Kurtlin InteropCheck",
+      "argv": [
+        "/usr/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/drivers:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign:/Users/yuku/f/git/kurtlin/references/kotlinc/lib/kotlin-stdlib.jar",
+        "InteropCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/023-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official",
+        "yuku.alkitab.yes2.util.UnsignedBinarySearchKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/024-stderr.txt"
+    },
+    {
+      "label": "Inspect Kurtlin JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate",
+        "yuku.alkitab.yes2.util.UnsignedBinarySearchKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/025-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official",
+        "kurtlin.probes.ArithmeticKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/026-stderr.txt"
+    },
+    {
+      "label": "Inspect Kurtlin JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate",
+        "kurtlin.probes.ArithmeticKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/027-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official",
+        "kurtlin.probes.StringsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/028-stderr.txt"
+    },
+    {
+      "label": "Inspect Kurtlin JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate",
+        "kurtlin.probes.StringsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/029-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official",
+        "yuku.alkitab.base.audio.AudioErrorCodeKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/030-stderr.txt"
+    },
+    {
+      "label": "Inspect Kurtlin JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate",
+        "yuku.alkitab.base.audio.AudioErrorCodeKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/031-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official",
+        "yuku.alkitab.base.util.IntArrayListUtilKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/032-stderr.txt"
+    },
+    {
+      "label": "Inspect Kurtlin JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate",
+        "yuku.alkitab.base.util.IntArrayListUtilKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/033-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/official",
+        "kurtlin.probes.InteropKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/034-stderr.txt"
+    },
+    {
+      "label": "Inspect Kurtlin JVM signatures",
+      "argv": [
+        "/usr/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/candidate",
+        "kurtlin.probes.InteropKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/035-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: val_reassignment",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/val_reassignment.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/036-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: val_reassignment",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/val_reassignment.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-val_reassignment"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/037-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: parameter_reassignment",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/parameter_reassignment.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/038-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: parameter_reassignment",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/parameter_reassignment.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-parameter_reassignment"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/039-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: unknown_local",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unknown_local.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/040-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: unknown_local",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unknown_local.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-unknown_local"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/041-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: boolean_arithmetic",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/boolean_arithmetic.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/042-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: boolean_arithmetic",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/boolean_arithmetic.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-boolean_arithmetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/043-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: return_type",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/return_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/044-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: return_type",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/return_type.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-return_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/045-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: missing_return",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing_return.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/046-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: missing_return",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing_return.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-missing_return"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/047-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: escaped_block_local",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/escaped_block_local.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/048-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: escaped_block_local",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/escaped_block_local.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-escaped_block_local"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/049-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: wrong_argument_count",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/wrong_argument_count.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/050-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: wrong_argument_count",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/wrong_argument_count.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-wrong_argument_count"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/051-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: duplicate_local",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/duplicate_local.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/052-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: duplicate_local",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/duplicate_local.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-duplicate_local"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/053-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: integer_overflow_literal",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/integer_overflow_literal.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/054-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: integer_overflow_literal",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/integer_overflow_literal.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-integer_overflow_literal"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/055-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: missing_statement_separator",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing_statement_separator.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/056-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: missing_statement_separator",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing_statement_separator.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-missing_statement_separator"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/057-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: reserved_underscore",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/reserved_underscore.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/058-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: reserved_underscore",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/reserved_underscore.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reserved_underscore"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/059-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: string_argument_type",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_argument_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/060-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: string_argument_type",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_argument_type.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-string_argument_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/061-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: string_return_type",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_return_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/062-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: string_return_type",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_return_type.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-string_return_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/063-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: string_escape",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_escape.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/064-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: string_escape",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_escape.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-string_escape"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/065-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: string_arity",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_arity.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/066-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: string_arity",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_arity.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-string_arity"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/067-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: string_unterminated",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_unterminated.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/068-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejection: string_unterminated",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_unterminated.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/negative-string_unterminated"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/069-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/069-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: string_templates",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_templates.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/070-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/070-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: string_templates",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_templates.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-string_templates"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/071-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/071-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: classes",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/classes.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/072-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/072-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: classes",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/classes.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-classes"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/073-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/073-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: nullable_types",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/nullable_types.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/074-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/074-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: nullable_types",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/nullable_types.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-nullable_types"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/075-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/075-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: overloads",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/overloads.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/076-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/076-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: overloads",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/overloads.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-overloads"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/077-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/077-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: unconditional_loop_analysis",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unconditional_loop_analysis.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/078-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/078-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: unconditional_loop_analysis",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unconditional_loop_analysis.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-unconditional_loop_analysis"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/079-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/079-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: escaped_string_template",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/escaped_string_template.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/080-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/080-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: escaped_string_template",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/escaped_string_template.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unsupported-escaped_string_template"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/081-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/081-stderr.txt"
+    },
+    {
+      "label": "Classpath alias and ordered directory search",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/ClasspathProbe.kt",
+        "--classpath",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/empty-classpath:/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/classpath-alias"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/082-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/082-stderr.txt"
+    },
+    {
+      "label": "Reject unsupported or missing classpath entry",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/ClasspathProbe.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/invalid-classpath-kotlin-stdlib.jar"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/083-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/083-stderr.txt"
+    },
+    {
+      "label": "Reject unsupported or missing classpath entry",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/ClasspathProbe.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/absent-classpath",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/invalid-classpath-absent-classpath"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/084-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/084-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: missing_import",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing_import.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/085-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/085-stderr.txt"
+    },
+    {
+      "label": "Kurtlin Java interop rejection: missing_import",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing_import.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-missing_import"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/086-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/086-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: missing_class",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing_class.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/087-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/087-stderr.txt"
+    },
+    {
+      "label": "Kurtlin Java interop rejection: missing_class",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing_class.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-missing_class"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/088-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/088-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: missing_member",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing_member.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/089-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/089-stderr.txt"
+    },
+    {
+      "label": "Kurtlin Java interop rejection: missing_member",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing_member.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-missing_member"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/090-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/090-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: private_member",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/private_member.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/091-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/091-stderr.txt"
+    },
+    {
+      "label": "Kurtlin Java interop rejection: private_member",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/private_member.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-private_member"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/092-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/092-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: wrong_java_arity",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/wrong_java_arity.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/093-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/093-stderr.txt"
+    },
+    {
+      "label": "Kurtlin Java interop rejection: wrong_java_arity",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/wrong_java_arity.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-wrong_java_arity"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/094-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/094-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: wrong_java_argument",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/wrong_java_argument.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/095-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/095-stderr.txt"
+    },
+    {
+      "label": "Kurtlin Java interop rejection: wrong_java_argument",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/wrong_java_argument.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-wrong_java_argument"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/096-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/096-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: unit_as_int",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unit_as_int.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/097-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/097-stderr.txt"
+    },
+    {
+      "label": "Kurtlin Java interop rejection: unit_as_int",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unit_as_int.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-invalid-unit_as_int"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/098-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/098-stderr.txt"
+    },
+    {
+      "label": "Reference rejects missing classpath",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/MissingClasspath.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing-classpath-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/099-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/099-stderr.txt"
+    },
+    {
+      "label": "Kurtlin rejects missing classpath",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/MissingClasspath.kt",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/missing-classpath-candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/100-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/100-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_overload",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_overload.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/101-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/101-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_overload",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_overload.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-java_overload"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/102-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/102-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_static",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_static.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/103-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/103-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_static",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_static.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-java_static"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/104-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/104-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_generic_method",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_generic_method.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/105-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/105-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_generic_method",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_generic_method.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-java_generic_method"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/106-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/106-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_annotated_method",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_annotated_method.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/107-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/107-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_annotated_method",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_annotated_method.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-java_annotated_method"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/108-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/108-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_field",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_field.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/109-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/109-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_field",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_field.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-java_field"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/110-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/110-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_inherited_member",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_inherited_member.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/111-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/111-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_inherited_member",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_inherited_member.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-java_inherited_member"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/112-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/112-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: kotlin_metadata_class",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/kotlin_metadata_class.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/113-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/113-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: kotlin_metadata_class",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/kotlin_metadata_class.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-kotlin_metadata_class"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/114-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/114-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_hierarchy_overload",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_hierarchy_overload.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/115-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/115-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_hierarchy_overload",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_hierarchy_overload.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-java_hierarchy_overload"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/116-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/116-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_interface",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_interface.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/117-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/117-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_interface",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_interface.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-java_interface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/118-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/118-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_annotated_class",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_annotated_class.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/119-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/119-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_annotated_class",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_annotated_class.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-java_annotated_class"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/120-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/120-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_annotated_package",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_annotated_package.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/121-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/121-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_annotated_package",
+      "argv": [
+        "/Users/yuku/f/git/kurtlin/target/release/kurtlin",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_annotated_package.kt",
+        "-cp",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign",
+        "-d",
+        "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/interop-unsupported-java_annotated_package"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T034815862070Z-interop/122-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T034815862070Z-interop/122-stderr.txt"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-23T034815862070Z-interop/000-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/000-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/001-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/001-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/002-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/002-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/003-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/003-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/004-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/004-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/005-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/005-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/006-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/006-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/007-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/007-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/008-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/008-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/009-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/009-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/010-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/010-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/011-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/011-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/012-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/012-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/013-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/013-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/014-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/014-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/015-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/015-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/016-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/016-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/017-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/017-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/018-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/018-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/019-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/019-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/020-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/020-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/021-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/021-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/022-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/022-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/023-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/023-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/024-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/024-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/025-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/025-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/026-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/026-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/027-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/027-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/028-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/028-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/029-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/029-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/030-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/030-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/031-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/031-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/032-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/032-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/033-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/033-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/034-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/034-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/035-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/035-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/036-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/036-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/037-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/037-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/038-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/038-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/039-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/039-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/040-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/040-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/041-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/041-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/042-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/042-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/043-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/043-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/044-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/044-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/045-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/045-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/046-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/046-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/047-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/047-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/048-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/048-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/049-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/049-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/050-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/050-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/051-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/051-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/052-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/052-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/053-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/053-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/054-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/054-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/055-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/055-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/056-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/056-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/057-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/057-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/058-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/058-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/059-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/059-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/060-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/060-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/061-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/061-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/062-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/062-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/063-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/063-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/064-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/064-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/065-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/065-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/066-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/066-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/067-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/067-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/068-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/068-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/069-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/069-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/070-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/070-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/071-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/071-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/072-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/072-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/073-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/073-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/074-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/074-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/075-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/075-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/076-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/076-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/077-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/077-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/078-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/078-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/079-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/079-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/080-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/080-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/081-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/081-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/082-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/082-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/083-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/083-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/084-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/084-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/085-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/085-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/086-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/086-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/087-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/087-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/088-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/088-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/089-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/089-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/090-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/090-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/091-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/091-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/092-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/092-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/093-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/093-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/094-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/094-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/095-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/095-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/096-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/096-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/097-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/097-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/098-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/098-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/099-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/099-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/100-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/100-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/101-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/101-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/102-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/102-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/103-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/103-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/104-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/104-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/105-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/105-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/106-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/106-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/107-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/107-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/108-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/108-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/109-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/109-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/110-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/110-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/111-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/111-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/112-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/112-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/113-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/113-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/114-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/114-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/115-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/115-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/116-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/116-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/117-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/117-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/118-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/118-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/119-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/119-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/120-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/120-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/121-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/121-stderr.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/122-stdout.txt",
+    "reports/correctness/2026-10-23T034815862070Z-interop/122-stderr.txt"
+  ],
+  "selection": "AndroidBible unsignedIntBinarySearch, AudioErrorCode and unchanged IntArrayListUtil using the original Java IntArrayList; JVM arithmetic/control-flow, UTF-16 String and scoped Java interop probes, invalid and unsupported syntax. Android classes are test-only type stubs; no parcel runtime, upstream Kotlin fixture adapter or whole-app tests.",
+  "cases": [
+    {
+      "id": "rust_frontend",
+      "outcome": "pass",
+      "scope": "Frontend diagnostics and boundary tests; see command log"
+    },
+    {
+      "id": "androidbible_unsigned_search",
+      "outcome": "pass",
+      "runtime_checks": 70858,
+      "result_sha256": "7e53e944b470730ff51185af2c035300f1e4e80c8014ed213adf417156231254",
+      "oracle": "Official Kotlin plus independent Java assertions",
+      "jvm_verification": "all"
+    },
+    {
+      "id": "jvm_semantics",
+      "outcome": "pass",
+      "runtime_checks": 4903,
+      "result_sha256": "6bdd4651fa3bdde89a0b8020098676396e8655710da79961ba43e23e4bcccf55",
+      "oracle": "Official Kotlin plus independent Java assertions",
+      "jvm_verification": "all"
+    },
+    {
+      "id": "string_semantics",
+      "outcome": "pass",
+      "runtime_checks": 48548,
+      "result_sha256": "762b7b5b4bcf2ed8d6cc86e22db9a9efa0a713fbbefe9421b9e13df151e68d36",
+      "oracle": "Official Kotlin plus independent Java assertions",
+      "jvm_verification": "all"
+    },
+    {
+      "id": "java_interop_semantics",
+      "outcome": "pass",
+      "runtime_checks": 5737,
+      "result_sha256": "ae6eb42c582aacdf292517845ab909954e10acca985d22eca72f4042651dad54",
+      "oracle": "Official Kotlin plus independent Java assertions",
+      "jvm_verification": "all"
+    },
+    {
+      "id": "jvm_signatures/yuku.alkitab.yes2.util.UnsignedBinarySearchKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/kurtlin.probes.ArithmeticKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/kurtlin.probes.StringsKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/yuku.alkitab.base.audio.AudioErrorCodeKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/yuku.alkitab.base.util.IntArrayListUtilKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/kurtlin.probes.InteropKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "diagnostics/val_reassignment",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/parameter_reassignment",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/unknown_local",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/boolean_arithmetic",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/return_type",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/missing_return",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/escaped_block_local",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/wrong_argument_count",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/duplicate_local",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/integer_overflow_literal",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/missing_statement_separator",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/reserved_underscore",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/string_argument_type",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/string_return_type",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/string_escape",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/string_arity",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/string_unterminated",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Kurtlin diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "unsupported/string_templates",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/string_templates.kt:1:32: error: String interpolation is not supported"
+    },
+    {
+      "id": "unsupported/classes",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/classes.kt:1:1: error: Expected fun, found class"
+    },
+    {
+      "id": "unsupported/nullable_types",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/nullable_types.kt:1:13: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "unsupported/overloads",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/overloads.kt:2:1: error: Function overloads are not supported"
+    },
+    {
+      "id": "unsupported/unconditional_loop_analysis",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/unconditional_loop_analysis.kt:1:1: error: Function must return on all paths; unconditional-loop analysis is not supported"
+    },
+    {
+      "id": "unsupported/escaped_string_template",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/escaped_string_template.kt:1:26: error: String interpolation is not supported"
+    },
+    {
+      "id": "interop_diagnostics/classpath_configuration",
+      "outcome": "pass",
+      "scope": "--classpath alias, multiple ordered directories, nonexistent directory and unsupported JAR entry rejection."
+    },
+    {
+      "id": "interop_diagnostics/missing_import",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/missing_class",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/missing_member",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/private_member",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/wrong_java_arity",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/wrong_java_argument",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/unit_as_int",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/missing_classpath",
+      "outcome": "pass",
+      "scope": "Both compilers reject unavailable imported Java class."
+    },
+    {
+      "id": "unsupported/java_overload",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_overload.kt:2:37: error: Java method missing or overloaded: overloaded",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_static",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_static.kt:2:16: error: Unresolved local: ForeignMethods",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_generic_method",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_generic_method.kt:2:40: error: Java method is inaccessible, static, generic, annotated, or unsupported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_annotated_method",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_annotated_method.kt:2:37: error: Java method is inaccessible, static, generic, annotated, or unsupported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_field",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_field.kt:2:37: error: Unsupported property: field",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_inherited_member",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_inherited_member.kt:2:37: error: Java inherited member resolution is not supported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/kotlin_metadata_class",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/kotlin_metadata_class.kt:1:8: error: Imported class is inaccessible or unsupported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_hierarchy_overload",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_hierarchy_overload.kt:2:35: error: Java inherited member or metadata resolution is not supported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_interface",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_interface.kt:2:39: error: Java interface calls are not supported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_annotated_class",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_annotated_class.kt:1:8: error: Imported class is inaccessible or unsupported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_annotated_package",
+      "outcome": "unsupported_language",
+      "diagnostic": "/Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/java_annotated_package.kt:1:1: error: Java package metadata /Users/yuku/f/git/kurtlin/target/checks/2026-10-23T034815862070Z-interop/foreign/fixtures/annotated/package-info.class is unsupported because it may define nullability defaults",
+      "scope": "Official compiler accepts with the same directory classpath."
+    }
+  ],
+  "counts": {
+    "pass": 37,
+    "unsupported_language": 17
+  },
+  "finished_at": "2026-10-23T03:50:25.159628+00:00"
+}

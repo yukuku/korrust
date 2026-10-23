@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-23T03:01:32.139959+00:00",
+  "compiler": {
+    "version": "kurtlin 0.1.0",
+    "binary_sha256": "d815bba42fe54f289b06173d674e184825fe1547c63f6e5a8f565e61f6186636",
+    "source_files_sha256": {
+      "Cargo.lock": "8fa23e59911a5a8af7372ed895018f008efde41141267c68ac68382aa590fc2c",
+      "Cargo.toml": "bc20777e5822571268bb4bc2f4af96b4e781f45d0fe1d11ed436088840c19503",
+      "src/bytecode.rs": "d81df1c0d002dafe361143fa07d74093da01e24c68c73a8b1b0e72a72242c69a",
+      "src/check.rs": "9a42c2478b4afcac1968ffc616048a31408b6cceb8e8dff8708dd52ff9681ee4",
+      "src/lib.rs": "58ca289b65f00ebdd7e8a0529d84531987aaff42546e089fc90d3671ea0f144f",
+      "src/main.rs": "a7797244b727c7638176cd5a533588dfc81faa7b164885af9e76ed521fa5750e",
+      "src/syntax.rs": "826642bb7f072826e6f9b024607cbd6a451d57963d106aa2ec5bf20e1dad73e4",
+      "tests/diagnostics.json": "a594f1d3ae5944d68dfdf976dec4d01581a878513ad7749609a8938258233681",
+      "tests/features.json": "9001f2668a6246ef89b983b434582c1feb6bd1b873ea82f96835ea5ff06f11cf",
+      "tests/fixtures/Arithmetic.kt": "9c374e03fc80901322d8cf18077359c30d01fda24bc483d0b08f3db665e2806f",
+      "tests/fixtures/ArithmeticCheck.java": "85711d139f91b532f9661973880bbf120d66f3e687c7cbf1b8abbd4467d95d44",
+      "tests/fixtures/BinarySearchCheck.java": "fb318c19290ba2a9eb928c83154c5b4a982dce44fbf908d70fdb74d6a702c50e",
+      "tests/frontend.rs": "683f577795056c66154d4ebe2c7d074552a783e6cc2f333731feb6db620e71b2",
+      "tests/unsupported.json": "f09640a4540647f8a44f55eeaa3fdfbdcf51a8315d19f56983e5a843bb448212",
+      "tools/check.py": "bb1e8688b2e0c09ea9dd48dacd114ae824ed4508344f6b2dc3be6569d6a7b25a",
+      "tools/setup_reference.py": "deafd96f0176c389a8fb6e81d90f03ba7d4cc9c25361d1fc0edd44a883e7d572"
+    },
+    "classfile_major_version": 49,
+    "kotlin_metadata": false,
+    "incremental_compilation": false
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "inputs": {
+    "source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+    "source_sha256": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+    "reference_commit": "fea1ad8c18995b80d1ca0e3917056104613d23db",
+    "androidbible_commit": "624629093af37d0d7f85699bfa0caa562fc41e61"
+  },
+  "commands": [
+    [
+      "python3",
+      "tools/check.py"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-23T030132139959Z-first-slice.json"
+  ],
+  "kind": "features",
+  "status": "assessed",
+  "features": [
+    {
+      "name": "integer_expressions",
+      "scope": "Int arithmetic, bitwise operations, shifts, comparisons, unary operators, and tested Boolean short-circuit expressions.",
+      "evidence_cases": [
+        "jvm_semantics",
+        "androidbible_unsigned_search"
+      ],
+      "restrictions": [
+        "No Long, floating-point, unsigned types, operator overloading, or general constant folding."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "functions_and_control_flow",
+      "scope": "Single-file top-level functions with explicit Int, Boolean, or IntArray signatures; private/public visibility, local val/var, block if/else, while, returns, and direct calls.",
+      "evidence_cases": [
+        "androidbible_unsigned_search",
+        "jvm_semantics",
+        "rust_frontend"
+      ],
+      "restrictions": [
+        "No imports, overload resolution, default/named arguments, function values, or cross-file linking.",
+        "Statement bodies require braces; functions must pass the conservative return-path check.",
+        "Compiler resource limits and the nesting limit intentionally reject larger constructs."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "int_arrays",
+      "scope": "Non-null IntArray parameters/returns, indexed reads, size, reference-preserving returns, and public parameter null checks.",
+      "evidence_cases": [
+        "jvm_semantics",
+        "androidbible_unsigned_search"
+      ],
+      "restrictions": [
+        "No nullable types, array construction or writes, generic arrays, or collections."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "jvm_java_interop",
+      "scope": "Java callers compiled against official Kotlin run against Kurtlin classes; public/private method signatures match for the two selected source files.",
+      "evidence_cases": [
+        "androidbible_unsigned_search",
+        "jvm_semantics",
+        "jvm_signatures/yuku.alkitab.yes2.util.UnsignedBinarySearchKt",
+        "jvm_signatures/kurtlin.probes.ArithmeticKt"
+      ],
+      "restrictions": [
+        "Emits class-file version 49; requires kotlin-stdlib for public array-parameter checks.",
+        "No Kotlin metadata or module metadata, source line/local-variable tables, class declarations, JAR packaging, or Gradle integration.",
+        "Kotlin consumers, Android/D8, and full application builds have not been validated."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "strings",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/strings"
+      ]
+    },
+    {
+      "name": "classes",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/classes"
+      ]
+    },
+    {
+      "name": "nullable_types",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/nullable_types"
+      ]
+    },
+    {
+      "name": "overloads",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/overloads"
+      ]
+    },
+    {
+      "name": "unconditional_loop_analysis",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/unconditional_loop_analysis"
+      ]
+    }
+  ]
+}

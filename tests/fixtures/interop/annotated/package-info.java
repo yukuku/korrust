@@ -1,0 +1,2 @@
+@Deprecated
+package fixtures.annotated;

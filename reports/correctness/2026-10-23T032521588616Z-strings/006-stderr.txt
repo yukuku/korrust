@@ -1,0 +1,9 @@
+tests/fixtures/Strings.kt:17:9: error: conflicting overloads:
+fun divide(a: Int, b: Int): Int
+private fun divide(a: Int, b: Int): Int = a / b
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/Strings.kt:18:87: error: overload resolution ambiguity between candidates:
+fun divide(a: Int, b: Int): Int
+fun divide(a: Int, b: Int): Int
+fun order(value: String, start: Int, divisor: Int): String = value.substring(start) + divide(1, divisor)
+                                                                                      ^^^^^^

@@ -1,0 +1,50 @@
+
+running 6 tests
+test classpath::tests::unsafe_names_are_rejected ... ok
+test classpath::tests::ordinary_class_annotations_are_unsupported ... ok
+test classpath::tests::oversized_attributes_and_invalid_pool_indices_are_rejected ... ok
+test classpath::tests::invalid_identity_and_trailing_data_are_rejected ... ok
+test classpath::tests::modified_utf8_and_double_slots_are_bounded ... ok
+test classpath::tests::truncations_are_diagnostics ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 11 tests
+test requires_legal_output_names_and_keeps_locations ... ok
+test requires_classpath_for_imported_java_classes ... FAILED
+test preserves_statement_boundaries_and_rejects_unsupported_syntax ... ok
+test rejects_invalid_strings_and_string_operations ... ok
+test extension_functions_require_receiver_syntax ... FAILED
+test rejects_invalid_bindings_and_types ... ok
+test accepts_unit_allocation_and_explicit_copy_ranges ... ok
+test accepts_nested_comments_shadowing_and_minimum_int ... ok
+test accepts_string_literals_calls_and_internal_functions ... ok
+test rejects_reserved_names_and_excessive_nesting_without_panicking ... ok
+test checks_modified_utf8_constant_limit ... ok
+
+failures:
+
+---- requires_classpath_for_imported_java_classes stdout ----
+
+thread 'requires_classpath_for_imported_java_classes' (14601858) panicked at tests/frontend.rs:7:5:
+Type requires an explicit class import: Foreign
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- extension_functions_require_receiver_syntax stdout ----
+
+thread 'extension_functions_require_receiver_syntax' (14601853) panicked at tests/frontend.rs:7:5:
+Calling declared Kotlin extensions is not supported
+
+
+failures:
+    extension_functions_require_receiver_syntax
+    requires_classpath_for_imported_java_classes
+
+test result: FAILED. 9 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
