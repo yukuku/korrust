@@ -1,0 +1,86 @@
+{
+  "builder_jar": "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/com.android.tools.build/builder/9.2.1/e8ef7f9072cd990708591c54128fd6c6dc42ae7d/builder-9.2.1.jar",
+  "builder_sha256": "091274bf71a4e29d823a54fefb4b59643f4abc23ef15b652b787d1565280bdb0",
+  "version": "D8 9.2.14 (build b159b01e1cdc38c1106be42aeebfb7f44397dad1 from go/r8bot (luci-r8-custom-ci-archive-0-vv1n))\n",
+  "version_stderr": "",
+  "runs": [
+    {
+      "mode": "official",
+      "command": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-cp",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/com.android.tools.build/builder/9.2.1/e8ef7f9072cd990708591c54128fd6c6dc42ae7d/builder-9.2.1.jar",
+        "com.android.tools.r8.D8",
+        "--release",
+        "--min-api",
+        "26",
+        "--lib",
+        "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "--classpath",
+        "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+        "--classpath",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+        "--classpath",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--output",
+        "/workspace/korrust/target/androidbible-agp-d8/official-dex",
+        "/workspace/korrust/target/androidbible-agp-d8/official-classes.jar"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "dex_sha256": {
+        "classes.dex": "172197fbf129224a3d0ced3e28adf6f9ce1e1f5034515524987482284225a02a"
+      }
+    },
+    {
+      "mode": "korrust",
+      "command": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-cp",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/com.android.tools.build/builder/9.2.1/e8ef7f9072cd990708591c54128fd6c6dc42ae7d/builder-9.2.1.jar",
+        "com.android.tools.r8.D8",
+        "--release",
+        "--min-api",
+        "26",
+        "--lib",
+        "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "--classpath",
+        "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+        "--classpath",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+        "--classpath",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module-artifacts/korrust/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--output",
+        "/workspace/korrust/target/androidbible-agp-d8/korrust-dex",
+        "/workspace/korrust/target/androidbible-agp-d8/korrust-classes.jar"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "",
+      "dex_sha256": {
+        "classes.dex": "221b1598b4c5b91a873104bc020aa192739df556be2991e67362b80d2416e19f"
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+warning: classpath entry points to a non-existent location: /workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out
+warning: classpath entry points to a non-existent location: /workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out
+tests/fixtures/consumers/InternalClassAccess.kt:1:26: error: cannot access 'class Yes2SingleChapterVerses : SingleChapterVerses': it is internal in file.
+import yuku.alkitab.yes2.Yes2SingleChapterVerses
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/consumers/InternalClassAccess.kt:2:19: error: cannot access 'class Yes2SingleChapterVerses : SingleChapterVerses': it is internal in file.
+fun leak(): Int = Yes2SingleChapterVerses(arrayOf("x")).verseCount
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/consumers/InternalClassAccess.kt:2:57: error: cannot access 'class Yes2SingleChapterVerses : SingleChapterVerses': it is internal in file.
+fun leak(): Int = Yes2SingleChapterVerses(arrayOf("x")).verseCount
+                                                        ^^^^^^^^^^

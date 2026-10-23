@@ -1,0 +1,2687 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-23T05:44:36.590486+00:00",
+  "status": "completed",
+  "compiler": {
+    "version": "korrust 0.1.0",
+    "binary_sha256": "afc6cd5a11efd77ffaf4bf34a66329af0dbe1b0a83edc9efab2b2cdd5beda6b3",
+    "source_files_sha256": {
+      "Cargo.lock": "b2146c5915d63f0a75500af0d88ca0e0856ed4f36b7b1ce1cc51da277049b1f1",
+      "Cargo.toml": "4643f02803cf1a9d48f32579c5837969b53450a2c37a2fbcce4d72eca39ac1e9",
+      "src/bytecode.rs": "8d1044c345a21c7de7a94ea5d3f212efa85f86ae8906106f70ea458b3e39e1cc",
+      "src/check.rs": "48f68570c1b3e49798e0e16a8d82be056381a44c180b6c4a8377ef24bca2711e",
+      "src/classpath.rs": "b5b9fc8bc909bcd928d1a5e30c68b14d0b1ca16918504a2dc26768176794aa7c",
+      "src/lib.rs": "7b0763246eb29aa7ab066c1b8a489edc34a0746b9f605edcc6d904e4b94df6b4",
+      "src/main.rs": "c17680b31cae9b79e19d58d9d0592d58e9302f2888dccec3b303fe609793c6bc",
+      "src/metadata.rs": "482f7dade479267d58bf93ba6d29beb598a29ce4193944ec62503aafbde8134e",
+      "src/output.rs": "d991a876f22a16543179837c9e36655f41125a052ec6ff89b7b0b56fa7514d9b",
+      "src/syntax.rs": "2a691b08331eeb3e9b518c8a4a7a17c0cc26810699f517138fdae52dfb144237",
+      "tests/diagnostics.json": "3008bde35e0ab52244ba98c2b867dc0e89c3802fa9b52869ab8be81810703fb8",
+      "tests/features.json": "1f5cbeb3170472979b6acbbc2e75eb7017c34619014df7b812436bfb2c8f61c4",
+      "tests/fixtures/Arithmetic.kt": "37d8d9bc057d6597ee9f3b65914c6d34036792e6c387f9e749d0feff301d2bf5",
+      "tests/fixtures/ArithmeticCheck.java": "a652303019ca0fa4e6431bd79f0201991001353a292b59f9c2fd7fe63a602fee",
+      "tests/fixtures/BinarySearchCheck.java": "fb318c19290ba2a9eb928c83154c5b4a982dce44fbf908d70fdb74d6a702c50e",
+      "tests/fixtures/Characters.kt": "46b8adc807d572d9cede889535ee52749334c7b6dfeed46410c966325ea87956",
+      "tests/fixtures/CharactersCheck.java": "af2ad0a50dfe887439229e24f9f6965c9c9d23b4d20e5a94b5aa8e366d7a1945",
+      "tests/fixtures/ClassesCheck.java": "a11275f572692c82ccdfa78802b4faef2f71e1bb416f6b74f7d5756d731b90c7",
+      "tests/fixtures/EnumsCheck.java": "5d225188355a3043f10bd907a1816d1f1f1dbf6c5e4ab16d1db6b1ef9c2776f1",
+      "tests/fixtures/Interop.kt": "f2c8805277fb3b1cb6cba3b1610bac8196cdd8866959679e288ab035a69f7def",
+      "tests/fixtures/InteropCheck.java": "2e7442e51d6b0e59b4657556fce9a6aa15c56010537460412e6d853608f462b5",
+      "tests/fixtures/MetadataForeign.kt": "139cded38b67b2165163e9ecface2f341de9a4be1d8eaf53b3a71328e82ad89e",
+      "tests/fixtures/ModuleClassVerification.java": "a1cda2b94555795253ae8a250279a84c5ffd9e0b91f337be7189ba229b23e414",
+      "tests/fixtures/ObjectsCheck.java": "46eaf093c231f8f9126f04351e30a11bb891066251ffb3e15cc77d2b739ba8c3",
+      "tests/fixtures/Strings.kt": "608e4ab1c049b9f46c2e1f39fe00f848c046a3f16c06f78f1cbbd872fc3fef3d",
+      "tests/fixtures/StringsCheck.java": "a7498f7b9492bcee70c2944e32329cbaf0daca689962980708bc778c80b9429f",
+      "tests/fixtures/Yes2Check.java": "a36be81faa013c0c2de019d473fdf902054b70f9558d47fcf5245266c0ff710c",
+      "tests/fixtures/classes/IndexedText.kt": "ed969970caeaccc233d6c0f5d0a290c86616634faf04134d755824b5fd9b3c59",
+      "tests/fixtures/classes/SyntheticChapter.kt": "94fd74380019b27d4787ff5e2c1d8a4a9e30b51a01e76c246d4f7059a6203278",
+      "tests/fixtures/classes/UnsupportedInterfaces.kt": "7a896c2c3f323b2859402e2f14d55369d3d4e393f4b14ff94b349483eda99d9d",
+      "tests/fixtures/consumers/FriendMetadataConsumer.kt": "88475a9e442b7b9e2be15ffd3d1a1214359c00a643286c2257b44d91c709f5e8",
+      "tests/fixtures/consumers/InternalClassAccess.kt": "3c55cae0f60bdfd070fed75783f8b1ddfb20c8f2b9c4dacfcd88be23c84bcadf",
+      "tests/fixtures/consumers/InternalFunctionAccess.kt": "f9c93c949956f7a865a49c86cd6e2065810f4a2bf31673b9c0151782260f74e0",
+      "tests/fixtures/consumers/ModuleFriendConsumer.kt": "4442f1aaeb940b5fc5be78303e1cb975474ab3856678574b3f8f5db56bd3c9d5",
+      "tests/fixtures/consumers/PrivateFieldAccess.kt": "a81111e64975d4fd0649d625a6c5c0551ee1e950ec4455a756d246ee41b68d3f",
+      "tests/fixtures/consumers/PublicMetadataConsumer.kt": "13a34a36b732254130472046fcfadd5f84aa6e4b436e1f05f737df0dc9b84f9f",
+      "tests/fixtures/consumers/PublicNullAccess.kt": "9fc4b6a51742b157ab678046c9b84330f0634eb92cea8cfd1c4994bbc8c0fb53",
+      "tests/fixtures/enums/CollisionEnum.kt": "fd5bfb1472cf72026c3e881ab1069e349e15a7bd08b539a39d4bf1a375390bed",
+      "tests/fixtures/enums/EmptyBodylessEnum.kt": "8fdd9e231521c36ddd049906ae49507b53bc0294d4dd969cb4187fb63c51d8d6",
+      "tests/fixtures/enums/EmptyEnum.kt": "5c9fa305ead8a1f5e785c71f609181b9c92670639cc6fa74ab94ac3d66d967c3",
+      "tests/fixtures/enums/EmptySemicolonEnum.kt": "b1abbe51fb5d7dc90b240285a16e15b4b94cdb4b313c46ea39e5b7ea5059c136",
+      "tests/fixtures/enums/EnumOrder.kt": "247d0b048d26260aa0a3e9d6fa20589fd4371fbc5f63fe54a7f3cc83bbf844be",
+      "tests/fixtures/enums/InternalEnum.kt": "5674637e0f07f5e74e68dcaa93d37a152e79c9411d666d2f8725d0649db09234",
+      "tests/fixtures/enums/LargeEnum.kt": "b5d10bf1e609debee64e59521ed6581948aa8481ad529ab4545d5f59dde6e9b8",
+      "tests/fixtures/enums/SingleEnum.kt": "14ac94098c27e73ed1e44a0fd94c1a0a52521169a70597439336352075c02fb2",
+      "tests/fixtures/interop/AnnotatedForeign.java": "a3874882c01772c9f51de0bd7735f829f56fb8290d8a24118529680ca0a50b4e",
+      "tests/fixtures/interop/ChildMethods.java": "ce64b6fa2a07429a6ff1261b94a16cd434fe17eef7d72deab87814d4455f133d",
+      "tests/fixtures/interop/ForeignInterface.java": "4db1cc4ae2b081ea1e840b50c82b9ff8fbd260235e6687e56d0e355ec8579c65",
+      "tests/fixtures/interop/ForeignMethods.java": "da172b22fc5abd194562a9c050e5c9f360f583a8631fe28535e0b62720f5e243",
+      "tests/fixtures/interop/ParentMethods.java": "4ad132dfd047e2a1e87f02039222779b3c9d0090b7afa8a6703a51cfe823436c",
+      "tests/fixtures/interop/WhenTracker.java": "65fc96f0667f3d4dd6c7d45e16284da48432b75138d871c4effdaa0e944f34fa",
+      "tests/fixtures/interop/android/os/Parcel.java": "d120badab7f8813973d6b148df41e085a859205f8f06d98fea1dd01463482f06",
+      "tests/fixtures/interop/android/os/Parcelable.java": "5057df7e618630b6719d80138603a6915f6060b79640dd52de62df50077e992c",
+      "tests/fixtures/interop/androidx/annotation/NonNull.java": "feb1e800204acdaa66e9792e34cbd43c834fa7d730feb40c2812fdb4d673ea59",
+      "tests/fixtures/interop/annotated/PackageForeign.java": "2d01c814c9251718e616ae420b89af49a598f154d96dcda0125db606dd9c72ce",
+      "tests/fixtures/interop/annotated/package-info.java": "6be1633993f2c8f0a04b192fc6da0740b7504c1928166e5da22ad8bff90e0492",
+      "tests/fixtures/objects/BodylessObject.kt": "59619cff24be2d3e94439e398554961fe773430e8200fe125bcc714b8520ec5d",
+      "tests/fixtures/objects/CollisionObject.kt": "a6102f866ab9c70837b03fa4a54012b4367d4f3bce2bfbc187e0d558d98b8f86",
+      "tests/fixtures/objects/EmptyObject.kt": "f740a5e55255c0c433d7dbe1be1c5b224d7341b75eee80e5d3ac2c45a56578a9",
+      "tests/fixtures/objects/InternalObject.kt": "23e8edd43f6c7fa7a2d97c82bfa813b90a6724ae10b0147a2930120128122244",
+      "tests/fixtures/objects/LargeObject.kt": "07133df79880991fa97d8c24e3f279e6f0c3ce8aa4e89ba423e2bfe5c8db1537",
+      "tests/fixtures/objects/ObjectLiterals.kt": "8a225a4165d2ca52b26d8cbd1ce45a1d772f643146eb24c79c930f4dcc4a5f46",
+      "tests/fixtures/objects/ObjectTree.kt": "dc769f90a34b9a13665caf1659bfc6315979da9f9bfc8e1a694c4c9424fdaf2e",
+      "tests/frontend.rs": "c8407138fb57a1cf91702ae81230f349b43500eff20f6d42633acd2214c81c38",
+      "tests/interop_diagnostics.json": "daec8bfd1219109339574f665396e4bab71bd9e0a6572bf3465b35d6a2316cb7",
+      "tests/interop_unsupported.json": "3d5f42508c3ec1cf23b846f604ee42988a2ae8254620f3d5a4e1d4b0ebba459c",
+      "tests/test_cli.py": "4d0b9d37bfb87eb996693f719d8889f331328aaa15d251539eb2baa378492052",
+      "tests/test_reports.py": "3bb9702230a594fb4a7a750f586777b8417fa4fb70feee6a14797e29fc0e1a28",
+      "tests/unsupported.json": "2b582508405c4d6915f30c543acfe80245a0d4e5d5525ba2432182603d32e5dd",
+      "tools/build_androidbible.py": "4e208707973a3339845289f391d33fe9ae4fe21eebabce2429cea0a6fc58cfc2",
+      "tools/check.py": "4ac6fb5a88cf799607489c2b1fc9a46e8bc5754fd9a497fc3703ea9bd03fbf5a",
+      "tools/check_androidbible_module.py": "b9aed71a370adcc26d3ad865e1c090c8d61eef0d9dd63f9bde63d240526b74f8",
+      "tools/corpus.py": "f0390f8b550a57b45098eb0b1317de220bf327e4a27adbc02059829a48d35c1c",
+      "tools/reports.py": "aefcdb623e7cea8d6a601f8bee4ba597b782b8b7905f54d7dbcc512f74e297bf",
+      "tools/setup_reference.py": "deafd96f0176c389a8fb6e81d90f03ba7d4cc9c25361d1fc0edd44a883e7d572"
+    },
+    "kotlin_metadata": true,
+    "kotlin_metadata_scope": "Bounded classes and top-level function facades; per-source package mappings",
+    "incremental_compilation": false,
+    "classfile_major_versions": [
+      49,
+      52,
+      65
+    ],
+    "configured_gradle_jvm_target": "21",
+    "jvm_target_scope": "Gradle retains target21; Korrust emits compatible older class versions49/52 and has no configurable target option"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "gradle_compiler_version": "2.3.21",
+    "gradle_compiler_files_sha256": {
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.3.21/9b0a49a4d4c570c63a3a2553816bf0539536ab69/kotlin-build-tools-api-2.3.21.jar": "b2e5cc2666c100079ed343618528eb820dcfa5095095e30f2dd19c60dff7e462",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-compat/2.3.21/d96ec659bcf373765197eddfcf19995bfeed9896/kotlin-build-tools-compat-2.3.21.jar": "99632b777b8a85a7a3f8431def497e31f7604a1475bba3c011abe305f585d8d6",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-cri-impl/2.3.21/15fb91d42e1985323b900ed0e0c24e70e601387a/kotlin-build-tools-cri-impl-2.3.21.jar": "cff0a9b665851a325c2195857e2e1a5a747954c9437d00de0ba15519a4294c46",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-impl/2.3.21/c6c11fd63ff15677c11f14dbdbad624f8d8dbf04/kotlin-build-tools-impl-2.3.21.jar": "2cd70396404a0e43c05aaf79a8b35ff3a8ff2e296aedf770f6e5923fbfacae3b",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.3.21/c4b47f8e33cdbeedd8c1415ab9f9ade870388162/kotlin-compiler-embeddable-2.3.21.jar": "d3e70fb011675e77ef00f1a68918d3cd91eed26058977d1e3ea2a37a293233af",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-runner/2.3.21/3245f77bb78bff349c35e0f4dfaede07e9d1249c/kotlin-compiler-runner-2.3.21.jar": "6db7086229db89d07183a9b476e0992f86120dbc21f66092cd124c7ed6d74434",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-client/2.3.21/8bd63e265ea5e6472f96f7e9e2431d02b4e69f3e/kotlin-daemon-client-2.3.21.jar": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.3.21/384c12222b10aaa06fdd2163435709efdade5a02/kotlin-daemon-embeddable-2.3.21.jar": "222fc10a3c22e74d30369bf8a0ca6c4f9372eac7d4a0081e290c256fa4d30fb2",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.3.21/8dafd7f0eb5efef35a446683a2774fef61c68aeb/kotlin-script-runtime-2.3.21.jar": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-tooling-core/2.3.21/7a050c09910ee587944bc2a7413e2d97d751f647/kotlin-tooling-core-2.3.21.jar": "367142781299bc0f9120c1deec0e62934a1af9ea7f01aaa9c5a5354dc5d8d7d9",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+    },
+    "options": {
+      "kotlin_jvm_target": "21",
+      "kotlin_module_name": "AlkitabYes2",
+      "java_source_compatibility": "21",
+      "java_target_compatibility": "21",
+      "unit_test_friend_paths": [
+        "/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar"
+      ],
+      "production_tasks": [
+        "compileDebugKotlin",
+        "compileReleaseKotlin"
+      ],
+      "unit_test_compiler": "official Kotlin Gradle plugin",
+      "dependencies_compiler": "normal Gradle Kotlin/Java/NDK compilers"
+    }
+  },
+  "inputs": {
+    "official_build": {
+      "path": "target/androidbible-module-artifacts/official/build.json",
+      "sha256": "13c17744747b8f3e7b1a2bd8f68d147086701d49acce0b0caf1ff8053fc64e3e",
+      "command": [
+        "/workspace/korrust-setup/gradle-9.7.1/bin/gradle",
+        "--init-script",
+        "/workspace/korrust/target/androidbible-module-artifacts/official/adapter.init.gradle",
+        "--no-configuration-cache",
+        "--no-build-cache",
+        "--max-workers=4",
+        "--console=plain",
+        "--stacktrace",
+        ":AlkitabYes2:clean",
+        ":AlkitabYes2:bundleReleaseAar",
+        ":AlkitabYes2:testDebugUnitTest",
+        ":AlkitabYes2:korrustBuildModel"
+      ],
+      "options": {
+        "kotlin_jvm_target": "21",
+        "kotlin_module_name": "AlkitabYes2",
+        "java_source_compatibility": "21",
+        "java_target_compatibility": "21",
+        "unit_test_friend_paths": [
+          "/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar"
+        ],
+        "production_tasks": [
+          "compileDebugKotlin",
+          "compileReleaseKotlin"
+        ],
+        "unit_test_compiler": "official Kotlin Gradle plugin",
+        "dependencies_compiler": "normal Gradle Kotlin/Java/NDK compilers"
+      },
+      "production_kotlin_compiler": "official Kotlin Gradle plugin",
+      "production_kotlin_fallback": false
+    },
+    "candidate_build": {
+      "path": "target/androidbible-module-artifacts/korrust/build.json",
+      "sha256": "59c6614e9e3646c762c084c67bc213f9202c048f1e6059e81344dd8dd2cb7be4",
+      "command": [
+        "/workspace/korrust-setup/gradle-9.7.1/bin/gradle",
+        "--init-script",
+        "/workspace/korrust/target/androidbible-module-artifacts/korrust/adapter.init.gradle",
+        "--no-configuration-cache",
+        "--no-build-cache",
+        "--max-workers=4",
+        "--console=plain",
+        "--stacktrace",
+        ":AlkitabYes2:clean",
+        ":AlkitabYes2:bundleReleaseAar",
+        ":AlkitabYes2:testDebugUnitTest",
+        ":AlkitabYes2:korrustBuildModel"
+      ],
+      "options": {
+        "kotlin_jvm_target": "21",
+        "kotlin_module_name": "AlkitabYes2",
+        "java_source_compatibility": "21",
+        "java_target_compatibility": "21",
+        "unit_test_friend_paths": [
+          "/workspace/korrust/target/androidbible-module-artifacts/korrust/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar"
+        ],
+        "production_tasks": [
+          "compileDebugKotlin",
+          "compileReleaseKotlin"
+        ],
+        "unit_test_compiler": "official Kotlin Gradle plugin",
+        "dependencies_compiler": "normal Gradle Kotlin/Java/NDK compilers"
+      },
+      "production_kotlin_compiler": "korrust",
+      "production_kotlin_fallback": false
+    },
+    "androidbible_commit": "624629093af37d0d7f85699bfa0caa562fc41e61",
+    "production_kotlin_sources": [
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt"
+    ],
+    "production_java_sources": [
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2Reader.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2Writer.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/compress/SnappyInputStream.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/compress/SnappyOutputStream.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/MemoryRandomOutputStream.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/RandomAccessFileRandomInputStream.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/RandomAccessFileRandomOutputStream.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/RandomInputStream.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/RandomOutputStream.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/Yes2VerseTextDecoder.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/model/PericopeData.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/model/SectionIndex.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/model/VerseBytes.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/model/Yes2Book.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/model/Yes2PericopeBlock.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/BooksInfoSection.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/FootnotesSection.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/PericopesSection.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/TextSection.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/VersionInfoSection.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/XrefsSection.java",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/base/SectionContent.java"
+    ],
+    "source_files_sha256": {
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2Reader.java": "d518cbeb2c3df165fae6a1856d252f81cb3de78afa140d087055d2a87f6ceeeb",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt": "0162f744a5d6a09e955a1111c68b50b3b3864ca36f7f9ba65936440de10b7290",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2Writer.java": "06a8cfdd29620687dd2bd2a00e9d84ea3724aa28ac8e5a873ef8ed271aa1d876",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/compress/SnappyInputStream.java": "539dda3ac41b70eb878beb4018f1266cff20d0ea029a2e5d9582b149dde73cb4",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/compress/SnappyOutputStream.java": "e0f43413cbc451e3bb5b301178fb1b63bd5a72872d2999e1bac74ed3a673fe72",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/MemoryRandomOutputStream.java": "52335bbde0361b0ae76d78f318df1351a3c455fe82a1d757ebfe40a1c300e8f6",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/RandomAccessFileRandomInputStream.java": "9fbc08f28433e546870873639d0aa389a699121be588ca054866b06a0b43f74e",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/RandomAccessFileRandomOutputStream.java": "3e86ecebc5a373b2fd2d517926042cf49ebc2ec433230cbdd4b1aed1debf43d6",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/RandomInputStream.java": "bc423a5609038076bc023265ba055b7aa6bea8004a476f8fc2455d02f2367919",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/RandomOutputStream.java": "b065d5632f0cf71b9ced210a6971c89f0cf77bd77d0d615e4cda5e1941698e9a",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/io/Yes2VerseTextDecoder.java": "ac81ad2060f0866aa3de6cbb9c156abacbc2c50e3f97a9901192ca94b39ec00c",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/model/PericopeData.java": "281b6dfd237cfc108add74114348178fe01eea69546823dd81d0132abcb583b6",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/model/SectionIndex.java": "3f05c60058b9e985c6b3f46725ef6ac9cafe1a3ce145c163c0ccdfb7da5c18d5",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/model/VerseBytes.java": "1ff2d5c7a9ea107fa947afc92d9ad8b499ac032ac9134e633ea4bb1501f0c9d7",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/model/Yes2Book.java": "487f33bf234db263111f669ee6c6fe2cdfea0d16c5926413237ed36cefe90d80",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/model/Yes2PericopeBlock.java": "2fc620001e26b61f513ca0e1b3008d2fffbaf9d4022c786a98300124d8d5f616",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/BooksInfoSection.java": "269bba7bcaf9adf0b32f449f9116f5d1893970c3ffdec765571cbf034e9a9c53",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/FootnotesSection.java": "54177c378e3f3df811cda680efc0acf1dea3f8e7e194ead9a04639d9e1a82242",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/PericopesSection.java": "478a368d12cccede8b0c9618e88777e1130f9dd339222e1d7e4681c19e339da9",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/TextSection.java": "98ffbaf9778efdc66bb592512887ebe957c3b7b43d15b20d2b1064d9160658b1",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/VersionInfoSection.java": "840df96e5570b0c6bdee40d662aeeb0cb850e5f3c96fad685b4fa08dc493ff69",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/XrefsSection.java": "4981fbfe5b7e20bcb43a990581106328dc321b02064b801b8a1ac3ffa4880f94",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/section/base/SectionContent.java": "b61d6bddff329c5adf4c899a96c8a49edd59eacd37fba3d5e2723e3c024cc597",
+      "AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+      "AlkitabYes2/src/test/java/android/util/Log.java": "499a07467d84c6659b3ec415f6c9254f2c48711709b27b68d39a723e90556f76",
+      "AlkitabYes2/src/test/java/yuku/alkitab/yes2/SnappyStreamRoundTripTest.kt": "f05e4c9574f4bb85279631b3e72c4705a277e8fa0df66132b9e9896ce37d8c3f",
+      "AlkitabYes2/src/test/java/yuku/alkitab/yes2/Yes2RoundTripTest.kt": "2006b9b9179eb35e94a940da84edff199ee89485b78672a0e859a47e3cf0e995",
+      "AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt": "32031fe3f0d2a7f21013405c7999be11310a2176b9e1d6ef8d57679f1f40d603"
+    },
+    "official_aar": {
+      "path": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/official-AlkitabYes2-release.aar",
+      "sha256": "76a7bfc0f103c8ded7e252847366f54c7ba08b764c0f66ec383154ea53ea2772",
+      "classes_jar_sha256": "98cb8f0b91e269529fd25973bb8902c124499b3c15de23b6044cf2eea9ed9d84",
+      "classes_sha256": {
+        "yuku/alkitab/yes2/Yes2Reader$TextSectionReader.class": "63e2f584c197ab4bcbf6e1c73fe10759084704512b99d8acb82cfa3efb1bd1fa",
+        "yuku/alkitab/yes2/Yes2Reader.class": "a60c8b8747e0ad6b6c1ec430364d2031265b4cca5da61c9f8dac4d2f192799c2",
+        "yuku/alkitab/yes2/Yes2SingleChapterVerses.class": "2c1a004ae69e0518089882a75a8ca98b7fdc9a61599b3818aca80b454bf7d897",
+        "yuku/alkitab/yes2/Yes2Writer.class": "862aca6e34e2712ed680a8231a24d1b0974dd46658a164d0b0e3fea6d44be3a7",
+        "yuku/alkitab/yes2/compress/SnappyInputStream.class": "ab54d618991359e0f52a9ebf30c9b2d5a22856c7489b9484d2746d4686b33459",
+        "yuku/alkitab/yes2/compress/SnappyOutputStream.class": "b8d1c9f7d1428b572391add32bcec877f1d948662c9628e4da3f52e115d13214",
+        "yuku/alkitab/yes2/io/MemoryRandomOutputStream.class": "ee9c3d90109c42a382137504d5e640944d453c78411d0a473f4b697ab4b50a4a",
+        "yuku/alkitab/yes2/io/RandomAccessFileRandomInputStream.class": "2341dcc9a7d36bb7a21e7e687c0c2ac4bee6c568d454bbc3bcbda9b5506c1b03",
+        "yuku/alkitab/yes2/io/RandomAccessFileRandomOutputStream.class": "98bd1a038140c33db6cb97a6d0d4a5d959196ee4e8eed5bef3f75b04c8f28741",
+        "yuku/alkitab/yes2/io/RandomInputStream.class": "bd2f0c2d352799aaef7d2e31eafb545715ae88c6fd771b299446552a7e31be03",
+        "yuku/alkitab/yes2/io/RandomOutputStream.class": "675b9345ba5ce4c08e8b7d3c20c91b6626baedfc12e3faa139d918e859988426",
+        "yuku/alkitab/yes2/io/Yes2VerseTextDecoder$Ascii.class": "4107740247ecaa2338c1196e570824c0705298748f7f22081018138641f783b0",
+        "yuku/alkitab/yes2/io/Yes2VerseTextDecoder$Utf8.class": "46c06c145dd83e357943ccd68bfa5c525edb33c8c326e93de6b86415839750a1",
+        "yuku/alkitab/yes2/io/Yes2VerseTextDecoder.class": "b46a80b6455f8ae5455a5be9d37c95bc253c0582154740a8518a86eee39d3b3e",
+        "yuku/alkitab/yes2/model/PericopeData$Block.class": "83819abad2c083fbde1a3a0b6b4d7b615a18f4b572fb669d0ecdcf9287562a05",
+        "yuku/alkitab/yes2/model/PericopeData$Entry.class": "a1667d008e01c4c71340da047c38ce036d3bc5e211082df6698b76014ca8e944",
+        "yuku/alkitab/yes2/model/PericopeData.class": "689ff76d8a45783354a286cec8233ec81629a6555def42f8d12643d032db0f5b",
+        "yuku/alkitab/yes2/model/SectionIndex$Entry.class": "3173eceaae780865b2e76c1b1401ee819791402ff064c19ff31514147d40f486",
+        "yuku/alkitab/yes2/model/SectionIndex.class": "e8743b80c80bbd4df3b85204a574c7d867d6d6a3f7fe0b5dee85d0f0ac1cb319",
+        "yuku/alkitab/yes2/model/VerseBytes.class": "8dcec2fda08e25e8d0978f5473c3a53e49608896fcd6f6f971103fb9c4ae271f",
+        "yuku/alkitab/yes2/model/Yes2Book.class": "c02789bc12744e5c3f99f4c7418a429821deb4556768b3d6a004a4b583237334",
+        "yuku/alkitab/yes2/model/Yes2PericopeBlock.class": "0670cf27f79e27c11b85709c8b47c282aeafe1431452be962213b02cb1127f91",
+        "yuku/alkitab/yes2/section/BooksInfoSection$Reader.class": "4d082ac5f0990ed530f0b096b7a6bfc50a4fa2165d3090a3f60b81bbab19c3fd",
+        "yuku/alkitab/yes2/section/BooksInfoSection.class": "3f60ae1c63f5c0bf77a3fe24f24c93e6a6513e9527858921c125760038bcf60d",
+        "yuku/alkitab/yes2/section/FootnotesSection$Reader.class": "97581abac9ffaf35838f9a64316d995c664d6e6292ebd7bce58173797e9c49ae",
+        "yuku/alkitab/yes2/section/FootnotesSection.class": "0f923b81daa9e12e03978285177022adbb8c8f7f6e0b043e9b175b96aece3c96",
+        "yuku/alkitab/yes2/section/PericopesSection$Reader.class": "b63f239c491d3f3e2c62eba18cbf959f2e4e7c95ded4339265867965d63774d9",
+        "yuku/alkitab/yes2/section/PericopesSection.class": "ac026280420d69834e01319276efcac42c17387b61b97ad01a7dc5ef10a54632",
+        "yuku/alkitab/yes2/section/TextSection.class": "244b0faf9c7bc0f9468dad914bc8637ee59ce09fb0d672765b218dcd553eefac",
+        "yuku/alkitab/yes2/section/VersionInfoSection$Reader.class": "af36dc2376d9aa2b42c952200c7661b7d95b8f82fb62d776a3ff917fe0464728",
+        "yuku/alkitab/yes2/section/VersionInfoSection.class": "d2b130b2e248f6a12ca4328ecaff08e246ca4e9d310f96132fa9c31062e2216c",
+        "yuku/alkitab/yes2/section/XrefsSection$Reader.class": "7cbb5dfa4dac754f65e8a69f4d616ecd0761d4df22d642a8aa6ef3ade05af681",
+        "yuku/alkitab/yes2/section/XrefsSection.class": "a883d5c0b970f461e948b04bcfc4026f7e5ce87cb4e6a5f6cfbfb9e378dfce21",
+        "yuku/alkitab/yes2/section/base/SectionContent$Reader.class": "581054cd64627752533103715a398c866e8149305b0713e42618dd426fc7b23d",
+        "yuku/alkitab/yes2/section/base/SectionContent$Writer.class": "9c04015ab08fa102ad940558fda57a0e00a0179544c3c0b5fed1978371bfbd42",
+        "yuku/alkitab/yes2/section/base/SectionContent.class": "ca76df644c627148211db51cf34dc46888437c47a0d90f16b0df60a2b9518923",
+        "yuku/alkitab/yes2/util/UnsignedBinarySearchKt.class": "2fca745fe0dab93870927ca8d5da56984af7f0937bf9f609e0fcabd9ff78c7b0"
+      },
+      "module_mappings_sha256": {
+        "META-INF/AlkitabYes2.kotlin_module": "f8164dcb8345763a6b51243bcb1c52fcdb720bcdf9e55def5e4b954825256bd2"
+      },
+      "classfile_major_versions": [
+        65
+      ]
+    },
+    "candidate_aar": {
+      "path": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-AlkitabYes2-release.aar",
+      "sha256": "72b41fe106ff1903639987d03bb450fa121b8c3c5965e860e985b69e17e74318",
+      "classes_jar_sha256": "c9cbe9d31b3a9e323a8d8557bb77947e787bbff2881375a148d30a7ad41e0c3e",
+      "classes_sha256": {
+        "yuku/alkitab/yes2/Yes2Reader$TextSectionReader.class": "63e2f584c197ab4bcbf6e1c73fe10759084704512b99d8acb82cfa3efb1bd1fa",
+        "yuku/alkitab/yes2/Yes2Reader.class": "a60c8b8747e0ad6b6c1ec430364d2031265b4cca5da61c9f8dac4d2f192799c2",
+        "yuku/alkitab/yes2/Yes2SingleChapterVerses.class": "c7b2f94c8d26d72ff56a8de33ebc2d2ac5d7c3e12bd0a3f109a0cbf521c18e38",
+        "yuku/alkitab/yes2/Yes2Writer.class": "862aca6e34e2712ed680a8231a24d1b0974dd46658a164d0b0e3fea6d44be3a7",
+        "yuku/alkitab/yes2/compress/SnappyInputStream.class": "ab54d618991359e0f52a9ebf30c9b2d5a22856c7489b9484d2746d4686b33459",
+        "yuku/alkitab/yes2/compress/SnappyOutputStream.class": "b8d1c9f7d1428b572391add32bcec877f1d948662c9628e4da3f52e115d13214",
+        "yuku/alkitab/yes2/io/MemoryRandomOutputStream.class": "ee9c3d90109c42a382137504d5e640944d453c78411d0a473f4b697ab4b50a4a",
+        "yuku/alkitab/yes2/io/RandomAccessFileRandomInputStream.class": "2341dcc9a7d36bb7a21e7e687c0c2ac4bee6c568d454bbc3bcbda9b5506c1b03",
+        "yuku/alkitab/yes2/io/RandomAccessFileRandomOutputStream.class": "98bd1a038140c33db6cb97a6d0d4a5d959196ee4e8eed5bef3f75b04c8f28741",
+        "yuku/alkitab/yes2/io/RandomInputStream.class": "bd2f0c2d352799aaef7d2e31eafb545715ae88c6fd771b299446552a7e31be03",
+        "yuku/alkitab/yes2/io/RandomOutputStream.class": "675b9345ba5ce4c08e8b7d3c20c91b6626baedfc12e3faa139d918e859988426",
+        "yuku/alkitab/yes2/io/Yes2VerseTextDecoder$Ascii.class": "4107740247ecaa2338c1196e570824c0705298748f7f22081018138641f783b0",
+        "yuku/alkitab/yes2/io/Yes2VerseTextDecoder$Utf8.class": "46c06c145dd83e357943ccd68bfa5c525edb33c8c326e93de6b86415839750a1",
+        "yuku/alkitab/yes2/io/Yes2VerseTextDecoder.class": "b46a80b6455f8ae5455a5be9d37c95bc253c0582154740a8518a86eee39d3b3e",
+        "yuku/alkitab/yes2/model/PericopeData$Block.class": "83819abad2c083fbde1a3a0b6b4d7b615a18f4b572fb669d0ecdcf9287562a05",
+        "yuku/alkitab/yes2/model/PericopeData$Entry.class": "a1667d008e01c4c71340da047c38ce036d3bc5e211082df6698b76014ca8e944",
+        "yuku/alkitab/yes2/model/PericopeData.class": "689ff76d8a45783354a286cec8233ec81629a6555def42f8d12643d032db0f5b",
+        "yuku/alkitab/yes2/model/SectionIndex$Entry.class": "3173eceaae780865b2e76c1b1401ee819791402ff064c19ff31514147d40f486",
+        "yuku/alkitab/yes2/model/SectionIndex.class": "e8743b80c80bbd4df3b85204a574c7d867d6d6a3f7fe0b5dee85d0f0ac1cb319",
+        "yuku/alkitab/yes2/model/VerseBytes.class": "8dcec2fda08e25e8d0978f5473c3a53e49608896fcd6f6f971103fb9c4ae271f",
+        "yuku/alkitab/yes2/model/Yes2Book.class": "c02789bc12744e5c3f99f4c7418a429821deb4556768b3d6a004a4b583237334",
+        "yuku/alkitab/yes2/model/Yes2PericopeBlock.class": "0670cf27f79e27c11b85709c8b47c282aeafe1431452be962213b02cb1127f91",
+        "yuku/alkitab/yes2/section/BooksInfoSection$Reader.class": "4d082ac5f0990ed530f0b096b7a6bfc50a4fa2165d3090a3f60b81bbab19c3fd",
+        "yuku/alkitab/yes2/section/BooksInfoSection.class": "3f60ae1c63f5c0bf77a3fe24f24c93e6a6513e9527858921c125760038bcf60d",
+        "yuku/alkitab/yes2/section/FootnotesSection$Reader.class": "97581abac9ffaf35838f9a64316d995c664d6e6292ebd7bce58173797e9c49ae",
+        "yuku/alkitab/yes2/section/FootnotesSection.class": "0f923b81daa9e12e03978285177022adbb8c8f7f6e0b043e9b175b96aece3c96",
+        "yuku/alkitab/yes2/section/PericopesSection$Reader.class": "b63f239c491d3f3e2c62eba18cbf959f2e4e7c95ded4339265867965d63774d9",
+        "yuku/alkitab/yes2/section/PericopesSection.class": "ac026280420d69834e01319276efcac42c17387b61b97ad01a7dc5ef10a54632",
+        "yuku/alkitab/yes2/section/TextSection.class": "244b0faf9c7bc0f9468dad914bc8637ee59ce09fb0d672765b218dcd553eefac",
+        "yuku/alkitab/yes2/section/VersionInfoSection$Reader.class": "af36dc2376d9aa2b42c952200c7661b7d95b8f82fb62d776a3ff917fe0464728",
+        "yuku/alkitab/yes2/section/VersionInfoSection.class": "d2b130b2e248f6a12ca4328ecaff08e246ca4e9d310f96132fa9c31062e2216c",
+        "yuku/alkitab/yes2/section/XrefsSection$Reader.class": "7cbb5dfa4dac754f65e8a69f4d616ecd0761d4df22d642a8aa6ef3ade05af681",
+        "yuku/alkitab/yes2/section/XrefsSection.class": "a883d5c0b970f461e948b04bcfc4026f7e5ce87cb4e6a5f6cfbfb9e378dfce21",
+        "yuku/alkitab/yes2/section/base/SectionContent$Reader.class": "581054cd64627752533103715a398c866e8149305b0713e42618dd426fc7b23d",
+        "yuku/alkitab/yes2/section/base/SectionContent$Writer.class": "9c04015ab08fa102ad940558fda57a0e00a0179544c3c0b5fed1978371bfbd42",
+        "yuku/alkitab/yes2/section/base/SectionContent.class": "ca76df644c627148211db51cf34dc46888437c47a0d90f16b0df60a2b9518923",
+        "yuku/alkitab/yes2/util/UnsignedBinarySearchKt.class": "8764138bc9dca4a5165e8b25e87ea3f6ebe3a87705d3fafcf3c855d91b280a91"
+      },
+      "module_mappings_sha256": {
+        "META-INF/korrust_9e43eb6eca6342d07b5a75c18cb5ba55.kotlin_module": "7a0c7e5eefce1b56504a4d448ac68065322d5f7a803fd2c1b730778a266ec22e"
+      },
+      "classfile_major_versions": [
+        49,
+        52,
+        65
+      ]
+    }
+  },
+  "commands": [
+    {
+      "label": "Korrust version",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/000-stderr.txt"
+    },
+    {
+      "label": "Java version",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/001-stderr.txt"
+    },
+    {
+      "label": "Compile independent Java callers against official module AAR",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/drivers",
+        "/workspace/korrust/tests/fixtures/Yes2Check.java",
+        "/workspace/korrust/tests/fixtures/BinarySearchCheck.java",
+        "/workspace/korrust/tests/fixtures/ModuleClassVerification.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/002-stderr.txt"
+    },
+    {
+      "label": "Run Yes2Check against official AAR",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/drivers:/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "Yes2Check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/003-stderr.txt"
+    },
+    {
+      "label": "Run Yes2Check against candidate AAR",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/drivers:/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "Yes2Check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/004-stderr.txt"
+    },
+    {
+      "label": "Run BinarySearchCheck against official AAR",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/drivers:/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "BinarySearchCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/005-stderr.txt"
+    },
+    {
+      "label": "Run BinarySearchCheck against candidate AAR",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/drivers:/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "BinarySearchCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/006-stderr.txt"
+    },
+    {
+      "label": "Verify all official module classes",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/drivers:/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "ModuleClassVerification",
+        "yuku.alkitab.yes2.Yes2Reader$TextSectionReader",
+        "yuku.alkitab.yes2.Yes2Reader",
+        "yuku.alkitab.yes2.Yes2SingleChapterVerses",
+        "yuku.alkitab.yes2.Yes2Writer",
+        "yuku.alkitab.yes2.compress.SnappyInputStream",
+        "yuku.alkitab.yes2.compress.SnappyOutputStream",
+        "yuku.alkitab.yes2.io.MemoryRandomOutputStream",
+        "yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream",
+        "yuku.alkitab.yes2.io.RandomAccessFileRandomOutputStream",
+        "yuku.alkitab.yes2.io.RandomInputStream",
+        "yuku.alkitab.yes2.io.RandomOutputStream",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Ascii",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Utf8",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder",
+        "yuku.alkitab.yes2.model.PericopeData$Block",
+        "yuku.alkitab.yes2.model.PericopeData$Entry",
+        "yuku.alkitab.yes2.model.PericopeData",
+        "yuku.alkitab.yes2.model.SectionIndex$Entry",
+        "yuku.alkitab.yes2.model.SectionIndex",
+        "yuku.alkitab.yes2.model.VerseBytes",
+        "yuku.alkitab.yes2.model.Yes2Book",
+        "yuku.alkitab.yes2.model.Yes2PericopeBlock",
+        "yuku.alkitab.yes2.section.BooksInfoSection$Reader",
+        "yuku.alkitab.yes2.section.BooksInfoSection",
+        "yuku.alkitab.yes2.section.FootnotesSection$Reader",
+        "yuku.alkitab.yes2.section.FootnotesSection",
+        "yuku.alkitab.yes2.section.PericopesSection$Reader",
+        "yuku.alkitab.yes2.section.PericopesSection",
+        "yuku.alkitab.yes2.section.TextSection",
+        "yuku.alkitab.yes2.section.VersionInfoSection$Reader",
+        "yuku.alkitab.yes2.section.VersionInfoSection",
+        "yuku.alkitab.yes2.section.XrefsSection$Reader",
+        "yuku.alkitab.yes2.section.XrefsSection",
+        "yuku.alkitab.yes2.section.base.SectionContent$Reader",
+        "yuku.alkitab.yes2.section.base.SectionContent$Writer",
+        "yuku.alkitab.yes2.section.base.SectionContent",
+        "yuku.alkitab.yes2.util.UnsignedBinarySearchKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/007-stderr.txt"
+    },
+    {
+      "label": "Verify all candidate module classes",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/drivers:/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "ModuleClassVerification",
+        "yuku.alkitab.yes2.Yes2Reader$TextSectionReader",
+        "yuku.alkitab.yes2.Yes2Reader",
+        "yuku.alkitab.yes2.Yes2SingleChapterVerses",
+        "yuku.alkitab.yes2.Yes2Writer",
+        "yuku.alkitab.yes2.compress.SnappyInputStream",
+        "yuku.alkitab.yes2.compress.SnappyOutputStream",
+        "yuku.alkitab.yes2.io.MemoryRandomOutputStream",
+        "yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream",
+        "yuku.alkitab.yes2.io.RandomAccessFileRandomOutputStream",
+        "yuku.alkitab.yes2.io.RandomInputStream",
+        "yuku.alkitab.yes2.io.RandomOutputStream",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Ascii",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Utf8",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder",
+        "yuku.alkitab.yes2.model.PericopeData$Block",
+        "yuku.alkitab.yes2.model.PericopeData$Entry",
+        "yuku.alkitab.yes2.model.PericopeData",
+        "yuku.alkitab.yes2.model.SectionIndex$Entry",
+        "yuku.alkitab.yes2.model.SectionIndex",
+        "yuku.alkitab.yes2.model.VerseBytes",
+        "yuku.alkitab.yes2.model.Yes2Book",
+        "yuku.alkitab.yes2.model.Yes2PericopeBlock",
+        "yuku.alkitab.yes2.section.BooksInfoSection$Reader",
+        "yuku.alkitab.yes2.section.BooksInfoSection",
+        "yuku.alkitab.yes2.section.FootnotesSection$Reader",
+        "yuku.alkitab.yes2.section.FootnotesSection",
+        "yuku.alkitab.yes2.section.PericopesSection$Reader",
+        "yuku.alkitab.yes2.section.PericopesSection",
+        "yuku.alkitab.yes2.section.TextSection",
+        "yuku.alkitab.yes2.section.VersionInfoSection$Reader",
+        "yuku.alkitab.yes2.section.VersionInfoSection",
+        "yuku.alkitab.yes2.section.XrefsSection$Reader",
+        "yuku.alkitab.yes2.section.XrefsSection",
+        "yuku.alkitab.yes2.section.base.SectionContent$Reader",
+        "yuku.alkitab.yes2.section.base.SectionContent$Writer",
+        "yuku.alkitab.yes2.section.base.SectionContent",
+        "yuku.alkitab.yes2.util.UnsignedBinarySearchKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/008-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.Yes2Reader$TextSectionReader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.Yes2Reader$TextSectionReader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/009-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.Yes2Reader$TextSectionReader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.Yes2Reader$TextSectionReader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/010-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.Yes2Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.Yes2Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/011-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.Yes2Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.Yes2Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/012-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.Yes2SingleChapterVerses",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.Yes2SingleChapterVerses"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/013-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.Yes2SingleChapterVerses",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.Yes2SingleChapterVerses"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/014-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.Yes2Writer",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.Yes2Writer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/015-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.Yes2Writer",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.Yes2Writer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/016-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.compress.SnappyInputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.compress.SnappyInputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/017-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.compress.SnappyInputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.compress.SnappyInputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/018-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.compress.SnappyOutputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.compress.SnappyOutputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/019-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.compress.SnappyOutputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.compress.SnappyOutputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/020-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.io.MemoryRandomOutputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.io.MemoryRandomOutputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/021-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.io.MemoryRandomOutputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.io.MemoryRandomOutputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/022-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/023-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/024-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.io.RandomAccessFileRandomOutputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.io.RandomAccessFileRandomOutputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/025-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.io.RandomAccessFileRandomOutputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.io.RandomAccessFileRandomOutputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/026-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.io.RandomInputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.io.RandomInputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/027-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.io.RandomInputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.io.RandomInputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/028-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.io.RandomOutputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.io.RandomOutputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/029-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.io.RandomOutputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.io.RandomOutputStream"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/030-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Ascii",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Ascii"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/031-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Ascii",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Ascii"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/032-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Utf8",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Utf8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/033-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Utf8",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Utf8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/034-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.io.Yes2VerseTextDecoder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/035-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.io.Yes2VerseTextDecoder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.io.Yes2VerseTextDecoder"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/036-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.model.PericopeData$Block",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.model.PericopeData$Block"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/037-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.model.PericopeData$Block",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.model.PericopeData$Block"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/038-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.model.PericopeData$Entry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.model.PericopeData$Entry"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/039-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.model.PericopeData$Entry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.model.PericopeData$Entry"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/040-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.model.PericopeData",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.model.PericopeData"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/041-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.model.PericopeData",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.model.PericopeData"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/042-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.model.SectionIndex$Entry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.model.SectionIndex$Entry"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/043-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.model.SectionIndex$Entry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.model.SectionIndex$Entry"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/044-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.model.SectionIndex",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.model.SectionIndex"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/045-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.model.SectionIndex",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.model.SectionIndex"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/046-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.model.VerseBytes",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.model.VerseBytes"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/047-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.model.VerseBytes",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.model.VerseBytes"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/048-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.model.Yes2Book",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.model.Yes2Book"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/049-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.model.Yes2Book",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.model.Yes2Book"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/050-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.model.Yes2PericopeBlock",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.model.Yes2PericopeBlock"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/051-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.model.Yes2PericopeBlock",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.model.Yes2PericopeBlock"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/052-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.BooksInfoSection$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.BooksInfoSection$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/053-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.BooksInfoSection$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.BooksInfoSection$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/054-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.BooksInfoSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.BooksInfoSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/055-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.BooksInfoSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.BooksInfoSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/056-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.FootnotesSection$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.FootnotesSection$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/057-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.FootnotesSection$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.FootnotesSection$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/058-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.FootnotesSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.FootnotesSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/059-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.FootnotesSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.FootnotesSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/060-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.PericopesSection$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.PericopesSection$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/061-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.PericopesSection$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.PericopesSection$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/062-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.PericopesSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.PericopesSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/063-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.PericopesSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.PericopesSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/064-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.TextSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.TextSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/065-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.TextSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.TextSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/066-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.VersionInfoSection$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.VersionInfoSection$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/067-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.VersionInfoSection$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.VersionInfoSection$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/068-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.VersionInfoSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.VersionInfoSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/069-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/069-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.VersionInfoSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.VersionInfoSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/070-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/070-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.XrefsSection$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.XrefsSection$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/071-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/071-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.XrefsSection$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.XrefsSection$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/072-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/072-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.XrefsSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.XrefsSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/073-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/073-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.XrefsSection",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.XrefsSection"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/074-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/074-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.base.SectionContent$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.base.SectionContent$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/075-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/075-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.base.SectionContent$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.base.SectionContent$Reader"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/076-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/076-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.base.SectionContent$Writer",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.base.SectionContent$Writer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/077-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/077-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.base.SectionContent$Writer",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.base.SectionContent$Writer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/078-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/078-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.section.base.SectionContent",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.section.base.SectionContent"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/079-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/079-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.section.base.SectionContent",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.section.base.SectionContent"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/080-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/080-stderr.txt"
+    },
+    {
+      "label": "Inspect official module JVM signatures yuku.alkitab.yes2.util.UnsignedBinarySearchKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "yuku.alkitab.yes2.util.UnsignedBinarySearchKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/081-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/081-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate module JVM signatures yuku.alkitab.yes2.util.UnsignedBinarySearchKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "yuku.alkitab.yes2.util.UnsignedBinarySearchKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/082-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/082-stderr.txt"
+    },
+    {
+      "label": "Compile friend Kotlin consumer against official AAR",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/ModuleFriendConsumer.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-Xfriend-paths=/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/083-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/083-stderr.txt"
+    },
+    {
+      "label": "Run friend Kotlin consumer against official AAR",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-consumer:/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "korrust.consumers.ModuleFriendConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/084-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/084-stderr.txt"
+    },
+    {
+      "label": "Kotlin module metadata rejection InternalClassAccess against official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/InternalClassAccess.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-rejected-InternalClassAccess"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/085-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/085-stderr.txt"
+    },
+    {
+      "label": "Kotlin module metadata rejection PrivateFieldAccess against official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/PrivateFieldAccess.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-Xfriend-paths=/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-rejected-PrivateFieldAccess"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/086-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/086-stderr.txt"
+    },
+    {
+      "label": "Compile friend Kotlin consumer against candidate AAR",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/ModuleFriendConsumer.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-Xfriend-paths=/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/087-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/087-stderr.txt"
+    },
+    {
+      "label": "Run friend Kotlin consumer against candidate AAR",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-consumer:/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "korrust.consumers.ModuleFriendConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/088-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/088-stderr.txt"
+    },
+    {
+      "label": "Kotlin module metadata rejection InternalClassAccess against candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/InternalClassAccess.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-rejected-InternalClassAccess"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/089-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/089-stderr.txt"
+    },
+    {
+      "label": "Kotlin module metadata rejection PrivateFieldAccess against candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/PrivateFieldAccess.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-Xfriend-paths=/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-rejected-PrivateFieldAccess"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/090-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/090-stderr.txt"
+    },
+    {
+      "label": "Run fixed official-compiled original JUnit suite against official AAR",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "org.junit.runner.JUnitCore",
+        "yuku.alkitab.yes2.SnappyStreamRoundTripTest",
+        "yuku.alkitab.yes2.Yes2RoundTripTest",
+        "yuku.alkitab.yes2.util.UnsignedBinarySearchKtTest"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/091-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/091-stderr.txt"
+    },
+    {
+      "label": "Run fixed official-compiled original JUnit suite against candidate AAR",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/built_in_kotlinc/debugUnitTest/compileDebugUnitTestKotlin/classes:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/javac/debugUnitTest/compileDebugUnitTestJavaWithJavac/classes:/workspace/korrust-setup/gradle-home/caches/9.7.1/transforms/4394873c69a8215a150759bf735d514c/transformed/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_and_runtime_r_class_jar/debugUnitTest/generateDebugUnitTestStubRFile/R.jar:/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/java_res/debugUnitTest/processDebugUnitTestJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/java_res/debug/processDebugJavaRes/out:/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+        "org.junit.runner.JUnitCore",
+        "yuku.alkitab.yes2.SnappyStreamRoundTripTest",
+        "yuku.alkitab.yes2.Yes2RoundTripTest",
+        "yuku.alkitab.yes2.util.UnsignedBinarySearchKtTest"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/092-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/092-stderr.txt"
+    },
+    {
+      "label": "Generate official module DEX",
+      "argv": [
+        "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/d8",
+        "--release",
+        "--min-api",
+        "26",
+        "--lib",
+        "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "--classpath",
+        "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+        "--classpath",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+        "--classpath",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module-artifacts/official/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--output",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-dex",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-classes.jar"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/093-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/093-stderr.txt"
+    },
+    {
+      "label": "Generate candidate module DEX",
+      "argv": [
+        "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/d8",
+        "--release",
+        "--min-api",
+        "26",
+        "--lib",
+        "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "--classpath",
+        "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+        "--classpath",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+        "--classpath",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/AlkitabIo/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/AlkitabModel/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module-artifacts/korrust/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--classpath",
+        "/workspace/korrust/target/androidbible-module/Snappy/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "--output",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-dex",
+        "/workspace/korrust/target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-classes.jar"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/094-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/094-stderr.txt"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/official-build.json",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/official-gradle.log",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-build.json",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-gradle.log",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-compileDebugKotlin-request.json",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-compileDebugKotlin.json",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-compileReleaseKotlin-request.json",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-compileReleaseKotlin.json",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/000-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/000-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/001-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/001-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/official-AlkitabYes2-release.aar",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-AlkitabYes2-release.aar",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/002-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/002-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/003-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/003-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/004-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/004-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/005-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/005-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/006-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/006-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/007-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/007-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/008-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/008-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/009-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/009-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/010-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/010-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/011-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/011-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/012-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/012-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/013-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/013-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/014-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/014-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/015-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/015-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/016-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/016-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/017-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/017-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/018-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/018-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/019-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/019-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/020-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/020-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/021-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/021-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/022-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/022-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/023-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/023-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/024-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/024-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/025-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/025-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/026-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/026-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/027-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/027-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/028-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/028-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/029-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/029-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/030-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/030-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/031-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/031-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/032-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/032-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/033-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/033-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/034-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/034-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/035-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/035-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/036-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/036-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/037-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/037-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/038-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/038-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/039-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/039-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/040-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/040-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/041-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/041-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/042-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/042-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/043-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/043-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/044-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/044-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/045-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/045-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/046-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/046-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/047-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/047-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/048-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/048-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/049-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/049-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/050-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/050-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/051-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/051-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/052-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/052-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/053-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/053-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/054-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/054-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/055-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/055-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/056-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/056-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/057-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/057-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/058-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/058-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/059-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/059-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/060-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/060-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/061-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/061-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/062-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/062-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/063-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/063-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/064-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/064-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/065-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/065-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/066-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/066-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/067-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/067-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/068-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/068-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/069-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/069-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/070-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/070-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/071-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/071-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/072-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/072-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/073-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/073-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/074-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/074-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/075-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/075-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/076-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/076-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/077-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/077-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/078-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/078-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/079-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/079-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/080-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/080-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/081-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/081-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/082-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/082-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/083-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/083-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/084-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/084-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/085-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/085-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/086-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/086-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/087-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/087-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/088-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/088-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/089-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/089-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/090-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/090-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/official-junit-0.xml",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/official-junit-1.xml",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/official-junit-2.xml",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-junit-0.xml",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-junit-1.xml",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-junit-2.xml",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/091-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/091-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/092-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/092-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/093-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/093-stderr.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/094-stdout.txt",
+    "reports/correctness/2026-10-23T054436590486Z-androidbible-yes2-module/094-stderr.txt"
+  ],
+  "cases": [
+    {
+      "id": "gradle_module/official",
+      "outcome": "pass",
+      "scope": "Real Gradle/AGP module build, release AAR and original debug unit tests; dependencies and test Kotlin use official compilers."
+    },
+    {
+      "id": "gradle_module/candidate",
+      "outcome": "pass",
+      "scope": "Real Gradle/AGP module build, release AAR and original debug unit tests; dependencies and test Kotlin use official compilers."
+    },
+    {
+      "id": "unchanged_module_sources",
+      "outcome": "pass",
+      "kotlin_sources": 2,
+      "java_sources": 22,
+      "scope": "All production and test source files match preserved snapshot and manifest hashes in both build copies."
+    },
+    {
+      "id": "candidate_production_trace/compileDebugKotlin",
+      "outcome": "pass",
+      "kotlin_sources": 2,
+      "compiler_sha256": "afc6cd5a11efd77ffaf4bf34a66329af0dbe1b0a83edc9efab2b2cdd5beda6b3",
+      "emitted_classes": [
+        "yuku/alkitab/yes2/Yes2SingleChapterVerses.class",
+        "yuku/alkitab/yes2/util/UnsignedBinarySearchKt.class"
+      ],
+      "scope": "Both exact original source hashes invoked Korrust successfully without fallback; staged class bytes match Gradle output and release bytes match packaged AAR."
+    },
+    {
+      "id": "candidate_production_trace/compileReleaseKotlin",
+      "outcome": "pass",
+      "kotlin_sources": 2,
+      "compiler_sha256": "afc6cd5a11efd77ffaf4bf34a66329af0dbe1b0a83edc9efab2b2cdd5beda6b3",
+      "emitted_classes": [
+        "yuku/alkitab/yes2/Yes2SingleChapterVerses.class",
+        "yuku/alkitab/yes2/util/UnsignedBinarySearchKt.class"
+      ],
+      "scope": "Both exact original source hashes invoked Korrust successfully without fallback; staged class bytes match Gradle output and release bytes match packaged AAR."
+    },
+    {
+      "id": "aar_class_inventory",
+      "outcome": "pass",
+      "classes": 37,
+      "scope": "Both real release AARs contain identical complete class inventories; original Kotlin source outputs are present. Exact class bytes and module mapping names may differ."
+    },
+    {
+      "id": "module_java_chapter",
+      "outcome": "pass",
+      "runtime_checks": 38540,
+      "result_sha256": "14fa22c9f06f0eaab3e8bac114d6e0bca1956e9c4c130becbe0f2a8314ab5bcd",
+      "scope": "Java caller compiled once against official module AAR and run against each provider with JVM verification all."
+    },
+    {
+      "id": "module_java_unsigned_search",
+      "outcome": "pass",
+      "runtime_checks": 70858,
+      "result_sha256": "7e53e944b470730ff51185af2c035300f1e4e80c8014ed213adf417156231254",
+      "scope": "Java caller compiled once against official module AAR and run against each provider with JVM verification all."
+    },
+    {
+      "id": "all_class_verification/official",
+      "outcome": "pass",
+      "classes": 37,
+      "scope": "Class loading without initialization and reflective field/method/constructor resolution under -Xverify:all."
+    },
+    {
+      "id": "all_class_verification/candidate",
+      "outcome": "pass",
+      "classes": 37,
+      "scope": "Class loading without initialization and reflective field/method/constructor resolution under -Xverify:all."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.Yes2Reader$TextSectionReader",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.Yes2Reader",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.Yes2SingleChapterVerses",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.Yes2Writer",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.compress.SnappyInputStream",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.compress.SnappyOutputStream",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.io.MemoryRandomOutputStream",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.io.RandomAccessFileRandomOutputStream",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.io.RandomInputStream",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.io.RandomOutputStream",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Ascii",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.io.Yes2VerseTextDecoder$Utf8",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.io.Yes2VerseTextDecoder",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.model.PericopeData$Block",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.model.PericopeData$Entry",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.model.PericopeData",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.model.SectionIndex$Entry",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.model.SectionIndex",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.model.VerseBytes",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.model.Yes2Book",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.model.Yes2PericopeBlock",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.BooksInfoSection$Reader",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.BooksInfoSection",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.FootnotesSection$Reader",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.FootnotesSection",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.PericopesSection$Reader",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.PericopesSection",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.TextSection",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.VersionInfoSection$Reader",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.VersionInfoSection",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.XrefsSection$Reader",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.XrefsSection",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.base.SectionContent$Reader",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.base.SectionContent$Writer",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.section.base.SectionContent",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_jvm_signatures/yuku.alkitab.yes2.util.UnsignedBinarySearchKt",
+      "outcome": "pass",
+      "scope": "javap -p -s of complete module class inventory."
+    },
+    {
+      "id": "module_kotlin_metadata",
+      "outcome": "pass",
+      "scope": "Pinned official Kotlin compiles and runs friend consumer of internal class and public facade from each AAR; no-friend internal class and friend-private field access rejected."
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.SnappyStreamRoundTripTest/compresses and decompresses a payload that spans exactly one block",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.SnappyStreamRoundTripTest/compresses and decompresses a payload that spans multiple blocks",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.SnappyStreamRoundTripTest/highly repetitive input compresses to substantially smaller blocks than the raw size",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.SnappyStreamRoundTripTest/seek into a middle block returns bytes from that offset onward",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/ASCII encoded versions preserve display text and lowercase search text",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/a compressed file is strictly smaller than its uncompressed equivalent for highly repetitive text",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/getXrefEntry and getFootnoteEntry return null when the sections are not present",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/loadPericope returns zero when the chapter has no pericopes",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/loadPericope returns zero when the file has no pericope section",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/loadVerseText returns null for out-of-range chapter",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/loadVerseText with dontSeparateVerses joins every verse into one newline-delimited string",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/loadVerseText with lowercase flag lowercases UTF-8 text in-place",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/round-trips UTF-8 text including supplementary code points",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/round-trips a multi-book Bible preserving book ordering and chapter offsets",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/round-trips pericopes and returns them by book-chapter",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/snappy-compressed text section reads back identical verses",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/unknown encodings fall back to ASCII for display and search text",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.Yes2RoundTripTest/writes a single-book Bible uncompressed and reads every verse back exactly",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "original_junit/yuku.alkitab.yes2.util.UnsignedBinarySearchKtTest/unsignedBinarySearch",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ]
+    },
+    {
+      "id": "fixed_original_test_bytecode",
+      "outcome": "pass",
+      "original_tests": 19,
+      "scope": "Identical original test classes compiled against official production run against both release AARs under -Xverify:all."
+    },
+    {
+      "id": "d8_generation/official",
+      "outcome": "pass",
+      "min_api": 26,
+      "dex_sha256": {
+        "target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/official-dex/classes.dex": "34f33201cc34326c037a0c47b0ab5df90f054e5b48a51436976dac2ab8487667"
+      },
+      "scope": "D8 accepts complete module classes with actual dependency classpath and API36 library. No Android-device/runtime execution."
+    },
+    {
+      "id": "d8_generation/candidate",
+      "outcome": "pass",
+      "min_api": 26,
+      "dex_sha256": {
+        "target/checks/2026-10-23T054436590486Z-androidbible-yes2-module/candidate-dex/classes.dex": "68ba5726c54f44b1aab538b9e1d43006be9c90474f4a2a4433719e4c413e9720"
+      },
+      "scope": "D8 accepts complete module classes with actual dependency classpath and API36 library. No Android-device/runtime execution."
+    }
+  ],
+  "environment": {
+    "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "java": "openjdk version \"21.0.12.1\" 2026-08-18 LTS\nOpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)\nOpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)"
+  },
+  "selection": "Complete unchanged AndroidBible AlkitabYes2 production module: both Kotlin sources and all 22 Java sources through real Gradle/AGP dependency, Java, resource and AAR tasks. Candidate production Kotlin uses Korrust without fallback; dependency modules and original Kotlin unit tests use normal official compilers. Independent Java assertions, Kotlin metadata consumers, all-class JVM verification, original JUnit tests, AAR inventories and D8 generation are checked. This does not establish full-app or Android-device runtime compatibility or incremental speed.",
+  "counts": {
+    "pass": 70
+  },
+  "finished_at": "2026-10-23T05:45:23.646750+00:00"
+}

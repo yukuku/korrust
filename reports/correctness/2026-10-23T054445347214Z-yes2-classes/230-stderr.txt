@@ -1,0 +1,8 @@
+target/checks/2026-10-23T054445347214Z-yes2-classes/object_duplicate_member_namespace.kt:1:22: error: conflicting declarations:
+object Child : Any
+object O { const val Child = 1; object Child }
+                     ^^^^^
+target/checks/2026-10-23T054445347214Z-yes2-classes/object_duplicate_member_namespace.kt:1:40: error: conflicting declarations:
+val Child: Int
+object O { const val Child = 1; object Child }
+                                       ^^^^^

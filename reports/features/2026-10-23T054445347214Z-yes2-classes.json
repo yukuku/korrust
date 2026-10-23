@@ -1,0 +1,824 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-23T05:44:45.347214+00:00",
+  "compiler": {
+    "version": "korrust 0.1.0",
+    "binary_sha256": "afc6cd5a11efd77ffaf4bf34a66329af0dbe1b0a83edc9efab2b2cdd5beda6b3",
+    "source_files_sha256": {
+      "Cargo.lock": "b2146c5915d63f0a75500af0d88ca0e0856ed4f36b7b1ce1cc51da277049b1f1",
+      "Cargo.toml": "4643f02803cf1a9d48f32579c5837969b53450a2c37a2fbcce4d72eca39ac1e9",
+      "src/bytecode.rs": "8d1044c345a21c7de7a94ea5d3f212efa85f86ae8906106f70ea458b3e39e1cc",
+      "src/check.rs": "48f68570c1b3e49798e0e16a8d82be056381a44c180b6c4a8377ef24bca2711e",
+      "src/classpath.rs": "b5b9fc8bc909bcd928d1a5e30c68b14d0b1ca16918504a2dc26768176794aa7c",
+      "src/lib.rs": "7b0763246eb29aa7ab066c1b8a489edc34a0746b9f605edcc6d904e4b94df6b4",
+      "src/main.rs": "c17680b31cae9b79e19d58d9d0592d58e9302f2888dccec3b303fe609793c6bc",
+      "src/metadata.rs": "482f7dade479267d58bf93ba6d29beb598a29ce4193944ec62503aafbde8134e",
+      "src/output.rs": "d991a876f22a16543179837c9e36655f41125a052ec6ff89b7b0b56fa7514d9b",
+      "src/syntax.rs": "2a691b08331eeb3e9b518c8a4a7a17c0cc26810699f517138fdae52dfb144237",
+      "tests/diagnostics.json": "3008bde35e0ab52244ba98c2b867dc0e89c3802fa9b52869ab8be81810703fb8",
+      "tests/features.json": "1f5cbeb3170472979b6acbbc2e75eb7017c34619014df7b812436bfb2c8f61c4",
+      "tests/fixtures/Arithmetic.kt": "37d8d9bc057d6597ee9f3b65914c6d34036792e6c387f9e749d0feff301d2bf5",
+      "tests/fixtures/ArithmeticCheck.java": "a652303019ca0fa4e6431bd79f0201991001353a292b59f9c2fd7fe63a602fee",
+      "tests/fixtures/BinarySearchCheck.java": "fb318c19290ba2a9eb928c83154c5b4a982dce44fbf908d70fdb74d6a702c50e",
+      "tests/fixtures/Characters.kt": "46b8adc807d572d9cede889535ee52749334c7b6dfeed46410c966325ea87956",
+      "tests/fixtures/CharactersCheck.java": "af2ad0a50dfe887439229e24f9f6965c9c9d23b4d20e5a94b5aa8e366d7a1945",
+      "tests/fixtures/ClassesCheck.java": "a11275f572692c82ccdfa78802b4faef2f71e1bb416f6b74f7d5756d731b90c7",
+      "tests/fixtures/EnumsCheck.java": "5d225188355a3043f10bd907a1816d1f1f1dbf6c5e4ab16d1db6b1ef9c2776f1",
+      "tests/fixtures/Interop.kt": "f2c8805277fb3b1cb6cba3b1610bac8196cdd8866959679e288ab035a69f7def",
+      "tests/fixtures/InteropCheck.java": "2e7442e51d6b0e59b4657556fce9a6aa15c56010537460412e6d853608f462b5",
+      "tests/fixtures/MetadataForeign.kt": "139cded38b67b2165163e9ecface2f341de9a4be1d8eaf53b3a71328e82ad89e",
+      "tests/fixtures/ModuleClassVerification.java": "a1cda2b94555795253ae8a250279a84c5ffd9e0b91f337be7189ba229b23e414",
+      "tests/fixtures/ObjectsCheck.java": "46eaf093c231f8f9126f04351e30a11bb891066251ffb3e15cc77d2b739ba8c3",
+      "tests/fixtures/Strings.kt": "608e4ab1c049b9f46c2e1f39fe00f848c046a3f16c06f78f1cbbd872fc3fef3d",
+      "tests/fixtures/StringsCheck.java": "a7498f7b9492bcee70c2944e32329cbaf0daca689962980708bc778c80b9429f",
+      "tests/fixtures/Yes2Check.java": "a36be81faa013c0c2de019d473fdf902054b70f9558d47fcf5245266c0ff710c",
+      "tests/fixtures/classes/IndexedText.kt": "ed969970caeaccc233d6c0f5d0a290c86616634faf04134d755824b5fd9b3c59",
+      "tests/fixtures/classes/SyntheticChapter.kt": "94fd74380019b27d4787ff5e2c1d8a4a9e30b51a01e76c246d4f7059a6203278",
+      "tests/fixtures/classes/UnsupportedInterfaces.kt": "7a896c2c3f323b2859402e2f14d55369d3d4e393f4b14ff94b349483eda99d9d",
+      "tests/fixtures/consumers/FriendMetadataConsumer.kt": "88475a9e442b7b9e2be15ffd3d1a1214359c00a643286c2257b44d91c709f5e8",
+      "tests/fixtures/consumers/InternalClassAccess.kt": "3c55cae0f60bdfd070fed75783f8b1ddfb20c8f2b9c4dacfcd88be23c84bcadf",
+      "tests/fixtures/consumers/InternalFunctionAccess.kt": "f9c93c949956f7a865a49c86cd6e2065810f4a2bf31673b9c0151782260f74e0",
+      "tests/fixtures/consumers/ModuleFriendConsumer.kt": "4442f1aaeb940b5fc5be78303e1cb975474ab3856678574b3f8f5db56bd3c9d5",
+      "tests/fixtures/consumers/PrivateFieldAccess.kt": "a81111e64975d4fd0649d625a6c5c0551ee1e950ec4455a756d246ee41b68d3f",
+      "tests/fixtures/consumers/PublicMetadataConsumer.kt": "13a34a36b732254130472046fcfadd5f84aa6e4b436e1f05f737df0dc9b84f9f",
+      "tests/fixtures/consumers/PublicNullAccess.kt": "9fc4b6a51742b157ab678046c9b84330f0634eb92cea8cfd1c4994bbc8c0fb53",
+      "tests/fixtures/enums/CollisionEnum.kt": "fd5bfb1472cf72026c3e881ab1069e349e15a7bd08b539a39d4bf1a375390bed",
+      "tests/fixtures/enums/EmptyBodylessEnum.kt": "8fdd9e231521c36ddd049906ae49507b53bc0294d4dd969cb4187fb63c51d8d6",
+      "tests/fixtures/enums/EmptyEnum.kt": "5c9fa305ead8a1f5e785c71f609181b9c92670639cc6fa74ab94ac3d66d967c3",
+      "tests/fixtures/enums/EmptySemicolonEnum.kt": "b1abbe51fb5d7dc90b240285a16e15b4b94cdb4b313c46ea39e5b7ea5059c136",
+      "tests/fixtures/enums/EnumOrder.kt": "247d0b048d26260aa0a3e9d6fa20589fd4371fbc5f63fe54a7f3cc83bbf844be",
+      "tests/fixtures/enums/InternalEnum.kt": "5674637e0f07f5e74e68dcaa93d37a152e79c9411d666d2f8725d0649db09234",
+      "tests/fixtures/enums/LargeEnum.kt": "b5d10bf1e609debee64e59521ed6581948aa8481ad529ab4545d5f59dde6e9b8",
+      "tests/fixtures/enums/SingleEnum.kt": "14ac94098c27e73ed1e44a0fd94c1a0a52521169a70597439336352075c02fb2",
+      "tests/fixtures/interop/AnnotatedForeign.java": "a3874882c01772c9f51de0bd7735f829f56fb8290d8a24118529680ca0a50b4e",
+      "tests/fixtures/interop/ChildMethods.java": "ce64b6fa2a07429a6ff1261b94a16cd434fe17eef7d72deab87814d4455f133d",
+      "tests/fixtures/interop/ForeignInterface.java": "4db1cc4ae2b081ea1e840b50c82b9ff8fbd260235e6687e56d0e355ec8579c65",
+      "tests/fixtures/interop/ForeignMethods.java": "da172b22fc5abd194562a9c050e5c9f360f583a8631fe28535e0b62720f5e243",
+      "tests/fixtures/interop/ParentMethods.java": "4ad132dfd047e2a1e87f02039222779b3c9d0090b7afa8a6703a51cfe823436c",
+      "tests/fixtures/interop/WhenTracker.java": "65fc96f0667f3d4dd6c7d45e16284da48432b75138d871c4effdaa0e944f34fa",
+      "tests/fixtures/interop/android/os/Parcel.java": "d120badab7f8813973d6b148df41e085a859205f8f06d98fea1dd01463482f06",
+      "tests/fixtures/interop/android/os/Parcelable.java": "5057df7e618630b6719d80138603a6915f6060b79640dd52de62df50077e992c",
+      "tests/fixtures/interop/androidx/annotation/NonNull.java": "feb1e800204acdaa66e9792e34cbd43c834fa7d730feb40c2812fdb4d673ea59",
+      "tests/fixtures/interop/annotated/PackageForeign.java": "2d01c814c9251718e616ae420b89af49a598f154d96dcda0125db606dd9c72ce",
+      "tests/fixtures/interop/annotated/package-info.java": "6be1633993f2c8f0a04b192fc6da0740b7504c1928166e5da22ad8bff90e0492",
+      "tests/fixtures/objects/BodylessObject.kt": "59619cff24be2d3e94439e398554961fe773430e8200fe125bcc714b8520ec5d",
+      "tests/fixtures/objects/CollisionObject.kt": "a6102f866ab9c70837b03fa4a54012b4367d4f3bce2bfbc187e0d558d98b8f86",
+      "tests/fixtures/objects/EmptyObject.kt": "f740a5e55255c0c433d7dbe1be1c5b224d7341b75eee80e5d3ac2c45a56578a9",
+      "tests/fixtures/objects/InternalObject.kt": "23e8edd43f6c7fa7a2d97c82bfa813b90a6724ae10b0147a2930120128122244",
+      "tests/fixtures/objects/LargeObject.kt": "07133df79880991fa97d8c24e3f279e6f0c3ce8aa4e89ba423e2bfe5c8db1537",
+      "tests/fixtures/objects/ObjectLiterals.kt": "8a225a4165d2ca52b26d8cbd1ce45a1d772f643146eb24c79c930f4dcc4a5f46",
+      "tests/fixtures/objects/ObjectTree.kt": "dc769f90a34b9a13665caf1659bfc6315979da9f9bfc8e1a694c4c9424fdaf2e",
+      "tests/frontend.rs": "c8407138fb57a1cf91702ae81230f349b43500eff20f6d42633acd2214c81c38",
+      "tests/interop_diagnostics.json": "daec8bfd1219109339574f665396e4bab71bd9e0a6572bf3465b35d6a2316cb7",
+      "tests/interop_unsupported.json": "3d5f42508c3ec1cf23b846f604ee42988a2ae8254620f3d5a4e1d4b0ebba459c",
+      "tests/test_cli.py": "4d0b9d37bfb87eb996693f719d8889f331328aaa15d251539eb2baa378492052",
+      "tests/test_reports.py": "3bb9702230a594fb4a7a750f586777b8417fa4fb70feee6a14797e29fc0e1a28",
+      "tests/unsupported.json": "2b582508405c4d6915f30c543acfe80245a0d4e5d5525ba2432182603d32e5dd",
+      "tools/build_androidbible.py": "4e208707973a3339845289f391d33fe9ae4fe21eebabce2429cea0a6fc58cfc2",
+      "tools/check.py": "4ac6fb5a88cf799607489c2b1fc9a46e8bc5754fd9a497fc3703ea9bd03fbf5a",
+      "tools/check_androidbible_module.py": "b9aed71a370adcc26d3ad865e1c090c8d61eef0d9dd63f9bde63d240526b74f8",
+      "tools/corpus.py": "f0390f8b550a57b45098eb0b1317de220bf327e4a27adbc02059829a48d35c1c",
+      "tools/reports.py": "aefcdb623e7cea8d6a601f8bee4ba597b782b8b7905f54d7dbcc512f74e297bf",
+      "tools/setup_reference.py": "deafd96f0176c389a8fb6e81d90f03ba7d4cc9c25361d1fc0edd44a883e7d572"
+    },
+    "classfile_major_versions": [
+      49,
+      52
+    ],
+    "kotlin_metadata": true,
+    "kotlin_metadata_scope": {
+      "top_level_functions": true,
+      "bounded_classes": true,
+      "enums": false,
+      "objects": false
+    },
+    "module_metadata": "Per-source module mappings for top-level function facades",
+    "incremental_compilation": false
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.12.1+1-LTS)",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "inputs": {
+    "yes2_chapter_source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt",
+    "yes2_chapter_source_sha256": "0162f744a5d6a09e955a1111c68b50b3b3864ca36f7f9ba65936440de10b7290",
+    "chapter_interface_source": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+    "chapter_interface_source_sha256": "1ffdebcffa174e2c119205b2ed7698fc9d47a0dd2deaf9e816eb84faa388ab02",
+    "class_fixtures_sha256": {
+      "tests/fixtures/classes/IndexedText.kt": "ed969970caeaccc233d6c0f5d0a290c86616634faf04134d755824b5fd9b3c59",
+      "tests/fixtures/classes/SyntheticChapter.kt": "94fd74380019b27d4787ff5e2c1d8a4a9e30b51a01e76c246d4f7059a6203278",
+      "tests/fixtures/classes/UnsupportedInterfaces.kt": "7a896c2c3f323b2859402e2f14d55369d3d4e393f4b14ff94b349483eda99d9d"
+    },
+    "consumer_fixtures_sha256": {
+      "tests/fixtures/consumers/FriendMetadataConsumer.kt": "88475a9e442b7b9e2be15ffd3d1a1214359c00a643286c2257b44d91c709f5e8",
+      "tests/fixtures/consumers/InternalClassAccess.kt": "3c55cae0f60bdfd070fed75783f8b1ddfb20c8f2b9c4dacfcd88be23c84bcadf",
+      "tests/fixtures/consumers/InternalFunctionAccess.kt": "f9c93c949956f7a865a49c86cd6e2065810f4a2bf31673b9c0151782260f74e0",
+      "tests/fixtures/consumers/ModuleFriendConsumer.kt": "4442f1aaeb940b5fc5be78303e1cb975474ab3856678574b3f8f5db56bd3c9d5",
+      "tests/fixtures/consumers/PrivateFieldAccess.kt": "a81111e64975d4fd0649d625a6c5c0551ee1e950ec4455a756d246ee41b68d3f",
+      "tests/fixtures/consumers/PublicMetadataConsumer.kt": "13a34a36b732254130472046fcfadd5f84aa6e4b436e1f05f737df0dc9b84f9f",
+      "tests/fixtures/consumers/PublicNullAccess.kt": "9fc4b6a51742b157ab678046c9b84330f0634eb92cea8cfd1c4994bbc8c0fb53"
+    },
+    "request_codes_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/RequestCodes.kt",
+    "request_codes_source_sha256": "61f910f2db36e4bd8ff62432388caa0a4250ba9ef6d36f4f7af4e479fc8f475a",
+    "object_fixtures_sha256": {
+      "tests/fixtures/objects/BodylessObject.kt": "59619cff24be2d3e94439e398554961fe773430e8200fe125bcc714b8520ec5d",
+      "tests/fixtures/objects/CollisionObject.kt": "a6102f866ab9c70837b03fa4a54012b4367d4f3bce2bfbc187e0d558d98b8f86",
+      "tests/fixtures/objects/EmptyObject.kt": "f740a5e55255c0c433d7dbe1be1c5b224d7341b75eee80e5d3ac2c45a56578a9",
+      "tests/fixtures/objects/InternalObject.kt": "23e8edd43f6c7fa7a2d97c82bfa813b90a6724ae10b0147a2930120128122244",
+      "tests/fixtures/objects/LargeObject.kt": "07133df79880991fa97d8c24e3f279e6f0c3ce8aa4e89ba423e2bfe5c8db1537",
+      "tests/fixtures/objects/ObjectLiterals.kt": "8a225a4165d2ca52b26d8cbd1ce45a1d772f643146eb24c79c930f4dcc4a5f46",
+      "tests/fixtures/objects/ObjectTree.kt": "dc769f90a34b9a13665caf1659bfc6315979da9f9bfc8e1a694c4c9424fdaf2e"
+    },
+    "ribka_eligibility_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/RibkaEligibility.kt",
+    "ribka_eligibility_source_sha256": "20d3ad45466d50f8ac82be12efd5973c95275f74622399a17b0c5121113d5022",
+    "enum_fixtures_sha256": {
+      "tests/fixtures/enums/CollisionEnum.kt": "fd5bfb1472cf72026c3e881ab1069e349e15a7bd08b539a39d4bf1a375390bed",
+      "tests/fixtures/enums/EmptyBodylessEnum.kt": "8fdd9e231521c36ddd049906ae49507b53bc0294d4dd969cb4187fb63c51d8d6",
+      "tests/fixtures/enums/EmptyEnum.kt": "5c9fa305ead8a1f5e785c71f609181b9c92670639cc6fa74ab94ac3d66d967c3",
+      "tests/fixtures/enums/EmptySemicolonEnum.kt": "b1abbe51fb5d7dc90b240285a16e15b4b94cdb4b313c46ea39e5b7ea5059c136",
+      "tests/fixtures/enums/EnumOrder.kt": "247d0b048d26260aa0a3e9d6fa20589fd4371fbc5f63fe54a7f3cc83bbf844be",
+      "tests/fixtures/enums/InternalEnum.kt": "5674637e0f07f5e74e68dcaa93d37a152e79c9411d666d2f8725d0649db09234",
+      "tests/fixtures/enums/LargeEnum.kt": "b5d10bf1e609debee64e59521ed6581948aa8481ad529ab4545d5f59dde6e9b8",
+      "tests/fixtures/enums/SingleEnum.kt": "14ac94098c27e73ed1e44a0fd94c1a0a52521169a70597439336352075c02fb2"
+    },
+    "verse_placement_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt",
+    "verse_placement_source_sha256": "957ed0e7cae7251aeb4d44abf8418959e7757601670e81178257a4b289dfa9cd",
+    "int_list_extension_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+    "int_list_extension_source_sha256": "96ce558706cd736ba496aa95311243931f4c12494a4723fe06a80b2295bdca9c",
+    "int_list_java_source": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java",
+    "int_list_java_source_sha256": "b5cbcca6e5c785a3b96bb9d56091a13fe23fc95318506d28af0503a5b68db88c",
+    "audio_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+    "audio_source_sha256": "2a5e79d26cef180c4f40542dd94f81bada672a4c755f01f0187bedef24e50098",
+    "source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+    "source_sha256": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+    "reference_commit": "fea1ad8c18995b80d1ca0e3917056104613d23db",
+    "androidbible_commit": "624629093af37d0d7f85699bfa0caa562fc41e61"
+  },
+  "commands": [
+    [
+      "python3",
+      "tools/check.py"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-23T054445347214Z-yes2-classes.json"
+  ],
+  "kind": "features",
+  "status": "assessed",
+  "features": [
+    {
+      "name": "integer_expressions",
+      "scope": "Int arithmetic, bitwise operations, shifts, comparisons, unary operators, and tested Boolean short-circuit expressions.",
+      "evidence_cases": [
+        "jvm_semantics",
+        "androidbible_unsigned_search"
+      ],
+      "restrictions": [
+        "No Long, floating-point, unsigned types, operator overloading, or general constant folding."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "functions_and_control_flow",
+      "scope": "Single-file top-level functions with explicit supported signatures, scoped Java extension receivers, Unit bodies/returns, local val/var, block if/else, while, returns, direct calls, Int local += and statement when with Int/Char subjects, ordered comma conditions, single-statement or braced branches, nesting, no-else and empty bodies.",
+      "evidence_cases": [
+        "androidbible_unsigned_search",
+        "jvm_semantics",
+        "rust_frontend",
+        "character_when_semantics"
+      ],
+      "restrictions": [
+        "No Kotlin overload resolution, default/named arguments, function values, or cross-file Kotlin linking; imports resolve only supported Java class files from directory classpaths.",
+        "if/while bodies require braces; when branches accept one statement or a block. Functions must pass the conservative return-path check; when proves a return only with an else and every branch returning.",
+        "Compiler resource limits and the nesting limit intentionally reject larger constructs.",
+        "No when expressions, subject declarations, subjectless when, in/is/range/guard conditions or trailing condition commas; supported subjects and equality conditions are Int or Char."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "int_arrays",
+      "scope": "Non-null IntArray parameters/returns, IntArray(size), indexed reads, size, explicit four-argument copyInto, returned destination identity, overlaps, bounds failures and public parameter null checks.",
+      "evidence_cases": [
+        "jvm_semantics",
+        "androidbible_unsigned_search",
+        "java_interop_semantics"
+      ],
+      "restrictions": [
+        "No nullable declarations, indexed array writes, generic arrays, collection construction, or default/named copyInto arguments."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "jvm_java_interop",
+      "scope": "Java callers compiled against official Kotlin run against Korrust classes; selected JVM signatures match including unchanged AndroidBible IntArrayListUtil extension against the original Java IntArrayList. Directory classpaths, explicit Java imports, declared public instance calls, scoped platform results, void calls and receiver checks are exercised. Bare enum Java callers and generic signatures are also validated against the pinned official compiler. Named/nested object Java callers, reflective constant reads and ConstantValue signatures are validated. Ordinary final classes implement validated imported Kotlin interfaces, including explicit/default JVM methods and constructor String-array fields.",
+      "evidence_cases": [
+        "androidbible_unsigned_search",
+        "jvm_semantics",
+        "jvm_signatures/yuku.alkitab.yes2.util.UnsignedBinarySearchKt",
+        "jvm_signatures/korrust.probes.ArithmeticKt",
+        "string_semantics",
+        "jvm_signatures/korrust.probes.StringsKt",
+        "jvm_signatures/yuku.alkitab.base.audio.AudioErrorCodeKt",
+        "java_interop_semantics",
+        "jvm_signatures/yuku.alkitab.base.util.IntArrayListUtilKt",
+        "jvm_signatures/korrust.probes.InteropKt",
+        "interop_diagnostics/missing_classpath",
+        "character_when_semantics",
+        "jvm_signatures/korrust.probes.CharactersKt",
+        "jvm_signatures/yuku.alkitab.base.widget.VerseNumberPlacementKt",
+        "bare_enum_semantics",
+        "jvm_signatures/yuku.alkitab.base.actionmode.RibkaEligibility",
+        "object_constant_semantics",
+        "jvm_signatures/yuku.alkitab.base.util.RequestCodes",
+        "jvm_signatures/yuku.alkitab.base.util.RequestCodes$FromActivity",
+        "androidbible_yes2_chapter",
+        "generic_class_semantics",
+        "jvm_signatures/yuku.alkitab.yes2.Yes2SingleChapterVerses",
+        "jvm_signatures/korrust.probes.classes.TextStore"
+      ],
+      "restrictions": [
+        "Emits class-file versions 49 and 52; requires kotlin-stdlib for non-null reference parameter checks, selected String operations and enum entries.",
+        "Kotlin metadata and module mappings cover supported top-level functions and bounded classes; enum/object metadata, source line/local-variable tables and general class forms are absent.",
+        "Kotlin consumer evidence covers selected public imports and internal/friend/private/nullability boundaries; full application builds remain unvalidated.",
+        "Java support is deliberately bounded: no JAR classpaths, Java construction, fields, static/interface/inherited calls, overloads, generics, varargs, annotated methods or general Kotlin metadata classes; validated Kotlin interfaces are accepted for bounded class implementation, while Java interface calls remain unsupported; unsupported surfaces fail closed.",
+        "Test-only Android Parcel/Parcelable and NonNull stubs provide javac types only; Android parcel behavior and full Java nullability annotation semantics are unvalidated."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "strings",
+      "scope": "Non-null UTF-16 String parameters, returns, locals, escaped ordinary literals, structural equality, String-left concatenation with String/Int/Boolean, length, isEmpty, startsWith, endsWith, removePrefix, substring, compareTo; unchanged AndroidBible internal stripErrorCodePrefix source.",
+      "evidence_cases": [
+        "string_semantics",
+        "rust_frontend",
+        "jvm_signatures/yuku.alkitab.base.audio.AudioErrorCodeKt"
+      ],
+      "restrictions": [
+        "No string templates, raw strings, nullable declarations, String extension declarations, overloads, or general String API support.",
+        "Kotlin consumer metadata evidence is limited to tested public imports and internal function visibility; String API breadth and Android runtime behavior remain outside this claim."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "characters_and_char_arrays",
+      "scope": "UTF-16 Char literals, parameters, returns, locals and comparisons; non-null CharArray parameters/returns, identity, size and indexed reads. Every UTF-16 code unit and unchanged AndroidBible startsWithGutterParagraph are exercised against official Kotlin and independent Java assertions.",
+      "evidence_cases": [
+        "character_when_semantics",
+        "rust_frontend",
+        "jvm_signatures/korrust.probes.CharactersKt",
+        "jvm_signatures/yuku.alkitab.base.widget.VerseNumberPlacementKt"
+      ],
+      "restrictions": [
+        "No Char arithmetic, conversions, String concatenation with Char, CharArray construction/copyInto/indexed writes, nullable declarations or other Char/CharArray APIs.",
+        "Non-BMP characters require surrogate code units; a Char literal must contain exactly one UTF-16 code unit.",
+        "Java Char/CharArray method descriptors and general character APIs remain outside the supported interop subset."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "bare_enum_classes",
+      "scope": "One top-level public/default/internal bare enum per file, empty forms and up to 1024 plain entries with optional trailing comma/terminating semicolon; unchanged AndroidBible RibkaEligibility. Java assertions cover names, ordinals, identity, comparison, declaring class, valueOf exceptions, defensive values arrays, stable ordered immutable kotlin-stdlib EnumEntries, generic reflection, EnumSet/EnumMap and serialization identity.",
+      "evidence_cases": [
+        "bare_enum_semantics",
+        "rust_frontend",
+        "jvm_signatures/yuku.alkitab.base.actionmode.RibkaEligibility",
+        "jvm_signatures/korrust.probes.enums.CollisionEnum",
+        "jvm_signatures/korrust.probes.enums.EmptyBodylessEnum",
+        "jvm_signatures/korrust.probes.enums.EmptyEnum",
+        "jvm_signatures/korrust.probes.enums.EmptySemicolonEnum",
+        "jvm_signatures/korrust.probes.enums.EnumOrder",
+        "jvm_signatures/korrust.probes.enums.InternalEnum",
+        "jvm_signatures/korrust.probes.enums.LargeEnum",
+        "jvm_signatures/korrust.probes.enums.SingleEnum"
+      ],
+      "restrictions": [
+        "No enum constructor parameters, supertypes, custom members, annotated entries/classes, entry arguments/bodies, nested or multiple enums, mixed top-level declarations or private enum visibility.",
+        "No Kotlin metadata or module metadata; Kotlin consumers, Kotlin enum expressions/imports, Android/D8 and full application builds remain unvalidated.",
+        "kotlin-stdlib is required at runtime for generated getEntries; general class declarations and Kotlin enum API use in source remain outside this milestone."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "objects_and_literal_constants",
+      "scope": "One top-level public/default/internal named object with nested objects, up to depth 16, 256 classes per source and 1024 constants per object. Literal const vals support inferred or matching explicit Int, Boolean, Char and String; unchanged AndroidBible RequestCodes. Java assertions cover singleton identity, private constructor, nested class reflection/flags, reflective field values, signed Int boundaries, escaped UTF-16/NUL/surrogate constants and 1024 constants.",
+      "evidence_cases": [
+        "object_constant_semantics",
+        "rust_frontend",
+        "jvm_signatures/yuku.alkitab.base.util.RequestCodes",
+        "jvm_signatures/yuku.alkitab.base.util.RequestCodes$FromActivity",
+        "jvm_signatures/korrust.probes.objects.ObjectLiterals",
+        "jvm_signatures/korrust.probes.objects.ObjectTree",
+        "jvm_signatures/korrust.probes.objects.ObjectTree$Left",
+        "jvm_signatures/korrust.probes.objects.ObjectTree$Left$Leaf",
+        "jvm_signatures/korrust.probes.objects.InternalObject",
+        "jvm_signatures/korrust.probes.objects.LargeObject",
+        "jvm_signatures/korrust.probes.objects.CollisionObject$CollisionObject"
+      ],
+      "restrictions": [
+        "No methods, non-const properties, init blocks, supertypes, companion/data objects, general nested classes, annotations, mixed/multiple top-level declarations or private visibility. Member name INSTANCE is explicitly unsupported for constants and nested objects.",
+        "Initializers are single literals with an optional sign for Int; no constant expressions/references, Long, other numeric types, nullable types, raw strings or string templates.",
+        "No Kotlin metadata/module metadata or Kotlin consumers validated. Kotlin source object/constant imports and references, Android/D8 and full application builds remain outside this evidence."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "owned_output_lifecycle",
+      "scope": "Recompiling an edited source removes its stale owned class files and matches independent clean compilation, including nested object removal/package changes. CLI tests cover failure preservation, ownership conflicts and output-path protections.",
+      "evidence_cases": [
+        "cli_output_lifecycle"
+      ],
+      "restrictions": [
+        "This is output ownership and cleanup for explicitly recompiled sources; no incremental dependency graph, deleted-source discovery or compilation cache is implemented.",
+        "Incremental speed and whole-app edit-to-running behavior are unmeasured.",
+        "Compile/preflight errors preserve prior outputs; filesystem errors during publication are not fully transactional. Missing or externally changed owned artifacts are rejected, and each output directory permits one writer."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "ordinary_final_classes_and_string_arrays",
+      "scope": "One public/default/internal final class per source, explicit primary constructor with private val fields, Array<String>, explicit getter properties and instance methods with straight-line supported expressions. Implements validated Kotlin interfaces with exact override identity and JVM descriptors, including default-interface bridges. Unchanged AndroidBible Yes2SingleChapterVerses plus differently named public TextStore with multiple fields/arithmetic are compared against official Kotlin.",
+      "evidence_cases": [
+        "androidbible_yes2_chapter",
+        "generic_class_semantics",
+        "rust_frontend",
+        "jvm_signatures/yuku.alkitab.yes2.Yes2SingleChapterVerses",
+        "jvm_signatures/korrust.probes.classes.TextStore"
+      ],
+      "restrictions": [
+        "No open/abstract/data/generic/nested classes, non-private-val constructor parameters, default/named constructor arguments, init blocks or arbitrary field/property initializers. Array type support is restricted to Array<String> with supported construction through Java/Kotlin consumers; general array types and operations are unavailable.",
+        "Class member bytecode supports straight-line expressions and return bodies; control-flow/branching members, overloads, inherited Any/Object members, unsupported interface metadata and Java interface implementations fail closed.",
+        "Interface support validates nonnullable ordinary supported signatures/property identity; nullable/generic/suspend/default-parameter and other metadata surfaces remain unsupported."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "kotlin_metadata_and_consumers",
+      "scope": "Metadata and per-source package mappings for supported top-level functions and bounded classes. Pinned official Kotlin compiles/runs separate public consumers importing three facades and a public class, and friend consumers accessing internal class/functions. Independent negative consumers enforce internal/private access and nonnull constructor types.",
+      "evidence_cases": [
+        "kotlin_metadata/PublicMetadataConsumer",
+        "kotlin_metadata/FriendMetadataConsumer",
+        "kotlin_metadata/InternalClassAccess",
+        "kotlin_metadata/PrivateFieldAccess",
+        "kotlin_metadata/PublicNullAccess",
+        "kotlin_metadata/InternalFunctionAccess"
+      ],
+      "restrictions": [
+        "Metadata and consumer compatibility is established only for exercised declaration shapes/signatures; enum/object metadata and arbitrary Kotlin API compatibility are unvalidated.",
+        "Kotlin module mappings support discovery of emitted top-level facades; no Gradle incremental dependency graph or incremental speed claim is established."
+      ],
+      "status": "partial"
+    },
+    {
+      "name": "string_templates",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/string_templates"
+      ]
+    },
+    {
+      "name": "nonprivate_constructor_properties",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/classes"
+      ]
+    },
+    {
+      "name": "nullable_types",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/nullable_types"
+      ]
+    },
+    {
+      "name": "overloads",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/overloads"
+      ]
+    },
+    {
+      "name": "unconditional_loop_analysis",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/unconditional_loop_analysis"
+      ]
+    },
+    {
+      "name": "escaped_string_template",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/escaped_string_template"
+      ]
+    },
+    {
+      "name": "when_expression",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/when_expression"
+      ]
+    },
+    {
+      "name": "when_subjectless",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/when_subjectless"
+      ]
+    },
+    {
+      "name": "when_range",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/when_range"
+      ]
+    },
+    {
+      "name": "when_subject_variable",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/when_subject_variable"
+      ]
+    },
+    {
+      "name": "char_arithmetic",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/char_arithmetic"
+      ]
+    },
+    {
+      "name": "char_array_construction",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/char_array_construction"
+      ]
+    },
+    {
+      "name": "char_array_write",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/char_array_write"
+      ]
+    },
+    {
+      "name": "when_boolean_subject",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/when_boolean_subject"
+      ]
+    },
+    {
+      "name": "when_trailing_condition_comma",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/when_trailing_condition_comma"
+      ]
+    },
+    {
+      "name": "enum_constructor_parameters",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_constructor_parameters"
+      ]
+    },
+    {
+      "name": "enum_supertype",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_supertype"
+      ]
+    },
+    {
+      "name": "enum_custom_member",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_custom_member"
+      ]
+    },
+    {
+      "name": "enum_entry_body",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_entry_body"
+      ]
+    },
+    {
+      "name": "enum_entry_arguments",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_entry_arguments"
+      ]
+    },
+    {
+      "name": "enum_mixed_declarations",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_mixed_declarations"
+      ]
+    },
+    {
+      "name": "enum_multiple_declarations",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_multiple_declarations"
+      ]
+    },
+    {
+      "name": "enum_nested",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_nested"
+      ]
+    },
+    {
+      "name": "enum_private_visibility",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_private_visibility"
+      ]
+    },
+    {
+      "name": "enum_annotation",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_annotation"
+      ]
+    },
+    {
+      "name": "enum_entry_annotation",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/enum_entry_annotation"
+      ]
+    },
+    {
+      "name": "object_nonconst_property",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_nonconst_property"
+      ]
+    },
+    {
+      "name": "object_method",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_method"
+      ]
+    },
+    {
+      "name": "object_init",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_init"
+      ]
+    },
+    {
+      "name": "object_supertype",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_supertype"
+      ]
+    },
+    {
+      "name": "object_data",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_data"
+      ]
+    },
+    {
+      "name": "object_nested_class",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_nested_class"
+      ]
+    },
+    {
+      "name": "object_mixed_declarations",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_mixed_declarations"
+      ]
+    },
+    {
+      "name": "object_multiple_declarations",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_multiple_declarations"
+      ]
+    },
+    {
+      "name": "object_private_visibility",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_private_visibility"
+      ]
+    },
+    {
+      "name": "object_private_const",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_private_const"
+      ]
+    },
+    {
+      "name": "object_reserved_const_instance",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_reserved_const_instance"
+      ]
+    },
+    {
+      "name": "object_reserved_nested_instance",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_reserved_nested_instance"
+      ]
+    },
+    {
+      "name": "object_const_expression",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_const_expression"
+      ]
+    },
+    {
+      "name": "object_const_reference",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_const_reference"
+      ]
+    },
+    {
+      "name": "object_const_long",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_const_long"
+      ]
+    },
+    {
+      "name": "object_const_byte",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_const_byte"
+      ]
+    },
+    {
+      "name": "object_annotation",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/object_annotation"
+      ]
+    },
+    {
+      "name": "class_open",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/class_open"
+      ]
+    },
+    {
+      "name": "class_implicit_constructor",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/class_implicit_constructor"
+      ]
+    },
+    {
+      "name": "class_mutable_constructor_property",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/class_mutable_constructor_property"
+      ]
+    },
+    {
+      "name": "class_constructor_parameter_without_property",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/class_constructor_parameter_without_property"
+      ]
+    },
+    {
+      "name": "class_generic_array_element",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/class_generic_array_element"
+      ]
+    },
+    {
+      "name": "class_non_getter_property",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/class_non_getter_property"
+      ]
+    },
+    {
+      "name": "class_any_override",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/class_any_override"
+      ]
+    },
+    {
+      "name": "class_nullable_interface",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/class_nullable_interface"
+      ]
+    },
+    {
+      "name": "class_builtin_shadow",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/class_builtin_shadow"
+      ]
+    },
+    {
+      "name": "java_overload",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/java_overload"
+      ]
+    },
+    {
+      "name": "java_static",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/java_static"
+      ]
+    },
+    {
+      "name": "java_generic_method",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/java_generic_method"
+      ]
+    },
+    {
+      "name": "java_annotated_method",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/java_annotated_method"
+      ]
+    },
+    {
+      "name": "java_field",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/java_field"
+      ]
+    },
+    {
+      "name": "java_inherited_member",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/java_inherited_member"
+      ]
+    },
+    {
+      "name": "kotlin_metadata_class",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/kotlin_metadata_class"
+      ]
+    },
+    {
+      "name": "java_hierarchy_overload",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/java_hierarchy_overload"
+      ]
+    },
+    {
+      "name": "java_interface",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/java_interface"
+      ]
+    },
+    {
+      "name": "java_annotated_class",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/java_annotated_class"
+      ]
+    },
+    {
+      "name": "java_annotated_package",
+      "status": "unsupported",
+      "evidence_cases": [
+        "unsupported/java_annotated_package"
+      ]
+    }
+  ]
+}

@@ -18,6 +18,13 @@ JAVA_LIST = Path("benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuk
 
 VERSE_PLACEMENT = Path("benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt")
 
+CHAPTER = Path("benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt")
+CHAPTER_INTERFACE = Path("benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt")
+
+OBJECT = Path("benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/RequestCodes.kt")
+
+ENUM = Path("benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/RibkaEligibility.kt")
+
 AUDIO = Path("benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt")
 
 def sha(path):
@@ -36,7 +43,7 @@ def executable(name):
 
 def main():
     now = datetime.now(timezone.utc)
-    run_id = now.strftime("%Y-%m-%dT%H%M%S%fZ") + "-characters"
+    run_id = now.strftime("%Y-%m-%dT%H%M%S%fZ") + "-model-interfaces"
     work = ROOT / "target/checks" / run_id
     artifacts = ROOT / "reports/correctness" / run_id
     work.mkdir(parents=True)
@@ -55,17 +62,19 @@ def main():
         "environment": {"os": platform.platform(), "machine": platform.machine()},
         "commands": commands,
         "evidence": [],
-        "selection": "AndroidBible unsignedIntBinarySearch, AudioErrorCode, unchanged IntArrayListUtil using the original Java IntArrayList and unchanged VerseNumberPlacement; JVM arithmetic/control-flow, UTF-16 String/Char/CharArray, subject when, Int += and scoped Java interop probes, invalid and unsupported syntax. Android classes are test-only type stubs; no parcel runtime, upstream Kotlin fixture adapter or whole-app tests.",
+        "selection": "AndroidBible unsignedIntBinarySearch, AudioErrorCode, unchanged IntArrayListUtil using the original Java IntArrayList and unchanged VerseNumberPlacement, RibkaEligibility and RequestCodes and Yes2SingleChapterVerses; ordinary final classes with private constructor properties, String arrays and Kotlin interface implementations; candidate-built SingleChapterVerses plus generic interface companions/defaults/anonymous objects, nested Float signatures and simple templates; Java/Kotlin metadata consumers and visibility/nullability probes; bounded named/nested objects with literal constants and Java singleton/nesting/runtime-constant assertions; bounded bare enums with Java runtime, generic-signature, EnumEntries, collection and serialization assertions; JVM arithmetic/control-flow, UTF-16 String/Char/CharArray, subject when, Int += and scoped Java interop probes, invalid and unsupported syntax. Android classes are test-only type stubs; no parcel runtime, upstream Kotlin fixture adapter or whole-app tests.",
         "cases": cases,
     }
 
-    def run(label, args, allowed=(0,), timeout=120):
+    def run(label, args, allowed=(0,), timeout=120, env=None):
         index = len(commands)
         print(label, flush=True)
         entry = {"label": label, "argv": [str(a) for a in args], "cwd": ".", "timeout_seconds": timeout}
+        if env:
+            entry["environment"] = env
         commands.append(entry)
         try:
-            result = subprocess.run(entry["argv"], cwd=ROOT, text=True, capture_output=True, timeout=timeout)
+            result = subprocess.run(entry["argv"], cwd=ROOT, text=True, capture_output=True, timeout=timeout, env=None if env is None else {**os.environ, **env})
             stdout, stderr = result.stdout, result.stderr
             entry["exit_code"] = result.returncode
         except subprocess.TimeoutExpired as error:
@@ -118,11 +127,24 @@ def main():
         relative_audio = str(AUDIO.relative_to("benchmarks/sources/androidbible"))
         if sha(ROOT / AUDIO) != inventory["androidbible"][relative_audio]:
             raise RuntimeError("AndroidBible AudioErrorCode source was changed")
-        for baseline in [INT_LIST, JAVA_LIST, VERSE_PLACEMENT]:
+        for baseline in [INT_LIST, JAVA_LIST, VERSE_PLACEMENT, ENUM, OBJECT, CHAPTER, CHAPTER_INTERFACE]:
             relative = str(baseline.relative_to("benchmarks/sources/androidbible"))
             if sha(ROOT / baseline) != inventory["androidbible"][relative]:
                 raise RuntimeError("AndroidBible source was changed: " + str(baseline))
         report["inputs"] = {
+            "yes2_chapter_source": str(CHAPTER),
+            "yes2_chapter_source_sha256": sha(ROOT / CHAPTER),
+            "chapter_interface_source": str(CHAPTER_INTERFACE),
+            "chapter_interface_source_sha256": sha(ROOT / CHAPTER_INTERFACE),
+            "model_fixtures_sha256": {str(p.relative_to(ROOT)): sha(p) for p in sorted((ROOT / "tests/fixtures/models").glob("*.kt"))},
+            "class_fixtures_sha256": {str(p.relative_to(ROOT)): sha(p) for p in sorted((ROOT / "tests/fixtures/classes").glob("*.kt"))},
+            "consumer_fixtures_sha256": {str(p.relative_to(ROOT)): sha(p) for p in sorted((ROOT / "tests/fixtures/consumers").glob("*.kt"))},
+            "request_codes_source": str(OBJECT),
+            "request_codes_source_sha256": sha(ROOT / OBJECT),
+            "object_fixtures_sha256": {str(p.relative_to(ROOT)): sha(p) for p in sorted((ROOT / "tests/fixtures/objects").glob("*.kt"))},
+            "ribka_eligibility_source": str(ENUM),
+            "ribka_eligibility_source_sha256": sha(ROOT / ENUM),
+            "enum_fixtures_sha256": {str(p.relative_to(ROOT)): sha(p) for p in sorted((ROOT / "tests/fixtures/enums").glob("*.kt"))},
             "verse_placement_source": str(VERSE_PLACEMENT),
             "verse_placement_source_sha256": sha(ROOT / VERSE_PLACEMENT),
             "int_list_extension_source": str(INT_LIST),
@@ -136,10 +158,15 @@ def main():
             "reference_commit": json.loads((ROOT / "references/sources.json").read_text())["kotlin"]["commit"],
             "androidbible_commit": json.loads((ROOT / "benchmarks/sources.json").read_text())["sources"]["androidbible"]["commit"],
         }
+        run("Rust formatting", [cargo, "fmt", "--check"])
+        run("Rust Clippy", [cargo, "clippy", "--all-targets", "--locked", "--offline", "--", "-D", "warnings"])
+        run("Report generator tests", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_reports.py"])
         run("Rust tests", [cargo, "test", "--locked", "--offline"])
         cases.append({"id": "rust_frontend", "outcome": "pass", "scope": "Frontend diagnostics and boundary tests; see command log"})
         run("Release build", [cargo, "build", "--release", "--locked", "--offline"])
         compiler = ROOT / "target/release/korrust"
+        run("CLI output lifecycle tests", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_cli.py"], env={"KORRUST_COMPILER": str(compiler)})
+        cases.append({"id": "cli_output_lifecycle", "outcome": "pass", "scope": "Repeated compilation of edited source matches clean outputs; owned stale classes, failures, collisions and output-path protection tested. No dependency graph or deleted-source discovery; incremental compilation performance unmeasured."})
         owned = [ROOT / "Cargo.toml", ROOT / "Cargo.lock"]
         for folder in ["src", "tests", "tools"]:
             owned.extend(p for p in (ROOT / folder).rglob("*") if p.is_file() and "__pycache__" not in p.parts)
@@ -148,8 +175,10 @@ def main():
             "version": run("Korrust version", [compiler, "--version"]).stdout.strip(),
             "binary_sha256": sha(compiler),
             "source_files_sha256": fingerprints,
-            "classfile_major_version": 49,
-            "kotlin_metadata": False,
+            "classfile_major_versions": [49, 52],
+            "kotlin_metadata": True,
+            "kotlin_metadata_scope": {"top_level_functions": True, "bounded_classes": True, "bounded_interfaces_companions": True, "enums": False, "objects": False},
+            "module_metadata": "Per-source module mappings for top-level function facades",
             "incremental_compilation": False,
         }
         official, candidate, drivers, foreign = [work / n for n in ["official", "candidate", "drivers", "foreign"]]
@@ -161,15 +190,19 @@ def main():
         strings = ROOT / "tests/fixtures/Strings.kt"
         interop = ROOT / "tests/fixtures/Interop.kt"
         characters = ROOT / "tests/fixtures/Characters.kt"
+        class_probe = ROOT / "tests/fixtures/classes/SyntheticChapter.kt"
+        run("Compile original Kotlin interface and generic interface fixture", [kotlinc, ROOT / CHAPTER_INTERFACE, ROOT / "tests/fixtures/classes/IndexedText.kt", ROOT / "tests/fixtures/classes/UnsupportedInterfaces.kt", *options, "-d", foreign])
+        object_fixtures = sorted((ROOT / "tests/fixtures/objects").glob("*.kt"))
+        enum_fixtures = sorted((ROOT / "tests/fixtures/enums").glob("*.kt"))
         run("Compile Kotlin metadata rejection fixture", [kotlinc, ROOT / "tests/fixtures/MetadataForeign.kt", *options, "-d", foreign])
-        run("Compile fixtures with official Kotlin", [kotlinc, ROOT / SEARCH, ROOT / AUDIO, ROOT / INT_LIST, ROOT / VERSE_PLACEMENT, strings, probe, interop, characters, "-cp", foreign, *options, "-d", official])
-        for source in [ROOT / SEARCH, ROOT / AUDIO, ROOT / INT_LIST, ROOT / VERSE_PLACEMENT, probe, strings, interop, characters]:
+        run("Compile fixtures with official Kotlin", [kotlinc, ROOT / SEARCH, ROOT / AUDIO, ROOT / INT_LIST, ROOT / VERSE_PLACEMENT, strings, probe, interop, characters, ROOT / ENUM, *enum_fixtures, ROOT / OBJECT, *object_fixtures, ROOT / CHAPTER, class_probe, "-cp", foreign, *options, "-d", official])
+        for source in [ROOT / SEARCH, ROOT / AUDIO, ROOT / INT_LIST, ROOT / VERSE_PLACEMENT, probe, strings, interop, characters, ROOT / ENUM, *enum_fixtures, ROOT / OBJECT, *object_fixtures, ROOT / CHAPTER, class_probe]:
             run("Compile " + source.name + " with Korrust", [compiler, source, "-cp", foreign, "-d", candidate])
         run("Compile Java callers against official Kotlin", [
             javac, "-cp", cp(official, foreign, stdlib), "-d", drivers,
-            ROOT / "tests/fixtures/BinarySearchCheck.java", ROOT / "tests/fixtures/ArithmeticCheck.java", ROOT / "tests/fixtures/StringsCheck.java", ROOT / "tests/fixtures/InteropCheck.java", ROOT / "tests/fixtures/CharactersCheck.java",
+            ROOT / "tests/fixtures/BinarySearchCheck.java", ROOT / "tests/fixtures/ArithmeticCheck.java", ROOT / "tests/fixtures/StringsCheck.java", ROOT / "tests/fixtures/InteropCheck.java", ROOT / "tests/fixtures/CharactersCheck.java", ROOT / "tests/fixtures/EnumsCheck.java", ROOT / "tests/fixtures/ObjectsCheck.java", ROOT / "tests/fixtures/Yes2Check.java", ROOT / "tests/fixtures/ClassesCheck.java",
         ])
-        for name, case_id in [("BinarySearchCheck", "androidbible_unsigned_search"), ("ArithmeticCheck", "jvm_semantics"), ("StringsCheck", "string_semantics"), ("InteropCheck", "java_interop_semantics"), ("CharactersCheck", "character_when_semantics")]:
+        for name, case_id in [("BinarySearchCheck", "androidbible_unsigned_search"), ("ArithmeticCheck", "jvm_semantics"), ("StringsCheck", "string_semantics"), ("InteropCheck", "java_interop_semantics"), ("CharactersCheck", "character_when_semantics"), ("EnumsCheck", "bare_enum_semantics"), ("ObjectsCheck", "object_constant_semantics"), ("Yes2Check", "androidbible_yes2_chapter"), ("ClassesCheck", "generic_class_semantics")]:
             reference = run("Run official " + name, [java, "-Xverify:all", "-cp", cp(drivers, official, foreign, stdlib), name], timeout=30)
             actual = run("Run Korrust " + name, [java, "-Xverify:all", "-cp", cp(drivers, candidate, foreign, stdlib), name], timeout=30)
             if reference.stdout != actual.stdout:
@@ -177,18 +210,107 @@ def main():
             result = json.loads(actual.stdout)
             cases.append({"id": case_id, "outcome": "pass", "runtime_checks": result["checks"], "result_sha256": result["sha256"],
                           "oracle": "Official Kotlin plus independent Java assertions", "jvm_verification": "all"})
-        for name in ["yuku.alkitab.yes2.util.UnsignedBinarySearchKt", "korrust.probes.ArithmeticKt", "korrust.probes.StringsKt", "yuku.alkitab.base.audio.AudioErrorCodeKt", "yuku.alkitab.base.util.IntArrayListUtilKt", "korrust.probes.InteropKt", "korrust.probes.CharactersKt", "yuku.alkitab.base.widget.VerseNumberPlacementKt"]:
+        for name in ["yuku.alkitab.yes2.util.UnsignedBinarySearchKt", "korrust.probes.ArithmeticKt", "korrust.probes.StringsKt", "yuku.alkitab.base.audio.AudioErrorCodeKt", "yuku.alkitab.base.util.IntArrayListUtilKt", "korrust.probes.InteropKt", "korrust.probes.CharactersKt", "yuku.alkitab.base.widget.VerseNumberPlacementKt", "yuku.alkitab.yes2.Yes2SingleChapterVerses", "korrust.probes.classes.TextStore"]:
             reference = run("Inspect official JVM signatures", [javap, "-p", "-s", "-classpath", official, name])
             actual = run("Inspect Korrust JVM signatures", [javap, "-p", "-s", "-classpath", candidate, name])
             if reference.stdout != actual.stdout:
                 raise AssertionError("JVM signatures differ: " + name)
             cases.append({"id": "jvm_signatures/" + name, "outcome": "pass", "scope": "javap -p -s; does not assert Kotlin metadata compatibility"})
+        enum_classes = ["yuku.alkitab.base.actionmode.RibkaEligibility", *["korrust.probes.enums." + source.stem for source in enum_fixtures]]
+        for name in enum_classes:
+            reference = run("Inspect official enum generic JVM signatures", [javap, "-p", "-s", "-classpath", official, name])
+            actual = run("Inspect Korrust enum generic JVM signatures", [javap, "-p", "-s", "-classpath", candidate, name])
+            if reference.stdout != actual.stdout:
+                raise AssertionError("Enum generic JVM signatures differ: " + name)
+            for output in [official, candidate]:
+                if not (output / (name.replace(".", "/") + ".class")).is_file():
+                    raise AssertionError("Missing declared enum class: " + name)
+                if (output / (name.replace(".", "/") + "Kt.class")).exists():
+                    raise AssertionError("Enum unexpectedly emitted a file facade: " + name)
+            cases.append({"id": "jvm_signatures/" + name, "outcome": "pass", "scope": "javap -p -s generic superclass, method signatures and descriptors; independent reflection assertions include generic superclass/getEntries. Declared enum class and absence of Kt facade checked; Kotlin metadata and Kotlin consumers unvalidated."})
+        def object_inventory(output):
+            fixtures = [str(p.relative_to(output).with_suffix("")).replace(os.sep, ".") for p in (output / "korrust/probes/objects").glob("*.class")]
+            app = [str(p.relative_to(output).with_suffix("")).replace(os.sep, ".") for p in (output / "yuku/alkitab/base/util").glob("RequestCodes*.class")]
+            return sorted(fixtures + app)
+        object_classes = object_inventory(official)
+        if not object_classes or object_classes != object_inventory(candidate):
+            raise AssertionError("Object emitted-class inventories differ")
+        for name in object_classes:
+            reference = run("Inspect official object JVM constants and signatures", [javap, "-p", "-s", "-constants", "-classpath", official, name])
+            actual = run("Inspect Korrust object JVM constants and signatures", [javap, "-p", "-s", "-constants", "-classpath", candidate, name])
+            if reference.stdout != actual.stdout:
+                raise AssertionError("Object JVM constants/signatures differ: " + name)
+            cases.append({"id": "jvm_signatures/" + name, "outcome": "pass", "scope": "javap -p -s -constants; singleton/const descriptors, modifiers and ConstantValue contents. Java reflection separately checks nested naming and declaring/enclosing/declared classes. Kotlin metadata and Kotlin consumers unvalidated."})
+        model_reference, model_candidate = work / "model-official", work / "model-candidate"
+        model_sources = [ROOT / CHAPTER_INTERFACE, *sorted((ROOT / "tests/fixtures/models").glob("*.kt"))]
+        run("Compile model interface fixtures with official Kotlin", [kotlinc, *model_sources, *options, "-d", model_reference])
+        for source in model_sources:
+            run("Compile model interface " + source.name + " with Korrust", [compiler, source, "-d", model_candidate])
+        model_drivers = work / "model-drivers"
+        run("Compile independent model Java callers against official", [javac, "-cp", cp(model_reference, stdlib), "-d", model_drivers, ROOT / "tests/fixtures/InterfaceAssertions.java", ROOT / "tests/fixtures/ModelCheck.java", ROOT / "tests/fixtures/InterfaceCheck.java"])
+        for name, case_id in [("ModelCheck", "androidbible_model_interface"), ("InterfaceCheck", "generic_interface_semantics")]:
+            reference = run("Run official model " + name, [java, "-Xverify:all", "-cp", cp(model_drivers, model_reference, stdlib), name])
+            actual = run("Run Korrust model " + name, [java, "-Xverify:all", "-cp", cp(model_drivers, model_candidate, stdlib), name])
+            if reference.stdout != actual.stdout:
+                raise AssertionError("Model Java observations differ: " + name)
+            result = json.loads(actual.stdout)
+            cases.append({"id": case_id, "outcome": "pass", "runtime_checks": result["checks"], "result_sha256": result["sha256"], "scope": "Official-compiled Java assertions, JVM verification all; companion/private-array initialization and aliasing, anonymous errors, default helpers including null receivers/override bypass, nested Float descriptors and simple templates."})
+        model_classes = sorted(str(path.relative_to(model_reference).with_suffix("")).replace(os.sep, ".") for path in model_reference.rglob("*.class"))
+        actual_model_classes = sorted(str(path.relative_to(model_candidate).with_suffix("")).replace(os.sep, ".") for path in model_candidate.rglob("*.class"))
+        if model_classes != actual_model_classes:
+            raise AssertionError("Model interface emitted class inventories differ")
+        for name in model_classes:
+            reference = run("Inspect official model interface ABI", [javap, "-p", "-s", "-classpath", model_reference, name])
+            actual = run("Inspect candidate model interface ABI", [javap, "-p", "-s", "-classpath", model_candidate, name])
+            if reference.stdout != actual.stdout:
+                raise AssertionError("Model interface ABI differs: " + name)
+            cases.append({"id": "model_jvm_signatures/" + name, "outcome": "pass", "scope": "Complete source-interface class inventory including Companion/anonymous/DefaultImpls/nested-interface helper descriptors; javap -p -s."})
+        model_consumer_results = []
+        for provider, output in [("official", model_reference), ("candidate", model_candidate)]:
+            destination = work / (provider + "-model-consumer")
+            run("Compile Kotlin model consumer against " + provider, [kotlinc, ROOT / "tests/fixtures/consumers/ModelConsumer.kt", "-cp", output, *options, "-d", destination])
+            model_consumer_results.append(run("Run Kotlin model consumer against " + provider, [java, "-Xverify:all", "-cp", cp(destination, output, stdlib), "korrust.consumers.ModelConsumerKt"]).stdout)
+            rejected = run("Reject Kotlin private companion access against " + provider, [kotlinc, ROOT / "tests/fixtures/consumers/ModelPrivateAccess.kt", "-cp", output, *options, "-d", work / (provider + "-model-private")], allowed=(1,))
+            if "error:" not in rejected.stderr or "private" not in rejected.stderr.lower():
+                raise AssertionError("Private companion metadata was not enforced")
+            dependent = work / (provider + "-yes2-with-model")
+            if provider == "official":
+                run("Compile official Yes2 against official model interface", [kotlinc, ROOT / CHAPTER, "-cp", output, *options, "-d", dependent])
+            else:
+                run("Compile Korrust Yes2 against candidate model interface", [compiler, ROOT / CHAPTER, "-cp", output, "-d", dependent])
+            observed = run("Run Yes2Check against " + provider + " source-built model", [java, "-Xverify:all", "-cp", cp(drivers, dependent, output, stdlib), "Yes2Check"])
+            if provider == "official":
+                dependent_reference = observed.stdout
+            elif observed.stdout != dependent_reference:
+                raise AssertionError("Yes2 with candidate-built interface differs")
+        if model_consumer_results[0] != model_consumer_results[1]:
+            raise AssertionError("Kotlin model metadata consumers differ")
+        cases.append({"id": "kotlin_metadata/ModelConsumer", "outcome": "pass", "scope": "Official Kotlin consumes each emitted interface/companion/anonymous/nested-Float surface, executes default methods, and rejects private companion access."})
+        cases.append({"id": "androidbible_yes2_candidate_model", "outcome": "pass", "runtime_checks": json.loads(dependent_reference)["checks"], "scope": "Korrust Yes2 is compiled against Korrust original SingleChapterVerses classpath; official-compiled Java caller results match entirely official pair under JVM verification all."})
+        for consumer, friend in [("PublicMetadataConsumer", False), ("FriendMetadataConsumer", True)]:
+            results = []
+            for provider, output in [("official", official), ("candidate", candidate)]:
+                consumer_output = work / "consumers" / provider / consumer
+                friend_options = ["-Xfriend-paths=" + str(output)] if friend else []
+                run("Compile " + consumer + " against " + provider, [kotlinc, ROOT / "tests/fixtures/consumers" / (consumer + ".kt"), "-cp", cp(output, foreign), *options, *friend_options, "-d", consumer_output])
+                results.append(run("Run " + consumer + " against " + provider, [java, "-Xverify:all", "-cp", cp(consumer_output, output, foreign, stdlib), "korrust.consumers." + consumer + "Kt"]).stdout)
+            if results[0] != results[1]:
+                raise AssertionError("Kotlin metadata consumer results differ: " + consumer)
+            cases.append({"id": "kotlin_metadata/" + consumer, "outcome": "pass", "scope": "Official Kotlin separately compiles and runs consumer against each provider; public multi-facade imports or internal class/function friend-path access; JVM verification all."})
+        for consumer, friend, marker in [("InternalClassAccess", False, "internal"), ("PrivateFieldAccess", True, "private"), ("PublicNullAccess", False, "null"), ("InternalFunctionAccess", False, "internal")]:
+            for provider, output in [("official", official), ("candidate", candidate)]:
+                friend_options = ["-Xfriend-paths=" + str(output)] if friend else []
+                rejected = run("Kotlin metadata rejection " + consumer + " against " + provider, [kotlinc, ROOT / "tests/fixtures/consumers" / (consumer + ".kt"), "-cp", cp(output, foreign), *options, *friend_options, "-d", work / "consumer-rejections" / provider / consumer], allowed=(1,))
+                if "error:" not in rejected.stderr or marker not in rejected.stderr.lower():
+                    raise AssertionError("Unexpected Kotlin metadata rejection: " + consumer)
+            cases.append({"id": "kotlin_metadata/" + consumer, "outcome": "pass", "scope": "Official Kotlin rejects access/nullability misuse against both providers with checked diagnostic category."})
         for fixture in json.loads((ROOT / "tests/diagnostics.json").read_text()):
             source = work / (fixture["id"] + ".kt")
             source.write_text(fixture["source"])
-            reference = run("Reference rejection: " + fixture["id"], [kotlinc, source, *options, "-d", work / "negative-reference"], allowed=(1,))
+            fixture_cp = ["-cp", str(foreign)] if fixture.get("classpath") else []
+            reference = run("Reference rejection: " + fixture["id"], [kotlinc, source, *fixture_cp, *options, "-d", work / "negative-reference"], allowed=(1,))
             output = work / ("negative-" + fixture["id"])
-            actual = run("Korrust rejection: " + fixture["id"], [compiler, source, "-d", output], allowed=(1,))
+            actual = run("Korrust rejection: " + fixture["id"], [compiler, source, *fixture_cp, "-d", output], allowed=(1,))
             if "error:" not in reference.stderr or fixture["message"] not in actual.stderr:
                 raise AssertionError("Unexpected diagnostic: " + fixture["id"])
             if output.exists():
@@ -198,10 +320,15 @@ def main():
         for fixture in json.loads((ROOT / "tests/unsupported.json").read_text()):
             source = work / (fixture["id"] + ".kt")
             source.write_text(fixture["source"])
-            run("Reference acceptance: " + fixture["id"], [kotlinc, source, *options, "-d", work / "unsupported-reference"])
-            actual = run("Explicit unsupported rejection: " + fixture["id"], [compiler, source, "-d", work / ("unsupported-" + fixture["id"])], allowed=(1,))
+            fixture_cp = ["-cp", str(foreign)] if fixture.get("classpath") else []
+            run("Reference acceptance: " + fixture["id"], [kotlinc, source, *fixture_cp, *options, "-d", work / "unsupported-reference"])
+            actual = run("Explicit unsupported rejection: " + fixture["id"], [compiler, source, *fixture_cp, "-d", work / ("unsupported-" + fixture["id"])], allowed=(1,))
+            if fixture.get("message") and fixture["message"] not in actual.stderr:
+                raise AssertionError("Unexpected unsupported diagnostic: " + fixture["id"])
+            if (work / ("unsupported-" + fixture["id"])).exists():
+                raise AssertionError("Unsupported input produced output")
             cases.append({"id": "unsupported/" + fixture["id"], "outcome": "unsupported_language",
-                          "diagnostic": actual.stderr.strip()})
+                          "diagnostic": actual.stderr.strip(), **({"feature_name": fixture["feature_name"]} if "feature_name" in fixture else {})})
         classpath_probe = work / "ClasspathProbe.kt"
         classpath_probe.write_text("import yuku.alkitab.util.IntArrayList\nfun f(value: IntArrayList): Int = value.size()")
         empty_classpath = work / "empty-classpath"
@@ -259,7 +386,7 @@ def main():
             features.append({**feature, "status": "partial"})
         for case in cases:
             if case["outcome"] == "unsupported_language":
-                features.append({"name": case["id"].split("/", 1)[1], "status": "unsupported", "evidence_cases": [case["id"]]})
+                features.append({"name": case.get("feature_name", case["id"].split("/", 1)[1]), "status": "unsupported", "evidence_cases": [case["id"]]})
         common = {key: report[key] for key in ["schema_version", "created_at", "compiler", "reference_compiler", "inputs"]}
         common["commands"] = [["python3", "tools/check.py"]]
         common["evidence"] = [str(report_path.relative_to(ROOT))]

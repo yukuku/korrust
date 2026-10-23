@@ -5,12 +5,54 @@ use crate::{
 };
 use std::collections::{HashMap, HashSet};
 
+#[path = "check_interfaces.rs"]
+mod interfaces;
+
 pub struct Module {
     pub functions: Vec<Function>,
+    pub class_decl: Option<ClassDecl>,
+    pub interface_decl: Option<InterfaceDecl>,
+}
+pub struct InterfaceDecl {
+    pub owner: String,
+    pub interfaces: Vec<String>,
+    pub methods: Vec<InterfaceMethod>,
+    pub nested: Vec<InterfaceDecl>,
+    pub companion: Option<CompanionDecl>,
+    pub defaults: Vec<JavaMethod>,
+}
+pub struct InterfaceMethod {
+    pub function: Function,
+    pub has_body: bool,
+    pub source_property: Option<String>,
+}
+pub struct CompanionDecl {
+    pub owner: String,
+    pub properties: Vec<CompanionProperty>,
+}
+pub struct CompanionProperty {
+    pub name: String,
+    pub private: bool,
+    pub ty: Type,
+    pub value: CompanionValue,
+}
+pub enum CompanionValue {
+    StringArray(Vec<Vec<u16>>),
+    Object {
+        owner: String,
+        class_decl: ClassDecl,
+    },
+}
+pub struct ClassDecl {
+    pub params: Vec<(String, Type)>,
+    pub interfaces: Vec<String>,
+    pub methods: Vec<Function>,
+    pub bridges: Vec<JavaMethod>,
 }
 pub struct Function {
     pub name: String,
     pub private: bool,
+    pub is_override: bool,
     pub params: Vec<(String, Type)>,
     pub result: Type,
     pub locals: u16,
@@ -34,6 +76,7 @@ pub enum Statement {
     Return(Value),
     If(Value, Vec<Statement>, Vec<Statement>),
     While(Value, Vec<Statement>),
+    Throw(Value),
 }
 pub struct Value {
     pub ty: Type,
@@ -52,6 +95,17 @@ pub enum StringMethod {
 }
 pub enum ValueKind {
     Unit,
+    If(Box<Value>, Box<Value>, Box<Value>),
+    IntToString(Box<Value>),
+    CompanionArray {
+        owner: String,
+        name: String,
+    },
+    MemberCall {
+        method: JavaMethod,
+        interface: bool,
+        args: Vec<Value>,
+    },
     JavaCall {
         method: JavaMethod,
         args: Vec<Value>,
@@ -65,6 +119,7 @@ pub enum ValueKind {
     StringConcat(Box<Value>, Box<Value>),
     StringCall(StringMethod, Vec<Value>),
     Local(u8),
+    Field(String, Box<Value>),
     Negate(Box<Value>),
     Not(Box<Value>),
     Binary(String, Box<Value>, Box<Value>),
@@ -77,7 +132,11 @@ impl Value {
     pub fn stack(&self) -> usize {
         match &self.kind {
             ValueKind::Unit => 0,
+            ValueKind::If(condition, yes, no) => condition.stack().max(yes.stack()).max(no.stack()),
+            ValueKind::IntToString(value) => value.stack(),
+            ValueKind::CompanionArray { .. } => 1,
             ValueKind::NewIntArray(v) => v.stack().max(1),
+            ValueKind::Field(_, receiver) => receiver.stack(),
             ValueKind::NotNull(v, _) => v.stack().max(3),
             ValueKind::Int(_)
             | ValueKind::Boolean(_)
@@ -91,7 +150,8 @@ impl Value {
             ValueKind::Call(_, args)
             | ValueKind::StringCall(_, args)
             | ValueKind::CopyInto(args)
-            | ValueKind::JavaCall { args, .. } => args
+            | ValueKind::JavaCall { args, .. }
+            | ValueKind::MemberCall { args, .. } => args
                 .iter()
                 .enumerate()
                 .map(|(i, v)| i + v.stack())
@@ -113,12 +173,57 @@ struct Checker<'a> {
     imports: &'a HashMap<String, String>,
     signatures: &'a Vec<(Vec<(String, Type)>, Type)>,
     receiver: Option<Local>,
+    fields: &'a HashMap<String, Type>,
+    members: &'a HashMap<String, JavaMethod>,
+    companion_fields: &'a HashMap<String, (String, Type)>,
     functions: &'a HashMap<String, usize>,
     scopes: Vec<HashMap<String, Local>>,
     next: u16,
     result: Type,
 }
 impl Checker<'_> {
+    fn receiver_value(&self, offset: usize) -> Result<Value> {
+        let receiver = self
+            .receiver
+            .as_ref()
+            .ok_or_else(|| Diagnostic::new(offset, "Member access requires a receiver"))?;
+        Ok(Value {
+            ty: receiver.ty.clone(),
+            kind: ValueKind::Local(receiver.slot),
+        })
+    }
+    fn member_call(
+        &mut self,
+        method: JavaMethod,
+        receiver: Value,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        let (params, result) = class_method_types(&method)?;
+        if params.len() != args.len() || result == Type::Float || params.contains(&Type::Float) {
+            return Err(Diagnostic::new(
+                offset,
+                "Unsupported member call arguments or Float result",
+            ));
+        }
+        let interface = self
+            .classes
+            .get(&method.owner)
+            .is_some_and(|class| class.access & 0x0200 != 0);
+        let mut values = vec![receiver];
+        for (arg, ty) in args.iter().zip(params) {
+            let value = self.value(arg)?;
+            values.push(self.coerce(value, ty, arg.offset)?);
+        }
+        Ok(Value {
+            ty: result,
+            kind: ValueKind::MemberCall {
+                method,
+                interface,
+                args: values,
+            },
+        })
+    }
     fn resolve(&self, ty: &Type, offset: usize) -> Result<Type> {
         resolve_type(ty, self.imports, offset)
     }
@@ -181,18 +286,7 @@ impl Checker<'_> {
         Ok(ty)
     }
     fn check_ancestors(&self, class: &JavaClass, name: &str, offset: usize) -> Result<()> {
-        if matches!(
-            name,
-            "equals"
-                | "hashCode"
-                | "toString"
-                | "getClass"
-                | "wait"
-                | "notify"
-                | "notifyAll"
-                | "clone"
-                | "finalize"
-        ) {
+        if inherited_object_method(name) {
             return Err(Diagnostic::new(
                 offset,
                 "Java inherited member resolution is not supported",
@@ -356,7 +450,14 @@ impl Checker<'_> {
                 }
                 StatementKind::Assign(name, expr) => {
                     let local = self.local(name).ok_or_else(|| {
-                        Diagnostic::new(offset, format!("Unresolved local: {name}"))
+                        if self.fields.contains_key(name) {
+                            Diagnostic::new(
+                                offset,
+                                format!("Cannot reassign val or parameter: {name}"),
+                            )
+                        } else {
+                            Diagnostic::new(offset, format!("Unresolved local: {name}"))
+                        }
                     })?;
                     if !local.mutable {
                         return Err(Diagnostic::new(
@@ -370,7 +471,14 @@ impl Checker<'_> {
                 }
                 StatementKind::AddAssign(name, expr) => {
                     let local = self.local(name).ok_or_else(|| {
-                        Diagnostic::new(offset, format!("Unresolved local: {name}"))
+                        if self.fields.contains_key(name) {
+                            Diagnostic::new(
+                                offset,
+                                format!("Cannot reassign val or parameter: {name}"),
+                            )
+                        } else {
+                            Diagnostic::new(offset, format!("Unresolved local: {name}"))
+                        }
                     })?;
                     if !local.mutable {
                         return Err(Diagnostic::new(
@@ -470,6 +578,34 @@ impl Checker<'_> {
                     returns = true;
                     Statement::Return(value)
                 }
+                StatementKind::Throw(expr) => {
+                    let ExprKind::Call(target, args) = &expr.kind else {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Only throwing IllegalArgumentException with a String message is supported",
+                        ));
+                    };
+                    if !matches!(&target.kind, ExprKind::Name(name) if name == "IllegalArgumentException")
+                        || args.len() != 1
+                        || self.local("IllegalArgumentException").is_some()
+                        || self.functions.contains_key("IllegalArgumentException")
+                        || self.imports.contains_key("IllegalArgumentException")
+                        || self.fields.contains_key("IllegalArgumentException")
+                        || self.members.contains_key("IllegalArgumentException")
+                        || self.members.values().any(|method| method.source_property.as_deref() == Some("IllegalArgumentException"))
+                        || self.companion_fields.contains_key("IllegalArgumentException")
+                        || self.receiver.as_ref().is_some_and(|receiver| matches!(receiver.ty.base(), Type::Java(owner) if owner.rsplit(['/', '$']).next() == Some("IllegalArgumentException")))
+                    {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Only throwing IllegalArgumentException with a String message is supported",
+                        ));
+                    }
+                    let message = self.value(&args[0])?;
+                    self.require(&message, Type::String, args[0].offset)?;
+                    returns = true;
+                    Statement::Throw(message)
+                }
                 StatementKind::Expression(expr) => Statement::Expression(self.value(expr)?),
                 StatementKind::If(cond, yes, no) => {
                     let cond = self.value(cond)?;
@@ -504,14 +640,87 @@ impl Checker<'_> {
             ExprKind::Char(value) => (Type::Char, ValueKind::Int(i32::from(*value))),
             ExprKind::Boolean(value) => (Type::Boolean, ValueKind::Boolean(*value)),
             ExprKind::String(value) => (Type::String, ValueKind::String(value.clone())),
+            ExprKind::If(condition, yes, no) => {
+                let condition = self.value(condition)?;
+                self.require(&condition, Type::Boolean, offset)?;
+                let yes = self.value(yes)?;
+                let no = self.value(no)?;
+                if yes.ty == Type::Unit {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Unit if expressions are not supported",
+                    ));
+                }
+                if yes.ty != no.ty {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Type mismatch between if expression branches; common type inference is not supported",
+                    ));
+                }
+                (
+                    yes.ty.clone(),
+                    ValueKind::If(Box::new(condition), Box::new(yes), Box::new(no)),
+                )
+            }
+            ExprKind::Template(parts) => {
+                let mut result = Value {
+                    ty: Type::String,
+                    kind: ValueKind::String(Vec::new()),
+                };
+                for part in parts {
+                    let value = self.value(part)?;
+                    if !matches!(value.ty, Type::String | Type::Int | Type::Boolean) {
+                        return Err(Diagnostic::new(
+                            part.offset,
+                            "String templates support only String, Int, and Boolean values",
+                        ));
+                    }
+                    result = Value {
+                        ty: Type::String,
+                        kind: ValueKind::StringConcat(Box::new(result), Box::new(value)),
+                    };
+                }
+                return Ok(result);
+            }
             ExprKind::Name(name) => {
-                let local = if name == "this" {
+                if let Some(local) = if name == "this" {
                     self.receiver.clone()
                 } else {
                     self.local(name)
+                } {
+                    (local.ty, ValueKind::Local(local.slot))
+                } else if let Some(ty) = self.fields.get(name) {
+                    let receiver = self.receiver.as_ref().ok_or_else(|| {
+                        Diagnostic::new(offset, "Instance field requires a receiver")
+                    })?;
+                    (
+                        ty.clone(),
+                        ValueKind::Field(
+                            name.clone(),
+                            Box::new(Value {
+                                ty: receiver.ty.clone(),
+                                kind: ValueKind::Local(receiver.slot),
+                            }),
+                        ),
+                    )
+                } else if let Some(method) = self
+                    .members
+                    .values()
+                    .find(|method| method.source_property.as_deref() == Some(name))
+                {
+                    let receiver = self.receiver_value(offset)?;
+                    return self.member_call(method.clone(), receiver, &[], offset);
+                } else if let Some((owner, ty)) = self.companion_fields.get(name) {
+                    (
+                        ty.clone(),
+                        ValueKind::CompanionArray {
+                            owner: owner.clone(),
+                            name: name.clone(),
+                        },
+                    )
+                } else {
+                    return Err(Diagnostic::new(offset, format!("Unresolved local: {name}")));
                 }
-                .ok_or_else(|| Diagnostic::new(offset, format!("Unresolved local: {name}")))?;
-                (local.ty, ValueKind::Local(local.slot))
             }
             ExprKind::Unary(op, inner) => {
                 if op == "-" && matches!(inner.kind, ExprKind::Int(2147483648)) {
@@ -535,8 +744,8 @@ impl Checker<'_> {
             ExprKind::Binary(op, a, b) => {
                 let a = self.value(a)?;
                 let b = self.value(b)?;
-                if a.ty == Type::Unit
-                    || b.ty == Type::Unit
+                if matches!(a.ty, Type::Unit | Type::Float)
+                    || matches!(b.ty, Type::Unit | Type::Float)
                     || matches!(a.ty.base(), Type::Java(_))
                     || matches!(b.ty.base(), Type::Java(_))
                     || matches!(a.ty, Type::Platform(_)) && a.ty.base() == &Type::String
@@ -561,9 +770,13 @@ impl Checker<'_> {
                     self.require(&b, Type::Boolean, offset)?;
                     Type::Boolean
                 } else if op == "==" || op == "!=" {
-                    if matches!(a.ty.base(), Type::IntArray | Type::CharArray)
-                        || matches!(b.ty.base(), Type::IntArray | Type::CharArray)
-                    {
+                    if matches!(
+                        a.ty.base(),
+                        Type::IntArray | Type::CharArray | Type::StringArray
+                    ) || matches!(
+                        b.ty.base(),
+                        Type::IntArray | Type::CharArray | Type::StringArray
+                    ) {
                         return Err(Diagnostic::new(offset, "Array equality is not supported"));
                     }
                     self.require(&b, a.ty.clone(), offset)?;
@@ -587,6 +800,12 @@ impl Checker<'_> {
             ExprKind::Property(receiver, name) => {
                 if matches!(&receiver.kind, ExprKind::Name(n) if n == "Int")
                     && self.local("Int").is_none()
+                    && !self.fields.contains_key("Int")
+                    && !self
+                        .members
+                        .values()
+                        .any(|method| method.source_property.as_deref() == Some("Int"))
+                    && !self.companion_fields.contains_key("Int")
                 {
                     let value = match name.as_str() {
                         "MIN_VALUE" => i32::MIN,
@@ -601,6 +820,31 @@ impl Checker<'_> {
                     (Type::Int, ValueKind::Int(value))
                 } else {
                     let receiver = self.value(receiver)?;
+                    if self
+                        .receiver
+                        .as_ref()
+                        .is_some_and(|this| this.ty == receiver.ty)
+                    {
+                        if let Some(ty) = self.fields.get(name) {
+                            return Ok(Value {
+                                ty: ty.clone(),
+                                kind: ValueKind::Field(name.clone(), Box::new(receiver)),
+                            });
+                        }
+                    }
+                    if self
+                        .receiver
+                        .as_ref()
+                        .is_some_and(|this| this.ty == receiver.ty)
+                    {
+                        if let Some(method) = self
+                            .members
+                            .values()
+                            .find(|method| method.source_property.as_deref() == Some(name))
+                        {
+                            return self.member_call(method.clone(), receiver, &[], offset);
+                        }
+                    }
                     if receiver.ty == Type::String && name == "length" {
                         return Ok(Value {
                             ty: Type::Int,
@@ -613,7 +857,10 @@ impl Checker<'_> {
                             format!("Unsupported property: {name}"),
                         ));
                     }
-                    if !matches!(receiver.ty.base(), Type::IntArray | Type::CharArray) {
+                    if !matches!(
+                        receiver.ty.base(),
+                        Type::IntArray | Type::CharArray | Type::StringArray
+                    ) {
                         return Err(Diagnostic::new(offset, "Expected IntArray or CharArray"));
                     }
                     (Type::Int, ValueKind::Length(Box::new(receiver)))
@@ -624,6 +871,7 @@ impl Checker<'_> {
                 let element = match array.ty.base() {
                     Type::IntArray => Type::Int,
                     Type::CharArray => Type::Char,
+                    Type::StringArray => Type::String,
                     _ => return Err(Diagnostic::new(offset, "Expected IntArray or CharArray")),
                 };
                 let index = self.value(index)?;
@@ -637,6 +885,16 @@ impl Checker<'_> {
                             offset,
                             "Invoking local values is not supported",
                         ));
+                    }
+                    if let Some(method) = self.members.get(name).cloned() {
+                        if method.source_property.is_some() {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Kotlin properties cannot be invoked as functions",
+                            ));
+                        }
+                        let receiver = self.receiver_value(offset)?;
+                        return self.member_call(method, receiver, args, offset);
                     }
                     if let Some(receiver) = self.receiver.clone() {
                         if let Type::Java(owner) = receiver.ty.base() {
@@ -715,6 +973,27 @@ impl Checker<'_> {
                         ));
                     }
                     let receiver = self.value(receiver)?;
+                    if self
+                        .receiver
+                        .as_ref()
+                        .is_some_and(|this| this.ty == receiver.ty)
+                    {
+                        if let Some(method) = self.members.get(name).cloned() {
+                            if method.source_property.is_some() {
+                                return Err(Diagnostic::new(
+                                    offset,
+                                    "Kotlin properties cannot be invoked as functions",
+                                ));
+                            }
+                            return self.member_call(method, receiver, args, offset);
+                        }
+                    }
+                    if receiver.ty == Type::Int && name == "toString" && args.is_empty() {
+                        return Ok(Value {
+                            ty: Type::String,
+                            kind: ValueKind::IntToString(Box::new(receiver)),
+                        });
+                    }
                     if matches!(receiver.ty.base(), Type::Java(_)) {
                         return self.java_call(receiver, name, args, offset);
                     }
@@ -827,9 +1106,48 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
     let mut imports = HashMap::new();
     let mut classes = HashMap::new();
     for (alias, name, offset) in &source.imports {
+        if source
+            .class_decl
+            .as_ref()
+            .is_some_and(|decl| decl.name == *alias)
+        {
+            return Err(Diagnostic::new(
+                *offset,
+                "Class import conflicts with class declaration",
+            ));
+        }
+        if source
+            .object_decl
+            .as_ref()
+            .is_some_and(|declaration| declaration.name == *alias)
+        {
+            return Err(Diagnostic::new(
+                *offset,
+                "Class import conflicts with object declaration",
+            ));
+        }
+        if source
+            .enum_decl
+            .as_ref()
+            .is_some_and(|declaration| declaration.name == *alias)
+        {
+            return Err(Diagnostic::new(
+                *offset,
+                "Class import conflicts with enum declaration",
+            ));
+        }
         if matches!(
             alias.as_str(),
-            "Int" | "Char" | "Boolean" | "String" | "IntArray" | "CharArray" | "Unit"
+            "Int"
+                | "Char"
+                | "Float"
+                | "Boolean"
+                | "String"
+                | "IntArray"
+                | "CharArray"
+                | "StringArray"
+                | "Array"
+                | "Unit"
         ) {
             return Err(Diagnostic::new(
                 *offset,
@@ -847,6 +1165,9 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             return Err(Diagnostic::new(*offset, "Conflicting class import"));
         }
         classes.insert(class.name.clone(), class);
+    }
+    if let Some(interface) = &source.interface_decl {
+        return interfaces::check(interface, &source.package, classpath, imports, classes);
     }
     let mut functions = HashMap::new();
     let mut signatures = Vec::new();
@@ -869,7 +1190,11 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         for (name, ty) in &function.params {
             params.push((name.clone(), resolve_type(ty, &imports, function.offset)?));
         }
-        if params.iter().any(|p| p.1 == Type::Unit) {
+        if params
+            .iter()
+            .any(|p| matches!(p.1, Type::Unit | Type::Float))
+            || function.result == Type::Float
+        {
             return Err(Diagnostic::new(
                 function.offset,
                 "Unit parameters are not supported",
@@ -889,6 +1214,24 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
     if functions.len() > 65535 {
         return Err(Diagnostic::new(0, "Too many functions for a JVM class"));
     }
+    if let Some(decl) = &source.class_decl {
+        return Ok(Module {
+            functions: Vec::new(),
+            interface_decl: None,
+            class_decl: Some(check_class(
+                decl,
+                &source.package,
+                classpath,
+                &imports,
+                &classes,
+                &HashMap::new(),
+                None,
+            )?),
+        });
+    }
+    let fields = HashMap::new();
+    let members = HashMap::new();
+    let companion_fields = HashMap::new();
     let mut result = Vec::new();
     for (id, function) in source.functions.iter().enumerate() {
         let (params, return_type) = signatures[id].clone();
@@ -899,6 +1242,9 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             imports: &imports,
             signatures: &signatures,
             receiver: None,
+            fields: &fields,
+            members: &members,
+            companion_fields: &companion_fields,
             functions: &functions,
             scopes: vec![HashMap::new()],
             next: 0,
@@ -930,11 +1276,361 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         result.push(Function {
             name: function.name.clone(),
             private: function.private,
+            is_override: false,
             params,
             result: return_type,
             locals: checker.next,
             body,
         });
     }
-    Ok(Module { functions: result })
+    Ok(Module {
+        functions: result,
+        class_decl: None,
+        interface_decl: None,
+    })
+}
+
+pub(crate) fn getter_name(name: &str) -> String {
+    if name.starts_with("is")
+        && name
+            .as_bytes()
+            .get(2)
+            .is_some_and(|c| !c.is_ascii_lowercase())
+    {
+        name.into()
+    } else {
+        format!("get{}{}", name[..1].to_ascii_uppercase(), &name[1..])
+    }
+}
+
+#[allow(clippy::too_many_arguments)]
+fn check_class(
+    source: &syntax::ClassDecl,
+    package: &str,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+    classes: &HashMap<String, JavaClass>,
+    companion_fields: &HashMap<String, (String, Type)>,
+    owner_override: Option<&str>,
+) -> Result<ClassDecl> {
+    let owner = if let Some(owner) = owner_override {
+        owner.into()
+    } else if package.is_empty() {
+        source.name.clone()
+    } else {
+        format!("{}/{}", package.replace('.', "/"), source.name)
+    };
+    let mut params = Vec::new();
+    let mut fields = HashMap::new();
+    for (name, ty) in &source.params {
+        let ty = resolve_type(ty, imports, source.offset)?;
+        if matches!(ty, Type::Unit | Type::Float) {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Unit parameters are not supported",
+            ));
+        }
+        if fields.insert(name.clone(), ty.clone()).is_some() {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Conflicting constructor field",
+            ));
+        }
+        params.push((name.clone(), ty));
+    }
+    if params.len() > 254 {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Instance methods support at most 254 parameter slots",
+        ));
+    }
+    let mut interfaces = Vec::new();
+    let mut required = HashMap::new();
+    for alias in &source.interfaces {
+        let name = imports
+            .get(alias)
+            .ok_or_else(|| Diagnostic::new(source.offset, "Interfaces require explicit imports"))?;
+        let interface = &classes[name];
+        if interfaces.contains(name) {
+            return Err(Diagnostic::new(source.offset, "Duplicate interface"));
+        }
+        interfaces.push(name.clone());
+        for (method_name, method) in
+            interfaces::interface_methods(interface, classes, source.offset)?
+        {
+            if required.insert(method_name, method).is_some() {
+                return Err(Diagnostic::new(
+                    source.offset,
+                    "Overloaded or conflicting interface methods are not supported",
+                ));
+            }
+        }
+    }
+
+    let mut declarations = Vec::new();
+    for property in &source.properties {
+        if property.ty == Type::Unit {
+            return Err(Diagnostic::new(
+                property.offset,
+                "Unit properties are not supported",
+            ));
+        }
+        if fields.contains_key(&property.name) {
+            return Err(Diagnostic::new(
+                property.offset,
+                "Conflicting property declaration",
+            ));
+        }
+        declarations.push((
+            getter_name(&property.name),
+            false,
+            property.is_override,
+            Some(property.name.as_str()),
+            Vec::new(),
+            &property.ty,
+            &property.body,
+            property.offset,
+        ));
+    }
+    for method in &source.methods {
+        let function = &method.function;
+        if function.receiver.is_some() {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Member extension functions are not supported",
+            ));
+        }
+        declarations.push((
+            function.name.clone(),
+            function.private,
+            method.is_override,
+            None,
+            function.params.clone(),
+            &function.result,
+            &function.body,
+            function.offset,
+        ));
+    }
+    let mut members = required.clone();
+    for (name, private, _, property, source_params, result, _, offset) in &declarations {
+        let params = source_params
+            .iter()
+            .map(|(_, ty)| resolve_type(ty, imports, *offset).map(|ty| ty.descriptor()))
+            .collect::<Result<Vec<_>>>()?
+            .concat();
+        let result = resolve_type(result, imports, *offset)?;
+        members.insert(
+            name.clone(),
+            JavaMethod {
+                owner: owner.clone(),
+                name: name.clone(),
+                descriptor: format!("({params}){}", result.descriptor()),
+                access: if *private { 2 } else { 1 },
+                unsupported: false,
+                source_property: property.map(str::to_owned),
+            },
+        );
+    }
+    let functions = HashMap::new();
+    let signatures = Vec::new();
+    let extensions = HashSet::new();
+    let mut methods = Vec::new();
+    let mut names = HashSet::new();
+    for (name, private, is_override, source_property, source_params, result, body, offset) in
+        declarations
+    {
+        if inherited_object_method(&name) {
+            return Err(Diagnostic::new(
+                offset,
+                "Any and Object inherited members are not supported",
+            ));
+        }
+        if !names.insert(name.clone()) {
+            return Err(Diagnostic::new(
+                offset,
+                "Member overloads and JVM getter collisions are not supported",
+            ));
+        }
+        let result = resolve_type(result, imports, offset)?;
+        if result == Type::Float {
+            return Err(Diagnostic::new(
+                offset,
+                "Float method bodies are not supported",
+            ));
+        }
+        let mut checker = Checker {
+            classpath,
+            extensions: &extensions,
+            classes,
+            imports,
+            signatures: &signatures,
+            receiver: Some(Local {
+                slot: 0,
+                ty: Type::Java(owner.clone()),
+                mutable: false,
+            }),
+            fields: &fields,
+            members: &members,
+            companion_fields,
+            functions: &functions,
+            scopes: vec![HashMap::new()],
+            next: 1,
+            result: result.clone(),
+        };
+        let mut method_params = Vec::new();
+        if source_params.len() > 254 {
+            return Err(Diagnostic::new(
+                offset,
+                "Instance methods support at most 254 parameter slots",
+            ));
+        }
+        for (param, ty) in source_params {
+            let ty = resolve_type(&ty, imports, offset)?;
+            if matches!(ty, Type::Unit | Type::Float) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Unit and Float parameters are not supported",
+                ));
+            }
+            checker.declare(&param, ty.clone(), false, offset)?;
+            method_params.push((param, ty));
+        }
+        let (mut body, returns) = checker.block(body)?;
+        if !returns {
+            if result != Type::Unit {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Function must return on all paths; unconditional-loop analysis is not supported",
+                ));
+            }
+            body.push(Statement::Return(Value {
+                ty: Type::Unit,
+                kind: ValueKind::Unit,
+            }));
+        }
+        let method = Function {
+            name,
+            private,
+            is_override,
+            params: method_params,
+            result,
+            locals: checker.next,
+            body,
+        };
+        match required.get(&method.name) {
+            Some(required) => {
+                if !is_override
+                    || private
+                    || method.descriptor() != required.descriptor
+                    || required.source_property.as_deref() != source_property
+                {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Interface implementation requires override and an exact supported JVM signature",
+                    ));
+                }
+            }
+            None if is_override => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Member overrides no supported interface declaration",
+                ));
+            }
+            None => {}
+        }
+        methods.push(method);
+    }
+    let mut bridges = Vec::new();
+    let mut required: Vec<_> = required.into_values().collect();
+    required.sort_by(|a, b| a.name.cmp(&b.name));
+    for method in required {
+        if names.contains(&method.name) {
+            continue;
+        }
+        if method.access & 0x0400 != 0 {
+            return Err(Diagnostic::new(
+                source.offset,
+                format!("Missing interface implementation: {}", method.name),
+            ));
+        }
+        if classes[&method.owner].kotlin_interface {
+            bridges.push(method);
+        }
+    }
+    if methods.len() + bridges.len() + 1 > 65535 {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Too many methods for a JVM class",
+        ));
+    }
+    Ok(ClassDecl {
+        params,
+        interfaces,
+        methods,
+        bridges,
+    })
+}
+
+pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type)> {
+    fn ty(descriptor: &str, cursor: &mut usize) -> Result<Type> {
+        let rest = descriptor
+            .get(*cursor..)
+            .ok_or_else(|| Diagnostic::new(0, "Invalid interface method descriptor"))?;
+        for (prefix, ty) in [
+            ("[Ljava/lang/String;", Type::StringArray),
+            ("Ljava/lang/String;", Type::String),
+            ("[I", Type::IntArray),
+            ("[C", Type::CharArray),
+            ("I", Type::Int),
+            ("C", Type::Char),
+            ("Z", Type::Boolean),
+            ("F", Type::Float),
+            ("V", Type::Unit),
+        ] {
+            if rest.starts_with(prefix) {
+                *cursor += prefix.len();
+                return Ok(ty);
+            }
+        }
+        Err(Diagnostic::new(
+            0,
+            "Unsupported interface method descriptor",
+        ))
+    }
+    if !method.descriptor.starts_with('(') {
+        return Err(Diagnostic::new(0, "Invalid interface method descriptor"));
+    }
+    let mut cursor = 1;
+    let mut params = Vec::new();
+    while method.descriptor.as_bytes().get(cursor) != Some(&b')') {
+        let param = ty(&method.descriptor, &mut cursor)?;
+        if param == Type::Unit || params.len() >= 254 {
+            return Err(Diagnostic::new(
+                0,
+                "Unsupported interface method parameters",
+            ));
+        }
+        params.push(param);
+    }
+    cursor += 1;
+    let result = ty(&method.descriptor, &mut cursor)?;
+    if cursor != method.descriptor.len() {
+        return Err(Diagnostic::new(0, "Invalid interface method descriptor"));
+    }
+    Ok((params, result))
+}
+
+fn inherited_object_method(name: &str) -> bool {
+    matches!(
+        name,
+        "equals"
+            | "hashCode"
+            | "toString"
+            | "getClass"
+            | "wait"
+            | "notify"
+            | "notifyAll"
+            | "clone"
+            | "finalize"
+    )
 }

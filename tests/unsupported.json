@@ -1,11 +1,13 @@
 [
   {
     "id": "string_templates",
-    "source": "fun f(x: Int): String = \"value=$x\""
+    "source": "fun f(x: Int): String = \"value=${x}\"",
+    "feature_name": "string_template_expressions"
   },
   {
     "id": "classes",
-    "source": "class Example(val value: Int)"
+    "source": "class Example(val value: Int)",
+    "feature_name": "nonprivate_constructor_properties"
   },
   {
     "id": "nullable_types",
@@ -58,5 +60,209 @@
   {
     "id": "when_trailing_condition_comma",
     "source": "fun f(n: Int): Int { when (n) { 1, -> return 1; else -> return 0 } }"
+  },
+  {
+    "id": "enum_constructor_parameters",
+    "source": "enum class E(val number: Int) { A(1) }",
+    "message": "Enum constructors, supertypes, and generics"
+  },
+  {
+    "id": "enum_supertype",
+    "source": "enum class E : java.io.Serializable { A }",
+    "message": "Enum constructors, supertypes, and generics"
+  },
+  {
+    "id": "enum_custom_member",
+    "source": "enum class E { A; fun number(): Int = 1 }"
+  },
+  {
+    "id": "enum_entry_body",
+    "source": "enum class E { A {} }"
+  },
+  {
+    "id": "enum_entry_arguments",
+    "source": "enum class E { A() }"
+  },
+  {
+    "id": "enum_mixed_declarations",
+    "source": "enum class E { A }\nfun number(): Int = 1",
+    "message": "Only one enum class"
+  },
+  {
+    "id": "enum_multiple_declarations",
+    "source": "enum class E { A }\nenum class F { B }",
+    "message": "Only one enum class"
+  },
+  {
+    "id": "enum_nested",
+    "source": "class Outer { enum class E { A } }"
+  },
+  {
+    "id": "enum_private_visibility",
+    "source": "private enum class E { A }",
+    "message": "Unsupported enum visibility"
+  },
+  {
+    "id": "enum_annotation",
+    "source": "@Deprecated(\"test\")\nenum class E { A }"
+  },
+  {
+    "id": "enum_entry_annotation",
+    "source": "enum class E { @Deprecated(\"test\") A }"
+  },
+  {
+    "id": "object_nonconst_property",
+    "source": "object O { val V = 1 }"
+  },
+  {
+    "id": "object_method",
+    "source": "object O { fun number(): Int = 1 }"
+  },
+  {
+    "id": "object_init",
+    "source": "object O { init {} }"
+  },
+  {
+    "id": "object_supertype",
+    "source": "object O : java.io.Serializable {}"
+  },
+  {
+    "id": "object_data",
+    "source": "data object O {}"
+  },
+  {
+    "id": "object_nested_class",
+    "source": "object O { class Child }"
+  },
+  {
+    "id": "object_mixed_declarations",
+    "source": "object O {}\nfun number(): Int = 1"
+  },
+  {
+    "id": "object_multiple_declarations",
+    "source": "object O {}\nobject P {}"
+  },
+  {
+    "id": "object_private_visibility",
+    "source": "private object O {}",
+    "message": "Unsupported object visibility"
+  },
+  {
+    "id": "object_private_const",
+    "source": "object O { private const val V = 1 }",
+    "message": "Unsupported constant visibility"
+  },
+  {
+    "id": "object_reserved_const_instance",
+    "source": "object O { const val INSTANCE = 1 }",
+    "message": "Object member name INSTANCE conflicts"
+  },
+  {
+    "id": "object_reserved_nested_instance",
+    "source": "object O { object INSTANCE }",
+    "message": "Object member name INSTANCE conflicts"
+  },
+  {
+    "id": "object_const_expression",
+    "source": "object O { const val V = 1 + 2 }"
+  },
+  {
+    "id": "object_const_reference",
+    "source": "object O { const val FIRST = 1; const val SECOND = FIRST }"
+  },
+  {
+    "id": "object_const_long",
+    "source": "object O { const val V = 2147483648 }"
+  },
+  {
+    "id": "object_const_byte",
+    "source": "object O { const val V: Byte = 1 }"
+  },
+  {
+    "id": "object_annotation",
+    "source": "@Deprecated(\"test\")\nobject O {}"
+  },
+  {
+    "id": "class_open",
+    "source": "open class C(private val elements: Array<String>)",
+    "message": "Only ordinary final classes"
+  },
+  {
+    "id": "class_implicit_constructor",
+    "source": "class C",
+    "message": "Classes require an explicit primary constructor"
+  },
+  {
+    "id": "class_mutable_constructor_property",
+    "source": "class C(private var value: Int)",
+    "message": "Expected val"
+  },
+  {
+    "id": "class_constructor_parameter_without_property",
+    "source": "class C(value: Int)",
+    "message": "Only private val primary constructor parameters"
+  },
+  {
+    "id": "class_generic_array_element",
+    "source": "class C(private val values: Array<Int>)",
+    "message": "Only Array<String> is supported"
+  },
+  {
+    "id": "class_non_getter_property",
+    "source": "class C(private val value: Int) { val other = 1 }"
+  },
+  {
+    "id": "class_any_override",
+    "source": "class C(private val elements: Array<String>) { override fun toString(): String = elements[0] }",
+    "message": "Any and Object inherited members are not supported"
+  },
+  {
+    "id": "class_nullable_interface",
+    "source": "import korrust.fixtures.NullableText\nclass C(private val elements: Array<String>) : NullableText { override fun text(): String = elements[0] }",
+    "classpath": true
+  },
+  {
+    "id": "class_builtin_shadow",
+    "source": "class Array()",
+    "message": "Declarations shadowing builtin types are not supported"
+  },
+  {
+    "id": "interface_generic",
+    "source": "interface I<T> { fun f(): T }",
+    "message": "Interface constructors, generics, and qualified supertypes"
+  },
+  {
+    "id": "interface_private",
+    "source": "private interface I",
+    "message": "Only public or internal plain interfaces"
+  },
+  {
+    "id": "interface_mutable_property",
+    "source": "interface I { var value: Int }",
+    "message": "Only public interface properties, functions, nested interfaces, and companion objects"
+  },
+  {
+    "id": "interface_named_companion",
+    "source": "interface I { companion object Named {} }",
+    "message": "Only unnamed companion objects are supported"
+  },
+  {
+    "id": "interface_companion_nonstring_array",
+    "source": "interface I { companion object { private val A = arrayOf(1) } }",
+    "message": "Companion arrayOf initializers support only String literals"
+  },
+  {
+    "id": "interface_companion_plain_value",
+    "source": "interface I { companion object { val value = 1 } }",
+    "message": "Companions support only"
+  },
+  {
+    "id": "interface_float_default",
+    "source": "interface I { fun f(): Float = 1.0f }"
+  },
+  {
+    "id": "interface_reference_default_parameter",
+    "source": "interface I { fun f(value: String): String = value }",
+    "message": "Interface default bodies with reference parameters are not supported"
   }
 ]

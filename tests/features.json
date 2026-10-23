@@ -40,7 +40,7 @@
   },
   {
     "name": "jvm_java_interop",
-    "scope": "Java callers compiled against official Kotlin run against Korrust classes; selected JVM signatures match including unchanged AndroidBible IntArrayListUtil extension against the original Java IntArrayList. Directory classpaths, explicit Java imports, declared public instance calls, scoped platform results, void calls and receiver checks are exercised.",
+    "scope": "Java callers compiled against official Kotlin run against Korrust classes; selected JVM signatures match including unchanged AndroidBible IntArrayListUtil extension against the original Java IntArrayList. Directory classpaths, explicit Java imports, declared public instance calls, scoped platform results, void calls and receiver checks are exercised. Bare enum Java callers and generic signatures are also validated against the pinned official compiler. Named/nested object Java callers, reflective constant reads and ConstantValue signatures are validated. Ordinary final classes implement validated imported Kotlin interfaces, including explicit/default JVM methods and constructor String-array fields.",
     "evidence_cases": [
       "androidbible_unsigned_search",
       "jvm_semantics",
@@ -55,13 +55,22 @@
       "interop_diagnostics/missing_classpath",
       "character_when_semantics",
       "jvm_signatures/korrust.probes.CharactersKt",
-      "jvm_signatures/yuku.alkitab.base.widget.VerseNumberPlacementKt"
+      "jvm_signatures/yuku.alkitab.base.widget.VerseNumberPlacementKt",
+      "bare_enum_semantics",
+      "jvm_signatures/yuku.alkitab.base.actionmode.RibkaEligibility",
+      "object_constant_semantics",
+      "jvm_signatures/yuku.alkitab.base.util.RequestCodes",
+      "jvm_signatures/yuku.alkitab.base.util.RequestCodes$FromActivity",
+      "androidbible_yes2_chapter",
+      "generic_class_semantics",
+      "jvm_signatures/yuku.alkitab.yes2.Yes2SingleChapterVerses",
+      "jvm_signatures/korrust.probes.classes.TextStore"
     ],
     "restrictions": [
-      "Emits class-file version 49; requires kotlin-stdlib for non-null reference parameter checks and selected String operations.",
-      "No Kotlin metadata or module metadata, source line/local-variable tables, class declarations, JAR packaging, or Gradle integration.",
-      "Kotlin consumers, Android/D8, and full application builds have not been validated.",
-      "Java support is deliberately bounded: no JAR classpaths, Java construction, fields, static/interface/inherited calls, overloads, generics, varargs, annotated methods or Kotlin metadata classes; unsupported surfaces fail closed.",
+      "Emits class-file versions 49 and 52; requires kotlin-stdlib for non-null reference parameter checks, selected String operations and enum entries.",
+      "Kotlin metadata and module mappings cover supported top-level functions and bounded classes; enum/object metadata, source line/local-variable tables and general class forms are absent.",
+      "Kotlin consumer evidence covers selected public imports and internal/friend/private/nullability boundaries; full application builds remain unvalidated.",
+      "Java support is deliberately bounded: no JAR classpaths, Java construction, fields, static/interface/inherited calls, overloads, generics, varargs, annotated methods or general Kotlin metadata classes; validated Kotlin interfaces are accepted for bounded class implementation, while Java interface calls remain unsupported; unsupported surfaces fail closed.",
       "Test-only Android Parcel/Parcelable and NonNull stubs provide javac types only; Android parcel behavior and full Java nullability annotation semantics are unvalidated."
     ]
   },
@@ -74,8 +83,8 @@
       "jvm_signatures/yuku.alkitab.base.audio.AudioErrorCodeKt"
     ],
     "restrictions": [
-      "No string templates, raw strings, nullable declarations, String extension declarations, overloads, or general String API support.",
-      "No Kotlin metadata or module metadata; Kotlin consumers and Android/D8 remain unvalidated."
+      "No braced-expression/backtick-name templates or raw strings; simple ASCII name interpolation is tested. No nullable declarations, String extension declarations, overloads, or general String API support.",
+      "Kotlin consumer metadata evidence is limited to tested public imports and internal function visibility; String API breadth and Android runtime behavior remain outside this claim."
     ]
   },
   {
@@ -91,6 +100,117 @@
       "No Char arithmetic, conversions, String concatenation with Char, CharArray construction/copyInto/indexed writes, nullable declarations or other Char/CharArray APIs.",
       "Non-BMP characters require surrogate code units; a Char literal must contain exactly one UTF-16 code unit.",
       "Java Char/CharArray method descriptors and general character APIs remain outside the supported interop subset."
+    ]
+  },
+  {
+    "name": "bare_enum_classes",
+    "scope": "One top-level public/default/internal bare enum per file, empty forms and up to 1024 plain entries with optional trailing comma/terminating semicolon; unchanged AndroidBible RibkaEligibility. Java assertions cover names, ordinals, identity, comparison, declaring class, valueOf exceptions, defensive values arrays, stable ordered immutable kotlin-stdlib EnumEntries, generic reflection, EnumSet/EnumMap and serialization identity.",
+    "evidence_cases": [
+      "bare_enum_semantics",
+      "rust_frontend",
+      "jvm_signatures/yuku.alkitab.base.actionmode.RibkaEligibility",
+      "jvm_signatures/korrust.probes.enums.CollisionEnum",
+      "jvm_signatures/korrust.probes.enums.EmptyBodylessEnum",
+      "jvm_signatures/korrust.probes.enums.EmptyEnum",
+      "jvm_signatures/korrust.probes.enums.EmptySemicolonEnum",
+      "jvm_signatures/korrust.probes.enums.EnumOrder",
+      "jvm_signatures/korrust.probes.enums.InternalEnum",
+      "jvm_signatures/korrust.probes.enums.LargeEnum",
+      "jvm_signatures/korrust.probes.enums.SingleEnum"
+    ],
+    "restrictions": [
+      "No enum constructor parameters, supertypes, custom members, annotated entries/classes, entry arguments/bodies, nested or multiple enums, mixed top-level declarations or private enum visibility.",
+      "No Kotlin metadata or module metadata; Kotlin consumers, Kotlin enum expressions/imports, Android/D8 and full application builds remain unvalidated.",
+      "kotlin-stdlib is required at runtime for generated getEntries; general class declarations and Kotlin enum API use in source remain outside this milestone."
+    ]
+  },
+  {
+    "name": "objects_and_literal_constants",
+    "scope": "One top-level public/default/internal named object with nested objects, up to depth 16, 256 classes per source and 1024 constants per object. Literal const vals support inferred or matching explicit Int, Boolean, Char and String; unchanged AndroidBible RequestCodes. Java assertions cover singleton identity, private constructor, nested class reflection/flags, reflective field values, signed Int boundaries, escaped UTF-16/NUL/surrogate constants and 1024 constants.",
+    "evidence_cases": [
+      "object_constant_semantics",
+      "rust_frontend",
+      "jvm_signatures/yuku.alkitab.base.util.RequestCodes",
+      "jvm_signatures/yuku.alkitab.base.util.RequestCodes$FromActivity",
+      "jvm_signatures/korrust.probes.objects.ObjectLiterals",
+      "jvm_signatures/korrust.probes.objects.ObjectTree",
+      "jvm_signatures/korrust.probes.objects.ObjectTree$Left",
+      "jvm_signatures/korrust.probes.objects.ObjectTree$Left$Leaf",
+      "jvm_signatures/korrust.probes.objects.InternalObject",
+      "jvm_signatures/korrust.probes.objects.LargeObject",
+      "jvm_signatures/korrust.probes.objects.CollisionObject$CollisionObject"
+    ],
+    "restrictions": [
+      "No methods, non-const properties, init blocks, supertypes, companion/data objects, general nested classes, annotations, mixed/multiple top-level declarations or private visibility. Member name INSTANCE is explicitly unsupported for constants and nested objects.",
+      "Initializers are single literals with an optional sign for Int; no constant expressions/references, Long, other numeric types, nullable types, raw strings or string templates.",
+      "Named object/constant metadata and consumers remain unvalidated; companion/anonymous objects inside bounded source interfaces have separate evidence. Kotlin source object/constant imports and references, Android/D8 and full application builds remain outside this evidence."
+    ]
+  },
+  {
+    "name": "owned_output_lifecycle",
+    "scope": "Recompiling an edited source removes its stale owned class files and matches independent clean compilation, including nested object removal/package changes. CLI tests cover failure preservation, ownership conflicts and output-path protections.",
+    "evidence_cases": [
+      "cli_output_lifecycle"
+    ],
+    "restrictions": [
+      "This is output ownership and cleanup for explicitly recompiled sources; no incremental dependency graph, deleted-source discovery or compilation cache is implemented.",
+      "Incremental speed and whole-app edit-to-running behavior are unmeasured.",
+      "Compile/preflight errors preserve prior outputs; filesystem errors during publication are not fully transactional. Missing or externally changed owned artifacts are rejected, and each output directory permits one writer."
+    ]
+  },
+  {
+    "name": "ordinary_final_classes_and_string_arrays",
+    "scope": "One public/default/internal final class per source, explicit primary constructor with private val fields, Array<String>, explicit getter properties and instance methods with straight-line supported expressions. Implements validated Kotlin interfaces with exact override identity and JVM descriptors, including default-interface bridges. Unchanged AndroidBible Yes2SingleChapterVerses plus differently named public TextStore with multiple fields/arithmetic are compared against official Kotlin.",
+    "evidence_cases": [
+      "androidbible_yes2_chapter",
+      "generic_class_semantics",
+      "rust_frontend",
+      "jvm_signatures/yuku.alkitab.yes2.Yes2SingleChapterVerses",
+      "jvm_signatures/korrust.probes.classes.TextStore"
+    ],
+    "restrictions": [
+      "No open/abstract/data/generic/nested classes, non-private-val constructor parameters, default/named constructor arguments, init blocks or arbitrary field/property initializers. Array type support is restricted to Array<String> with supported construction through Java/Kotlin consumers; general array types and operations are unavailable.",
+      "Class member bytecode supports straight-line expressions and return bodies; control-flow/branching members, overloads, inherited Any/Object members, unsupported interface metadata and Java interface implementations fail closed.",
+      "Interface support validates nonnullable ordinary supported signatures/property identity; nullable/generic/suspend/default-parameter and other metadata surfaces remain unsupported."
+    ]
+  },
+  {
+    "name": "kotlin_metadata_and_consumers",
+    "scope": "Metadata and per-source package mappings for supported top-level functions and bounded classes. Pinned official Kotlin compiles/runs separate public consumers importing three facades and a public class, and friend consumers accessing internal class/functions. Independent negative consumers enforce internal/private access and nonnull constructor types.",
+    "evidence_cases": [
+      "kotlin_metadata/PublicMetadataConsumer",
+      "kotlin_metadata/FriendMetadataConsumer",
+      "kotlin_metadata/InternalClassAccess",
+      "kotlin_metadata/PrivateFieldAccess",
+      "kotlin_metadata/PublicNullAccess",
+      "kotlin_metadata/InternalFunctionAccess"
+    ],
+    "restrictions": [
+      "Metadata and consumer compatibility is established only for exercised declaration shapes/signatures; enum/object metadata and arbitrary Kotlin API compatibility are unvalidated.",
+      "Kotlin module mappings support discovery of emitted top-level facades; no Gradle incremental dependency graph or incremental speed claim is established."
+    ]
+  },
+  {
+    "name": "source_interfaces_companions_and_defaults",
+    "scope": "Public/internal ordinary source interfaces with abstract supported members, straight-line/default bodies, if expressions, Int.toString, simple ASCII name String interpolation, IllegalArgumentException throw; nested inherited interfaces with abstract Float return descriptors. Bounded companion private String-literal arrays and public anonymous implementation values. Unchanged SingleChapterVerses and renamed RecordView validate helpers/default dispatch/null receivers, companion and private-array identity, initialization, exact anonymous exception messages, Float ABI and Kotlin metadata consumers.",
+    "evidence_cases": [
+      "androidbible_model_interface",
+      "generic_interface_semantics",
+      "androidbible_yes2_candidate_model",
+      "kotlin_metadata/ModelConsumer",
+      "model_jvm_signatures/yuku.alkitab.model.SingleChapterVerses",
+      "model_jvm_signatures/yuku.alkitab.model.SingleChapterVerses$Companion",
+      "model_jvm_signatures/yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+      "model_jvm_signatures/yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+      "model_jvm_signatures/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+      "model_jvm_signatures/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+      "model_jvm_signatures/korrust.probes.models.RecordView"
+    ],
+    "restrictions": [
+      "Interface/companion/anonymous support is bounded to tested declaration and initialization shapes; no general object construction, mutable companion state, named companions, generics or arbitrary initializers.",
+      "Float is supported for abstract interface return descriptors and external Java/Kotlin consumers; general Float arithmetic/literals/source implementations remain unsupported.",
+      "String templates support simple ASCII $name references; braced expressions, escaped identifier names and raw strings remain unsupported. Named object/enum metadata and complete Kotlin/Android compatibility remain outside this evidence.",
+      "Source interface default bodies with reference parameters are explicitly unsupported; abstract reference-parameter declarations retain separate supported-signature checks."
     ]
   }
 ]

@@ -25,6 +25,8 @@ Open the [HTML reports](target/reports-html/index.html); see [report generation 
 
 Use [feature reports](reports/features/) to assess the tested subset and limitations. The command accepts one source file and an output directory. Pass compiled Java dependency directories with `-cp <classpath>`; separate multiple directories with the platform path separator (`:` on macOS/Linux). The differential harness prepares its Java dependencies automatically.
 
+Use a dedicated output directory. Korrust records ownership of emitted classes and Kotlin package metadata there and refuses to overwrite unowned or externally modified outputs. Recompiling a source removes obsolete outputs previously emitted by that source.
+
 Agent workflow and review guidance lives in [AGENTS.md](AGENTS.md).
 
 ## Project contract

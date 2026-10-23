@@ -1,4 +1,7 @@
-use korrust::compile;
+use korrust::{
+    compile, compile_all, compile_all_with_classpath, compile_outputs_with_classpath,
+    compile_with_classpath,
+};
 
 fn rejects(source: &str, message: &str) {
     let error = compile(source, "Test.kt")
@@ -368,4 +371,778 @@ fn when_generated_locals_and_nesting_obey_limits() {
         &format!("fun f({params}) {{ when (1) {{}}; when (2) {{}} }}"),
         "256 local slots",
     );
+}
+
+#[test]
+fn accepts_bare_enums_and_uses_the_declaration_name() {
+    for source in [
+        "enum class Choice { First, Second }",
+        "public enum class Choice { First, Second, }",
+        "internal enum class Choice { First, Second; }",
+        "enum class Choice { First, Second,; }",
+        "enum class Choice {}",
+        "enum class Choice {;}",
+        "enum class Choice",
+        "enum class Choice;",
+        "enum class Choice\n",
+        "public\nenum\nclass\nChoice\n{\nFirst /* entry */,\nSecond,\n}\n",
+    ] {
+        let class = compile(source, "DifferentFile.kt")
+            .unwrap_or_else(|error| panic!("rejected {source}: {}", error.message));
+        assert_eq!(class.internal_name, "Choice");
+        assert_eq!(&class.bytes[..4], &[0xca, 0xfe, 0xba, 0xbe]);
+    }
+    let class = compile(
+        "package example.nested\ninternal enum class Choice { First }",
+        "differentFile.kt",
+    )
+    .unwrap();
+    assert_eq!(class.internal_name, "example/nested/Choice");
+    assert!(compile("enum class E { values, valueOf, E }", "Enum.kt").is_ok());
+}
+
+#[test]
+fn rejects_enum_features_outside_the_bare_declaration_scope() {
+    for source in [
+        "private enum class E { A }",
+        "protected enum class E { A }",
+        "open enum class E { A }",
+        "sealed enum class E { A }",
+        "public internal enum class E { A }",
+        "public public enum class E { A }",
+        "enum class E() { A }",
+        "enum class E private constructor() { A }",
+        "enum class E(val n: Int) { A(1) }",
+        "enum class E : Runnable { A }",
+        "enum class E<T> { A }",
+        "@Deprecated(\"x\") enum class E { A }",
+        "enum class E { @Deprecated(\"x\") A }",
+        "enum class E { A() }",
+        "enum class E { A(1) }",
+        "enum class E { A {} }",
+        "enum class E { A { fun f() {} } }",
+        "enum class E { A; fun f() {} }",
+        "enum class E { A; val x = 1 }",
+        "enum class E { A; companion object {} }",
+        "enum class E { enum class Nested { A } }",
+        "class Outer { enum class E { A } }",
+        "enum class E { A }\nfun f() {}",
+        "fun f() {}\nenum class E { A }",
+        "enum class E { A }\nenum class F { B }",
+        "enum class E\nfun f() {}",
+        "enum class E { A B }",
+        "enum class E { A\nB }",
+        "enum class E { ,A }",
+        "enum class E { A,, }",
+        "enum class E { A;; }",
+        "enum class E { A; B }",
+        "enum class E { A",
+        "enum class E { _ }",
+        "enum class E { catch }",
+        "enum class E { finally }",
+        "enum class E { import }",
+        "enum class E { name }",
+        "enum class E { ordinal }",
+        "enum class E { entries }",
+        "enum class E { `A` }",
+    ] {
+        assert!(compile(source, "Invalid.kt").is_err(), "accepted {source}");
+    }
+    rejects("private enum class E { A }", "Unsupported enum visibility");
+    rejects(
+        "enum class E { A }\nenum class F { B }",
+        "Only one enum class",
+    );
+}
+
+#[test]
+fn rejects_duplicate_enum_entries_at_the_second_declaration() {
+    let source = "enum class E { First, Second, First }";
+    let error = compile(source, "Enum.kt").err().unwrap();
+    assert!(error.message.contains("Duplicate enum entry"));
+    assert_eq!(error.offset, source.rfind("First").unwrap());
+    assert!(error.render("Enum.kt", source).starts_with("Enum.kt:1:31:"));
+}
+
+#[test]
+fn bounds_enum_entry_counts() {
+    let entries = (0..1024)
+        .map(|n| format!("Entry{n}"))
+        .collect::<Vec<_>>()
+        .join(",");
+    assert!(compile(&format!("enum class E {{ {entries} }}"), "Enum.kt").is_ok());
+    rejects(
+        &format!("enum class E {{ {entries}, Entry1024 }}"),
+        "1024-entry limit",
+    );
+}
+
+#[test]
+fn validates_even_unused_enum_imports() {
+    rejects("import missing.Foreign\nenum class E { A }", "not found");
+    rejects(
+        "import missing.Foreign as Int\nenum class E { A }",
+        "shadowing builtin",
+    );
+    rejects(
+        "import missing.Foreign as E\nenum class E { A }",
+        "conflicts with enum",
+    );
+    assert!(compile("import missing.*\nenum class E { A }", "Enum.kt").is_err());
+}
+
+#[test]
+fn accepts_objects_with_typed_and_inferred_literal_constants() {
+    for source in [
+        "object Empty",
+        "object Empty {}",
+        "object Empty {;}",
+        "public object Empty {}",
+        "internal\nobject Empty {}",
+        "object Empty { const val N = 0 }",
+        "object Empty { const val Min = -2147483648; const val Max: Int = 2147483647; const val Plus = +1; const val MinusZero = -0 }",
+        "object Empty { public const val Yes: Boolean = true; const internal val No = false }",
+        "object Empty { const val C: Char = '\\uD800'; const val Other = 'é' }",
+        r#"object Empty { const val S: String = "\u0000\uD800😀"; const val Empty = "" }"#,
+        "object Empty { const val Empty = 1; const val name = 2; const val entries = 3 }",
+    ] {
+        let class = compile(source, "DifferentFile.kt")
+            .unwrap_or_else(|error| panic!("rejected {source}: {}", error.message));
+        assert_eq!(class.internal_name, "Empty");
+        assert_eq!(&class.bytes[..4], &[0xca, 0xfe, 0xba, 0xbe]);
+    }
+}
+
+#[test]
+fn compiles_all_nested_object_classes_without_a_facade() {
+    let source = "package test.objects\nobject Root { const val N=1; object Child { internal object Grandchild; const val C='a' }; object Root }";
+    let classes = compile_all(source, "UnrelatedFile.kt").unwrap();
+    let mut names = classes
+        .iter()
+        .map(|class| class.internal_name.as_str())
+        .collect::<Vec<_>>();
+    names.sort();
+    assert_eq!(
+        names,
+        [
+            "test/objects/Root",
+            "test/objects/Root$Child",
+            "test/objects/Root$Child$Grandchild",
+            "test/objects/Root$Root"
+        ]
+    );
+    for class in classes {
+        assert_eq!(&class.bytes[..4], &[0xca, 0xfe, 0xba, 0xbe]);
+    }
+    for result in [
+        compile(source, "UnrelatedFile.kt"),
+        compile_with_classpath(source, "UnrelatedFile.kt", &[]),
+    ] {
+        let error = result.err().unwrap();
+        assert!(error.message.contains("multiple classes"));
+        assert!(error.message.contains("compile_all"));
+    }
+    assert_eq!(
+        compile_all("fun f(): Int = 1", "test.kt").unwrap()[0].internal_name,
+        "TestKt"
+    );
+    assert_eq!(
+        compile_all("enum class E { A }", "test.kt").unwrap()[0].internal_name,
+        "E"
+    );
+    assert_eq!(
+        compile_all_with_classpath("object E", "test.kt", &[]).unwrap()[0].internal_name,
+        "E"
+    );
+    assert!(compile_all("object E", "../test.kt").is_err());
+    assert_eq!(
+        compile("object INSTANCE", "Singleton.kt")
+            .unwrap()
+            .internal_name,
+        "INSTANCE"
+    );
+}
+
+#[test]
+fn rejects_unsupported_object_and_constant_forms() {
+    for source in [
+        "private object E",
+        "protected object E",
+        "data object E",
+        "companion object E",
+        "public internal object E",
+        "object E()",
+        "object E : Runnable",
+        "object E<T>",
+        "@Deprecated(\"x\") object E",
+        "object E { fun f() {} }",
+        "object E { init {} }",
+        "object E { val N = 1 }",
+        "object E { var N = 1 }",
+        "object E { const var N = 1 }",
+        "object E { const const val N = 1 }",
+        "object E { public internal const val N = 1 }",
+        "object E { private const val N = 1 }",
+        "object E { protected object Nested }",
+        "object E { data object Nested }",
+        "object E { companion object Nested }",
+        "object E { object Nested() }",
+        "object E { const val INSTANCE = 1 }",
+        "object E { object INSTANCE }",
+        "object E { const val N = 1 + 2 }",
+        "object E { const val N = (1) }",
+        "object E { const val N = other }",
+        "object E { const val N = -true }",
+        "object E { const val N = !false }",
+        "object E { const val N = null }",
+        "object E { const val N: Boolean = 1 }",
+        "object E { const val N: Char = 1 }",
+        "object E { const val N: Int = 'a' }",
+        "object E { const val N: String = false }",
+        "object E { const val N: Long = 1 }",
+        "object E { const val N = 2147483648 }",
+        "object E { const val N = -2147483649 }",
+        "object E { const val N = +2147483648 }",
+        "object E { const val N = 9223372036854775808 }",
+        "object E { const val N = 01 }",
+        "object E { const val N = 1L }",
+        "object E { const val N = 0x10 }",
+        "object E { const val N = 1_000 }",
+        "object E { const val N = '😀' }",
+        "object E { const val N = \"$value\" }",
+        "object E { const val N = 1 const val Other = 2 }",
+        "object E { const val N = 1",
+        "object E { object Nested",
+        "object E\nobject Other",
+        "object E\nfun f() {}",
+        "fun f() {}\nobject E",
+        "enum class E { A }\nobject Other",
+        "object E\nenum class Other { A }",
+    ] {
+        assert!(
+            compile_all(source, "Invalid.kt").is_err(),
+            "accepted {source}"
+        );
+    }
+    rejects(
+        "object E { const val INSTANCE = 1 }",
+        "generated singleton field",
+    );
+    rejects(
+        "object E { const val N: Boolean = 1 }",
+        "Const literal type mismatch",
+    );
+    rejects("object E { const val N = -2147483649 }", "out of range");
+    rejects("object E { const val N = 1", "Unterminated object body");
+}
+
+#[test]
+fn object_member_names_share_one_namespace_and_preserve_locations() {
+    for source in [
+        "object E { const val N=1; const val N=2 }",
+        "object E { object N; object N }",
+        "object E { const val N=1; object N }",
+        "object E { object N; const val N=1 }",
+    ] {
+        let error = compile_all(source, "Object.kt").err().unwrap();
+        assert!(error.message.contains("Duplicate object member name"));
+        assert_eq!(error.offset, source.rfind(';').unwrap() + 2);
+    }
+}
+
+#[test]
+fn object_depth_class_and_constant_counts_obey_limits() {
+    let nested = |count: usize| {
+        format!(
+            "{}{}",
+            (0..count)
+                .map(|i| format!("object N{i} {{ "))
+                .collect::<String>(),
+            "}".repeat(count)
+        )
+    };
+    assert_eq!(compile_all(&nested(16), "Depth.kt").unwrap().len(), 16);
+    assert!(
+        compile_all(&nested(17), "Depth.kt")
+            .err()
+            .unwrap()
+            .message
+            .contains("16-class depth limit")
+    );
+    let siblings = (0..255)
+        .map(|i| format!("object N{i};"))
+        .collect::<String>();
+    assert_eq!(
+        compile_all(&format!("object Root {{ {siblings} }}"), "Classes.kt")
+            .unwrap()
+            .len(),
+        256
+    );
+    assert!(
+        compile_all(
+            &format!("object Root {{ {siblings} object Extra }}"),
+            "Classes.kt"
+        )
+        .err()
+        .unwrap()
+        .message
+        .contains("256-class limit")
+    );
+    let constants = (0..1024)
+        .map(|i| format!("const val N{i}={i};"))
+        .collect::<String>();
+    assert!(compile(&format!("object Root {{ {constants} }}"), "Constants.kt").is_ok());
+    rejects(
+        &format!("object Root {{ {constants} const val Extra=0 }}"),
+        "1024-constant limit",
+    );
+}
+
+#[test]
+fn object_string_constants_obey_modified_utf8_limits() {
+    let accepted = format!(
+        "object Root {{ const val Text = \"{}\" }}",
+        "\\u0000".repeat(32767)
+    );
+    assert!(compile(&accepted, "Strings.kt").is_ok());
+    let rejected = format!(
+        "object Root {{ const val Text = \"{}\" }}",
+        "\\u0000".repeat(32768)
+    );
+    assert!(compile(&rejected, "Strings.kt").is_err());
+}
+
+#[test]
+fn object_imports_remain_fail_closed() {
+    rejects("import missing.Foreign\nobject E", "not found");
+    rejects(
+        "import missing.Foreign as E\nobject E",
+        "conflicts with object",
+    );
+    rejects(
+        "import missing.Foreign as Int\nobject E",
+        "shadowing builtin",
+    );
+    assert!(compile_all("import missing.*\nobject E", "Object.kt").is_err());
+}
+
+#[test]
+fn accepts_ordinary_final_classes_with_constructor_fields_and_instance_members() {
+    let source = r#"package sample
+internal class Texts(private val texts: Array<String>, private val tag: Int) {
+    val count: Int
+        get() = texts.size
+    public val marker: Int get() { return tag }
+    fun text(index: Int): String = texts[index]
+    fun identity(values: Array<String>): Array<String> = values
+    private fun saved(): Int = tag
+}"#;
+    let class =
+        compile(source, "DifferentFile.kt").unwrap_or_else(|error| panic!("{}", error.message));
+    assert_eq!(class.internal_name, "sample/Texts");
+    assert_eq!(&class.bytes[..4], &[0xca, 0xfe, 0xba, 0xbe]);
+    assert!(
+        class
+            .bytes
+            .windows(19)
+            .any(|bytes| bytes == b"[Ljava/lang/String;")
+    );
+    for declaration in [
+        "class Empty()",
+        "public class Empty() {}",
+        "final internal class Empty() {}",
+        "internal final class Empty() {}",
+    ] {
+        let class = compile(declaration, "Unrelated.kt").unwrap();
+        assert_eq!(class.internal_name, "Empty");
+    }
+}
+
+#[test]
+fn rejects_unsupported_class_surface_and_mixed_declarations() {
+    for source in [
+        "private class E()",
+        "protected class E()",
+        "open class E()",
+        "abstract class E()",
+        "data class E(private val x: Int)",
+        "sealed class E()",
+        "public internal class E()",
+        "final final class E()",
+        "class E",
+        "class E<T>()",
+        "class E private constructor()",
+        "class E(x: Int)",
+        "class E(val x: Int)",
+        "class E(private var x: Int)",
+        "class E(private val x: Int = 1)",
+        "class E(private val x: Int, private val x: Int)",
+        "class E() { constructor(x: Int) {} }",
+        "class E() { init {} }",
+        "class E() { val x = 1 }",
+        "class E() { val x: Int = 1 }",
+        "class E() { var x: Int get() = 1 }",
+        "class E() { private val x: Int get() = 1 }",
+        "class E() { internal fun x() {} }",
+        "class E() { protected fun x() {} }",
+        "class E() { private override fun x() {} }",
+        "class E() { override override fun x() {} }",
+        "class E() { fun String.extension(): Int = 1 }",
+        "class E() { object Nested }",
+        "class E() { class Nested() }",
+        "class E() { companion object }",
+        "class E() { val x: Int get() = 1; val x: Int get() = 2 }",
+        "class E(private val x: Int) { val x: Int get() = 1 }",
+        "class E(private val x: Array<Int>)",
+        "class E(private val x: Array<Array<String>>)",
+        "class E() { val x: Int get() = 1",
+        "class E()\nfun f() {}",
+        "fun f() {}\nclass E()",
+        "class E()\nobject Other",
+        "class E()\nenum class Other { A }",
+        "class E()\nclass Other()",
+    ] {
+        assert!(
+            compile_all(source, "Invalid.kt").is_err(),
+            "accepted {source}"
+        );
+    }
+}
+
+#[test]
+fn checks_constructor_fields_array_operations_and_getter_returns() {
+    for (source, message) in [
+        (
+            "class E(private val value: Int) { fun f(): String = value }",
+            "Type mismatch",
+        ),
+        (
+            "class E(private val values: Array<String>) { fun f(): Int = values[0] }",
+            "Type mismatch",
+        ),
+        (
+            "class E(private val values: Array<String>) { fun f(): String = values[true] }",
+            "Type mismatch",
+        ),
+        (
+            "class E(private val value: Int) { fun f(): Int = missing }",
+            "Unresolved",
+        ),
+        (
+            "class E(private val value: Int) { fun f() { value = 1 } }",
+            "Cannot reassign",
+        ),
+        ("class E() { val x: Int get() {} }", "return on all paths"),
+        ("class E() { val x: Int get() = false }", "Type mismatch"),
+    ] {
+        rejects(source, message);
+    }
+}
+
+#[test]
+fn classes_require_valid_imports_even_when_unused() {
+    rejects("import missing.Foreign\nclass E()", "not found");
+    rejects(
+        "import missing.Foreign as Array\nclass E()",
+        "shadowing builtin",
+    );
+    rejects(
+        "import missing.Foreign as E\nclass E()",
+        "conflicts with class",
+    );
+    assert!(compile("class E() : Missing {}", "Class.kt").is_err());
+}
+
+#[test]
+fn output_artifacts_include_module_mapping_only_for_function_facades() {
+    let outputs =
+        compile_outputs_with_classpath("package p\nfun f() {}", "sample.kt", &[]).unwrap();
+    let mut paths = outputs
+        .iter()
+        .map(|output| output.relative_path.as_str())
+        .collect::<Vec<_>>();
+    paths.sort();
+    assert_eq!(
+        paths,
+        [
+            "META-INF/korrust_23680438640a1a3c1f3140900a6ba17d.kotlin_module",
+            "p/SampleKt.class"
+        ]
+    );
+    assert!(outputs.iter().all(|output| !output.bytes.is_empty()));
+    for source in ["object NameKt", "enum class NameKt { A }", "class NameKt()"] {
+        let outputs = compile_outputs_with_classpath(source, "Other.kt", &[]).unwrap();
+        assert_eq!(outputs.len(), 1);
+        assert_eq!(outputs[0].relative_path, "NameKt.class");
+    }
+    let outputs =
+        compile_outputs_with_classpath("object Root { object Child }", "Other.kt", &[]).unwrap();
+    assert_eq!(outputs.len(), 2);
+    assert!(
+        outputs
+            .iter()
+            .all(|output| output.relative_path.ends_with(".class"))
+    );
+}
+
+#[test]
+fn rejects_declared_classifiers_shadowing_builtin_types() {
+    for source in [
+        "class Array()",
+        "class Int() { fun f(x: Int): Int = x }",
+        "object Int { const val X: Int = 1 }",
+        "object Root { object String; const val X: String = \"x\" }",
+        "enum class Boolean { A }",
+    ] {
+        rejects(source, "shadowing builtin types");
+    }
+}
+
+#[test]
+fn module_mapping_filenames_stay_bounded_for_long_packages() {
+    let package = vec!["longpackagename"; 24].join(".");
+    let source = format!("package {package}\nfun f() {{}}");
+    let outputs = compile_outputs_with_classpath(&source, "sample.kt", &[]).unwrap();
+    let mapping = outputs
+        .iter()
+        .find(|output| output.relative_path.ends_with(".kotlin_module"))
+        .unwrap();
+    assert!(mapping.relative_path.rsplit('/').next().unwrap().len() <= 255);
+    assert_eq!(
+        mapping.relative_path.len(),
+        "META-INF/korrust_".len() + 32 + ".kotlin_module".len()
+    );
+    let repeated = compile_outputs_with_classpath(&source, "sample.kt", &[]).unwrap();
+    assert_eq!(
+        mapping.relative_path,
+        repeated
+            .iter()
+            .find(|output| output.relative_path.ends_with(".kotlin_module"))
+            .unwrap()
+            .relative_path
+    );
+}
+
+#[test]
+fn rejects_unsupported_inherited_any_and_object_members() {
+    for source in [
+        "class A() { fun toString(): String = \"x\" }",
+        "class A() { override fun toString(): String = \"x\" }",
+        "class A() { fun hashCode(): Int = 1 }",
+        "class A() { fun notify() {} }",
+    ] {
+        rejects(source, "Any and Object inherited members are not supported");
+    }
+}
+
+#[test]
+fn accepts_abstract_and_default_interface_declarations() {
+    for source in [
+        "interface Empty",
+        "interface Empty {}",
+        "public interface Empty { val size: Int; fun at(index: Int): String }",
+        "internal interface Empty { fun weight(index: Int): Float }",
+        "interface Empty { val answer: Int get() = 42 }",
+        "interface Empty { fun answer(): Int = 42 }",
+    ] {
+        let classes = compile_all(source, "Different.kt")
+            .unwrap_or_else(|error| panic!("rejected {source}: {}", error.message));
+        assert_eq!(classes[0].internal_name, "Empty");
+        assert!(
+            classes
+                .iter()
+                .all(|class| class.bytes.starts_with(&[0xca, 0xfe, 0xba, 0xbe]))
+        );
+    }
+}
+
+#[test]
+fn interfaces_emit_generic_nested_companion_and_anonymous_classes() {
+    let source = r#"package sample
+interface View {
+    val size: Int
+    fun at(index: Int): String
+    fun label(index: Int): String {
+        val next = index + 1
+        return if (next < 2) { LABELS[next] } else { next.toString() }
+    }
+    interface Child : View { fun weight(index: Int): Float }
+    companion object {
+        private val LABELS = arrayOf("zero", "\u0000二")
+        val EMPTY = object : View {
+            override val size: Int get() = 0
+            override fun at(index: Int): String {
+                throw IllegalArgumentException("index=$index size=$size")
+            }
+        }
+    }
+}"#;
+    let classes =
+        compile_all(source, "Different.kt").unwrap_or_else(|error| panic!("{}", error.message));
+    let mut names = classes
+        .iter()
+        .map(|class| class.internal_name.as_str())
+        .collect::<Vec<_>>();
+    names.sort();
+    assert_eq!(
+        names,
+        [
+            "sample/View",
+            "sample/View$Child",
+            "sample/View$Child$DefaultImpls",
+            "sample/View$Companion",
+            "sample/View$Companion$EMPTY$1",
+            "sample/View$DefaultImpls",
+        ]
+    );
+    assert!(
+        compile(source, "Different.kt")
+            .err()
+            .unwrap()
+            .message
+            .contains("multiple classes")
+    );
+    let outputs = compile_outputs_with_classpath(source, "Different.kt", &[]).unwrap();
+    assert_eq!(outputs.len(), 6);
+    assert!(
+        outputs
+            .iter()
+            .all(|output| output.relative_path.ends_with(".class"))
+    );
+}
+
+#[test]
+fn supports_if_expressions_integer_strings_templates_and_explicit_throws() {
+    for source in [
+        "fun f(n: Int): Int = if (n < 0) { -1 } else { 1 }",
+        "fun f(n: Int): String = if (n < 0) \"negative\" else n.toString()",
+        r#"fun f(n: Int, b: Boolean, s: String): String = "$s:$n:$b""#,
+        r#"fun f(n: Int): String = "\$n/$n/\u0000\uD800""#,
+        r#"fun f(n: Int): String { throw IllegalArgumentException("n=$n") }"#,
+    ] {
+        assert!(
+            compile(source, "Expressions.kt").is_ok(),
+            "rejected {source}"
+        );
+    }
+    rejects("fun f(): Int = if (1) 2 else 3", "Type mismatch");
+    rejects("fun f(): Int = if (true) 1 else false", "Type mismatch");
+    rejects(r#"fun f(): String = "$missing""#, "Unresolved");
+    rejects(
+        r#"fun f(c: Char): String = "$c""#,
+        "String templates support only",
+    );
+    rejects(
+        r#"fun f(n: Int): String = "${n}""#,
+        "Only simple ASCII name",
+    );
+    rejects(
+        r#"fun f(n: Int): String = "$`n`""#,
+        "Only simple ASCII name",
+    );
+    rejects(r#"fun f(n: Int): String = "$n二""#, "Non-ASCII characters");
+    rejects(
+        "fun f(): String { throw IllegalArgumentException(1) }",
+        "Type mismatch",
+    );
+    rejects(
+        "fun f(): String { throw RuntimeException(\"x\") }",
+        "Only throwing IllegalArgumentException",
+    );
+    let source = r#"object E { const val S = "$missing" }"#;
+    let error = compile(source, "Literal.kt").err().unwrap();
+    assert!(error.message.contains("literal initializers"));
+    assert_eq!(error.offset, source.find('"').unwrap());
+}
+
+#[test]
+fn rejects_unsupported_interface_and_companion_forms() {
+    for source in [
+        "private interface E",
+        "protected interface E",
+        "sealed interface E",
+        "fun interface E { fun f() }",
+        "interface E<T>",
+        "interface E()",
+        "interface E { var x: Int }",
+        "interface E { val x: Int = 1 }",
+        "interface E { private fun f() {} }",
+        "interface E { fun String.extension(): Int = 1 }",
+        "interface E { object Named }",
+        "interface E { class Nested() }",
+        "interface E { companion object Named {} }",
+        "interface E { companion object {}; companion object {} }",
+        "interface E { companion object { var x = 1 } }",
+        "interface E { companion object { const val x = 1 } }",
+        "interface E { companion object { val x = arrayOf(\"x\") } }",
+        "interface E { companion object { private val x = arrayOf(1) } }",
+        "interface E { companion object { private val x = arrayOf() } }",
+        "interface E { companion object { private val x: IntArray = arrayOf(\"x\") } }",
+        "interface E { companion object { val x = 1 } }",
+        "interface E { companion object { private val x = object : E {} } }",
+        "interface E { companion object { val x: String = object : E {} } }",
+        "interface E { val x: Int; val x: Int }",
+        "interface E { interface Child; interface Child }",
+        "interface E { companion object { private val x = arrayOf(\"a\"); private val x = arrayOf(\"b\") } }",
+        "interface E { companion object { val INSTANCE = object : E {} } }",
+        "interface E { fun f(): Int",
+        "interface E { companion object { private val x = arrayOf(\"a\")",
+        "interface E\nfun f() {}",
+        "fun f() {}\ninterface E",
+        "interface E\ninterface Other",
+        "interface E\nclass Other()",
+        "interface E\nobject Other",
+        "interface E\nenum class Other { A }",
+    ] {
+        assert!(
+            compile_all(source, "Unsupported.kt").is_err(),
+            "accepted {source}"
+        );
+    }
+}
+
+#[test]
+fn preserves_abstract_member_and_bodyless_nested_interface_boundaries() {
+    let source = "interface Root { fun first()\nval count: Int\ninterface Child\nfun second(index: Int): String\n}";
+    let mut names = compile_all(source, "Boundary.kt")
+        .unwrap()
+        .into_iter()
+        .map(|class| class.internal_name)
+        .collect::<Vec<_>>();
+    names.sort();
+    assert_eq!(names, ["Root", "Root$Child"]);
+    assert!(
+        compile(
+            "interface Root { fun f(): Int val count: Int }",
+            "Invalid.kt"
+        )
+        .is_err()
+    );
+}
+
+#[test]
+fn limits_interface_nesting_and_template_complexity() {
+    let nested = |count: usize| {
+        format!(
+            "{}{}",
+            (0..count)
+                .map(|index| format!("interface N{index} {{ "))
+                .collect::<String>(),
+            "}".repeat(count)
+        )
+    };
+    assert_eq!(compile_all(&nested(16), "Depth.kt").unwrap().len(), 16);
+    assert!(
+        compile_all(&nested(17), "Depth.kt")
+            .err()
+            .unwrap()
+            .message
+            .contains("16-declaration depth limit")
+    );
+    rejects(
+        &format!("fun f(n: Int): String = \"{}\"", "$n ".repeat(129)),
+        "128-name limit",
+    );
+    rejects("interface Float", "shadowing builtin types");
+    rejects("import missing.Foreign\ninterface E", "not found");
 }

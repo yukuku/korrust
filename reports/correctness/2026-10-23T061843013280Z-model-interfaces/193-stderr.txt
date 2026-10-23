@@ -1,0 +1,6 @@
+tests/fixtures/consumers/InternalFunctionAccess.kt:1:23: error: cannot access 'fun internalIdentity(value: String): String': it is internal in file.
+import korrust.probes.internalIdentity
+                      ^^^^^^^^^^^^^^^^
+tests/fixtures/consumers/InternalFunctionAccess.kt:2:21: error: cannot access 'fun internalIdentity(value: String): String': it is internal in file.
+fun bad(): String = internalIdentity("x")
+                    ^^^^^^^^^^^^^^^^

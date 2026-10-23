@@ -1,0 +1,4004 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-23T04:28:46.761339+00:00",
+  "status": "completed",
+  "compiler": {
+    "version": "korrust 0.1.0",
+    "binary_sha256": "748662b1c92bda7c726029537a94f842ea040a8e17a6fae2924880db93aedf8b",
+    "source_files_sha256": {
+      "Cargo.lock": "b2146c5915d63f0a75500af0d88ca0e0856ed4f36b7b1ce1cc51da277049b1f1",
+      "Cargo.toml": "4643f02803cf1a9d48f32579c5837969b53450a2c37a2fbcce4d72eca39ac1e9",
+      "src/bytecode.rs": "06715e49117265790b40b574ead088e293f59df847ab297bae743e677e73fc16",
+      "src/check.rs": "14d637a52c9ce3489244beee8a42cd5c731e3d3d0e640136aefadc33a30bd6b9",
+      "src/classpath.rs": "ed78de9ea477657330fdec735551c1f4932e9daae9ebe64356e45e955918a7d6",
+      "src/lib.rs": "7111c35c62066a0318800b21f3e2dfc0ecf13d825521523a489b6368cfdc5f02",
+      "src/main.rs": "08df4bb04a9b2f9a3c105ebcdafc4a39e207fc1c1812201bad4a59f91c4ceda7",
+      "src/syntax.rs": "d512779811a49586a9b2600f94260d802ee3685284ba8a2ec7f49b90792eec82",
+      "tests/diagnostics.json": "08754436be316cb70ccbf10a9b9f491d211d58a0c257eaa5fd8d6a843902d0d5",
+      "tests/features.json": "c925c8273ad33c82f3be315e315a82112288eac9028958d77c3a9932aa1cda84",
+      "tests/fixtures/Arithmetic.kt": "37d8d9bc057d6597ee9f3b65914c6d34036792e6c387f9e749d0feff301d2bf5",
+      "tests/fixtures/ArithmeticCheck.java": "a652303019ca0fa4e6431bd79f0201991001353a292b59f9c2fd7fe63a602fee",
+      "tests/fixtures/BinarySearchCheck.java": "fb318c19290ba2a9eb928c83154c5b4a982dce44fbf908d70fdb74d6a702c50e",
+      "tests/fixtures/Characters.kt": "46b8adc807d572d9cede889535ee52749334c7b6dfeed46410c966325ea87956",
+      "tests/fixtures/CharactersCheck.java": "af2ad0a50dfe887439229e24f9f6965c9c9d23b4d20e5a94b5aa8e366d7a1945",
+      "tests/fixtures/Interop.kt": "f2c8805277fb3b1cb6cba3b1610bac8196cdd8866959679e288ab035a69f7def",
+      "tests/fixtures/InteropCheck.java": "2e7442e51d6b0e59b4657556fce9a6aa15c56010537460412e6d853608f462b5",
+      "tests/fixtures/MetadataForeign.kt": "139cded38b67b2165163e9ecface2f341de9a4be1d8eaf53b3a71328e82ad89e",
+      "tests/fixtures/Strings.kt": "608e4ab1c049b9f46c2e1f39fe00f848c046a3f16c06f78f1cbbd872fc3fef3d",
+      "tests/fixtures/StringsCheck.java": "a7498f7b9492bcee70c2944e32329cbaf0daca689962980708bc778c80b9429f",
+      "tests/fixtures/interop/AnnotatedForeign.java": "a3874882c01772c9f51de0bd7735f829f56fb8290d8a24118529680ca0a50b4e",
+      "tests/fixtures/interop/ChildMethods.java": "ce64b6fa2a07429a6ff1261b94a16cd434fe17eef7d72deab87814d4455f133d",
+      "tests/fixtures/interop/ForeignInterface.java": "4db1cc4ae2b081ea1e840b50c82b9ff8fbd260235e6687e56d0e355ec8579c65",
+      "tests/fixtures/interop/ForeignMethods.java": "da172b22fc5abd194562a9c050e5c9f360f583a8631fe28535e0b62720f5e243",
+      "tests/fixtures/interop/ParentMethods.java": "4ad132dfd047e2a1e87f02039222779b3c9d0090b7afa8a6703a51cfe823436c",
+      "tests/fixtures/interop/WhenTracker.java": "65fc96f0667f3d4dd6c7d45e16284da48432b75138d871c4effdaa0e944f34fa",
+      "tests/fixtures/interop/android/os/Parcel.java": "d120badab7f8813973d6b148df41e085a859205f8f06d98fea1dd01463482f06",
+      "tests/fixtures/interop/android/os/Parcelable.java": "5057df7e618630b6719d80138603a6915f6060b79640dd52de62df50077e992c",
+      "tests/fixtures/interop/androidx/annotation/NonNull.java": "feb1e800204acdaa66e9792e34cbd43c834fa7d730feb40c2812fdb4d673ea59",
+      "tests/fixtures/interop/annotated/PackageForeign.java": "2d01c814c9251718e616ae420b89af49a598f154d96dcda0125db606dd9c72ce",
+      "tests/fixtures/interop/annotated/package-info.java": "6be1633993f2c8f0a04b192fc6da0740b7504c1928166e5da22ad8bff90e0492",
+      "tests/frontend.rs": "d8a19b75bf5e1c3a8d52e205d388fb128e9e8874b3a8db645b3065e1522c19ae",
+      "tests/interop_diagnostics.json": "daec8bfd1219109339574f665396e4bab71bd9e0a6572bf3465b35d6a2316cb7",
+      "tests/interop_unsupported.json": "3d5f42508c3ec1cf23b846f604ee42988a2ae8254620f3d5a4e1d4b0ebba459c",
+      "tests/test_reports.py": "3bb9702230a594fb4a7a750f586777b8417fa4fb70feee6a14797e29fc0e1a28",
+      "tests/unsupported.json": "880c46c0ad944fd7dbc9d3c892f4ee7607e99e9adfea54d958f7f878ecaff0df",
+      "tools/check.py": "a3364e9e065f50c81be6d5914db858d749a85afe9850452ee390af35dcdbc0de",
+      "tools/corpus.py": "f0390f8b550a57b45098eb0b1317de220bf327e4a27adbc02059829a48d35c1c",
+      "tools/reports.py": "aefcdb623e7cea8d6a601f8bee4ba597b782b8b7905f54d7dbcc512f74e297bf",
+      "tools/setup_reference.py": "deafd96f0176c389a8fb6e81d90f03ba7d4cc9c25361d1fc0edd44a883e7d572"
+    },
+    "classfile_major_version": 49,
+    "kotlin_metadata": false,
+    "incremental_compilation": false
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.12.1+1-LTS)",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "inputs": {
+    "verse_placement_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt",
+    "verse_placement_source_sha256": "957ed0e7cae7251aeb4d44abf8418959e7757601670e81178257a4b289dfa9cd",
+    "int_list_extension_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+    "int_list_extension_source_sha256": "96ce558706cd736ba496aa95311243931f4c12494a4723fe06a80b2295bdca9c",
+    "int_list_java_source": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java",
+    "int_list_java_source_sha256": "b5cbcca6e5c785a3b96bb9d56091a13fe23fc95318506d28af0503a5b68db88c",
+    "audio_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+    "audio_source_sha256": "2a5e79d26cef180c4f40542dd94f81bada672a4c755f01f0187bedef24e50098",
+    "source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+    "source_sha256": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+    "reference_commit": "fea1ad8c18995b80d1ca0e3917056104613d23db",
+    "androidbible_commit": "624629093af37d0d7f85699bfa0caa562fc41e61"
+  },
+  "environment": {
+    "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+    "java": "openjdk version \"21.0.12.1\" 2026-08-18 LTS\nOpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)\nOpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)"
+  },
+  "commands": [
+    {
+      "label": "Rust version",
+      "argv": [
+        "/workspace/korrust-setup/cargo/bin/rustc",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/000-stderr.txt"
+    },
+    {
+      "label": "Java version",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/001-stderr.txt"
+    },
+    {
+      "label": "Reference compiler version",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/002-stderr.txt"
+    },
+    {
+      "label": "Rust tests",
+      "argv": [
+        "/workspace/korrust-setup/cargo/bin/cargo",
+        "test",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/003-stderr.txt"
+    },
+    {
+      "label": "Release build",
+      "argv": [
+        "/workspace/korrust-setup/cargo/bin/cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/004-stderr.txt"
+    },
+    {
+      "label": "Korrust version",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/005-stderr.txt"
+    },
+    {
+      "label": "Compile original Java IntArrayList with test-only Android type stubs",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java",
+        "/workspace/korrust/tests/fixtures/interop/AnnotatedForeign.java",
+        "/workspace/korrust/tests/fixtures/interop/ChildMethods.java",
+        "/workspace/korrust/tests/fixtures/interop/ForeignInterface.java",
+        "/workspace/korrust/tests/fixtures/interop/ForeignMethods.java",
+        "/workspace/korrust/tests/fixtures/interop/ParentMethods.java",
+        "/workspace/korrust/tests/fixtures/interop/WhenTracker.java",
+        "/workspace/korrust/tests/fixtures/interop/android/os/Parcel.java",
+        "/workspace/korrust/tests/fixtures/interop/android/os/Parcelable.java",
+        "/workspace/korrust/tests/fixtures/interop/androidx/annotation/NonNull.java",
+        "/workspace/korrust/tests/fixtures/interop/annotated/PackageForeign.java",
+        "/workspace/korrust/tests/fixtures/interop/annotated/package-info.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/006-stderr.txt"
+    },
+    {
+      "label": "Compile Kotlin metadata rejection fixture",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/MetadataForeign.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/007-stderr.txt"
+    },
+    {
+      "label": "Compile fixtures with official Kotlin",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt",
+        "/workspace/korrust/tests/fixtures/Strings.kt",
+        "/workspace/korrust/tests/fixtures/Arithmetic.kt",
+        "/workspace/korrust/tests/fixtures/Interop.kt",
+        "/workspace/korrust/tests/fixtures/Characters.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/008-stderr.txt"
+    },
+    {
+      "label": "Compile unsignedBinarySearch.kt with Korrust",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/009-stderr.txt"
+    },
+    {
+      "label": "Compile AudioErrorCode.kt with Korrust",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/010-stderr.txt"
+    },
+    {
+      "label": "Compile IntArrayListUtil.kt with Korrust",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/011-stderr.txt"
+    },
+    {
+      "label": "Compile VerseNumberPlacement.kt with Korrust",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/012-stderr.txt"
+    },
+    {
+      "label": "Compile Arithmetic.kt with Korrust",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/Arithmetic.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/013-stderr.txt"
+    },
+    {
+      "label": "Compile Strings.kt with Korrust",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/Strings.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/014-stderr.txt"
+    },
+    {
+      "label": "Compile Interop.kt with Korrust",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/Interop.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/015-stderr.txt"
+    },
+    {
+      "label": "Compile Characters.kt with Korrust",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/Characters.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/016-stderr.txt"
+    },
+    {
+      "label": "Compile Java callers against official Kotlin",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers",
+        "/workspace/korrust/tests/fixtures/BinarySearchCheck.java",
+        "/workspace/korrust/tests/fixtures/ArithmeticCheck.java",
+        "/workspace/korrust/tests/fixtures/StringsCheck.java",
+        "/workspace/korrust/tests/fixtures/InteropCheck.java",
+        "/workspace/korrust/tests/fixtures/CharactersCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/017-stderr.txt"
+    },
+    {
+      "label": "Run official BinarySearchCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "BinarySearchCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/018-stderr.txt"
+    },
+    {
+      "label": "Run Korrust BinarySearchCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "BinarySearchCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/019-stderr.txt"
+    },
+    {
+      "label": "Run official ArithmeticCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ArithmeticCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/020-stderr.txt"
+    },
+    {
+      "label": "Run Korrust ArithmeticCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ArithmeticCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/021-stderr.txt"
+    },
+    {
+      "label": "Run official StringsCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "StringsCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/022-stderr.txt"
+    },
+    {
+      "label": "Run Korrust StringsCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "StringsCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/023-stderr.txt"
+    },
+    {
+      "label": "Run official InteropCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "InteropCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/024-stderr.txt"
+    },
+    {
+      "label": "Run Korrust InteropCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "InteropCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/025-stderr.txt"
+    },
+    {
+      "label": "Run official CharactersCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "CharactersCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/026-stderr.txt"
+    },
+    {
+      "label": "Run Korrust CharactersCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/drivers:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "CharactersCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 30,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/027-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official",
+        "yuku.alkitab.yes2.util.UnsignedBinarySearchKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/028-stderr.txt"
+    },
+    {
+      "label": "Inspect Korrust JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate",
+        "yuku.alkitab.yes2.util.UnsignedBinarySearchKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/029-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official",
+        "korrust.probes.ArithmeticKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/030-stderr.txt"
+    },
+    {
+      "label": "Inspect Korrust JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate",
+        "korrust.probes.ArithmeticKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/031-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official",
+        "korrust.probes.StringsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/032-stderr.txt"
+    },
+    {
+      "label": "Inspect Korrust JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate",
+        "korrust.probes.StringsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/033-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official",
+        "yuku.alkitab.base.audio.AudioErrorCodeKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/034-stderr.txt"
+    },
+    {
+      "label": "Inspect Korrust JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate",
+        "yuku.alkitab.base.audio.AudioErrorCodeKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/035-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official",
+        "yuku.alkitab.base.util.IntArrayListUtilKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/036-stderr.txt"
+    },
+    {
+      "label": "Inspect Korrust JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate",
+        "yuku.alkitab.base.util.IntArrayListUtilKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/037-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official",
+        "korrust.probes.InteropKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/038-stderr.txt"
+    },
+    {
+      "label": "Inspect Korrust JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate",
+        "korrust.probes.InteropKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/039-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official",
+        "korrust.probes.CharactersKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/040-stderr.txt"
+    },
+    {
+      "label": "Inspect Korrust JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate",
+        "korrust.probes.CharactersKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/041-stderr.txt"
+    },
+    {
+      "label": "Inspect official JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/official",
+        "yuku.alkitab.base.widget.VerseNumberPlacementKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/042-stderr.txt"
+    },
+    {
+      "label": "Inspect Korrust JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/candidate",
+        "yuku.alkitab.base.widget.VerseNumberPlacementKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/043-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: val_reassignment",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/val_reassignment.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/044-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: val_reassignment",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/val_reassignment.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-val_reassignment"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/045-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: parameter_reassignment",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/parameter_reassignment.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/046-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: parameter_reassignment",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/parameter_reassignment.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-parameter_reassignment"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/047-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: unknown_local",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unknown_local.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/048-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: unknown_local",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unknown_local.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-unknown_local"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/049-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: boolean_arithmetic",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/boolean_arithmetic.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/050-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: boolean_arithmetic",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/boolean_arithmetic.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-boolean_arithmetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/051-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: return_type",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/return_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/052-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: return_type",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/return_type.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-return_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/053-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: missing_return",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing_return.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/054-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: missing_return",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing_return.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-missing_return"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/055-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: escaped_block_local",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/escaped_block_local.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/056-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: escaped_block_local",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/escaped_block_local.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-escaped_block_local"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/057-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: wrong_argument_count",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/wrong_argument_count.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/058-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: wrong_argument_count",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/wrong_argument_count.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-wrong_argument_count"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/059-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: duplicate_local",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/duplicate_local.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/060-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: duplicate_local",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/duplicate_local.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-duplicate_local"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/061-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: integer_overflow_literal",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/integer_overflow_literal.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/062-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: integer_overflow_literal",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/integer_overflow_literal.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-integer_overflow_literal"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/063-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: missing_statement_separator",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing_statement_separator.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/064-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: missing_statement_separator",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing_statement_separator.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-missing_statement_separator"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/065-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: reserved_underscore",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/reserved_underscore.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/066-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: reserved_underscore",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/reserved_underscore.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reserved_underscore"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/067-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: string_argument_type",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_argument_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/068-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: string_argument_type",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_argument_type.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-string_argument_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/069-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/069-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: string_return_type",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_return_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/070-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/070-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: string_return_type",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_return_type.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-string_return_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/071-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/071-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: string_escape",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_escape.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/072-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/072-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: string_escape",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_escape.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-string_escape"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/073-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/073-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: string_arity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_arity.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/074-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/074-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: string_arity",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_arity.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-string_arity"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/075-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/075-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: string_unterminated",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_unterminated.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/076-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/076-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: string_unterminated",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_unterminated.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-string_unterminated"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/077-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/077-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: char_return_mismatch",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_return_mismatch.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/078-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/078-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: char_return_mismatch",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_return_mismatch.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-char_return_mismatch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/079-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/079-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: char_equality_mismatch",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_equality_mismatch.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/080-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/080-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: char_equality_mismatch",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_equality_mismatch.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-char_equality_mismatch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/081-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/081-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: char_array_index_type",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_array_index_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/082-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/082-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: char_array_index_type",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_array_index_type.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-char_array_index_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/083-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/083-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: char_array_return_mismatch",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_array_return_mismatch.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/084-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/084-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: char_array_return_mismatch",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_array_return_mismatch.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-char_array_return_mismatch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/085-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/085-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: compound_val_assignment",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/compound_val_assignment.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/086-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/086-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: compound_val_assignment",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/compound_val_assignment.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-compound_val_assignment"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/087-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/087-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: compound_char_assignment",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/compound_char_assignment.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/088-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/088-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: compound_char_assignment",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/compound_char_assignment.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-compound_char_assignment"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/089-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/089-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: when_condition_type",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_condition_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/090-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/090-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: when_condition_type",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_condition_type.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-when_condition_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/091-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/091-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: when_missing_return",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_missing_return.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/092-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/092-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: when_missing_return",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_missing_return.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-when_missing_return"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/093-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/093-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: when_branch_scope",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_branch_scope.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/094-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/094-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: when_branch_scope",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_branch_scope.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-when_branch_scope"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/095-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/095-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: char_empty_literal",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_empty_literal.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/096-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/096-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: char_empty_literal",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_empty_literal.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-char_empty_literal"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/097-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/097-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: char_multiple_units",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_multiple_units.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/098-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/098-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: char_multiple_units",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_multiple_units.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-char_multiple_units"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/099-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/099-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: char_supplementary_literal",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_supplementary_literal.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/100-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/100-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: char_supplementary_literal",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_supplementary_literal.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-char_supplementary_literal"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/101-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/101-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: char_invalid_escape",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_invalid_escape.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/102-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/102-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: char_invalid_escape",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_invalid_escape.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-char_invalid_escape"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/103-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/103-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: char_incomplete_unicode",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_incomplete_unicode.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/104-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/104-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: char_incomplete_unicode",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_incomplete_unicode.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-char_incomplete_unicode"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/105-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/105-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: invalid_postfix_sequence",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/invalid_postfix_sequence.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/106-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/106-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: invalid_postfix_sequence",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/invalid_postfix_sequence.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-invalid_postfix_sequence"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/107-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/107-stderr.txt"
+    },
+    {
+      "label": "Reference rejection: when_else_not_last",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_else_not_last.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/108-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/108-stderr.txt"
+    },
+    {
+      "label": "Korrust rejection: when_else_not_last",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_else_not_last.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/negative-when_else_not_last"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/109-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/109-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: string_templates",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_templates.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/110-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/110-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: string_templates",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_templates.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-string_templates"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/111-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/111-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: classes",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/classes.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/112-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/112-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: classes",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/classes.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-classes"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/113-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/113-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: nullable_types",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/nullable_types.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/114-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/114-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: nullable_types",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/nullable_types.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-nullable_types"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/115-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/115-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: overloads",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/overloads.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/116-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/116-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: overloads",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/overloads.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-overloads"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/117-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/117-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: unconditional_loop_analysis",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unconditional_loop_analysis.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/118-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/118-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: unconditional_loop_analysis",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unconditional_loop_analysis.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-unconditional_loop_analysis"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/119-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/119-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: escaped_string_template",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/escaped_string_template.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/120-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/120-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: escaped_string_template",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/escaped_string_template.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-escaped_string_template"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/121-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/121-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: when_expression",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_expression.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/122-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/122-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: when_expression",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_expression.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-when_expression"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/123-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/123-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: when_subjectless",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_subjectless.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/124-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/124-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: when_subjectless",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_subjectless.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-when_subjectless"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/125-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/125-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: when_range",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_range.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/126-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/126-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: when_range",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_range.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-when_range"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/127-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/127-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: when_subject_variable",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_subject_variable.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/128-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/128-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: when_subject_variable",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_subject_variable.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-when_subject_variable"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/129-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/129-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: char_arithmetic",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_arithmetic.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/130-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/130-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: char_arithmetic",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_arithmetic.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-char_arithmetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/131-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/131-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: char_array_construction",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_array_construction.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/132-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/132-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: char_array_construction",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_array_construction.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-char_array_construction"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/133-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/133-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: char_array_write",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_array_write.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/134-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/134-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: char_array_write",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_array_write.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-char_array_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/135-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/135-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: when_boolean_subject",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_boolean_subject.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/136-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/136-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: when_boolean_subject",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_boolean_subject.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-when_boolean_subject"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/137-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/137-stderr.txt"
+    },
+    {
+      "label": "Reference acceptance: when_trailing_condition_comma",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_trailing_condition_comma.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/138-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/138-stderr.txt"
+    },
+    {
+      "label": "Explicit unsupported rejection: when_trailing_condition_comma",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_trailing_condition_comma.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unsupported-when_trailing_condition_comma"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/139-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/139-stderr.txt"
+    },
+    {
+      "label": "Classpath alias and ordered directory search",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/ClasspathProbe.kt",
+        "--classpath",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/empty-classpath:/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/classpath-alias"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/140-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/140-stderr.txt"
+    },
+    {
+      "label": "Reject unsupported or missing classpath entry",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/ClasspathProbe.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/invalid-classpath-kotlin-stdlib.jar"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/141-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/141-stderr.txt"
+    },
+    {
+      "label": "Reject unsupported or missing classpath entry",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/ClasspathProbe.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/absent-classpath",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/invalid-classpath-absent-classpath"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/142-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/142-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: missing_import",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing_import.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/143-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/143-stderr.txt"
+    },
+    {
+      "label": "Korrust Java interop rejection: missing_import",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing_import.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-missing_import"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/144-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/144-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: missing_class",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing_class.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/145-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/145-stderr.txt"
+    },
+    {
+      "label": "Korrust Java interop rejection: missing_class",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing_class.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-missing_class"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/146-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/146-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: missing_member",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing_member.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/147-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/147-stderr.txt"
+    },
+    {
+      "label": "Korrust Java interop rejection: missing_member",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing_member.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-missing_member"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/148-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/148-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: private_member",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/private_member.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/149-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/149-stderr.txt"
+    },
+    {
+      "label": "Korrust Java interop rejection: private_member",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/private_member.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-private_member"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/150-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/150-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: wrong_java_arity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/wrong_java_arity.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/151-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/151-stderr.txt"
+    },
+    {
+      "label": "Korrust Java interop rejection: wrong_java_arity",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/wrong_java_arity.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-wrong_java_arity"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/152-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/152-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: wrong_java_argument",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/wrong_java_argument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/153-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/153-stderr.txt"
+    },
+    {
+      "label": "Korrust Java interop rejection: wrong_java_argument",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/wrong_java_argument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-wrong_java_argument"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/154-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/154-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop rejection: unit_as_int",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unit_as_int.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/155-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/155-stderr.txt"
+    },
+    {
+      "label": "Korrust Java interop rejection: unit_as_int",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unit_as_int.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-invalid-unit_as_int"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/156-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/156-stderr.txt"
+    },
+    {
+      "label": "Reference rejects missing classpath",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/MissingClasspath.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing-classpath-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/157-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/157-stderr.txt"
+    },
+    {
+      "label": "Korrust rejects missing classpath",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/MissingClasspath.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/missing-classpath-candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/158-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/158-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_overload",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_overload.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/159-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/159-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_overload",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_overload.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-java_overload"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/160-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/160-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_static",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_static.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/161-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/161-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_static",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_static.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-java_static"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/162-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/162-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_generic_method",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_generic_method.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/163-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/163-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_generic_method",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_generic_method.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-java_generic_method"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/164-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/164-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_annotated_method",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_annotated_method.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/165-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/165-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_annotated_method",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_annotated_method.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-java_annotated_method"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/166-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/166-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_field",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_field.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/167-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/167-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_field",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_field.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-java_field"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/168-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/168-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_inherited_member",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_inherited_member.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/169-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/169-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_inherited_member",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_inherited_member.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-java_inherited_member"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/170-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/170-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: kotlin_metadata_class",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/kotlin_metadata_class.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/171-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/171-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: kotlin_metadata_class",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/kotlin_metadata_class.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-kotlin_metadata_class"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/172-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/172-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_hierarchy_overload",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_hierarchy_overload.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/173-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/173-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_hierarchy_overload",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_hierarchy_overload.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-java_hierarchy_overload"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/174-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/174-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_interface",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_interface.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/175-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/175-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_interface",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_interface.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-java_interface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/176-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/176-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_annotated_class",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_annotated_class.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/177-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/177-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_annotated_class",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_annotated_class.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-java_annotated_class"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/178-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/178-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_annotated_package",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_annotated_package.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-reference"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/179-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/179-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_annotated_package",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_annotated_package.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/interop-unsupported-java_annotated_package"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-23T042846761339Z-characters/180-stdout.txt",
+      "stderr": "reports/correctness/2026-10-23T042846761339Z-characters/180-stderr.txt"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-23T042846761339Z-characters/000-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/000-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/001-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/001-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/002-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/002-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/003-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/003-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/004-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/004-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/005-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/005-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/006-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/006-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/007-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/007-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/008-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/008-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/009-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/009-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/010-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/010-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/011-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/011-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/012-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/012-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/013-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/013-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/014-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/014-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/015-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/015-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/016-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/016-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/017-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/017-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/018-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/018-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/019-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/019-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/020-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/020-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/021-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/021-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/022-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/022-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/023-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/023-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/024-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/024-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/025-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/025-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/026-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/026-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/027-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/027-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/028-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/028-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/029-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/029-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/030-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/030-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/031-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/031-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/032-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/032-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/033-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/033-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/034-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/034-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/035-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/035-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/036-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/036-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/037-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/037-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/038-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/038-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/039-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/039-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/040-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/040-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/041-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/041-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/042-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/042-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/043-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/043-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/044-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/044-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/045-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/045-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/046-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/046-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/047-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/047-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/048-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/048-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/049-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/049-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/050-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/050-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/051-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/051-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/052-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/052-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/053-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/053-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/054-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/054-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/055-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/055-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/056-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/056-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/057-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/057-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/058-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/058-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/059-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/059-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/060-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/060-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/061-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/061-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/062-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/062-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/063-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/063-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/064-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/064-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/065-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/065-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/066-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/066-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/067-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/067-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/068-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/068-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/069-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/069-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/070-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/070-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/071-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/071-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/072-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/072-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/073-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/073-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/074-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/074-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/075-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/075-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/076-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/076-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/077-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/077-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/078-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/078-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/079-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/079-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/080-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/080-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/081-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/081-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/082-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/082-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/083-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/083-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/084-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/084-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/085-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/085-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/086-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/086-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/087-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/087-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/088-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/088-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/089-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/089-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/090-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/090-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/091-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/091-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/092-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/092-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/093-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/093-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/094-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/094-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/095-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/095-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/096-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/096-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/097-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/097-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/098-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/098-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/099-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/099-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/100-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/100-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/101-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/101-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/102-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/102-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/103-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/103-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/104-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/104-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/105-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/105-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/106-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/106-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/107-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/107-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/108-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/108-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/109-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/109-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/110-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/110-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/111-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/111-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/112-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/112-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/113-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/113-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/114-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/114-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/115-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/115-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/116-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/116-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/117-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/117-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/118-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/118-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/119-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/119-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/120-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/120-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/121-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/121-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/122-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/122-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/123-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/123-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/124-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/124-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/125-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/125-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/126-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/126-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/127-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/127-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/128-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/128-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/129-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/129-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/130-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/130-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/131-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/131-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/132-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/132-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/133-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/133-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/134-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/134-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/135-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/135-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/136-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/136-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/137-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/137-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/138-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/138-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/139-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/139-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/140-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/140-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/141-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/141-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/142-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/142-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/143-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/143-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/144-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/144-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/145-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/145-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/146-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/146-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/147-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/147-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/148-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/148-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/149-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/149-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/150-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/150-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/151-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/151-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/152-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/152-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/153-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/153-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/154-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/154-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/155-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/155-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/156-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/156-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/157-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/157-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/158-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/158-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/159-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/159-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/160-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/160-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/161-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/161-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/162-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/162-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/163-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/163-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/164-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/164-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/165-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/165-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/166-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/166-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/167-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/167-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/168-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/168-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/169-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/169-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/170-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/170-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/171-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/171-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/172-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/172-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/173-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/173-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/174-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/174-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/175-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/175-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/176-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/176-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/177-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/177-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/178-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/178-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/179-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/179-stderr.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/180-stdout.txt",
+    "reports/correctness/2026-10-23T042846761339Z-characters/180-stderr.txt"
+  ],
+  "selection": "AndroidBible unsignedIntBinarySearch, AudioErrorCode, unchanged IntArrayListUtil using the original Java IntArrayList and unchanged VerseNumberPlacement; JVM arithmetic/control-flow, UTF-16 String/Char/CharArray, subject when, Int += and scoped Java interop probes, invalid and unsupported syntax. Android classes are test-only type stubs; no parcel runtime, upstream Kotlin fixture adapter or whole-app tests.",
+  "cases": [
+    {
+      "id": "rust_frontend",
+      "outcome": "pass",
+      "scope": "Frontend diagnostics and boundary tests; see command log"
+    },
+    {
+      "id": "androidbible_unsigned_search",
+      "outcome": "pass",
+      "runtime_checks": 70858,
+      "result_sha256": "7e53e944b470730ff51185af2c035300f1e4e80c8014ed213adf417156231254",
+      "oracle": "Official Kotlin plus independent Java assertions",
+      "jvm_verification": "all"
+    },
+    {
+      "id": "jvm_semantics",
+      "outcome": "pass",
+      "runtime_checks": 4903,
+      "result_sha256": "6bdd4651fa3bdde89a0b8020098676396e8655710da79961ba43e23e4bcccf55",
+      "oracle": "Official Kotlin plus independent Java assertions",
+      "jvm_verification": "all"
+    },
+    {
+      "id": "string_semantics",
+      "outcome": "pass",
+      "runtime_checks": 48548,
+      "result_sha256": "3c4fe74f7863365161066bdb91258091138b066d4195cb2f20819080131d949e",
+      "oracle": "Official Kotlin plus independent Java assertions",
+      "jvm_verification": "all"
+    },
+    {
+      "id": "java_interop_semantics",
+      "outcome": "pass",
+      "runtime_checks": 5737,
+      "result_sha256": "ad5ffbca2c9f44f97e1eb0107ec36468917e25a286b916a38afc94d6aa3c8d37",
+      "oracle": "Official Kotlin plus independent Java assertions",
+      "jvm_verification": "all"
+    },
+    {
+      "id": "character_when_semantics",
+      "outcome": "pass",
+      "runtime_checks": 931568,
+      "result_sha256": "578b86345d42e83e029765fae0f48e206320416b08911641411975ce2b1186c1",
+      "oracle": "Official Kotlin plus independent Java assertions",
+      "jvm_verification": "all"
+    },
+    {
+      "id": "jvm_signatures/yuku.alkitab.yes2.util.UnsignedBinarySearchKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/korrust.probes.ArithmeticKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/korrust.probes.StringsKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/yuku.alkitab.base.audio.AudioErrorCodeKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/yuku.alkitab.base.util.IntArrayListUtilKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/korrust.probes.InteropKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/korrust.probes.CharactersKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "jvm_signatures/yuku.alkitab.base.widget.VerseNumberPlacementKt",
+      "outcome": "pass",
+      "scope": "javap -p -s; does not assert Kotlin metadata compatibility"
+    },
+    {
+      "id": "diagnostics/val_reassignment",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/parameter_reassignment",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/unknown_local",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/boolean_arithmetic",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/return_type",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/missing_return",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/escaped_block_local",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/wrong_argument_count",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/duplicate_local",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/integer_overflow_literal",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/missing_statement_separator",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/reserved_underscore",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/string_argument_type",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/string_return_type",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/string_escape",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/string_arity",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/string_unterminated",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/char_return_mismatch",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/char_equality_mismatch",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/char_array_index_type",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/char_array_return_mismatch",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/compound_val_assignment",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/compound_char_assignment",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/when_condition_type",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/when_missing_return",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/when_branch_scope",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/char_empty_literal",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/char_multiple_units",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/char_supplementary_literal",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/char_invalid_escape",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/char_incomplete_unicode",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/invalid_postfix_sequence",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "diagnostics/when_else_not_last",
+      "outcome": "pass",
+      "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."
+    },
+    {
+      "id": "unsupported/string_templates",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/string_templates.kt:1:32: error: String interpolation is not supported"
+    },
+    {
+      "id": "unsupported/classes",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/classes.kt:1:1: error: Expected fun, found class"
+    },
+    {
+      "id": "unsupported/nullable_types",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/nullable_types.kt:1:13: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "unsupported/overloads",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/overloads.kt:2:1: error: Function overloads are not supported"
+    },
+    {
+      "id": "unsupported/unconditional_loop_analysis",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/unconditional_loop_analysis.kt:1:1: error: Function must return on all paths; unconditional-loop analysis is not supported"
+    },
+    {
+      "id": "unsupported/escaped_string_template",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/escaped_string_template.kt:1:26: error: String interpolation is not supported"
+    },
+    {
+      "id": "unsupported/when_expression",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_expression.kt:1:22: error: Expected an identifier"
+    },
+    {
+      "id": "unsupported/when_subjectless",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_subjectless.kt:1:27: error: Expected (, found {"
+    },
+    {
+      "id": "unsupported/when_range",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_range.kt:1:33: error: Expected an identifier"
+    },
+    {
+      "id": "unsupported/when_subject_variable",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_subject_variable.kt:1:28: error: Expected an identifier"
+    },
+    {
+      "id": "unsupported/char_arithmetic",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_arithmetic.kt:1:24: error: Type mismatch: expected Int, found Char"
+    },
+    {
+      "id": "unsupported/char_array_construction",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_array_construction.kt:1:28: error: Unresolved function: CharArray"
+    },
+    {
+      "id": "unsupported/char_array_write",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/char_array_write.kt:1:28: error: Expected a newline or semicolon"
+    },
+    {
+      "id": "unsupported/when_boolean_subject",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_boolean_subject.kt:1:26: error: when subjects support only Int and Char"
+    },
+    {
+      "id": "unsupported/when_trailing_condition_comma",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/when_trailing_condition_comma.kt:1:36: error: Expected an identifier"
+    },
+    {
+      "id": "interop_diagnostics/classpath_configuration",
+      "outcome": "pass",
+      "scope": "--classpath alias, multiple ordered directories, nonexistent directory and unsupported JAR entry rejection."
+    },
+    {
+      "id": "interop_diagnostics/missing_import",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/missing_class",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/missing_member",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/private_member",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/wrong_java_arity",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/wrong_java_argument",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/unit_as_int",
+      "outcome": "pass",
+      "scope": "Both compilers reject with directory classpath; candidate diagnostic category checked."
+    },
+    {
+      "id": "interop_diagnostics/missing_classpath",
+      "outcome": "pass",
+      "scope": "Both compilers reject unavailable imported Java class."
+    },
+    {
+      "id": "unsupported/java_overload",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_overload.kt:2:37: error: Java method missing or overloaded: overloaded",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_static",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_static.kt:2:16: error: Unresolved local: ForeignMethods",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_generic_method",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_generic_method.kt:2:40: error: Java method is inaccessible, static, generic, annotated, or unsupported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_annotated_method",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_annotated_method.kt:2:37: error: Java method is inaccessible, static, generic, annotated, or unsupported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_field",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_field.kt:2:37: error: Unsupported property: field",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_inherited_member",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_inherited_member.kt:2:37: error: Java inherited member resolution is not supported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/kotlin_metadata_class",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/kotlin_metadata_class.kt:1:8: error: Imported class is inaccessible or unsupported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_hierarchy_overload",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_hierarchy_overload.kt:2:35: error: Java inherited member or metadata resolution is not supported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_interface",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_interface.kt:2:39: error: Java interface calls are not supported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_annotated_class",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_annotated_class.kt:1:8: error: Imported class is inaccessible or unsupported",
+      "scope": "Official compiler accepts with the same directory classpath."
+    },
+    {
+      "id": "unsupported/java_annotated_package",
+      "outcome": "unsupported_language",
+      "diagnostic": "/workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/java_annotated_package.kt:1:1: error: Java package metadata /workspace/korrust/target/checks/2026-10-23T042846761339Z-characters/foreign/fixtures/annotated/package-info.class is unsupported because it may define nullability defaults",
+      "scope": "Official compiler accepts with the same directory classpath."
+    }
+  ],
+  "counts": {
+    "pass": 56,
+    "unsupported_language": 26
+  },
+  "finished_at": "2026-10-23T04:34:07.104116+00:00"
+}
+

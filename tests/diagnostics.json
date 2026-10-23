@@ -163,5 +163,148 @@
     "id": "when_else_not_last",
     "source": "fun f(n: Int): Int { when (n) { else -> return 1; 1 -> return 2 } }",
     "message": "last"
+  },
+  {
+    "id": "enum_duplicate_entry",
+    "source": "enum class E { A, A }",
+    "message": "Duplicate enum entry"
+  },
+  {
+    "id": "enum_conflicting_name",
+    "source": "enum class E { name }",
+    "message": "Enum entry conflicts"
+  },
+  {
+    "id": "enum_conflicting_ordinal",
+    "source": "enum class E { ordinal }",
+    "message": "Enum entry conflicts"
+  },
+  {
+    "id": "enum_conflicting_entries",
+    "source": "enum class E { entries }",
+    "message": "Enum entry conflicts"
+  },
+  {
+    "id": "enum_missing_name",
+    "source": "enum class { A }",
+    "message": "Expected an identifier"
+  },
+  {
+    "id": "enum_missing_comma",
+    "source": "enum class E { A B }",
+    "message": "Expected a comma"
+  },
+  {
+    "id": "enum_unterminated_body",
+    "source": "enum class E { A,",
+    "message": "Unterminated enum body"
+  },
+  {
+    "id": "enum_leading_comma",
+    "source": "enum class E { , A }",
+    "message": "Expected an identifier"
+  },
+  {
+    "id": "object_duplicate_constant",
+    "source": "object O { const val V = 1; const val V = 2 }",
+    "message": "Duplicate object member name"
+  },
+  {
+    "id": "object_duplicate_nested",
+    "source": "object O { object Child; object Child }",
+    "message": "Duplicate object member name"
+  },
+  {
+    "id": "object_duplicate_member_namespace",
+    "source": "object O { const val Child = 1; object Child }",
+    "message": "Duplicate object member name"
+  },
+  {
+    "id": "object_const_type_mismatch",
+    "source": "object O { const val V: Int = true }",
+    "message": "Const literal type mismatch"
+  },
+  {
+    "id": "object_const_char_type_mismatch",
+    "source": "object O { const val V: String = 'a' }",
+    "message": "Const literal type mismatch"
+  },
+  {
+    "id": "object_const_positive_overflow",
+    "source": "object O { const val V: Int = 2147483648 }",
+    "message": "Int constant literal is out of range"
+  },
+  {
+    "id": "object_const_negative_overflow",
+    "source": "object O { const val V: Int = -2147483649 }",
+    "message": "Int constant literal is out of range"
+  },
+  {
+    "id": "object_missing_name",
+    "source": "object {}",
+    "message": "Expected an identifier"
+  },
+  {
+    "id": "object_missing_initializer",
+    "source": "object O { const val V: Int }",
+    "message": "Expected ="
+  },
+  {
+    "id": "object_missing_literal",
+    "source": "object O { const val V = }",
+    "message": "Const initializers support only"
+  },
+  {
+    "id": "object_unterminated_body",
+    "source": "object O { const val V = 1",
+    "message": "Unterminated object body"
+  },
+  {
+    "id": "class_duplicate_constructor_property",
+    "source": "class C(private val value: Int, private val value: Int)",
+    "message": "Duplicate class property name"
+  },
+  {
+    "id": "class_missing_property_getter",
+    "source": "class C(private val elements: Array<String>) { val count: Int }",
+    "message": "Class properties require an explicit getter"
+  },
+  {
+    "id": "class_missing_required_override",
+    "source": "import korrust.fixtures.IndexedText\nclass C(private val elements: Array<String>) : IndexedText { override val itemCount: Int get() = elements.size }",
+    "message": "Missing interface implementation",
+    "classpath": true
+  },
+  {
+    "id": "class_property_function_override_mismatch",
+    "source": "import korrust.fixtures.IndexedText\nclass C(private val elements: Array<String>) : IndexedText { override fun getItemCount(): Int = elements.size\noverride fun itemAt(position: Int): String = elements[position] }",
+    "message": "Interface implementation requires override and an exact supported JVM signature",
+    "classpath": true
+  },
+  {
+    "id": "class_missing_override_modifier",
+    "source": "import korrust.fixtures.IndexedText\nclass C(private val elements: Array<String>) : IndexedText { override val itemCount: Int get() = elements.size\nfun itemAt(position: Int): String = elements[position] }",
+    "message": "Interface implementation requires override and an exact supported JVM signature",
+    "classpath": true
+  },
+  {
+    "id": "class_unmarked_to_string",
+    "source": "class C(private val elements: Array<String>) { fun toString(): String = elements[0] }",
+    "message": "Any and Object inherited members are not supported"
+  },
+  {
+    "id": "interface_duplicate_member",
+    "source": "interface I { fun f(n: Int): Int; fun f(n: Int): Int }",
+    "message": "Member overloads and JVM getter collisions"
+  },
+  {
+    "id": "interface_duplicate_companion_property",
+    "source": "interface I { companion object { private val A = arrayOf(\"x\"); private val A = arrayOf(\"y\") } }",
+    "message": "Duplicate companion property name"
+  },
+  {
+    "id": "template_unknown_name",
+    "source": "fun f(): String = \"value=$missing\"",
+    "message": "Unresolved"
   }
 ]

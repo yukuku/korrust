@@ -1,3 +1,5 @@
+mod output;
+
 use std::{env, fs, path::PathBuf, process::ExitCode};
 
 fn run() -> std::result::Result<(), String> {
@@ -44,13 +46,11 @@ fn run() -> std::result::Result<(), String> {
         .file_name()
         .and_then(|s| s.to_str())
         .ok_or("Invalid source filename")?;
-    let class = korrust::compile_with_classpath(&source, name, &classpath)
+    let artifacts = korrust::compile_outputs_with_classpath(&source, name, &classpath)
         .map_err(|e| e.render(&input.display().to_string(), &source))?;
-    let output = destination.join(format!("{}.class", class.internal_name));
-    fs::create_dir_all(output.parent().ok_or("Invalid output directory")?)
-        .map_err(|e| e.to_string())?;
-    fs::write(&output, class.bytes).map_err(|e| format!("{}: {e}", output.display()))?;
-    println!("{}", output.display());
+    for path in output::write_outputs(&input, &destination, artifacts)? {
+        println!("{}", path.display());
+    }
     Ok(())
 }
 

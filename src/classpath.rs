@@ -15,6 +15,7 @@ pub(crate) struct JavaClass {
     pub interfaces: Vec<String>,
     pub methods: Vec<JavaMethod>,
     pub unsupported: bool,
+    pub kotlin_interface: bool,
 }
 
 #[derive(Clone, Debug)]
@@ -24,6 +25,7 @@ pub(crate) struct JavaMethod {
     pub descriptor: String,
     pub access: u16,
     pub unsupported: bool,
+    pub source_property: Option<String>,
 }
 
 impl Classpath {
@@ -141,6 +143,7 @@ enum Constant {
     Empty,
     Utf8(String),
     Class(u16),
+    Integer(u32),
 }
 fn utf8(pool: &[Constant], index: u16) -> Result<&str> {
     match pool.get(usize::from(index)) {
@@ -193,15 +196,538 @@ fn modified_utf8(bytes: &[u8]) -> Result<String> {
     Ok(String::from_utf16_lossy(&units))
 }
 
-fn attributes(reader: &mut Reader<'_>, pool: &[Constant]) -> Result<bool> {
-    let mut unsupported = false;
+#[derive(Debug)]
+enum AnnotationValue {
+    Integer(u32),
+    String(String),
+    Array(Vec<AnnotationValue>),
+    Other,
+}
+
+#[derive(Debug)]
+struct Annotation {
+    name: String,
+    values: Vec<(String, AnnotationValue)>,
+}
+
+#[derive(Default)]
+struct Attributes {
+    unsupported: bool,
+    annotated: bool,
+    annotations: Vec<Annotation>,
+    parameter_annotations: Vec<Vec<Annotation>>,
+}
+
+fn annotation_value(
+    reader: &mut Reader<'_>,
+    pool: &[Constant],
+    depth: usize,
+) -> Result<AnnotationValue> {
+    if depth > 32 {
+        return Err(invalid());
+    }
+    Ok(match reader.u1()? {
+        b'I' => match pool.get(usize::from(reader.u2()?)) {
+            Some(Constant::Integer(value)) => AnnotationValue::Integer(*value),
+            _ => return Err(invalid()),
+        },
+        b's' => AnnotationValue::String(utf8(pool, reader.u2()?)?.to_owned()),
+        b'[' => {
+            let count = reader.u2()?;
+            let mut values = Vec::new();
+            for _ in 0..count {
+                values.push(annotation_value(reader, pool, depth + 1)?);
+            }
+            AnnotationValue::Array(values)
+        }
+        b'@' => {
+            annotation(reader, pool, depth + 1)?;
+            AnnotationValue::Other
+        }
+        b'e' => {
+            utf8(pool, reader.u2()?)?;
+            utf8(pool, reader.u2()?)?;
+            AnnotationValue::Other
+        }
+        b'c' => {
+            utf8(pool, reader.u2()?)?;
+            AnnotationValue::Other
+        }
+        b'B' | b'C' | b'D' | b'F' | b'J' | b'S' | b'Z' => {
+            let index = usize::from(reader.u2()?);
+            if index == 0 || index >= pool.len() {
+                return Err(invalid());
+            }
+            AnnotationValue::Other
+        }
+        _ => return Err(invalid()),
+    })
+}
+
+fn annotation(reader: &mut Reader<'_>, pool: &[Constant], depth: usize) -> Result<Annotation> {
+    let name = utf8(pool, reader.u2()?)?.to_owned();
+    let mut values = Vec::new();
+    for _ in 0..reader.u2()? {
+        let key = utf8(pool, reader.u2()?)?.to_owned();
+        if values.iter().any(|(name, _)| name == &key) {
+            return Err(invalid());
+        }
+        values.push((key, annotation_value(reader, pool, depth)?));
+    }
+    Ok(Annotation { name, values })
+}
+
+fn attributes(reader: &mut Reader<'_>, pool: &[Constant]) -> Result<Attributes> {
+    let mut result = Attributes::default();
     for _ in 0..reader.u2()? {
         let name = utf8(pool, reader.u2()?)?;
         let length = usize::try_from(reader.u4()?).map_err(|_| invalid())?;
-        reader.take(length)?;
-        unsupported |= name == "Signature" || name.contains("Annotations");
+        let bytes = reader.take(length)?;
+        let mut data = Reader { bytes, offset: 0 };
+        result.annotated |= name.contains("Annotations");
+        match name {
+            "RuntimeVisibleAnnotations" | "RuntimeInvisibleAnnotations" => {
+                for _ in 0..data.u2()? {
+                    result.annotations.push(annotation(&mut data, pool, 0)?);
+                }
+            }
+            "RuntimeVisibleParameterAnnotations" | "RuntimeInvisibleParameterAnnotations" => {
+                let count = usize::from(data.u1()?);
+                if !result.parameter_annotations.is_empty()
+                    && result.parameter_annotations.len() != count
+                {
+                    return Err(invalid());
+                }
+                result.parameter_annotations.resize_with(count, Vec::new);
+                for annotations in &mut result.parameter_annotations {
+                    for _ in 0..data.u2()? {
+                        annotations.push(annotation(&mut data, pool, 0)?);
+                    }
+                }
+            }
+            _ => {
+                result.unsupported |= name == "Signature" || name.contains("Annotations");
+                continue;
+            }
+        }
+        if data.offset != bytes.len() {
+            return Err(invalid());
+        }
     }
-    Ok(unsupported)
+    Ok(result)
+}
+
+#[derive(Clone, Copy)]
+enum ProtoValue<'a> {
+    Integer(u64),
+    Bytes(&'a [u8]),
+}
+
+struct Proto<'a>(Vec<(u32, ProtoValue<'a>)>);
+
+fn varint(reader: &mut Reader<'_>) -> Result<u64> {
+    let mut value = 0;
+    for shift in (0..70).step_by(7) {
+        let byte = reader.u1()?;
+        if shift == 63 && byte > 1 {
+            return Err(invalid());
+        }
+        value |= u64::from(byte & 127) << shift;
+        if byte & 128 == 0 {
+            return Ok(value);
+        }
+    }
+    Err(invalid())
+}
+
+impl<'a> Proto<'a> {
+    fn parse(bytes: &'a [u8]) -> Result<Self> {
+        let mut reader = Reader { bytes, offset: 0 };
+        let mut fields = Vec::new();
+        while reader.offset < bytes.len() {
+            let key = varint(&mut reader)?;
+            let number = u32::try_from(key >> 3).map_err(|_| invalid())?;
+            if number == 0 {
+                return Err(invalid());
+            }
+            let value = match key & 7 {
+                0 => ProtoValue::Integer(varint(&mut reader)?),
+                2 => {
+                    let count = usize::try_from(varint(&mut reader)?).map_err(|_| invalid())?;
+                    ProtoValue::Bytes(reader.take(count)?)
+                }
+                _ => return Err(invalid()),
+            };
+            fields.push((number, value));
+        }
+        Ok(Self(fields))
+    }
+    fn allowed(&self, numbers: &[u32]) -> Result<()> {
+        if self.0.iter().all(|(number, _)| numbers.contains(number)) {
+            Ok(())
+        } else {
+            Err(invalid())
+        }
+    }
+    fn integer(&self, number: u32) -> Result<Option<u64>> {
+        let mut values = self.0.iter().filter(|(key, _)| *key == number);
+        let result = match values.next() {
+            None => None,
+            Some((_, ProtoValue::Integer(value))) => Some(*value),
+            _ => return Err(invalid()),
+        };
+        if values.next().is_some() {
+            return Err(invalid());
+        }
+        Ok(result)
+    }
+    fn bytes(&self, number: u32) -> Result<Option<&'a [u8]>> {
+        let mut values = self.messages(number)?;
+        let result = values.pop();
+        if !values.is_empty() {
+            return Err(invalid());
+        }
+        Ok(result)
+    }
+    fn messages(&self, number: u32) -> Result<Vec<&'a [u8]>> {
+        self.0
+            .iter()
+            .filter(|(key, _)| *key == number)
+            .map(|(_, value)| match value {
+                ProtoValue::Bytes(bytes) => Ok(*bytes),
+                _ => Err(invalid()),
+            })
+            .collect()
+    }
+}
+
+fn metadata_strings(table: &[u8], strings: &[String]) -> Result<Vec<String>> {
+    let table = Proto::parse(table)?;
+    table.allowed(&[1])?;
+    let predefined = [
+        "kotlin/Any",
+        "kotlin/Nothing",
+        "kotlin/Unit",
+        "kotlin/Throwable",
+        "kotlin/Number",
+        "kotlin/Byte",
+        "kotlin/Double",
+        "kotlin/Float",
+        "kotlin/Int",
+        "kotlin/Long",
+        "kotlin/Short",
+        "kotlin/Boolean",
+        "kotlin/Char",
+        "kotlin/CharSequence",
+        "kotlin/String",
+        "kotlin/Comparable",
+        "kotlin/Enum",
+        "kotlin/Array",
+        "kotlin/ByteArray",
+        "kotlin/DoubleArray",
+        "kotlin/FloatArray",
+        "kotlin/IntArray",
+        "kotlin/LongArray",
+        "kotlin/ShortArray",
+        "kotlin/BooleanArray",
+        "kotlin/CharArray",
+    ];
+    let mut result = Vec::new();
+    for record in table.messages(1)? {
+        let record = Proto::parse(record)?;
+        record.allowed(&[1, 2, 3, 6])?;
+        let range = record.integer(1)?.unwrap_or(1);
+        if range == 0 || range > strings.len() as u64 {
+            return Err(invalid());
+        }
+        for _ in 0..range {
+            let mut value = strings.get(result.len()).ok_or_else(invalid)?.clone();
+            if let Some(index) = record.integer(2)? {
+                value = predefined
+                    .get(usize::try_from(index).map_err(|_| invalid())?)
+                    .ok_or_else(invalid)?
+                    .to_string();
+            }
+            if let Some(bytes) = record.bytes(6)? {
+                value = std::str::from_utf8(bytes)
+                    .map_err(|_| invalid())?
+                    .to_owned();
+            }
+            match record.integer(3)?.unwrap_or(0) {
+                0 => {}
+                1 => value = value.replace('$', "."),
+                2 => {
+                    value = value
+                        .strip_prefix('L')
+                        .and_then(|s| s.strip_suffix(';'))
+                        .ok_or_else(invalid)?
+                        .replace('$', ".");
+                }
+                _ => return Err(invalid()),
+            }
+            result.push(value);
+        }
+    }
+    if result.len() != strings.len() {
+        return Err(invalid());
+    }
+    Ok(result)
+}
+
+fn metadata_name(strings: &[String], index: Option<u64>) -> Result<&str> {
+    strings
+        .get(usize::try_from(index.ok_or_else(invalid)?).map_err(|_| invalid())?)
+        .map(String::as_str)
+        .ok_or_else(invalid)
+}
+
+fn metadata_type<'a>(bytes: &[u8], strings: &'a [String]) -> Result<&'a str> {
+    let ty = Proto::parse(bytes)?;
+    ty.allowed(&[1, 3, 6])?;
+    if ty.integer(1)?.unwrap_or(0) != 0 || ty.integer(3)?.unwrap_or(0) != 0 {
+        return Err(invalid());
+    }
+    match metadata_name(strings, ty.integer(6)?)? {
+        "kotlin/Int" => Ok("I"),
+        "kotlin/Boolean" => Ok("Z"),
+        "kotlin/Byte" => Ok("B"),
+        "kotlin/Short" => Ok("S"),
+        "kotlin/Char" => Ok("C"),
+        "kotlin/Long" => Ok("J"),
+        "kotlin/Float" => Ok("F"),
+        "kotlin/Double" => Ok("D"),
+        "kotlin/String" => Ok("Ljava/lang/String;"),
+        "kotlin/IntArray" => Ok("[I"),
+        "kotlin/Unit" => Ok("V"),
+        _ => Err(invalid()),
+    }
+}
+
+fn metadata_signature<'a>(
+    bytes: Option<&[u8]>,
+    strings: &'a [String],
+    name: &'a str,
+    descriptor: &'a str,
+) -> Result<(&'a str, &'a str)> {
+    let Some(bytes) = bytes else {
+        return Ok((name, descriptor));
+    };
+    let signature = Proto::parse(bytes)?;
+    signature.allowed(&[1, 2])?;
+    let actual_name = signature
+        .integer(1)?
+        .map(|n| metadata_name(strings, Some(n)))
+        .transpose()?
+        .unwrap_or(name);
+    let actual_descriptor = signature
+        .integer(2)?
+        .map(|n| metadata_name(strings, Some(n)))
+        .transpose()?
+        .unwrap_or(descriptor);
+    if actual_name != name || actual_descriptor != descriptor {
+        return Err(invalid());
+    }
+    Ok((actual_name, actual_descriptor))
+}
+
+fn nullability_annotations(attributes: &Attributes) -> bool {
+    attributes
+        .annotations
+        .iter()
+        .chain(attributes.parameter_annotations.iter().flatten())
+        .all(|annotation| {
+            annotation.name == "Lorg/jetbrains/annotations/NotNull;" && annotation.values.is_empty()
+        })
+}
+
+fn kotlin_interface(
+    metadata: &Annotation,
+    class: &JavaClass,
+    attributes: &[Attributes],
+) -> Result<Vec<Option<String>>> {
+    let mut version = None;
+    let mut kind = None;
+    let mut extra = None;
+    let mut data = None;
+    let mut strings = None;
+    for (key, value) in &metadata.values {
+        match (key.as_str(), value) {
+            ("mv", AnnotationValue::Array(values)) => {
+                version = Some(
+                    values
+                        .iter()
+                        .map(|v| match v {
+                            AnnotationValue::Integer(n) => Ok(*n),
+                            _ => Err(invalid()),
+                        })
+                        .collect::<Result<Vec<_>>>()?,
+                );
+            }
+            ("k", AnnotationValue::Integer(value)) => kind = Some(*value),
+            ("xi", AnnotationValue::Integer(value)) => extra = Some(*value),
+            ("d1", AnnotationValue::Array(values)) | ("d2", AnnotationValue::Array(values)) => {
+                let values = values
+                    .iter()
+                    .map(|v| match v {
+                        AnnotationValue::String(s) => Ok(s.clone()),
+                        _ => Err(invalid()),
+                    })
+                    .collect::<Result<Vec<_>>>()?;
+                if key == "d1" {
+                    data = Some(values);
+                } else {
+                    strings = Some(values);
+                }
+            }
+            _ => return Err(invalid()),
+        }
+    }
+    if version.as_deref() != Some(&[2, 3, 0])
+        || kind != Some(1)
+        || extra != Some(48)
+        || class.access != 0x0601
+        || class.super_name.as_deref() != Some("java/lang/Object")
+    {
+        return Err(invalid());
+    }
+    let data = data.ok_or_else(invalid)?.concat();
+    let mut chars = data.chars();
+    if chars.next() != Some('\0') {
+        return Err(invalid());
+    }
+    let bytes = chars
+        .map(|c| u8::try_from(u32::from(c)).map_err(|_| invalid()))
+        .collect::<Result<Vec<_>>>()?;
+    let mut reader = Reader {
+        bytes: &bytes,
+        offset: 0,
+    };
+    let size = usize::try_from(varint(&mut reader)?).map_err(|_| invalid())?;
+    let strings = metadata_strings(reader.take(size)?, &strings.ok_or_else(invalid)?)?;
+    let proto = Proto::parse(reader.take(bytes.len() - reader.offset)?)?;
+    proto.allowed(&[1, 3, 4, 6, 7, 9, 10, 101, 104])?;
+    if proto.integer(1)?.unwrap_or(6) != 102
+        || metadata_name(&strings, proto.integer(3)?)?.replace('.', "$") != class.name
+    {
+        return Err(invalid());
+    }
+    if let Some(module) = proto.integer(101)? {
+        if metadata_name(&strings, Some(module))?.is_empty() {
+            return Err(invalid());
+        }
+    }
+    let jvm_flags = proto.integer(104)?.unwrap_or(0);
+    if jvm_flags > 3 {
+        return Err(invalid());
+    }
+    let mut supertypes = Vec::new();
+    for bytes in proto.messages(6)? {
+        let ty = Proto::parse(bytes)?;
+        ty.allowed(&[6])?;
+        supertypes.push(metadata_name(&strings, ty.integer(6)?)?.replace('.', "$"));
+    }
+    if class.interfaces.is_empty() {
+        if supertypes != ["kotlin/Any"] {
+            return Err(invalid());
+        }
+    } else if supertypes != class.interfaces {
+        return Err(invalid());
+    }
+    let mut seen = vec![false; class.methods.len()];
+    let mut properties = vec![None; class.methods.len()];
+    let mut validate = |name: &str, descriptor: &str, flags: u64| -> Result<()> {
+        if !matches!(flags, 0x16 | 0x26) {
+            return Err(invalid());
+        }
+        let matching: Vec<_> = class
+            .methods
+            .iter()
+            .enumerate()
+            .filter(|(_, m)| m.name == name && m.descriptor == descriptor)
+            .collect();
+        let [(index, method)] = matching.as_slice() else {
+            return Err(invalid());
+        };
+        if seen[*index]
+            || method.access != (if flags & 0x30 == 0x20 { 0x0401 } else { 1 })
+            || attributes[*index].unsupported
+            || !nullability_annotations(&attributes[*index])
+            || (method.access & 0x0400 == 0 && jvm_flags & 1 == 0)
+        {
+            return Err(invalid());
+        }
+        seen[*index] = true;
+        Ok(())
+    };
+    for bytes in proto.messages(9)? {
+        let function = Proto::parse(bytes)?;
+        function.allowed(&[2, 3, 6, 9, 100])?;
+        let name = metadata_name(&strings, function.integer(2)?)?;
+        let result = metadata_type(function.bytes(3)?.ok_or_else(invalid)?, &strings)?;
+        let mut descriptor = String::from("(");
+        for parameter in function.messages(6)? {
+            let parameter = Proto::parse(parameter)?;
+            parameter.allowed(&[1, 2, 3])?;
+            if parameter.integer(1)?.unwrap_or(0) != 0 {
+                return Err(invalid());
+            }
+            metadata_name(&strings, parameter.integer(2)?)?;
+            let ty = metadata_type(parameter.bytes(3)?.ok_or_else(invalid)?, &strings)?;
+            if ty == "V" {
+                return Err(invalid());
+            }
+            descriptor.push_str(ty);
+        }
+        descriptor.push(')');
+        descriptor.push_str(result);
+        metadata_signature(function.bytes(100)?, &strings, name, &descriptor)?;
+        validate(name, &descriptor, function.integer(9)?.unwrap_or(6))?;
+    }
+    for bytes in proto.messages(10)? {
+        let property = Proto::parse(bytes)?;
+        property.allowed(&[2, 3, 7, 11, 100])?;
+        let flags = property.integer(11)?.unwrap_or(518);
+        if flags & !0x236 != 0 || flags & 0x200 == 0 {
+            return Err(invalid());
+        }
+        let name = metadata_name(&strings, property.integer(2)?)?;
+        let ty = metadata_type(property.bytes(3)?.ok_or_else(invalid)?, &strings)?;
+        if ty == "V" {
+            return Err(invalid());
+        }
+        let getter =
+            if name.starts_with("is") && name.chars().nth(2).is_some_and(|c| !c.is_lowercase()) {
+                name.to_owned()
+            } else {
+                let mut chars = name.chars();
+                let first = chars.next().ok_or_else(invalid)?;
+                if !first.is_ascii_alphabetic() {
+                    return Err(invalid());
+                }
+                format!("get{}{}", first.to_ascii_uppercase(), chars.as_str())
+            };
+        let descriptor = format!("(){ty}");
+        let signature = Proto::parse(property.bytes(100)?.ok_or_else(invalid)?)?;
+        signature.allowed(&[3])?;
+        metadata_signature(signature.bytes(3)?, &strings, &getter, &descriptor)?;
+        let getter_flags = property.integer(7)?.unwrap_or(flags & 0x3f);
+        if getter_flags & !0x76 != 0 || getter_flags & 0x3f != flags & 0x3f {
+            return Err(invalid());
+        }
+        validate(&getter, &descriptor, flags & 0x3f)?;
+        let index = class
+            .methods
+            .iter()
+            .position(|m| m.name == getter && m.descriptor == descriptor)
+            .ok_or_else(invalid)?;
+        properties[index] = Some(name.to_owned());
+    }
+    for (index, method) in class.methods.iter().enumerate() {
+        if !seen[index] && method.access & 8 == 0 {
+            return Err(invalid());
+        }
+    }
+    Ok(properties)
 }
 
 fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
@@ -226,7 +752,8 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
                 Constant::Utf8(modified_utf8(reader.take(length)?)?)
             }
             7 => Constant::Class(reader.u2()?),
-            3 | 4 | 9 | 10 | 11 | 12 | 17 | 18 => {
+            3 => Constant::Integer(reader.u4()?),
+            4 | 9 | 10 | 11 | 12 | 17 | 18 => {
                 reader.take(4)?;
                 Constant::Empty
             }
@@ -282,35 +809,55 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
         attributes(&mut reader, &pool)?;
     }
     let mut methods = Vec::new();
+    let mut method_attributes = Vec::new();
     for _ in 0..reader.u2()? {
         let access = reader.u2()?;
         let method_name = utf8(&pool, reader.u2()?)?.to_owned();
         let descriptor = utf8(&pool, reader.u2()?)?.to_owned();
+        let attrs = attributes(&mut reader, &pool)?;
         let unsupported =
-            attributes(&mut reader, &pool)? || access & (0x0040 | 0x0080 | 0x1000) != 0;
+            attrs.unsupported || attrs.annotated || access & (0x0040 | 0x0080 | 0x1000) != 0;
+        method_attributes.push(attrs);
         methods.push(JavaMethod {
             owner: name.clone(),
             name: method_name,
             descriptor,
             access,
             unsupported,
+            source_property: None,
         });
     }
-    let unsupported = attributes(&mut reader, &pool)?
-        || pool
-            .iter()
-            .any(|value| matches!(value, Constant::Utf8(value) if value == "Lkotlin/Metadata;"));
+    let attrs = attributes(&mut reader, &pool)?;
     if reader.offset != bytes.len() {
         return Err(invalid());
     }
-    Ok(JavaClass {
+    let mut class = JavaClass {
         name,
         access,
         super_name,
         interfaces,
         methods,
-        unsupported,
-    })
+        unsupported: attrs.unsupported || attrs.annotated,
+        kotlin_interface: false,
+    };
+    if !attrs.unsupported
+        && attrs.annotations.len() == 1
+        && attrs.annotations[0].name == "Lkotlin/Metadata;"
+        && attrs.parameter_annotations.is_empty()
+    {
+        if let Ok(properties) = kotlin_interface(&attrs.annotations[0], &class, &method_attributes)
+        {
+            class.unsupported = false;
+            class.kotlin_interface = true;
+            for (method, property) in class.methods.iter_mut().zip(properties) {
+                method.source_property = property;
+                if method.access & 8 == 0 {
+                    method.unsupported = false;
+                }
+            }
+        }
+    }
+    Ok(class)
 }
 
 #[cfg(test)]
@@ -377,5 +924,263 @@ mod tests {
             0xca, 0xfe, 0xba, 0xbe, 0, 0, 0, 52, 0, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0,
         ];
         assert!(parse(&bytes, "A").is_err());
+    }
+    fn proto_integer(number: u32, value: u64) -> Vec<u8> {
+        fn write(mut value: u64, bytes: &mut Vec<u8>) {
+            while value >= 128 {
+                bytes.push((value as u8 & 127) | 128);
+                value >>= 7;
+            }
+            bytes.push(value as u8);
+        }
+        let mut bytes = Vec::new();
+        write(u64::from(number) << 3, &mut bytes);
+        write(value, &mut bytes);
+        bytes
+    }
+    fn proto_bytes(number: u32, value: &[u8]) -> Vec<u8> {
+        let mut bytes = proto_integer(number, value.len() as u64);
+        bytes[0] |= 2;
+        bytes.extend_from_slice(value);
+        bytes
+    }
+    fn fixture_metadata(
+        nullable: bool,
+        function_extra: &[u8],
+        property_flags: u64,
+        parameter_flags: u64,
+        function_flags: u64,
+    ) -> (Annotation, JavaClass, Vec<Attributes>) {
+        let strings = [
+            "sample/Index",
+            "kotlin/Any",
+            "itemCount",
+            "kotlin/Int",
+            "getItemCount",
+            "()I",
+            "item",
+            "kotlin/String",
+            "index",
+            "label",
+        ];
+        let ty = |index| proto_integer(6, index);
+        let mut result = ty(7);
+        if nullable {
+            result.extend(proto_integer(3, 1));
+        }
+        let parameter = [
+            proto_integer(1, parameter_flags),
+            proto_integer(2, 8),
+            proto_bytes(3, &ty(3)),
+        ]
+        .concat();
+        let function = [
+            proto_integer(2, 6),
+            proto_bytes(3, &result),
+            proto_bytes(6, &parameter),
+            proto_integer(9, function_flags),
+            function_extra.to_vec(),
+        ]
+        .concat();
+        let default = [
+            proto_integer(2, 9),
+            proto_bytes(3, &ty(7)),
+            proto_bytes(6, &parameter),
+            proto_integer(9, 22),
+        ]
+        .concat();
+        let signature = [proto_integer(1, 4), proto_integer(2, 5)].concat();
+        let property = [
+            proto_integer(2, 2),
+            proto_bytes(3, &ty(3)),
+            proto_integer(11, property_flags),
+            proto_bytes(100, &proto_bytes(3, &signature)),
+        ]
+        .concat();
+        let class = [
+            proto_integer(1, 102),
+            proto_integer(3, 0),
+            proto_bytes(6, &ty(1)),
+            proto_bytes(9, &function),
+            proto_bytes(9, &default),
+            proto_bytes(10, &property),
+            proto_integer(104, 3),
+        ]
+        .concat();
+        let table = proto_bytes(1, &proto_integer(1, strings.len() as u64));
+        let mut data = vec![0];
+        let mut length = table.len();
+        while length >= 128 {
+            data.push((length as u8 & 127) | 128);
+            length >>= 7;
+        }
+        data.push(length as u8);
+        data.extend(table);
+        data.extend(class);
+        let metadata = Annotation {
+            name: "Lkotlin/Metadata;".into(),
+            values: vec![
+                (
+                    "mv".into(),
+                    AnnotationValue::Array(vec![
+                        AnnotationValue::Integer(2),
+                        AnnotationValue::Integer(3),
+                        AnnotationValue::Integer(0),
+                    ]),
+                ),
+                ("k".into(), AnnotationValue::Integer(1)),
+                ("xi".into(), AnnotationValue::Integer(48)),
+                (
+                    "d1".into(),
+                    AnnotationValue::Array(vec![AnnotationValue::String(
+                        data.into_iter().map(char::from).collect(),
+                    )]),
+                ),
+                (
+                    "d2".into(),
+                    AnnotationValue::Array(
+                        strings
+                            .into_iter()
+                            .map(|s| AnnotationValue::String(s.into()))
+                            .collect(),
+                    ),
+                ),
+            ],
+        };
+        let methods = [
+            ("getItemCount", "()I", 0x0401),
+            ("item", "(I)Ljava/lang/String;", 0x0401),
+            ("label", "(I)Ljava/lang/String;", 1),
+        ]
+        .into_iter()
+        .map(|(name, descriptor, access)| JavaMethod {
+            owner: "sample/Index".into(),
+            name: name.into(),
+            descriptor: descriptor.into(),
+            access,
+            unsupported: false,
+            source_property: None,
+        })
+        .collect();
+        let class = JavaClass {
+            name: "sample/Index".into(),
+            access: 0x0601,
+            super_name: Some("java/lang/Object".into()),
+            interfaces: vec![],
+            methods,
+            unsupported: true,
+            kotlin_interface: false,
+        };
+        let attributes = (0..3).map(|_| Attributes::default()).collect();
+        (metadata, class, attributes)
+    }
+    #[test]
+    fn kotlin_interface_metadata_preserves_property_identity_and_default_methods() {
+        let (metadata, class, attributes) = fixture_metadata(false, &[], 550, 0, 38);
+        assert_eq!(
+            kotlin_interface(&metadata, &class, &attributes).unwrap(),
+            [Some("itemCount".into()), None, None]
+        );
+    }
+    #[test]
+    fn kotlin_interface_nullable_generic_extension_suspend_and_default_arguments_are_rejected() {
+        for (nullable, extra, property_flags, parameter_flags, function_flags) in [
+            (true, vec![], 550, 0, 38),
+            (false, proto_bytes(4, &[]), 550, 0, 38),
+            (false, proto_bytes(5, &proto_integer(6, 7)), 550, 0, 38),
+            (false, vec![], 550, 0, 8192 | 38),
+            (false, vec![], 550 | 256, 0, 38),
+            (false, vec![], 550, 2, 38),
+        ] {
+            let (metadata, class, attributes) = fixture_metadata(
+                nullable,
+                &extra,
+                property_flags,
+                parameter_flags,
+                function_flags,
+            );
+            assert!(kotlin_interface(&metadata, &class, &attributes).is_err());
+        }
+    }
+    #[test]
+    fn kotlin_interface_binary_mismatches_and_extra_annotations_are_rejected() {
+        let (metadata, mut class, attributes) = fixture_metadata(false, &[], 550, 0, 38);
+        class.methods[1].descriptor = "(I)I".into();
+        assert!(kotlin_interface(&metadata, &class, &attributes).is_err());
+        let (metadata, mut class, attributes) = fixture_metadata(false, &[], 550, 0, 38);
+        class.methods[2].access |= 0x0400;
+        assert!(kotlin_interface(&metadata, &class, &attributes).is_err());
+        let (metadata, class, mut attributes) = fixture_metadata(false, &[], 550, 0, 38);
+        attributes[1].annotations.push(Annotation {
+            name: "Lorg/jetbrains/annotations/Nullable;".into(),
+            values: vec![],
+        });
+        assert!(kotlin_interface(&metadata, &class, &attributes).is_err());
+        attributes[1].annotations[0].name = "Lorg/jetbrains/annotations/NotNull;".into();
+        assert!(kotlin_interface(&metadata, &class, &attributes).is_ok());
+    }
+    #[test]
+    fn kotlin_metadata_version_and_truncated_protobuf_are_rejected() {
+        let (mut metadata, class, attributes) = fixture_metadata(false, &[], 550, 0, 38);
+        metadata.values[0].1 = AnnotationValue::Array(vec![AnnotationValue::Integer(3)]);
+        assert!(kotlin_interface(&metadata, &class, &attributes).is_err());
+        let (mut metadata, class, attributes) = fixture_metadata(false, &[], 550, 0, 38);
+        let AnnotationValue::Array(values) = &mut metadata.values[3].1 else {
+            panic!()
+        };
+        let AnnotationValue::String(data) = &mut values[0] else {
+            panic!()
+        };
+        let full = data.clone();
+        for end in full.char_indices().map(|(index, _)| index) {
+            let (mut candidate, _, _) = fixture_metadata(false, &[], 550, 0, 38);
+            candidate.values[3].1 =
+                AnnotationValue::Array(vec![AnnotationValue::String(full[..end].into())]);
+            assert!(
+                kotlin_interface(&candidate, &class, &attributes).is_err(),
+                "length {end}"
+            );
+        }
+        assert!(Proto::parse(&[0x80; 11]).is_err());
+        assert!(Proto::parse(&[10, 255]).is_err());
+    }
+    #[test]
+    fn metadata_predefined_names_and_descriptor_operations_are_bounded() {
+        let table = [
+            proto_bytes(1, &proto_integer(2, 8)),
+            proto_bytes(1, &proto_integer(3, 2)),
+        ]
+        .concat();
+        assert_eq!(
+            metadata_strings(&table, &["".into(), "Lsample/Index$Nested;".into()]).unwrap(),
+            ["kotlin/Int", "sample/Index.Nested"]
+        );
+        assert!(metadata_strings(&table, &["".into(), "bad".into()]).is_err());
+        assert!(metadata_strings(&proto_bytes(1, &proto_integer(1, 1000)), &["".into()]).is_err());
+    }
+    #[test]
+    fn kotlin_interface_module_names_are_validated_without_changing_member_contracts() {
+        for (fields, expected) in [
+            (proto_integer(101, 2), true),
+            (proto_integer(101, 1000), false),
+            (proto_bytes(101, b"module"), false),
+            (
+                [proto_integer(101, 2), proto_integer(101, 2)].concat(),
+                false,
+            ),
+        ] {
+            let (mut metadata, class, attributes) = fixture_metadata(false, &[], 550, 0, 38);
+            let AnnotationValue::Array(values) = &mut metadata.values[3].1 else {
+                panic!()
+            };
+            let AnnotationValue::String(data) = &mut values[0] else {
+                panic!()
+            };
+            data.extend(fields.into_iter().map(char::from));
+            assert_eq!(
+                kotlin_interface(&metadata, &class, &attributes).is_ok(),
+                expected
+            );
+        }
     }
 }
