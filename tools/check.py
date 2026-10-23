@@ -6,6 +6,7 @@ import platform
 import shutil
 import subprocess
 import sys
+import zipfile
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,6 +18,8 @@ INT_LIST = Path("benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alki
 JAVA_LIST = Path("benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java")
 
 VERSE_PLACEMENT = Path("benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt")
+
+IO_SOURCE = Path("benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/Utf8Decoder.kt")
 
 CHAPTER = Path("benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt")
 CHAPTER_INTERFACE = Path("benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt")
@@ -43,7 +46,7 @@ def executable(name):
 
 def main():
     now = datetime.now(timezone.utc)
-    run_id = now.strftime("%Y-%m-%dT%H%M%S%fZ") + "-model-interfaces"
+    run_id = now.strftime("%Y-%m-%dT%H%M%S%fZ") + "-io-byte-arrays"
     work = ROOT / "target/checks" / run_id
     artifacts = ROOT / "reports/correctness" / run_id
     work.mkdir(parents=True)
@@ -62,7 +65,7 @@ def main():
         "environment": {"os": platform.platform(), "machine": platform.machine()},
         "commands": commands,
         "evidence": [],
-        "selection": "AndroidBible unsignedIntBinarySearch, AudioErrorCode, unchanged IntArrayListUtil using the original Java IntArrayList and unchanged VerseNumberPlacement, RibkaEligibility and RequestCodes and Yes2SingleChapterVerses; ordinary final classes with private constructor properties, String arrays and Kotlin interface implementations; candidate-built SingleChapterVerses plus generic interface companions/defaults/anonymous objects, nested Float signatures and simple templates; Java/Kotlin metadata consumers and visibility/nullability probes; bounded named/nested objects with literal constants and Java singleton/nesting/runtime-constant assertions; bounded bare enums with Java runtime, generic-signature, EnumEntries, collection and serialization assertions; JVM arithmetic/control-flow, UTF-16 String/Char/CharArray, subject when, Int += and scoped Java interop probes, invalid and unsupported syntax. Android classes are test-only type stubs; no parcel runtime, upstream Kotlin fixture adapter or whole-app tests.",
+        "selection": "Unchanged AndroidBible Utf8Decoder plus independent exhaustive Unicode/byte/thread-local and generic control-flow/object metadata probes; candidate noncapturing Supplier helper classes differ intentionally from official indy and are explicitly validated. AndroidBible unsignedIntBinarySearch, AudioErrorCode, unchanged IntArrayListUtil using the original Java IntArrayList and unchanged VerseNumberPlacement, RibkaEligibility and RequestCodes and Yes2SingleChapterVerses; ordinary final classes with private constructor properties, String arrays and Kotlin interface implementations; candidate-built SingleChapterVerses plus generic interface companions/defaults/anonymous objects, nested Float signatures and simple templates; Java/Kotlin metadata consumers and visibility/nullability probes; bounded named/nested objects with literal constants and Java singleton/nesting/runtime-constant assertions; bounded bare enums with Java runtime, generic-signature, EnumEntries, collection and serialization assertions; JVM arithmetic/control-flow, UTF-16 String/Char/CharArray, subject when, Int += and scoped Java interop probes, invalid and unsupported syntax. Android classes are test-only type stubs; no parcel runtime, upstream Kotlin fixture adapter or whole-app tests.",
         "cases": cases,
     }
 
@@ -127,11 +130,15 @@ def main():
         relative_audio = str(AUDIO.relative_to("benchmarks/sources/androidbible"))
         if sha(ROOT / AUDIO) != inventory["androidbible"][relative_audio]:
             raise RuntimeError("AndroidBible AudioErrorCode source was changed")
-        for baseline in [INT_LIST, JAVA_LIST, VERSE_PLACEMENT, ENUM, OBJECT, CHAPTER, CHAPTER_INTERFACE]:
+        for baseline in [INT_LIST, JAVA_LIST, VERSE_PLACEMENT, ENUM, OBJECT, CHAPTER, CHAPTER_INTERFACE, IO_SOURCE, *[path.relative_to(ROOT) for path in sorted((ROOT / "benchmarks/sources/androidbible/Bintex/src/main/java").rglob("*.java"))]]:
             relative = str(baseline.relative_to("benchmarks/sources/androidbible"))
             if sha(ROOT / baseline) != inventory["androidbible"][relative]:
                 raise RuntimeError("AndroidBible source was changed: " + str(baseline))
         report["inputs"] = {
+            "io_source": str(IO_SOURCE),
+            "io_source_sha256": sha(ROOT / IO_SOURCE),
+            "io_fixtures_sha256": {str(p.relative_to(ROOT)): sha(p) for p in sorted((ROOT / "tests/fixtures/io").glob("*")) if p.is_file()},
+            "bintex_sources_sha256": {str(p.relative_to(ROOT)): sha(p) for p in sorted((ROOT / "benchmarks/sources/androidbible/Bintex/src/main/java").rglob("*.java"))},
             "yes2_chapter_source": str(CHAPTER),
             "yes2_chapter_source_sha256": sha(ROOT / CHAPTER),
             "chapter_interface_source": str(CHAPTER_INTERFACE),
@@ -177,14 +184,22 @@ def main():
             "source_files_sha256": fingerprints,
             "classfile_major_versions": [49, 52],
             "kotlin_metadata": True,
-            "kotlin_metadata_scope": {"top_level_functions": True, "bounded_classes": True, "bounded_interfaces_companions": True, "enums": False, "objects": False},
+            "kotlin_metadata_scope": {"top_level_functions": True, "bounded_classes": True, "bounded_interfaces_companions": True, "bounded_dynamic_objects": True, "enums": False, "constant_only_objects": False},
             "module_metadata": "Per-source module mappings for top-level function facades",
             "incremental_compilation": False,
         }
         official, candidate, drivers, foreign = [work / n for n in ["official", "candidate", "drivers", "foreign"]]
         cp = lambda *paths: os.pathsep.join(str(p) for p in paths)
+        jmod = Path(os.environ.get("JAVA_HOME", str(Path(java).resolve().parents[1]))) / "jmods/java.base.jmod"
+        jdk_classes = ["java/io/IOException", "java/io/Closeable", "java/lang/AutoCloseable", "java/lang/Exception", "java/lang/Throwable", "java/lang/Object", "java/lang/Deprecated"]
+        with zipfile.ZipFile(jmod) as archive:
+            for name in jdk_classes:
+                output = foreign / (name + ".class")
+                output.parent.mkdir(parents=True, exist_ok=True)
+                output.write_bytes(archive.read("classes/" + name + ".class"))
+        report["inputs"]["jdk_classpath"] = {"jmod": str(jmod), "jmod_sha256": sha(jmod), "classes_sha256": {name: sha(foreign / (name + ".class")) for name in jdk_classes}}
         java_fixtures = sorted((ROOT / "tests/fixtures/interop").rglob("*.java"))
-        run("Compile original Java IntArrayList with test-only Android type stubs", [javac, "-d", foreign, ROOT / JAVA_LIST, *java_fixtures])
+        run("Compile original Java IntArrayList with test-only Android type stubs", [javac, "-d", foreign, ROOT / JAVA_LIST, *java_fixtures, ROOT / "tests/fixtures/io/IoTrace.java", *sorted((ROOT / "benchmarks/sources/androidbible/Bintex/src/main/java").rglob("*.java"))])
         options = report["reference_compiler"]["options"]
         probe = ROOT / "tests/fixtures/Arithmetic.kt"
         strings = ROOT / "tests/fixtures/Strings.kt"
@@ -287,6 +302,49 @@ def main():
             raise AssertionError("Kotlin model metadata consumers differ")
         cases.append({"id": "kotlin_metadata/ModelConsumer", "outcome": "pass", "scope": "Official Kotlin consumes each emitted interface/companion/anonymous/nested-Float surface, executes default methods, and rejects private companion access."})
         cases.append({"id": "androidbible_yes2_candidate_model", "outcome": "pass", "runtime_checks": json.loads(dependent_reference)["checks"], "scope": "Korrust Yes2 is compiled against Korrust original SingleChapterVerses classpath; official-compiled Java caller results match entirely official pair under JVM verification all."})
+        from check_androidbible_io import source_abi
+        io_reference, io_candidate = work / "io-official", work / "io-candidate"
+        io_sources = [ROOT / IO_SOURCE, *sorted((ROOT / "tests/fixtures/io").glob("*.kt"))]
+        run("Compile Io and generic byte fixtures with official Kotlin", [kotlinc, *io_sources, "-cp", foreign, *options, "-d", io_reference])
+        for source in io_sources:
+            run("Compile Io fixture " + source.name, [compiler, source, "-cp", foreign, "-d", io_candidate])
+        io_drivers = work / "io-drivers"
+        run("Compile independent Io/byte Java callers against official Kotlin", [javac, "-cp", cp(io_reference, foreign, stdlib), "-d", io_drivers, ROOT / "tests/fixtures/InterfaceAssertions.java", *sorted((ROOT / "tests/fixtures/io").glob("*Check.java"))])
+        for name, case_id in [("IoCheck", "androidbible_io_semantics"), ("BytesCheck", "generic_byte_array_semantics")]:
+            results = [run("Run " + name + " against " + provider, [java, "-Xverify:all", "-cp", cp(io_drivers, output, foreign, stdlib), name], timeout=60).stdout for provider, output in [("official", io_reference), ("candidate", io_candidate)]]
+            if results[0] != results[1]:
+                raise AssertionError("Io observations differ: " + name)
+            result = json.loads(results[0])
+            cases.append({"id": case_id, "outcome": "pass", "runtime_checks": result["checks"], "result_sha256": result["sha256"], "scope": "Official-compiled Java callers, JVM verification all; Unicode scalars, bytes, buffer/concurrency, lazy suppliers, control-flow/definite assignment and observable evaluation order."})
+        supplier_fields = {"yuku.alkitab.io.Utf8Decoder": {"byteBuffer": "byte", "charBuffer": "char"}, "korrust.probes.io.ByteWorkbench": {"octets": "byte", "letters": "char"}, "korrust.probes.io.HiddenBuffers": {"state": "char"}, "korrust.probes.io.LazyScratch": {"failedBytes": "byte", "failedChars": "char"}}
+        reference_classes = {path.relative_to(io_reference).with_suffix("").as_posix().replace("/", ".") for path in io_reference.rglob("*.class")}
+        candidate_classes = {path.relative_to(io_candidate).with_suffix("").as_posix().replace("/", ".") for path in io_candidate.rglob("*.class")}
+        expected_helpers = {owner + "$" + field + "$Supplier" for owner, fields in supplier_fields.items() for field in fields}
+        if candidate_classes != reference_classes | expected_helpers:
+            raise AssertionError("Io source/synthetic class inventories differ")
+        for name in sorted(reference_classes):
+            expected = run("Inspect official Io source ABI", [javap, "-p", "-s", "-classpath", io_reference, name]).stdout
+            actual = run("Inspect candidate Io source ABI", [javap, "-p", "-s", "-classpath", io_candidate, name]).stdout
+            if source_abi(expected, supplier_fields.get(name, {})) != source_abi(actual, supplier_fields.get(name, {})):
+                raise AssertionError("Io source ABI differs: " + name)
+            cases.append({"id": "io_jvm_signatures/" + name, "outcome": "pass", "scope": "All source-defined JVM descriptors/generic fields/throws/modifiers; only exact derived synthetic Supplier accessors and member order normalized. Separate synthetic helper contract verified."})
+        run("Verify candidate synthetic Supplier implementation contracts", [java, "-Xverify:all", "-cp", cp(io_drivers, io_candidate, foreign, stdlib), "SupplierCheck", *supplier_fields])
+        cases.append({"id": "io_supplier_lowering", "outcome": "pass", "synthetic_classes": sorted(expected_helpers), "scope": "Exactly derived synthetic noncapturing Suppliers/accessors; fresh allocation on Supplier.get, thread-local cache identity and deferred negative allocations tested. Official indy and candidate synthetic inventories differ legitimately."})
+        for consumer, friend in [("IoMetadataConsumer", False), ("IoInternalConsumer", True)]:
+            results = []
+            for provider, output in [("official", io_reference), ("candidate", io_candidate)]:
+                destination = work / (provider + "-" + consumer)
+                run("Compile " + consumer + " against " + provider, [kotlinc, ROOT / "tests/fixtures/consumers" / (consumer + ".kt"), "-cp", cp(output, foreign), *options, *(["-Xfriend-paths=" + str(output)] if friend else []), "-d", destination])
+                results.append(run("Run " + consumer + " against " + provider, [java, "-Xverify:all", "-cp", cp(destination, output, foreign, stdlib), "korrust.consumers." + consumer + "Kt"]).stdout)
+            if results[0] != results[1]:
+                raise AssertionError("Io Kotlin consumer differs")
+            cases.append({"id": "kotlin_metadata/" + consumer, "outcome": "pass", "scope": "Official Kotlin compiles/runs Byte, ByteArray, overload/static object or internal-object friend consumer against each provider."})
+        for consumer, marker in [("IoInternalConsumer", "internal"), ("IoPrivateAccess", "private"), ("IoNullAccess", "null")]:
+            for provider, output in [("official", io_reference), ("candidate", io_candidate)]:
+                rejected = run("Io Kotlin rejection " + consumer + " against " + provider, [kotlinc, ROOT / "tests/fixtures/consumers" / (consumer + ".kt"), "-cp", cp(output, foreign), *options, "-d", work / (provider + "-reject-" + consumer)], allowed=(1,))
+                if "error:" not in rejected.stderr or marker not in rejected.stderr.lower():
+                    raise AssertionError("Unexpected Io Kotlin rejection")
+            cases.append({"id": "kotlin_metadata/" + consumer + "_rejection", "outcome": "pass", "scope": "Official Kotlin enforces internal/private/non-null object metadata against both providers."})
         for consumer, friend in [("PublicMetadataConsumer", False), ("FriendMetadataConsumer", True)]:
             results = []
             for provider, output in [("official", official), ("candidate", candidate)]:

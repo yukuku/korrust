@@ -11,7 +11,7 @@ pub(crate) struct Metadata {
     pub data2: Vec<String>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 struct Proto(Vec<u8>);
 
 impl Proto {
@@ -159,10 +159,12 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
     let mut proto = Proto::default();
     let name = match ty {
         Type::Int => "kotlin/Int",
+        Type::Byte => "kotlin/Byte",
         Type::Char => "kotlin/Char",
         Type::Boolean => "kotlin/Boolean",
         Type::Float => "kotlin/Float",
         Type::IntArray => "kotlin/IntArray",
+        Type::ByteArray => "kotlin/ByteArray",
         Type::CharArray => "kotlin/CharArray",
         Type::String => "kotlin/String",
         Type::Unit => "kotlin/Unit",
@@ -171,6 +173,12 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
             argument.message(2, &type_proto(&Type::String, imports, strings)?);
             proto.message(2, &argument);
             "kotlin/Array"
+        }
+        Type::ThreadLocal(inner) => {
+            let mut argument = Proto::default();
+            argument.message(2, &type_proto(inner, imports, strings)?);
+            proto.message(2, &argument);
+            "java/lang/ThreadLocal"
         }
         Type::Java(name) => {
             let name = imported_name(name, imports)?.replace('$', ".");
@@ -217,6 +225,16 @@ fn function_with_modality(
     imports: Imports<'_>,
     strings: &mut Strings,
 ) -> Result<Proto> {
+    function_with_flags(function, modality, 0, imports, strings)
+}
+
+fn function_with_flags(
+    function: &Function,
+    modality: u32,
+    extra_flags: u32,
+    imports: Imports<'_>,
+    strings: &mut Strings,
+) -> Result<Proto> {
     let mut proto = Proto::default();
     let visibility = if function.private {
         2
@@ -225,7 +243,7 @@ fn function_with_modality(
     } else {
         6
     };
-    proto.number(9, visibility | modality);
+    proto.number(9, visibility | modality | extra_flags);
     proto.number(2, strings.id(&function.name)?);
     proto.message(3, &type_proto(&function.result, imports, strings)?);
     let mut desc = String::from("(");
@@ -525,6 +543,111 @@ pub(crate) fn for_interfaces(module: &Module, owner: &str) -> Result<BTreeMap<St
     imports.extend_from_slice(&module.imports);
     interface_tree(interface, owner, &imports, &mut result)?;
     Ok(result)
+}
+
+fn platform_type(mut lower: Proto, strings: &mut Strings) -> Result<Proto> {
+    let mut upper = lower.clone();
+    upper.number(3, 1);
+    lower.number(4, strings.id("kotlin.jvm.PlatformType")?);
+    lower.message(5, &upper);
+    Ok(lower)
+}
+
+fn inferred_thread_local(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<Proto> {
+    let Type::ThreadLocal(inner) = ty else {
+        return Err(Diagnostic::new(
+            0,
+            "Object metadata supports inferred ThreadLocal array fields",
+        ));
+    };
+    if !matches!(inner.as_ref(), Type::ByteArray | Type::CharArray) {
+        return Err(Diagnostic::new(
+            0,
+            "Object metadata supports ByteArray and CharArray ThreadLocal arguments",
+        ));
+    }
+    let array = platform_type(type_proto(inner, imports, strings)?, strings)?;
+    let mut argument = Proto::default();
+    argument.message(2, &array);
+    let mut thread_local = Proto::default();
+    thread_local.number(6, strings.id("java/lang/ThreadLocal")?);
+    thread_local.message(2, &argument);
+    platform_type(thread_local, strings)
+}
+
+pub(crate) fn for_object(
+    module: &Module,
+    owner: &str,
+    fields: &[(String, Type)],
+) -> Result<Metadata> {
+    let object = module
+        .object_decl
+        .as_ref()
+        .ok_or_else(|| Diagnostic::new(0, "Object metadata requires an object declaration"))?;
+    if !object.constants.is_empty() || !object.objects.is_empty() {
+        return Err(Diagnostic::new(
+            object.offset,
+            "Dynamic objects mixed with constant or nested object declarations are unsupported",
+        ));
+    }
+    if fields.len() != object.fields.len() {
+        return Err(Diagnostic::new(
+            object.offset,
+            "Object metadata field types do not match declarations",
+        ));
+    }
+    let mut strings = Strings::default();
+    let mut proto = Proto::default();
+    proto.number(1, if object.internal { 320 } else { 326 });
+    proto.number(3, strings.id(&owner.replace('$', "."))?);
+    let mut supertype = Proto::default();
+    supertype.number(6, strings.id("kotlin/Any")?);
+    proto.message(6, &supertype);
+    let mut constructor = Proto::default();
+    constructor.number(1, 2);
+    constructor.message(100, &method_signature("<init>", "()V", &mut strings)?);
+    proto.message(8, &constructor);
+    for method in &object.methods {
+        let flags = u32::from(method.jvm_static) | if method.inline { 1024 } else { 0 };
+        proto.message(
+            9,
+            &function_with_flags(&method.function, 0, flags, &module.imports, &mut strings)?,
+        );
+    }
+    let mut seen = BTreeSet::new();
+    for field in &object.fields {
+        if !field.private || !seen.insert(&field.name) {
+            return Err(Diagnostic::new(
+                field.offset,
+                "Object metadata requires unique private ThreadLocal fields",
+            ));
+        }
+        let matches: Vec<_> = fields
+            .iter()
+            .filter(|(name, _)| name == &field.name)
+            .collect();
+        let [(_, ty)] = matches.as_slice() else {
+            return Err(Diagnostic::new(
+                field.offset,
+                "Object metadata field type is missing or repeated",
+            ));
+        };
+        let mut declaration = Proto::default();
+        declaration.number(11, 514);
+        declaration.number(2, strings.id(&field.name)?);
+        declaration.message(
+            3,
+            &inferred_thread_local(ty, &module.imports, &mut strings)?,
+        );
+        let mut signature = Proto::default();
+        signature.message(
+            1,
+            &method_signature(&field.name, &descriptor(ty, &module.imports)?, &mut strings)?,
+        );
+        declaration.message(100, &signature);
+        proto.message(10, &declaration);
+    }
+    strings.finish(1, proto)
 }
 
 pub(crate) fn for_package(module: &Module) -> Result<Metadata> {

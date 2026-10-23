@@ -19,6 +19,7 @@ pub(super) fn check(
         functions: Vec::new(),
         class_decl: None,
         interface_decl: Some(interface),
+        object_decl: None,
     })
 }
 
@@ -558,6 +559,11 @@ fn check_function(
         members,
         companion_fields,
         functions: &functions,
+        object_methods: &HashMap::new(),
+        object_fields: &HashMap::new(),
+        object_owner: None,
+        initialized: HashSet::new(),
+        loop_depth: 0,
         scopes: vec![HashMap::new()],
         next: 1,
         result: result.clone(),
@@ -832,6 +838,11 @@ interface Catalog {
                 members: &empty_members,
                 companion_fields: &companion_fields,
                 functions: &empty_functions,
+                object_methods: &HashMap::new(),
+                object_fields: &HashMap::new(),
+                object_owner: None,
+                initialized: HashSet::new(),
+                loop_depth: 0,
                 scopes: vec![HashMap::new()],
                 next: 0,
                 result: Type::String,

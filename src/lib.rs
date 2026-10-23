@@ -160,6 +160,19 @@ pub fn compile_all_with_classpath(
             &metadata::for_interfaces(&module, &internal_name)?,
         );
     }
+    if let Some(declaration) = &typed.object_decl {
+        let field_types = declaration
+            .fields
+            .iter()
+            .map(|field| (field.name.clone(), field.ty.clone()))
+            .collect::<Vec<_>>();
+        return bytecode::emit_dynamic_object(
+            declaration,
+            &internal_name,
+            file_name,
+            &metadata::for_object(&module, &internal_name, &field_types)?,
+        );
+    }
     if let Some(declaration) = &module.object_decl {
         return bytecode::emit_objects(declaration, &internal_name, file_name);
     }

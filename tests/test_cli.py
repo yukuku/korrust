@@ -73,6 +73,25 @@ class OutputLifecycleTests(unittest.TestCase):
                 self.assertEqual(len(result.stdout.splitlines()), len(self.classes()))
         self.assertEqual(set(self.classes()), {"Final.class"})
 
+    def test_object_supplier_removal_matches_clean_compilation(self):
+        versions = [
+            "object Buffers { private val bytes = ThreadLocal.withInitial { ByteArray(3) }; private val chars = ThreadLocal.withInitial { CharArray(5) }; @JvmStatic fun size(): Int = bytes.get()!!.size + chars.get()!!.size }",
+            "object Buffers { private val chars = ThreadLocal.withInitial { CharArray(7) }; @JvmStatic fun size(): Int = chars.get()!!.size }",
+            "object Buffers { const val SIZE = 9 }",
+            "package moved; object Renamed { const val SIZE = 11 }",
+        ]
+        for number, source in enumerate(versions):
+            with self.subTest(version=number):
+                self.compile(source)
+                clean = self.root / f"supplier-clean-{number}"
+                self.compile(source, destination=clean)
+                self.assertEqual(self.snapshot(), self.snapshot(clean))
+                if number == 0:
+                    self.assertEqual(len(self.classes()), 3)
+                elif number == 1:
+                    self.assertEqual(len(self.classes()), 2)
+        self.assertEqual(set(self.classes()), {"moved/Renamed.class"})
+
     def test_package_mapping_cleanup_matches_clean_compilation(self):
         versions = [
             "package first; fun value(): Int { return 1 }",

@@ -306,5 +306,30 @@
     "id": "template_unknown_name",
     "source": "fun f(): String = \"value=$missing\"",
     "message": "Unresolved"
+  },
+  {
+    "id": "byte_store_out_of_range",
+    "source": "fun f(a: ByteArray) { a[0] = 128 }",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "byte_index_type",
+    "source": "fun f(a: ByteArray): Byte = a[true]",
+    "message": "Type mismatch"
+  },
+  {
+    "id": "uninitialized_branch",
+    "source": "fun f(flag: Boolean): Int { var value: Int; if (flag) { value = 1 }; return value }",
+    "message": "initialized"
+  },
+  {
+    "id": "io_annotation_shadow",
+    "source": "object JvmStatic { @JvmStatic fun f(): Int = 1 }",
+    "message": "Shadowed builtin object annotations"
+  },
+  {
+    "id": "io_throws_shadow",
+    "source": "object IllegalArgumentException { @Throws(IllegalArgumentException::class) fun f(): Int = 1 }",
+    "message": "class literals cannot be shadowed"
   }
 ]

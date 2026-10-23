@@ -1,0 +1,15 @@
+target/checks/2026-10-23T073002840123Z-io-byte-arrays/string_argument_type.kt:1:30: error: none of the following candidates is applicable:
+
+fun String.substring(startIndex: Int): String:
+  Argument type mismatch: actual type is 'Boolean', but 'Int' was expected.
+
+fun String.substring(range: IntRange): String:
+  Argument type mismatch: actual type is 'Boolean', but 'IntRange' was expected.
+
+fun CharSequence.substring(startIndex: Int, endIndex: Int = ...): String:
+  Argument type mismatch: actual type is 'Boolean', but 'Int' was expected.
+
+fun CharSequence.substring(range: IntRange): String:
+  Argument type mismatch: actual type is 'Boolean', but 'IntRange' was expected.
+fun f(x: String): String = x.substring(true)
+                             ^^^^^^^^^

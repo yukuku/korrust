@@ -1,0 +1,7 @@
+target/checks/2026-10-23T073002840123Z-io-byte-arrays/class_property_function_override_mismatch.kt:2:1: error: class 'C' is not abstract and does not implement abstract member:
+val itemCount: Int
+class C(private val elements: Array<String>) : IndexedText { override fun getItemCount(): Int = elements.size
+^^^^^^^
+target/checks/2026-10-23T073002840123Z-io-byte-arrays/class_property_function_override_mismatch.kt:2:62: error: 'getItemCount' overrides nothing.
+class C(private val elements: Array<String>) : IndexedText { override fun getItemCount(): Int = elements.size
+                                                             ^^^^^^^^

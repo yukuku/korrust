@@ -6,7 +6,9 @@ use crate::{
 use std::collections::HashMap;
 
 mod interfaces;
+mod objects;
 pub use interfaces::emit_interfaces;
+pub use objects::emit_dynamic_object;
 
 fn failure(message: &str) -> Diagnostic {
     Diagnostic::new(0, message)
@@ -45,6 +47,27 @@ fn return_opcode(ty: &Type) -> u8 {
         0xae
     } else {
         0xac
+    }
+}
+
+fn reference_class(ty: &Type) -> Result<String> {
+    match ty.base() {
+        Type::String => Ok("java/lang/String".into()),
+        Type::Java(owner) => Ok(owner.clone()),
+        Type::ThreadLocal(_) => Ok("java/lang/ThreadLocal".into()),
+        Type::IntArray | Type::ByteArray | Type::CharArray | Type::StringArray => {
+            Ok(ty.descriptor())
+        }
+        _ => Err(failure("Expected a reference type")),
+    }
+}
+
+fn primitive_array_type(ty: &Type) -> Result<u8> {
+    match ty.base() {
+        Type::ByteArray => Ok(8),
+        Type::CharArray => Ok(5),
+        Type::IntArray => Ok(10),
+        _ => Err(failure("Unsupported primitive array type")),
     }
 }
 
@@ -183,6 +206,7 @@ struct Code<'a> {
     bytes: Vec<u8>,
     labels: Vec<Option<usize>>,
     branches: Vec<(usize, usize)>,
+    loops: Vec<(usize, usize)>,
     max_stack: usize,
 }
 impl Code<'_> {
@@ -201,6 +225,33 @@ impl Code<'_> {
     fn reference(&mut self, opcode: u8, index: u16) {
         self.bytes.push(opcode);
         u2(&mut self.bytes, index);
+    }
+    fn method_reference(
+        &mut self,
+        opcode: u8,
+        owner: &str,
+        name: &str,
+        descriptor: &str,
+    ) -> Result<()> {
+        let index = self.pool.method(owner, name, descriptor)?;
+        self.reference(opcode, index);
+        Ok(())
+    }
+    fn field_reference(
+        &mut self,
+        opcode: u8,
+        owner: &str,
+        name: &str,
+        descriptor: &str,
+    ) -> Result<()> {
+        let index = self.pool.field(owner, name, descriptor)?;
+        self.reference(opcode, index);
+        Ok(())
+    }
+    fn class_reference(&mut self, opcode: u8, name: &str) -> Result<()> {
+        let index = self.pool.class(name)?;
+        self.reference(opcode, index);
+        Ok(())
     }
     fn integer(&mut self, value: i32) -> Result<()> {
         if (-1..=5).contains(&value) {
@@ -249,8 +300,11 @@ impl Code<'_> {
                         Type::Int => "(I)Ljava/lang/StringBuilder;",
                         Type::Boolean => "(Z)Ljava/lang/StringBuilder;",
                         Type::Char
+                        | Type::Byte
                         | Type::Float
                         | Type::IntArray
+                        | Type::ByteArray
+                        | Type::ThreadLocal(_)
                         | Type::CharArray
                         | Type::StringArray
                         | Type::Java(_)
@@ -326,6 +380,108 @@ impl Code<'_> {
                     .pool
                     .method(&method.owner, &method.name, &method.descriptor)?;
                 self.reference(0xb6, method);
+            }
+            ValueKind::Let { slot, value, body } => {
+                self.value(value)?;
+                self.bytes.extend([store_opcode(&value.ty), *slot]);
+                self.value(body)?;
+            }
+            ValueKind::NewArray(array_type, size) => {
+                self.value(size)?;
+                self.bytes.extend([0xbc, primitive_array_type(array_type)?]);
+            }
+            ValueKind::Convert(target, value) => {
+                self.value(value)?;
+                match target {
+                    Type::Byte => self.bytes.push(0x91),
+                    Type::Char => self.bytes.push(0x92),
+                    Type::Int => {}
+                    _ => return Err(failure("Unsupported primitive conversion")),
+                }
+            }
+            ValueKind::StaticField { owner, name } => {
+                self.field_reference(0xb2, owner, name, &value.ty.descriptor())?;
+            }
+            ValueKind::ObjectInstance(owner) => {
+                self.field_reference(0xb2, owner, "INSTANCE", &format!("L{owner};"))?;
+            }
+            ValueKind::ThreadLocalGet(receiver, array_type) => {
+                self.value(receiver)?;
+                self.method_reference(
+                    0xb6,
+                    "java/lang/ThreadLocal",
+                    "get",
+                    "()Ljava/lang/Object;",
+                )?;
+                self.class_reference(0xc0, &array_type.descriptor())?;
+            }
+            ValueKind::ThreadLocalSet(receiver, value) => {
+                self.value(receiver)?;
+                self.value(value)?;
+                self.method_reference(
+                    0xb6,
+                    "java/lang/ThreadLocal",
+                    "set",
+                    "(Ljava/lang/Object;)V",
+                )?;
+            }
+            ValueKind::CopyOf(array, length) => {
+                self.value(array)?;
+                self.value(length)?;
+                let array_type = array.ty.descriptor();
+                self.method_reference(
+                    0xb8,
+                    "java/util/Arrays",
+                    "copyOf",
+                    &format!("({array_type}I){array_type}"),
+                )?;
+            }
+            ValueKind::StringFromChars(args) => {
+                self.max_stack = self.max_stack.max(
+                    2 + args
+                        .iter()
+                        .enumerate()
+                        .map(|(index, value)| index + value.stack())
+                        .max()
+                        .unwrap_or(0),
+                );
+                self.class_reference(0xbb, "java/lang/String")?;
+                self.bytes.push(0x59);
+                for arg in args {
+                    self.value(arg)?;
+                }
+                self.method_reference(0xb7, "java/lang/String", "<init>", "([CII)V")?;
+            }
+            ValueKind::StaticCall {
+                owner,
+                name,
+                descriptor,
+                args,
+            } => {
+                for arg in args {
+                    self.value(arg)?;
+                }
+                self.method_reference(0xb8, owner, name, descriptor)?;
+            }
+            ValueKind::Increment { slot, prefix } => {
+                if *prefix {
+                    self.bytes.extend([0x84, *slot, 1]);
+                }
+                self.bytes.extend([0x15, *slot]);
+                if !*prefix {
+                    self.bytes.extend([0x84, *slot, 1]);
+                }
+            }
+            ValueKind::RequireNotNull(inner) => {
+                self.value(inner)?;
+                self.bytes.push(0x59);
+                self.method_reference(
+                    0xb8,
+                    "kotlin/jvm/internal/Intrinsics",
+                    "checkNotNull",
+                    "(Ljava/lang/Object;)V",
+                )?;
+                self.class_reference(0xc0, &reference_class(&value.ty)?)?;
             }
             ValueKind::If(condition, yes, no) => {
                 let otherwise = self.label();
@@ -438,6 +594,7 @@ impl Code<'_> {
                 self.value(index)?;
                 self.bytes.push(match array.ty.base() {
                     Type::IntArray => 0x2e,
+                    Type::ByteArray => 0x33,
                     Type::CharArray => 0x34,
                     Type::StringArray => 0x32,
                     _ => return Err(failure("Unsupported array indexing operand")),
@@ -537,6 +694,84 @@ impl Code<'_> {
                     self.reference(0xb7, constructor);
                     self.bytes.push(0xbf);
                 }
+                Statement::ThrowException { owner, message } => {
+                    self.max_stack = self
+                        .max_stack
+                        .max(2 + message.as_ref().map_or(0, Value::stack));
+                    self.class_reference(0xbb, owner)?;
+                    self.bytes.push(0x59);
+                    if let Some(message) = message {
+                        self.value(message)?;
+                    }
+                    self.method_reference(
+                        0xb7,
+                        owner,
+                        "<init>",
+                        if message.is_some() {
+                            "(Ljava/lang/String;)V"
+                        } else {
+                            "()V"
+                        },
+                    )?;
+                    self.bytes.push(0xbf);
+                }
+                Statement::IndexStore(array, index, value) => {
+                    self.max_stack = self
+                        .max_stack
+                        .max(array.stack().max(1 + index.stack()).max(2 + value.stack()));
+                    self.value(array)?;
+                    self.value(index)?;
+                    self.value(value)?;
+                    self.bytes.push(match array.ty.base() {
+                        Type::IntArray => 0x4f,
+                        Type::ByteArray => 0x54,
+                        Type::CharArray => 0x55,
+                        Type::StringArray => 0x53,
+                        _ => return Err(failure("Unsupported array store operand")),
+                    });
+                }
+                Statement::Break => {
+                    let target = self
+                        .loops
+                        .last()
+                        .ok_or_else(|| failure("Break requires a loop"))?
+                        .1;
+                    self.branch(0xa7, target);
+                }
+                Statement::Continue => {
+                    let target = self
+                        .loops
+                        .last()
+                        .ok_or_else(|| failure("Continue requires a loop"))?
+                        .0;
+                    self.branch(0xa7, target);
+                }
+                Statement::ForUntil {
+                    slot,
+                    start,
+                    end_slot,
+                    end,
+                    body,
+                } => {
+                    self.value(start)?;
+                    self.bytes.extend([0x36, *slot]);
+                    self.value(end)?;
+                    self.bytes.extend([0x36, *end_slot]);
+                    let head = self.label();
+                    let step = self.label();
+                    let done = self.label();
+                    self.mark(head);
+                    self.bytes.extend([0x15, *slot, 0x15, *end_slot]);
+                    self.max_stack = self.max_stack.max(2);
+                    self.branch(0xa2, done);
+                    self.loops.push((step, done));
+                    self.block(body)?;
+                    self.loops.pop();
+                    self.mark(step);
+                    self.bytes.extend([0x84, *slot, 1]);
+                    self.branch(0xa7, head);
+                    self.mark(done);
+                }
                 Statement::Expression(value) => {
                     self.value(value)?;
                     if value.ty.base() != &Type::Unit {
@@ -560,7 +795,9 @@ impl Code<'_> {
                     self.mark(start);
                     self.value(cond)?;
                     self.branch(0x99, end);
+                    self.loops.push((start, end));
                     self.block(body)?;
+                    self.loops.pop();
                     self.branch(0xa7, start);
                     self.mark(end);
                 }
@@ -605,6 +842,7 @@ pub fn emit(
             bytes: Vec::new(),
             labels: Vec::new(),
             branches: Vec::new(),
+            loops: Vec::new(),
             max_stack: 2,
         };
         if !function.private {
@@ -1306,6 +1544,7 @@ fn emit_class_with(
             bytes: Vec::new(),
             labels: Vec::new(),
             branches: Vec::new(),
+            loops: Vec::new(),
             max_stack: 2,
         };
         if !function.private {

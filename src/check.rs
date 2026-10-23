@@ -7,11 +7,37 @@ use std::collections::{HashMap, HashSet};
 
 #[path = "check_interfaces.rs"]
 mod interfaces;
+#[path = "check_objects.rs"]
+mod objects;
 
 pub struct Module {
     pub functions: Vec<Function>,
     pub class_decl: Option<ClassDecl>,
     pub interface_decl: Option<InterfaceDecl>,
+    pub object_decl: Option<DynamicObject>,
+}
+pub struct DynamicObject {
+    pub owner: String,
+    pub fields: Vec<ObjectField>,
+    pub methods: Vec<ObjectMethod>,
+}
+pub struct ObjectField {
+    pub name: String,
+    pub ty: Type,
+    pub initializer: ObjectInitializer,
+}
+pub enum ObjectInitializer {
+    ThreadLocalArray {
+        array_type: Type,
+        size: Value,
+        locals: u16,
+    },
+}
+pub struct ObjectMethod {
+    pub function: Function,
+    pub jvm_static: bool,
+    pub throws: Vec<String>,
+    pub inline: bool,
 }
 pub struct InterfaceDecl {
     pub owner: String,
@@ -77,6 +103,20 @@ pub enum Statement {
     If(Value, Vec<Statement>, Vec<Statement>),
     While(Value, Vec<Statement>),
     Throw(Value),
+    ThrowException {
+        owner: String,
+        message: Option<Value>,
+    },
+    IndexStore(Value, Value, Value),
+    Continue,
+    Break,
+    ForUntil {
+        slot: u8,
+        start: Value,
+        end_slot: u8,
+        end: Value,
+        body: Vec<Statement>,
+    },
 }
 pub struct Value {
     pub ty: Type,
@@ -95,6 +135,33 @@ pub enum StringMethod {
 }
 pub enum ValueKind {
     Unit,
+    Let {
+        slot: u8,
+        value: Box<Value>,
+        body: Box<Value>,
+    },
+    NewArray(Type, Box<Value>),
+    Convert(Type, Box<Value>),
+    StaticField {
+        owner: String,
+        name: String,
+    },
+    ObjectInstance(String),
+    ThreadLocalGet(Box<Value>, Type),
+    ThreadLocalSet(Box<Value>, Box<Value>),
+    CopyOf(Box<Value>, Box<Value>),
+    StringFromChars(Vec<Value>),
+    StaticCall {
+        owner: String,
+        name: String,
+        descriptor: String,
+        args: Vec<Value>,
+    },
+    Increment {
+        slot: u8,
+        prefix: bool,
+    },
+    RequireNotNull(Box<Value>),
     If(Box<Value>, Box<Value>, Box<Value>),
     IntToString(Box<Value>),
     CompanionArray {
@@ -132,6 +199,17 @@ impl Value {
     pub fn stack(&self) -> usize {
         match &self.kind {
             ValueKind::Unit => 0,
+            ValueKind::Let { value, body, .. } => value.stack().max(body.stack()),
+            ValueKind::NewArray(_, value)
+            | ValueKind::Convert(_, value)
+            | ValueKind::ThreadLocalGet(value, _)
+            | ValueKind::RequireNotNull(value) => value.stack().max(2),
+            ValueKind::StaticField { .. }
+            | ValueKind::ObjectInstance(_)
+            | ValueKind::Increment { .. } => 2,
+            ValueKind::ThreadLocalSet(a, b) | ValueKind::CopyOf(a, b) => {
+                a.stack().max(1 + b.stack())
+            }
             ValueKind::If(condition, yes, no) => condition.stack().max(yes.stack()).max(no.stack()),
             ValueKind::IntToString(value) => value.stack(),
             ValueKind::CompanionArray { .. } => 1,
@@ -147,7 +225,14 @@ impl Value {
                 a.stack().max(1 + b.stack())
             }
             ValueKind::StringConcat(a, b) => 2.max(1 + a.stack()).max(1 + b.stack()),
+            ValueKind::StringFromChars(args) => args
+                .iter()
+                .enumerate()
+                .map(|(index, value)| 2 + index + value.stack())
+                .max()
+                .unwrap_or(2),
             ValueKind::Call(_, args)
+            | ValueKind::StaticCall { args, .. }
             | ValueKind::StringCall(_, args)
             | ValueKind::CopyInto(args)
             | ValueKind::JavaCall { args, .. }
@@ -177,6 +262,11 @@ struct Checker<'a> {
     members: &'a HashMap<String, JavaMethod>,
     companion_fields: &'a HashMap<String, (String, Type)>,
     functions: &'a HashMap<String, usize>,
+    object_methods: &'a HashMap<String, Vec<JavaMethod>>,
+    object_fields: &'a HashMap<String, (String, Type)>,
+    object_owner: Option<&'a str>,
+    initialized: HashSet<u8>,
+    loop_depth: usize,
     scopes: Vec<HashMap<String, Local>>,
     next: u16,
     result: Type,
@@ -231,11 +321,21 @@ impl Checker<'_> {
         if value.ty == expected {
             return Ok(value);
         }
+        if expected == Type::Byte
+            && value.ty == Type::Int
+            && matches!(value.kind, ValueKind::Int(n) if (-128..=127).contains(&n))
+        {
+            return Ok(Value {
+                ty: Type::Byte,
+                kind: value.kind,
+            });
+        }
         if matches!(value.ty, Type::Platform(_)) && value.ty.base() == &expected {
             let message = match &value.kind {
                 ValueKind::JavaCall { method, .. } => {
                     format!("{}(...)", method.name)
                 }
+                ValueKind::ThreadLocalGet(_, _) => "get(...)".into(),
                 _ => String::new(),
             };
             return Ok(Value {
@@ -257,8 +357,18 @@ impl Checker<'_> {
         *cursor += 1;
         let ty = match bytes.get(start) {
             Some(b'I') => Type::Int,
+            Some(b'B') => Type::Byte,
+            Some(b'C') => Type::Char,
             Some(b'Z') => Type::Boolean,
             Some(b'V') => Type::Unit,
+            Some(b'[') if bytes.get(*cursor) == Some(&b'B') => {
+                *cursor += 1;
+                Type::ByteArray
+            }
+            Some(b'[') if bytes.get(*cursor) == Some(&b'C') => {
+                *cursor += 1;
+                Type::CharArray
+            }
             Some(b'[') if bytes.get(*cursor) == Some(&b'I') => {
                 *cursor += 1;
                 Type::IntArray
@@ -341,7 +451,19 @@ impl Checker<'_> {
             ));
         }
         self.check_ancestors(class, name, offset)?;
-        let methods: Vec<_> = class.methods.iter().filter(|m| m.name == name).collect();
+        let named: Vec<_> = class
+            .methods
+            .iter()
+            .filter(|method| method.name == name)
+            .collect();
+        let methods: Vec<_> = if named.len() == 1 {
+            named
+        } else {
+            named
+                .into_iter()
+                .filter(|method| objects::arity(&method.descriptor) == Some(args.len()))
+                .collect()
+        };
         if methods.len() != 1 {
             return Err(Diagnostic::new(
                 offset,
@@ -403,6 +525,7 @@ impl Checker<'_> {
             ));
         }
         let slot = self.allocate_slot(offset)?;
+        self.initialized.insert(slot);
         self.scopes
             .last_mut()
             .unwrap()
@@ -436,10 +559,95 @@ impl Checker<'_> {
         let mut returns = false;
         for statement in source {
             let offset = statement.offset;
+            if returns {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Unreachable statements are not supported",
+                ));
+            }
             let typed = match &statement.kind {
+                StatementKind::Declare(name, mutable, annotation) => {
+                    let ty = self.resolve(annotation, offset)?;
+                    if matches!(ty, Type::Unit | Type::Float | Type::ThreadLocal(_)) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Unsupported uninitialized local type",
+                        ));
+                    }
+                    if !mutable {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Uninitialized val declarations are not supported",
+                        ));
+                    }
+                    let slot = self.declare(name, ty, *mutable, offset)?;
+                    self.initialized.remove(&slot);
+                    continue;
+                }
+                StatementKind::IndexAssign(array, index, value) => {
+                    let array = self.value(array)?;
+                    let element = match array.ty.base() {
+                        Type::IntArray => Type::Int,
+                        Type::ByteArray => Type::Byte,
+                        Type::CharArray => Type::Char,
+                        _ => {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Array assignment supports IntArray, ByteArray, and CharArray",
+                            ));
+                        }
+                    };
+                    let index = self.value(index)?;
+                    self.require(&index, Type::Int, offset)?;
+                    let value = self.value(value)?;
+                    let value = self.coerce(value, element, offset)?;
+                    Statement::IndexStore(array, index, value)
+                }
+                StatementKind::Continue | StatementKind::Break => {
+                    if self.loop_depth == 0 {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Loop control requires an enclosing loop",
+                        ));
+                    }
+                    returns = true;
+                    if matches!(statement.kind, StatementKind::Continue) {
+                        Statement::Continue
+                    } else {
+                        Statement::Break
+                    }
+                }
+                StatementKind::ForUntil(name, start, end, source_body) => {
+                    let start = self.value(start)?;
+                    let end = self.value(end)?;
+                    self.require(&start, Type::Int, offset)?;
+                    self.require(&end, Type::Int, offset)?;
+                    let before = self.initialized.clone();
+                    self.scopes.push(HashMap::new());
+                    let slot = self.declare(name, Type::Int, false, offset)?;
+                    let end_slot = self.allocate_slot(offset)?;
+                    self.loop_depth += 1;
+                    let (body, _) = self.block(source_body)?;
+                    self.loop_depth -= 1;
+                    self.scopes.pop();
+                    self.initialized = before;
+                    Statement::ForUntil {
+                        slot,
+                        start,
+                        end_slot,
+                        end,
+                        body,
+                    }
+                }
                 StatementKind::Let(name, mutable, annotation, expr) => {
                     let mut value = self.value(expr)?;
                     if let Some(ty) = annotation {
+                        if matches!(ty, Type::ThreadLocal(_)) {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Explicit ThreadLocal local types are not supported",
+                            ));
+                        }
                         value = self.coerce(value, self.resolve(ty, offset)?, offset)?;
                     }
                     if value.ty == Type::Unit {
@@ -467,6 +675,7 @@ impl Checker<'_> {
                     }
                     let value = self.value(expr)?;
                     let value = self.coerce(value, local.ty, offset)?;
+                    self.initialized.insert(local.slot);
                     Statement::Store(local.slot, value)
                 }
                 StatementKind::AddAssign(name, expr) => {
@@ -490,6 +699,12 @@ impl Checker<'_> {
                         return Err(Diagnostic::new(
                             offset,
                             "+= supports only mutable Int locals",
+                        ));
+                    }
+                    if !self.initialized.contains(&local.slot) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Variable must be initialized before use",
                         ));
                     }
                     let right = self.value(expr)?;
@@ -517,24 +732,37 @@ impl Checker<'_> {
                     let subject_type = subject.ty.clone();
                     let slot = self.allocate_slot(offset)?;
                     body.push(Statement::Store(slot, subject));
+                    let before = self.initialized.clone();
+                    let mut continuing = Vec::new();
                     let mut checked = Vec::new();
                     let mut all_return = otherwise.is_some();
                     for (conditions, branch) in branches {
+                        self.initialized = before.clone();
                         let mut combined = None;
                         for condition in conditions {
-                            let right = self.value(condition)?;
-                            self.require(&right, subject_type.clone(), condition.offset)?;
                             let left = Value {
                                 ty: subject_type.clone(),
                                 kind: ValueKind::Local(slot),
                             };
-                            let equal = Value {
-                                ty: Type::Boolean,
-                                kind: ValueKind::Binary(
-                                    "==".into(),
-                                    Box::new(left),
-                                    Box::new(right),
-                                ),
+                            let equal = if let ExprKind::Unary(operator, range) = &condition.kind {
+                                if operator != "in" {
+                                    return Err(Diagnostic::new(
+                                        condition.offset,
+                                        "Unsupported when range condition",
+                                    ));
+                                }
+                                self.range_contains(left, range, condition.offset)?
+                            } else {
+                                let right = self.value(condition)?;
+                                self.require(&right, subject_type.clone(), condition.offset)?;
+                                Value {
+                                    ty: Type::Boolean,
+                                    kind: ValueKind::Binary(
+                                        "==".into(),
+                                        Box::new(left),
+                                        Box::new(right),
+                                    ),
+                                }
                             };
                             combined = Some(match combined {
                                 None => equal,
@@ -549,16 +777,30 @@ impl Checker<'_> {
                             });
                         }
                         let (branch, branch_returns) = self.block(branch)?;
+                        if !branch_returns {
+                            continuing.push(self.initialized.clone());
+                        }
                         all_return &= branch_returns;
                         checked.push((combined.unwrap(), branch));
                     }
+                    self.initialized = before.clone();
                     let mut tail = if let Some(otherwise) = otherwise {
                         let (branch, branch_returns) = self.block(otherwise)?;
+                        if !branch_returns {
+                            continuing.push(self.initialized.clone());
+                        }
                         all_return &= branch_returns;
                         branch
                     } else {
+                        continuing.push(before.clone());
                         Vec::new()
                     };
+                    self.initialized = continuing
+                        .into_iter()
+                        .reduce(|previous, current| {
+                            previous.intersection(&current).copied().collect()
+                        })
+                        .unwrap_or(before);
                     for (condition, branch) in checked.into_iter().rev() {
                         tail = vec![Statement::If(condition, branch, tail)];
                     }
@@ -579,46 +821,43 @@ impl Checker<'_> {
                     Statement::Return(value)
                 }
                 StatementKind::Throw(expr) => {
-                    let ExprKind::Call(target, args) = &expr.kind else {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Only throwing IllegalArgumentException with a String message is supported",
-                        ));
-                    };
-                    if !matches!(&target.kind, ExprKind::Name(name) if name == "IllegalArgumentException")
-                        || args.len() != 1
-                        || self.local("IllegalArgumentException").is_some()
-                        || self.functions.contains_key("IllegalArgumentException")
-                        || self.imports.contains_key("IllegalArgumentException")
-                        || self.fields.contains_key("IllegalArgumentException")
-                        || self.members.contains_key("IllegalArgumentException")
-                        || self.members.values().any(|method| method.source_property.as_deref() == Some("IllegalArgumentException"))
-                        || self.companion_fields.contains_key("IllegalArgumentException")
-                        || self.receiver.as_ref().is_some_and(|receiver| matches!(receiver.ty.base(), Type::Java(owner) if owner.rsplit(['/', '$']).next() == Some("IllegalArgumentException")))
-                    {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Only throwing IllegalArgumentException with a String message is supported",
-                        ));
-                    }
-                    let message = self.value(&args[0])?;
-                    self.require(&message, Type::String, args[0].offset)?;
+                    let statement = self.throw_exception(expr, offset)?;
                     returns = true;
-                    Statement::Throw(message)
+                    statement
                 }
                 StatementKind::Expression(expr) => Statement::Expression(self.value(expr)?),
                 StatementKind::If(cond, yes, no) => {
                     let cond = self.value(cond)?;
                     self.require(&cond, Type::Boolean, offset)?;
+                    let before = self.initialized.clone();
                     let (yes, y) = self.block(yes)?;
+                    let yes_initialized = self.initialized.clone();
+                    self.initialized = before;
                     let (no, n) = self.block(no)?;
+                    let no_initialized = self.initialized.clone();
+                    self.initialized = match (y, n) {
+                        (false, false) => yes_initialized
+                            .intersection(&no_initialized)
+                            .copied()
+                            .collect(),
+                        (false, true) => yes_initialized,
+                        (true, false) => no_initialized,
+                        (true, true) => yes_initialized
+                            .intersection(&no_initialized)
+                            .copied()
+                            .collect(),
+                    };
                     returns |= y && n;
                     Statement::If(cond, yes, no)
                 }
                 StatementKind::While(cond, body) => {
                     let cond = self.value(cond)?;
                     self.require(&cond, Type::Boolean, offset)?;
+                    let before = self.initialized.clone();
+                    self.loop_depth += 1;
                     let (body, _) = self.block(body)?;
+                    self.loop_depth -= 1;
+                    self.initialized = before;
                     Statement::While(cond, body)
                 }
             };
@@ -640,6 +879,129 @@ impl Checker<'_> {
             ExprKind::Char(value) => (Type::Char, ValueKind::Int(i32::from(*value))),
             ExprKind::Boolean(value) => (Type::Boolean, ValueKind::Boolean(*value)),
             ExprKind::String(value) => (Type::String, ValueKind::String(value.clone())),
+            ExprKind::Increment { value, prefix } => {
+                let ExprKind::Name(name) = &value.kind else {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Increment supports mutable Int locals only",
+                    ));
+                };
+                let local = self
+                    .local(name)
+                    .ok_or_else(|| Diagnostic::new(offset, "Increment requires a local"))?;
+                if !local.mutable
+                    || local.ty != Type::Int
+                    || !self.initialized.contains(&local.slot)
+                {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Increment supports initialized mutable Int locals only",
+                    ));
+                }
+                (
+                    Type::Int,
+                    ValueKind::Increment {
+                        slot: local.slot,
+                        prefix: *prefix,
+                    },
+                )
+            }
+            ExprKind::NonNull(value) => {
+                let value = self.value(value)?;
+                if !value.ty.is_reference() {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Not-null assertions require reference values",
+                    ));
+                }
+                (
+                    value.ty.base().clone(),
+                    ValueKind::RequireNotNull(Box::new(value)),
+                )
+            }
+            ExprKind::Lambda(_) => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Lambdas are supported only in private ThreadLocal array initializers",
+                ));
+            }
+            ExprKind::When(subject, branches, otherwise) => {
+                let subject = self.value(subject)?;
+                if !matches!(subject.ty, Type::Int | Type::Char | Type::Byte) {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "when expression subjects support Int, Byte, and Char",
+                    ));
+                }
+                let slot = self.allocate_slot(offset)?;
+                let mut checked = Vec::new();
+                for (conditions, branch) in branches {
+                    let mut combined = None;
+                    for condition in conditions {
+                        let left = Value {
+                            ty: subject.ty.clone(),
+                            kind: ValueKind::Local(slot),
+                        };
+                        let condition = if let ExprKind::Unary(operator, range) = &condition.kind {
+                            if operator != "in" {
+                                return Err(Diagnostic::new(
+                                    condition.offset,
+                                    "Unsupported when range condition",
+                                ));
+                            }
+                            self.range_contains(left, range, condition.offset)?
+                        } else {
+                            let right = self.value(condition)?;
+                            self.require(&right, subject.ty.clone(), condition.offset)?;
+                            Value {
+                                ty: Type::Boolean,
+                                kind: ValueKind::Binary(
+                                    "==".into(),
+                                    Box::new(left),
+                                    Box::new(right),
+                                ),
+                            }
+                        };
+                        combined = Some(match combined {
+                            None => condition,
+                            Some(previous) => Value {
+                                ty: Type::Boolean,
+                                kind: ValueKind::Binary(
+                                    "||".into(),
+                                    Box::new(previous),
+                                    Box::new(condition),
+                                ),
+                            },
+                        });
+                    }
+                    checked.push((
+                        combined.ok_or_else(|| Diagnostic::new(offset, "Empty when condition"))?,
+                        self.value(branch)?,
+                    ));
+                }
+                let mut body = self.value(otherwise)?;
+                if body.ty == Type::Unit {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Unit when expressions are not supported",
+                    ));
+                }
+                for (condition, branch) in checked.into_iter().rev() {
+                    self.require(&branch, body.ty.clone(), offset)?;
+                    body = Value {
+                        ty: body.ty.clone(),
+                        kind: ValueKind::If(Box::new(condition), Box::new(branch), Box::new(body)),
+                    };
+                }
+                (
+                    body.ty.clone(),
+                    ValueKind::Let {
+                        slot,
+                        value: Box::new(subject),
+                        body: Box::new(body),
+                    },
+                )
+            }
             ExprKind::If(condition, yes, no) => {
                 let condition = self.value(condition)?;
                 self.require(&condition, Type::Boolean, offset)?;
@@ -688,7 +1050,27 @@ impl Checker<'_> {
                 } else {
                     self.local(name)
                 } {
+                    if name != "this" && !self.initialized.contains(&local.slot) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            format!("Variable must be initialized before use: {name}"),
+                        ));
+                    }
                     (local.ty, ValueKind::Local(local.slot))
+                } else if let Some((owner, ty)) = self.object_fields.get(name) {
+                    (
+                        ty.clone(),
+                        ValueKind::StaticField {
+                            owner: owner.clone(),
+                            name: name.clone(),
+                        },
+                    )
+                } else if name == "this" && self.object_owner.is_some() {
+                    let owner = self.object_owner.unwrap();
+                    (
+                        Type::Java(owner.into()),
+                        ValueKind::ObjectInstance(owner.into()),
+                    )
                 } else if let Some(ty) = self.fields.get(name) {
                     let receiver = self.receiver.as_ref().ok_or_else(|| {
                         Diagnostic::new(offset, "Instance field requires a receiver")
@@ -742,12 +1124,30 @@ impl Checker<'_> {
                 }
             }
             ExprKind::Binary(op, a, b) => {
+                if op == "in" || op == "!in" {
+                    let value = self.value(a)?;
+                    let value = self.range_contains(value, b, offset)?;
+                    return Ok(if op == "!in" {
+                        Value {
+                            ty: Type::Boolean,
+                            kind: ValueKind::Not(Box::new(value)),
+                        }
+                    } else {
+                        value
+                    });
+                }
+                if op == ".." {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Range values are supported only by membership and when conditions",
+                    ));
+                }
                 let a = self.value(a)?;
                 let b = self.value(b)?;
                 if matches!(a.ty, Type::Unit | Type::Float)
                     || matches!(b.ty, Type::Unit | Type::Float)
-                    || matches!(a.ty.base(), Type::Java(_))
-                    || matches!(b.ty.base(), Type::Java(_))
+                    || matches!(a.ty.base(), Type::Java(_) | Type::ThreadLocal(_))
+                    || matches!(b.ty.base(), Type::Java(_) | Type::ThreadLocal(_))
                     || matches!(a.ty, Type::Platform(_)) && a.ty.base() == &Type::String
                     || matches!(b.ty, Type::Platform(_)) && b.ty.base() == &Type::String
                 {
@@ -772,10 +1172,10 @@ impl Checker<'_> {
                 } else if op == "==" || op == "!=" {
                     if matches!(
                         a.ty.base(),
-                        Type::IntArray | Type::CharArray | Type::StringArray
+                        Type::IntArray | Type::ByteArray | Type::CharArray | Type::StringArray
                     ) || matches!(
                         b.ty.base(),
-                        Type::IntArray | Type::CharArray | Type::StringArray
+                        Type::IntArray | Type::ByteArray | Type::CharArray | Type::StringArray
                     ) {
                         return Err(Diagnostic::new(offset, "Array equality is not supported"));
                     }
@@ -799,13 +1199,7 @@ impl Checker<'_> {
             }
             ExprKind::Property(receiver, name) => {
                 if matches!(&receiver.kind, ExprKind::Name(n) if n == "Int")
-                    && self.local("Int").is_none()
-                    && !self.fields.contains_key("Int")
-                    && !self
-                        .members
-                        .values()
-                        .any(|method| method.source_property.as_deref() == Some("Int"))
-                    && !self.companion_fields.contains_key("Int")
+                    && self.unshadowed("Int")
                 {
                     let value = match name.as_str() {
                         "MIN_VALUE" => i32::MIN,
@@ -845,6 +1239,12 @@ impl Checker<'_> {
                             return self.member_call(method.clone(), receiver, &[], offset);
                         }
                     }
+                    if receiver.ty == Type::Char && name == "code" {
+                        return Ok(Value {
+                            ty: Type::Int,
+                            kind: ValueKind::Convert(Type::Int, Box::new(receiver)),
+                        });
+                    }
                     if receiver.ty == Type::String && name == "length" {
                         return Ok(Value {
                             ty: Type::Int,
@@ -859,7 +1259,7 @@ impl Checker<'_> {
                     }
                     if !matches!(
                         receiver.ty.base(),
-                        Type::IntArray | Type::CharArray | Type::StringArray
+                        Type::IntArray | Type::ByteArray | Type::CharArray | Type::StringArray
                     ) {
                         return Err(Diagnostic::new(offset, "Expected IntArray or CharArray"));
                     }
@@ -870,6 +1270,7 @@ impl Checker<'_> {
                 let array = self.value(array)?;
                 let element = match array.ty.base() {
                     Type::IntArray => Type::Int,
+                    Type::ByteArray => Type::Byte,
                     Type::CharArray => Type::Char,
                     Type::StringArray => Type::String,
                     _ => return Err(Diagnostic::new(offset, "Expected IntArray or CharArray")),
@@ -885,6 +1286,9 @@ impl Checker<'_> {
                             offset,
                             "Invoking local values is not supported",
                         ));
+                    }
+                    if self.object_methods.contains_key(name) {
+                        return self.object_call(name, args, None, offset);
                     }
                     if let Some(method) = self.members.get(name).cloned() {
                         if method.source_property.is_some() {
@@ -924,18 +1328,51 @@ impl Checker<'_> {
                             }
                         }
                     }
-                    if name == "IntArray" && !self.functions.contains_key(name) {
+                    if matches!(name.as_str(), "IntArray" | "ByteArray" | "CharArray")
+                        && self.unshadowed(name)
+                    {
                         if args.len() != 1 {
                             return Err(Diagnostic::new(
                                 offset,
-                                "IntArray requires one size argument",
+                                "Array allocation requires one size argument",
                             ));
                         }
                         let size = self.value(&args[0])?;
-                        self.require(&size, Type::Int, offset)?;
+                        self.require(&size, Type::Int, args[0].offset)?;
+                        let array = match name.as_str() {
+                            "IntArray" => Type::IntArray,
+                            "ByteArray" => Type::ByteArray,
+                            _ => Type::CharArray,
+                        };
                         return Ok(Value {
-                            ty: Type::IntArray,
-                            kind: ValueKind::NewIntArray(Box::new(size)),
+                            ty: array.clone(),
+                            kind: if array == Type::IntArray {
+                                ValueKind::NewIntArray(Box::new(size))
+                            } else {
+                                ValueKind::NewArray(array, Box::new(size))
+                            },
+                        });
+                    }
+                    if name == "String" && self.unshadowed(name) {
+                        if args.len() != 3 {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "String array constructor requires CharArray, offset, and count",
+                            ));
+                        }
+                        let mut values = Vec::new();
+                        for (index, arg) in args.iter().enumerate() {
+                            let value = self.value(arg)?;
+                            let expected = if index == 0 {
+                                Type::CharArray
+                            } else {
+                                Type::Int
+                            };
+                            values.push(self.coerce(value, expected, arg.offset)?);
+                        }
+                        return Ok(Value {
+                            ty: Type::String,
+                            kind: ValueKind::StringFromChars(values),
                         });
                     }
                     let id = *self.functions.get(name).ok_or_else(|| {
@@ -972,7 +1409,106 @@ impl Checker<'_> {
                             "Calling declared Kotlin extensions is not supported",
                         ));
                     }
+                    if matches!(&receiver.kind, ExprKind::Name(name) if name == "Character")
+                        && self.unshadowed("Character")
+                    {
+                        if args.len() != 1 {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Character conversion requires one Int argument",
+                            ));
+                        }
+                        let (descriptor, result) = match name.as_str() {
+                            "toLowerCase" => ("(I)I", Type::Int),
+                            "highSurrogate" | "lowSurrogate" => ("(I)C", Type::Char),
+                            _ => {
+                                return Err(Diagnostic::new(
+                                    offset,
+                                    "Unsupported Character static method",
+                                ));
+                            }
+                        };
+                        let value = self.value(&args[0])?;
+                        self.require(&value, Type::Int, args[0].offset)?;
+                        return Ok(Value {
+                            ty: result,
+                            kind: ValueKind::StaticCall {
+                                owner: "java/lang/Character".into(),
+                                name: name.clone(),
+                                descriptor: descriptor.into(),
+                                args: vec![value],
+                            },
+                        });
+                    }
                     let receiver = self.value(receiver)?;
+                    if self
+                        .object_owner
+                        .is_some_and(|owner| receiver.ty == Type::Java(owner.into()))
+                        && self.object_methods.contains_key(name)
+                    {
+                        return self.object_call(name, args, Some(receiver), offset);
+                    }
+                    if let Type::ThreadLocal(element) = receiver.ty.base() {
+                        let element = element.as_ref().clone();
+                        match name.as_str() {
+                            "get" if args.is_empty() => {
+                                return Ok(Value {
+                                    ty: Type::Platform(Box::new(element.clone())),
+                                    kind: ValueKind::ThreadLocalGet(Box::new(receiver), element),
+                                });
+                            }
+                            "set" if args.len() == 1 => {
+                                let value = self.value(&args[0])?;
+                                if value.ty.base() != &element {
+                                    return Err(Diagnostic::new(
+                                        offset,
+                                        "ThreadLocal.set value type mismatch",
+                                    ));
+                                }
+                                return Ok(Value {
+                                    ty: Type::Unit,
+                                    kind: ValueKind::ThreadLocalSet(
+                                        Box::new(receiver),
+                                        Box::new(value),
+                                    ),
+                                });
+                            }
+                            _ => {
+                                return Err(Diagnostic::new(
+                                    offset,
+                                    "Unsupported ThreadLocal call",
+                                ));
+                            }
+                        }
+                    }
+                    if matches!(receiver.ty, Type::Int | Type::Byte | Type::Char)
+                        && args.is_empty()
+                        && matches!(name.as_str(), "toInt" | "toByte" | "toChar")
+                    {
+                        let target = match name.as_str() {
+                            "toByte" => Type::Byte,
+                            "toChar" => Type::Char,
+                            _ => Type::Int,
+                        };
+                        return Ok(Value {
+                            ty: target.clone(),
+                            kind: ValueKind::Convert(target, Box::new(receiver)),
+                        });
+                    }
+                    if matches!(
+                        receiver.ty,
+                        Type::CharArray | Type::ByteArray | Type::IntArray
+                    ) && name == "copyOf"
+                        && args.len() == 1
+                    {
+                        let size = self.value(&args[0])?;
+                        self.require(&size, Type::Int, args[0].offset)?;
+                        return Ok(Value {
+                            ty: receiver.ty.clone(),
+                            kind: ValueKind::CopyOf(Box::new(receiver), Box::new(size)),
+                        });
+                    }
+
                     if self
                         .receiver
                         .as_ref()
@@ -1090,6 +1626,10 @@ impl Checker<'_> {
 }
 fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> Result<Type> {
     match ty {
+        Type::ThreadLocal(_) => Err(Diagnostic::new(
+            offset,
+            "Explicit ThreadLocal types are not supported; only inferred private array buffers are supported",
+        )),
         Type::Java(name) => imports
             .get(name)
             .map(|n| Type::Java(n.clone()))
@@ -1139,6 +1679,9 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         if matches!(
             alias.as_str(),
             "Int"
+                | "Byte"
+                | "ByteArray"
+                | "ThreadLocal"
                 | "Char"
                 | "Float"
                 | "Boolean"
@@ -1165,6 +1708,11 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             return Err(Diagnostic::new(*offset, "Conflicting class import"));
         }
         classes.insert(class.name.clone(), class);
+    }
+    if let Some(object) = &source.object_decl {
+        if !object.methods.is_empty() || !object.fields.is_empty() {
+            return objects::check(object, &source.package, classpath, &imports, &classes);
+        }
     }
     if let Some(interface) = &source.interface_decl {
         return interfaces::check(interface, &source.package, classpath, imports, classes);
@@ -1218,6 +1766,7 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         return Ok(Module {
             functions: Vec::new(),
             interface_decl: None,
+            object_decl: None,
             class_decl: Some(check_class(
                 decl,
                 &source.package,
@@ -1246,6 +1795,11 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             members: &members,
             companion_fields: &companion_fields,
             functions: &functions,
+            object_methods: &HashMap::new(),
+            object_fields: &HashMap::new(),
+            object_owner: None,
+            initialized: HashSet::new(),
+            loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 0,
             result: return_type.clone(),
@@ -1287,6 +1841,7 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         functions: result,
         class_decl: None,
         interface_decl: None,
+        object_decl: None,
     })
 }
 
@@ -1473,6 +2028,11 @@ fn check_class(
             members: &members,
             companion_fields,
             functions: &functions,
+            object_methods: &HashMap::new(),
+            object_fields: &HashMap::new(),
+            object_owner: None,
+            initialized: HashSet::new(),
+            loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 1,
             result: result.clone(),
@@ -1580,8 +2140,10 @@ pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type
             ("[Ljava/lang/String;", Type::StringArray),
             ("Ljava/lang/String;", Type::String),
             ("[I", Type::IntArray),
+            ("[B", Type::ByteArray),
             ("[C", Type::CharArray),
             ("I", Type::Int),
+            ("B", Type::Byte),
             ("C", Type::Char),
             ("Z", Type::Boolean),
             ("F", Type::Float),

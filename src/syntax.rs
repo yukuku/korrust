@@ -3,15 +3,18 @@ use crate::{Diagnostic, Result};
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Type {
     Int,
+    Byte,
     Char,
     Boolean,
     Float,
     IntArray,
+    ByteArray,
     CharArray,
     StringArray,
     String,
     Unit,
     Java(String),
+    ThreadLocal(Box<Type>),
     Platform(Box<Type>),
 }
 
@@ -25,21 +28,30 @@ impl Type {
     pub fn is_reference(&self) -> bool {
         matches!(
             self.base(),
-            Self::IntArray | Self::CharArray | Self::StringArray | Self::String | Self::Java(_)
+            Self::IntArray
+                | Self::ByteArray
+                | Self::CharArray
+                | Self::StringArray
+                | Self::String
+                | Self::Java(_)
+                | Self::ThreadLocal(_)
         )
     }
     pub fn descriptor(&self) -> String {
         match self.base() {
             Self::Int => "I".into(),
+            Self::Byte => "B".into(),
             Self::Char => "C".into(),
             Self::Boolean => "Z".into(),
             Self::Float => "F".into(),
             Self::IntArray => "[I".into(),
+            Self::ByteArray => "[B".into(),
             Self::CharArray => "[C".into(),
             Self::StringArray => "[Ljava/lang/String;".into(),
             Self::String => "Ljava/lang/String;".into(),
             Self::Unit => "V".into(),
             Self::Java(name) => format!("L{name};"),
+            Self::ThreadLocal(_) => "Ljava/lang/ThreadLocal;".into(),
             Self::Platform(_) => unreachable!(),
         }
     }
@@ -106,8 +118,26 @@ pub struct EnumDecl {
 pub struct ObjectDecl {
     pub name: String,
     pub offset: usize,
+    pub internal: bool,
     pub constants: Vec<ConstDecl>,
     pub objects: Vec<ObjectDecl>,
+    pub fields: Vec<ObjectField>,
+    pub methods: Vec<ObjectMethod>,
+}
+#[derive(Debug)]
+pub struct ObjectField {
+    pub name: String,
+    pub offset: usize,
+    pub private: bool,
+    pub initializer: Expr,
+}
+#[derive(Debug)]
+pub struct ObjectMethod {
+    pub function: Function,
+    pub jvm_static: bool,
+    pub throws: Vec<String>,
+    pub inline: bool,
+    pub suppress: Vec<String>,
 }
 #[derive(Debug)]
 pub struct ConstDecl {
@@ -163,6 +193,11 @@ pub struct Statement {
 #[derive(Debug)]
 pub enum StatementKind {
     Let(String, bool, Option<Type>, Expr),
+    Declare(String, bool, Type),
+    IndexAssign(Expr, Expr, Expr),
+    Continue,
+    Break,
+    ForUntil(String, Expr, Expr, Vec<Statement>),
     Assign(String, Expr),
     AddAssign(String, Expr),
     Return(Option<Expr>),
@@ -195,6 +230,10 @@ pub enum ExprKind {
     Property(Box<Expr>, String),
     Call(Box<Expr>, Vec<Expr>),
     Index(Box<Expr>, Box<Expr>),
+    Increment { value: Box<Expr>, prefix: bool },
+    NonNull(Box<Expr>),
+    Lambda(Box<Expr>),
+    When(Box<Expr>, Vec<(Vec<Expr>, Expr)>, Box<Expr>),
 }
 #[derive(Debug, Clone)]
 struct Token {
@@ -471,20 +510,43 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                 offset: start,
             });
         } else if b.is_ascii_digit() {
-            i += 1;
-            while i < bytes.len() && bytes[i].is_ascii_digit() {
+            if b == b'0'
+                && bytes
+                    .get(i + 1)
+                    .is_some_and(|next| *next == b'x' || *next == b'X')
+            {
+                i += 2;
+                while i < bytes.len() && (bytes[i].is_ascii_alphanumeric() || bytes[i] == b'_') {
+                    i += 1;
+                }
+            } else {
                 i += 1;
+                while i < bytes.len() && bytes[i].is_ascii_digit() {
+                    i += 1;
+                }
             }
             tokens.push(Token {
                 text: source[start..i].into(),
                 offset: start,
             });
-        } else if b"(){}[]:.,;=+-*/%<>!".contains(&b) || b == b'&' || b == b'|' {
+        } else if b"(){}[]:.,;=+-*/%<>!@".contains(&b) || b == b'&' || b == b'|' {
             i += 1;
             if i < bytes.len()
                 && matches!(
                     &bytes[start..=i],
-                    b"==" | b"!=" | b"<=" | b">=" | b"&&" | b"||" | b"+=" | b"->" | b"++" | b"--"
+                    b"=="
+                        | b"!="
+                        | b"<="
+                        | b">="
+                        | b"&&"
+                        | b"||"
+                        | b"+="
+                        | b"->"
+                        | b"++"
+                        | b"--"
+                        | b"!!"
+                        | b".."
+                        | b"::"
                 )
             {
                 i += 1;
@@ -608,6 +670,19 @@ impl Parser {
             })
     }
     fn ty(&mut self) -> Result<Type> {
+        if self.take("ThreadLocal") {
+            self.expect("<")?;
+            self.lines();
+            let element = self.ty()?;
+            self.lines();
+            self.expect(">")?;
+            if !matches!(element, Type::ByteArray | Type::CharArray) {
+                return Err(self.error(
+                    "Only ThreadLocal<ByteArray> and ThreadLocal<CharArray> are supported",
+                ));
+            }
+            return Ok(Type::ThreadLocal(Box::new(element)));
+        }
         if self.take("Array") {
             self.expect("<")?;
             self.lines();
@@ -620,10 +695,12 @@ impl Parser {
         }
         let ty = match self.token().text.as_str() {
             "Int" => Type::Int,
+            "Byte" => Type::Byte,
             "Char" => Type::Char,
             "Boolean" => Type::Boolean,
             "Float" => Type::Float,
             "IntArray" => Type::IntArray,
+            "ByteArray" => Type::ByteArray,
             "CharArray" => Type::CharArray,
             "String" => Type::String,
             "Unit" => Type::Unit,
@@ -772,9 +849,12 @@ impl Parser {
             self.token().text.as_str(),
             "Int"
                 | "Char"
+                | "Byte"
                 | "Boolean"
                 | "Float"
                 | "IntArray"
+                | "ByteArray"
+                | "ThreadLocal"
                 | "CharArray"
                 | "Array"
                 | "StringArray"
@@ -800,12 +880,12 @@ impl Parser {
         if *class_count > 256 {
             return Err(self.error("Objects exceed the current 256-class limit"));
         }
-        let mut visibility = false;
+        let mut visibility = None;
         while matches!(self.token().text.as_str(), "public" | "internal") {
-            if visibility {
+            if visibility.is_some() {
                 return Err(self.error("Conflicting or repeated object visibility modifiers"));
             }
-            visibility = true;
+            visibility = Some(self.token().text.clone());
             self.pos += 1;
             self.lines();
         }
@@ -832,8 +912,11 @@ impl Parser {
                 return Ok(ObjectDecl {
                     name,
                     offset,
+                    internal: visibility.as_deref() == Some("internal"),
                     constants: Vec::new(),
                     objects: Vec::new(),
+                    fields: Vec::new(),
+                    methods: Vec::new(),
                 });
             }
             return Err(self.error("Only plain named singleton objects are supported"));
@@ -841,6 +924,8 @@ impl Parser {
         self.separators();
         let mut constants = Vec::new();
         let mut objects = Vec::new();
+        let mut fields = Vec::new();
+        let mut methods = Vec::new();
         let mut names = std::collections::HashSet::new();
         while !self.at("}") {
             if self.at("<eof>") {
@@ -851,6 +936,41 @@ impl Parser {
                 let object = self.object_decl(depth + 1, class_count)?;
                 let name = object.name.clone();
                 objects.push(object);
+                name
+            } else if self.at("@") || self.starts_declaration("fun") {
+                methods.push(self.object_method()?);
+                if methods.len() > 1024 {
+                    return Err(self.error("Objects exceed the current 1024-method limit"));
+                }
+                self.end()?;
+                continue;
+            } else if self.at("private")
+                && self.tokens[self.pos + 1..]
+                    .iter()
+                    .find(|token| token.text != "\n")
+                    .is_some_and(|token| token.text == "val")
+            {
+                self.expect("private")?;
+                self.lines();
+                self.expect("val")?;
+                let name = self.declaration_name()?;
+                if self.at(":") {
+                    return Err(self.error(
+                        "Object private field types must be inferred from supported initializers",
+                    ));
+                }
+                self.expect("=")?;
+                self.lines();
+                let initializer = self.expr(0)?;
+                fields.push(ObjectField {
+                    name: name.clone(),
+                    offset: member_offset,
+                    private: true,
+                    initializer,
+                });
+                if fields.len() > 256 {
+                    return Err(self.error("Objects exceed the current 256-private-field limit"));
+                }
                 name
             } else {
                 let constant = self.constant()?;
@@ -879,11 +999,122 @@ impl Parser {
             self.end()?;
         }
         self.expect("}")?;
+        if depth > 1 && (!fields.is_empty() || !methods.is_empty()) {
+            return Err(Diagnostic::new(
+                offset,
+                "Nested objects with initialized fields or methods are not supported",
+            ));
+        }
         Ok(ObjectDecl {
             name,
             offset,
+            internal: visibility.as_deref() == Some("internal"),
             constants,
             objects,
+            fields,
+            methods,
+        })
+    }
+    fn object_method(&mut self) -> Result<ObjectMethod> {
+        let offset = self.token().offset;
+        let mut jvm_static = false;
+        let mut throws = None;
+        let mut suppress = None;
+        while self.take("@") {
+            let annotation = self.declaration_name()?;
+            match annotation.as_str() {
+                "JvmStatic" => {
+                    if jvm_static { return Err(self.error("Repeated @JvmStatic annotation")); }
+                    jvm_static = true;
+                    if self.take("(") { self.expect(")")?; }
+                }
+                "Throws" => {
+                    if throws.is_some() { return Err(self.error("Repeated @Throws annotation")); }
+                    self.expect("(")?;
+                    self.lines();
+                    let mut exceptions = Vec::new();
+                    loop {
+                        let exception = self.declaration_name()?;
+                        self.expect("::")?;
+                        self.expect("class")?;
+                        exceptions.push(exception);
+                        if exceptions.len() > 32 { return Err(self.error("@Throws exceeds the current 32-exception limit")); }
+                        self.lines();
+                        if !self.take(",") { break; }
+                        self.lines();
+                        if self.at(")") { break; }
+                    }
+                    self.expect(")")?;
+                    throws = Some(exceptions);
+                }
+                "Suppress" => {
+                    if suppress.is_some() { return Err(self.error("Repeated @Suppress annotation")); }
+                    self.expect("(")?;
+                    self.lines();
+                    let mut warnings = Vec::new();
+                    loop {
+                        if !self.token().text.starts_with('"') { return Err(self.error("@Suppress supports only ordinary String literal arguments")); }
+                        let warning = String::from_utf16(&self.plain_string()?).map_err(|_| self.error("@Suppress arguments must be valid Unicode strings"))?;
+                        warnings.push(warning);
+                        self.pos += 1;
+                        if warnings.len() > 64 { return Err(self.error("@Suppress exceeds the current 64-warning limit")); }
+                        self.lines();
+                        if !self.take(",") { break; }
+                        self.lines();
+                        if self.at(")") { break; }
+                    }
+                    self.expect(")")?;
+                    suppress = Some(warnings);
+                }
+                _ => return Err(self.error("Only @JvmStatic, @Throws, and @Suppress object method annotations are supported")),
+            }
+            self.lines();
+        }
+        let mut visibility = None;
+        let mut inline = false;
+        loop {
+            if matches!(
+                self.token().text.as_str(),
+                "public" | "private" | "internal"
+            ) {
+                if visibility.is_some() {
+                    return Err(
+                        self.error("Conflicting or repeated object method visibility modifiers")
+                    );
+                }
+                visibility = Some(self.token().text.clone());
+                self.pos += 1;
+            } else if self.take("inline") {
+                if inline {
+                    return Err(self.error("Repeated inline modifier"));
+                }
+                inline = true;
+            } else {
+                break;
+            }
+            self.lines();
+        }
+        if visibility.as_deref() == Some("internal") {
+            return Err(self.error("Internal object methods are not supported"));
+        }
+        if inline && visibility.as_deref() != Some("private") {
+            return Err(self.error("Only private inline object methods are supported"));
+        }
+        let mut function = self.function()?;
+        function.offset = offset;
+        function.private = visibility.as_deref() == Some("private");
+        if function.receiver.is_some() {
+            return Err(Diagnostic::new(
+                offset,
+                "Object member extension functions are not supported",
+            ));
+        }
+        Ok(ObjectMethod {
+            function,
+            jvm_static,
+            throws: throws.unwrap_or_default(),
+            inline,
+            suppress: suppress.unwrap_or_default(),
         })
     }
     fn constant(&mut self) -> Result<ConstDecl> {
@@ -937,13 +1168,7 @@ impl Parser {
         }
         let token = self.token();
         let (value, ty) = if token.text.as_bytes()[0].is_ascii_digit() {
-            if token.text.len() > 1 && token.text.starts_with('0') {
-                return Err(self.error("Leading zeroes are not allowed in decimal literals"));
-            }
-            let magnitude: i64 = token
-                .text
-                .parse()
-                .map_err(|_| self.error("Int constant literal is out of range"))?;
+            let magnitude = integer_literal(&token.text, token.offset)?;
             let signed = if negative == Some(true) {
                 -magnitude
             } else {
@@ -1630,9 +1855,33 @@ impl Parser {
             } else {
                 None
             };
-            self.expect("=")?;
+            if self.take("=") {
+                self.lines();
+                StatementKind::Let(name, mutable, ty, self.expr(0)?)
+            } else {
+                let ty = ty.ok_or_else(|| {
+                    self.error("Uninitialized locals require an explicit supported type")
+                })?;
+                StatementKind::Declare(name, mutable, ty)
+            }
+        } else if self.take("continue") {
+            StatementKind::Continue
+        } else if self.take("break") {
+            StatementKind::Break
+        } else if self.take("for") {
+            self.expect("(")?;
             self.lines();
-            StatementKind::Let(name, mutable, ty, self.expr(0)?)
+            let name = self.declaration_name()?;
+            self.expect("in")?;
+            self.lines();
+            let start = self.expr(0)?;
+            self.expect("until")?;
+            self.lines();
+            let end = self.expr(0)?;
+            self.lines();
+            self.expect(")")?;
+            self.lines();
+            StatementKind::ForUntil(name, start, end, self.statement_body()?)
         } else if self.take("throw") {
             self.lines();
             StatementKind::Throw(self.expr(0)?)
@@ -1664,7 +1913,7 @@ impl Parser {
                 let mut conditions = Vec::new();
                 if !is_else {
                     loop {
-                        conditions.push(self.expr(0)?);
+                        conditions.push(self.when_condition()?);
                         if conditions.len() > 128 {
                             return Err(self.error("Condition nesting exceeds the current limit"));
                         }
@@ -1707,7 +1956,7 @@ impl Parser {
             self.lines();
             self.expect(")")?;
             self.lines();
-            StatementKind::While(cond, self.block()?)
+            StatementKind::While(cond, self.statement_body()?)
         } else if self.take("if") {
             self.expect("(")?;
             self.lines();
@@ -1715,7 +1964,7 @@ impl Parser {
             self.lines();
             self.expect(")")?;
             self.lines();
-            let yes = self.block()?;
+            let yes = self.statement_body()?;
             let save = self.pos;
             self.lines();
             let no = if self.take("else") {
@@ -1723,7 +1972,7 @@ impl Parser {
                 if self.at("if") {
                     vec![self.statement()?]
                 } else {
-                    self.block()?
+                    self.statement_body()?
                 }
             } else {
                 self.pos = save;
@@ -1745,10 +1994,28 @@ impl Parser {
             self.lines();
             StatementKind::Assign(name, self.expr(0)?)
         } else {
-            StatementKind::Expression(self.expr(0)?)
+            let target = self.expr(0)?;
+            if self.take("=") {
+                let ExprKind::Index(array, index) = target.kind else {
+                    return Err(
+                        self.error("Only local and array element assignments are supported")
+                    );
+                };
+                self.lines();
+                StatementKind::IndexAssign(*array, *index, self.expr(0)?)
+            } else {
+                StatementKind::Expression(target)
+            }
         };
         self.depth -= 1;
         Ok(Statement { kind, offset })
+    }
+    fn statement_body(&mut self) -> Result<Vec<Statement>> {
+        if self.at("{") {
+            self.block()
+        } else {
+            Ok(vec![self.statement()?])
+        }
     }
     fn expr(&mut self, min: u8) -> Result<Expr> {
         self.depth += 1;
@@ -1756,12 +2023,34 @@ impl Parser {
             return Err(self.error("Nesting exceeds the current limit"));
         }
         let mut left = self.prefix()?;
-        while let Some(precedence) = precedence(&self.token().text) {
+        loop {
+            if self.at("\n") {
+                let next = self.tokens[self.pos..]
+                    .iter()
+                    .position(|token| token.text != "\n")
+                    .unwrap()
+                    + self.pos;
+                if matches!(self.tokens[next].text.as_str(), "&&" | "||") {
+                    self.pos = next;
+                }
+            }
+            let negated_membership = self.at("!")
+                && self
+                    .tokens
+                    .get(self.pos + 1)
+                    .is_some_and(|token| token.text == "in");
+            let op = if negated_membership {
+                "!in".to_string()
+            } else {
+                self.token().text.clone()
+            };
+            let Some(precedence) = precedence(&op) else {
+                break;
+            };
             if precedence < min {
                 break;
             }
-            let op = self.token().text.clone();
-            self.pos += 1;
+            self.pos += if negated_membership { 2 } else { 1 };
             self.lines();
             let right = self.expr(precedence + 1)?;
             let offset = left.offset;
@@ -1776,15 +2065,26 @@ impl Parser {
     }
     fn prefix(&mut self) -> Result<Expr> {
         let offset = self.token().offset;
+        if self.take("++") {
+            return Self::bounded(Expr {
+                offset,
+                kind: ExprKind::Increment {
+                    value: Box::new(self.expr(9)?),
+                    prefix: true,
+                },
+            });
+        }
         if self.at("-") || self.at("+") || self.at("!") {
             let op = self.token().text.clone();
             self.pos += 1;
             return Self::bounded(Expr {
                 offset,
-                kind: ExprKind::Unary(op, Box::new(self.expr(8)?)),
+                kind: ExprKind::Unary(op, Box::new(self.expr(9)?)),
             });
         }
-        let mut expr = if self.take("if") {
+        let mut expr = if self.take("when") {
+            self.when_expression(offset)?
+        } else if self.take("if") {
             self.expect("(")?;
             self.lines();
             let condition = self.expr(0)?;
@@ -1839,13 +2139,7 @@ impl Parser {
                 kind: ExprKind::Boolean(value),
             }
         } else if self.token().text.as_bytes()[0].is_ascii_digit() {
-            let text = &self.token().text;
-            if text.len() > 1 && text.starts_with('0') {
-                return Err(self.error("Leading zeroes are not allowed in decimal literals"));
-            }
-            let value = text
-                .parse()
-                .map_err(|_| self.error("Integer literal is out of range"))?;
+            let value = integer_literal(&self.token().text, self.token().offset)?;
             self.pos += 1;
             Expr {
                 offset,
@@ -1862,7 +2156,38 @@ impl Parser {
             }
         };
         loop {
-            if self.take(".") {
+            if self.take("!!") {
+                expr = Expr {
+                    offset,
+                    kind: ExprKind::NonNull(Box::new(expr)),
+                };
+            } else if self.take("++") {
+                expr = Expr {
+                    offset,
+                    kind: ExprKind::Increment {
+                        value: Box::new(expr),
+                        prefix: false,
+                    },
+                };
+            } else if self.at("{") {
+                let lambda = Expr {
+                    offset: self.token().offset,
+                    kind: ExprKind::Lambda(Box::new(self.expression_branch()?)),
+                };
+                expr = match expr.kind {
+                    ExprKind::Call(target, mut arguments) => {
+                        arguments.push(lambda);
+                        Expr {
+                            offset,
+                            kind: ExprKind::Call(target, arguments),
+                        }
+                    }
+                    kind => Expr {
+                        offset,
+                        kind: ExprKind::Call(Box::new(Expr { offset, kind }), vec![lambda]),
+                    },
+                };
+            } else if self.take(".") {
                 let name = self.name()?;
                 expr = Expr {
                     offset,
@@ -1905,6 +2230,89 @@ impl Parser {
         }
         Self::bounded(expr)
     }
+    fn when_condition(&mut self) -> Result<Expr> {
+        let offset = self.token().offset;
+        let operator = if self.take("in") {
+            Some("in")
+        } else if self.at("!")
+            && self
+                .tokens
+                .get(self.pos + 1)
+                .is_some_and(|token| token.text == "in")
+        {
+            self.pos += 2;
+            Some("!in")
+        } else {
+            None
+        };
+        if let Some(operator) = operator {
+            self.lines();
+            Ok(Expr {
+                offset,
+                kind: ExprKind::Unary(operator.into(), Box::new(self.expr(0)?)),
+            })
+        } else {
+            self.expr(0)
+        }
+    }
+    fn when_expression(&mut self, offset: usize) -> Result<Expr> {
+        self.expect("(")?;
+        self.lines();
+        let subject = self.expr(0)?;
+        self.lines();
+        self.expect(")")?;
+        self.lines();
+        self.expect("{")?;
+        self.separators();
+        let mut branches = Vec::new();
+        let mut otherwise = None;
+        while !self.at("}") {
+            if self.at("<eof>") {
+                return Err(self.error("Unterminated when expression"));
+            }
+            if otherwise.is_some() {
+                return Err(self.error("The else branch must be unique and last"));
+            }
+            let is_else = self.take("else");
+            let mut conditions = Vec::new();
+            if !is_else {
+                loop {
+                    conditions.push(self.when_condition()?);
+                    if conditions.len() > 128 {
+                        return Err(self
+                            .error("When expression condition nesting exceeds the current limit"));
+                    }
+                    self.lines();
+                    if !self.take(",") {
+                        break;
+                    }
+                    self.lines();
+                }
+            }
+            self.expect("->")?;
+            self.lines();
+            let value = self.expression_branch()?;
+            if is_else {
+                otherwise = Some(value);
+            } else {
+                branches.push((conditions, value));
+                if branches.len() > 128 {
+                    return Err(
+                        self.error("When expression branch nesting exceeds the current limit")
+                    );
+                }
+            }
+            self.end()?;
+        }
+        self.expect("}")?;
+        let otherwise = otherwise.ok_or_else(|| {
+            Diagnostic::new(offset, "When expressions require an explicit else branch")
+        })?;
+        Ok(Expr {
+            offset,
+            kind: ExprKind::When(Box::new(subject), branches, Box::new(otherwise)),
+        })
+    }
     fn expression_branch(&mut self) -> Result<Expr> {
         if self.take("{") {
             self.lines();
@@ -1934,6 +2342,17 @@ impl Parser {
                 ExprKind::Template(parts) => {
                     pending.extend(parts.iter().map(|part| (part, depth + 1)))
                 }
+                ExprKind::When(subject, branches, otherwise) => {
+                    pending.push((subject, depth + 1));
+                    pending.push((otherwise, depth + 1));
+                    for (conditions, value) in branches {
+                        pending.extend(conditions.iter().map(|condition| (condition, depth + 1)));
+                        pending.push((value, depth + 1));
+                    }
+                }
+                ExprKind::Increment { value, .. }
+                | ExprKind::NonNull(value)
+                | ExprKind::Lambda(value) => pending.push((value, depth + 1)),
                 ExprKind::Unary(_, a) | ExprKind::Property(a, _) => pending.push((a, depth + 1)),
                 ExprKind::Binary(_, a, b) | ExprKind::Index(a, b) => {
                     pending.push((a, depth + 1));
@@ -1949,15 +2368,38 @@ impl Parser {
         Ok(expr)
     }
 }
+fn integer_literal(text: &str, offset: usize) -> Result<i64> {
+    if let Some(digits) = text.strip_prefix("0x").or_else(|| text.strip_prefix("0X")) {
+        if digits.is_empty() || !digits.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+            return Err(Diagnostic::new(
+                offset,
+                "Hexadecimal literals require plain hexadecimal digits without suffixes or separators",
+            ));
+        }
+        i64::from_str_radix(digits, 16)
+            .map_err(|_| Diagnostic::new(offset, "Integer literal is out of range"))
+    } else {
+        if text.len() > 1 && text.starts_with('0') {
+            return Err(Diagnostic::new(
+                offset,
+                "Leading zeroes are not allowed in decimal literals",
+            ));
+        }
+        text.parse()
+            .map_err(|_| Diagnostic::new(offset, "Integer literal is out of range"))
+    }
+}
+
 fn precedence(op: &str) -> Option<u8> {
     match op {
         "||" => Some(1),
         "&&" => Some(2),
         "==" | "!=" => Some(3),
-        "<" | ">" | "<=" | ">=" => Some(4),
+        "<" | ">" | "<=" | ">=" | "in" | "!in" => Some(4),
         "shl" | "shr" | "ushr" | "and" | "or" | "xor" => Some(5),
-        "+" | "-" => Some(6),
-        "*" | "/" | "%" => Some(7),
+        ".." => Some(6),
+        "+" | "-" => Some(7),
+        "*" | "/" | "%" => Some(8),
         _ => None,
     }
 }

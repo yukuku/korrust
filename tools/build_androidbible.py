@@ -357,7 +357,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--compile-request", type=Path)
     parser.add_argument("--mode", choices=["official", "korrust"], default="official")
-    parser.add_argument("--modules", nargs="+", choices=["AlkitabModel", "AlkitabYes2"], default=[MODULE])
+    parser.add_argument("--modules", nargs="+", choices=["AlkitabModel", "AlkitabIo", "AlkitabYes2"], default=[MODULE])
     parser.add_argument("--work-dir", type=Path)
     parser.add_argument("--artifact-dir", type=Path)
     parser.add_argument("--result", type=Path)

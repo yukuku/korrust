@@ -20,10 +20,10 @@
       "character_when_semantics"
     ],
     "restrictions": [
-      "No Kotlin overload resolution, default/named arguments, function values, or cross-file Kotlin linking; imports resolve only supported Java class files from directory classpaths.",
-      "if/while bodies require braces; when branches accept one statement or a block. Functions must pass the conservative return-path check; when proves a return only with an else and every branch returning.",
+      "Top-level/general Kotlin overload resolution, default/named arguments and function values are unsupported; bounded exact-signature object overloads are tested separately. Imports resolve supported classes from directory classpaths.",
+      "if/while/when bodies accept a single statement or a block. Functions must pass the conservative return-path check; when proves a return only with an else and every branch returning.",
       "Compiler resource limits and the nesting limit intentionally reject larger constructs.",
-      "No when expressions, subject declarations, subjectless when, in/is/range/guard conditions or trailing condition commas; supported subjects and equality conditions are Int or Char."
+      "Bounded Int when expressions/ranges, for-until loops, loop control, postfix Int locals and definite assignment now have separate Io evidence. Subject declarations, subjectless when, is/collection/guard conditions and trailing condition commas remain unsupported."
     ]
   },
   {
@@ -97,9 +97,9 @@
       "jvm_signatures/yuku.alkitab.base.widget.VerseNumberPlacementKt"
     ],
     "restrictions": [
-      "No Char arithmetic, conversions, String concatenation with Char, CharArray construction/copyInto/indexed writes, nullable declarations or other Char/CharArray APIs.",
+      "Io evidence adds tested Int/Char conversions, CharArray construction/copyOf/indexed writes and String(CharArray,offset,count). General Char arithmetic, nullable declarations and other APIs remain unsupported.",
       "Non-BMP characters require surrogate code units; a Char literal must contain exactly one UTF-16 code unit.",
-      "Java Char/CharArray method descriptors and general character APIs remain outside the supported interop subset."
+      "Scoped Java Char/Byte/array descriptors and bounded Character intrinsics now have separate Io evidence; general character APIs remain unsupported."
     ]
   },
   {
@@ -141,7 +141,7 @@
       "jvm_signatures/korrust.probes.objects.CollisionObject$CollisionObject"
     ],
     "restrictions": [
-      "No methods, non-const properties, init blocks, supertypes, companion/data objects, general nested classes, annotations, mixed/multiple top-level declarations or private visibility. Member name INSTANCE is explicitly unsupported for constants and nested objects.",
+      "Dynamic object methods and inferred private ThreadLocal array fields have separate Io evidence. No general non-const properties or init blocks, supertypes, companion/data objects, general nested classes, annotations, mixed/multiple top-level declarations or private visibility. Member name INSTANCE is explicitly unsupported for constants and nested objects.",
       "Initializers are single literals with an optional sign for Int; no constant expressions/references, Long, other numeric types, nullable types, raw strings or string templates.",
       "Named object/constant metadata and consumers remain unvalidated; companion/anonymous objects inside bounded source interfaces have separate evidence. Kotlin source object/constant imports and references, Android/D8 and full application builds remain outside this evidence."
     ]
@@ -186,7 +186,7 @@
       "kotlin_metadata/InternalFunctionAccess"
     ],
     "restrictions": [
-      "Metadata and consumer compatibility is established only for exercised declaration shapes/signatures; enum/object metadata and arbitrary Kotlin API compatibility are unvalidated.",
+      "Metadata and consumer compatibility is established only for exercised declaration shapes/signatures; enum/constant-object metadata and arbitrary Kotlin API compatibility are unvalidated; bounded dynamic-object metadata has separate Io evidence.",
       "Kotlin module mappings support discovery of emitted top-level facades; no Gradle incremental dependency graph or incremental speed claim is established."
     ]
   },
@@ -209,8 +209,41 @@
     "restrictions": [
       "Interface/companion/anonymous support is bounded to tested declaration and initialization shapes; no general object construction, mutable companion state, named companions, generics or arbitrary initializers.",
       "Float is supported for abstract interface return descriptors and external Java/Kotlin consumers; general Float arithmetic/literals/source implementations remain unsupported.",
-      "String templates support simple ASCII $name references; braced expressions, escaped identifier names and raw strings remain unsupported. Named object/enum metadata and complete Kotlin/Android compatibility remain outside this evidence.",
+      "String templates support simple ASCII $name references; braced expressions, escaped identifier names and raw strings remain unsupported. Constant-object/enum metadata and complete Kotlin/Android compatibility remain outside this evidence.",
       "Source interface default bodies with reference parameters are explicitly unsupported; abstract reference-parameter declarations retain separate supported-signature checks."
+    ]
+  },
+  {
+    "name": "bytes_arrays_and_io_control_flow",
+    "scope": "Signed Byte/ByteArray, byte/int/char conversions, mutable primitive array indexing, CharArray construction/copyOf/String conversion, bounded Int ranges/when expressions, for-until/continue/break and tested definite assignment. Generic renamed fixtures validate all signed byte values, UTF-16 writes, receiver/index/value order, eager String-constructor checks, range/when/loop evaluation once and exceptions. Unchanged Utf8Decoder independently checks every Unicode scalar/simple lowercase, malformed/truncated UTF-8, real Bintex length prefixes, buffer growth and concurrency.",
+    "evidence_cases": [
+      "androidbible_io_semantics",
+      "generic_byte_array_semantics",
+      "io_jvm_signatures/yuku.alkitab.io.Utf8Decoder",
+      "io_jvm_signatures/korrust.probes.io.ByteWorkbench",
+      "io_jvm_signatures/korrust.probes.io.ArrayEdgesKt"
+    ],
+    "restrictions": [
+      "This establishes the exercised bounded primitive APIs and control flow; generic collections/arrays, reference equality and unrestricted Java/Character APIs remain unsupported.",
+      "Runtime correctness is established for tested inputs; Android-device and complete application behavior and incremental speed remain unmeasured."
+    ]
+  },
+  {
+    "name": "dynamic_objects_threadlocal_and_metadata",
+    "scope": "Public/internal ordinary object methods with exact-signature overloads, JvmStatic/Throws/Suppress/private-inline forms and inferred private ThreadLocal noncapturing array-allocation suppliers. Java/Kotlin consumers check JvmStatic annotations, IOException exceptions, generic field signatures, signed primitive descriptors, public/internal/private/non-null metadata, lazy allocation failures, thread-local identity/replacement and concurrent isolation.",
+    "evidence_cases": [
+      "androidbible_io_semantics",
+      "generic_byte_array_semantics",
+      "io_supplier_lowering",
+      "kotlin_metadata/IoMetadataConsumer",
+      "kotlin_metadata/IoInternalConsumer",
+      "kotlin_metadata/IoInternalConsumer_rejection",
+      "kotlin_metadata/IoPrivateAccess_rejection",
+      "kotlin_metadata/IoNullAccess_rejection"
+    ],
+    "restrictions": [
+      "ThreadLocal suppliers support bounded noncapturing single array allocations; arbitrary lambdas/captures, explicit generic field types, general initialized object fields, internal object method mangling and reference equality remain unsupported.",
+      "Korrust uses derived synthetic Supplier classes and access bridges instead of official invokedynamic; source-defined ABI is compared after excluding only exact validated bridges. Synthetic class inventories intentionally differ and all candidate helpers undergo JVM verification/contract assertions."
     ]
   }
 ]

@@ -222,8 +222,6 @@ fn rejects_malformed_chars_and_implicit_char_conversions() {
         "fun f(a: CharArray): Char { var c = 'x'; c = 1; return c }",
         "fun f(a: CharArray): Char = a['a']",
         "fun f(a: CharArray, b: CharArray): Boolean = a == b",
-        "fun f(a: CharArray) { a[0] = 'x' }",
-        "fun f(): CharArray = CharArray(1)",
         "fun f(a: CharArray): CharArray = a.copyInto(a, 0, 0, 1)",
         "fun f(s: String): Char = s[0]",
     ] {
@@ -303,7 +301,6 @@ fn accepts_statement_when_and_checks_return_paths_and_scopes() {
 #[test]
 fn rejects_unsupported_when_forms_and_malformed_entries() {
     for source in [
-        "fun f(): Int = when (1) { else -> 1 }",
         "fun f() { when { true -> return } }",
         "fun f() { when (val n = 1) { else -> return } }",
         "fun f() { when (true) { true -> return } }",
@@ -311,7 +308,6 @@ fn rejects_unsupported_when_forms_and_malformed_entries() {
         "fun f(a: CharArray) { when (a) { else -> return } }",
         "fun f() { when (1) { 'a' -> return } }",
         "fun f() { when ('a') { 97 -> return } }",
-        "fun f() { when (1) { in 0..2 -> return } }",
         "fun f() { when (1) { is Int -> return } }",
         "fun f() { when (1) { 1 if true -> return } }",
         "fun f() { when (1) { else -> return; 1 -> return } }",
@@ -575,7 +571,6 @@ fn rejects_unsupported_object_and_constant_forms() {
         "object E : Runnable",
         "object E<T>",
         "@Deprecated(\"x\") object E",
-        "object E { fun f() {} }",
         "object E { init {} }",
         "object E { val N = 1 }",
         "object E { var N = 1 }",
@@ -606,7 +601,6 @@ fn rejects_unsupported_object_and_constant_forms() {
         "object E { const val N = 9223372036854775808 }",
         "object E { const val N = 01 }",
         "object E { const val N = 1L }",
-        "object E { const val N = 0x10 }",
         "object E { const val N = 1_000 }",
         "object E { const val N = '😀' }",
         "object E { const val N = \"$value\" }",
@@ -1047,7 +1041,7 @@ fn supports_if_expressions_integer_strings_templates_and_explicit_throws() {
     );
     rejects(
         "fun f(): String { throw RuntimeException(\"x\") }",
-        "Only throwing IllegalArgumentException",
+        "Only throwing supported standard exception constructors",
     );
     let source = r#"object E { const val S = "$missing" }"#;
     let error = compile(source, "Literal.kt").err().unwrap();
@@ -1145,4 +1139,172 @@ fn limits_interface_nesting_and_template_complexity() {
     );
     rejects("interface Float", "shadowing builtin types");
     rejects("import missing.Foreign\ninterface E", "not found");
+}
+
+#[test]
+fn accepts_byte_arrays_char_array_construction_and_hexadecimal_ints() {
+    for source in [
+        "fun f(value: Byte): Int = value.toInt()",
+        "fun f(value: Int): Byte = value.toByte()",
+        "fun f(size: Int): ByteArray = ByteArray(size)",
+        "fun f(): CharArray = CharArray(1)",
+        "fun f(a: CharArray) { a[0] = 'x' }",
+        "fun f(a: ByteArray, index: Int, value: Byte): Byte { a[index] = value; return a[index] }",
+        "fun f(): Int = 0x7fffffff",
+        "fun f(): Int = -0X80000000",
+        "fun f(value: Byte): Int = value.toInt() and 0xff",
+        "fun f(value: Int): Char = value.toChar()",
+        "fun f(value: Char): Int = value.code",
+    ] {
+        assert!(compile(source, "Bytes.kt").is_ok(), "rejected {source}");
+    }
+    for source in [
+        "fun f(): Int = 0x80000000",
+        "fun f(): Int = -0x80000001",
+        "fun f(): Int = 0x",
+        "fun f(): Int = 0xGG",
+        "fun f(): Int = 0xffL",
+        "fun f(): Int = 0xff_ff",
+        "fun f(): Int = 0xffffffffffffffffffffffffffffffff",
+        "fun f(a: ByteArray) { a[0] = true }",
+        "fun f(a: CharArray) { a[0] = 1 }",
+    ] {
+        assert!(compile(source, "Invalid.kt").is_err(), "accepted {source}");
+    }
+    assert!(compile("object E { const val Hex: Int = 0xff }", "Hex.kt").is_ok());
+}
+
+#[test]
+fn accepts_annotated_overloaded_object_methods_and_lazy_array_fields() {
+    let source = r#"package arbitrary
+internal object Scratch {
+    private val bytes = ThreadLocal.withInitial { ByteArray(7) }
+    private val chars = ThreadLocal.withInitial { CharArray(9) }
+    @JvmStatic fun choose(value: Byte): Int = value.toInt()
+    @JvmStatic fun choose(value: Int): Int = value + 2
+    @JvmStatic fun choose(value: ByteArray): Int = value.size
+    @JvmStatic fun bytes(): ByteArray = bytes.get()!!
+    @JvmStatic fun chars(): CharArray = chars.get()!!
+    @Suppress("NOTHING_TO_INLINE") private inline fun low(value: Byte): Int = value.toInt() and 0xff
+    private fun call(value: Byte): Int = choose(value)
+}"#;
+    let classes =
+        compile_all(source, "Different.kt").unwrap_or_else(|error| panic!("{}", error.message));
+    assert_eq!(classes.len(), 3);
+    assert!(
+        classes
+            .iter()
+            .any(|class| class.internal_name == "arbitrary/Scratch")
+    );
+    assert!(
+        classes
+            .iter()
+            .all(|class| class.internal_name.starts_with("arbitrary/Scratch"))
+    );
+    assert!(
+        compile(source, "Different.kt")
+            .err()
+            .unwrap()
+            .message
+            .contains("multiple classes")
+    );
+    assert!(compile("object E { fun f() {} }", "Methods.kt").is_ok());
+    assert!(compile("object E { @JvmStatic @Throws(IllegalArgumentException::class) fun fail() { throw IllegalArgumentException() } }", "Throws.kt").is_ok());
+}
+
+#[test]
+fn supports_ranges_when_expressions_loops_and_incremented_array_indices() {
+    for source in [
+        "fun f(): Int = when (1) { else -> 1 }",
+        "fun f() { when (1) { in 0..2 -> return } }",
+        "fun f(value: Int): Int = when (value) { in 0x10..0x1f -> 2; in 0x20..0x2f -> 3; else -> 1 }",
+        "fun f(value: Int): Boolean = value in 'A'.code..'Z'.code",
+        "fun f(value: Int): Boolean = value !in -2..2",
+        "fun f(limit: Int): Int { var result = 0; for (index in 0 until limit) { if (index == 2) continue; result += index }; return result }",
+        "fun f(limit: Int): Int { var result = 0; while (result < limit) { result++; if (result > 2) break }; return result }",
+        "fun f(a: CharArray, value: Char): Int { var cursor = 0; a[cursor++] = value; return cursor }",
+        "fun f(): Int { var n = 1; return ++n + n++ }",
+        "fun f(a: ByteArray, index: Int): Boolean = index >= 0\n && index < a.size\n && (a[index].toInt() and 0xff) >= 0x80",
+    ] {
+        assert!(compile(source, "Control.kt").is_ok(), "rejected {source}");
+    }
+}
+
+#[test]
+fn requires_definite_assignment_before_every_local_read() {
+    for source in [
+        "fun f(flag: Boolean): Int { var value: Int; if (flag) { value = 1 } else { value = 2 }; return value }",
+        "fun f(flag: Boolean): Int { var value: Int; if (flag) { throw IllegalArgumentException() } else { value = 2 }; return value }",
+        "fun f(flag: Boolean): Int { var value: Int; if (flag) { value = 1 } else { return 2 }; return value }",
+    ] {
+        assert!(compile(source, "Assigned.kt").is_ok(), "rejected {source}");
+    }
+    for source in [
+        "fun f(): Int { var value: Int; return value }",
+        "fun f(flag: Boolean): Int { var value: Int; if (flag) { value = 1 }; return value }",
+        "fun f(flag: Boolean): Int { var value: Int; while (flag) { value = 1 }; return value }",
+        "fun f(limit: Int): Int { var value: Int; for (index in 0 until limit) { value = index }; return value }",
+        "fun f(): Int { var value: Int; value++; return 0 }",
+        "fun f(): Int { var value: Int; value += 1; return 0 }",
+        "fun f(): Int { var value: Int; value = value + 1; return value }",
+    ] {
+        let error = compile(source, "Unassigned.kt").err().expect(source);
+        assert!(error.message.contains("initialized"), "{}", error.message);
+    }
+    assert!(compile("fun f() { var value }", "Unassigned.kt").is_err());
+}
+
+#[test]
+fn rejects_unsupported_object_annotations_initializers_and_overloads() {
+    for source in [
+        "object E { @Unknown fun f() {} }",
+        "object E { @JvmStatic @JvmStatic fun f() {} }",
+        "object E { @Throws() fun f() {} }",
+        "object E { @Throws(String::class) fun f() {} }",
+        "object E { @Suppress(1) fun f() {} }",
+        "object E { @Suppress(\"x\") @Suppress(\"y\") fun f() {} }",
+        "object E { inline fun f() {} }",
+        "object E { private inline inline fun f() {} }",
+        "object E { internal fun f() {} }",
+        "object E { private val bytes: ThreadLocal<ByteArray> = ThreadLocal.withInitial { ByteArray(1) } }",
+        "object E { private val bytes = ThreadLocal.withInitial { value -> ByteArray(value) } }",
+        "object E { private val bytes = ThreadLocal.withInitial { val count = 1; ByteArray(count) } }",
+        "object E { private val bytes = ThreadLocal.withInitial { IntArray(1) } }",
+        "object E { private val bytes = ThreadLocal.withInitial { ByteArray(missing) } }",
+        "object E { const val C = 1; fun f() {} }",
+        "object E { object Nested; fun f() {} }",
+        "object E { object Nested { fun f(): Int = 1 } }",
+        "object E { object Nested { private val bytes = ThreadLocal.withInitial { ByteArray(1) } } }",
+        "object E { fun f(value: Int): Int = value; fun f(value: Int): String = \"x\" }",
+    ] {
+        assert!(
+            compile_all(source, "Unsupported.kt").is_err(),
+            "accepted {source}"
+        );
+    }
+}
+
+#[test]
+fn rejects_invalid_loop_membership_increment_and_when_boundaries() {
+    for source in [
+        "fun f() { continue }",
+        "fun f() { break }",
+        "fun f(): Int { val value = 0; return value++ }",
+        "fun f(value: Int): Int = ++value",
+        "fun f(): Int { var value: Char = 'a'; value++; return 0 }",
+        "fun f() { for (index in 0 until 2) { index++ } }",
+        "fun f() { for (index in 0..2) {} }",
+        "fun f(value: Int): Boolean = value in 0..true",
+        "fun f(value: Int): Int = when (value) { in 0..2 -> 1 }",
+        "fun f(value: Int): Int = when (value) { in 0..2 -> 1; else -> 2; else -> 3 }",
+        "fun f(value: Int): Int = when (value) { in 0..2 -> 1; else -> 2; 3 -> 4 }",
+        "fun f(value: Int): Int = when (value) { in 0..2 -> true; else -> 2 }",
+        "fun f(value: Int): Int = when (value) { in 0..2 -> { val x = 1; x }; else -> 2 }",
+        "fun f(a: ByteArray) { a[true] = a[0] }",
+    ] {
+        assert!(
+            compile_all(source, "Invalid.kt").is_err(),
+            "accepted {source}"
+        );
+    }
 }

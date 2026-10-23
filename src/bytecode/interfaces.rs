@@ -4,7 +4,7 @@ use crate::metadata::Metadata;
 use std::collections::{BTreeMap, HashSet};
 
 #[derive(Clone)]
-struct Relation {
+pub(super) struct Relation {
     owner: String,
     outer: Option<String>,
     name: Option<String>,
@@ -91,20 +91,26 @@ fn deprecated(pool: &mut Pool, method: &mut Vec<u8>) -> Result<()> {
     Ok(())
 }
 
-struct Builder {
+pub(super) struct Builder {
     owner: String,
     version: u16,
     flags: u16,
-    pool: Pool,
-    class: u16,
+    pub(super) pool: Pool,
+    pub(super) class: u16,
     parent: u16,
     interfaces: Vec<u16>,
-    fields: Vec<Vec<u8>>,
-    methods: Vec<Vec<u8>>,
+    pub(super) fields: Vec<Vec<u8>>,
+    pub(super) methods: Vec<Vec<u8>>,
+    pub(super) attributes: Vec<Vec<u8>>,
 }
 
 impl Builder {
-    fn new(owner: &str, version: u16, flags: u16, interfaces: &[String]) -> Result<Self> {
+    pub(super) fn new(
+        owner: &str,
+        version: u16,
+        flags: u16,
+        interfaces: &[String],
+    ) -> Result<Self> {
         let mut pool = Pool::default();
         let class = pool.class(owner)?;
         let parent = pool.class("java/lang/Object")?;
@@ -122,9 +128,16 @@ impl Builder {
             interfaces,
             fields: Vec::new(),
             methods: Vec::new(),
+            attributes: Vec::new(),
         })
     }
-    fn field(&mut self, name: &str, descriptor: &str, flags: u16, annotated: bool) -> Result<()> {
+    pub(super) fn field(
+        &mut self,
+        name: &str,
+        descriptor: &str,
+        flags: u16,
+        annotated: bool,
+    ) -> Result<()> {
         let mut field = Vec::new();
         u2(&mut field, flags);
         u2(&mut field, self.pool.utf8(name)?);
@@ -136,13 +149,13 @@ impl Builder {
         self.fields.push(field);
         Ok(())
     }
-    fn finish(
+    pub(super) fn finish(
         mut self,
         file: &str,
         metadata: &Metadata,
         relations: &[Relation],
     ) -> Result<crate::ClassFile> {
-        let mut attributes = Vec::new();
+        let mut attributes = std::mem::take(&mut self.attributes);
         if let Some(inner) = inner_attribute(&mut self.pool, relations)? {
             attributes.push(inner);
         }
@@ -339,6 +352,7 @@ fn helper_body(
         bytes: prefix.bytes,
         labels: Vec::new(),
         branches: Vec::new(),
+        loops: Vec::new(),
         max_stack: 2,
     };
     code.block(&function.body)?;
@@ -405,6 +419,26 @@ fn helper_inherited(
 
 fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
     match &value.kind {
+        ValueKind::Let { value, body, .. } => {
+            collect_value(value, accesses);
+            collect_value(body, accesses);
+        }
+        ValueKind::NewArray(_, value)
+        | ValueKind::Convert(_, value)
+        | ValueKind::ThreadLocalGet(value, _)
+        | ValueKind::RequireNotNull(value) => collect_value(value, accesses),
+        ValueKind::ThreadLocalSet(a, b) | ValueKind::CopyOf(a, b) => {
+            collect_value(a, accesses);
+            collect_value(b, accesses);
+        }
+        ValueKind::StaticCall { args, .. } | ValueKind::StringFromChars(args) => {
+            for value in args {
+                collect_value(value, accesses);
+            }
+        }
+        ValueKind::StaticField { .. }
+        | ValueKind::ObjectInstance(_)
+        | ValueKind::Increment { .. } => {}
         ValueKind::CompanionArray { owner, name } => {
             accesses.insert((owner.clone(), name.clone()));
         }
@@ -446,6 +480,24 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
 fn collect_block(body: &[Statement], accesses: &mut HashSet<(String, String)>) {
     for statement in body {
         match statement {
+            Statement::ThrowException { message, .. } => {
+                if let Some(value) = message {
+                    collect_value(value, accesses);
+                }
+            }
+            Statement::IndexStore(array, index, value) => {
+                collect_value(array, accesses);
+                collect_value(index, accesses);
+                collect_value(value, accesses);
+            }
+            Statement::Continue | Statement::Break => {}
+            Statement::ForUntil {
+                start, end, body, ..
+            } => {
+                collect_value(start, accesses);
+                collect_value(end, accesses);
+                collect_block(body, accesses);
+            }
             Statement::Store(_, value)
             | Statement::Expression(value)
             | Statement::Return(value)
