@@ -1,0 +1,110 @@
+/*
+ * Copyright 2010-2022 JetBrains s.r.o. and Kotlin Programming Language contributors.
+ * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
+ */
+
+package org.jetbrains.kotlin.scripting.compiler.plugin.services
+
+import com.intellij.mock.MockProject
+import com.intellij.openapi.util.Disposer
+import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.extensions.FirExtensionSessionComponent
+import org.jetbrains.kotlin.scripting.compiler.plugin.definitions.CliScriptConfigurationsProvider
+import org.jetbrains.kotlin.scripting.compiler.plugin.definitions.CliScriptDefinitionProvider
+import org.jetbrains.kotlin.scripting.definitions.ScriptConfigurationsProvider
+import org.jetbrains.kotlin.scripting.definitions.ScriptDefinition
+import org.jetbrains.kotlin.scripting.definitions.ScriptDefinitionProvider
+import kotlin.script.experimental.api.*
+
+class FirScriptDefinitionProviderService(
+    session: FirSession,
+    private val makeDefaultDefinitionProvider: () -> ScriptDefinitionProvider,
+    private val makeDefaultConfigurationProvider: (ScriptDefinitionProvider) -> ScriptConfigurationsProvider,
+) : FirExtensionSessionComponent(session) {
+
+    // TODO: get rid of project-based implementation, write and use own singleton in K2
+
+    private var _definitionProvider: ScriptDefinitionProvider? = null
+    var definitionProvider: ScriptDefinitionProvider?
+        get() = synchronized(this) {
+            if (_definitionProvider == null) _definitionProvider = makeDefaultDefinitionProvider()
+            _definitionProvider
+        }
+        set(value) {
+            synchronized(this) { _definitionProvider = value }
+        }
+
+    private var _configurationProvider: ScriptConfigurationsProvider? = null
+    var configurationProvider: ScriptConfigurationsProvider?
+        get() = synchronized(this) {
+            if (_configurationProvider == null) _configurationProvider = makeDefaultConfigurationProvider(definitionProvider!!)
+            _configurationProvider
+        }
+        set(value) {
+            synchronized(this) { _configurationProvider = value }
+        }
+
+    fun getDefaultConfiguration(): ResultWithDiagnostics<ScriptCompilationConfiguration> =
+        definitionProvider!!.getDefaultDefinition().compilationConfiguration.asSuccess()
+
+    fun getBaseConfiguration(sourceCode: SourceCode): ResultWithDiagnostics<ScriptCompilationConfiguration>? =
+        definitionProvider!!.findDefinition(sourceCode)?.compilationConfiguration?.asSuccess()
+
+    private val refinedCache = mutableMapOf<String, ResultWithDiagnostics<ScriptCompilationConfiguration>>()
+
+    fun getRefinedConfiguration(sourceCode: SourceCode): ResultWithDiagnostics<ScriptCompilationConfiguration>? =
+        sourceCode.locationId?.let { refinedCache[it] }
+            ?: configurationProvider!!.getScriptCompilationConfiguration(sourceCode)?.onSuccess { it.configuration?.asSuccess() ?: return null }
+
+    fun storeRefinedConfiguration(
+        sourceCode: SourceCode,
+        configuration: ResultWithDiagnostics<ScriptCompilationConfiguration>
+    ): ResultWithDiagnostics<ScriptCompilationConfiguration>? {
+        val locationId = sourceCode.locationId ?: error("Cannot cache script without location: ${sourceCode.name ?: sourceCode.text}")
+        return refinedCache.put(locationId, configuration)
+    }
+
+    @Suppress("unused") // left for possible future use in IDE
+    fun clearRefinedConfiguration(sourceCode: SourceCode): ResultWithDiagnostics<ScriptCompilationConfiguration>? {
+        val locationId = sourceCode.locationId ?: return null
+        return refinedCache.remove(locationId)
+    }
+
+    companion object {
+        fun getFactory(
+            definitions: List<ScriptDefinition>,
+            @Suppress("DEPRECATION") //KT-82551
+            definitionSources: List<org.jetbrains.kotlin.scripting.definitions.ScriptDefinitionsSource>,
+            definitionProvider: ScriptDefinitionProvider? = null,
+            configurationProvider: ScriptConfigurationsProvider? = null,
+        ): Factory {
+            val makeDefinitionsProvider = definitionProvider?.let { { it } }
+                ?: {
+                    CliScriptDefinitionProvider().also {
+                        it.setScriptDefinitionsSources(definitionSources)
+                        it.setScriptDefinitions(definitions)
+                    }
+                }
+
+            val makeConfigurationProvider: (ScriptDefinitionProvider) -> ScriptConfigurationsProvider =
+                configurationProvider?.let { cp -> { cp } }
+                    ?: { definitionProvider ->
+                        // TODO: check if memory can leak in MockProject (probably not too important, since currently the providers are set externaly in important cases)
+                        CliScriptConfigurationsProvider(
+                            MockProject(
+                                null,
+                                Disposer.newDisposable(
+                                    "Disposable for project of ${CliScriptConfigurationsProvider::class.simpleName} created by" +
+                                            " ${FirScriptDefinitionProviderService::class.simpleName}"
+                                ),
+                            ),
+                            { definitionProvider }
+                        )
+                    }
+
+            return Factory { session -> FirScriptDefinitionProviderService(session, makeDefinitionsProvider, makeConfigurationProvider) }
+        }
+    }
+}
+
+val FirSession.scriptDefinitionProviderService: FirScriptDefinitionProviderService? by FirSession.nullableSessionComponentAccessor()

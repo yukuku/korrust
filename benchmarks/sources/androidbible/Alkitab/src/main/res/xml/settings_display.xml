@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<ListPreference
+		android:defaultValue="@string/pref_language_default"
+		android:entries="@array/pref_language_labels"
+		android:entryValues="@array/pref_language_values"
+		android:key="@string/pref_language_key"
+		android:negativeButtonText="@null"
+		android:positiveButtonText="@null"
+		android:title="@string/pref_bahasa_language" />
+
+	<CheckBoxPreference
+		android:defaultValue="@bool/pref_keepScreenOn_default"
+		android:key="@string/pref_keepScreenOn_key"
+		android:summary="@string/pref_layar_tidak_akan_padam_ketika_membaca_teks_alkitab"
+		android:title="@string/pref_biarkan_layar_menyala" />
+
+	<CheckBoxPreference
+		android:defaultValue="@bool/pref_textPadding_default"
+		android:key="@string/pref_textPadding_key"
+		android:summary="@string/pref_textPadding_summary"
+		android:title="@string/pref_textPadding_title" />
+
+	<CheckBoxPreference
+		android:defaultValue="@bool/pref_bottomToolbarOnText_default"
+		android:key="@string/pref_bottomToolbarOnText_key"
+		android:summary="@string/pref_bottomToolbarOnText_summary"
+		android:title="@string/pref_bottomToolbarOnText_title" />
+
+	<CheckBoxPreference
+		android:defaultValue="@bool/pref_verseNumberIsShown_default"
+		android:key="@string/pref_verseNumberIsShown_key"
+		android:summary="@string/pref_verseNumberIsShown_summary"
+		android:title="@string/pref_verseNumberIsShown_title" />
+
+	<yuku.alkitab.base.widget.ColorPreference
+		android:defaultValue="@integer/pref_selectedVerseBgColor_default"
+		android:key="@string/pref_selectedVerseBgColor_key"
+		android:title="@string/pref_selectedVerseBgColor_title" />
+    <ListPreference
+        android:key="@string/pref_currentReadingDisplay_key"
+        android:title="@string/pref_currentReadingDisplay_title"
+        android:defaultValue="@string/pref_currentReadingDisplay_default"
+        android:entries="@array/current_reading_display_labels"
+        android:entryValues="@array/current_reading_display_values"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+</PreferenceScreen>

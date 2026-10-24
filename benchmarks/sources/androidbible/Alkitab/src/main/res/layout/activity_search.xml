@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/root"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:theme="@style/ThemeOverlay.Alkitab.Toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:background="?attr/colorPrimary"
+		app:contentInsetStart="0dp"
+		app:contentInsetEnd="0dp">
+
+		<androidx.compose.ui.platform.ComposeView
+			android:id="@+id/composeToolbar"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+
+	</androidx.appcompat.widget.Toolbar>
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<androidx.appcompat.widget.SearchView
+			android:id="@+id/searchView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="40dp"
+			app:iconifiedByDefault="false"
+			app:searchHintIcon="@null"
+			app:searchIcon="@null" />
+
+		<FrameLayout
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:layout_gravity="end|center_vertical">
+
+			<com.google.android.material.progressindicator.CircularProgressIndicator
+				android:id="@+id/progressbar"
+				style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:indeterminate="true"
+				android:visibility="gone"
+				app:trackColor="@color/accent"
+				tools:visibility="visible" />
+
+			<ImageButton
+				android:id="@+id/bSearch"
+				android:layout_width="48dp"
+				android:layout_height="48dp"
+				android:background="?selectableItemBackgroundBorderless"
+				android:contentDescription="@string/search"
+				android:src="@drawable/ic_menu_search" />
+
+		</FrameLayout>
+
+	</FrameLayout>
+
+	<include
+		android:id="@+id/panelFilter"
+		layout="@layout/search_panel_filter"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content" />
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"
+		android:orientation="vertical">
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/lsSearchResults"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:visibility="gone"
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+		<TextView
+			android:id="@+id/tSearchTips"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:paddingStart="16dp"
+			android:paddingEnd="16dp"
+			android:text="@string/search_syntax_tips"
+			android:textSize="16sp"
+			android:visibility="visible" />
+
+	</LinearLayout>
+
+</LinearLayout>

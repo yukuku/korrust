@@ -1,0 +1,169 @@
+package yuku.alkitab.base.br;
+
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.widget.Toast;
+import androidx.core.util.AtomicFile;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Map;
+import yuku.alkitab.base.App;
+import yuku.alkitab.base.ac.AlertDialogActivity;
+import yuku.alkitab.base.events.AppEvents;
+import yuku.alkitab.base.model.MVersionDb;
+import yuku.alkitab.base.storage.YesReaderFactory;
+import yuku.alkitab.base.util.AddonManager;
+import yuku.alkitab.base.util.AppLog;
+import yuku.alkitab.base.util.Background;
+import yuku.alkitab.base.util.DownloadMapper;
+import yuku.alkitab.base.util.Foreground;
+import yuku.alkitab.base.widget.Localized;
+import yuku.alkitab.debug.R;
+import yuku.alkitab.io.BibleReader;
+import yuku.alkitab.io.OptionalGzipInputStream;
+
+public class VersionDownloadCompleteReceiver {
+	private static final String TAG = VersionDownloadCompleteReceiver.class.getSimpleName();
+
+	public static void onReceive(final int id) {
+		final Context context = App.context;
+
+		final int status = DownloadMapper.instance.getStatus(id);
+		if (status != DownloadManager.STATUS_SUCCESSFUL) {
+			AppLog.w(TAG, "ACTION_DOWNLOAD_COMPLETE reported for " + id + " but actual status is " + status);
+			return; // lost download
+		}
+
+		final Map<String, String> attrs = DownloadMapper.instance.getAttrs(id);
+		if (attrs == null) {
+			AppLog.w(TAG, "No download attrs");
+			return;
+		}
+
+		if (!attrs.containsKey("download_type")) {
+			AppLog.w(TAG, "download_type attr not found for " + id);
+			return;
+		}
+
+		final String download_type = attrs.get("download_type");
+
+		final String preset_name;
+		final int modifyTime;
+
+		final File destFile;
+		if ("preset".equals(download_type)) {
+			if (!attrs.containsKey("preset_name")) {
+				AppLog.w(TAG, "preset_name attr not found for " + id);
+				return;
+			}
+
+			preset_name = attrs.get("preset_name");
+
+			if (!attrs.containsKey("modifyTime")) {
+				AppLog.w(TAG, "modifyTime attr not found for " + id);
+				return;
+			}
+
+			modifyTime = Integer.parseInt(attrs.get("modifyTime"));
+			destFile = AddonManager.getWritableVersionFile(preset_name + ".yes");
+		} else if ("url".equals(download_type)) {
+			if (!attrs.containsKey("filename_last_segment")) {
+				AppLog.w(TAG, "filename_last_segment attr not found for " + id);
+				return;
+			}
+
+			final String filename_last_segment = attrs.get("filename_last_segment");
+			destFile = AddonManager.getWritableVersionFile(filename_last_segment);
+
+			preset_name = null;
+			modifyTime = (int) (System.currentTimeMillis() / 1000L);
+		} else {
+			AppLog.w(TAG, "unknown download_type for " + id + ": " + download_type);
+			return;
+		}
+
+		// transfer from dm to the actual file in the background
+		Background.run(() -> {
+			try {
+				final String downloadedFilePath = DownloadMapper.instance.getDownloadedFilePath(id);
+				finalizeDownload(new File(downloadedFilePath), destFile);
+
+			} catch (IOException e) {
+				AppLog.e(TAG, "I/O error when saving downloaded version", e);
+				Foreground.run(() -> context.startActivity(
+					AlertDialogActivity.createOkIntent(null, Localized.string(R.string.version_download_saving_io_error))
+						.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+				));
+				AppEvents.emitVersionListReload();
+				return;
+			} finally {
+				// `consumeAndRemove` (not `remove`) so the temp file is deleted:
+				// the worker always starts from byte 0 so the leftover bytes
+				// would never be reused, they'd just leak cache space.
+				DownloadMapper.instance.consumeAndRemove(id);
+			}
+
+			final BibleReader reader = YesReaderFactory.createYesReader(destFile.getAbsolutePath());
+			if (reader == null) {
+				//noinspection ResultOfMethodCallIgnored
+				destFile.delete();
+
+				Foreground.run(() -> context.startActivity(
+					AlertDialogActivity.createOkIntent(null, Localized.string(R.string.version_download_corrupted_file))
+						.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+				));
+				AppEvents.emitVersionListReload();
+				return;
+			}
+
+			// success!
+
+			int maxOrdering = App.services.storage.getDb().getVersionMaxOrdering();
+			if (maxOrdering == 0) maxOrdering = MVersionDb.DEFAULT_ORDERING_START;
+
+			final MVersionDb mvDb = new MVersionDb();
+			mvDb.locale = reader.getLocale();
+			mvDb.shortName = reader.getShortName();
+			mvDb.longName = reader.getLongName();
+			mvDb.description = reader.getDescription();
+			mvDb.filename = destFile.getAbsolutePath();
+			if ("preset".equals(download_type)) {
+				mvDb.preset_name = preset_name;
+			}
+			mvDb.modifyTime = modifyTime;
+			mvDb.ordering = maxOrdering + 1;
+
+			App.services.storage.getDb().insertOrUpdateVersionWithActive(mvDb, true);
+			MVersionDb.clearVersionImplCache();
+
+			Foreground.run(() -> {
+				Toast.makeText(App.context, TextUtils.expandTemplate(Localized.text(R.string.version_download_complete), mvDb.longName), Toast.LENGTH_LONG).show();
+			});
+
+			AppEvents.emitVersionListReload();
+		});
+	}
+	static void finalizeDownload(File source, File destination) throws IOException {
+		final AtomicFile af = new AtomicFile(destination);
+		final FileOutputStream fos = af.startWrite();
+		try {
+			try (FileInputStream fis = new FileInputStream(source);
+				 OptionalGzipInputStream ogis = new OptionalGzipInputStream(fis)) {
+				final byte[] buf = new byte[4096];
+				int read;
+				while ((read = ogis.read(buf)) != -1) {
+					fos.write(buf, 0, read);
+				}
+			}
+			af.finishWrite(fos);
+		} catch (IOException | RuntimeException | Error e) {
+			af.failWrite(fos);
+			throw e;
+		}
+	}
+
+}

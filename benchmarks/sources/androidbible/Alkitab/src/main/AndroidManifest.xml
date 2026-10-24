@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:installLocation="auto">
+
+	<uses-permission android:name="android.permission.INTERNET" />
+
+	<!-- Foreground service for Bible audio playback (yuku.alkitab.base.audio.BibleAudioService) -->
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+	<!-- Keeping storage permissions for users who upgrade from an existing versions
+	and store their version files in the external storage -->
+	<uses-permission
+		android:name="android.permission.READ_EXTERNAL_STORAGE"
+		android:maxSdkVersion="32" />
+	<uses-permission
+		android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+		android:maxSdkVersion="32"
+		tools:ignore="ScopedStorage" />
+
+	<uses-feature
+		android:name="android.hardware.touchscreen"
+		android:required="false" />
+
+	<application
+		android:name="yuku.alkitab.base.App"
+		android:allowBackup="true"
+		android:fullBackupContent="true"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:networkSecurityConfig="@xml/network_security_config"
+		android:supportsRtl="true"
+		android:theme="@style/Theme.Alkitab">
+
+		<!--
+			Disable Firebase Messaging's auto-init at process startup. Without this,
+			firebase-messaging 23.1.0+ proactively requests POST_NOTIFICATIONS on
+			Android 13+ the first time the app launches, before the user has any
+			reason to grant it. We instead initialize FCM lazily once the user signs
+			into sync (see SyncLoginActivity), which is the only feature that uses
+			push messages.
+		-->
+		<meta-data
+			android:name="firebase_messaging_auto_init_enabled"
+			android:value="false" />
+
+		<activity
+			android:name="yuku.alkitab.base.IsiActivity"
+			android:theme="@style/Theme.Alkitab.Starting"
+			android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+
+				<category android:name="android.intent.category.LAUNCHER" />
+				<category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="yuku.alkitab.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:name="yuku.alkitab.base.ac.GotoActivity"
+			android:windowSoftInputMode="adjustResize" />
+		<activity
+			android:name="yuku.alkitab.base.settings.SettingsActivity"
+			android:label="@string/pengaturan_alkitab" />
+		<activity android:name="yuku.alkitab.base.ac.ColorSettingsActivity" />
+		<activity
+			android:name="yuku.alkitab.base.ac.MarkersActivity"
+			android:label="@string/activity_title_markers" />
+		<activity
+			android:name="yuku.alkitab.base.ac.MarkerListActivity"
+			android:windowSoftInputMode="adjustResize|stateHidden" />
+		<activity
+			android:name="yuku.alkitab.versionmanager.VersionsActivity"
+			android:exported="true"
+			android:label="@string/kelola_versi"
+			android:parentActivityName="yuku.alkitab.base.IsiActivity">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="yuku.alkitab.base.IsiActivity" />
+
+			<!-- no type, lowercase .yes -->
+			<intent-filter android:label="@string/intent_filter_open_yes_file">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				<data android:host="*" />
+				<data android:pathPattern="/.*\\.yes" />
+				<data android:pathPattern="/.*\\..*\\.yes" />
+				<data android:pathPattern="/.*\\..*\\..*\\.yes" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\.yes" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.yes" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.yes" />
+			</intent-filter>
+			<!-- any type, lowercase .yes -->
+			<intent-filter android:label="@string/intent_filter_open_yes_file">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				<data android:mimeType="*/*" />
+				<data android:host="*" />
+				<data android:pathPattern="/.*\\.yes" />
+				<data android:pathPattern="/.*\\..*\\.yes" />
+				<data android:pathPattern="/.*\\..*\\..*\\.yes" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\.yes" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.yes" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.yes" />
+			</intent-filter>
+			<!-- no type, uppercase .yes -->
+			<intent-filter android:label="@string/intent_filter_open_yes_file">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				<data android:host="*" />
+				<data android:pathPattern="/.*\\.YES" />
+				<data android:pathPattern="/.*\\..*\\.YES" />
+				<data android:pathPattern="/.*\\..*\\..*\\.YES" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\.YES" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.YES" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.YES" />
+			</intent-filter>
+			<!-- any type, uppercase .yes -->
+			<intent-filter android:label="@string/intent_filter_open_yes_file">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				<data android:mimeType="*/*" />
+				<data android:host="*" />
+				<data android:pathPattern="/.*\\.YES" />
+				<data android:pathPattern="/.*\\..*\\.YES" />
+				<data android:pathPattern="/.*\\..*\\..*\\.YES" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\.YES" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.YES" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.YES" />
+			</intent-filter>
+			<!-- no type, lowercase .pdb -->
+			<intent-filter android:label="@string/intent_filter_open_pdb_file">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				<data android:host="*" />
+				<data android:pathPattern="/.*\\.pdb" />
+				<data android:pathPattern="/.*\\..*\\.pdb" />
+				<data android:pathPattern="/.*\\..*\\..*\\.pdb" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\.pdb" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.pdb" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.pdb" />
+			</intent-filter>
+			<!-- any type, lowercase .pdb -->
+			<intent-filter android:label="@string/intent_filter_open_pdb_file">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				<data android:mimeType="*/*" />
+				<data android:host="*" />
+				<data android:pathPattern="/.*\\.pdb" />
+				<data android:pathPattern="/.*\\..*\\.pdb" />
+				<data android:pathPattern="/.*\\..*\\..*\\.pdb" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\.pdb" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.pdb" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.pdb" />
+			</intent-filter>
+			<!-- no type, uppercase .pdb -->
+			<intent-filter android:label="@string/intent_filter_open_pdb_file">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				<data android:host="*" />
+				<data android:pathPattern="/.*\\.PDB" />
+				<data android:pathPattern="/.*\\..*\\.PDB" />
+				<data android:pathPattern="/.*\\..*\\..*\\.PDB" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\.PDB" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.PDB" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.PDB" />
+			</intent-filter>
+			<!-- any type, uppercase .pdb -->
+			<intent-filter android:label="@string/intent_filter_open_pdb_file">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				<data android:mimeType="*/*" />
+				<data android:host="*" />
+				<data android:pathPattern="/.*\\.PDB" />
+				<data android:pathPattern="/.*\\..*\\.PDB" />
+				<data android:pathPattern="/.*\\..*\\..*\\.PDB" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\.PDB" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\.PDB" />
+				<data android:pathPattern="/.*\\..*\\..*\\..*\\..*\\..*\\.PDB" />
+			</intent-filter>
+			<!-- chemical/x-pdb -->
+			<intent-filter android:label="@string/intent_filter_open_pdb_file">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				<data android:mimeType="chemical/x-pdb" />
+			</intent-filter>
+			<!-- last: any file with application/octet-stream type -->
+			<intent-filter android:label="@string/intent_filter_open_pdb_or_yes_file">
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="file" />
+				<data android:scheme="content" />
+				<data android:mimeType="application/octet-stream" />
+				<data android:host="*" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:name="yuku.alkitab.base.ac.SearchActivity"
+			android:label="@string/search"
+			android:windowSoftInputMode="adjustResize" />
+		<activity
+			android:name="yuku.alkitab.base.ac.DevotionActivity"
+			android:label="@string/menuDevotion">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="yuku.alkitab.base.IsiActivity" />
+		</activity>
+		<activity android:name="yuku.alkitab.base.ac.HelpActivity">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="yuku.alkitab.base.ac.AboutActivity" />
+		</activity>
+		<activity
+			android:name="yuku.alkitab.base.ac.AboutActivity"
+			android:label="@string/menuBantuan">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="yuku.alkitab.base.IsiActivity" />
+		</activity>
+		<activity
+			android:name="yuku.alkitab.base.ac.FontManagerActivity"
+			android:label="@string/fm_activity_title" />
+		<activity
+			android:name="yuku.alkitab.songs.SongViewActivity"
+			android:label="@string/sn_songs_activity_title" />
+		<activity
+			android:name="yuku.alkitab.base.ac.SecretSettingsActivity"
+			android:label="Secret settings" />
+		<activity
+			android:name="yuku.alkitab.base.ac.SecretSyncDebugActivity"
+			android:label="Secret sync debug" />
+		<activity android:name="yuku.alkitab.base.ac.ReadingPlanActivity" />
+		<activity
+			android:name="yuku.alkitab.base.ac.PatchTextActivity"
+			android:windowSoftInputMode="adjustResize" />
+		<activity
+			android:name="yuku.alkitab.base.sync.SyncSettingsActivity"
+			android:label="@string/sync_status_activity_title" />
+		<activity
+			android:name="yuku.alkitab.base.sync.SyncLogActivity"
+			android:label="@string/sync_log_activity_title" />
+		<activity
+			android:name="yuku.alkitab.base.sync.SyncLoginActivity"
+			android:label="@string/sync_login_activity_title" />
+		<activity
+			android:name="yuku.alkitab.base.ac.VersesDialogActivity"
+			android:exported="true"
+			android:theme="@style/Theme.Alkitab.Transparent">
+			<intent-filter>
+				<action android:name="yuku.alkitab.action.SHOW_VERSES_DIALOG" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:name="yuku.alkitab.base.appwidget.DailyVerseAppWidgetConfigurationActivity"
+			android:exported="true"
+			android:label="@string/dv_activity_title">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:name="yuku.alkitab.base.ac.SearchBookFilterActivity"
+			android:label="@string/select_books_to_search" />
+		<activity
+			android:name="yuku.alkitab.base.ac.NoteActivity"
+			android:icon="@drawable/ic_attr_note"
+			android:windowSoftInputMode="adjustResize" />
+		<activity
+			android:name="yuku.alkitab.base.ac.AlertDialogActivity"
+			android:excludeFromRecents="true"
+			android:theme="@style/Theme.PopupActivity" />
+
+		<activity
+			android:name="yuku.alkitab.datatransfer.ui.DataTransferActivity"
+			android:configChanges="orientation|keyboardHidden|screenSize|screenLayout"
+			android:label="@string/data_transfer_title" />
+
+		<activity
+			android:name="yuku.alkitab.ribka.RibkaReportActivity"
+			android:label="@string/ribka_title"
+			android:theme="@style/Ribka.Theme" />
+
+		<activity
+			android:name="com.example.android.wizardpager.AlkitabFeedbackActivity"
+			android:theme="@style/AlkitabFeedback.Theme" />
+
+		<service android:name="yuku.alkitab.base.sv.DownloadService" />
+
+		<provider
+			android:name="yuku.alkitab.base.cp.Provider"
+			android:authorities="${applicationId}.provider"
+			android:exported="true"
+			tools:ignore="ExportedContentProvider" />
+
+		<receiver
+			android:name="yuku.alkitab.base.br.SecretSettingsReceiver"
+			android:exported="true"
+			tools:ignore="ExportedReceiver">
+			<intent-filter>
+				<action android:name="android.provider.Telephony.SECRET_CODE" />
+
+				<data
+					android:host="2554822"
+					android:scheme="android_secret_code" />
+			</intent-filter>
+		</receiver>
+
+		<receiver
+			android:name="yuku.alkitab.base.br.DailyVerseAppWidgetReceiver"
+			android:exported="true"
+			android:icon="@mipmap/ic_launcher">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+
+			<meta-data
+				android:name="android.appwidget.provider"
+				android:resource="@xml/daily_verse_app_widget_provider" />
+		</receiver>
+
+		<receiver android:name="yuku.alkitab.base.br.DailyVerseAppWidgetReceiver$ClickReceiver" />
+
+		<service
+			android:name="yuku.alkitab.base.br.DailyVerseAppWidgetReceiver$UpdateService"
+			android:exported="true"
+			android:permission="android.permission.BIND_JOB_SERVICE" />
+
+		<service
+			android:name="yuku.alkitab.base.appwidget.DailyVerseAppWidgetService"
+			android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+		<uses-library
+			android:name="com.sec.android.app.multiwindow"
+			android:required="false" />
+
+		<meta-data
+			android:name="com.samsung.android.sdk.multiwindow.enable"
+			android:value="true" />
+		<meta-data
+			android:name="com.sec.android.support.multiwindow"
+			android:value="true" />
+
+		<service
+			android:name="yuku.alkitab.base.sv.VersionConfigUpdaterService"
+			android:exported="false" />
+
+		<!-- Bible audio: media3 MediaSessionService. exported=true is required so
+			 the OS (notification, lock-screen, Bluetooth, Android Auto) can bind. -->
+		<service
+			android:name="yuku.alkitab.base.audio.BibleAudioService"
+			android:exported="true"
+			android:foregroundServiceType="mediaPlayback">
+			<intent-filter>
+				<action android:name="androidx.media3.session.MediaSessionService" />
+			</intent-filter>
+		</service>
+
+		<!-- Kidung (hymn) audio: media3 MediaSessionService for MP3 + MIDI.
+			 Deliberately NOT exported and WITHOUT the MediaSessionService
+			 intent-filter: only one service per app may advertise that action,
+			 otherwise media3's MediaButtonReceiver throws when resolving hardware
+			 media-button events (it expects exactly one match). BibleAudioService
+			 owns that role. Notification / lock-screen controls still work here —
+			 media3 builds those PendingIntents with an explicit service component,
+			 not via action resolution. -->
+		<service
+			android:name="yuku.alkitab.songs.SongAudioService"
+			android:exported="false"
+			android:foregroundServiceType="mediaPlayback" />
+
+		<!--
+			File provider, for sharing app files.
+			Authority MUST NOT be changed without changing sharing code.
+        -->
+		<provider
+			android:name="androidx.core.content.FileProvider"
+			android:authorities="${applicationId}.file_provider"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/file_provider" />
+		</provider>
+
+		<!-- fcm -->
+		<service
+			android:name="yuku.alkitab.base.sync.FcmMessagingService"
+			android:exported="false">
+			<intent-filter>
+				<action android:name="com.google.firebase.MESSAGING_EVENT" />
+			</intent-filter>
+		</service>
+
+		<service
+			android:name="yuku.alkitab.base.sync.FcmIntentService"
+			android:exported="true"
+			android:permission="android.permission.BIND_JOB_SERVICE" />
+
+	</application>
+
+	<queries>
+		<package android:name="org.sabda.kamus" />
+		<package android:name="org.sabda.pedia" />
+		<package android:name="org.sabda.tafsiran" />
+		<package android:name="org.sabda.gpt" />
+		<package android:name="yuku.esvsbasal" />
+		<package android:name="palki.maps" />
+	</queries>
+
+</manifest>

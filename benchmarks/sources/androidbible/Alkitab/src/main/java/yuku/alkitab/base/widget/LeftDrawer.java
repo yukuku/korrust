@@ -1,0 +1,705 @@
+package yuku.alkitab.base.widget;
+
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
+import android.util.AttributeSet;
+import android.view.DragEvent;
+import android.view.HapticFeedbackConstants;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Spinner;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.GravityCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.drawerlayout.widget.DrawerLayout;
+import java.util.ArrayList;
+import java.util.List;
+import yuku.afw.storage.Preferences;
+import yuku.afw.widget.EasyAdapter;
+import yuku.alkitab.base.App;
+import yuku.alkitab.base.IsiActivity;
+import yuku.alkitab.base.ac.AboutActivity;
+import yuku.alkitab.base.ac.DevotionActivity;
+import yuku.alkitab.base.ac.ReadingPlanActivity;
+import yuku.alkitab.base.config.AppConfig;
+import yuku.alkitab.base.events.AppEvents;
+import yuku.alkitab.base.settings.SettingsActivity;
+import yuku.alkitab.base.storage.Prefkey;
+import yuku.alkitab.base.util.CurrentReading;
+import yuku.alkitab.debug.R;
+import yuku.alkitab.songs.SongSelectionControls;
+import yuku.alkitab.songs.SongViewActivity;
+
+public abstract class LeftDrawer extends NestedScrollView {
+
+	public static final String PROGRESS_MARK_DRAG_MIME_TYPE = "application/vnd.yuku.alkitab.progress_mark.drag";
+
+	// mandatory
+	TextView bBible;
+	TextView bDevotion;
+	TextView bReadingPlan;
+	TextView bSongs;
+	View bSettings;
+	View bHelp;
+
+	// for launching other activities
+	final Activity activity;
+	// for closing drawer
+	DrawerLayout drawerLayout;
+
+	public LeftDrawer(final Context context, final AttributeSet attrs) {
+		super(context, attrs);
+		setClipToPadding(false);
+		activity = isInEditMode() ? null : (Activity) context;
+	}
+
+	@Override
+	protected void onFinishInflate() {
+		super.onFinishInflate();
+
+		setClickable(true);
+		for (int i = 0, len = getChildCount(); i < len; i++) {
+			getChildAt(i).setDuplicateParentStateEnabled(false);
+		}
+
+		bBible = findViewById(R.id.bBible);
+		bDevotion = findViewById(R.id.bDevotion);
+		bReadingPlan = findViewById(R.id.bReadingPlan);
+		bSongs = findViewById(R.id.bSongs);
+		bSettings = findViewById(R.id.bSettings);
+		bHelp = findViewById(R.id.bHelp);
+
+		if (this instanceof Text) setDrawerItemSelected(bBible);
+		if (this instanceof Devotion) setDrawerItemSelected(bDevotion);
+		if (this instanceof ReadingPlan) setDrawerItemSelected(bReadingPlan);
+		if (this instanceof Songs) setDrawerItemSelected(bSongs);
+
+		// hide and show according to app config
+		if (!isInEditMode()) {
+			bSongs.setVisibility(AppConfig.get().menuSongs ? VISIBLE : GONE);
+			bDevotion.setVisibility(AppConfig.get().menuDevotion ? VISIBLE : GONE);
+		}
+
+		bBible.setOnClickListener(v -> {
+			bBible_click();
+			closeDrawer();
+		});
+
+		bDevotion.setOnClickListener(v -> {
+			bDevotion_click();
+			closeDrawer();
+		});
+
+		bReadingPlan.setOnClickListener(v -> {
+			bReadingPlan_click();
+			closeDrawer();
+		});
+
+		bSongs.setOnClickListener(v -> {
+			bSongs_click();
+			closeDrawer();
+		});
+
+		bSettings.setOnClickListener(v -> {
+			bSettings_click();
+			closeDrawer();
+		});
+
+		bHelp.setOnClickListener(v -> {
+			bHelp_click();
+			closeDrawer();
+		});
+	}
+
+	public void setSafeAreaInsets(final int left, final int top, final int right, final int bottom) {
+		setPadding(left, 0, right, bottom);
+		final View header = (View) bBible.getParent();
+		header.setPadding(0, top, 0, 0);
+	}
+
+	void setDrawerItemSelected(@NonNull TextView drawerItem) {
+		final int selectedTextColor = ResourcesCompat.getColor(getResources(), R.color.accent, getContext().getTheme());
+		drawerItem.setTextColor(selectedTextColor);
+		drawerItem.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
+	}
+
+	@Override
+	public boolean onDragEvent(final DragEvent event) {
+		if (event.getAction() == DragEvent.ACTION_DRAG_STARTED) {
+			// Just so that the progress pin is not dropped to the verses
+			return event.getClipDescription().hasMimeType(PROGRESS_MARK_DRAG_MIME_TYPE);
+		}
+		return false;
+	}
+
+	public void toggleDrawer() {
+		if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+			drawerLayout.closeDrawer(GravityCompat.START);
+		} else {
+			drawerLayout.openDrawer(GravityCompat.START);
+		}
+	}
+
+	public void closeDrawer() {
+		drawerLayout.closeDrawer(GravityCompat.START);
+	}
+
+	/**
+	 * Turns the edge swipe that opens this drawer on or off. Callers that own a
+	 * competing horizontal drag near the left edge — the split handle parked
+	 * there — switch it off for the duration of their drag, so the touch does
+	 * not also peek the drawer open.
+	 */
+	public void setEdgeSwipeEnabled(boolean enabled) {
+		drawerLayout.setDrawerLockMode(enabled ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+	}
+
+	void bHelp_click() {
+		activity.startActivity(AboutActivity.createIntent());
+	}
+
+	void bSettings_click() {
+		activity.startActivity(SettingsActivity.createIntent());
+	}
+
+	/**
+	 * When the current activity is not {@link yuku.alkitab.base.IsiActivity},
+	 * this clears all activity on this stack,
+	 * starts {@link yuku.alkitab.base.IsiActivity} on the background,
+	 * and then starts {@link yuku.alkitab.base.ac.ReadingPlanActivity}.
+	 */
+	void bReadingPlan_click() {
+		if (getContext() instanceof IsiActivity) {
+			activity.startActivity(ReadingPlanActivity.createIntent());
+		} else {
+			final Intent baseIntent = IsiActivity.createIntent();
+			baseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			baseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			final Intent intent = ReadingPlanActivity.createIntent();
+			activity.startActivities(new Intent[]{baseIntent, intent});
+		}
+	}
+
+	/**
+	 * When the current activity is not {@link yuku.alkitab.base.IsiActivity},
+	 * this clears all activity on this stack,
+	 * starts {@link yuku.alkitab.base.IsiActivity} on the background,
+	 * and then starts {@link SongViewActivity}.
+	 */
+	void bSongs_click() {
+		if (getContext() instanceof IsiActivity) {
+			activity.startActivity(SongViewActivity.createIntent());
+		} else {
+			final Intent baseIntent = IsiActivity.createIntent();
+			baseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			baseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			final Intent intent = SongViewActivity.createIntent();
+			activity.startActivities(new Intent[]{baseIntent, intent});
+		}
+	}
+
+	/**
+	 * When the current activity is not {@link yuku.alkitab.base.IsiActivity},
+	 * this clears all activity on this stack,
+	 * starts {@link yuku.alkitab.base.IsiActivity} on the background,
+	 * and then starts {@link yuku.alkitab.base.ac.DevotionActivity}.
+	 */
+	void bDevotion_click() {
+		if (getContext() instanceof IsiActivity) {
+			activity.startActivity(DevotionActivity.createIntent());
+		} else {
+			final Intent baseIntent = IsiActivity.createIntent();
+			baseIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			baseIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			final Intent intent = DevotionActivity.createIntent();
+			activity.startActivities(new Intent[]{baseIntent, intent});
+		}
+	}
+
+	/**
+	 * This clears all activity on this stack and starts {@link yuku.alkitab.base.IsiActivity}.
+	 */
+	void bBible_click() {
+		final Intent intent = IsiActivity.createIntent();
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		activity.startActivity(intent);
+	}
+
+	public static class Text extends LeftDrawer {
+		public interface Listener {
+			void bMarkers_click();
+
+			void bDisplay_click();
+
+			void cFullScreen_checkedChange(boolean isChecked);
+
+			void cNightMode_checkedChange(boolean isChecked);
+
+			void cSplitVersion_checkedChange(final SwitchCompat cSplitVersion, boolean isChecked);
+
+			void bProgressMarkList_click();
+
+			void bProgress_click(int preset_id);
+
+			void bCurrentReadingClose_click();
+
+			void bCurrentReadingReference_click(int rangeIndex);
+
+			void cCurrentReadingComplete_checkedChange(int rangeIndex, boolean checked);
+		}
+
+		public interface Handle {
+			void setFullScreen(boolean fullScreen);
+
+			void setSplitVersion(boolean splitVersion);
+		}
+
+		View bMarkers;
+		View bDisplay;
+		SwitchCompat cFullScreen;
+		SwitchCompat cNightMode;
+		SwitchCompat cSplitVersion;
+
+		View bProgressMarkList;
+		View bProgress1;
+		View bProgress2;
+		View bProgress3;
+		View bProgress4;
+		View bProgress5;
+
+		View panelCurrentReadingHeader;
+		View bCurrentReadingClose;
+		ViewGroup panelCurrentReadingRows;
+
+		Listener listener;
+		Handle handle = new Handle() {
+			@Override
+			public void setFullScreen(final boolean fullScreen) {
+				cFullScreen.setOnCheckedChangeListener(null);
+				cFullScreen.setChecked(fullScreen);
+				cFullScreen.setOnCheckedChangeListener(cFullScreen_checkedChange);
+			}
+
+			@Override
+			public void setSplitVersion(final boolean splitVersion) {
+				cSplitVersion.setOnCheckedChangeListener(null);
+				cSplitVersion.setChecked(splitVersion);
+				cSplitVersion.setOnCheckedChangeListener(cSplitVersion_checkedChange);
+			}
+		};
+
+		public Text(final Context context, final AttributeSet attrs) {
+			super(context, attrs);
+		}
+
+		public Handle getHandle() {
+			return handle;
+		}
+
+		@Override
+		protected void onFinishInflate() {
+			super.onFinishInflate();
+
+			bMarkers = findViewById(R.id.bMarkers);
+			bDisplay = findViewById(R.id.bDisplay);
+			cFullScreen = findViewById(R.id.cFullScreen);
+			cNightMode = findViewById(R.id.cNightMode);
+			cSplitVersion = findViewById(R.id.cSplitVersion);
+
+			bProgressMarkList = findViewById(R.id.bProgressMarkList);
+			bProgress1 = findViewById(R.id.bProgress1);
+			bProgress2 = findViewById(R.id.bProgress2);
+			bProgress3 = findViewById(R.id.bProgress3);
+			bProgress4 = findViewById(R.id.bProgress4);
+			bProgress5 = findViewById(R.id.bProgress5);
+
+			panelCurrentReadingHeader = findViewById(R.id.panelCurrentReadingHeader);
+			bCurrentReadingClose = findViewById(R.id.bCurrentReadingClose);
+			panelCurrentReadingRows = findViewById(R.id.panelCurrentReadingRows);
+
+			cNightMode.setChecked(!isInEditMode() && Preferences.getBoolean(Prefkey.is_night_mode, false));
+
+			bProgressMarkList.setOnClickListener(v -> listener.bProgressMarkList_click());
+
+			final View[] views = new View[]{bProgress1, bProgress2, bProgress3, bProgress4, bProgress5};
+			for (int i = 0; i < views.length; i++) {
+				final View b = views[i];
+				final int preset_id = i;
+				b.setOnClickListener(v -> {
+					listener.bProgress_click(preset_id);
+					closeDrawer();
+				});
+				b.setOnLongClickListener(v -> {
+					final ClipData dragData = new ClipData("progress_mark", new String[]{PROGRESS_MARK_DRAG_MIME_TYPE}, new ClipData.Item("" + preset_id));
+					b.setPressed(false);
+					final DragShadowBuilder dragShadowBuilder = new DragShadowBuilder(b);
+					performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+					closeDrawer();
+					v.startDragAndDrop(dragData, dragShadowBuilder, null, 0);
+
+					return true;
+				});
+			}
+
+			bMarkers.setOnClickListener(v -> {
+				listener.bMarkers_click();
+				closeDrawer();
+			});
+
+			bDisplay.setOnClickListener(v -> {
+				listener.bDisplay_click();
+				closeDrawer();
+			});
+
+			cFullScreen.setOnCheckedChangeListener(cFullScreen_checkedChange);
+
+			cNightMode.setOnCheckedChangeListener(cNightMode_checkedChange);
+
+			cSplitVersion.setOnCheckedChangeListener(cSplitVersion_checkedChange);
+
+			bCurrentReadingClose.setOnClickListener(v -> listener.bCurrentReadingClose_click());
+
+			displayCurrentReading();
+
+			// Not in onAttachedToWindow: we need to listen to activeVersionChanged as early
+			// as possible so we do not end up with a verse reference from a version that
+			// was not actually selected during app startup.
+			AppEvents.observeOnView(this, AppEvents.currentReadingChanged, this::displayCurrentReading);
+			AppEvents.observeOnView(this, AppEvents.activeVersionChanged, this::displayCurrentReading);
+			AppEvents.observeOnView(this, AppEvents.readingPlanProgressChanged, this::displayCurrentReading);
+		}
+
+		@Override
+		public void onAttachedToWindow() {
+			super.onAttachedToWindow();
+			displayCurrentReading();
+		}
+
+		public void displayCurrentReading() {
+			if (isInEditMode()) return;
+
+			final int[] aris = CurrentReading.getRanges();
+			final int rowCount = aris == null ? 0 : aris.length / 2;
+			findViewById(R.id.dividerCurrentReading).setVisibility(rowCount == 0 ? GONE : VISIBLE);
+			panelCurrentReadingHeader.setVisibility(rowCount == 0 ? GONE : VISIBLE);
+			panelCurrentReadingRows.setVisibility(rowCount == 0 ? GONE : VISIBLE);
+			while (panelCurrentReadingRows.getChildCount() > rowCount) {
+				panelCurrentReadingRows.removeViewAt(panelCurrentReadingRows.getChildCount() - 1);
+			}
+			while (panelCurrentReadingRows.getChildCount() < rowCount) {
+				LayoutInflater.from(getContext()).inflate(R.layout.item_current_reading, panelCurrentReadingRows, true);
+			}
+			if (aris == null) {
+				return;
+			}
+			final boolean[] completed = CurrentReading.getPlanCompletions();
+			for (int index = 0; index < rowCount; index++) {
+				final int rangeIndex = index;
+				final View row = panelCurrentReadingRows.getChildAt(index);
+				final TextView reference = row.findViewById(R.id.bCurrentReadingReference);
+				final CheckBox checkbox = row.findViewById(R.id.cCurrentReadingComplete);
+				reference.setText(CurrentReading.reference(App.services.versions.activeVersion(), rangeIndex));
+				reference.setOnClickListener(v -> listener.bCurrentReadingReference_click(rangeIndex));
+				checkbox.setOnCheckedChangeListener(null);
+				checkbox.setVisibility(completed != null ? VISIBLE : GONE);
+				checkbox.setChecked(completed != null && completed[index]);
+				checkbox.setContentDescription(getContext().getString(R.string.current_reading_completed) + ": " + reference.getText());
+				checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+					listener.cCurrentReadingComplete_checkedChange(rangeIndex, isChecked);
+					displayCurrentReading();
+				});
+			}
+		}
+
+		CompoundButton.OnCheckedChangeListener cFullScreen_checkedChange = new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(@NonNull final CompoundButton buttonView, final boolean isChecked) {
+				listener.cFullScreen_checkedChange(isChecked);
+			}
+		};
+
+		CompoundButton.OnCheckedChangeListener cNightMode_checkedChange = new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(@NonNull final CompoundButton buttonView, final boolean isChecked) {
+				listener.cNightMode_checkedChange(isChecked);
+			}
+		};
+
+		CompoundButton.OnCheckedChangeListener cSplitVersion_checkedChange = new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(@NonNull final CompoundButton buttonView, final boolean isChecked) {
+				listener.cSplitVersion_checkedChange(cSplitVersion, isChecked);
+				closeDrawer();
+			}
+		};
+
+		public <T extends Activity & Listener> void configure(T listener, DrawerLayout drawerLayout) {
+			this.listener = listener;
+			this.drawerLayout = drawerLayout;
+		}
+
+		@Override
+		void bBible_click() {
+			closeDrawer();
+		}
+	}
+
+	public static class Devotion extends LeftDrawer {
+
+		DevotionKindAdapter adapter;
+
+		public interface Listener {
+			void bPrev_click();
+
+			void bNext_click();
+
+			void bReload_click();
+
+			void cbKind_itemSelected(DevotionActivity.DevotionKind kind);
+		}
+
+		public interface Handle {
+			void setDevotionDate(CharSequence date);
+
+			void setDevotionKind(DevotionActivity.DevotionKind kind);
+		}
+
+		Spinner cbKind;
+		TextView tCurrentDate;
+		View bPrev;
+		View bNext;
+		View bReload;
+
+		Listener listener;
+		Handle handle = new Handle() {
+			@Override
+			public void setDevotionDate(final CharSequence date) {
+				tCurrentDate.setText(date);
+			}
+
+			@Override
+			public void setDevotionKind(final DevotionActivity.DevotionKind kind) {
+				final AdapterView.OnItemSelectedListener backup = cbKind.getOnItemSelectedListener();
+				cbKind.setOnItemSelectedListener(null);
+				cbKind.setSelection(adapter.getPositionForKind(kind));
+				cbKind.setOnItemSelectedListener(backup);
+			}
+		};
+
+		public Devotion(final Context context, final AttributeSet attrs) {
+			super(context, attrs);
+		}
+
+		public Handle getHandle() {
+			return handle;
+		}
+
+		@Override
+		protected void onFinishInflate() {
+			super.onFinishInflate();
+
+			cbKind = findViewById(R.id.cbKind);
+			tCurrentDate = findViewById(R.id.tCurrentDate);
+			bPrev = findViewById(R.id.bPrev);
+			bNext = findViewById(R.id.bNext);
+			bReload = findViewById(R.id.bReload);
+
+
+			cbKind.setAdapter(adapter = new DevotionKindAdapter());
+			cbKind.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
+					listener.cbKind_itemSelected(adapter.getItem(position));
+				}
+
+				@Override
+				public void onNothingSelected(final AdapterView<?> parent) {
+				}
+			});
+
+
+			bPrev.setOnClickListener(v -> listener.bPrev_click());
+
+			bNext.setOnClickListener(v -> listener.bNext_click());
+
+			bReload.setOnClickListener(v -> {
+				listener.bReload_click();
+				closeDrawer();
+			});
+		}
+
+		public <T extends Activity & Listener> void configure(T listener, DrawerLayout drawerLayout) {
+			this.listener = listener;
+			this.drawerLayout = drawerLayout;
+		}
+
+		@Override
+		void bDevotion_click() {
+			closeDrawer();
+		}
+
+		class DevotionKindAdapter extends EasyAdapter {
+			final List<DevotionActivity.DevotionKind> kinds = new ArrayList<>();
+
+			{
+				// gather available devotions based on app config
+				for (String devotionName : AppConfig.get().devotionNames) {
+					kinds.add(DevotionActivity.DevotionKind.getByName(devotionName));
+				}
+			}
+
+			@Override
+			public View newView(final int position, final ViewGroup parent) {
+				return LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false);
+			}
+
+			@Override
+			public DevotionActivity.DevotionKind getItem(final int position) {
+				return kinds.get(position);
+			}
+
+			@Override
+			public void bindView(final View view, final int position, final ViewGroup parent) {
+				final DevotionActivity.DevotionKind kind = getItem(position);
+				final SpannableStringBuilder sb = new SpannableStringBuilder();
+				sb.append(kind.title);
+				sb.append("\n");
+				final int sb_len = sb.length();
+				sb.append(kind.subtitle);
+				sb.setSpan(new RelativeSizeSpan(0.7f), sb_len, sb.length(), 0);
+				((TextView) view).setText(sb);
+			}
+
+			@Override
+			public View newDropDownView(final int position, final ViewGroup parent) {
+				final TextView res = (TextView) LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+				res.setSingleLine(false);
+				return res;
+			}
+
+			@Override
+			public int getCount() {
+				return kinds.size();
+			}
+
+			public int getPositionForKind(final DevotionActivity.DevotionKind kind) {
+				return kinds.indexOf(kind);
+			}
+		}
+	}
+
+	public static class ReadingPlan extends LeftDrawer {
+		public interface Handle {
+			void setDescription(CharSequence description);
+		}
+
+		NestedScrollView scrollDescription;
+		TextView tDescription;
+
+		Handle handle = new Handle() {
+			@Override
+			public void setDescription(final CharSequence description) {
+				if (description == null) {
+					scrollDescription.setVisibility(GONE);
+					tDescription.setText("");
+				} else {
+					scrollDescription.setVisibility(VISIBLE);
+					tDescription.setText(description);
+				}
+			}
+		};
+
+		public ReadingPlan(final Context context, final AttributeSet attrs) {
+			super(context, attrs);
+		}
+
+		public Handle getHandle() {
+			return handle;
+		}
+
+		@Override
+		protected void onFinishInflate() {
+			super.onFinishInflate();
+
+			scrollDescription = findViewById(R.id.scrollDescription);
+			tDescription = findViewById(R.id.tDescription);
+		}
+
+		@Override
+		void bReadingPlan_click() {
+			closeDrawer();
+		}
+
+		public void configure(DrawerLayout drawerLayout) {
+			this.drawerLayout = drawerLayout;
+		}
+	}
+
+	public static class Songs extends LeftDrawer {
+		public interface Listener {
+			void songKeypadButton_click(View v);
+
+			void songBookSelected(String name);
+
+			void moreSelected();
+		}
+
+		public interface Handle {
+			void setOkButtonEnabled(boolean enabled);
+
+			void setAButtonEnabled(boolean enabled);
+
+			void setBButtonEnabled(boolean enabled);
+
+			void setCButtonEnabled(boolean enabled);
+
+			void setBookName(CharSequence bookName);
+
+			void setCode(String code);
+		}
+
+		Listener listener;
+		private SongSelectionControls controls;
+
+		public Songs(final Context context, final AttributeSet attrs) {
+			super(context, attrs);
+		}
+
+		public Handle getHandle() {
+			return controls;
+		}
+
+		@Override
+		protected void onFinishInflate() {
+			super.onFinishInflate();
+			controls = new SongSelectionControls(activity, this, new Listener() {
+				@Override public void songKeypadButton_click(View v) { listener.songKeypadButton_click(v); }
+				@Override public void songBookSelected(String name) { listener.songBookSelected(name); }
+				@Override public void moreSelected() { listener.moreSelected(); }
+			});
+		}
+
+		@Override
+		void bSongs_click() {
+			closeDrawer();
+		}
+
+		public <T extends Activity & Listener> void configure(T listener, DrawerLayout drawerLayout) {
+			this.listener = listener;
+			this.drawerLayout = drawerLayout;
+		}
+	}
+}

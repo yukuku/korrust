@@ -1,0 +1,40 @@
+\usepackage{enumitem}
+\setlist[description]{style=nextline}
+
+\usepackage{amsmath}
+\usepackage{cancel}
+
+\usepackage{todonotes}
+
+\usepackage{titlesec}
+
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{2}
+
+\titleformat{\paragraph}{\normalfont\bfseries}{\theparagraph}{1em}{}
+
+\titlespacing{\paragraph}{0pt}{\parskip}{\parskip}
+
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1}}{}{}
+}
+\makeatother
+
+\usepackage{newunicodechar}
+\newunicodechar{⪯}{$\preceq$}
+\newunicodechar{⊆}{$\subseteq$}
+\newunicodechar{⊤}{$\top$}
+\newunicodechar{⊥}{$\bot$}
+
+\hyphenation{
+Sus-pend-Co-ro-u-ti-ne-Un-in-ter-cep-ted-Or-Re-turn
+}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=cyan
+}

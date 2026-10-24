@@ -1,0 +1,193 @@
+package yuku.alkitab.base.sync;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Set;
+import kotlin.Unit;
+import yuku.afw.storage.Preferences;
+import yuku.alkitab.base.App;
+import yuku.alkitab.base.ac.base.BaseActivity;
+import yuku.alkitab.base.events.AppEvents;
+import yuku.alkitab.base.model.SyncShadow;
+import yuku.alkitab.base.storage.Prefkey;
+import yuku.alkitab.base.util.Sqlitil;
+import yuku.alkitab.base.widget.MaterialDialogJavaHelper;
+import yuku.alkitab.debug.R;
+
+public class SyncSettingsActivity extends BaseActivity {
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_sync_settings);
+
+		final Toolbar toolbar = findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		setupEdgeToEdgeDisplay(toolbar);
+		final ActionBar ab = getSupportActionBar();
+		assert ab != null;
+		ab.setDisplayHomeAsUpEnabled(true);
+        SyncKotlin.observeWork(this);
+	}
+
+	public static class SyncSettingsFragment extends PreferenceFragmentCompat {
+		private static final int REQCODE_login = 1;
+		private static final int REQCODE_login_initial = 2;
+
+		private Preference pref_syncAccountName;
+
+		static final ThreadLocal<DateFormat> lastSyncDateFormat = ThreadLocal.withInitial(() -> android.text.format.DateFormat.getDateFormat(App.context));
+
+		static final ThreadLocal<DateFormat> lastSyncTimeFormat = ThreadLocal.withInitial(() -> android.text.format.DateFormat.getTimeFormat(App.context));
+
+		@Override
+		public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
+			addPreferencesFromResource(R.xml.sync_settings);
+
+			final String syncAccountName = Preferences.getString(R.string.pref_syncAccountName_key);
+			if (syncAccountName == null) {
+				startActivityForResult(SyncLoginActivity.createIntent(), REQCODE_login_initial);
+			}
+
+			pref_syncAccountName = findPreference(getString(R.string.pref_syncAccountName_key));
+			pref_syncAccountName.setOnPreferenceClickListener(pref_syncAccountName_click);
+			updateDisplay();
+
+			AppEvents.observe(this, AppEvents.syncSettingsReload, this::updateDisplay);
+		}
+
+
+		void updateDisplay() {
+			final String syncAccountName = Preferences.getString(R.string.pref_syncAccountName_key);
+			pref_syncAccountName.setSummary(syncAccountName != null ? syncAccountName : getString(R.string.sync_account_not_selected));
+
+			for (final String syncSetName : SyncShadow.ALL_SYNC_SET_NAMES) {
+				final Preference pref = findPreference(Sync.prefkeyForSyncSetEnabled(syncSetName));
+				pref.setEnabled(syncAccountName != null);
+
+				if (syncAccountName != null) {
+					final Set<String> runningSyncs = SyncAdapter.getRunningSyncs();
+					if (runningSyncs.contains(syncSetName)) {
+						pref.setSummary(getString(R.string.sync_sync_set_pref_summary_syncing));
+					} else {
+						final int time = SyncRecorder.getLastSuccessTime(syncSetName);
+						if (time == 0) {
+							pref.setSummary(getString(R.string.sync_sync_set_pref_summary_never));
+						} else {
+							final Date date = Sqlitil.toDate(time);
+							pref.setSummary(getString(R.string.sync_sync_set_pref_summary_last_synced, lastSyncDateFormat.get().format(date), lastSyncTimeFormat.get().format(date), 	Integer.toString(App.services.storage.getDb().getRevnoFromSyncShadowBySyncSetName(syncSetName))));
+						}
+					}
+				} else {
+					pref.setSummary(null);
+				}
+			}
+		}
+
+		Preference.OnPreferenceClickListener pref_syncAccountName_click = preference -> {
+			final String syncAccountName = Preferences.getString(R.string.pref_syncAccountName_key);
+
+			if (syncAccountName == null) {
+				startActivityForResult(SyncLoginActivity.createIntent(), REQCODE_login);
+
+			} else { // show logout instead
+				MaterialDialogJavaHelper.showOkDialog(
+					requireActivity(),
+					getString(R.string.sync_logout_warning),
+					getString(R.string.ok),
+					() -> {
+						SyncRecorder.log(SyncRecorder.EventKind.logout_pre, null, "accountName", syncAccountName);
+
+						Preferences.withTransaction(() -> {
+							Preferences.remove(getString(R.string.pref_syncAccountName_key));
+							Preferences.remove(Prefkey.sync_simpleToken);
+							Preferences.remove(Prefkey.sync_token_obtained_time);
+
+							for (final String syncSetName : SyncShadow.ALL_SYNC_SET_NAMES) {
+								App.services.storage.getDb().deleteSyncShadowBySyncSetName(syncSetName);
+							}
+						});
+
+						SyncRecorder.removeAllLastSuccessTimes();
+
+						SyncRecorder.log(SyncRecorder.EventKind.logout_post, null, "accountName", syncAccountName);
+
+						FirebaseCrashlytics.getInstance().setUserId("");
+
+						updateDisplay();
+						return Unit.INSTANCE;
+					},
+					getString(R.string.cancel)
+				);
+			}
+			return true;
+		};
+
+		@Override
+		public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+			if (requestCode == REQCODE_login || requestCode == REQCODE_login_initial) {
+				if (resultCode == RESULT_OK) {
+					final SyncLoginActivity.Result result = SyncLoginActivity.obtainResult(data);
+
+					// Success!
+					SyncRecorder.log(SyncRecorder.EventKind.login_success_pre, null, "accountName", result.accountName);
+
+					Preferences.withTransaction(() -> {
+						Preferences.setString(R.string.pref_syncAccountName_key, result.accountName);
+						Preferences.setString(Prefkey.sync_simpleToken, result.simpleToken);
+						Preferences.setInt(Prefkey.sync_token_obtained_time, Sqlitil.nowDateTime());
+					});
+
+					SyncRecorder.log(SyncRecorder.EventKind.login_success_post, null, "accountName", result.accountName);
+
+					// force sync immediately after login
+					SyncRecorder.log(SyncRecorder.EventKind.sync_forced, null);
+					SyncKotlin.syncNow(true);
+
+					updateDisplay();
+				} else if (resultCode == RESULT_CANCELED) {
+					if (requestCode == REQCODE_login_initial) {
+						getActivity().finish();
+					}
+				}
+				return;
+			}
+
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_sync_settings, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		final int itemId = item.getItemId();
+		if (itemId == R.id.menuSyncNow) {
+			SyncRecorder.log(SyncRecorder.EventKind.sync_forced, null);
+            Toast.makeText(this, getString(R.string.sync_diagnostics_requested, getString(R.string.sync_menu_item_sync_log)), Toast.LENGTH_LONG).show();
+			SyncKotlin.syncNow(true);
+			return true;
+		} else if (itemId == R.id.menuSyncLog) {
+			startActivity(SyncLogActivity.createIntent());
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+    public static Intent createIntent() {
+        return new Intent(App.context, SyncSettingsActivity.class);
+    }
+}

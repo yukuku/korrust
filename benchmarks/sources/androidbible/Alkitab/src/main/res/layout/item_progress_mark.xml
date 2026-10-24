@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical"
+	android:padding="16dp">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/lDate"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentTop="true"
+			android:layout_marginTop="2dp"
+			android:gravity="top|end"
+			tools:text="2099-12-32" />
+
+		<TextView
+			android:id="@+id/lCaption"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentStart="false"
+			android:layout_alignParentTop="true"
+			android:layout_marginStart="4dp"
+			android:layout_toStartOf="@+id/lDate"
+			android:layout_toEndOf="@+id/imgIcon"
+			android:textAppearance="?android:textAppearanceMedium"
+			tools:text="Description or reference" />
+
+		<ImageView
+			android:id="@+id/imgIcon"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentTop="true"
+			tools:ignore="ContentDescription" />
+
+	</RelativeLayout>
+
+	<TextView
+		android:id="@+id/lSnippet"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:textSize="14sp"
+		tools:text="Verse snippet if can be displayed Verse snippet if can be displayed Verse snippet if can be displayed" />
+
+</LinearLayout>

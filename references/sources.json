@@ -6,8 +6,7 @@
     "tag": "v2.3.21",
     "commit": "fea1ad8c18995b80d1ca0e3917056104613d23db",
     "path": "references/kotlin",
-    "shallow": true,
-    "git_lfs": "All five referenced documentation images were fetched.",
+    "git_lfs": "Five documentation JPEGs; run git lfs install and git lfs pull after cloning.",
     "purpose": "Compiler source and correctness fixtures; unchanged upstream reference.",
     "selection_basis": "AndroidBible version catalog declaration; resolved Gradle compiler versions still require verification.",
     "test_paths": {
@@ -21,7 +20,20 @@
       "licenses": "license/README.md",
       "compose": "plugins/compose"
     },
-    "restore_command": "git clone --depth 1 --single-branch --branch v2.3.21 https://github.com/JetBrains/kotlin.git references/kotlin",
-    "verification_command": "git -C references/kotlin rev-parse HEAD"
-  }
+    "verification_command": "python3 tools/verify_references.py",
+    "storage": "Tracked source snapshot without upstream Git history; upstream Git LFS attributes preserved.",
+    "file_count": 117716
+  },
+  "kotlin-spec": {
+    "upstream": "https://github.com/Kotlin/kotlin-spec",
+    "ref": "release",
+    "commit": "0f762a2314a9304e4b3fc386b1aceef1d56c7e4c",
+    "path": "references/kotlin-spec",
+    "file_count": 6933,
+    "license": "LICENSE",
+    "purpose": "Experimental Kotlin/Core language specification, grammar, and tests; coverage may lag Kotlin 2.3.21.",
+    "storage": "Tracked source snapshot without upstream Git history."
+  },
+  "source_checksums": "references/source-files.sha256.json",
+  "vendored_at": "2026-10-24"
 }

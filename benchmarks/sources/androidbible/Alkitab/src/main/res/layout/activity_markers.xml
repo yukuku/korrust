@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:theme="@style/ThemeOverlay.Alkitab.Toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?actionBarSize"
+		android:background="@color/primary" />
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@android:id/list"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1" />
+
+	<!-- A FrameLayout, not a RelativeLayout: gravity honors the bottom padding
+	     that keeps the button out of the navigation bar the panel extends
+	     behind, while centerVertical would ignore it. -->
+	<FrameLayout
+		android:id="@+id/panelGotoSync"
+		android:layout_width="match_parent"
+		android:layout_height="52dp"
+		android:background="#262626">
+
+		<Button
+			android:id="@+id/bGotoSync"
+			style="?buttonBarButtonStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical|end"
+			android:background="?selectableItemBackgroundBorderless"
+			android:padding="16dp"
+			android:text="@string/bl_sync_suggest"
+			android:textColor="#fff" />
+	</FrameLayout>
+
+</LinearLayout>

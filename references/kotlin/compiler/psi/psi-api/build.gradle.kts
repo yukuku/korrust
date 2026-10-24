@@ -1,0 +1,57 @@
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
+
+plugins {
+    kotlin("jvm")
+    id("java-test-fixtures")
+    id("project-tests-convention")
+}
+
+dependencies {
+    api(project(":core:compiler.common"))
+    api(project(":compiler:util"))
+    api(project(":compiler:frontend.common"))
+    api(project(":kotlin-script-runtime"))
+
+    compileOnly(intellijCore())
+    compileOnly(libs.guava)
+    compileOnly(libs.intellij.fastutil)
+
+    testFixturesApi(platform(libs.junit.bom))
+    testFixturesImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
+
+    testFixturesImplementation(testFixtures(project(":compiler:tests-common")))
+    testImplementation(testFixtures(project(":compiler:tests-common")))
+    testFixturesCompileOnly(intellijCore())
+    testCompileOnly(intellijCore())
+}
+
+sourceSets {
+    "main" { projectDefault() }
+    "test" { projectDefault() }
+    "testFixtures" { projectDefault() }
+}
+
+kotlin {
+    @OptIn(ExperimentalAbiValidation::class)
+    abiValidation {
+        enabled.set(true)
+        filters {
+            exclude.annotatedWith.addAll(
+                "org.jetbrains.kotlin.psi.KtImplementationDetail",
+                "org.jetbrains.kotlin.psi.KtNonPublicApi",
+                "org.jetbrains.kotlin.psi.KtExperimentalApi",
+            )
+        }
+    }
+}
+
+testsJar()
+
+projectTests {
+    testTask(jUnitMode = JUnitMode.JUnit5) {
+        workingDir = rootDir
+    }
+}

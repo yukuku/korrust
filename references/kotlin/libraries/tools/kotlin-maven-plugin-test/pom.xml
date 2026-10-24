@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>kotlin-project</artifactId>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <version>2.3.255-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>kotlin-maven-plugin-test</artifactId>
+
+    <properties>
+        <jdk8Home>${env.JDK_1_8}</jdk8Home>
+        <jdk11Home>${env.JDK_11_0}</jdk11Home>
+        <jdk17Home>${env.JDK_17_0}</jdk17Home>
+        <jdk21Home>${env.JDK_21_0}</jdk21Home>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>6.0.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-verifier</artifactId>
+            <version>2.0.0-M1</version>
+        </dependency>
+
+        <!-- FIXME: KT-83109/Remove-beanshell-and-groovy-verification-in-kotlin-maven-plugin-test  -->
+        <dependency>
+            <groupId>org.apache-extras.beanshell</groupId>
+            <artifactId>bsh</artifactId>
+            <version>2.0b6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>4.0.29</version>
+        </dependency>
+
+        <!-- TODO: KT-83110 Remove dependency to intellij platform from kotlin-maven-plugin-test -->
+        <dependency>
+            <groupId>com.jetbrains.intellij.platform</groupId>
+            <artifactId>util</artifactId>
+            <version>251.27812.49</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-settings</artifactId>
+            <version>${maven.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-compat</artifactId>
+            <version>${maven.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/test/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <jdkHome>${jdk17Home}</jdkHome>
+                            <sourceDirs>
+                                <sourceDir>src/main/kotlin</sourceDir>
+                                <sourceDir>src/main/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-test-compile</id>
+                        <phase>test-compile</phase>
+                        <configuration>
+                            <jdkHome>${jdk17Home}</jdkHome>
+                            <sourceDirs>
+                                <sourceDir>src/test/kotlin</sourceDir>
+                                <sourceDir>src/test/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <nonFilteredFileExtensions>
+                        <!--
+                            This is needed to avoid bug: https://github.com/apache/maven-resources-plugin/issues/276
+                            When packaging maven-wrapper.jar from resources to jar.
+                         -->
+                        <nonFilteredFileExtension>jar</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <!-- TODO: KT-83110 Remove dependency to intellij platform from kotlin-maven-plugin-test -->
+        <repository>
+            <id>intellij-repo</id>
+            <name>JetBrains IntelliJ IDEA Repo</name>
+            <url>https://www.jetbrains.com/intellij-repository/releases</url>
+        </repository>
+        <repository>
+            <id>intellij-dependencies</id>
+            <name>JetBrains IntelliJ IDEA Dependencies</name>
+            <url>https://packages.jetbrains.team/maven/p/ij/intellij-dependencies</url>
+        </repository>
+    </repositories>
+
+    <profiles>
+        <!--
+        moved the integration test into a profile so we can disable this
+        for example this integration test doesn't work if offline
+        -->
+        <profile>
+            <id>integrationTest</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.5.4</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <jvm>${jdk17Home}/bin/java</jvm>
+                                    <systemPropertyVariables>
+                                        <maven.home>${maven.home}</maven.home>
+                                        <kotlin.version>${project.version}</kotlin.version>
+                                        <kotlin.maven.local.repo.for.tests>${project.basedir}/local-repo</kotlin.maven.local.repo.for.tests>
+                                        <kotlin.it.testDirs>${project.basedir}/src/it</kotlin.it.testDirs>
+                                        <!-- ./libraries/tools/kotlin-maven-plugin-test/pom.xml -->
+                                        <kotlin.build.repo>${settings.localRepository}</kotlin.build.repo>
+                                        <kotlin.it.verify-common.bsh>${project.basedir}/verify-common.bsh</kotlin.it.verify-common.bsh>
+
+                                        <!-- JDK configuration must follow this rule jdk\d+Home -->
+                                        <jdk8Home>${jdk8Home}</jdk8Home>
+                                        <jdk11Home>${jdk11Home}</jdk11Home>
+                                        <jdk17Home>${jdk17Home}</jdk17Home>
+                                        <jdk21Home>${jdk21Home}</jdk21Home>
+                                    </systemPropertyVariables>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- allows the integration test to be disabled (for example if you are offline) -->
+        <profile>
+            <id>noTest</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>skipTests</name>
+                    <value>true</value>
+                </property>
+            </activation>
+        </profile>
+    </profiles>
+</project>

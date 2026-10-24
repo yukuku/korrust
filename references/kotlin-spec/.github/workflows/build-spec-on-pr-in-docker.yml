@@ -1,0 +1,14 @@
+name: 'Build Kotlin spec on PRs (Docker version)'
+
+on: [pull_request]
+
+jobs:
+  build-spec:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v3
+      - name: 'Build Kotlin spec in its Docker container'
+        uses: ./.github/actions/build-spec-in-docker
+      - name: 'Upload Kotlin spec artifacts'
+        uses: ./.github/actions/upload-spec-artifacts

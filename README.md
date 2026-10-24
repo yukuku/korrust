@@ -86,7 +86,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 - Preserve Kotlin behavior and the binary contracts required by Java and Kotlin consumers.
 - Adopt per Gradle module; use official Kotlin for unsupported modules and production builds.
 - Diagnose unsupported constructs explicitly. Never silently approximate their behavior.
-- Use pinned official Kotlin tests and executables as references. Preserve upstream test directives and distinguish unsupported fixtures from failures.
+- Use the pinned Kotlin specification for covered language rules and the official compiler, standard library, and tests for version-specific behavior and JVM contracts; follow the [reference policy](references/README.md).
 - Validate incremental output against clean compilation, including declaration removal and stale-output cleanup.
 - Treat a 2–5× incremental-compilation speedup as a target to measure, not an established result.
 
@@ -94,9 +94,11 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 
 | Location | Purpose |
 | --- | --- |
+| [references/](references/README.md) | Language specification, compiler oracle, and reference policy |
 | [references/sources.json](references/sources.json) | Kotlin source pin, provenance, and useful upstream test paths |
 | [references/compiler.json](references/compiler.json) | Official compiler artifact pin and checksum |
-| [references/kotlin/](references/kotlin/) | Independent, shallow upstream checkout; keep it unchanged |
+| [references/kotlin/](references/kotlin/) | Tracked, unchanged upstream compiler sources and tests |
+| [references/kotlin-spec/](references/kotlin-spec/) | Tracked, unchanged upstream language specification |
 | [benchmarks/](benchmarks/README.md) | AndroidBible and Now in Android source snapshots and provenance |
 | [reports/](reports/README.md) | Dated correctness results, feature evidence, and performance measurements |
 
@@ -104,4 +106,4 @@ The source pin initially follows AndroidBible's declared Kotlin version. Confirm
 
 Keep the requested numbered feature overview here concise and grounded in dated reports. Record detailed capabilities, limitations, counts, timings, implementation details, and progress in those reports or executable tests.
 
-Downloaded reference checkouts and app snapshots are excluded from a future Korrust Git repository. Their manifests and reports remain versionable. Do not change pins automatically when upstream moves.
+Reference sources and app snapshots are tracked unchanged with their provenance and upstream licenses. Downloaded compiler binaries and generated build outputs remain ignored. Change pins explicitly and record dated provenance; do not follow upstream automatically.

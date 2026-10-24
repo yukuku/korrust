@@ -1,0 +1,10 @@
+// RUN_PIPELINE_TILL: BACKEND
+enum class Direction {
+    NORTH, EAST, SOUTH, WEST
+}
+
+fun usage() {
+    Direction.<!DEBUG_INFO_CALLABLE_OWNER("Direction.values in Direction")!>values()<!>
+}
+
+/* GENERATED_FIR_TAGS: enumDeclaration, enumEntry, functionDeclaration */

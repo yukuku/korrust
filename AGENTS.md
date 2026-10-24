@@ -12,7 +12,8 @@
 Before compiler work, read the project contract in [README.md](README.md) and the evidence conventions in [reports/README.md](reports/README.md). Before choosing a milestone, inspect the latest successful feature/correctness reports and actual unsupported AndroidBible source files.
 
 - Use AndroidBible as the first compatibility target and Now in Android as a secondary benchmark. Prefer a bounded milestone that compiles an unchanged app file and adds reusable language support.
-- Keep reference compiler sources and app snapshots inside this project, unchanged and excluded from Git. Their manifests and checksums provide provenance. Do not edit the original AndroidBible repository for compiler work.
+- Keep the language specification, reference compiler sources, and app snapshots tracked inside this project and unchanged. Their manifests and checksums provide provenance; preserve upstream licenses. Compiler binaries and generated build outputs remain ignored. Do not edit the original AndroidBible repository for compiler work.
+- Follow the [reference policy](references/README.md): the specification defines covered language rules, while the pinned official compiler and standard library supply version-specific and JVM evidence. Record discrepancies and suspected oracle bugs; do not silently adopt incorrect behavior or special-case each library API.
 - Keep documentation minimal. Current support, limitations, test counts, benchmarks, and progress belong in dated reports and executable tests, not another prose feature checklist.
 - Preserve the author's attribution: Randy Sugianto (Yuku), GitHub `yukuku`.
 
