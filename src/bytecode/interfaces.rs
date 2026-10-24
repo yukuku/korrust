@@ -254,10 +254,20 @@ fn abstract_method(pool: &mut Pool, function: &crate::check::Function) -> Result
     u2(&mut method, 0x0401);
     u2(&mut method, pool.utf8(&function.name)?);
     u2(&mut method, pool.utf8(&function.descriptor())?);
-    u2(&mut method, u16::from(function.result.is_reference()));
-    if function.result.is_reference() {
+    let signature = generic_method(&function.params, &function.result);
+    u2(
+        &mut method,
+        u16::from(nonnull(&function.result)) + u16::from(signature.is_some()),
+    );
+    if let Some(signature) = signature {
+        u2(&mut method, pool.utf8("Signature")?);
+        u4(&mut method, 2);
+        u2(&mut method, pool.utf8(&signature)?);
+    }
+    if nonnull(&function.result) {
         method.extend(not_null(pool)?);
     }
+    nullable_result(pool, &mut method, &function.result)?;
     parameter_annotations(pool, &mut method, &function.params)?;
     Ok(method)
 }
@@ -299,10 +309,11 @@ fn default_forward(
         &function.name,
         &function.descriptor(),
         code,
-        None,
-        function.result.is_reference(),
+        generic_method(&function.params, &function.result).as_deref(),
+        nonnull(&function.result),
     )?;
     parameter_annotations(pool, &mut method, &function.params)?;
+    nullable_result(pool, &mut method, &function.result)?;
     Ok(method)
 }
 
@@ -444,6 +455,25 @@ fn helper_inherited(
 
 fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
     match &value.kind {
+        ValueKind::ListSet(receiver, index, value) => {
+            collect_value(receiver, accesses);
+            collect_value(index, accesses);
+            collect_value(value, accesses);
+        }
+        ValueKind::Box(value) | ValueKind::Unbox(value) => collect_value(value, accesses),
+        ValueKind::Abrupt(body) => collect_block(body, accesses),
+        ValueKind::New { args, .. }
+        | ValueKind::DefaultCall(_, args, _)
+        | ValueKind::ListFactory { elements: args, .. } => {
+            for value in args {
+                collect_value(value, accesses);
+            }
+        }
+        ValueKind::JavaField { receiver, .. } => {
+            if let Some(value) = receiver {
+                collect_value(value, accesses);
+            }
+        }
         ValueKind::Let { value, body, .. } => {
             collect_value(value, accesses);
             collect_value(body, accesses);
@@ -499,6 +529,7 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
             }
         }
         ValueKind::Unit
+        | ValueKind::Float(_)
         | ValueKind::Int(_)
         | ValueKind::Long(_)
         | ValueKind::Null
@@ -510,6 +541,25 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
 fn collect_block(body: &[Statement], accesses: &mut HashSet<(String, String)>) {
     for statement in body {
         match statement {
+            Statement::JavaFieldStore {
+                receiver, value, ..
+            } => {
+                if let Some(receiver) = receiver {
+                    collect_value(receiver, accesses);
+                }
+                collect_value(value, accesses);
+            }
+            Statement::ListSet(receiver, index, value) => {
+                collect_value(receiver, accesses);
+                collect_value(index, accesses);
+                collect_value(value, accesses);
+            }
+            Statement::FieldStore {
+                receiver, value, ..
+            } => {
+                collect_value(receiver, accesses);
+                collect_value(value, accesses);
+            }
             Statement::ThrowException { message, .. } => {
                 if let Some(value) = message {
                     collect_value(value, accesses);

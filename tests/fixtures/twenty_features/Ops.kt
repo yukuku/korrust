@@ -1,0 +1,72 @@
+package twenty
+import twenty.dep.JavaApi
+import twenty.dep.Trace
+import yuku.alkitab.base.audio.AudioLogEntry
+fun orderedCall(): Int = JavaApi.orderedReceiver().add2(Trace.mark("A", 2), Trace.mark("B", 3))
+fun orderedNullCall(): Int = JavaApi.nullReceiver().add2(Trace.mark("A", 2), Trace.mark("B", 3))
+fun instanceConstantNull(): Int = JavaApi.nullReceiver().immutable
+fun constantRead(): Int = JavaApi.FIXED
+fun fieldReceiver(): Int = JavaApi.receiver().mutable
+fun fieldReceiverWrite(value: Int): Int { JavaApi.receiver().mutable = value; return value }
+fun safeArgument(value: JavaApi?): Int? = value?.add(Trace.mark("A", 2))
+fun staticCall(a: Int, b: Int): Int = JavaApi.sum(a, b)
+fun staticThrow(): Int = JavaApi.throwing()
+fun staticRead(): Int = JavaApi.changing
+fun staticWrite(value: Int): Int { JavaApi.changing = value; return JavaApi.changing }
+fun fieldRead(value: JavaApi): Int = value.immutable + value.mutable
+fun fieldWrite(value: JavaApi, number: Int): Int { value.mutable = number; return value.mutable }
+fun javaLiteral(): String = JavaApi.choose(1)
+fun javaLong(): String = JavaApi.choose(1L)
+fun javaNull(): String = JavaApi.choose(null)
+fun overloaded(value: Int): String = "int"
+fun overloaded(value: Long): String = "long"
+fun overloaded(value: String?): String = "string"
+fun kotlinLiteral(): String = overloaded(1)
+fun kotlinLong(): String = overloaded(1L)
+fun kotlinNull(): String = overloaded(null)
+fun boxedInt(value: Int?): Int? = value
+fun boxedLong(value: Long?): Long? = value
+fun boxedBoolean(value: Boolean?): Boolean? = value
+fun boxedChar(value: Char?): Char? = value
+fun boxedByte(value: Byte?): Byte? = value
+fun boxedFloat(value: Float?): Float? = value
+fun boxInt(value: Int): Int? = value
+fun boxLong(value: Long): Long? = value
+fun boxFloat(value: Float): Float? = value
+fun unboxInt(value: Int?): Int = value!!
+fun unboxLong(value: Long?): Long = value!!
+fun nullableText(value: Int?): String? = value?.toString()
+fun nullableLongText(value: Long?): String? = value?.toString()
+fun chainedPrimitive(value: String?): String? = value?.length?.toString()
+fun safeLength(value: String?): Int? = value?.length
+fun safeEmpty(value: String?): Boolean? = value?.isEmpty()
+fun primitiveElvis(value: String?): Int = value?.length ?: -1
+fun smart(value: String?): Int { if (value != null) { return value.length }; return -1 }
+fun smartEarly(value: String?): Int { if (value == null) { return -1 }; return value.length }
+fun smartLocal(value: String?): Int { val local = value; if (local != null) { return local.length }; return -1 }
+fun elvisReturn(value: String?): Int { val text = value ?: return Trace.mark("R", -1); return text.length }
+fun elvisThrow(value: String?): Int { val text = value ?: throw IllegalArgumentException(Trace.text("E", "missing")); return text.length }
+fun appList(value: List<AudioLogEntry>): AudioLogEntry = value[0]
+fun intList(value: List<Int>): Int = value[0]
+fun longList(value: List<Long>): Long = value[0]
+fun floatList(value: List<Float>): Float = value[0]
+fun nullableList(value: List<Int?>): Int? = value[0]
+fun empty(): List<AudioLogEntry> = emptyList<AudioLogEntry>()
+fun scalars(): List<Int> = listOf<Int>(1, 2, 3)
+fun nullableScalars(): List<Int?> = listOf<Int?>(null, 200)
+fun mutable(): MutableList<Int> = mutableListOf<Int>(3, 4)
+fun mutate(value: MutableList<Int>): Int { value.add(9); value[0] = 8; return value[0] + value[2] }
+fun singleton(): List<Int> = listOf<Int>(200)
+fun mutableEmpty(): MutableList<Int> = mutableListOf<Int>()
+fun mutableSingle(): MutableList<Int> = mutableListOf<Int>(200)
+fun booleanList(value: List<Boolean>): Boolean = value[0]
+fun byteList(value: List<Byte>): Byte = value[0]
+fun charList(value: List<Char>): Char = value[0]
+fun booleanFactory(): List<Boolean> = listOf<Boolean>(true, false)
+fun byteFactory(): List<Byte> = listOf<Byte>(-128, 127)
+fun charFactory(): List<Char> = listOf<Char>('\ud800', '\udfff')
+fun appFactory(value: AudioLogEntry): List<AudioLogEntry> = listOf<AudioLogEntry>(value, value)
+fun replace(value: MutableList<Int>, number: Int): Int = value.set(0, number)
+fun nullableListAssert(value: List<Int?>): Int = value[0]!!
+fun nullableListLocal(value: List<Int?>): Int { val item = value[0]; return item!! }
+fun nullableListElvis(value: List<Int?>): Int = value[0] ?: 0

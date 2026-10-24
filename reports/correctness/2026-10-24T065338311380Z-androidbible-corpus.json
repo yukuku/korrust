@@ -1,0 +1,2571 @@
+{
+  "schema_version": 1,
+  "kind": "corpus",
+  "created_at": "2026-10-24T06:53:38.311380+00:00",
+  "status": "completed",
+  "selection": "All .kt files in the pinned AndroidBible snapshot, including tests and tools; excludes .kts and generated sources.",
+  "reason": "Standalone compilation probes with no dependency classpath supplied; imported Java dependencies are unavailable to this scan. Emission is not a correctness pass. Rejection records only the first blocker, not every missing feature. Syntax observations are regex heuristics; nested comments and template expressions are not fully parsed. Categories overlap and are not coverage percentages.",
+  "compiler": {
+    "binary_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4"
+  },
+  "inputs": {
+    "manifest": "benchmarks/sources.json"
+  },
+  "commands": [
+    [
+      "python3",
+      "tools/corpus.py"
+    ]
+  ],
+  "counts": {
+    "rejected": 389,
+    "emitted": 11
+  },
+  "observations": [
+    {
+      "construct": "imports",
+      "files": 369,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AlertDialogActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt"
+      ]
+    },
+    {
+      "construct": "classes",
+      "files": 313,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AlertDialogActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt"
+      ]
+    },
+    {
+      "construct": "data_classes",
+      "files": 59,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/FontManagerActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/MarkerListActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/SearchActivity.kt"
+      ]
+    },
+    {
+      "construct": "interfaces",
+      "files": 43,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/VerseActionModeActions.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/VerseActionModeHost.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioBarController.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioPlaybackCoordinator.kt"
+      ]
+    },
+    {
+      "construct": "objects",
+      "files": 182,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AlertDialogActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt"
+      ]
+    },
+    {
+      "construct": "nullable_type_or_safe_call",
+      "files": 234,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AlertDialogActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt"
+      ]
+    },
+    {
+      "construct": "lambda_or_block_arrow",
+      "files": 205,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AlertDialogActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt"
+      ]
+    },
+    {
+      "construct": "when",
+      "files": 86,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/FontManagerActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/GotoActivity.kt"
+      ]
+    },
+    {
+      "construct": "for",
+      "files": 146,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/FontManagerActivity.kt"
+      ]
+    },
+    {
+      "construct": "suspend",
+      "files": 10,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetsRepository.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/PlatformFontFamily.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncLogActivity.kt"
+      ]
+    },
+    {
+      "construct": "internal",
+      "files": 51,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseAppWidgetConfigurationActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseConfigurationScreen.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioBarController.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt"
+      ]
+    },
+    {
+      "construct": "String_type_or_name",
+      "files": 246,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AlertDialogActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt"
+      ]
+    },
+    {
+      "construct": "string_literals",
+      "files": 273,
+      "examples": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AlertDialogActivity.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "48750ec4a67717fc383af5ca0813b80a2a4c81cfa7d4b91c17b4a721e6ae4eb4",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/IsiActivity.kt:167:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt",
+      "outcome": "rejected",
+      "source_sha256": "951a57dff7c18772a26c0fb3b34fa096422d5c024b95ed3a4faa68344306d9ee",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/S.kt:31:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "c27c850714ee44f733bd421f472910a454b036e12ffacf6dccbef0caa688aa2f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AboutActivity.kt:29:35: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AlertDialogActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "76c4be98cecdf24961044fb5111c05d1fd403c781f562346872b6b2a2808fcb7",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/AlertDialogActivity.kt:22:41: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "efae77bc11aa64d9763ecafbdd553bca57733dbb97dfef10b6a461a3da70f1a0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt:55:1: error: Only ordinary final classes are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionSelectionSheet.kt",
+      "outcome": "rejected",
+      "source_sha256": "8c571a75bef3ef931fa6a841f165519e36288f15465323b731147c43c5600d77",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionSelectionSheet.kt:44:11: error: Only @JvmStatic, @Throws, and @Suppress object method annotations are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/FontManagerActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "089cf24babfaa9380ac243140f316a38e500b7de8a1c5f862bcdef664e00c249",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/FontManagerActivity.kt:37:34: error: String interpolation is not supported in literal initializers"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/GotoActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "b922cf593d559d465effd0fc9af146e093da0d8393805dac7497e6ad0f810d96",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/GotoActivity.kt:31:34: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/MarkerListActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "56d4c32ab6deed3950195a06a459ba3f6fc809b36eefcbc9e2d7471e55646e3e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/MarkerListActivity.kt:71:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/SearchActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "1ea870bf60e79bd30c9fa6eceb1eb62886bd84c9e665cf27313cc77d4b981499",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/SearchActivity.kt:82:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/SecretSettingsActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "371648a83253e2e3d07e0737bb3d641499f02d7c6a07581e8d4a106f7543258b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/SecretSettingsActivity.kt:20:44: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/SecretSyncDebugActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "9391e031038da42e5b88152ffd87d3601244293ef8f6f61d9acca0d2b8de5c3b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/SecretSyncDebugActivity.kt:48:45: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "1f15f212a764cd20a06cd8750dc941c7f4208f385f39284996041ad10444fed7",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseActivity.kt:45:9: error: Expected fun, found val"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "cec476ed7d32929d0f3a88d0ffa1fe7ae7ef7b260f936e0b4bc24760edb36ee2",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:9:1: error: Only ordinary final classes are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/ReaderSelectionActionMode.kt",
+      "outcome": "rejected",
+      "source_sha256": "66225c019f3ad334a6ebefb0a509d5d480bfd91701b9cb96ddd9ce637358d1a4",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/ReaderSelectionActionMode.kt:13:15: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/RibkaEligibility.kt",
+      "outcome": "emitted",
+      "source_sha256": "20d3ad45466d50f8ac82be12efd5973c95275f74622399a17b0c5121113d5022",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/VerseActionModeActions.kt",
+      "outcome": "rejected",
+      "source_sha256": "5b6ce18603a09cb464c714755dc6e28958fe72b7bef85ad0ef575fc4d9692900",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/VerseActionModeActions.kt:21:38: error: Expected ), found <"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/VerseActionModeController.kt",
+      "outcome": "rejected",
+      "source_sha256": "9c4d00e99228a9d6954a413e4f55e5d9f37c9248337ad452c3724e93733792c3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/VerseActionModeController.kt:47:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/VerseActionModeHost.kt",
+      "outcome": "rejected",
+      "source_sha256": "94d57605bf0f1ea8c364a4f99954b07bf5f1f38df7f7d309253c6c9013a55715",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/VerseActionModeHost.kt:1:1: error: Java class android.view.View was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseAppWidgetConfigurationActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "e936ae70c1e8e6504c0e1a6f6f1c4edd8507c3db614b7f018a6984d3e008bbfe",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseAppWidgetConfigurationActivity.kt:29:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseAppWidgetService.kt",
+      "outcome": "rejected",
+      "source_sha256": "843a8c716350ef156e115b02f06596cf84c5ecd21dc3fd4d714851fd85f454ca",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseAppWidgetService.kt:6:54: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseConfigurationScreen.kt",
+      "outcome": "rejected",
+      "source_sha256": "b98413f92ef022306ace581d393b50b87ec68102cd7dc8a10a1056ab34cd3023",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseConfigurationScreen.kt:50:10: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt",
+      "outcome": "rejected",
+      "source_sha256": "4812cfa9784c2138980853d518041e75adf7ff65f65a51d63736e2a685d1a564",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:20:37: error: Expected a newline or semicolon"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseFactory.kt",
+      "outcome": "rejected",
+      "source_sha256": "54d9fe7a4b9b6c7c08157d1db3c7a6f00ae2b182c264f89cafeaa4d71bf5b4c8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseFactory.kt:24:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioBarController.kt",
+      "outcome": "rejected",
+      "source_sha256": "88e579b7a64a9bc27bdd0de893651f88bfb6df6e46005758488947a84459dd18",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioBarController.kt:49:5: error: Only instance functions, properties, and companion properties are supported in classes"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+      "outcome": "emitted",
+      "source_sha256": "2a5e79d26cef180c4f40542dd94f81bada672a4c755f01f0187bedef24e50098",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt",
+      "outcome": "rejected",
+      "source_sha256": "1e610f1399fb388b5c1f70dea178c69f429ad92be79a57fea83952e3ad29dde8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:16:14: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+      "outcome": "rejected",
+      "source_sha256": "0f8bd02878e33edeca3d9e08a65b6ed96a44e6266c11053696816d69ca51db55",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt:23:9: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt",
+      "outcome": "rejected",
+      "source_sha256": "10909e7fb4afe6a49fa487410b87f0888399c958d49573210370aa440fa64583",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:24:58: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt",
+      "outcome": "emitted",
+      "source_sha256": "ad8a96509404079595da548ba9ea602b7d17ccc6459c527f73f34f6864bc51db",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogMessage.kt",
+      "outcome": "rejected",
+      "source_sha256": "b6a2dccba0e844cef85c9cfcff0f3d15a22a442d6e5024ab691ca39500ee0bfa",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogMessage.kt:18:5: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioPlaybackCoordinator.kt",
+      "outcome": "rejected",
+      "source_sha256": "14ab87497bab4d9b10b0ad062d887423d9300dc370d3a706e33caa5ca84fa4fd",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioPlaybackCoordinator.kt:18:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt",
+      "outcome": "rejected",
+      "source_sha256": "0730c6b32bd3ff3e28363bd082973933228e58988dc2bd82f3258bce701584a0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:34:5: error: Private object constants are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetsRepository.kt",
+      "outcome": "rejected",
+      "source_sha256": "c08638e1bb92c89588f3de1d3216a24440ef71983482e4178ea472cb4355ca29",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetsRepository.kt:38:5: error: Private object constants are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioPlayer.kt",
+      "outcome": "rejected",
+      "source_sha256": "154be95f91b7b78d3d3425e351ec0b0283102de046ed5c2e3a0466a75c3c9565",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioPlayer.kt:53:7: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt",
+      "outcome": "rejected",
+      "source_sha256": "c4e50bbd423b8bdf197d879ad5354afa993cf7d322a1d03c49004a0d0c28d816",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:23:5: error: Private object constants are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioService.kt",
+      "outcome": "rejected",
+      "source_sha256": "c7d0ecf2fa467e037d54784641bff571ff506c925e41f32d225fa09887bcfaa8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioService.kt:55:7: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleChapterNavigatingPlayer.kt",
+      "outcome": "rejected",
+      "source_sha256": "7091f8f35d952b34edd75533685f14be42773203270b05bb736cf332883d1490",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleChapterNavigatingPlayer.kt:37:7: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt",
+      "outcome": "rejected",
+      "source_sha256": "6b0a3756f7d5e53d6b6560ac952fbf1d2dd000afc561294387ee9f88b9a66182",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:27:86: error: Expected a function body"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt",
+      "outcome": "rejected",
+      "source_sha256": "89342c7333e0639a62c49ec3643a50350624523920f59ae67a78f1f2d7929eb6",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:22:26: error: Expected get, found <"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+      "outcome": "rejected",
+      "source_sha256": "02c130ca13174deadca40c9054bc0e612bb50579ec3285178bca832b8bda99e3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt:1:1: error: Java class yuku.alkitab.base.audio.AudioLogEntry was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/model/AudioSet.kt",
+      "outcome": "rejected",
+      "source_sha256": "3b96929e9869c631c5931f3d6bf9063d4b1572b56a3745c3af4fcf88f0b88db2",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/model/AudioSet.kt:24:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/model/AudioSets.kt",
+      "outcome": "rejected",
+      "source_sha256": "3056d7d8a42ee2cb137469555569825b92cc554ccd1bdef0e7f1bf2e026356bf",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/model/AudioSets.kt:19:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/model/ChapterTiming.kt",
+      "outcome": "rejected",
+      "source_sha256": "44e9f29ca983a1900071b96e3e01cc644eac17d53a350c3264450a8ed474d918",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/model/ChapterTiming.kt:20:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/model/VerseTiming.kt",
+      "outcome": "rejected",
+      "source_sha256": "eb393b002323a26143ac9ece78b22fe4f96e6a71654a286fff1d5261ee1bba13",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/model/VerseTiming.kt:6:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt",
+      "outcome": "rejected",
+      "source_sha256": "725aa743c8b56b9a69dcdbfdc0bc9341885760366d0dba3c71c3fc679cbe8d62",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt:115:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt",
+      "outcome": "rejected",
+      "source_sha256": "f4540bbaefa4386f2874631ac8f697ec57ea8c8438efca3f115ca01b627afa53",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt:18:42: error: Double literals are not supported; use a Float suffix"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioLogBottomSheet.kt",
+      "outcome": "rejected",
+      "source_sha256": "8193b1d7b3ff05974f47d92cf785cbdecff623ca2c9a1379978293ce291cb748",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioLogBottomSheet.kt:26:9: error: Expected fun, found val"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioSetBottomSheet.kt",
+      "outcome": "rejected",
+      "source_sha256": "7cd3c11e8261ad9b69e08bd27332ca66df7d51d3c0fe9efbb33e259dd04709d2",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioSetBottomSheet.kt:33:7: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioTheme.kt",
+      "outcome": "rejected",
+      "source_sha256": "43943bfe0c7ea2c985541b847a5da3760be678031069c088f539729fe9de85a9",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioTheme.kt:17:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/SpeedBottomSheet.kt",
+      "outcome": "rejected",
+      "source_sha256": "90f6aa486dc5aacedcb13ce138b0a540cf46df79706cd6e2939fa10ad6895752",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/SpeedBottomSheet.kt:26:9: error: Expected fun, found val"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/br/DailyVerseAppWidgetReceiver.kt",
+      "outcome": "rejected",
+      "source_sha256": "20fd5f8dc5ccdc7ebc6484d65b5d93beeb3eadc69eb645e7d0f71c1aaa187e1d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/br/DailyVerseAppWidgetReceiver.kt:30:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/br/SecretSettingsReceiver.kt",
+      "outcome": "rejected",
+      "source_sha256": "80f0e93ebf612e4847db5a1df2186d6ae7685e04047f1b7f889cc2a2d9d59c70",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/br/SecretSettingsReceiver.kt:8:49: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/BibleAppTheme.kt",
+      "outcome": "rejected",
+      "source_sha256": "88755a377f4239c359fd963845348ac52087d57c42b6f91ebcd7b3d9d67cb2f9",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/BibleAppTheme.kt:15:1: error: Unsupported object visibility; use public or internal"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/ComposeBottomSheetHost.kt",
+      "outcome": "rejected",
+      "source_sha256": "060171e277c6c7150c1eeb660c3b2566f31d0794e9f26c535998516406c4c147",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/ComposeBottomSheetHost.kt:31:11: error: Only @JvmStatic, @Throws, and @Suppress object method annotations are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/PlatformFontFamily.kt",
+      "outcome": "rejected",
+      "source_sha256": "6cfbbacfb83edf31a94e4ad2e31fa25613b0d8a64a4859726d4331264178363a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/PlatformFontFamily.kt:19:13: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/colorpicker/ColorPickerDialog.kt",
+      "outcome": "rejected",
+      "source_sha256": "3842c96b68af419492ba4df34b397138d548b714892ca14e0122b9f55f3a4fe3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/colorpicker/ColorPickerDialog.kt:36:9: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/colorpicker/IosColorPicker.kt",
+      "outcome": "rejected",
+      "source_sha256": "5f1fb3c7a689244e507281318a240d06541b229938b184f7d3444b23d83d199d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/colorpicker/IosColorPicker.kt:61:7: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt",
+      "outcome": "rejected",
+      "source_sha256": "3bc7f49c4dbf54ae6ac48ea9cfb75eef58c2e9e5c5a38e5879248177ea331967",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:14:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/DialerTab.kt",
+      "outcome": "rejected",
+      "source_sha256": "3864dae4ea8248f0151785fe04e5bb61aa6beae30cc8caba2965c266a017dc40",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/DialerTab.kt:63:1: error: Unsupported enum visibility; use public or internal"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/DirectTab.kt",
+      "outcome": "rejected",
+      "source_sha256": "95f968ef9afb0508151f801a00ad6dc7e0be9b06531bb916dc19e556dde6d5fc",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/DirectTab.kt:60:9: error: Expected fun, found val"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoScreen.kt",
+      "outcome": "rejected",
+      "source_sha256": "93f849ec4e5ed5c0838cab5582d2e2d33cc20e11edf08a360ca64e4ef9819078",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoScreen.kt:46:9: error: Expected fun, found val"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt",
+      "outcome": "rejected",
+      "source_sha256": "8c684c8b766e51cfe8b033bfdde4e394ec4d9b8aa2a6490ea87b1787b89f502d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt:3:19: error: Enum constructors, supertypes, and generics are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoViewModel.kt",
+      "outcome": "rejected",
+      "source_sha256": "f52c0a1ea536808a370ce54f20dc9b9f8d62969531d44d53a75e729802e83742",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoViewModel.kt:19:1: error: Only ordinary final classes are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GridTab.kt",
+      "outcome": "rejected",
+      "source_sha256": "01d458bf245bb42f750b8286cf81ae7013532f82bef0c28f485b71ccf5657ab7",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GridTab.kt:46:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/sync/SyncLoginScreen.kt",
+      "outcome": "rejected",
+      "source_sha256": "f7cac29803e7744468849ca2f78caa19f03e99799a9bc26c02594b8aba5764f8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/sync/SyncLoginScreen.kt:75:5: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/toolbar/ReaderToolbar.kt",
+      "outcome": "rejected",
+      "source_sha256": "5c285eec0faf1be0d2e4e0204614f218d4a2d42ae30f256f3b8f9a4827ad12cd",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/toolbar/ReaderToolbar.kt:62:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/toolbar/SearchToolbar.kt",
+      "outcome": "rejected",
+      "source_sha256": "a2ab99e0344f083a17151a5d8913a28e59fcb4f95d9894d0a0eb6b55756d192d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/toolbar/SearchToolbar.kt:21:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/toolbar/ToolbarScaffold.kt",
+      "outcome": "rejected",
+      "source_sha256": "13b621bc9f8a3f8c7ee6f7d1d43124e7fe0962a7f0f71204c3b0023cbb85d01b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/toolbar/ToolbarScaffold.kt:18:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/connection/Connections.kt",
+      "outcome": "rejected",
+      "source_sha256": "c7b2e3e87775ac86a39ff47db3f792a7c63faa12aeb0c03d151e0188f7ab41d1",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/connection/Connections.kt:16:28: error: Expected =, found by"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/cp/Provider.kt",
+      "outcome": "rejected",
+      "source_sha256": "407d9e748304afb37248e88d3acbaa07d332dd2063c3abcb2b9fd69623c0ea06",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/cp/Provider.kt:25:1: error: Only ordinary final classes are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt",
+      "outcome": "rejected",
+      "source_sha256": "8eed6fef3c6e06ce217c1ec325e5095b8bb6ee899bc1097d284b09712917a0e2",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:15:25: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloader.kt",
+      "outcome": "rejected",
+      "source_sha256": "52b3428b38a500d5cc690656c0769b657e4f5a675fc03398e1ec11be524a9a7b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloader.kt:18:5: error: Only instance functions, properties, and companion properties are supported in classes"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/LabelEditorDialog.kt",
+      "outcome": "rejected",
+      "source_sha256": "236993ff7b55e1cc44d25f1636c1cde8bc54174eaaf702272925491121a7d568",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/LabelEditorDialog.kt:18:1: error: Only one top-level object without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/ProgressMarkListDialog.kt",
+      "outcome": "rejected",
+      "source_sha256": "690d7329dbe77501878390ef8d388e8474b4e9bf5e137dc6986fbe159054dd8b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/ProgressMarkListDialog.kt:27:46: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/ProgressMarkRenameDialog.kt",
+      "outcome": "rejected",
+      "source_sha256": "a0206c0c9fb35b685c2d48ba87d19face0167e2adfcf095d9ca263d14d15d04e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/ProgressMarkRenameDialog.kt:18:49: error: Object constructors, supertypes, and generics are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/TypeHighlightDialog.kt",
+      "outcome": "rejected",
+      "source_sha256": "7e20020924e30057963da96db2f97d6e2bc7941f694ce583d24757fd030e4c5d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/TypeHighlightDialog.kt:66:9: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/VersesDialog.kt",
+      "outcome": "rejected",
+      "source_sha256": "a454099646d553fb8179bde776eb53e11392961c2149316c7a6064f02ef0448a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/VersesDialog.kt:39:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/VersesDialogCompareVerses.kt",
+      "outcome": "rejected",
+      "source_sha256": "18986af2c631294757d90a58e34b5cfe626a96f7e3a4cd3fba64fc2ec05edc49",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/VersesDialogCompareVerses.kt:13:44: error: Expected >, found MVersion"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/VersesDialogNormalVerses.kt",
+      "outcome": "rejected",
+      "source_sha256": "33b15ec80d6b342107301e6c9b5a689a0a81115bad2cbee555de11f345eeaf3a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/VersesDialogNormalVerses.kt:1:1: error: Java class yuku.alkitab.model.SingleChapterVerses was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/XrefDialog.kt",
+      "outcome": "rejected",
+      "source_sha256": "1b133dbd11028eff02e229024a64ead6160f1e158d3c6437d232e7703ae99965",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/XrefDialog.kt:39:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/XrefDialogVerses.kt",
+      "outcome": "rejected",
+      "source_sha256": "02688f632a054149272d372e7e8a93bcd2051c7c3f46a094dc7b34fdc133ec19",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/XrefDialogVerses.kt:1:1: error: Java class yuku.alkitab.model.SingleChapterVerses was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/events/AppEvents.kt",
+      "outcome": "rejected",
+      "source_sha256": "8d4711b51e706d93ca99cf2e7a60c854e38fa1ffd9cc76ac21c4bdf55f7404c3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/events/AppEvents.kt:29:17: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/feedback/PrereleaseFeedback.kt",
+      "outcome": "rejected",
+      "source_sha256": "663901da3ff90cd7d184af87a832b4661bb9eb0d0d02cb90afe07d7e529c0863",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/feedback/PrereleaseFeedback.kt:30:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/feedback/PrereleaseVersion.kt",
+      "outcome": "rejected",
+      "source_sha256": "d4c09caf8a85b2f5f2d8e94404fd80b04386bb39b9734f6a2a3fe3a2f6193bc8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/feedback/PrereleaseVersion.kt:8:9: error: Expected val, found fun"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/pdbconvert/PdbBookNumberToBookIdMapping.kt",
+      "outcome": "rejected",
+      "source_sha256": "9c519725139a73738e4e8305ca53e8837b0d749ee7ddce81adee45534a323925",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/pdbconvert/PdbBookNumberToBookIdMapping.kt:5:5: error: Object fields require ThreadLocal.withInitial array suppliers"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/AppServices.kt",
+      "outcome": "rejected",
+      "source_sha256": "3f7bbff9d0a56264a13a705c1ee8e27f350d60ba949162a2f1be8d09dae41159",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/AppServices.kt:13:5: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/StorageProvider.kt",
+      "outcome": "rejected",
+      "source_sha256": "476771b303a0905a181c0c14893016bbf72572c80d2da7d255e25136f39a66bf",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/StorageProvider.kt:1:1: error: Java class yuku.alkitab.base.storage.InternalDb was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/UiDimensionsProvider.kt",
+      "outcome": "rejected",
+      "source_sha256": "7a7807a192279f8f3a54dd1e01877340c5b726664b15afba7840daaa9395bc88",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/UiDimensionsProvider.kt:10:21: error: Expected a newline or semicolon"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/VersionManager.kt",
+      "outcome": "rejected",
+      "source_sha256": "7e6bcb3c6350337a820db365c779b6c4d21cba72d00a10e0b69899206b7ee1e0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/VersionManager.kt:1:1: error: Java class yuku.alkitab.base.model.MVersion was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/CopyShareFragment.kt",
+      "outcome": "rejected",
+      "source_sha256": "d57905c8a69090db07b785ad6bb93fec2b3f6062b8ae4694f629fb9fa7857d5e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/CopyShareFragment.kt:7:51: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/DataTransferFragment.kt",
+      "outcome": "rejected",
+      "source_sha256": "eb19bc73df8664f5e507c0d9df84cdd4f1bcd7b53b6722e672018b21c2ceebc7",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/DataTransferFragment.kt:11:54: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/DisplayFragment.kt",
+      "outcome": "rejected",
+      "source_sha256": "59ac68fde9c29e689002295a1828f6460bf0427624f2eef12ef27f4064f78d58",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/DisplayFragment.kt:20:49: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/ExperimentalFlags.kt",
+      "outcome": "rejected",
+      "source_sha256": "14f373b36e6fa1e0e748a6898279e60a87b785a895ce0295d71ccd7e1b0034ff",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/ExperimentalFlags.kt:1:1: error: Java class yuku.afw.storage.Preferences was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/ExperimentalFragment.kt",
+      "outcome": "rejected",
+      "source_sha256": "95356d0454505d2c669489f613652ab075d49be06bf47f43a5c855f0ada18502",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/ExperimentalFragment.kt:12:54: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/HighlightStyleSheet.kt",
+      "outcome": "rejected",
+      "source_sha256": "c37152a4d9131f04a242d589fc1811945b678dadf12ef3b94d5438794d47fbfa",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/HighlightStyleSheet.kt:49:14: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/SettingsActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "55853f277df8b659a30a9381247c803a3983022cf3945085d005ef9e392c40f9",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/SettingsActivity.kt:25:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/UsageFragment.kt",
+      "outcome": "rejected",
+      "source_sha256": "bce5fd87c2a284a9e2c1e4551603719c6caa08b93e3df5ba3ab5bee8f209dcb8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/settings/UsageFragment.kt:12:47: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt",
+      "outcome": "rejected",
+      "source_sha256": "983765ac9a86a2fea5f322d2e6965b6a7c398615d051967c13c81c8da35131a6",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:29:13: error: Expected }, found put"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalDbTxWrapper.kt",
+      "outcome": "rejected",
+      "source_sha256": "b53c86c2c6d2286876e5c441cc5a8b4420c3cf042e4feb98714cb946b9a39c46",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalDbTxWrapper.kt:4:9: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+      "outcome": "rejected",
+      "source_sha256": "95549b2852efb326426c8d051fa7b2e656d1f4520d01833ff75c6583d29d3a94",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt:1:1: error: Java class yuku.alkitab.model.SingleChapterVerses was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt",
+      "outcome": "rejected",
+      "source_sha256": "c3a5a28d986df3f07d501a7a315ba309a4079237af525e0cb1000a253f75feea",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:22:36: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt",
+      "outcome": "rejected",
+      "source_sha256": "7c1cb3412e1314baf92cbcc4c29a73d6f4f39c55de0e64eeb10429782fe35f6c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:29:24: error: Expected }, found ->"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/Marker_LabelDao.kt",
+      "outcome": "rejected",
+      "source_sha256": "134669946ec95b838c77fab0acd27464e2836b28b3c5a170bb3cee5564856528",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/Marker_LabelDao.kt:18:43: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/OldVerseTextDecoder.kt",
+      "outcome": "rejected",
+      "source_sha256": "3e0e9ea80c77be37db44d667d2acba06b23f6ec4ef2306e709857505d48369ab",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/OldVerseTextDecoder.kt:6:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt",
+      "outcome": "rejected",
+      "source_sha256": "67c187440a8ad605f5318abf1ee2adbd9b9f18829460baa097f4504c2a09a435",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:21:19: error: Expected }, found ->"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/Prefkey.kt",
+      "outcome": "rejected",
+      "source_sha256": "95cd1c9b0c74f639d8d011e0587d63f521bdd88d68fa1e7b15611ce798abbfa5",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/Prefkey.kt:7:1: error: Only one top-level object without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt",
+      "outcome": "rejected",
+      "source_sha256": "e961b5bf079191645120b7115de58dc1ba930a834201b3b0db3fcbe4c0496d76",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:26:43: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ReadingPlanDao.kt",
+      "outcome": "rejected",
+      "source_sha256": "0b43fb646fe1dadd0196bf787aef0ba26f5654ca0b22ea1befee1338ab1f4ae0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ReadingPlanDao.kt:19:33: error: Expected ), found ."
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt",
+      "outcome": "rejected",
+      "source_sha256": "a5b2ec24a9e20d966a5eb8574ca3890c37ec88a029dcf1665f6310f9a5577b4e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:35:9: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+      "outcome": "emitted",
+      "source_sha256": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt",
+      "outcome": "rejected",
+      "source_sha256": "ebb8291440060b3ed9592049555bc48b2d377ad21b151976a2d3a1aec73e034e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:19:41: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt",
+      "outcome": "rejected",
+      "source_sha256": "7d7f121e70a595f9df01eeb727d921799cdc6e10b0be563411494a2d3d16c01f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:12:20: error: Object private field types must be inferred from supported initializers"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/room/SongBookInfoEntity.kt",
+      "outcome": "rejected",
+      "source_sha256": "be0ebcc3608d4490a973c22a19d70ec53401a8497289e318c6e5e36037dcae9f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/room/SongBookInfoEntity.kt:26:8: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/room/SongDbDataMigration.kt",
+      "outcome": "rejected",
+      "source_sha256": "da6a5f1c28b35299f4090da839a3e613bf9db65eb09e97d6e8e8a876dd2c427d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/room/SongDbDataMigration.kt:38:5: error: Private object constants are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/room/SongInfoEntity.kt",
+      "outcome": "rejected",
+      "source_sha256": "5e48aae8d72b9fecf1b17dca23395d4823dc44ecc7878a7a8677d59f04d9b20f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/room/SongInfoEntity.kt:36:8: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/room/SongRoomDao.kt",
+      "outcome": "rejected",
+      "source_sha256": "2d028aefea8e0472737e372a586c64aa457fd763ce71f16664b9deac58e8301d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/room/SongRoomDao.kt:18:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/room/SongRoomDatabase.kt",
+      "outcome": "rejected",
+      "source_sha256": "b5d151fd0856e3030871ba3561bc58e5bc64bbd0dceaded25de0c3513ecfe6c2",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/room/SongRoomDatabase.kt:22:10: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/FcmMessagingService.kt",
+      "outcome": "rejected",
+      "source_sha256": "f185ca56f50909ea6b915dd4529c790d52347c801f219715ed70db50719cce21",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/FcmMessagingService.kt:10:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncApplier.kt",
+      "outcome": "rejected",
+      "source_sha256": "7abd33175049a942b6c488de31c66fa5d2bc83dc5c39a3b350a357fe029f75e4",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncApplier.kt:32:34: error: Expected >, found ."
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncDiagnostics.kt",
+      "outcome": "rejected",
+      "source_sha256": "837d714a332c46b54a64bbb52b2411e4c8c3127399478bc1de75f0715164e9d6",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncDiagnostics.kt:20:13: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncKotlin.kt",
+      "outcome": "rejected",
+      "source_sha256": "aceff4f6b4d63d03b834f9d8fa986a0bd0ddb70fe5cd53c311f88ae6dc488198",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncKotlin.kt:17:1: error: Only one top-level object without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncLogActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "812c896e1cac8145cade3bf9b826a408216d07ed16f06bdf8e79a286c57bc196",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncLogActivity.kt:55:37: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncUtils.kt",
+      "outcome": "rejected",
+      "source_sha256": "8989169cfb0def01dc4a4abc8854a1138e1b6419f84b90597c2e644a2a5168c0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncUtils.kt:6:9: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlkitabGptIntegration.kt",
+      "outcome": "rejected",
+      "source_sha256": "aeb91a994f56b44b330819973e912492e37af8e544dd56a01437da85e8766669",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlkitabGptIntegration.kt:29:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt",
+      "outcome": "rejected",
+      "source_sha256": "56326e90eba0626a340aaf73c3f4f539e7000c5b6b2242b45a81beb0319fcd33",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt:35:38: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AppLog.kt",
+      "outcome": "rejected",
+      "source_sha256": "2a8642802ae08cd7dd8ee2c8e59d078f4f745d8ba6cce00bcfbb2c68b4809fa0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AppLog.kt:10:18: error: Only @JvmStatic, @Throws, and @Suppress object method annotations are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Appearances.kt",
+      "outcome": "rejected",
+      "source_sha256": "41405f20d8907eef476f30152bde3ed4df8787e40bed62a4e83ae5af7f7ed724",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Appearances.kt:18:13: error: Expected }, found append"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt",
+      "outcome": "rejected",
+      "source_sha256": "bfce6040eacbff475ddeabd04f33503361e1be9fea03aaf68a6fddb9698de684",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt:5:5: error: Only instance functions, properties, and companion properties are supported in classes"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt",
+      "outcome": "rejected",
+      "source_sha256": "8d020890054d7f277d4eb9dd6931d58ec559493bbcaccfe3e6caab08dd060431",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt:13:32: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookColorUtil.kt",
+      "outcome": "rejected",
+      "source_sha256": "9251854fdc0168549fd0afb3e007589a22145d817cc49f6a264fdf8148355c76",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookColorUtil.kt:9:17: error: Hexadecimal literals require plain hexadecimal digits without suffixes or separators"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt",
+      "outcome": "rejected",
+      "source_sha256": "0e3a3649ab9756f086b8c02a3624e1666f730dc7844639a34b26da63de624f32",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:8:32: error: Object private field types must be inferred from supported initializers"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ClipboardUtil.kt",
+      "outcome": "rejected",
+      "source_sha256": "bfc7b08d36a0630383e9580227b28586f6fcb5f3a90dacd813f707738eb4e1a4",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ClipboardUtil.kt:11:88: error: Expected a newline or semicolon"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ContentResolverUtil.kt",
+      "outcome": "rejected",
+      "source_sha256": "4bc125fee3289e7b8f9715090e525aa2688aae38686971b94648bcb3fb77f7d7",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ContentResolverUtil.kt:11:29: error: Expected >, found ?"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/CurrentReading.kt",
+      "outcome": "rejected",
+      "source_sha256": "1697e945bb7158d9b9c8502b0ba68949ebdcc0c8ac18a589de8a7dcce414b07c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/CurrentReading.kt:16:13: error: Expected }, found Preferences"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt",
+      "outcome": "rejected",
+      "source_sha256": "28f9402b0bd4f77406c7e50916c97d9ccdcbe0a82bf8bd06ea6d083875473956",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:23:1: error: Only ordinary final classes are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/DownloadMapper.kt",
+      "outcome": "rejected",
+      "source_sha256": "0ee7a5e9b2ef9dcac1605abf9319bb24d4f593d34a0ba24be3f3b7da7ea929ef",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/DownloadMapper.kt:54:22: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt",
+      "outcome": "rejected",
+      "source_sha256": "c0bd140e97d28b74a41d28af81e49a955564dc13df469c7a3e0c1058cc3888a2",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt:10:18: error: Only @JvmStatic, @Throws, and @Suppress object method annotations are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Highlights.kt",
+      "outcome": "rejected",
+      "source_sha256": "6b1430644f5ff19bac29ac72fe57f03489316bca37f37ed2a382e32169815733",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Highlights.kt:13:20: error: Object private field types must be inferred from supported initializers"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt",
+      "outcome": "rejected",
+      "source_sha256": "d7c2709f96480726ee89620f845b4af41d3ab4b169d5c2f1927b305cc51e3dfe",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:15:1: error: Only one top-level object without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt",
+      "outcome": "rejected",
+      "source_sha256": "d8bad33aa0d86bfc6f7a69807fdea3fa2c70363cbdb8a453b10471ea2e9ac3a0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:14:1: error: Only one top-level object without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/InstallationUtil.kt",
+      "outcome": "rejected",
+      "source_sha256": "c42599c64ef8cea10aeefd12cece4d8a7320019f7d61f9544dce98ed59b30299",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/InstallationUtil.kt:20:18: error: Only @JvmStatic, @Throws, and @Suppress object method annotations are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+      "outcome": "rejected",
+      "source_sha256": "96ce558706cd736ba496aa95311243931f4c12494a4723fe06a80b2295bdca9c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt:1:1: error: Java class yuku.alkitab.util.IntArrayList was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Jumper.kt",
+      "outcome": "rejected",
+      "source_sha256": "a61e464d4aef3d20bc45637d0cf46284ca30a0cb7bdbd14aa6e495b17ba240a4",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Jumper.kt:9:9: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/LabelColorUtil.kt",
+      "outcome": "rejected",
+      "source_sha256": "15841f2e22d00fd32f359cee96f466918e6b301d7bf68d703c3f14de1f8cd2d6",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/LabelColorUtil.kt:42:21: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Levenshtein.kt",
+      "outcome": "rejected",
+      "source_sha256": "60ab1eee8d1efce538932c839371259b22eec6db1dcf6faf2ca46b2ce5071e51",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Levenshtein.kt:4:5: error: Private object constants are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/LidToAri.kt",
+      "outcome": "rejected",
+      "source_sha256": "4d9e7f15f0bfa998059e2ad48fbfe1031db5d1bac60d9c09b0baf8de66929cf7",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/LidToAri.kt:13:5: error: Object fields require ThreadLocal.withInitial array suppliers"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/OsisBookNames.kt",
+      "outcome": "rejected",
+      "source_sha256": "ce52549618105615c1ce8b97359fab7d98502b624175fca1f3f2ec7fee71c72d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/OsisBookNames.kt:102:36: error: Object private field types must be inferred from supported initializers"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+      "outcome": "rejected",
+      "source_sha256": "f28172f76561e583bd046a5d28e65468f8c8f358fec3a5553c4399b537b8e7f1",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt:26:13: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt",
+      "outcome": "rejected",
+      "source_sha256": "2ba30de66648c7f35923fd3757b0af63289b6a1f9ece5184fd44c4df054042b3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:8:5: error: Only instance functions, properties, and companion properties are supported in classes"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/RequestCodes.kt",
+      "outcome": "emitted",
+      "source_sha256": "61f910f2db36e4bd8ff62432388caa0a4250ba9ef6d36f4f7af4e479fc8f475a",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/SearchEngine.kt",
+      "outcome": "rejected",
+      "source_sha256": "35cf93aee1a09247ed2bf6640a43768509e330039a112fb020ef9310bbdf7b77",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/SearchEngine.kt:16:35: error: Expected a newline or semicolon"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/SearchEngineQuery.kt",
+      "outcome": "rejected",
+      "source_sha256": "435d80d33ceb7be7690af2577d3a2cb41dfaed14104e0c868fe27c8412b5fece",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/SearchEngineQuery.kt:8:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ShareUrl.kt",
+      "outcome": "rejected",
+      "source_sha256": "faff880a2ed6bdf20571320eeeffd7707f6e329e3777faeb3517a24ad3ee4139",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ShareUrl.kt:42:23: error: Expected ), found until"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Sqlitil.kt",
+      "outcome": "rejected",
+      "source_sha256": "65cd1774225e752977a0fd6c73e0c77e73c4d468b7d258f280d1309ee923fd8e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Sqlitil.kt:1:1: error: Java class android.text.format.DateFormat was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/TargetDecoder.kt",
+      "outcome": "rejected",
+      "source_sha256": "fe75008f26e28425c54daa1a1bae95055b9d74d6fbecb2b17296f07d9b8ed32b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/TargetDecoder.kt:8:36: error: Expected a newline or semicolon"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/TextColorUtil.kt",
+      "outcome": "rejected",
+      "source_sha256": "c9d0f57c74a31d6c522eae5c80cd597cd209d9716827f31012e825c1324a3c7d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/TextColorUtil.kt:21:73: error: Double literals are not supported; use a Float suffix"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VerseTextFormatter.kt",
+      "outcome": "rejected",
+      "source_sha256": "a90789bd527e04bd21ff08472045f0362da011aba8797f606d1bcf5a45e8b914",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VerseTextFormatter.kt:1:1: error: Java class yuku.alkitab.base.verses.VersesDataModel was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDialogHelper.kt",
+      "outcome": "rejected",
+      "source_sha256": "71d4d59aa7bb4e55d5908ec974b5a6d7be691e52db7d363b1ade2dd352203c14",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDialogHelper.kt:45:126: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt",
+      "outcome": "rejected",
+      "source_sha256": "697a1a5623c588af1620fcd15f97db883f56e17723ac33b95c0b6ab975b2c8e0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:43:20: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt",
+      "outcome": "rejected",
+      "source_sha256": "fdcc6a0080b5b1f441353ccfa487888e2505c40bdbdd4debfc3a13762c7d959a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt:6:61: error: Only Array<String> is supported among generic array types"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/EmptyableRecyclerView.kt",
+      "outcome": "rejected",
+      "source_sha256": "755f80af28c2466d4e93d267d0373d316f2ef8b0318d5d5b6eba0b1fd2cd5887",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/EmptyableRecyclerView.kt:9:29: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt",
+      "outcome": "rejected",
+      "source_sha256": "570fb7e85ef1a0604076d52efb60340570485ce7949cf0d2c1e282e8d3b89c76",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:9:28: error: Enum constructors, supertypes, and generics are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuidePreviews.kt",
+      "outcome": "rejected",
+      "source_sha256": "138732e301821bb617a52b936c7c46d6468aee29a53e2f4d78600bc004da6185",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuidePreviews.kt:36:9: error: Expected fun, found val"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuideRow.kt",
+      "outcome": "rejected",
+      "source_sha256": "ac55056c2933e1f31ed7104c4c68d16daf474158e341d21f0e02545cd5da208b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuideRow.kt:19:10: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuideView.kt",
+      "outcome": "rejected",
+      "source_sha256": "6711cbe2f3d5fae8d70e2816bbb2c36985749987a2d2fb670e5a0e1a95c33548",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuideView.kt:10:57: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt",
+      "outcome": "rejected",
+      "source_sha256": "22420fb042f2e2af130601ac72bb36d1621411adc1bc5bee5fbb39b06e43452a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:16:1: error: Only one top-level object without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseItem.kt",
+      "outcome": "rejected",
+      "source_sha256": "414e69a1b861da5b5af9df7873eca75ec60badcdc91a9c22ed57e9548502bb76",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseItem.kt:26:72: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseItemCompose.kt",
+      "outcome": "rejected",
+      "source_sha256": "09549c0a5314b00f995b7c19ca8d0991a80a0a1cb373ba00e9b5eceea0ccdb17",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseItemCompose.kt:93:37: error: Expected ), found ."
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseRuby.kt",
+      "outcome": "rejected",
+      "source_sha256": "52b72d7867a70952ba0e2574aec32d5bbf59ddb666d156e5e59c65b597473942",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseRuby.kt:35:9: error: Expected fun, found val"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseTextCompose.kt",
+      "outcome": "rejected",
+      "source_sha256": "2a533eb3c5dfad5eec77a42ef3c868518de4a5ff7c4001d62ba3ea7c76c07084",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseTextCompose.kt:53:26: error: Expected ), found ."
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseTextFlow.kt",
+      "outcome": "rejected",
+      "source_sha256": "176970cf7108660b354d523825fe4a81f1d0d7fb1988155aeb7fb7db35ab560d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseTextFlow.kt:13:33: error: Expected ), found ."
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesAttributes.kt",
+      "outcome": "rejected",
+      "source_sha256": "77547469b07a3f6b576f82ebd0df16009fe636d9c48e6cdcfab0033cee9a69db",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesAttributes.kt:8:34: error: Only Array<String> is supported among generic array types"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesComposeControllerImpl.kt",
+      "outcome": "rejected",
+      "source_sha256": "3c00560ffcd639577ff9e8ed6ec09c257bc17f087470cf310a8e16524bba527c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesComposeControllerImpl.kt:108:9: error: Expected fun, found val"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesController.kt",
+      "outcome": "rejected",
+      "source_sha256": "c4f63501ff56318133a3b61a10930efedf4c8cda9535a791016d67f46b01f0e3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesController.kt:9:5: error: Only public interface properties, functions, nested interfaces, and companion objects are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesControllerFactory.kt",
+      "outcome": "rejected",
+      "source_sha256": "5b272c3647cce5630e41b02f6ee06f19574cd84dbaf976347b1cb963b8b2fc29",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesControllerFactory.kt:26:38: error: Expected a newline or semicolon"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesControllerImpl.kt",
+      "outcome": "rejected",
+      "source_sha256": "06a3cdcc1f0adc14a0d22cc79f734b94a3469fe50c2c8b8a18bad7ef99611932",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesControllerImpl.kt:44:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesDataModel.kt",
+      "outcome": "rejected",
+      "source_sha256": "ecdd9b06da37ae48b75cf4f759280e96723ef3d5568791e21a518ecce4c4c084",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesDataModel.kt:11:1: error: Only one top-level object without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesListeners.kt",
+      "outcome": "rejected",
+      "source_sha256": "84a1a074646c1535c5ce8274e968501379e24aeae839f3ccc804b5fc362cc2a1",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesListeners.kt:8:44: error: Expected ), found ."
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesUiModel.kt",
+      "outcome": "rejected",
+      "source_sha256": "ccf88eafbd377bad4a4d6d89f13ce1e1722caa8900e98770ebb5ffec188bf55d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesUiModel.kt:5:45: error: Expected ), found ."
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesViewController.kt",
+      "outcome": "rejected",
+      "source_sha256": "b41aac98c9deddc90672034dfa651b343299daa72bf4f26e284487c6f5710c92",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesViewController.kt:1:1: error: Java class androidx.recyclerview.widget.RecyclerView was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ColorPreference.kt",
+      "outcome": "rejected",
+      "source_sha256": "2dd9f00e8946ea92959ecb86b28ca3dbd2e657a9edcc3d60b864c8e38899cafb",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ColorPreference.kt:13:23: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/DevotionGestureLayout.kt",
+      "outcome": "rejected",
+      "source_sha256": "e8add1a19266384a34b4b442d67f763d2bc7791eb46c993b87ade81dff0ab45f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/DevotionGestureLayout.kt:9:91: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/DictionaryLinkSpan.kt",
+      "outcome": "rejected",
+      "source_sha256": "3d7917acf93f5c7011a7453ec237907790cb2dea0cb602b7a2ea67a5792b5ed9",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/DictionaryLinkSpan.kt:9:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/FloatingSelectionToolbar.kt",
+      "outcome": "rejected",
+      "source_sha256": "916e49a7e9c9f153f918751b3b16f41d50982471de4dc946b170c2ffe041211e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/FloatingSelectionToolbar.kt:23:81: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/FormattedTextRenderer.kt",
+      "outcome": "rejected",
+      "source_sha256": "17897bc1986c86011cb5689b0659dccd5b05b57cc230baae413c57d8506698ff",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/FormattedTextRenderer.kt:10:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/MaterialDialogAdapterHelper.kt",
+      "outcome": "rejected",
+      "source_sha256": "108615d9c4c0080524de4ce6b0f91d17c65ccf53d5f900fc3230015e0afa3ea5",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/MaterialDialogAdapterHelper.kt:16:18: error: Only @JvmStatic, @Throws, and @Suppress object method annotations are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/MaterialDialogJavaHelper.kt",
+      "outcome": "rejected",
+      "source_sha256": "c95c20159b9007212343372e556684f5cf5409c1f71b61cca0c1697456bdc26b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/MaterialDialogJavaHelper.kt:13:18: error: Only @JvmStatic, @Throws, and @Suppress object method annotations are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ParallelSpan.kt",
+      "outcome": "rejected",
+      "source_sha256": "d6e3837a23324e32415f164bb8174983c8d9df93384f8f252589ec9afd37acfb",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ParallelSpan.kt:8:1: error: Only one top-level interface without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+      "outcome": "emitted",
+      "source_sha256": "de818317815f6f3c8602ff5c5aac7b50ea5c663a756e719104c2f97fca9b94b2",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureHandler.kt",
+      "outcome": "rejected",
+      "source_sha256": "d936efa788d553a5a9a10a5dd6433ef3ee802889183a12f0cbf9421d3eb1f2d1",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureHandler.kt:18:26: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureHost.kt",
+      "outcome": "rejected",
+      "source_sha256": "f38b1b8d44287dd56522f4e7060a0368df1a0e082ee573b509489e8a30051572",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureHost.kt:1:1: error: Java class yuku.alkitab.model.Book was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderToolbarLayout.kt",
+      "outcome": "rejected",
+      "source_sha256": "f4b9f8b853539e7e63870e386b11fe180fb803268687613643128156dc9a0999",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderToolbarLayout.kt:17:31: error: Expected a newline or semicolon"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ScrollbarSetter.kt",
+      "outcome": "rejected",
+      "source_sha256": "9dba6adc4877c902409d5462d2dd2920f0c0a568e89dd41f5b7abc3bee0a2e27",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ScrollbarSetter.kt:13:1: error: Only one top-level object without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/SplitViewActions.kt",
+      "outcome": "rejected",
+      "source_sha256": "77e36b32738d74db7b901b7c130c125bba0eb1f22e60abb195c8a353c806f878",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/SplitViewActions.kt:1:1: error: Java class yuku.alkitab.base.verses.VersesDataModel was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/SplitViewHost.kt",
+      "outcome": "rejected",
+      "source_sha256": "cb5a11aeb0be873e87c67310825584514333bb2155ebb17615de318e2c67f031",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/SplitViewHost.kt:33:31: error: Expected a newline or semicolon"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/SplitViewManager.kt",
+      "outcome": "rejected",
+      "source_sha256": "a09cca59dbd515d6c91eee13c613ed21bc43a12375e9a9d2cf1a870f276f99e7",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/SplitViewManager.kt:56:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/TextAppearancePanel.kt",
+      "outcome": "rejected",
+      "source_sha256": "1dec4217c4a7ee156fe1ce5cdba602e69c980111807eeb6dad111527bf025b82",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/TextAppearancePanel.kt:100:5: error: Only instance functions, properties, and companion properties are supported in classes"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseInlineLinkSpan.kt",
+      "outcome": "rejected",
+      "source_sha256": "2efbfb578b58b24991982966f5d488baf6cb8c49a7b38c7c4eb09dc9dde933c0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseInlineLinkSpan.kt:7:1: error: Only ordinary final classes are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt",
+      "outcome": "emitted",
+      "source_sha256": "957ed0e7cae7251aeb4d44abf8418959e7757601670e81178257a4b289dfa9cd",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseRenderer.kt",
+      "outcome": "rejected",
+      "source_sha256": "c05d25d06ed4a5e27cd5cdbd76f78640c795714bb1d84712207c845c5a91408b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseRenderer.kt:33:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseRendererCompose.kt",
+      "outcome": "rejected",
+      "source_sha256": "6268f77faffcf6da12696c74a6d3b907a980310020944a1f6972ce291b0852dc",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseRendererCompose.kt:50:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+      "outcome": "rejected",
+      "source_sha256": "487b8ecadfe52f276154df2c2fabe3d4bdea0deb550ad5cd7400dd63fe0ddc0c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt:4:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/JsonFileStructure.kt",
+      "outcome": "rejected",
+      "source_sha256": "55ded62392cdc3957441e4fdb7833b5625361a5114c20f4c82f820abbcc6388e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/JsonFileStructure.kt:8:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt",
+      "outcome": "rejected",
+      "source_sha256": "edaa027f6e6f053e85ae87a9afe7e9a6ded54e0fb09f98a1fe2db12391ecf37d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt:1:1: error: Java class yuku.alkitab.datatransfer.model.Gid was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ExportProcess.kt",
+      "outcome": "rejected",
+      "source_sha256": "8ef0d376a08d285f40633873ce6a0fa708e42acf935da25432dbacb3f51354a6",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ExportProcess.kt:41:58: error: Expected }, found ->"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ImportProcess.kt",
+      "outcome": "rejected",
+      "source_sha256": "966f6473117fd0b044f63c22bbd7a166ba98fa8adc81503d34c3416c1204919a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ImportProcess.kt:28:5: error: Only instance functions, properties, and companion properties are supported in classes"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/LogInterface.kt",
+      "outcome": "rejected",
+      "source_sha256": "75c396bc84cab536f47925e2f2f4b99744e7eed08e4df6b3800b2ba4fbd8f6bb",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/LogInterface.kt:4:5: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt",
+      "outcome": "rejected",
+      "source_sha256": "022ff83c8852048d327743c160b50b8b9910e144afee692825427b9278a1fff5",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:15:49: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageInterface.kt",
+      "outcome": "rejected",
+      "source_sha256": "331c16d4b13e95891413ce146c55be4cc8c5fb709f77b448f334513b2b250be3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageInterface.kt:12:9: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt",
+      "outcome": "rejected",
+      "source_sha256": "13c57388d58d1df75e90c0e6e6aac61e18f3f7416442937b70c640c3055189f1",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:13:1: error: Only ordinary final classes are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageInterface.kt",
+      "outcome": "rejected",
+      "source_sha256": "c248f71c708afaad3f569ad9007cc36ec7e34f5fe0bfa7817b820aa166ab9711",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageInterface.kt:12:32: error: Expected >, found ."
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/Serializer.kt",
+      "outcome": "rejected",
+      "source_sha256": "c2f5e8767f0d930b7daaf3a8d77debe664074545a831ddff3b508a1a9342fea1",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/Serializer.kt:6:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/ui/DataTransferActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "8f5722fe1bb5655fe0a7afff0783af03b8593a15a3b348dcbb723d479754193f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/ui/DataTransferActivity.kt:38:42: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/ribka/RibkaReportActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "148bfe9514849d3b3db1bcc0384d5dec2a5c6d40f0926cd3a5b882ba4e65ec53",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/ribka/RibkaReportActivity.kt:31:41: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/MediaController.kt",
+      "outcome": "rejected",
+      "source_sha256": "1e712c82c56d58f294174599c35e45539bb843432b1ef66907d163ac335952f8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/MediaController.kt:10:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/MediaStateListener.kt",
+      "outcome": "rejected",
+      "source_sha256": "135550d4f742c138eab62085d70500277440227647bec6c0a34c85433392cc10",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/MediaStateListener.kt:4:56: error: Expected ), found ."
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/ScriptureReferenceRenderer.kt",
+      "outcome": "rejected",
+      "source_sha256": "37d0df04b4c59a5ecc276ee102c0d818ac10e85bba8c60ed99ed1dc41adc2aef",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/ScriptureReferenceRenderer.kt:15:1: error: Only one top-level object without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt",
+      "outcome": "rejected",
+      "source_sha256": "2073ded5bdb2eeac759808df731db7b923c49862bf85b71fa674bd822e616c07",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:28:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioService.kt",
+      "outcome": "rejected",
+      "source_sha256": "457f79bd0aaf2c6475efd9091dbd993bf677976537080db296fbc733aa985ed3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioService.kt:47:7: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongBookUtil.kt",
+      "outcome": "rejected",
+      "source_sha256": "4907838dfdb28f9c5295de4f56fdc3e1f9a6a32447e25c2fbdf723ae671d47dc",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongBookUtil.kt:33:5: error: Private object constants are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongComposeContent.kt",
+      "outcome": "rejected",
+      "source_sha256": "5af237721f933c3f6873ff559154ff3d3535f64b465538ce5e4a006248c46c2d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongComposeContent.kt:84:18: error: Expected }, found ="
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongComposeFragment.kt",
+      "outcome": "rejected",
+      "source_sha256": "470685a4493b04fb262eff32cdee85aad29fd956ba183c2fb325d2eec65a9c96",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongComposeFragment.kt:18:41: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt",
+      "outcome": "rejected",
+      "source_sha256": "9f94d957dba2a3666f0f1fc6b1d4d165b7db7dc251146217490ae5183a5299e1",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:11:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFragment.kt",
+      "outcome": "rejected",
+      "source_sha256": "2b41ecddab9f3e833e5bf57efc1be605572e3037c5a6057f313bb2791e520078",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFragment.kt:22:34: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongInfo.kt",
+      "outcome": "rejected",
+      "source_sha256": "5c6b49ae1b71b6224d357283f5dd1e1080ecacd20eba910998c25bdbd4ab408d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongInfo.kt:15:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongPlaybackState.kt",
+      "outcome": "emitted",
+      "source_sha256": "1e66ca9032335bb8b418b286f2045cf8d1efa66108b9407786bdaef87167c0bb",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongSearchSheet.kt",
+      "outcome": "rejected",
+      "source_sha256": "0bb7d36bfcdeedc45501728f609e017789ab71172a366545d99abd3460282a94",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongSearchSheet.kt:84:59: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongSelectionControls.kt",
+      "outcome": "rejected",
+      "source_sha256": "ef2d26009f97fc0b6e49f4ee3f7c8a6181fbe49192567cf78cd9e925b511c69c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongSelectionControls.kt:9:81: error: Expected ), found ."
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongSelectionSheet.kt",
+      "outcome": "rejected",
+      "source_sha256": "f433ca13d5921e982c982494b3846f46d8e3fd46fb38e37a72e300479f7b21c0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongSelectionSheet.kt:53:11: error: Only @JvmStatic, @Throws, and @Suppress object method annotations are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+      "outcome": "emitted",
+      "source_sha256": "e97b1f80db7c221c201af3ff01aae4947facdcffb20f0645ad3a07a79cee9211",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongViewActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "745cbad6821dc332f76abe977b924006235fb5535959dc01e3079fba655642e6",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongViewActivity.kt:73:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt",
+      "outcome": "rejected",
+      "source_sha256": "a4e4177e9fad6c0be4ac15947e0d14b9cb8e0a0fa83a1617dba880e0c0b32c31",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:21:5: error: Private object constants are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacySongConverter.kt",
+      "outcome": "rejected",
+      "source_sha256": "8e278ff783df8279e7d3e62b6a8db87f8f2a0d94647d79faad28223ec7f23ce8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacySongConverter.kt:38:55: error: Expected }, found ->"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocument.kt",
+      "outcome": "rejected",
+      "source_sha256": "6fa1a91c4d5cf9f578891b1cce1c454a74d44a96765d2fc28085c0cf5b4c6a96",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocument.kt:14:1: error: Unsupported object modifier; only public and internal are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt",
+      "outcome": "rejected",
+      "source_sha256": "6a23df732204a41931f32a4694669869a7c1a1e30385ed71411cd29dd936a214",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:19:5: error: Only const val literal properties are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt",
+      "outcome": "rejected",
+      "source_sha256": "f395928ce467be083e15edd86d274078a0fb4b696c14af6fa48fb8faf7377040",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:24:60: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt",
+      "outcome": "rejected",
+      "source_sha256": "f0d62b37a07ae8d538805f8daea3052945f0d57dd81624d05d66e817c60ab485",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:20:33: error: Expected until, found )"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSerializers.kt",
+      "outcome": "rejected",
+      "source_sha256": "a09ecef5a2f15cbaace011001ab670cfa0c360e5cfd3a01f75153b8b54eb5943",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSerializers.kt:1:6: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt",
+      "outcome": "rejected",
+      "source_sha256": "6392a4452b7723e2fe889a545bd945ae0426414fd806c467fa0b6bde13f99ee2",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt:21:25: error: Expected an identifier"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt",
+      "outcome": "rejected",
+      "source_sha256": "d4fd28353d64729e8cf510e336b5b2236c3ee38ee1e27702005be39afda31038",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:16:39: error: Const initializers support only literals; expressions are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionListFragment.kt",
+      "outcome": "rejected",
+      "source_sha256": "c7a53212199123e23e67d3ba822c75a0ad0361e14d8483ae24b182d13a04a882",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionListFragment.kt:57:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionsActivity.kt",
+      "outcome": "rejected",
+      "source_sha256": "a11c466265ce541ab3aa946ff8f6e5801ec29b4f0f5a47e3d4eb860e929f6fcf",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionsActivity.kt:40:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt",
+      "outcome": "rejected",
+      "source_sha256": "5df3b8b8fd5c81ceff0cf622bbea49906d047976634e7ad9d0450d1dd952fade",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt:1:1: error: Java class yuku.alkitab.model.SingleChapterVerses was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitabconverter/util/DesktopVerseParser.kt",
+      "outcome": "rejected",
+      "source_sha256": "1295bf354ba6fbfee7b49cb565fe5f0edb494788c858c5e2738ae4a20bc76f4c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitabconverter/util/DesktopVerseParser.kt:93:46: error: Expected a newline or semicolon"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "ff64f9999f52184a9e1d2566ce014287ac2a1830af33a331604459814420d21a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:14:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/afw/storage/PreferencesConcurrencyTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "f2dd2988d669a5c3bbf1f7268154a0606b0425b990fb1007e2f93d38ea2452c5",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/afw/storage/PreferencesConcurrencyTest.kt:38:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/AppliedDimensionsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "d0db23c343b64524e361451b11e05d16914487785e301a10eeedfd7b25a8c5ce",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/AppliedDimensionsTest.kt:31:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/IsiActivityCurrentReadingTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "a2341fcd6f99a91e1fb0ffc77a946ddedc3e9e458380e3b88147e716613a989c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/IsiActivityCurrentReadingTest.kt:31:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/IsiActivityIntentTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "dbf0c4fe228ee41575b0de17bb87fc6915cd11f9371f8806494be6735c2ebcb4",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/IsiActivityIntentTest.kt:31:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/ac/DevotionActivityTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "e2cb79e602d0165de2ba93e66e3379caf17bafbc2c175b8375715f5342e094ed",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/ac/DevotionActivityTest.kt:140:15: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/ac/NoteActivityTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "ee50b61463f9c92457761c3256efc7dfa0fb7b90d60856bcb2927c9e8eddf56d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/ac/NoteActivityTest.kt:75:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/ac/ReadingPlanCurrentReadingTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "4bc7492a4ec8fec6a87bb1d5990e927cf59ece0dcc7c6f0605a2effb81a2af78",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/ac/ReadingPlanCurrentReadingTest.kt:33:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/ac/SearchSuggestionsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "6bdb9c4b4373501b4c7cc46e7ee3d998fd565292fcf66fc70b1d1c1712b39fcf",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/ac/SearchSuggestionsTest.kt:69:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/ac/base/BottomToolbarLayoutTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "802a1059d3134f6e25481b265cc3b4cd7cd7dc0a0e487d614513c8d979615f10",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/ac/base/BottomToolbarLayoutTest.kt:63:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/actionmode/ReaderSelectionActionModeTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "917a557c72c6624c0b289acff5611c0fc0650ce8b5a70fd6f991a67ab1023f38",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/actionmode/ReaderSelectionActionModeTest.kt:23:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/actionmode/VerseActionModeControllerTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "5ab31ae9635d7f08e0712f5d9240abfe046c64616dae88969d39921933b0a412",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/actionmode/VerseActionModeControllerTest.kt:125:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseClickReceiverTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "aa0f3adb48b1c0c21c0c53ec58dbf77444702130d458f14b361c8c8d4ff51b32",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseClickReceiverTest.kt:26:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseConfigurationScreenTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "4672e4e4322c73468dfb6ad01f7efaf9af9a9043b1c12a2e9f29d98ff92cfd8c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseConfigurationScreenTest.kt:41:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseConfigurationTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "a7e08e3e69fe0c55ee761396110e1f168df393a31bf240bff98fb75980dd3e17",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseConfigurationTest.kt:77:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "44227294360fc7a1444cb5860729544a6ea0c5c0de8e106ce447730935f6ddb8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt:42:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseFactoryTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "f5d7d6accf06388e419a829917c928a7ed0747318808bf8bec1fe94f17355eac",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseFactoryTest.kt:58:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseLoadingTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "ab370caa7e7dc8d1d187b0bebcc4495a1fd0ac8612846224885519d3463d2653",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseLoadingTest.kt:60:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioBarControllerLoggingTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "a7d7da2e2de479d06dc94928366a371ca263d92c2ff13ebf98b3fca8734c03b9",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioBarControllerLoggingTest.kt:18:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioBarControllerPlayFromVerseTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "29f6895fc21ccd5e802359ebe9ac7096f6948843ffc81974e5df672113d26bce",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioBarControllerPlayFromVerseTest.kt:46:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioBarControllerReshowTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "2f9b4e1f5dbeda38409a9c9ee8ea21603f559ae740ccee650328f1d4b0bae3e9",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioBarControllerReshowTest.kt:18:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioBarControllerSetChoiceTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "507a8691fab1ebc88306da8cc7b81937720b3bd27a482afffec5c02b48a5dfca",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioBarControllerSetChoiceTest.kt:30:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioBarControllerTimingAvailableTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "be525f37366c2e29a687340eb7a56c53caf5519a853f16361442281719d05b25",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioBarControllerTimingAvailableTest.kt:15:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioErrorCodeTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "9ae0619f61b0b44c5189b2dde94160755e67045ccb7f25aa5bb633b2c465dea9",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioErrorCodeTest.kt:10:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioHttpErrorBodyTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "3f57865b2966fe98f9c708e86f21c88ce9e681c2c5471286e1b67da55db589ef",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioHttpErrorBodyTest.kt:11:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioPlaybackCoordinatorTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "886dac4ef62216ab44cddbdffc1a152d988377eb2f9d7a327769a132a71e18fc",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioPlaybackCoordinatorTest.kt:24:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioSetSelectionsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "7f9ee9df0ecaf4b4502b206d7543e3fe766b0805cfa2f9060c3a8afa90495fe6",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioSetSelectionsTest.kt:48:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioSetsRepositoryTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "bdf4b6d1963fecb3794bec5cb6b411bb492f05a7b005caa45871716a16abfb97",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/AudioSetsRepositoryTest.kt:99:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "9f8a23439588eb4e6c3b83c8c9d7b513696fa05b4f0473b34f17fc392f80b193",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt:57:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioServiceLogTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "1ffcb08e5102a915c8525710dc1a8e6d64355cd4c7e309066e8187baf3244945",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioServiceLogTest.kt:16:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioServicePlaybackTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "7c771caa39ef00f93638ae3c9e23b988851f99a34e9ec9f45b33c57466353e2a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioServicePlaybackTest.kt:21:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "2145e9638fd6b4833cbf5c38d8da37e410cf3cfb960c8028d5a0f88ae8f25da6",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:64:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/HighlightTrackerTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "7b6732109020a50e3b0fb21f0121844341417eb83dd1ba6fecee0b3fe071d6e3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/HighlightTrackerTest.kt:22:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/model/AudioSetTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "b67bac4735507c2ed1070da59d34feb9f090ef0c867fcf5545cd8f90f8c89332",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/model/AudioSetTest.kt:32:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/ui/AudioBarTimeLabelTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "dfaff85f2ee95f486fe68e534b6c43997aa0f903df38dcdb0ef8ec39724e2125",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/ui/AudioBarTimeLabelTest.kt:10:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/ui/AudioHighlightColorTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "270088404d2eb992dd61b2131e765454cdb0e674433434b8afce12aa618a068f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/ui/AudioHighlightColorTest.kt:34:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/ui/AudioLogBottomSheetTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "0dae1184dced8fdf0eb317ea1c96f95080d67b3ab13fae4b4907e4574850a5b0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/ui/AudioLogBottomSheetTest.kt:17:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/br/VersionDownloadCompleteReceiverTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "512cd331a6551796454da829f8cb874dad327900ebd624415e3b22f7ef34fcff",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/br/VersionDownloadCompleteReceiverTest.kt:24:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/BibleAppThemeColorsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "93717f4822cdab392a240c7f2ae7d02c4f0dda6f6ffa69b9c408d4b7a718528b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/BibleAppThemeColorsTest.kt:36:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/ComposeThemeSnapshotTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "8ef2b49d1d3288b5b689b150bb0c9e7bb750caee795bc99b55fcd8702e9b3a18",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/ComposeThemeSnapshotTest.kt:374:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/goto/GotoScreenNavigationTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "3df0f5575ce71e95a254f102df2fdbf0943c6fb6f8828ddd8171c57be75e244a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/goto/GotoScreenNavigationTest.kt:54:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/toolbar/ReaderToolbarComposeTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "419f550a1cb141256ef9d87129b7332bca63cb16b25442f734c4be8600014d42",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/toolbar/ReaderToolbarComposeTest.kt:196:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/toolbar/SearchToolbarComposeTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "dcfeae28a6932b9f91a7e51ef555813987c66fc5ae48e1f618a39e9da356c3b7",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/toolbar/SearchToolbarComposeTest.kt:51:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/toolbar/ToolbarScaffoldTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "3dd1ba40c5dd18f1bbc7ad983f75083d1d0d3118ebad0e35dda4fbb654f1f25f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/toolbar/ToolbarScaffoldTest.kt:43:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/cp/ProviderTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "4df641d215023ce76ddef770e6e7dde6c870bae235397da29758ad29d850bc12",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/cp/ProviderTest.kt:201:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "fe8a93038a92e6bfffbe1408da38e4625b9477c83bfe0599fc7885c66e949764",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:41:15: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "da0b1b5a5b3e3df37df7bfc452d7492a35f3f39aa75b0f7723809ac7955e80bf",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:34:15: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/ManualDispatcher.kt",
+      "outcome": "rejected",
+      "source_sha256": "61b3a31716b5b32a54aac365c35811b15278342d655e7abcdfa4c98d3a35f12c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/ManualDispatcher.kt:7:45: error: Only imported interface supertypes without constructor calls are supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/feedback/PrereleaseFeedbackSnapshotTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "00f479e18b17a872493fcb627b94e94b9ee820864592ec38babe1f1dc27d092a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/feedback/PrereleaseFeedbackSnapshotTest.kt:55:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/feedback/PrereleaseVersionTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "62fe5c5291d0fd78d04bdc7cc30df6c11cbabaf3549997ac98e2b1653aabc36b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/feedback/PrereleaseVersionTest.kt:9:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/pdbconvert/PdbBookNumberToBookIdMappingTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "7b9b5de7ece92a4adbbddabc69026b2ea01436ae426debc953338ea301a46186",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/pdbconvert/PdbBookNumberToBookIdMappingTest.kt:8:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/services/AppServicesTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "8737bffdd4d7ac2db3c51e2b31998357429b6f1f3ec4fa3c4e63db70c0347e5e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/services/AppServicesTest.kt:26:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/settings/HighlightAdjustmentSettingsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "5288bffb9643596154eed0c3361f9cbf1565a6e085332a604f0e6702fa5da48f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/settings/HighlightAdjustmentSettingsTest.kt:86:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/settings/HighlightStylePreviewTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "42cc547d2adbaa23bb1f311a545935502b32403da73491ce2ff7daa63e159b9d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/settings/HighlightStylePreviewTest.kt:45:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/BuiltInGalleryTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "ba8e591b83d9af327e793c24e8fab0c91c79e6ba895b19c141b5a43cf8aa2f0b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/BuiltInGalleryTest.kt:47:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/DevotionDaoTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "df1e44ae2bb81c227f70347beb44781b294c6dc191383ec95b57580c00a670f3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/DevotionDaoTest.kt:43:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/InternalDbHelperMigrationTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "0215d8c1af5bae3a3cc26fb6485909a62d7710eb1d8b3e2e31485f149957ba67",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/InternalDbHelperMigrationTest.kt:165:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/InternalDbTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "667a19380861916cee27d73cb3b2d5bfda84b127d94adaef874f72b7449a2bdc",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/InternalDbTest.kt:68:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/OldVerseTextDecoderTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "ef349610417289c6fbb95324a75db9e951e1d214c6c319b86880ef67f4804382",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/OldVerseTextDecoderTest.kt:11:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/PerVersionDaoTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "06eeeb0c2324e30101f7c16bd784f29cab7ca9aac76272c68bfc62a9e91d894f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/PerVersionDaoTest.kt:34:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/ProgressMarkDaoTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "2c9f8976f17933b7f4448405ca03bd2db016a5af6b45e8c9094ce88f8e617582",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/ProgressMarkDaoTest.kt:45:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/ReadingPlanDaoTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "3f3bff449b8e10f218ffffdbe935b00f7d57f3b67c34c32ff38fac96ce0cf59e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/ReadingPlanDaoTest.kt:53:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "d11a020134dfa0a37107768b0c62d44b2d220fa779bf6014c5ef233af298cf42",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt:121:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/UpgradeFrom4111Test.kt",
+      "outcome": "rejected",
+      "source_sha256": "542c0fb68136c36f05291046fa28671c380e03aba2ee59d4006449704b685531",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/UpgradeFrom4111Test.kt:197:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/Utf8DecoderTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "75df9b2845b50e59c51d9c3056f9862848a6d32680878a4ecad4198083232faa",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/Utf8DecoderTest.kt:13:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/VerseAttributeGuardsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "ea707bcaca64a53b67ccf93c07a270ec65e9209f4435f663ddab1b43625acfbc",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/VerseAttributeGuardsTest.kt:37:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/VersionDaoTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "27557e934a380fa34517ffc802075d636dde150e76f3a34e60c85afcf053a8c0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/VersionDaoTest.kt:65:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/YesReaderFactoryTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "58e7131d212b539bc9e8282c2eb7fc5c62ae619c68639d327847e83dee60235c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/YesReaderFactoryTest.kt:31:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/room/SongDbDataMigrationTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "5d6dcd47994471038476edb7d8b13245abec42e71bab29d463c6588269be98cd",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/room/SongDbDataMigrationTest.kt:106:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/room/SongRoomDaoTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "ee98ae6246a37afd5b9e7d0c281816ce6489d70560ebf4c8b2871901651456c8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/room/SongRoomDaoTest.kt:77:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/room/SongRoomDatabaseMigrationTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "aa8d7442f2b41d5227b7bf7f913721fdd91a6c95e6f4f29349c85d4e90cca85a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/room/SongRoomDatabaseMigrationTest.kt:69:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/SyncApplierTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "a2e5cf144b3d4d4fd4472cba2af2cfec34914f4d6a8b374f3c44c404f5f4de9d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/SyncApplierTest.kt:59:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/SyncDeliveryTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "42c5a6b8653ccf817d77802a022bb521aad3c08af2d5ef475bb3631e46f87039",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/SyncDeliveryTest.kt:98:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/SyncDeltaTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "2342d2459ddb6ebc45b46efd90a3d9acb59a168698db7228dcd16435393ea1ca",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/SyncDeltaTest.kt:47:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/SyncDiagnosticsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "1ab521976cf1dd75c46c2de061b9376db55250082d2ab94e3b51e910f81c353b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/SyncDiagnosticsTest.kt:10:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/SyncRecordingTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "f6850d491c9ab74866ae31bad72a94864f364a994397b1fe2bcbcbc3ec070fc8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/SyncRecordingTest.kt:82:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/Sync_MabelTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "5508878918c3737356039e46a11ef6f40b9a7197a193f4cb41c2a3998376ce5f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/Sync_MabelTest.kt:27:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/Sync_PinsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "823e99f6c2aab97d5a592fb69b80712e1840d6b101a011b397f45daf4b636121",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/Sync_PinsTest.kt:28:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/Sync_RpTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "27f6accfc588448990b6d854cf3375d2aa45907b7d6be6f21c6aa9bbf5139dd3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/sync/Sync_RpTest.kt:28:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "8f73cc41bd1144c69c1cabb03840016527b45cb22548a1024367f42deff8f63b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt:34:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlphanumComparatorTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "187f9992953558c59e089dab942d738b7e5aa2bcb26735c1c63e11c81a31dea4",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlphanumComparatorTest.kt:11:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/BookNameSorterTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "677763b71bb8e9049cb447b54f0eb4abff64553e8dca02e8a7afb7ae64e380d1",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/BookNameSorterTest.kt:16:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/CurrentReadingCompletionTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "d2ace3452f919df482b9429694e2bea90c954bcbcfa235fe2357acab44c8aa3f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/CurrentReadingCompletionTest.kt:60:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/CurrentReadingTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "bfa3e97f9a1f2b3c746a7bc775b9635ab3123725aeaaf89c849380f9e8d7f350",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/CurrentReadingTest.kt:26:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/DebouncerTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "a3f9e9c1a39a8c60953fd65133af86df182ee217e05bce86d05ea3e4d6ef81eb",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/DebouncerTest.kt:70:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/DownloadMapperTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "1004457d6f574562958de3f1f7c8e2f2f361a0999c9f7dfce23b26a71224e2a2",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/DownloadMapperTest.kt:54:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HighlightBlendSnapshotTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "0170bdefefe42b219e7c6778cff0b957b0b7fc245c17a609eefac1e5fba47a2e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HighlightBlendSnapshotTest.kt:89:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HighlightsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "41d1eeb6178907d4c6a8e359a67ee240a38f74505b9a30c33e03991e3dd77aa4",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HighlightsTest.kt:23:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "2334541b085484a9c5dc971a166f251915722ba9a8e9587e476dfecd1da2e10f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:29:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/JumperSeparatorTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "cb50c46bd645a3b94e46347a071fbe6c0a4bc12673b5dfab091756fd8cb93de7",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/JumperSeparatorTest.kt:12:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/LevenshteinTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "8eb68ef36d5007a856e38c5eeb326596e484b437f4e36b5007d5808e84b5f706",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/LevenshteinTest.kt:8:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/LidToAriTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "9a455d41dfa25c7347e0d26dee6475ab88f274b108b66555db5e89db9809669e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/LidToAriTest.kt:11:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/QueryTokenizerTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "5e7b7fccf09f97b56420859f266bfa59445d36abb6127b240ffc008e9d4f494f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/QueryTokenizerTest.kt:11:70: error: Raw triple-quoted strings are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "fee582a37a2996806f75edb49a9c3931ea01164e54deb20875941df42ec63df5",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:24:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPlanManagerTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "8b0c03a858239b305f7411027435b4e19106db35dc07f3b003a4f149cda5b223",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPlanManagerTest.kt:13:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/SearchEngineTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "d7b7be022171572cb4c883a961f9067719363cf266bff77faf8b0c46b4061815",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/SearchEngineTest.kt:47:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/SearchReferenceAriTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "bfe0de3225b514ed606192999472ccf1ef4f8ecfae32583598fd00427e29cc2a",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/SearchReferenceAriTest.kt:32:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ShareUrlLifecycleTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "c101382b1d90c91a4811bd6681a3b53bcda2078777f6ae0218fd6379c6ea0344",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ShareUrlLifecycleTest.kt:49:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/TextColorUtilTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "325f1a92b2f589261133eb3b9f5b4d6456a4463440480cf30e2801585286ab0e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/TextColorUtilTest.kt:23:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/VerseTextFormatterTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "d093d179588f65c11a678c84044d0cea7a43e6c11799788dd3b4a88d09543d2f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/VerseTextFormatterTest.kt:15:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/VersionDownloadWorkerTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "b4e574d1f278b43e2aaab62a78eda60cf44012b8274a186a7940675d1977102e",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/VersionDownloadWorkerTest.kt:28:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReaderSideBySideSnapshotTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "18f33943932bd8092792ace5c937f469df59354594da6dce2e9d5667019806f1",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReaderSideBySideSnapshotTest.kt:380:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuideColorTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "cbe26e1123ff033680353229667a0ec3b0d5988d18ad8e84371bcdbb8bae04d9",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuideColorTest.kt:18:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuidePreviewsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "5cdb675eee540eea4638e680dd445ed3f48b3a78156cb7cafd5ca1db487ad5f0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuidePreviewsTest.kt:94:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuideRowTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "06510229151f4eaad2aadd876ffcea3d4dd5aa324d1f4f2f26754dfdf1ac681d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuideRowTest.kt:91:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuideViewTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "3bd2a268f9b11bd5db7941d198061284ea274652197e543cfcb1d0b10e157e11",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuideViewTest.kt:28:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseFontFamilyTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "b75febc46a3fb5796f853e8e6c228d82970d18d8f1f13fa444af4305e3caa5d5",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseFontFamilyTest.kt:58:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemComposeDictionaryTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "28dc43902a04a5e944ee8228f0c159b1ea15abf77ddc001ae624c98d78d6b91c",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemComposeDictionaryTest.kt:137:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemComposeInteractionTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "5c1d586337b5096b1529a20acb9a3a0f74cc1b07eda9e19d8001e2c31c0686ee",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemComposeInteractionTest.kt:209:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemSideBySideSnapshotTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "7c495bffd5b855dba47dc69bf760b4ef332a15d6b95b06eed5c1b9d508bd806b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemSideBySideSnapshotTest.kt:122:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseRubyLineMetricsTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "5352766d02f139f3d27329556352b4df6baf7975ee319ab5c0a07f912abff5be",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseRubyLineMetricsTest.kt:25:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseRubySnapshotTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "4274e2e6bc852f3f8e09b33303859fda6713cae21eda99124d1a6a9b15fc8cde",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseRubySnapshotTest.kt:231:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseRubyTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "a60fb99332f522315ecf2b3226f399920bef3c36e346e02ea986dd765a05a7f9",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseRubyTest.kt:17:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseRubyWidthTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "052ac73c7cc09838315d40496767e6efc2c87d889260c336665b645e63e2f3d0",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseRubyWidthTest.kt:60:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseTextColorSnapshotTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "b336a80babbdedf5f6692bae395cab7223e0021a9aab0f4c791ef24a46b3e629",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseTextColorSnapshotTest.kt:196:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseTextComposeTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "448797e2914ac8f0614cf57d1399088f97cb7f5144c2388566f35f476954ab6d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseTextComposeTest.kt:81:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseTextFlowTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "67200825b79213adebdb3c77a524fe5e7d2d0cb9c718980f4850e134bfc7c6e2",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseTextFlowTest.kt:43:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VersesComposeControllerImplTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "98d1e7503e1b89946fb0b5227feeb1fadaf03730d977a359493f0a7b003b4cc7",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VersesComposeControllerImplTest.kt:62:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VersesComposeListCompositionTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "788a2132d55319ca9c3bb7d6210d16590c38dbddec0e116de3b26a4971ba4562",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VersesComposeListCompositionTest.kt:206:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VersesControllerFactoryTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "d879ff09690a81bcae800d8cea023163fae884340088c87d020158fd764d9541",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VersesControllerFactoryTest.kt:53:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/AttributeViewIconTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "6dd43e9f12d36aaccc4a0aacbdb2142b6a897f7777248be81c9af9a38cd4bbb8",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/AttributeViewIconTest.kt:30:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/ConfigurationWrapperLocalizedContextTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "01aca6b9fe66aededc5c5a7641b5f83cff9e17488dd26b17253a90e3ca284172",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/ConfigurationWrapperLocalizedContextTest.kt:50:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/DictionaryLinkSpanTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "fd648156d7c29fd527eb7915022631da72ac1d43e85e87962ddea76003b08ad4",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/DictionaryLinkSpanTest.kt:16:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/FloatingSelectionToolbarTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "b6c8d801662a4b64600865409d3666b398f9fe1fba29ab08da044baa8d0c5fcc",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/FloatingSelectionToolbarTest.kt:31:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/GotoButtonBalanceWrapTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "03873c5dc0d8d0a35b5ef66cc77276630bf3127639e229040596475a279712c9",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/GotoButtonBalanceWrapTest.kt:11:6: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/GotoButtonSideBySideSnapshotTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "ad411c310f7ef14a086aefa187b804cdb3e5845d6784dbf75936c8770e9d50bf",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/GotoButtonSideBySideSnapshotTest.kt:64:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/LeftDrawerCurrentReadingTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "b88b1b4bf49c8f6d4f96fd584ac99702b8ce572f6c673378fc198a378f19d5df",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/LeftDrawerCurrentReadingTest.kt:94:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/ReaderToolbarLayoutTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "bc7f1d79f53a479a1bee42ac84ff47ef2537516157bdd234c096ca6f766e076d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/ReaderToolbarLayoutTest.kt:25:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/ReaderToolbarSpaceAuditTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "83132bd2886558e0301337129bcecdba6c7a2367dd5144421a3cda4f029eda9d",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/ReaderToolbarSpaceAuditTest.kt:843:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/SplitHandleGestureTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "7fe07e26441e9a82bc1701004a221dfc651a2340d0474d08f4d5e7be1331f470",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/SplitHandleGestureTest.kt:34:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/VerseRendererComposeCheckedHighlightTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "e33ca8f0f88eafa3a061094f9d45f4e010c82703b54d0e772cf3fece580e4718",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/VerseRendererComposeCheckedHighlightTest.kt:61:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/VerseRendererComposeRubyTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "8423c3e2dd051a2b3654dd34f2b0e5757aa72811f62ca577dc085a028d519251",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/VerseRendererComposeRubyTest.kt:36:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/VerseRendererGoldenGen.kt",
+      "outcome": "rejected",
+      "source_sha256": "ae811bb8701ffd00808d87702fe4b5f1e8783defe226e47802238be674eb2e77",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/VerseRendererGoldenGen.kt:38:9: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/VerseRendererTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "11301db2e21b59638370e6dff31705c0c7518f64a1df4ba650173c9bd0267d00",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/widget/VerseRendererTest.kt:89:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/datatransfer/model/JsonFileExportTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "2069ce0ca8bf95869348bddf69cd9f1209e258421f76b54011967c6989ad0474",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/datatransfer/model/JsonFileExportTest.kt:8:5: error: Only instance functions, properties, and companion properties are supported in classes"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/datatransfer/process/ImportProcessTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "eca4c40fc3ae9e843503011d43b4ca11440b86c5375c0d18c5a65e68d24b200f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/datatransfer/process/ImportProcessTest.kt:73:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/songs/SongComposeFontTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "671e3109c500ca17c136ff4376da7a7bc45dc4071294097d5d60890934627859",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/songs/SongComposeFontTest.kt:61:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/songs/SongFilterMatchTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "caf33582af8ea94300dd5431f7bf13ec514b6c7284ed12fbe8221fb3db5f8425",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/songs/SongFilterMatchTest.kt:58:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/songs/SongFilterTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "29693a3502d622bb602869f6b0fd0ae7a04f30dcc2093031175225ef7eff0b46",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/songs/SongFilterTest.kt:18:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/songs/newdoc/AospParcelWriter.kt",
+      "outcome": "rejected",
+      "source_sha256": "aa264b01176c6c642ffa8428c8fc9a2f3d73ac6c0b9772bd9aa470028f195115",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/songs/newdoc/AospParcelWriter.kt:18:1: error: Only one top-level class without other declarations is supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/songs/newdoc/PortableSongsBridgeTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "8e0c3352cbe9e0fc629e7e3932197ee2e8c239f5ba6243acc865d8795cf27d89",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/songs/newdoc/PortableSongsBridgeTest.kt:225:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/util/IntArrayListTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "e3f827c7f2ee1ad0b0edfd7432354fcff1927112ecaaa66e05a067413e2c65ed",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/util/IntArrayListTest.kt:8:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserAliasTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "903946dc47b5bfcdcec8f8720252b665a734b87a1319cb2c8e5704e340b6d228",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserAliasTest.kt:12:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "d9b9d09dadb10f0eaffcede5335b4426edd8985e07be1bca37cfed7b23db3221",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.kt:12:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserReferenceTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "972201938e7495bae40ca6546d012b9d5f606e3b424c50fc152348ac01a18a8b",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserReferenceTest.kt:16:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserRegressionTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "b855341d5b0a8a44dc9cf2ba3a4acc627774b8e3a0eaedbef25477327e297255",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserRegressionTest.kt:14:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/Utf8Decoder.kt",
+      "outcome": "rejected",
+      "source_sha256": "acf20f118b8599b2fb4a6265edc9528b9f19107fabf790709451256edc8738d3",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/Utf8Decoder.kt:1:1: error: Java class java.io.IOException was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+      "outcome": "emitted",
+      "source_sha256": "1ffdebcffa174e2c119205b2ed7698fc9d47a0dd2deaf9e816eb84faa388ab02",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt",
+      "outcome": "rejected",
+      "source_sha256": "0162f744a5d6a09e955a1111c68b50b3b3864ca36f7f9ba65936440de10b7290",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt:1:1: error: Java class yuku.alkitab.model.SingleChapterVerses was not found on the classpath"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+      "outcome": "emitted",
+      "source_sha256": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+      "diagnostic": ""
+    },
+    {
+      "id": "benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/SnappyStreamRoundTripTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "f05e4c9574f4bb85279631b3e72c4705a277e8fa0df66132b9e9896ce37d8c3f",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/SnappyStreamRoundTripTest.kt:43:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/Yes2RoundTripTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "2006b9b9179eb35e94a940da84edff199ee89485b78672a0e859a47e3cf0e995",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/Yes2RoundTripTest.kt:171:9: error: Unsupported token in this Kotlin subset"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt",
+      "outcome": "rejected",
+      "source_sha256": "32031fe3f0d2a7f21013405c7999be11310a2176b9e1d6ef8d57679f1f40d603",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt:1:6: error: Object annotation arguments and use-site targets are not supported"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/tools/AlkitabConverterProcesses/src/yuku/alkitabconverter/in_ayt/Proses1.kt",
+      "outcome": "rejected",
+      "source_sha256": "414ecd893130aa759e5212ab2323a42f0f2710763b62e9532a252bd44a4db110",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/tools/AlkitabConverterProcesses/src/yuku/alkitabconverter/in_ayt/Proses1.kt:9:9: error: Expected fun, found val"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/tools/AlkitabConverterProcesses/src/yuku/alkitabconverter/in_ayt/Proses2.kt",
+      "outcome": "rejected",
+      "source_sha256": "53fc461c8a5dda3415207887a93f0d623ec17839c92924e93bbb3fc28964d022",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/tools/AlkitabConverterProcesses/src/yuku/alkitabconverter/in_ayt/Proses2.kt:51:13: error: Unsupported token in this Kotlin subset"
+    }
+  ]
+}

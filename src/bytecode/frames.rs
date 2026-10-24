@@ -10,6 +10,7 @@ enum Verification {
     Null,
     Object(String),
     New(usize, String),
+    UninitializedThis(String),
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Frame {
@@ -185,6 +186,7 @@ fn transfer(
             .push(match pool.entries.get(index() as usize - 1) {
                 Some(Constant::Long(_)) => Verification::Long,
                 Some(Constant::Integer(_)) => Verification::Int,
+                Some(Constant::Float(_)) => Verification::Float,
                 Some(Constant::String(_)) => Verification::Object("java/lang/String".into()),
                 _ => return Err(failure("Unsupported constant during frame generation")),
             }),
@@ -301,7 +303,10 @@ fn transfer(
             if op != 0xb8 {
                 let receiver = pop(&mut frame)?;
                 if name == "<init>" {
-                    let initialized = Verification::Object(owner);
+                    let initialized = Verification::Object(match &receiver {
+                        Verification::UninitializedThis(current) => current.clone(),
+                        _ => owner,
+                    });
                     for value in frame.locals.iter_mut().chain(frame.stack.iter_mut()) {
                         if *value == receiver {
                             *value = initialized.clone();
@@ -357,6 +362,7 @@ fn write_type(pool: &mut Pool, bytes: &mut Vec<u8>, ty: &Verification) -> Result
         Verification::Float => bytes.push(2),
         Verification::Long => bytes.push(4),
         Verification::Null => bytes.push(5),
+        Verification::UninitializedThis(_) => bytes.push(6),
         Verification::Object(name) => {
             bytes.push(7);
             u2(bytes, pool.class(name)?);
@@ -376,6 +382,26 @@ pub(super) fn attach(
     locals: u16,
     is_static: bool,
 ) -> Result<()> {
+    attach_with_constructor(pool, method, owner, params, locals, is_static, false)
+}
+pub(super) fn attach_constructor(
+    pool: &mut Pool,
+    method: &mut Vec<u8>,
+    owner: &str,
+    params: &[(String, Type)],
+    locals: u16,
+) -> Result<()> {
+    attach_with_constructor(pool, method, owner, params, locals, false, true)
+}
+fn attach_with_constructor(
+    pool: &mut Pool,
+    method: &mut Vec<u8>,
+    owner: &str,
+    params: &[(String, Type)],
+    locals: u16,
+    is_static: bool,
+    constructor: bool,
+) -> Result<()> {
     let length = u32::from_be_bytes(method[18..22].try_into().unwrap()) as usize;
     let bytes = &method[22..22 + length];
     let mut initial = Frame {
@@ -383,7 +409,11 @@ pub(super) fn attach(
         stack: Vec::new(),
     };
     if !is_static {
-        initial.locals[0] = Verification::Object(owner.into());
+        initial.locals[0] = if constructor {
+            Verification::UninitializedThis(owner.into())
+        } else {
+            Verification::Object(owner.into())
+        };
     }
     for (slot, (_, ty)) in parameter_slots(params, usize::from(!is_static))
         .into_iter()

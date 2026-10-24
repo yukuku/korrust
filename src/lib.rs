@@ -47,7 +47,7 @@ pub fn compile_outputs_with_classpath(
 ) -> Result<Vec<OutputFile>> {
     let classes = compile_all_with_classpath(source, file_name, classpath)?;
     let module = syntax::parse(source)?;
-    let mapping = if module.functions.is_empty() {
+    let mapping = if module.functions.is_empty() && module.constants.is_empty() {
         None
     } else {
         let facade = &classes[0].internal_name;
@@ -187,15 +187,23 @@ pub fn compile_all_with_classpath(
             .class_decl
             .as_ref()
             .ok_or_else(|| Diagnostic::new(0, "Class checking did not produce a class"))?;
-        return Ok(vec![ClassFile {
-            internal_name: internal_name.clone(),
-            bytes: bytecode::emit_class(
+        let companion_metadata = declaration
+            .companion
+            .as_ref()
+            .map(|companion| metadata::for_class_companion(companion, &module.imports))
+            .transpose()?;
+        return bytecode::emit_class_files(
+            declaration,
+            &internal_name,
+            file_name,
+            &metadata::for_checked_class(
+                source_declaration,
                 declaration,
                 &internal_name,
-                file_name,
-                &metadata::for_class(source_declaration, &internal_name, &module.imports)?,
+                &module.imports,
             )?,
-        }]);
+            companion_metadata.as_ref(),
+        );
     }
     let bytes = match &module.enum_decl {
         Some(declaration) => bytecode::emit_enum(declaration, &internal_name, file_name)?,
@@ -203,7 +211,7 @@ pub fn compile_all_with_classpath(
             &typed,
             &internal_name,
             file_name,
-            &metadata::for_package(&module)?,
+            &metadata::for_checked_package(&module, &typed)?,
         )?,
     };
     Ok(vec![ClassFile {

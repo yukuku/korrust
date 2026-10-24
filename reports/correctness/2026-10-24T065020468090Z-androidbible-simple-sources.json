@@ -1,0 +1,2832 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-24T06:50:20.468090+00:00",
+  "status": "completed",
+  "compiler": {
+    "version": "korrust 0.1.0",
+    "binary_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+    "source_files_sha256": {
+      "Cargo.lock": "b2146c5915d63f0a75500af0d88ca0e0856ed4f36b7b1ce1cc51da277049b1f1",
+      "Cargo.toml": "4643f02803cf1a9d48f32579c5837969b53450a2c37a2fbcce4d72eca39ac1e9",
+      "src/bytecode/class_companion.rs": "6fe482344b62825573cef0a0aa0650520302ab58d2837c31a312f5b050754b8f",
+      "src/bytecode/data.rs": "5efd2c32de16016ffaff27c54d219590ca4cde00e9b7fe471cfc16c33eab69fe",
+      "src/bytecode/defaults.rs": "127ca30f31d753058d61108635aecce6f3a2aa39ddb53121d1c5fc9c1f9f6544",
+      "src/bytecode/frames.rs": "81bed9f048829f09f3b70e42033a9b4aa9bc4da669ac2c97878faabe40e3bb71",
+      "src/bytecode/interfaces.rs": "9a89b249a552753609194634983cfb8b5ce412fabf155d1294c3991ff2268031",
+      "src/bytecode/objects.rs": "5082d63b9fefc38d2ab0f5733d80698bdcfca2eb5b8b4e20b9842bc58d7c750b",
+      "src/bytecode.rs": "c55e8292ec9d0deed9e61b9d04a19314711dc49d3bd84b74d768e9b016a65828",
+      "src/check.rs": "372ffa2d9ba44d8aa038b946de24b0c2ff117a25b2d7a236bdfd01747b4cbee6",
+      "src/check_interfaces.rs": "c2d3cdd1c345b11d09d07fe2a81abb95aff29117d36ec9f0ec3fb9ffe14fb511",
+      "src/check_objects.rs": "95b40a6cbd14635c19d1178c52bfd0e26ebbdc5aae2f958495b172ee76510acf",
+      "src/check_singletons.rs": "a81fdcdcd14c2974678efd36f1fd505b7f7f31325e083786e45c456b979f05df",
+      "src/classpath.rs": "16718bb89057357ff45b444564cf935db343d5277de075d1cf848ee25a3ff9cb",
+      "src/lib.rs": "1f427eb32088a28acc355852dc9db8e7e1a97e0d12a8cc5313a198ef27fcf05a",
+      "src/main.rs": "c17680b31cae9b79e19d58d9d0592d58e9302f2888dccec3b303fe609793c6bc",
+      "src/metadata.rs": "843760a5ea92a237309b9dd508da727515e66a16e4df8834fea8d625a49eefd7",
+      "src/output.rs": "d991a876f22a16543179837c9e36655f41125a052ec6ff89b7b0b56fa7514d9b",
+      "src/syntax.rs": "38431fa68f958733c6b19daf9e504be331eec7325b031e7df5ebc6418b18d358",
+      "tests/diagnostics.json": "dbcda9a0ba445e064ad3e72e9b571e474c74a63a41ae33f9e6885cf6fe55fa33",
+      "tests/features.json": "a85025807064d2e4af598ff5a0f9b03a2fc01ca49dd3db53f49229caf438f412",
+      "tests/fixtures/Arithmetic.kt": "37d8d9bc057d6597ee9f3b65914c6d34036792e6c387f9e749d0feff301d2bf5",
+      "tests/fixtures/ArithmeticCheck.java": "a652303019ca0fa4e6431bd79f0201991001353a292b59f9c2fd7fe63a602fee",
+      "tests/fixtures/BinarySearchCheck.java": "fb318c19290ba2a9eb928c83154c5b4a982dce44fbf908d70fdb74d6a702c50e",
+      "tests/fixtures/Characters.kt": "46b8adc807d572d9cede889535ee52749334c7b6dfeed46410c966325ea87956",
+      "tests/fixtures/CharactersCheck.java": "af2ad0a50dfe887439229e24f9f6965c9c9d23b4d20e5a94b5aa8e366d7a1945",
+      "tests/fixtures/ClassesCheck.java": "a11275f572692c82ccdfa78802b4faef2f71e1bb416f6b74f7d5756d731b90c7",
+      "tests/fixtures/EnumsCheck.java": "5d225188355a3043f10bd907a1816d1f1f1dbf6c5e4ab16d1db6b1ef9c2776f1",
+      "tests/fixtures/InterfaceAssertions.java": "f560e4eacfb57ae417f7279831befbc561a98faec38c0a90785117bab0419ad1",
+      "tests/fixtures/InterfaceCheck.java": "ce97cbdf11a768493f5328fe2832fcdbfce369dc5a479bbf986fb4d12075794b",
+      "tests/fixtures/Interop.kt": "f2c8805277fb3b1cb6cba3b1610bac8196cdd8866959679e288ab035a69f7def",
+      "tests/fixtures/InteropCheck.java": "2e7442e51d6b0e59b4657556fce9a6aa15c56010537460412e6d853608f462b5",
+      "tests/fixtures/MetadataForeign.kt": "139cded38b67b2165163e9ecface2f341de9a4be1d8eaf53b3a71328e82ad89e",
+      "tests/fixtures/ModelCheck.java": "9042abcb3930cca80e011d82a7ea8dbec759cf9ebb813bc40e2a02163ab3e486",
+      "tests/fixtures/ModuleClassVerification.java": "a1cda2b94555795253ae8a250279a84c5ffd9e0b91f337be7189ba229b23e414",
+      "tests/fixtures/ObjectsCheck.java": "46eaf093c231f8f9126f04351e30a11bb891066251ffb3e15cc77d2b739ba8c3",
+      "tests/fixtures/Strings.kt": "608e4ab1c049b9f46c2e1f39fe00f848c046a3f16c06f78f1cbbd872fc3fef3d",
+      "tests/fixtures/StringsCheck.java": "a7498f7b9492bcee70c2944e32329cbaf0daca689962980708bc778c80b9429f",
+      "tests/fixtures/Yes2Check.java": "a36be81faa013c0c2de019d473fdf902054b70f9558d47fcf5245266c0ff710c",
+      "tests/fixtures/classes/IndexedText.kt": "ed969970caeaccc233d6c0f5d0a290c86616634faf04134d755824b5fd9b3c59",
+      "tests/fixtures/classes/SyntheticChapter.kt": "94fd74380019b27d4787ff5e2c1d8a4a9e30b51a01e76c246d4f7059a6203278",
+      "tests/fixtures/classes/UnsupportedInterfaces.kt": "7a896c2c3f323b2859402e2f14d55369d3d4e393f4b14ff94b349483eda99d9d",
+      "tests/fixtures/consumers/FriendMetadataConsumer.kt": "88475a9e442b7b9e2be15ffd3d1a1214359c00a643286c2257b44d91c709f5e8",
+      "tests/fixtures/consumers/InternalClassAccess.kt": "3c55cae0f60bdfd070fed75783f8b1ddfb20c8f2b9c4dacfcd88be23c84bcadf",
+      "tests/fixtures/consumers/InternalFunctionAccess.kt": "f9c93c949956f7a865a49c86cd6e2065810f4a2bf31673b9c0151782260f74e0",
+      "tests/fixtures/consumers/IoInternalConsumer.kt": "ea9b75b8d216de7b2b25212750cae44a0fc7c0b5637b13c492e46d3e6fdc344b",
+      "tests/fixtures/consumers/IoMetadataConsumer.kt": "db1f60d87f967aa3ed80292459a8ebb7e4e57b31b37d5c28b1d97dedd9c5c05e",
+      "tests/fixtures/consumers/IoNullAccess.kt": "1f7b032981de1078556f60b2fdad29575fb53505d171d15b539673984e2f394e",
+      "tests/fixtures/consumers/IoPrivateAccess.kt": "7a672286c880c63e9da9457da71263401d845e38e95bb7ab3ea026eab60010b5",
+      "tests/fixtures/consumers/ModelConsumer.kt": "64d6f44abfc08e0630a78b05ccfe72db9dd34b974fa5b77729f49b9c2aa7053c",
+      "tests/fixtures/consumers/ModelPrivateAccess.kt": "05278b8a30ef0f7b612213dd72a2f68b043b042ac390f91be2e4b7d5675f1eda",
+      "tests/fixtures/consumers/ModuleFriendConsumer.kt": "4442f1aaeb940b5fc5be78303e1cb975474ab3856678574b3f8f5db56bd3c9d5",
+      "tests/fixtures/consumers/ModuleIoConsumer.kt": "c20d551f5fbce90389396f9e8e9712aaac975043c2bf01ae37110ec44af8a972",
+      "tests/fixtures/consumers/ModuleModelConsumer.kt": "fe4dcec4a0baee0f635ec15aa76b213a8325df37b0563746bb78fbf2abc331ff",
+      "tests/fixtures/consumers/PrivateFieldAccess.kt": "a81111e64975d4fd0649d625a6c5c0551ee1e950ec4455a756d246ee41b68d3f",
+      "tests/fixtures/consumers/PublicMetadataConsumer.kt": "13a34a36b732254130472046fcfadd5f84aa6e4b436e1f05f737df0dc9b84f9f",
+      "tests/fixtures/consumers/PublicNullAccess.kt": "9fc4b6a51742b157ab678046c9b84330f0634eb92cea8cfd1c4994bbc8c0fb53",
+      "tests/fixtures/enums/CollisionEnum.kt": "fd5bfb1472cf72026c3e881ab1069e349e15a7bd08b539a39d4bf1a375390bed",
+      "tests/fixtures/enums/EmptyBodylessEnum.kt": "8fdd9e231521c36ddd049906ae49507b53bc0294d4dd969cb4187fb63c51d8d6",
+      "tests/fixtures/enums/EmptyEnum.kt": "5c9fa305ead8a1f5e785c71f609181b9c92670639cc6fa74ab94ac3d66d967c3",
+      "tests/fixtures/enums/EmptySemicolonEnum.kt": "b1abbe51fb5d7dc90b240285a16e15b4b94cdb4b313c46ea39e5b7ea5059c136",
+      "tests/fixtures/enums/EnumOrder.kt": "247d0b048d26260aa0a3e9d6fa20589fd4371fbc5f63fe54a7f3cc83bbf844be",
+      "tests/fixtures/enums/InternalEnum.kt": "5674637e0f07f5e74e68dcaa93d37a152e79c9411d666d2f8725d0649db09234",
+      "tests/fixtures/enums/LargeEnum.kt": "b5d10bf1e609debee64e59521ed6581948aa8481ad529ab4545d5f59dde6e9b8",
+      "tests/fixtures/enums/SingleEnum.kt": "14ac94098c27e73ed1e44a0fd94c1a0a52521169a70597439336352075c02fb2",
+      "tests/fixtures/interop/AnnotatedForeign.java": "a3874882c01772c9f51de0bd7735f829f56fb8290d8a24118529680ca0a50b4e",
+      "tests/fixtures/interop/ChildMethods.java": "ce64b6fa2a07429a6ff1261b94a16cd434fe17eef7d72deab87814d4455f133d",
+      "tests/fixtures/interop/ForeignInterface.java": "4db1cc4ae2b081ea1e840b50c82b9ff8fbd260235e6687e56d0e355ec8579c65",
+      "tests/fixtures/interop/ForeignMethods.java": "da172b22fc5abd194562a9c050e5c9f360f583a8631fe28535e0b62720f5e243",
+      "tests/fixtures/interop/ParentMethods.java": "4ad132dfd047e2a1e87f02039222779b3c9d0090b7afa8a6703a51cfe823436c",
+      "tests/fixtures/interop/WhenTracker.java": "65fc96f0667f3d4dd6c7d45e16284da48432b75138d871c4effdaa0e944f34fa",
+      "tests/fixtures/interop/android/os/Parcel.java": "d120badab7f8813973d6b148df41e085a859205f8f06d98fea1dd01463482f06",
+      "tests/fixtures/interop/android/os/Parcelable.java": "5057df7e618630b6719d80138603a6915f6060b79640dd52de62df50077e992c",
+      "tests/fixtures/interop/androidx/annotation/NonNull.java": "feb1e800204acdaa66e9792e34cbd43c834fa7d730feb40c2812fdb4d673ea59",
+      "tests/fixtures/interop/annotated/PackageForeign.java": "2d01c814c9251718e616ae420b89af49a598f154d96dcda0125db606dd9c72ce",
+      "tests/fixtures/interop/annotated/package-info.java": "6be1633993f2c8f0a04b192fc6da0740b7504c1928166e5da22ad8bff90e0492",
+      "tests/fixtures/io/ArrayEdges.kt": "71e72752dcd8dcd0e5adb547ad121b56fcfdf92d7c5df324730401c1edd811a8",
+      "tests/fixtures/io/ByteWorkbench.kt": "cdd1d78bb3fed4f8d61c85d23c7d02438e7156977b0f409dd4e6a50ce1615b02",
+      "tests/fixtures/io/BytesCheck.java": "ab940b2c209d7357d731d63aa29e7540bb9a42c8cb51f529ae7381bea9688d01",
+      "tests/fixtures/io/HiddenBuffers.kt": "f8fd2688c6b9a497548614c8c787b98f2dcdc7406bd1f8a9b25c6e5d5fde7281",
+      "tests/fixtures/io/IoCheck.java": "6cb717f576ba759c6bb569550b8559c2df3be4e483e237f4f167bb3c6dea1cac",
+      "tests/fixtures/io/IoTrace.java": "edf2a838e133b0e5640906d81651c52faa640e67f545d4157b069f986945d8f4",
+      "tests/fixtures/io/LazyScratch.kt": "eb17ac8d151b612593503f152b87a014cfd3256e1e1efbb9a3e7bf7e26efc0da",
+      "tests/fixtures/io/StaticReceiver.kt": "bcac6aa28fe4eaf53ffde0a2eac98d774e1cee82f5a23b8fecd7c22daa6ee700",
+      "tests/fixtures/io/SupplierCheck.java": "948605f6b1985369e8a6324469afb70d7c9033193b12fd45dcc8ca74f5f72f67",
+      "tests/fixtures/models/BodylessInterface.kt": "3144d9302d0b309a6026dbaf954c2296a1d6329d73ab44708a6df5a3b90f7130",
+      "tests/fixtures/models/EmptyInterface.kt": "267d638f8df1a4496cc6187dd15da14e12d4783bf643076c7a2f11afb17bc335",
+      "tests/fixtures/models/RecordView.kt": "604e16985f5e368b8bd086188e66b7e48cae3e4ce7cbaeda35e0dd6f34205b25",
+      "tests/fixtures/models/Templates.kt": "aa80d870dee2497db4ca468cf2900e499cb753991e2eb975dc400687d13ab686",
+      "tests/fixtures/objects/BodylessObject.kt": "59619cff24be2d3e94439e398554961fe773430e8200fe125bcc714b8520ec5d",
+      "tests/fixtures/objects/CollisionObject.kt": "a6102f866ab9c70837b03fa4a54012b4367d4f3bce2bfbc187e0d558d98b8f86",
+      "tests/fixtures/objects/EmptyObject.kt": "f740a5e55255c0c433d7dbe1be1c5b224d7341b75eee80e5d3ac2c45a56578a9",
+      "tests/fixtures/objects/InternalObject.kt": "23e8edd43f6c7fa7a2d97c82bfa813b90a6724ae10b0147a2930120128122244",
+      "tests/fixtures/objects/LargeObject.kt": "07133df79880991fa97d8c24e3f279e6f0c3ce8aa4e89ba423e2bfe5c8db1537",
+      "tests/fixtures/objects/ObjectLiterals.kt": "8a225a4165d2ca52b26d8cbd1ce45a1d772f643146eb24c79c930f4dcc4a5f46",
+      "tests/fixtures/objects/ObjectTree.kt": "dc769f90a34b9a13665caf1659bfc6315979da9f9bfc8e1a694c4c9424fdaf2e",
+      "tests/fixtures/serialization/AliasedDestination.kt": "355bd8bb25ef104a2ab6ba3223cfc7013091c0b9a86a94ade09ad7b35d506812",
+      "tests/fixtures/serialization/EmptyRoute.kt": "e65a7275b30e1708889506bd72612960f355f937c95c79e759e0ec5853dbadb5",
+      "tests/fixtures/serialization/InternalConsumer.kt": "a5508dce4e37c478808d2754b9e1fc795e560128d5e85652267b7bf9085cbd2e",
+      "tests/fixtures/serialization/InternalSignal.kt": "8bfceda515196f5de11c7e878aa6bc27e6944cfa4268d6de8fde408af65c6feb",
+      "tests/fixtures/serialization/QualifiedToken.kt": "ac1d237838c90b73a275e2fc845594307373b6423bc78bc2cb3c0f41a63e6428",
+      "tests/fixtures/serialization/SerializationCheck.java": "7e8890a76e0a7b548952de2dc4ca977e311b6d3e9f5b39016ffe3e595fc6a47b",
+      "tests/fixtures/serialization/SerializationConsumer.kt": "e2db98352b2fbce40759dc2cc949eef95758ea15efee53f1844f14039f17fa15",
+      "tests/fixtures/serialization/SyntheticConsumer.kt": "433d4ce7c51975f9696e0a012c10b7034dfaec552a1611b06e7a7c393a2ad91b",
+      "tests/fixtures/serialization/rejections.json": "c11921f278b9fc7bb98766009eed371a910d786748dcc7216691ee643f391d96",
+      "tests/fixtures/simple_androidbible/ClassReadOnlyOverride.kt": "44f1b28c9b480252a650448d2587a4e5722fc2b686f40d88b3e5f2f9bd89274a",
+      "tests/fixtures/simple_androidbible/DefaultMutableAccessor.kt": "fffe1c2008ac9ac1b7c3055940d495e7237789c4b629727efa0785f6265b68a1",
+      "tests/fixtures/simple_androidbible/InternalAccess.kt": "b3e13c99e928d01951a1e0f62ace55d821d1db2de488392a5565f1a0915a738d",
+      "tests/fixtures/simple_androidbible/MismatchedMutableOverride.kt": "957ab58dc3c5b75a1d0d7f57093faa53c87cfaeffeb12b26dfbbc2ac86551dc8",
+      "tests/fixtures/simple_androidbible/MutableInherited.kt": "ec8b3fe791c441191d3fa2ac1cb9454be13b6f2efa219ea2dd8b498689aa5bec",
+      "tests/fixtures/simple_androidbible/MutableNullAssignment.kt": "e4a19287c47ba8186c17e8f168f322c1794c143177c63445b96899d6540da60e",
+      "tests/fixtures/simple_androidbible/MutableOverride.kt": "778e06ef19d8aa2725e6f81d61f73912604c73b81b04bf021f0e46a0266a2a74",
+      "tests/fixtures/simple_androidbible/MutableSurface.kt": "d60a80f4a9bf30bde8af04444d4c6d9ea41bacbc16d0b2661abb413f8ed5c9f1",
+      "tests/fixtures/simple_androidbible/NullableArguments.kt": "0922ab9815e6044065f6eb5931adb29d17bd9d51698f0c87153b11511d61c0b7",
+      "tests/fixtures/simple_androidbible/ReadOnlyBase.kt": "9dc5e0874d8a27d441f31e515b54ff407b3fd4d073e3e83fc220714752d6d58a",
+      "tests/fixtures/simple_androidbible/ReadOnlySetter.kt": "f39cd748494d69e39cbbcbf27ed60ca4bbc2d9bf3ec8208de69b6f889ab2806b",
+      "tests/fixtures/simple_androidbible/SimpleAndroidBibleCheck.java": "4848fcd48e892bcefcc990cc7e16fded01ce54846a578300d35c6a35ce438fe8",
+      "tests/fixtures/simple_androidbible/SimpleConsumer.kt": "a34065d50b4d0fd77e59cdcdfa1b4a01c6ed48557d4c1b924c7784ef5a373514",
+      "tests/fixtures/simple_androidbible/ValOverrideVar.kt": "b35333f7ad84ac30a4481af31903cc9f9594dbb9782e726ea71547756db42d7e",
+      "tests/fixtures/ten_features/Frames.kt": "aa9f8c157a096e2bf55bdf6d02d6094e75e8523fbc7c1171e2d945737f69dd42",
+      "tests/fixtures/ten_features/InternalAccess.kt": "e2419c32467c0102f904090c28e9ff9e541a9dee008bf77cefc0eef8adb7059d",
+      "tests/fixtures/ten_features/LongOps.kt": "4c04bdccbc8010bcf9ff7f6ac5b02d3696c7d6a33169b1ca772c97a9cdb05112",
+      "tests/fixtures/ten_features/MetadataRejections.kt": "af3f8a55e18e5f0f1b75e17a8217b4a45ed1185077a0462f48296ccf44b8560c",
+      "tests/fixtures/ten_features/PublicFields.kt": "cf8ad3e7f1dc84f183abac10ef27f55cf48902eeafd01c2b801ba8ef914d18a5",
+      "tests/fixtures/ten_features/ScalarRecord.kt": "59126d3aa0c697258eef938f1a1c35365f03b7414537a1b9eb64d4de2899da48",
+      "tests/fixtures/ten_features/TenCheck.java": "8945602cd617240b9141cbe320f7e189333ba11cf4868f886b78e5c8ae028055",
+      "tests/fixtures/ten_features/TenConsumer.kt": "f977b52a6e7e19d068e5134b04457b1c2b24fff0a8edba376d7c3b4464318310",
+      "tests/fixtures/ten_features/TenOps.kt": "33d4d29c1bce101bf9bd0c3aa65fe7922c797dc0c361331507978844f9190d0c",
+      "tests/fixtures/ten_features/ThirtyTwo.kt": "1b65dbb18b45de455e4aef184e1a50ac23f9437ab5daefa34cd016ab496baaa2",
+      "tests/fixtures/ten_features/Trace.java": "e35822a13fac9397aa0543a14becfc24d301b02942668715fd130d5fe562eb0a",
+      "tests/fixtures/ten_features/rejections.json": "9d99c3ff0491faf7767d0bd1bd2d585c59287520a38164ec38e103d48b3214dc",
+      "tests/fixtures/twenty_features/Captured.kt": "921cce38637e2d1af821de8cbb4b10531147811eb3bc795a95cd6692f4666af2",
+      "tests/fixtures/twenty_features/CompanionInit.kt": "ab737737017c1e2253a8b36b3f0d562838f39c10ac44e4ed6c65df8e5fe466b8",
+      "tests/fixtures/twenty_features/Construction.kt": "d150d54acfb32e3fb2500fc7c91519e45028e9e3e3c5f14aad95d234c3f2a3be",
+      "tests/fixtures/twenty_features/Consts.kt": "c85b9d518580f4a27c5b5cf27aa10c828c1d41e215d113f46cf9b93b31eb4e43",
+      "tests/fixtures/twenty_features/DefaultCtor.kt": "7483172de1be6e40ac2202ace5fe3ba62181111a3bba430e4cd6bf7171f4b5df",
+      "tests/fixtures/twenty_features/DefaultMethods.kt": "6a841d9e55846ec4ab56ff7bea11b4ce4bb7224487d1cb3385a00336ce285496",
+      "tests/fixtures/twenty_features/Defaults.kt": "b62bfb823ed3a7fafb43c9b5733df921ec6732efc381c346d0da5c6be25e3942",
+      "tests/fixtures/twenty_features/Implicit.kt": "d0dad61ee11c3708765db44ccbd985fca78658c24680e4d2e619edf71005d833",
+      "tests/fixtures/twenty_features/Initialized.kt": "35fbf73ab35bcafc76786667022a1424d654a65db63841452369b58b25d30a66",
+      "tests/fixtures/twenty_features/InternalAccess.kt": "7c570727d0e973a5ba66687b3006b05c5ac6e3c0384318957d339c4ba84d3fe4",
+      "tests/fixtures/twenty_features/JavaApi.java": "8b67a4f04974d2ec29ef20909bf5c3be4b9c28509427046317e5c1ccb990e7ad",
+      "tests/fixtures/twenty_features/Mask32.kt": "1608b42aee969de5030c22195745202215206017b6b37462ba0f4e9eff482512",
+      "tests/fixtures/twenty_features/MaskCtor.kt": "405989ca7003e7069c96b4c6afd928086a8eab029eec43823058a7b06eb28306",
+      "tests/fixtures/twenty_features/MemberImplementation.kt": "73d321c23c6ba448d9c16512b3658cb994c82c0e7922f8e38a8a6ef97f991091",
+      "tests/fixtures/twenty_features/MemberSurface.kt": "3014183aae09315cb7ffc9a3401b324f7242178fd31e15e0a5257560b458ec84",
+      "tests/fixtures/twenty_features/MetadataRejections.kt": "c79d56b1af4129591befb1673f30de411c4e7f88e8d5728e59e877de1c2ef9db",
+      "tests/fixtures/twenty_features/MutableCtor.kt": "194f86b170e29b688e9aac405cb037e70a5612f4e69cccdd42970ef7fdd9a19b",
+      "tests/fixtures/twenty_features/Ops.kt": "ea3b319dc099d8cb227383f7f085a7f3976d8a5b5fc80b957abebc6d4dcb7c4f",
+      "tests/fixtures/twenty_features/RichRecord.kt": "3ac9f86734afac80cac2856dd261a49c83602c3f59e894ce2fcd5dbcb5a2c87e",
+      "tests/fixtures/twenty_features/Signatures.kt": "cfb3b22c2568ff209b1374355ac3c84b5f418d7495877e06716aed915356285b",
+      "tests/fixtures/twenty_features/Trace.java": "a0ee1fdf9082062ca1ec693cc10280253e9917d74edf4d76b55af191ddc2313c",
+      "tests/fixtures/twenty_features/TwentyCheck.java": "6e7e6a18a6dd7c355005b48e5cd19a58628fca9569d338f84d411e9c4bfe0957",
+      "tests/fixtures/twenty_features/TwentyConsumer.kt": "59a0457ae00e1ecef0b061b4b3a74b3f2d2fe929aee344ee650dc1b283f1c834",
+      "tests/fixtures/twenty_features/rejections.json": "d028a3294fbb66d81cbff81c30454be2813d75a8ee4f9efee1e37fb177e72143",
+      "tests/frontend.rs": "76068970507f21f550e39485f4845e28a470dcf044f335b20b40d9d15f5f9c3d",
+      "tests/interop_diagnostics.json": "6e536f971b69eb22658a13fd90b05c8f18b69c8b02a9a1608d588f0cf7b4ffc3",
+      "tests/interop_unsupported.json": "ed2d0d1bb2e685b8b297b95a3aaa37f87bfb16d1b62c40c7ded82995f2f67214",
+      "tests/test_androidbible_simple.py": "8a5916164b59715dacd90bde3b93a3eb7b4ab0b29b0ff2bb5086ce7e8ffac724",
+      "tests/test_androidbible_ten.py": "3f439b1997f1ec404e74093a3390b40d1d05a367d5b22295a13d5b3d4b7fdf9c",
+      "tests/test_androidbible_twenty.py": "f2060404dd9661b2f61d08d659fac22cd8497319d393b74e7397aafb4740de9f",
+      "tests/test_cli.py": "4c693f82efa73ecef0de392120419bd1459c7446d3a110a679f1d3a275d3ec57",
+      "tests/test_nia_build.py": "37f5b7349c83d5ddbc5fbf8dea924964540bd5a35e80545c6976660f062710ec",
+      "tests/test_nowinandroid.py": "31431026b6e93bcef1606a6f77c039efbd91f20d881940ae5e0b63e2047f811c",
+      "tests/test_reports.py": "3bb9702230a594fb4a7a750f586777b8417fa4fb70feee6a14797e29fc0e1a28",
+      "tests/unsupported.json": "ef77909e725fd626191f335d207a7e4940ffdb1ac7875f47d809ce75c80185bc",
+      "tools/build_androidbible.py": "34068eff3f952d78d80d992f7b36f44c30e466617cf58d9aa97717deb8d18ad8",
+      "tools/build_nowinandroid.py": "ebbeb41c0f95cc0a1ec5498d16b47944e0be2dd67cf288d5b633338482f9243d",
+      "tools/check.py": "a777b74510eebc47c2574dadc3bcf17ae8b7ba56ffcf150bcb33f457aaf21035",
+      "tools/check_androidbible_io.py": "fc0b57df8706914a60ac010a90b29c0d9dd1ea02328e57ba96e3455b71cdd271",
+      "tools/check_androidbible_models.py": "8003610cd672c50c9bab67c633764a6859283ab119db1f503016fe947b136d9e",
+      "tools/check_androidbible_module.py": "b9aed71a370adcc26d3ad865e1c090c8d61eef0d9dd63f9bde63d240526b74f8",
+      "tools/check_androidbible_simple.py": "34f06f1d28b7a2845891b22e9e06db0222978b7cd7567d9657b15d8b5157681b",
+      "tools/check_androidbible_ten.py": "409e36ebef6c3dd5ed18990be7c19176b69bbc847428463394ef4a744a16d1d2",
+      "tools/check_androidbible_twenty.py": "76c9152fb4e5b793eedc6fa5fc9632314f0178296a1996ebfcf4fba4f82b47da",
+      "tools/check_nowinandroid.py": "9dc06c572321c6a2ad27cb638081577982494ba61ac0ef3fc7f5310b0b4f37a9",
+      "tools/corpus.py": "f0390f8b550a57b45098eb0b1317de220bf327e4a27adbc02059829a48d35c1c",
+      "tools/reports.py": "aefcdb623e7cea8d6a601f8bee4ba597b782b8b7905f54d7dbcc512f74e297bf",
+      "tools/setup_reference.py": "deafd96f0176c389a8fb6e81d90f03ba7d4cc9c25361d1fc0edd44a883e7d572"
+    },
+    "kotlin_metadata": true,
+    "incremental_compilation": false,
+    "jvm_target_scope": "Official sources and consumers use JVM21/language2.3/API2.3. Korrust has no target-setting option and emits classfile49/52; verified source/ABI/runtime subset, not target-bytecode equivalence."
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_distribution_libs_sha256": {
+      "references/kotlinc/lib/allopen-compiler-plugin.jar": "4d10b6efd97edcdfff90ad064eb4410c60177653810844b104155b4a9086dfc6",
+      "references/kotlinc/lib/annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+      "references/kotlinc/lib/assignment-compiler-plugin.jar": "ca3c5b11501c5ed848b491d5a69bf13cb4197c79903a7cee2b2ad024bae5f601",
+      "references/kotlinc/lib/compose-compiler-plugin.jar": "e8b44d65a4ba5fb14f3e51d10fb605d7da2a0c35a9ee275c94ffd74cb3f2b11e",
+      "references/kotlinc/lib/jvm-abi-gen.jar": "88a5e104dde4ef2f3cd211b077bb93f0a5e2e54b61e53c373f146af061be4504",
+      "references/kotlinc/lib/kotlin-annotation-processing-cli.jar": "c44c21f9bedeca54e0062b825dcb394a75a3efc289d4354e153225213f498e5f",
+      "references/kotlinc/lib/kotlin-annotation-processing-runtime.jar": "d9bcc297a3263366e216956c9425f3ba7b04f4a72f8b0dffb06fdd88e48606b9",
+      "references/kotlinc/lib/kotlin-annotation-processing.jar": "51308691a3cbd4c3964c5669d6ffb771b4879a214ab95c1df6aab18f137b4fa6",
+      "references/kotlinc/lib/kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+      "references/kotlinc/lib/kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+      "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+      "references/kotlinc/lib/kotlin-daemon-client.jar": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be",
+      "references/kotlinc/lib/kotlin-daemon.jar": "b7c67e908442f64f7d2acf99ac6b68b625d5317541d7130efac72507de0c36cf",
+      "references/kotlinc/lib/kotlin-main-kts.jar": "d786b3ace9625918014c1da51d7c6ba29ef06e3291f6cc4264d39e6992acc4ee",
+      "references/kotlinc/lib/kotlin-metadata-jvm-sources.jar": "2ededf948f1afd503217a772c95718a41494e757762206216f4c1b42ada64585",
+      "references/kotlinc/lib/kotlin-metadata-jvm.jar": "00590f26a5a768777f04252c6cf93c016a3361a6bc93636df67375ad4d19557d",
+      "references/kotlinc/lib/kotlin-preloader.jar": "4fb08cc92cf83ace6af60953e968a7f79eb57c5304175a9c0a9a9ad14a9e6348",
+      "references/kotlinc/lib/kotlin-reflect-sources.jar": "8cbdca65092aa6888901e23c08c7d69d141544107a9bcc9aa47b5453d4dbcf7e",
+      "references/kotlinc/lib/kotlin-reflect.jar": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb",
+      "references/kotlinc/lib/kotlin-runner.jar": "b217c59d320058007fed21927f71d5fbb7899fb6acab817a6d63aec5544a548c",
+      "references/kotlinc/lib/kotlin-script-runtime-sources.jar": "275d90c0c92e9680aff9c013394f3f395bc46dc23762107c4fdccd9887a58561",
+      "references/kotlinc/lib/kotlin-script-runtime.jar": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e",
+      "references/kotlinc/lib/kotlin-scripting-common.jar": "69885751bdce7d4e1d1b9758baf4bc0fe03b24827abd7b7687e5a7c0b4d029ed",
+      "references/kotlinc/lib/kotlin-scripting-compiler-impl.jar": "fe93b36234d6ff2ae5d1c8f965c5ae7c61b5211c5945d1fe8f3b2136ef313520",
+      "references/kotlinc/lib/kotlin-scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5",
+      "references/kotlinc/lib/kotlin-scripting-jvm.jar": "8cb637132fc7fa511c700ee7f2b63b282630167f5ebd699a263a0b67b5d486ab",
+      "references/kotlinc/lib/kotlin-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+      "references/kotlinc/lib/kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+      "references/kotlinc/lib/kotlin-stdlib-jdk7.jar": "e2243abac2bed6e0b47be18b2b7fe1c1b4cf6a431480353dcd49d1ed35f31199",
+      "references/kotlinc/lib/kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+      "references/kotlinc/lib/kotlin-stdlib-jdk8.jar": "63091929246beba86b5fb2b020a6f5d06e01693a960b58a59959c8713667991c",
+      "references/kotlinc/lib/kotlin-stdlib-js-sources.jar": "f57cda653d86e12f005c68a684ed32cdf44416f55db140a4182d8dbb53697ef2",
+      "references/kotlinc/lib/kotlin-stdlib-sources.jar": "8693386ae174f7e4a91eb82c5c632d169d236704da24f78b9c8c84d87af2fd64",
+      "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "references/kotlinc/lib/kotlin-test-js-sources.jar": "b45aee3561d48173468db1eb05743925b3f91c7a99a30c8a3457e3a554819e78",
+      "references/kotlinc/lib/kotlin-test-junit-sources.jar": "3fd39bbf3f8283cf7b7759e02abdd752ddde9964352f645467b779257bccef20",
+      "references/kotlinc/lib/kotlin-test-junit.jar": "554739f282eaca114882ad7effcd8523de2651eb6d65189624425110992ca4ce",
+      "references/kotlinc/lib/kotlin-test-junit5-sources.jar": "5e0d4688277a3f859be086b874601b45f54b30b5b045800138b54e9418bdc95b",
+      "references/kotlinc/lib/kotlin-test-junit5.jar": "24350f53fe1be3b7fe0e8fcd7e1b777eb0b8fa16af720617fe7e87d0a77c2797",
+      "references/kotlinc/lib/kotlin-test-sources.jar": "bce4ebcf90507cc14ea3857f65088d10fd1a305616da62a6e5b6be0735ccb456",
+      "references/kotlinc/lib/kotlin-test-testng-sources.jar": "b88a8f12928480d14e29c6c879958c156afc946b9b8d333d1c2f4a428cdb1041",
+      "references/kotlinc/lib/kotlin-test-testng.jar": "da9c1164af8de599d8e31ae768f78c48caceb1a401790454139ec03cfe8ddf08",
+      "references/kotlinc/lib/kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+      "references/kotlinc/lib/kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "references/kotlinc/lib/kotlinx-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+      "references/kotlinc/lib/lombok-compiler-plugin.jar": "ab61ddad3977c19396223dbac64b82c5d33796b712e4cfac6d79a0fe2166cf24",
+      "references/kotlinc/lib/mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+      "references/kotlinc/lib/noarg-compiler-plugin.jar": "2f978ae34fec60a2e92ed3c1f6862f015b98922b07508a2648a019d898bf3761",
+      "references/kotlinc/lib/parcelize-compiler.jar": "edacd6e066bef87f00448e95ba4aff89b4e10f6ce27d99ba125c7e96f2d73ada",
+      "references/kotlinc/lib/parcelize-runtime.jar": "a21d5f85475efb27f17dd97d1a289d64874f2ddfdb508ea484477a4cf1afe969",
+      "references/kotlinc/lib/power-assert-compiler-plugin.jar": "29164fe3dd405d78204655bb533cf1abc409288be825039c3443fd894096745e",
+      "references/kotlinc/lib/sam-with-receiver-compiler-plugin.jar": "8e9eb418d5ddae8c24ee79da1d5394636dc256defc62a3ea347bd59aca8592fd",
+      "references/kotlinc/lib/scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5"
+    },
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "21",
+      "-module-name",
+      "androidbible_simple"
+    ]
+  },
+  "inputs": {
+    "candidate_stdlib_classpath": [
+      {
+        "path": "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "kind": "jar",
+        "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+        "extracted": "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+      }
+    ],
+    "androidbible_commit": "624629093af37d0d7f85699bfa0caa562fc41e61",
+    "unchanged_sources_sha256": {
+      "AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt": "1ffdebcffa174e2c119205b2ed7698fc9d47a0dd2deaf9e816eb84faa388ab02",
+      "Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt": "e97b1f80db7c221c201af3ff01aae4947facdcffb20f0645ad3a07a79cee9211",
+      "Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c",
+      "Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt": "de818317815f6f3c8602ff5c5aac7b50ea5c663a756e719104c2f97fca9b94b2",
+      "Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt": "95549b2852efb326426c8d051fa7b2e656d1f4520d01833ff75c6583d29d3a94",
+      "Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt": "5df3b8b8fd5c81ceff0cf622bbea49906d047976634e7ad9d0450d1dd952fade"
+    },
+    "new_language_target": "Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+    "existing_language_coverage_additions": [
+      "Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+      "Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+      "Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+      "Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt"
+    ],
+    "real_dependency_source": "AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+    "candidate_invocations": [
+      {
+        "source": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+        "source_sha256": "1ffdebcffa174e2c119205b2ed7698fc9d47a0dd2deaf9e816eb84faa388ab02",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model/yuku/alkitab/model/SingleChapterVerses$Companion$EMPTY$1.class": "e57bad65d1048ea291cb3f82c7c891291660b24bd7c7095c83ac2d4c60036070",
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model/yuku/alkitab/model/SingleChapterVerses$Companion.class": "4c88322b635c53ea82752ee7c8cda7fcd5ebd17880b6089c907de880c03a229a",
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model/yuku/alkitab/model/SingleChapterVerses$DefaultImpls.class": "03b4195884fe9342a1e3d989592f3e775e00ada9b89bbfbb46a117287451b7c9",
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model/yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult$DefaultImpls.class": "ba2f9de380cfe304666469c64dd3e79021180f8b8bbe4e7c62d36db30b418fd2",
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model/yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult.class": "0cea4708b38ea70125bf7351c37078353be6a7b98120acd6aaab1119caa65a9c",
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model/yuku/alkitab/model/SingleChapterVerses.class": "e2578e1a1ee141e74822ff2d0071ccbd3cc9739b80b2d97cea6df77218a1839c"
+        }
+      },
+      {
+        "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+        "source_sha256": "e97b1f80db7c221c201af3ff01aae4947facdcffb20f0645ad3a07a79cee9211",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app/yuku/alkitab/songs/SongTextZoomable.class": "31d53c57e3065e1bb7ae8f1cd8ee26f39f8522875bc3bbe18204bd0ed77d5449"
+        }
+      },
+      {
+        "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+        "source_sha256": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app/yuku/alkitab/base/storage/VerseTextDecoder.class": "115e9ffc9bb2d069907fd021f7bf02b4d0318ff127320e5f37314bc428396b77"
+        }
+      },
+      {
+        "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+        "source_sha256": "de818317815f6f3c8602ff5c5aac7b50ea5c663a756e719104c2f97fca9b94b2",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app/yuku/alkitab/base/widget/ReaderGestureActions.class": "b3b493995258bb526e103799a269da8f6b099e940867dc8fe8c882f82eedadf8"
+        }
+      },
+      {
+        "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+        "source_sha256": "95549b2852efb326426c8d051fa7b2e656d1f4520d01833ff75c6583d29d3a94",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app/yuku/alkitab/base/storage/InternalSingleChapterVerses.class": "fecaf278e0267959d9c925f012e9b813d7f543594447db4af7b7dc15e3fdabb4"
+        }
+      },
+      {
+        "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt",
+        "source_sha256": "5df3b8b8fd5c81ceff0cf622bbea49906d047976634e7ad9d0450d1dd952fade",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app/yuku/alkitab/yes1/Yes1SingleChapterVerses.class": "539f81fb14b400012a222e7bb9fe08cef8c6afaca5e106134a3b8d4823a7cda5"
+        }
+      },
+      {
+        "source": "tests/fixtures/simple_androidbible/MutableSurface.kt",
+        "source_sha256": "d60a80f4a9bf30bde8af04444d4c6d9ea41bacbc16d0b2661abb413f8ed5c9f1",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/tests/fixtures/simple_androidbible/MutableSurface.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic/simple/mutable/MutableSurface$Nested.class": "ec592ccd83a80a8b4a024a7c10c8a2185d2a2d93eb06993ec3bacdba696a960e",
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic/simple/mutable/MutableSurface.class": "01982fe8f1a86fd4ab0b4491b1f6c67b16965fd48c3f952856e8e41458cf17db"
+        }
+      },
+      {
+        "source": "tests/fixtures/simple_androidbible/MutableInherited.kt",
+        "source_sha256": "ec8b3fe791c441191d3fa2ac1cb9454be13b6f2efa219ea2dd8b498689aa5bec",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/tests/fixtures/simple_androidbible/MutableInherited.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic/simple/mutable/MutableInherited$DefaultImpls.class": "7c56682b799b007721346c31d2793b2c1f3609e8c6b21dea7b7712d8eeafabeb",
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic/simple/mutable/MutableInherited.class": "4412cd326f233ab3070751ac186325abcf65d0f6f6e2454d7906de8f4dedf206"
+        }
+      },
+      {
+        "source": "tests/fixtures/simple_androidbible/ReadOnlyBase.kt",
+        "source_sha256": "9dc5e0874d8a27d441f31e515b54ff407b3fd4d073e3e83fc220714752d6d58a",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/tests/fixtures/simple_androidbible/ReadOnlyBase.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic/simple/mutable/ReadOnlyBase.class": "00219eb2b265867fa84f93d0ff9c3e04f672d4f8758086ff2cb23d3dc0ddf2af"
+        }
+      },
+      {
+        "source": "tests/fixtures/simple_androidbible/MutableOverride.kt",
+        "source_sha256": "778e06ef19d8aa2725e6f81d61f73912604c73b81b04bf021f0e46a0266a2a74",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/tests/fixtures/simple_androidbible/MutableOverride.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic/simple/mutable/MutableOverride.class": "be285a56226bcefc49f6949e6636bae2012960ca1e66013349307d5619658f0d"
+        }
+      },
+      {
+        "source": "tests/fixtures/simple_androidbible/MutableInherited.kt",
+        "source_sha256": "ec8b3fe791c441191d3fa2ac1cb9454be13b6f2efa219ea2dd8b498689aa5bec",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/tests/fixtures/simple_androidbible/MutableInherited.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies/simple/mutable/MutableInherited$DefaultImpls.class": "7c56682b799b007721346c31d2793b2c1f3609e8c6b21dea7b7712d8eeafabeb",
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies/simple/mutable/MutableInherited.class": "4412cd326f233ab3070751ac186325abcf65d0f6f6e2454d7906de8f4dedf206"
+        }
+      },
+      {
+        "source": "tests/fixtures/simple_androidbible/MutableOverride.kt",
+        "source_sha256": "778e06ef19d8aa2725e6f81d61f73912604c73b81b04bf021f0e46a0266a2a74",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/tests/fixtures/simple_androidbible/MutableOverride.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies/simple/mutable/MutableOverride.class": "be285a56226bcefc49f6949e6636bae2012960ca1e66013349307d5619658f0d"
+        }
+      },
+      {
+        "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+        "source_sha256": "95549b2852efb326426c8d051fa7b2e656d1f4520d01833ff75c6583d29d3a94",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies/yuku/alkitab/base/storage/InternalSingleChapterVerses.class": "fecaf278e0267959d9c925f012e9b813d7f543594447db4af7b7dc15e3fdabb4"
+        }
+      },
+      {
+        "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt",
+        "source_sha256": "5df3b8b8fd5c81ceff0cf622bbea49906d047976634e7ad9d0450d1dd952fade",
+        "command": [
+          "/workspace/korrust/target/release/korrust",
+          "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt",
+          "-cp",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+          "-d",
+          "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies"
+        ],
+        "compiler_sha256": "4b2e53ea3cdbeda73dfc5773f9aeacb17568242828ffaa4d3efa25f376792ec4",
+        "fallback": false,
+        "emitted_classes_sha256": {
+          "target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies/yuku/alkitab/yes1/Yes1SingleChapterVerses.class": "539f81fb14b400012a222e7bb9fe08cef8c6afaca5e106134a3b8d4823a7cda5"
+        }
+      }
+    ],
+    "model_class_files_sha256": {
+      "official": {
+        "yuku/alkitab/model/SingleChapterVerses$Companion$EMPTY$1.class": "ebf32bf55d365cbf9b678b6a74b95e64e6db4bc657c5300aba8818b6932f8d94",
+        "yuku/alkitab/model/SingleChapterVerses$Companion.class": "fc0a86a46cb579a3ed933d8f8a3dc39ab9c827c926ea83f7c08091ea7b1548b9",
+        "yuku/alkitab/model/SingleChapterVerses$DefaultImpls.class": "0db704f79eab8d0ae128cebcce6a48c17bcb1a4f6d1bd93447422512fd80d57a",
+        "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult$DefaultImpls.class": "4b040ba774fa3131715b16a6614ba03335c2124d15a1418ce501aca502632723",
+        "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult.class": "d70bf247012a41099431a1b29eb60fc148ddb6b0bcb38af2946056ac6071c4af",
+        "yuku/alkitab/model/SingleChapterVerses.class": "5f11de41fa0937375cdad1585fc7d0d139d0f85cd99e0afc5f23d5c9f7d780e5"
+      },
+      "candidate": {
+        "yuku/alkitab/model/SingleChapterVerses$Companion$EMPTY$1.class": "e57bad65d1048ea291cb3f82c7c891291660b24bd7c7095c83ac2d4c60036070",
+        "yuku/alkitab/model/SingleChapterVerses$Companion.class": "4c88322b635c53ea82752ee7c8cda7fcd5ebd17880b6089c907de880c03a229a",
+        "yuku/alkitab/model/SingleChapterVerses$DefaultImpls.class": "03b4195884fe9342a1e3d989592f3e775e00ada9b89bbfbb46a117287451b7c9",
+        "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult$DefaultImpls.class": "ba2f9de380cfe304666469c64dd3e79021180f8b8bbe4e7c62d36db30b418fd2",
+        "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult.class": "0cea4708b38ea70125bf7351c37078353be6a7b98120acd6aaab1119caa65a9c",
+        "yuku/alkitab/model/SingleChapterVerses.class": "e2578e1a1ee141e74822ff2d0071ccbd3cc9739b80b2d97cea6df77218a1839c"
+      }
+    },
+    "official_model_module_metadata_sha256": {
+      "META-INF/androidbible_simple.kotlin_module": "e871d64c498617a57844801a5921b0eb078931ca7429f57b863de02b58cbb2a0"
+    },
+    "candidate_model_module_metadata_sha256": {},
+    "app_class_files_sha256": {
+      "official": {
+        "yuku/alkitab/base/storage/InternalSingleChapterVerses.class": "f687455e8c8d69947e98dbd04d1228a0108d5e97a38ed2a3b60da41c30aead38",
+        "yuku/alkitab/base/storage/VerseTextDecoder.class": "f194ddb830a7ea2d25298bb63365d1f33aecfcd3e2f5d28b44053548710086a9",
+        "yuku/alkitab/base/widget/ReaderGestureActions.class": "299298379514147878b250837ca1e702638f19f5c8a81291bfbb9265c258545a",
+        "yuku/alkitab/songs/SongTextZoomable.class": "57942bdc80639abb3f6efac6fd7100f07ca4251baf904cea84c587029f5a7cbe",
+        "yuku/alkitab/yes1/Yes1SingleChapterVerses.class": "7160fdd69c52650e3f3ab11cada942549591b1b5ef77152a73f79b1e5eaed3c2"
+      },
+      "candidate": {
+        "yuku/alkitab/base/storage/InternalSingleChapterVerses.class": "fecaf278e0267959d9c925f012e9b813d7f543594447db4af7b7dc15e3fdabb4",
+        "yuku/alkitab/base/storage/VerseTextDecoder.class": "115e9ffc9bb2d069907fd021f7bf02b4d0318ff127320e5f37314bc428396b77",
+        "yuku/alkitab/base/widget/ReaderGestureActions.class": "b3b493995258bb526e103799a269da8f6b099e940867dc8fe8c882f82eedadf8",
+        "yuku/alkitab/songs/SongTextZoomable.class": "31d53c57e3065e1bb7ae8f1cd8ee26f39f8522875bc3bbe18204bd0ed77d5449",
+        "yuku/alkitab/yes1/Yes1SingleChapterVerses.class": "539f81fb14b400012a222e7bb9fe08cef8c6afaca5e106134a3b8d4823a7cda5"
+      }
+    },
+    "official_app_module_metadata_sha256": {
+      "META-INF/androidbible_simple.kotlin_module": "e871d64c498617a57844801a5921b0eb078931ca7429f57b863de02b58cbb2a0"
+    },
+    "candidate_app_module_metadata_sha256": {},
+    "synthetic_class_files_sha256": {
+      "official": {
+        "simple/mutable/MutableInherited$DefaultImpls.class": "c715167f2dd7217d55ddd88678d3ac25e2565c29f4d8c83fa6921055a7090e42",
+        "simple/mutable/MutableInherited.class": "5a0eea6789d9d044c2c8b4d6d31f9a2abaad99c13dbff56b16bc895600f9ce37",
+        "simple/mutable/MutableOverride.class": "dc9d7f128e482298fd38e0deb9a129dadb93c1cfd26dbf33fae9bec4bfecdc96",
+        "simple/mutable/MutableSurface$Nested.class": "efc90317fd4eee58db9d1fefe671b6c7b4ebadeef32134ead5244a8b0737113e",
+        "simple/mutable/MutableSurface.class": "f28a2366d920f9a2eea44f4fa042e29e5b8622f59bec94add718638cc81c6432",
+        "simple/mutable/ReadOnlyBase.class": "0111f2b3fa186c80ea3e45f356800e5298231401d18b3dc1a7e22153e6ce5eee"
+      },
+      "candidate": {
+        "simple/mutable/MutableInherited$DefaultImpls.class": "7c56682b799b007721346c31d2793b2c1f3609e8c6b21dea7b7712d8eeafabeb",
+        "simple/mutable/MutableInherited.class": "4412cd326f233ab3070751ac186325abcf65d0f6f6e2454d7906de8f4dedf206",
+        "simple/mutable/MutableOverride.class": "be285a56226bcefc49f6949e6636bae2012960ca1e66013349307d5619658f0d",
+        "simple/mutable/MutableSurface$Nested.class": "ec592ccd83a80a8b4a024a7c10c8a2185d2a2d93eb06993ec3bacdba696a960e",
+        "simple/mutable/MutableSurface.class": "01982fe8f1a86fd4ab0b4491b1f6c67b16965fd48c3f952856e8e41458cf17db",
+        "simple/mutable/ReadOnlyBase.class": "00219eb2b265867fa84f93d0ff9c3e04f672d4f8758086ff2cb23d3dc0ddf2af"
+      }
+    },
+    "official_synthetic_module_metadata_sha256": {
+      "META-INF/androidbible_simple.kotlin_module": "e871d64c498617a57844801a5921b0eb078931ca7429f57b863de02b58cbb2a0"
+    },
+    "candidate_synthetic_module_metadata_sha256": {},
+    "standalone_d8": {
+      "jar": "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/com.android.tools.build/builder/9.3.2/f9fdaab774037c649303d97015bfb4ffe3d6f1/builder-9.3.2.jar",
+      "sha256": "20dd166889b8108243b019779bdfecf7a08208ae4165f88a2a3422f34ae9e282",
+      "version": "D8 9.3.16 (build 65eb2ed58d2ac1dbce414b51a8ea877c3ce5f68a from go/r8bot (luci-r8-custom-ci-archive-0-ib6e))",
+      "android_library": "/workspace/korrust-setup/android-sdk/platforms/android-37.0/android.jar",
+      "android_library_sha256": "bf1b4387cc7ca94fc6ef684f040d9d16fbf16248e181819f020736ea2053f177",
+      "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "scope": "Actual AGP9.3.2 embedded D8 executable, standalone source-file class jars with Android37 library. No Gradle/AGP Alkitab app build or Android device execution."
+    }
+  },
+  "commands": [
+    {
+      "label": "Pinned official compiler identity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/000-stderr.txt"
+    },
+    {
+      "label": "Korrust identity",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/001-stderr.txt"
+    },
+    {
+      "label": "Java identity",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/002-stderr.txt"
+    },
+    {
+      "label": "Compile official SingleChapterVerses.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/003-stderr.txt"
+    },
+    {
+      "label": "Compile official SongTextZoomable.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/004-stderr.txt"
+    },
+    {
+      "label": "Compile official VerseTextDecoder.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/005-stderr.txt"
+    },
+    {
+      "label": "Compile official ReaderGestureActions.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/006-stderr.txt"
+    },
+    {
+      "label": "Compile official InternalSingleChapterVerses.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/007-stderr.txt"
+    },
+    {
+      "label": "Compile official Yes1SingleChapterVerses.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/008-stderr.txt"
+    },
+    {
+      "label": "Compile official MutableSurface.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MutableSurface.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/009-stderr.txt"
+    },
+    {
+      "label": "Compile official MutableInherited.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MutableInherited.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/010-stderr.txt"
+    },
+    {
+      "label": "Compile official ReadOnlyBase.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/ReadOnlyBase.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/011-stderr.txt"
+    },
+    {
+      "label": "Compile official MutableOverride.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MutableOverride.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/012-stderr.txt"
+    },
+    {
+      "label": "Compile candidate SingleChapterVerses.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/013-stderr.txt"
+    },
+    {
+      "label": "Compile candidate SongTextZoomable.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/014-stderr.txt"
+    },
+    {
+      "label": "Compile candidate VerseTextDecoder.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/015-stderr.txt"
+    },
+    {
+      "label": "Compile candidate ReaderGestureActions.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/016-stderr.txt"
+    },
+    {
+      "label": "Compile candidate InternalSingleChapterVerses.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/017-stderr.txt"
+    },
+    {
+      "label": "Compile candidate Yes1SingleChapterVerses.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/018-stderr.txt"
+    },
+    {
+      "label": "Compile candidate MutableSurface.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MutableSurface.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/019-stderr.txt"
+    },
+    {
+      "label": "Compile candidate MutableInherited.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MutableInherited.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/020-stderr.txt"
+    },
+    {
+      "label": "Compile candidate ReadOnlyBase.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/ReadOnlyBase.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/021-stderr.txt"
+    },
+    {
+      "label": "Compile candidate MutableOverride.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MutableOverride.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/022-stderr.txt"
+    },
+    {
+      "label": "Compile candidate MutableInherited.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MutableInherited.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/023-stderr.txt"
+    },
+    {
+      "label": "Compile candidate MutableOverride.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MutableOverride.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/024-stderr.txt"
+    },
+    {
+      "label": "Compile candidate InternalSingleChapterVerses.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/025-stderr.txt"
+    },
+    {
+      "label": "Compile candidate Yes1SingleChapterVerses.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-official-dependencies"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/026-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/027-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/028-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.model.SingleChapterVerses$Companion",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "yuku.alkitab.model.SingleChapterVerses$Companion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/029-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.model.SingleChapterVerses$Companion",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "yuku.alkitab.model.SingleChapterVerses$Companion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/030-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "yuku.alkitab.model.SingleChapterVerses$DefaultImpls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/031-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "yuku.alkitab.model.SingleChapterVerses$DefaultImpls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/032-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/033-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/034-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/035-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/036-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.model.SingleChapterVerses",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model",
+        "yuku.alkitab.model.SingleChapterVerses"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/037-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.model.SingleChapterVerses",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model",
+        "yuku.alkitab.model.SingleChapterVerses"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/038-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.base.storage.InternalSingleChapterVerses",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app",
+        "yuku.alkitab.base.storage.InternalSingleChapterVerses"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/039-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.base.storage.InternalSingleChapterVerses",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app",
+        "yuku.alkitab.base.storage.InternalSingleChapterVerses"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/040-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.base.storage.VerseTextDecoder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app",
+        "yuku.alkitab.base.storage.VerseTextDecoder"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/041-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.base.storage.VerseTextDecoder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app",
+        "yuku.alkitab.base.storage.VerseTextDecoder"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/042-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.base.widget.ReaderGestureActions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app",
+        "yuku.alkitab.base.widget.ReaderGestureActions"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/043-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.base.widget.ReaderGestureActions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app",
+        "yuku.alkitab.base.widget.ReaderGestureActions"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/044-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.songs.SongTextZoomable",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app",
+        "yuku.alkitab.songs.SongTextZoomable"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/045-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.songs.SongTextZoomable",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app",
+        "yuku.alkitab.songs.SongTextZoomable"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/046-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI yuku.alkitab.yes1.Yes1SingleChapterVerses",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app",
+        "yuku.alkitab.yes1.Yes1SingleChapterVerses"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/047-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI yuku.alkitab.yes1.Yes1SingleChapterVerses",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app",
+        "yuku.alkitab.yes1.Yes1SingleChapterVerses"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/048-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI simple.mutable.MutableInherited$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "simple.mutable.MutableInherited$DefaultImpls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/049-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI simple.mutable.MutableInherited$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "simple.mutable.MutableInherited$DefaultImpls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/050-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI simple.mutable.MutableInherited",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "simple.mutable.MutableInherited"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/051-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI simple.mutable.MutableInherited",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "simple.mutable.MutableInherited"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/052-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI simple.mutable.MutableOverride",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "simple.mutable.MutableOverride"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/053-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI simple.mutable.MutableOverride",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "simple.mutable.MutableOverride"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/054-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI simple.mutable.MutableSurface$Nested",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "simple.mutable.MutableSurface$Nested"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/055-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI simple.mutable.MutableSurface$Nested",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "simple.mutable.MutableSurface$Nested"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/056-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI simple.mutable.MutableSurface",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "simple.mutable.MutableSurface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/057-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI simple.mutable.MutableSurface",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "simple.mutable.MutableSurface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/058-stderr.txt"
+    },
+    {
+      "label": "Inspect official ABI simple.mutable.ReadOnlyBase",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "simple.mutable.ReadOnlyBase"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/059-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate ABI simple.mutable.ReadOnlyBase",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "simple.mutable.ReadOnlyBase"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/060-stderr.txt"
+    },
+    {
+      "label": "Compile Java callers once against official outputs",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/java-callers",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/SimpleAndroidBibleCheck.java",
+        "/workspace/korrust/tests/fixtures/InterfaceAssertions.java",
+        "/workspace/korrust/tests/fixtures/ModelCheck.java",
+        "/workspace/korrust/tests/fixtures/ModuleClassVerification.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/061-stderr.txt"
+    },
+    {
+      "label": "Run fixed Java SimpleAndroidBibleCheck official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/java-callers:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "SimpleAndroidBibleCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/062-stderr.txt"
+    },
+    {
+      "label": "Run fixed Java SimpleAndroidBibleCheck candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/java-callers:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "SimpleAndroidBibleCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/063-stderr.txt"
+    },
+    {
+      "label": "Run fixed Java ModelCheck official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/java-callers:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ModelCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/064-stderr.txt"
+    },
+    {
+      "label": "Run fixed Java ModelCheck candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/java-callers:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ModelCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/065-stderr.txt"
+    },
+    {
+      "label": "Verify every emitted class official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/java-callers:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ModuleClassVerification",
+        "yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+        "yuku.alkitab.model.SingleChapterVerses$Companion",
+        "yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+        "yuku.alkitab.model.SingleChapterVerses",
+        "yuku.alkitab.base.storage.InternalSingleChapterVerses",
+        "yuku.alkitab.base.storage.VerseTextDecoder",
+        "yuku.alkitab.base.widget.ReaderGestureActions",
+        "yuku.alkitab.songs.SongTextZoomable",
+        "yuku.alkitab.yes1.Yes1SingleChapterVerses",
+        "simple.mutable.MutableInherited$DefaultImpls",
+        "simple.mutable.MutableInherited",
+        "simple.mutable.MutableOverride",
+        "simple.mutable.MutableSurface$Nested",
+        "simple.mutable.MutableSurface",
+        "simple.mutable.ReadOnlyBase"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/066-stderr.txt"
+    },
+    {
+      "label": "Verify every emitted class candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/java-callers:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ModuleClassVerification",
+        "yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+        "yuku.alkitab.model.SingleChapterVerses$Companion",
+        "yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+        "yuku.alkitab.model.SingleChapterVerses",
+        "yuku.alkitab.base.storage.InternalSingleChapterVerses",
+        "yuku.alkitab.base.storage.VerseTextDecoder",
+        "yuku.alkitab.base.widget.ReaderGestureActions",
+        "yuku.alkitab.songs.SongTextZoomable",
+        "yuku.alkitab.yes1.Yes1SingleChapterVerses",
+        "simple.mutable.MutableInherited$DefaultImpls",
+        "simple.mutable.MutableInherited",
+        "simple.mutable.MutableOverride",
+        "simple.mutable.MutableSurface$Nested",
+        "simple.mutable.MutableSurface",
+        "simple.mutable.ReadOnlyBase"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/067-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin consumer against official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/SimpleConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/068-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin consumer official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-consumer:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "simple.consumer.SimpleConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/069-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/069-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata access InternalAccess official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/InternalAccess.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-rejected-InternalAccess"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/070-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/070-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata access NullableArguments official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/NullableArguments.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-rejected-NullableArguments"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/071-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/071-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata access MutableNullAssignment official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MutableNullAssignment.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-rejected-MutableNullAssignment"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/072-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/072-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata access ReadOnlySetter official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/ReadOnlySetter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-rejected-ReadOnlySetter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/073-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/073-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin consumer against candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/SimpleConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/074-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/074-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin consumer candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-consumer:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "simple.consumer.SimpleConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/075-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/075-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata access InternalAccess candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/InternalAccess.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-rejected-InternalAccess"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/076-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/076-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata access NullableArguments candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/NullableArguments.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-rejected-NullableArguments"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/077-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/077-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata access MutableNullAssignment candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MutableNullAssignment.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-rejected-MutableNullAssignment"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/078-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/078-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata access ReadOnlySetter candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/ReadOnlySetter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-rejected-ReadOnlySetter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/079-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/079-stderr.txt"
+    },
+    {
+      "label": "Compile official ValOverrideVar.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/ValOverrideVar.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-rejected-ValOverrideVar"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/080-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/080-stderr.txt"
+    },
+    {
+      "label": "Compile candidate ValOverrideVar.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/ValOverrideVar.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-rejected-ValOverrideVar"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/081-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/081-stderr.txt"
+    },
+    {
+      "label": "Compile official MismatchedMutableOverride.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MismatchedMutableOverride.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-rejected-MismatchedMutableOverride"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/082-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/082-stderr.txt"
+    },
+    {
+      "label": "Compile candidate MismatchedMutableOverride.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/MismatchedMutableOverride.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-rejected-MismatchedMutableOverride"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/083-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/083-stderr.txt"
+    },
+    {
+      "label": "Compile official ClassReadOnlyOverride.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/ClassReadOnlyOverride.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-class-readonly-rejected"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/084-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/084-stderr.txt"
+    },
+    {
+      "label": "Compile candidate ClassReadOnlyOverride.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/ClassReadOnlyOverride.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a:/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-class-readonly-rejected"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/085-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/085-stderr.txt"
+    },
+    {
+      "label": "Compile official DefaultMutableAccessor.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/DefaultMutableAccessor.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_simple",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-default-accessor"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/086-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/086-stderr.txt"
+    },
+    {
+      "label": "Compile candidate DefaultMutableAccessor.kt",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/korrust/tests/fixtures/simple_androidbible/DefaultMutableAccessor.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/stdlib-classpath/6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-default-accessor"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/087-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/087-stderr.txt"
+    },
+    {
+      "label": "Actual AGP embedded D8 identity",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-cp",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/com.android.tools.build/builder/9.3.2/f9fdaab774037c649303d97015bfb4ffe3d6f1/builder-9.3.2.jar",
+        "com.android.tools.r8.D8",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/088-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/088-stderr.txt"
+    },
+    {
+      "label": "Standalone strict warning-free D8 official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-cp",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/com.android.tools.build/builder/9.3.2/f9fdaab774037c649303d97015bfb4ffe3d6f1/builder-9.3.2.jar",
+        "com.android.tools.r8.D8",
+        "--release",
+        "--min-api",
+        "26",
+        "--lib",
+        "/workspace/korrust-setup/android-sdk/platforms/android-37.0/android.jar",
+        "--classpath",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--output",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-dex",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-model.jar",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-app.jar",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic.jar"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/089-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/089-stderr.txt"
+    },
+    {
+      "label": "Standalone strict warning-free D8 candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-cp",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/com.android.tools.build/builder/9.3.2/f9fdaab774037c649303d97015bfb4ffe3d6f1/builder-9.3.2.jar",
+        "com.android.tools.r8.D8",
+        "--release",
+        "--min-api",
+        "26",
+        "--lib",
+        "/workspace/korrust-setup/android-sdk/platforms/android-37.0/android.jar",
+        "--classpath",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--output",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-dex",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model.jar",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app.jar",
+        "/workspace/korrust/target/checks/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic.jar"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/090-stdout.txt",
+      "stderr": "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/090-stderr.txt"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/000-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/000-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/001-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/001-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/002-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/002-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/original-SingleChapterVerses.kt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/original-SongTextZoomable.kt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/original-VerseTextDecoder.kt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/original-ReaderGestureActions.kt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/original-InternalSingleChapterVerses.kt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/original-Yes1SingleChapterVerses.kt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/003-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/003-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/004-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/004-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/005-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/005-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/006-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/006-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/007-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/007-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/008-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/008-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/009-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/009-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/010-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/010-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/011-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/011-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/012-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/012-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/013-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/013-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/014-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/014-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/015-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/015-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/016-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/016-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/017-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/017-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/018-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/018-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/019-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/019-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/020-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/020-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/021-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/021-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/022-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/022-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/023-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/023-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/024-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/024-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/025-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/025-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/026-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/026-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/027-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/027-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/028-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/028-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/029-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/029-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/030-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/030-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/031-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/031-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/032-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/032-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/033-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/033-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/034-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/034-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/035-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/035-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/036-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/036-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/037-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/037-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/038-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/038-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/039-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/039-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/040-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/040-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/041-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/041-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/042-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/042-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/043-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/043-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/044-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/044-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/045-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/045-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/046-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/046-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/047-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/047-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/048-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/048-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/049-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/049-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/050-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/050-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/051-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/051-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/052-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/052-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/053-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/053-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/054-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/054-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/055-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/055-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/056-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/056-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/057-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/057-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/058-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/058-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/059-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/059-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/060-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/060-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/061-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/061-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/062-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/062-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/063-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/063-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/064-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/064-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/065-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/065-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/066-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/066-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/067-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/067-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/068-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/068-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/069-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/069-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/070-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/070-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/071-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/071-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/072-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/072-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/073-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/073-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/074-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/074-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/075-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/075-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/076-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/076-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/077-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/077-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/078-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/078-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/079-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/079-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/080-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/080-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/081-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/081-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/082-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/082-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/083-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/083-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/084-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/084-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/085-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/085-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/086-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/086-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/087-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/087-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/088-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/088-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/official-model.jar",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/official-app.jar",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/official-synthetic.jar",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/089-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/089-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/official-classes.dex",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-model.jar",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-app.jar",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-synthetic.jar",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/090-stdout.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/090-stderr.txt",
+    "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-classes.dex"
+  ],
+  "cases": [
+    {
+      "id": "unchanged_sources",
+      "outcome": "pass",
+      "targets": 5,
+      "real_dependency_sources": 1,
+      "scope": "Exact original source bytes match preserved benchmark manifest; original snapshot is compiled directly and never edited."
+    },
+    {
+      "id": "unchanged_source/SongTextZoomable",
+      "outcome": "pass",
+      "source": "Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+      "source_sha256": "e97b1f80db7c221c201af3ff01aae4947facdcffb20f0645ad3a07a79cee9211",
+      "new_language_support": true
+    },
+    {
+      "id": "unchanged_source/VerseTextDecoder",
+      "outcome": "pass",
+      "source": "Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+      "source_sha256": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c",
+      "new_language_support": false
+    },
+    {
+      "id": "unchanged_source/ReaderGestureActions",
+      "outcome": "pass",
+      "source": "Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+      "source_sha256": "de818317815f6f3c8602ff5c5aac7b50ea5c663a756e719104c2f97fca9b94b2",
+      "new_language_support": false
+    },
+    {
+      "id": "unchanged_source/InternalSingleChapterVerses",
+      "outcome": "pass",
+      "source": "Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+      "source_sha256": "95549b2852efb326426c8d051fa7b2e656d1f4520d01833ff75c6583d29d3a94",
+      "new_language_support": false
+    },
+    {
+      "id": "unchanged_source/Yes1SingleChapterVerses",
+      "outcome": "pass",
+      "source": "Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt",
+      "source_sha256": "5df3b8b8fd5c81ceff0cf622bbea49906d047976634e7ad9d0450d1dd952fade",
+      "new_language_support": false
+    },
+    {
+      "id": "official_dependency_metadata",
+      "outcome": "pass",
+      "classes_sha256": {
+        "simple/mutable/MutableInherited$DefaultImpls.class": "7c56682b799b007721346c31d2793b2c1f3609e8c6b21dea7b7712d8eeafabeb",
+        "simple/mutable/MutableInherited.class": "4412cd326f233ab3070751ac186325abcf65d0f6f6e2454d7906de8f4dedf206",
+        "simple/mutable/MutableOverride.class": "be285a56226bcefc49f6949e6636bae2012960ca1e66013349307d5619658f0d",
+        "yuku/alkitab/base/storage/InternalSingleChapterVerses.class": "fecaf278e0267959d9c925f012e9b813d7f543594447db4af7b7dc15e3fdabb4",
+        "yuku/alkitab/yes1/Yes1SingleChapterVerses.class": "539f81fb14b400012a222e7bb9fe08cef8c6afaca5e106134a3b8d4823a7cda5"
+      },
+      "scope": "Candidate inherited mutable interfaces/var-over-val and both unchanged chapter classes cross-compiled against official dependency metadata; every emitted class byte equals candidate-dependency compilation."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.model.SingleChapterVerses$Companion",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.model.SingleChapterVerses",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.base.storage.InternalSingleChapterVerses",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.base.storage.VerseTextDecoder",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.base.widget.ReaderGestureActions",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.songs.SongTextZoomable",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/yuku.alkitab.yes1.Yes1SingleChapterVerses",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/simple.mutable.MutableInherited$DefaultImpls",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/simple.mutable.MutableInherited",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/simple.mutable.MutableOverride",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/simple.mutable.MutableSurface$Nested",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/simple.mutable.MutableSurface",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "source_abi/simple.mutable.ReadOnlyBase",
+      "outcome": "pass",
+      "scope": "All javap private/public descriptors and generic signatures compared, normalizing only member order; Kotlin consumers establish relevant metadata behavior separately."
+    },
+    {
+      "id": "java/SimpleAndroidBibleCheck",
+      "outcome": "pass",
+      "runtime_checks": 120,
+      "result_sha256": "0e7c35c7a6018a5cd880d3e86652b7df0db90797868431a1a42b0334111efe7e",
+      "scope": "Same Java caller bytecodes compiled once against official class set run against both outputs with -Xverify:all; independent expected observations."
+    },
+    {
+      "id": "java/ModelCheck",
+      "outcome": "pass",
+      "runtime_checks": 122,
+      "result_sha256": "c9f325c06b255c7b1c22ed587e901c29956e1f0dc2c3402379e39a8c14c1c7c2",
+      "scope": "Same Java caller bytecodes compiled once against official class set run against both outputs with -Xverify:all; independent expected observations."
+    },
+    {
+      "id": "all_class_verification/official",
+      "outcome": "pass",
+      "classes": 17
+    },
+    {
+      "id": "all_class_verification/candidate",
+      "outcome": "pass",
+      "classes": 17
+    },
+    {
+      "id": "metadata_rejection/official/InternalAccess",
+      "outcome": "pass",
+      "diagnostic_count": 3,
+      "scope": "Pinned official Kotlin validates external internal visibility, nonnull arguments/setters/array element types and val/var metadata against selected provider; every expected invalid statement diagnoses and complete diagnostics must match across providers."
+    },
+    {
+      "id": "metadata_rejection/official/NullableArguments",
+      "outcome": "pass",
+      "diagnostic_count": 3,
+      "scope": "Pinned official Kotlin validates external internal visibility, nonnull arguments/setters/array element types and val/var metadata against selected provider; every expected invalid statement diagnoses and complete diagnostics must match across providers."
+    },
+    {
+      "id": "metadata_rejection/official/MutableNullAssignment",
+      "outcome": "pass",
+      "diagnostic_count": 5,
+      "scope": "Pinned official Kotlin validates external internal visibility, nonnull arguments/setters/array element types and val/var metadata against selected provider; every expected invalid statement diagnoses and complete diagnostics must match across providers."
+    },
+    {
+      "id": "metadata_rejection/official/ReadOnlySetter",
+      "outcome": "pass",
+      "diagnostic_count": 1,
+      "scope": "Pinned official Kotlin validates external internal visibility, nonnull arguments/setters/array element types and val/var metadata against selected provider; every expected invalid statement diagnoses and complete diagnostics must match across providers."
+    },
+    {
+      "id": "metadata_rejection/candidate/InternalAccess",
+      "outcome": "pass",
+      "diagnostic_count": 3,
+      "scope": "Pinned official Kotlin validates external internal visibility, nonnull arguments/setters/array element types and val/var metadata against selected provider; every expected invalid statement diagnoses and complete diagnostics must match across providers."
+    },
+    {
+      "id": "metadata_rejection/candidate/NullableArguments",
+      "outcome": "pass",
+      "diagnostic_count": 3,
+      "scope": "Pinned official Kotlin validates external internal visibility, nonnull arguments/setters/array element types and val/var metadata against selected provider; every expected invalid statement diagnoses and complete diagnostics must match across providers."
+    },
+    {
+      "id": "metadata_rejection/candidate/MutableNullAssignment",
+      "outcome": "pass",
+      "diagnostic_count": 5,
+      "scope": "Pinned official Kotlin validates external internal visibility, nonnull arguments/setters/array element types and val/var metadata against selected provider; every expected invalid statement diagnoses and complete diagnostics must match across providers."
+    },
+    {
+      "id": "metadata_rejection/candidate/ReadOnlySetter",
+      "outcome": "pass",
+      "diagnostic_count": 1,
+      "scope": "Pinned official Kotlin validates external internal visibility, nonnull arguments/setters/array element types and val/var metadata against selected provider; every expected invalid statement diagnoses and complete diagnostics must match across providers."
+    },
+    {
+      "id": "kotlin/song_mutable_int_override",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ],
+      "scope": "Pinned official Kotlin compiles implementations, overrides, property reads/writes and real chapter consumers against both sets; each independently runs with JVM verification all."
+    },
+    {
+      "id": "kotlin/mutable_primitives_and_is_names",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ],
+      "scope": "Pinned official Kotlin compiles implementations, overrides, property reads/writes and real chapter consumers against both sets; each independently runs with JVM verification all."
+    },
+    {
+      "id": "kotlin/mutable_array_types_aliasing",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ],
+      "scope": "Pinned official Kotlin compiles implementations, overrides, property reads/writes and real chapter consumers against both sets; each independently runs with JVM verification all."
+    },
+    {
+      "id": "kotlin/nested_and_inherited_mutable_properties",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ],
+      "scope": "Pinned official Kotlin compiles implementations, overrides, property reads/writes and real chapter consumers against both sets; each independently runs with JVM verification all."
+    },
+    {
+      "id": "kotlin/decoder_byte_array_string_array_contract",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ],
+      "scope": "Pinned official Kotlin compiles implementations, overrides, property reads/writes and real chapter consumers against both sets; each independently runs with JVM verification all."
+    },
+    {
+      "id": "kotlin/reader_action_interface_dispatch",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ],
+      "scope": "Pinned official Kotlin compiles implementations, overrides, property reads/writes and real chapter consumers against both sets; each independently runs with JVM verification all."
+    },
+    {
+      "id": "kotlin/chapter_classes_and_internal_friend_metadata",
+      "outcome": "pass",
+      "providers": [
+        "official",
+        "candidate"
+      ],
+      "scope": "Pinned official Kotlin compiles implementations, overrides, property reads/writes and real chapter consumers against both sets; each independently runs with JVM verification all."
+    },
+    {
+      "id": "invalid_override/ValOverrideVar",
+      "outcome": "pass",
+      "scope": "Both official and candidate reject invalid getter-only override of var or mismatched var type; no output accepted."
+    },
+    {
+      "id": "invalid_override/MismatchedMutableOverride",
+      "outcome": "pass",
+      "scope": "Both official and candidate reject invalid getter-only override of var or mismatched var type; no output accepted."
+    },
+    {
+      "id": "invalid_override/ClassReadOnlyOverride",
+      "outcome": "pass",
+      "scope": "Both compilers reject a class providing only val/getter for the sole inherited mutable Int property; required setter/var contract is enforced."
+    },
+    {
+      "id": "unsupported/default_mutable_accessor",
+      "outcome": "unsupported_language",
+      "rejection_verified": true,
+      "scope": "Official Kotlin accepts custom/default mutable getter+setter; bounded candidate implementation rejects explicitly without class output. This is not a supported feature/pass."
+    },
+    {
+      "id": "standalone_d8/official",
+      "outcome": "pass",
+      "dex_sha256": {
+        "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/official-classes.dex": "6480d5236a2f5955f9cc9d1bfe4d0bf9186b901dde6c94aca8c2f8bd03e3770b"
+      },
+      "min_api": 26,
+      "stdout_empty": true,
+      "stderr_empty": true,
+      "scope": "All five real selected source classes plus actual model dependency and synthetic interface fixtures accepted by standalone real AGP D8 without warnings; not an Alkitab AGP/module build."
+    },
+    {
+      "id": "standalone_d8/candidate",
+      "outcome": "pass",
+      "dex_sha256": {
+        "reports/correctness/2026-10-24T065020468090Z-androidbible-simple-sources/candidate-classes.dex": "dd037afe7288183c6cdede0554ed9f8229fa0dc9b3b1b60ab5804c2e08eaacb4"
+      },
+      "min_api": 26,
+      "stdout_empty": true,
+      "stderr_empty": true,
+      "scope": "All five real selected source classes plus actual model dependency and synthetic interface fixtures accepted by standalone real AGP D8 without warnings; not an Alkitab AGP/module build."
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "files": 179,
+      "scope": "All compiler source, test, fixture and tool hashes unchanged from start through completion; reference compiler distribution jars, candidate binary and pinned original app sources unchanged."
+    }
+  ],
+  "environment": {
+    "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "java": "openjdk version \"21.0.12.1\" 2026-08-18 LTS\nOpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)\nOpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)"
+  },
+  "selection": "Five unchanged AndroidBible Alkitab Kotlin source files: SongTextZoomable (new abstract mutable interface property support), VerseTextDecoder, ReaderGestureActions, InternalSingleChapterVerses and Yes1SingleChapterVerses (four coverage additions using existing language support). Real unchanged SingleChapterVerses dependency compiled independently by both compilers; no stand-in stubs. Source-file ABI, Java and official Kotlin consumers, synthetic mutable-property type/override boundaries and standalone AGP D8 validation. This is not a complete Alkitab Gradle/module/app build or Android runtime/performance evidence.",
+  "counts": {
+    "pass": 49,
+    "unsupported_language": 1
+  },
+  "finished_at": "2026-10-24T06:53:35.865094+00:00"
+}

@@ -16,6 +16,7 @@ pub(super) fn check(
     register_classes(source, &owner, &imports, &mut classes)?;
     let interface = check_interface(source, &owner, classpath, &imports, &classes)?;
     Ok(Module {
+        constants: Vec::new(),
         functions: Vec::new(),
         class_decl: None,
         interface_decl: Some(interface),
@@ -144,6 +145,9 @@ fn register_classes(
             &mut methods,
             &mut names,
             JavaMethod {
+                kotlin_params: Some(Vec::new()),
+                kotlin_result: Some(ty.clone()),
+                kotlin_internal: false,
                 owner: owner.into(),
                 name: getter_name(&property.name),
                 descriptor: format!("(){}", ty.descriptor()),
@@ -158,6 +162,9 @@ fn register_classes(
                 &mut methods,
                 &mut names,
                 JavaMethod {
+                    kotlin_params: Some(vec![("value".into(), ty.clone(), false)]),
+                    kotlin_result: Some(Type::Unit),
+                    kotlin_internal: false,
                     owner: owner.into(),
                     name: setter_name(&property.name),
                     descriptor: format!("({})V", ty.descriptor()),
@@ -171,6 +178,12 @@ fn register_classes(
     }
     for method in &source.methods {
         let function = &method.function;
+        if function.defaults.iter().any(Option::is_some) {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Default arguments on source interface methods are unsupported",
+            ));
+        }
         if loses_member_type(&function.result)
             || function.params.iter().any(|(_, ty)| loses_member_type(ty))
         {
@@ -213,6 +226,21 @@ fn register_classes(
             &mut methods,
             &mut names,
             JavaMethod {
+                kotlin_params: Some(
+                    function
+                        .params
+                        .iter()
+                        .map(|(n, t)| {
+                            Ok((
+                                n.clone(),
+                                resolve_type(t, &imports, function.offset)?,
+                                false,
+                            ))
+                        })
+                        .collect::<Result<Vec<_>>>()?,
+                ),
+                kotlin_result: Some(result.clone()),
+                kotlin_internal: false,
                 owner: owner.into(),
                 name: function.name.clone(),
                 descriptor: format!("({parameters}){}", result.descriptor()),
@@ -227,6 +255,8 @@ fn register_classes(
         .insert(
             owner.into(),
             JavaClass {
+                fields: Vec::new(),
+                kotlin_class: false,
                 name: owner.into(),
                 access: 0x0601,
                 super_name: Some("java/lang/Object".into()),
@@ -520,7 +550,7 @@ fn check_interface(
                         Type::Java(interface.clone()),
                         CompanionValue::Object {
                             owner: object_owner,
-                            class_decl,
+                            class_decl: Box::new(class_decl),
                         },
                     )
                 }
@@ -616,6 +646,11 @@ fn check_function(
     let signatures = Vec::new();
     let extensions = HashSet::new();
     let mut checker = Checker {
+        constants: &HashMap::new(),
+        constructor: None,
+        defaults: &Vec::new(),
+        function_names: &[],
+        mutable_fields: &HashSet::new(),
         classpath,
         extensions: &extensions,
         classes,
@@ -633,6 +668,8 @@ fn check_function(
         object_methods: &HashMap::new(),
         object_fields: &HashMap::new(),
         object_owner: None,
+        allow_return: true,
+        refinements: HashMap::new(),
         initialized: HashSet::new(),
         loop_depth: 0,
         scopes: vec![HashMap::new()],
@@ -682,6 +719,7 @@ fn check_function(
         Vec::new()
     };
     Ok(Function {
+        defaults: Vec::new(),
         name: name.into(),
         private: false,
         is_override,
@@ -874,10 +912,7 @@ interface Catalog {
             "Float",
         );
         rejects("interface Root { val f: Float get() = 1 }", "Float");
-        rejects(
-            "interface Root { fun f(): String? }",
-            "Nullable and List interface",
-        );
+        assert!(checked("interface Root { fun f(): String? }").is_ok());
         rejects(
             r#"interface Root { companion object { val VALUES = arrayOf("a") } }"#,
             "private",
@@ -906,7 +941,7 @@ interface Catalog {
         );
         rejects(
             "interface Root { fun item(index: Int): String; fun text(): String = item(true) }",
-            "Type mismatch",
+            "No applicable member",
         );
         rejects(
             "interface Root { val value: Int; fun text(): String = getValue().toString() }",
@@ -922,11 +957,16 @@ interface Catalog {
         let classes = HashMap::from([(
             "Foreign".into(),
             JavaClass {
+                fields: Vec::new(),
+                kotlin_class: false,
                 name: "Foreign".into(),
                 access: 1,
                 super_name: Some("java/lang/Object".into()),
                 interfaces: vec![],
                 methods: vec![JavaMethod {
+                    kotlin_params: None,
+                    kotlin_result: None,
+                    kotlin_internal: false,
                     owner: "Foreign".into(),
                     name: "text".into(),
                     descriptor: "()Ljava/lang/String;".into(),
@@ -955,6 +995,11 @@ interface Catalog {
                 panic!()
             };
             let mut checker = Checker {
+                constants: &HashMap::new(),
+                constructor: None,
+                defaults: &Vec::new(),
+                function_names: &[],
+                mutable_fields: &HashSet::new(),
                 classpath: &classpath,
                 extensions: &extensions,
                 classes: &classes,
@@ -968,6 +1013,8 @@ interface Catalog {
                 object_methods: &HashMap::new(),
                 object_fields: &HashMap::new(),
                 object_owner: None,
+                allow_return: true,
+                refinements: HashMap::new(),
                 initialized: HashSet::new(),
                 loop_depth: 0,
                 scopes: vec![HashMap::new()],
@@ -1028,11 +1075,16 @@ interface Catalog {
             let classes = HashMap::from([(
                 "foreign/Parent".into(),
                 JavaClass {
+                    fields: Vec::new(),
+                    kotlin_class: false,
                     name: "foreign/Parent".into(),
                     access: 0x0601,
                     super_name: Some("java/lang/Object".into()),
                     interfaces: vec![],
                     methods: vec![JavaMethod {
+                        kotlin_params: None,
+                        kotlin_result: None,
+                        kotlin_internal: false,
                         owner: "foreign/Parent".into(),
                         name: "size".into(),
                         descriptor: descriptor.into(),

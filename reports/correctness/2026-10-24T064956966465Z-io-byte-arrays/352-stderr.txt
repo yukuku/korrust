@@ -1,0 +1,8 @@
+target/checks/2026-10-24T064956966465Z-io-byte-arrays/interface_duplicate_companion_property.kt:1:46: error: conflicting declarations:
+val A: Array<String>
+interface I { companion object { private val A = arrayOf("x"); private val A = arrayOf("y") } }
+                                             ^
+target/checks/2026-10-24T064956966465Z-io-byte-arrays/interface_duplicate_companion_property.kt:1:76: error: conflicting declarations:
+val A: Array<String>
+interface I { companion object { private val A = arrayOf("x"); private val A = arrayOf("y") } }
+                                                                           ^

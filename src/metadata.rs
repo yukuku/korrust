@@ -2,7 +2,10 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use crate::{
     Diagnostic, Result,
-    syntax::{ClassDecl, CompanionDecl, CompanionValue, Function, InterfaceDecl, Module, Type},
+    syntax::{
+        ClassDecl, CompanionDecl, CompanionValue, ConstDecl, ConstValue, Function, InterfaceDecl,
+        Module, Type,
+    },
 };
 
 pub(crate) struct Metadata {
@@ -131,7 +134,10 @@ fn encode_bytes(bytes: &[u8]) -> Vec<Vec<u16>> {
 
 type Imports<'a> = &'a [(String, String, usize)];
 
-fn imported_name<'a>(name: &str, imports: Imports<'a>) -> Result<&'a str> {
+fn imported_name<'a>(name: &'a str, imports: Imports<'a>) -> Result<&'a str> {
+    if name.contains('/') {
+        return Ok(name);
+    }
     imports
         .iter()
         .find(|(alias, _, _)| alias == name)
@@ -146,7 +152,8 @@ fn imported_name<'a>(name: &str, imports: Imports<'a>) -> Result<&'a str> {
 
 fn descriptor(ty: &Type, imports: Imports<'_>) -> Result<String> {
     match ty {
-        Type::Nullable(inner) => descriptor(inner, imports),
+        Type::Nullable(inner) if inner.is_reference() => descriptor(inner, imports),
+        Type::Nullable(_) => Ok(ty.descriptor()),
         Type::Java(name) => Ok(format!("L{};", imported_name(name, imports)?)),
         Type::Platform(_) => Err(Diagnostic::new(
             0,
@@ -168,11 +175,15 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
         Type::Long => "kotlin/Long",
         Type::Null => "kotlin/Nothing",
         Type::Nullable(_) => unreachable!(),
-        Type::List(inner) => {
+        Type::List(inner) | Type::MutableList(inner) => {
             let mut argument = Proto::default();
             argument.message(2, &type_proto(inner, imports, strings)?);
             proto.message(2, &argument);
-            "kotlin/collections/List"
+            if matches!(ty, Type::MutableList(_)) {
+                "kotlin/collections/MutableList"
+            } else {
+                "kotlin/collections/List"
+            }
         }
         Type::Byte => "kotlin/Byte",
         Type::Char => "kotlin/Char",
@@ -266,8 +277,12 @@ fn function_with_flags(
         proto.message(5, &type_proto(receiver, imports, strings)?);
         desc.push_str(&descriptor(receiver, imports)?);
     }
-    for (name, ty) in &function.params {
-        proto.message(6, &parameter(name, ty, imports, strings)?);
+    for (index, (name, ty)) in function.params.iter().enumerate() {
+        let mut param = parameter(name, ty, imports, strings)?;
+        if function.defaults.get(index).is_some_and(Option::is_some) {
+            param.number(1, 2);
+        }
+        proto.message(6, &param);
         desc.push_str(&descriptor(ty, imports)?);
     }
     desc.push(')');
@@ -276,19 +291,12 @@ fn function_with_flags(
     Ok(proto)
 }
 
-pub(crate) fn for_class(
-    class: &ClassDecl,
-    internal_name: &str,
-    imports: Imports<'_>,
-) -> Result<Metadata> {
-    class_metadata(class, internal_name, imports, false)
-}
-
 fn class_metadata(
     class: &ClassDecl,
     internal_name: &str,
     imports: Imports<'_>,
     anonymous: bool,
+    checked: Option<&crate::check::ClassDecl>,
 ) -> Result<Metadata> {
     let mut strings = Strings::default();
     let mut proto = Proto::default();
@@ -324,12 +332,21 @@ fn class_metadata(
             proto.message(6, &supertype);
         }
     }
+    if class.companion.is_some() {
+        let name = strings.id("Companion")?;
+        proto.number(4, name);
+        proto.number(7, name);
+    }
     if !anonymous {
         let mut constructor = Proto::default();
         constructor.number(1, 6);
         let mut constructor_desc = String::from("(");
-        for (name, ty) in &class.params {
-            constructor.message(2, &parameter(name, ty, imports, &mut strings)?);
+        for (index, (name, ty)) in class.params.iter().enumerate() {
+            let mut param = parameter(name, ty, imports, &mut strings)?;
+            if class.defaults.get(index).is_some_and(Option::is_some) {
+                param.number(1, 2);
+            }
+            constructor.message(2, &param);
             constructor_desc.push_str(&descriptor(ty, imports)?);
         }
         constructor_desc.push_str(")V");
@@ -346,9 +363,20 @@ fn class_metadata(
         );
     }
     for (name, ty) in &class.params {
+        if !class.param_properties.contains(name) {
+            continue;
+        }
         let mut property = Proto::default();
         let public = class.public_params.contains(name);
-        property.number(11, if public { 518 } else { 514 });
+        property.number(
+            11,
+            (if public { 518 } else { 514 })
+                | if class.mutable_params.contains(name) {
+                    256 | 1024
+                } else {
+                    0
+                },
+        );
         property.number(2, strings.id(name)?);
         property.message(3, &type_proto(ty, imports, &mut strings)?);
         let mut signature = Proto::default();
@@ -362,6 +390,16 @@ fn class_metadata(
                 &method_signature(
                     &crate::check::getter_name(name),
                     &format!("(){}", descriptor(ty, imports)?),
+                    &mut strings,
+                )?,
+            );
+        }
+        if public && class.mutable_params.contains(name) {
+            signature.message(
+                4,
+                &method_signature(
+                    &crate::check::setter_name(name),
+                    &format!("({})V", descriptor(ty, imports)?),
                     &mut strings,
                 )?,
             );
@@ -429,20 +467,188 @@ fn class_metadata(
     }
     for property in &class.properties {
         let mut declaration = Proto::default();
-        let flags = 6 | if property.is_override { 16 } else { 0 };
-        declaration.number(11, flags | 512);
+        let ty = checked
+            .and_then(|class| {
+                class
+                    .fields
+                    .iter()
+                    .find(|field| field.name == property.name)
+            })
+            .map(|field| &field.ty)
+            .unwrap_or(&property.ty);
+        let flags =
+            (if property.private { 2 } else { 6 }) | if property.is_override { 16 } else { 0 };
+        declaration.number(
+            11,
+            flags | 512 | if property.mutable { 256 | 1024 } else { 0 },
+        );
+        declaration.number(2, strings.id(&property.name)?);
+        declaration.message(3, &type_proto(ty, imports, &mut strings)?);
+        if property.initializer.is_none() {
+            declaration.number(7, flags | 64);
+        }
+        let mut signature = Proto::default();
+        if property.initializer.is_some() {
+            signature.message(
+                1,
+                &method_signature(&property.name, &descriptor(ty, imports)?, &mut strings)?,
+            );
+        }
+        if !property.private {
+            signature.message(
+                3,
+                &method_signature(
+                    &crate::check::getter_name(&property.name),
+                    &format!("(){}", descriptor(ty, imports)?),
+                    &mut strings,
+                )?,
+            );
+        }
+        if !property.private && property.mutable {
+            signature.message(
+                4,
+                &method_signature(
+                    &crate::check::setter_name(&property.name),
+                    &format!("({})V", descriptor(ty, imports)?),
+                    &mut strings,
+                )?,
+            );
+        }
+        declaration.message(100, &signature);
+        proto.message(10, &declaration);
+    }
+    strings.finish(1, proto)
+}
+
+pub(crate) fn for_checked_class(
+    source: &ClassDecl,
+    checked: &crate::check::ClassDecl,
+    owner: &str,
+    imports: Imports<'_>,
+) -> Result<Metadata> {
+    let mut bindings = imports.to_vec();
+    bindings.push((source.name.clone(), owner.into(), source.offset));
+    fn bind(source: &Type, checked: &Type, bindings: &mut Vec<(String, String, usize)>) {
+        match (source, checked) {
+            (Type::Java(alias), Type::Java(owner)) => {
+                bindings.push((alias.clone(), owner.clone(), 0))
+            }
+            (Type::Nullable(a), Type::Nullable(b))
+            | (Type::List(a), Type::List(b))
+            | (Type::MutableList(a), Type::MutableList(b)) => bind(a, b, bindings),
+            _ => {}
+        }
+    }
+    for ((_, source), (_, checked)) in source.params.iter().zip(&checked.params) {
+        bind(source, checked, &mut bindings);
+    }
+    for property in &source.properties {
+        if let Some(field) = checked
+            .fields
+            .iter()
+            .find(|field| field.name == property.name)
+        {
+            bind(&property.ty, &field.ty, &mut bindings);
+        }
+    }
+    fn same_type(source: &Type, checked: &Type, imports: Imports<'_>) -> bool {
+        match (source, checked) {
+            (Type::Java(alias), Type::Java(owner)) => imports
+                .iter()
+                .find(|(name, _, _)| name == alias)
+                .map(|(_, imported, _)| imported == owner)
+                .unwrap_or_else(|| owner.rsplit('/').next() == Some(alias.as_str())),
+            (Type::Nullable(a), Type::Nullable(b))
+            | (Type::List(a), Type::List(b))
+            | (Type::MutableList(a), Type::MutableList(b)) => same_type(a, b, imports),
+            _ => source == checked,
+        }
+    }
+    for method in &source.methods {
+        if let Some(actual) = checked.methods.iter().find(|actual| {
+            actual.name == method.function.name
+                && actual.params.len() == method.function.params.len()
+                && method
+                    .function
+                    .params
+                    .iter()
+                    .zip(&actual.params)
+                    .all(|((_, source), (_, checked))| same_type(source, checked, &bindings))
+        }) {
+            bind(&method.function.result, &actual.result, &mut bindings);
+            for ((_, source), (_, checked)) in method.function.params.iter().zip(&actual.params) {
+                bind(source, checked, &mut bindings);
+            }
+        }
+    }
+    class_metadata(source, owner, &bindings, false, Some(checked))
+}
+
+pub(crate) fn for_class_companion(
+    companion: &crate::check::ClassCompanion,
+    imports: Imports<'_>,
+) -> Result<Metadata> {
+    let owner = companion
+        .owner
+        .strip_suffix("$Companion")
+        .ok_or_else(|| Diagnostic::new(0, "Invalid class companion owner"))?;
+    let mut bindings = imports.to_vec();
+    bindings.push((
+        owner.rsplit('/').next().unwrap_or(owner).into(),
+        owner.into(),
+        0,
+    ));
+    let imports = bindings.as_slice();
+    let mut strings = Strings::default();
+    let mut proto = Proto::default();
+    proto.number(1, 390);
+    proto.number(3, strings.id(&companion.owner.replace('$', "."))?);
+    proto.message(
+        6,
+        &type_proto(&Type::Java("kotlin/Any".into()), imports, &mut strings)?,
+    );
+    let mut constructor = Proto::default();
+    constructor.number(1, 2);
+    constructor.message(100, &method_signature("<init>", "()V", &mut strings)?);
+    proto.message(8, &constructor);
+    for property in &companion.properties {
+        let mut declaration = Proto::default();
+        declaration.number(
+            11,
+            (if property.private { 514 } else { 518 })
+                | if property.mutable { 256 | 1024 } else { 0 },
+        );
         declaration.number(2, strings.id(&property.name)?);
         declaration.message(3, &type_proto(&property.ty, imports, &mut strings)?);
-        declaration.number(7, flags | 64);
         let mut signature = Proto::default();
         signature.message(
-            3,
+            1,
             &method_signature(
-                &crate::check::getter_name(&property.name),
-                &format!("(){}", descriptor(&property.ty, imports)?),
+                &property.name,
+                &descriptor(&property.ty, imports)?,
                 &mut strings,
             )?,
         );
+        if !property.private {
+            signature.message(
+                3,
+                &method_signature(
+                    &crate::check::getter_name(&property.name),
+                    &format!("(){}", descriptor(&property.ty, imports)?),
+                    &mut strings,
+                )?,
+            );
+            if property.mutable {
+                signature.message(
+                    4,
+                    &method_signature(
+                        &crate::check::setter_name(&property.name),
+                        &format!("({})V", descriptor(&property.ty, imports)?),
+                        &mut strings,
+                    )?,
+                );
+            }
+        }
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }
@@ -615,7 +821,7 @@ fn interface_tree(
                 let owner = format!("{companion_owner}${}$1", property.name);
                 result.insert(
                     owner.clone(),
-                    class_metadata(class, &owner, &bindings, true)?,
+                    class_metadata(class, &owner, &bindings, true, None)?,
                 );
             }
         }
@@ -771,14 +977,94 @@ pub(crate) fn for_object(
     strings.finish(1, proto)
 }
 
-pub(crate) fn for_package(module: &Module) -> Result<Metadata> {
+fn constant_proto(
+    constant: &ConstDecl,
+    imports: Imports<'_>,
+    strings: &mut Strings,
+) -> Result<Proto> {
+    let ty = match constant.value {
+        ConstValue::Int(_) => Type::Int,
+        ConstValue::Long(_) => Type::Long,
+        ConstValue::Float(_) => Type::Float,
+        ConstValue::Char(_) => Type::Char,
+        ConstValue::Boolean(_) => Type::Boolean,
+        ConstValue::String(_) => Type::String,
+    };
+    let mut proto = Proto::default();
+    proto.number(
+        11,
+        (if constant.private {
+            2
+        } else if constant.internal {
+            0
+        } else {
+            6
+        }) | 0x2a00,
+    );
+    proto.number(2, strings.id(&constant.name)?);
+    proto.message(3, &type_proto(&ty, imports, strings)?);
+    let mut signature = Proto::default();
+    signature.message(
+        1,
+        &method_signature(&constant.name, &descriptor(&ty, imports)?, strings)?,
+    );
+    proto.message(100, &signature);
+    Ok(proto)
+}
+
+pub(crate) fn for_checked_package(
+    module: &Module,
+    checked: &crate::check::Module,
+) -> Result<Metadata> {
+    let mut bindings = module.imports.clone();
+    fn bind(source: &Type, checked: &Type, bindings: &mut Vec<(String, String, usize)>) {
+        match (source, checked) {
+            (Type::Java(alias), Type::Java(owner)) => {
+                bindings.push((alias.clone(), owner.clone(), 0))
+            }
+            (Type::Nullable(a), Type::Nullable(b))
+            | (Type::List(a), Type::List(b))
+            | (Type::MutableList(a), Type::MutableList(b))
+            | (Type::ThreadLocal(a), Type::ThreadLocal(b)) => bind(a, b, bindings),
+            _ => {}
+        }
+    }
+    if module.functions.len() != checked.functions.len() {
+        return Err(Diagnostic::new(
+            0,
+            "Checked functions do not match package metadata declarations",
+        ));
+    }
+    for (source, checked) in module.functions.iter().zip(&checked.functions) {
+        let receiver_count = usize::from(source.receiver.is_some());
+        if source.name != checked.name
+            || source.params.len() + receiver_count != checked.params.len()
+        {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Checked function does not match metadata declaration",
+            ));
+        }
+        bind(&source.result, &checked.result, &mut bindings);
+        if let Some(receiver) = &source.receiver {
+            bind(receiver, &checked.params[0].1, &mut bindings);
+        }
+        for ((_, source), (_, checked)) in
+            source.params.iter().zip(&checked.params[receiver_count..])
+        {
+            bind(source, checked, &mut bindings);
+        }
+    }
     let mut strings = Strings::default();
     let mut proto = Proto::default();
     for function in &module.functions {
         proto.message(
             3,
-            &function_proto(function, false, &module.imports, &mut strings)?,
+            &function_proto(function, false, &bindings, &mut strings)?,
         );
+    }
+    for constant in &module.constants {
+        proto.message(4, &constant_proto(constant, &bindings, &mut strings)?);
     }
     strings.finish(2, proto)
 }
@@ -842,6 +1128,49 @@ mod tests {
         let child = &metadata["Root$Child"];
         assert!(child.data2.iter().any(|name| name == "Root.Base"));
         assert!(!child.data2.iter().any(|name| name == "Root.Child.Base"));
+    }
+
+    #[test]
+    fn package_metadata_uses_checked_class_names_for_unimported_source_types() {
+        let source =
+            crate::syntax::parse("package source\nfun echo(value: External): External = value")
+                .unwrap();
+        let ty = Type::Java("resolved/External".into());
+        let checked = crate::check::Module {
+            constants: Vec::new(),
+            functions: vec![crate::check::Function {
+                defaults: Vec::new(),
+                name: "echo".into(),
+                private: false,
+                is_override: false,
+                params: vec![("value".into(), ty.clone())],
+                result: ty,
+                locals: 1,
+                body: Vec::new(),
+            }],
+            class_decl: None,
+            interface_decl: None,
+            object_decl: None,
+        };
+        let metadata = for_checked_package(&source, &checked).unwrap();
+        assert!(
+            metadata
+                .data2
+                .iter()
+                .any(|value| value == "resolved/External")
+        );
+        assert!(
+            metadata
+                .data2
+                .iter()
+                .any(|value| value == "(Lresolved/External;)Lresolved/External;")
+        );
+        assert!(
+            !metadata
+                .data2
+                .iter()
+                .any(|value| value.contains("source/External"))
+        );
     }
 
     #[test]

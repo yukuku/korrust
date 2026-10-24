@@ -21,6 +21,12 @@ pub(super) fn check(
     let mut object_methods: HashMap<String, Vec<JavaMethod>> = HashMap::new();
     for method in &source.methods {
         let function = &method.function;
+        if function.defaults.iter().any(Option::is_some) {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Default arguments on object methods are unsupported",
+            ));
+        }
         if loses_member_type(&function.result)
             || function.params.iter().any(|(_, ty)| loses_member_type(ty))
         {
@@ -102,6 +108,9 @@ pub(super) fn check(
             ));
         }
         overloads.push(JavaMethod {
+            kotlin_params: None,
+            kotlin_result: None,
+            kotlin_internal: false,
             owner: owner.clone(),
             name: function.name.clone(),
             descriptor,
@@ -193,6 +202,11 @@ pub(super) fn check(
         let signatures = Vec::new();
         let extensions = HashSet::new();
         let mut checker = Checker {
+            constants: &HashMap::new(),
+            constructor: None,
+            defaults: &Vec::new(),
+            function_names: &[],
+            mutable_fields: &HashSet::new(),
             classpath,
             extensions: &extensions,
             classes,
@@ -206,6 +220,8 @@ pub(super) fn check(
             object_methods: &empty_methods,
             object_fields: &empty_object_fields,
             object_owner: None,
+            allow_return: true,
+            refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
@@ -235,8 +251,19 @@ pub(super) fn check(
     let extensions = HashSet::new();
     for method in &source.methods {
         let function = &method.function;
+        if function.defaults.iter().any(Option::is_some) {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Default arguments on object methods are unsupported",
+            ));
+        }
         let result = resolve_type(&function.result, imports, function.offset)?;
         let mut checker = Checker {
+            constants: &HashMap::new(),
+            constructor: None,
+            defaults: &Vec::new(),
+            function_names: &[],
+            mutable_fields: &HashSet::new(),
             classpath,
             extensions: &extensions,
             classes,
@@ -258,6 +285,8 @@ pub(super) fn check(
             object_methods: &object_methods,
             object_fields: &object_fields,
             object_owner: Some(&owner),
+            allow_return: true,
+            refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
@@ -311,6 +340,7 @@ pub(super) fn check(
         }
         methods.push(ObjectMethod {
             function: Function {
+                defaults: Vec::new(),
                 name: function.name.clone(),
                 private: function.private,
                 is_override: false,
@@ -325,6 +355,7 @@ pub(super) fn check(
         });
     }
     Ok(Module {
+        constants: Vec::new(),
         functions: Vec::new(),
         class_decl: None,
         interface_decl: None,
@@ -359,7 +390,7 @@ fn exception_owner(name: &str) -> Option<&'static str> {
 
 impl Checker<'_> {
     pub(super) fn unshadowed(&self, name: &str) -> bool {
-        self.local(name).is_none() && !self.functions.contains_key(name) && !self.object_methods.contains_key(name)
+        self.local(name).is_none() && !self.constants.contains_key(name) && !self.functions.contains_key(name) && !self.object_methods.contains_key(name)
             && !self.fields.contains_key(name) && !self.object_fields.contains_key(name) && !self.members.contains_key(name)
             && !self.members.values().any(|method| method.source_property.as_deref() == Some(name))
             && !self.companion_fields.contains_key(name) && !self.imports.contains_key(name)
@@ -506,8 +537,13 @@ impl Checker<'_> {
         }
         let message = if let Some(arg) = args.first() {
             let value = self.value(arg)?;
-            self.require(&value, Type::String, arg.offset)?;
-            Some(value)
+            if value.ty == Type::Null && owner != "java/lang/IndexOutOfBoundsException" {
+                return Err(Diagnostic::new(
+                    arg.offset,
+                    "Ambiguous null exception constructor argument",
+                ));
+            }
+            Some(self.coerce(value, Type::Nullable(Box::new(Type::String)), arg.offset)?)
         } else {
             None
         };
@@ -595,33 +631,6 @@ impl Checker<'_> {
             },
         })
     }
-}
-
-pub(super) fn arity(descriptor: &str) -> Option<usize> {
-    let bytes = descriptor.as_bytes();
-    if bytes.first() != Some(&b'(') {
-        return None;
-    }
-    let mut cursor = 1;
-    let mut count = 0;
-    while bytes.get(cursor) != Some(&b')') {
-        while bytes.get(cursor) == Some(&b'[') {
-            cursor += 1;
-        }
-        match bytes.get(cursor)? {
-            b'B' | b'C' | b'D' | b'F' | b'I' | b'J' | b'S' | b'Z' => cursor += 1,
-            b'L' => {
-                cursor += 1;
-                while *bytes.get(cursor)? != b';' {
-                    cursor += 1;
-                }
-                cursor += 1;
-            }
-            _ => return None,
-        }
-        count += 1;
-    }
-    Some(count)
 }
 
 #[cfg(test)]

@@ -1,11 +1,11 @@
 [
   {
-    "id": "nullable_types",
-    "source": "fun f(x: Int?): Int? = x"
+    "id": "nullable_double_types",
+    "source": "fun f(x: Double?): Double? = x"
   },
   {
-    "id": "overloads",
-    "source": "fun f(): Int = 0\nfun f(x: Int): Int = x"
+    "id": "generic_overloads",
+    "source": "fun <T> f(x: T): T = x\nfun f(x: Int): Int = x"
   },
   {
     "id": "unconditional_loop_analysis",
@@ -132,7 +132,7 @@
   {
     "id": "object_private_const",
     "source": "object O { private const val V = 1 }",
-    "message": "Unsupported constant visibility"
+    "message": "Private object constants are not supported"
   },
   {
     "id": "object_reserved_const_instance",
@@ -170,19 +170,16 @@
     "message": "Only ordinary final classes"
   },
   {
-    "id": "class_implicit_constructor",
-    "source": "class C",
-    "message": "Classes require an explicit primary constructor"
+    "id": "class_secondary_constructor",
+    "source": "class C { constructor(value: Int) {} }"
   },
   {
-    "id": "class_mutable_constructor_property",
-    "source": "class C(private var value: Int)",
-    "message": "Expected val"
+    "id": "class_custom_mutable_accessor",
+    "source": "class C { var value: Int = 1; set(value) { field = value } }"
   },
   {
-    "id": "class_constructor_parameter_without_property",
-    "source": "class C(value: Int)",
-    "message": "Expected val"
+    "id": "class_constructor_lambda_capture",
+    "source": "class C(value: Int) { val callback: () -> Int = { value } }"
   },
   {
     "id": "class_generic_array_element",
@@ -190,8 +187,8 @@
     "message": "Only Array<String> is supported"
   },
   {
-    "id": "class_non_getter_property",
-    "source": "class C(private val value: Int) { val other = 1 }"
+    "id": "class_delegated_property",
+    "source": "class C { val other: Int by lazy { 1 } }"
   },
   {
     "id": "class_any_override",
@@ -199,8 +196,8 @@
     "message": "Any and Object inherited members are not supported"
   },
   {
-    "id": "class_nullable_interface",
-    "source": "import korrust.fixtures.NullableText\nclass C(private val elements: Array<String>) : NullableText { override fun text(): String = elements[0] }",
+    "id": "class_interface_function_type_member",
+    "source": "import korrust.fixtures.NullableText\nclass C(private val elements: Array<String>) : NullableText { override fun text(): String = elements[0]; fun map(action: () -> String): String = action() }",
     "classpath": true
   },
   {

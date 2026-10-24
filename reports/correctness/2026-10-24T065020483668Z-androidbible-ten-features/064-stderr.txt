@@ -1,0 +1,18 @@
+tests/fixtures/ten_features/MetadataRejections.kt:7:23: error: null cannot be a value of a non-null type 'String'.
+    AudioLogEntry(0L, null)
+                      ^^^^
+tests/fixtures/ten_features/MetadataRejections.kt:8:13: error: argument type mismatch: actual type is 'List<String?>', but 'List<String>' was expected.
+    listGet(listOf<String?>(null), 0)
+            ^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/ten_features/MetadataRejections.kt:10:27: error: null cannot be a value of a non-null type 'String'.
+    record.copy(message = null)
+                          ^^^^
+tests/fixtures/ten_features/MetadataRejections.kt:11:12: error: 'val' cannot be reassigned.
+    record.message = "changed"
+           ^^^^^^^
+tests/fixtures/ten_features/MetadataRejections.kt:13:12: error: 'val' cannot be reassigned.
+    fields.label = "changed"
+           ^^^^^
+tests/fixtures/ten_features/MetadataRejections.kt:14:22: error: initializer type mismatch: expected 'String', actual 'String?'.
+    val text: String = fields.optional
+                     ^

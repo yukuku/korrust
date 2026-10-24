@@ -60,7 +60,10 @@ fn preserves_statement_boundaries_and_rejects_unsupported_syntax() {
     rejects("fun f(): Int = 01", "Leading zeroes");
 
     rejects("fun f(): Int = 1 /*", "Unterminated");
-    rejects("fun f(): Int = 1\nfun f(x: Int): Int = x", "overloads");
+    rejects(
+        "fun f(): Int = 1\nfun f(): Int = 2",
+        "Conflicting JVM function signature",
+    );
 }
 
 #[test]
@@ -140,7 +143,7 @@ fn requires_classpath_for_imported_java_classes() {
         "import missing.Foreign\nfun f(value: Foreign): Int = 1",
         "not found",
     );
-    rejects("fun f(value: Foreign): Int = 1", "explicit class import");
+    rejects("fun f(value: Foreign): Int = 1", "not found");
 }
 
 #[test]
@@ -760,27 +763,20 @@ fn rejects_unsupported_class_surface_and_mixed_declarations() {
         "sealed class E()",
         "public internal class E()",
         "final final class E()",
-        "class E",
         "class E<T>()",
         "class E private constructor()",
-        "class E(x: Int)",
-        "class E(private var x: Int)",
-        "class E(private val x: Int = 1)",
         "class E(private val x: Int, private val x: Int)",
         "class E() { constructor(x: Int) {} }",
         "class E() { init {} }",
-        "class E() { val x = 1 }",
-        "class E() { val x: Int = 1 }",
         "class E() { var x: Int get() = 1 }",
-        "class E() { private val x: Int get() = 1 }",
         "class E() { internal fun x() {} }",
         "class E() { protected fun x() {} }",
         "class E() { private override fun x() {} }",
         "class E() { override override fun x() {} }",
         "class E() { fun String.extension(): Int = 1 }",
         "class E() { object Nested }",
-        "class E() { class Nested() }",
         "class E() { companion object }",
+        "class E() { class Nested() }",
         "class E() { val x: Int get() = 1; val x: Int get() = 2 }",
         "class E(private val x: Int) { val x: Int get() = 1 }",
         "class E(private val x: Array<Int>)",
@@ -1339,16 +1335,9 @@ fn accepts_ten_bounded_androidbible_language_additions() {
 fn rejects_unsupported_or_invalid_ten_feature_boundaries() {
     for source in [
         "fun f(): Long = -9223372036854775808L",
-        "fun f(value: Int?): Int? = value",
-        r#"fun f(value: String?): String = "${value?.isEmpty()}""#,
-        "fun f(values: List<Int>): Int = values.size",
-        "fun f(): List<String> = listOf(\"a\")",
         "fun f(): String = null",
         "fun f(value: String?): String = value.substring(0)",
-        "data class Entry(val text: String?)",
         "data class Entry(var text: String)",
-        "data class Entry(val text: String = \"default\")",
-        "class Entry(var text: String)",
         "fun f(value: Int): Int = when { value, 1 -> 1; else -> 2 }",
     ] {
         assert!(
@@ -1418,4 +1407,31 @@ fn long_parameters_and_locals_enforce_jvm_slot_widths() {
         )
         .is_err()
     );
+}
+
+#[test]
+fn accepts_twenty_bounded_language_additions() {
+    for source in [
+        "fun f(): Int = 1\nfun f(x: Int): Int = x",
+        "const val VALUE: Int = 3\nfun f(): Int = VALUE",
+        "class E",
+        "class E(x: Int) { val field: Int = x }",
+        "class E(private var x: Int)",
+        "class E(private val x: Int = 1)",
+        "class E() { val x = 1 }",
+        "class E() { private val x: Int get() = 1 }",
+        "class E() { val x: Int = 1 }",
+        "fun f(value: Int?): Int? = value",
+        "fun f(value: String?): Int? = value?.length",
+        "fun f(values: List<Int>): Int = values.size",
+        "fun f(): List<String> = listOf(\"a\")",
+        "data class Entry(val text: String?)",
+        "data class Entry(val text: String = \"default\")",
+        "class Entry(var text: String)",
+        "fun f(value: String?): Int { if (value == null) { return -1 }; return value.length }",
+        "fun f(value: String?): Int { val text = value ?: return -1; return text.length }",
+    ] {
+        let result = compile_all(source, "Twenty.kt");
+        assert!(result.is_ok(), "rejected {source}: {:?}", result.err());
+    }
 }

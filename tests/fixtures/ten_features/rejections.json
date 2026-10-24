@@ -1,71 +1,71 @@
 [
   {
-    "id": "nullable_primitive",
-    "source": "fun f(value: Int?): Int? = value",
-    "scope": "Nullable primitive boxing is outside the reference-only subset.",
-    "candidate_diagnostic": "Nullable primitive types are not supported"
+    "id": "nullable_double",
+    "source": "fun f(value: Double?): Double? = value",
+    "scope": "Nullable Double scalars remain unsupported.",
+    "candidate_diagnostic": "Double was not found"
   },
   {
-    "id": "safe_primitive_result",
-    "source": "fun f(value: String?): String = \"${value?.isEmpty()}\"",
-    "scope": "Safe calls returning a primitive require boxing and are rejected.",
-    "candidate_diagnostic": "Safe calls returning primitives or Unit are not supported"
+    "id": "safe_unit_result",
+    "source": "import ten.trace.Trace\nfun f(value: Trace?): Unit? = value?.markReceiver()",
+    "scope": "Nullable Unit results are outside the boxed scalar safe-call subset.",
+    "candidate_diagnostic": "Nullable Unit is not supported"
   },
   {
-    "id": "general_list_element",
-    "source": "fun f(values: List<Int>): Int = values.size",
-    "scope": "Only exact List<String> and List<String?> element types are supported.",
-    "candidate_diagnostic": "Only List<String> and List<String?> are supported"
+    "id": "unsupported_list_scalar",
+    "source": "fun f(values: List<Double>): Int = values.size",
+    "scope": "Double list elements remain outside the supported scalar types.",
+    "candidate_diagnostic": "Double was not found"
   },
   {
-    "id": "list_factory",
-    "source": "fun f(): List<String> = listOf(\"a\")",
-    "scope": "Collection factories are outside the bounded list surface.",
-    "candidate_diagnostic": "Unresolved function: listOf"
+    "id": "list_factory_spread",
+    "source": "fun f(values: Array<String>): List<String> = listOf(*values)",
+    "scope": "Spread arguments to list factories remain unsupported.",
+    "candidate_diagnostic": "Expected an identifier"
   },
   {
     "id": "list_mutation",
     "source": "fun f(values: List<String>) { values[0] = \"a\" }",
     "invalid": true,
     "scope": "Read-only List indexed assignment is invalid Kotlin and must reject.",
-    "candidate_diagnostic": "Array assignment supports IntArray, ByteArray, and CharArray",
+    "candidate_diagnostic": "Read-only List does not support indexed assignment",
     "official_diagnostic": "no 'set' operator method providing array access"
   },
   {
-    "id": "data_nullable_property",
-    "source": "data class E(val value: String?)",
-    "scope": "Generated data-class members are bounded to nonnull scalar/String properties.",
-    "candidate_diagnostic": "Data classes require 1 to 32 public val nonnullable scalar or String parameters"
+    "id": "data_array_property",
+    "source": "data class E(val value: IntArray)",
+    "scope": "Generated data properties remain bounded to supported scalars, references and Lists.",
+    "candidate_diagnostic": "Data classes"
   },
   {
     "id": "data_mutable_property",
     "source": "data class E(var value: Int)",
     "scope": "Generated data-class members are bounded to read-only public constructor properties.",
-    "candidate_diagnostic": "Expected val, found var"
+    "candidate_diagnostic": "Data classes require"
   },
   {
-    "id": "data_body",
-    "source": "data class E(val value: Int) { fun doubled(): Int = value + value }",
-    "scope": "Data-class bodies remain outside the bounded generated-member implementation.",
-    "candidate_diagnostic": "Data classes require 1 to 32 public val nonnullable scalar or String parameters"
+    "id": "data_inheritance",
+    "source": "data class E(val value: Int) : java.io.Serializable",
+    "scope": "General data-class inheritance remains unsupported.",
+    "candidate_diagnostic": "Only imported interface supertypes"
   },
   {
-    "id": "data_constructor_default",
-    "source": "data class E(val value: Int = 1)",
-    "scope": "Constructor parameter defaults are separate from generated copy defaults.",
-    "candidate_diagnostic": "Expected ), found ="
+    "id": "data_constructor_limit",
+    "source": "data class E(val p0: Int = 0, val p1: Int = 1, val p2: Int = 2, val p3: Int = 3, val p4: Int = 4, val p5: Int = 5, val p6: Int = 6, val p7: Int = 7, val p8: Int = 8, val p9: Int = 9, val p10: Int = 10, val p11: Int = 11, val p12: Int = 12, val p13: Int = 13, val p14: Int = 14, val p15: Int = 15, val p16: Int = 16, val p17: Int = 17, val p18: Int = 18, val p19: Int = 19, val p20: Int = 20, val p21: Int = 21, val p22: Int = 22, val p23: Int = 23, val p24: Int = 24, val p25: Int = 25, val p26: Int = 26, val p27: Int = 27, val p28: Int = 28, val p29: Int = 29, val p30: Int = 30, val p31: Int = 31, val p32: Int = 32)",
+    "scope": "Data classes retain the 32-property bound.",
+    "candidate_diagnostic": "Data classes"
   },
   {
-    "id": "public_mutable_constructor",
-    "source": "class E(var value: Int)",
-    "scope": "Ordinary constructor properties are read-only in this subset.",
-    "candidate_diagnostic": "Expected val, found var"
+    "id": "custom_mutable_accessor",
+    "source": "class E { var value: Int = 1; set(value) { field = value } }",
+    "scope": "Custom mutable accessors remain unsupported.",
+    "candidate_diagnostic": "Only instance functions, properties"
   },
   {
-    "id": "nullable_without_smartcast",
-    "source": "fun f(value: String?): String { if (value != null) { return value }; return \"missing\" }",
-    "scope": "Flow-sensitive smart casts are outside the nullable reference subset.",
-    "candidate_diagnostic": "Type mismatch: expected String, found Nullable(String)"
+    "id": "unstable_mutable_smartcast",
+    "source": "fun f(value: String?): String { var text = value; if (text != null) { return text }; return \"missing\" }",
+    "scope": "Mutable-local refinement is outside stable-val/parameter smartcasts.",
+    "candidate_diagnostic": "Type mismatch"
   },
   {
     "id": "when_subject_declaration",

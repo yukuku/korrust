@@ -35,7 +35,15 @@ fn method(
 ) -> Result<Vec<u8>> {
     let (params, result) = types;
     let locals = code.locals;
-    let mut method = simple_method(pool, flags, name, descriptor, code, None, nonnull(result))?;
+    let mut method = simple_method(
+        pool,
+        flags,
+        name,
+        descriptor,
+        code,
+        generic_method(params, result).as_deref(),
+        nonnull(result),
+    )?;
     parameter_annotations(pool, &mut method, params)?;
     nullable_result(pool, &mut method, result)?;
     frames::attach(pool, &mut method, owner, params, locals, flags & 8 != 0)?;
@@ -192,7 +200,9 @@ pub(super) fn methods(
             "(Ljava/lang/String;)Ljava/lang/StringBuilder;",
         )?;
         field(&mut body, owner, 0, name, ty)?;
-        let arg = if ty == &Type::Byte {
+        let arg = if ty.is_reference() && ty.base() != &Type::String {
+            "Ljava/lang/Object;".into()
+        } else if ty == &Type::Byte {
             "I".into()
         } else {
             ty.descriptor()
@@ -238,10 +248,25 @@ pub(super) fn methods(
         field(&mut body, owner, 0, name, ty)?;
         match ty {
             Type::Long => body.method_reference(0xb8, "java/lang/Long", "hashCode", "(J)I")?,
+            Type::Float => body.method_reference(0xb8, "java/lang/Float", "hashCode", "(F)I")?,
             Type::Boolean => {
                 body.method_reference(0xb8, "java/lang/Boolean", "hashCode", "(Z)I")?
             }
-            Type::String => body.method_reference(0xb6, "java/lang/String", "hashCode", "()I")?,
+            ty if ty.is_reference() => {
+                if ty.is_nullable() {
+                    let present = body.label();
+                    let end = body.label();
+                    body.bytes.push(0x59);
+                    body.branch(0xc7, present);
+                    body.bytes.extend([0x57, 0x03]);
+                    body.branch(0xa7, end);
+                    body.mark(present);
+                    body.method_reference(0xb6, "java/lang/Object", "hashCode", "()I")?;
+                    body.mark(end);
+                } else {
+                    body.method_reference(0xb6, "java/lang/Object", "hashCode", "()I")?;
+                }
+            }
             _ => {}
         }
         if index != 0 {
@@ -279,7 +304,11 @@ pub(super) fn methods(
                 body.bytes.push(0x94);
                 body.branch(0x9a, different);
             }
-            Type::String => {
+            Type::Float => {
+                body.method_reference(0xb8, "java/lang/Float", "compare", "(FF)I")?;
+                body.branch(0x9a, different);
+            }
+            ty if ty.is_reference() => {
                 body.method_reference(
                     0xb8,
                     "kotlin/jvm/internal/Intrinsics",

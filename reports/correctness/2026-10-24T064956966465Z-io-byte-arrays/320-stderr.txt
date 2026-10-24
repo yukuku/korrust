@@ -1,0 +1,8 @@
+target/checks/2026-10-24T064956966465Z-io-byte-arrays/object_duplicate_member_namespace.kt:1:22: error: conflicting declarations:
+object Child : Any
+object O { const val Child = 1; object Child }
+                     ^^^^^
+target/checks/2026-10-24T064956966465Z-io-byte-arrays/object_duplicate_member_namespace.kt:1:40: error: conflicting declarations:
+val Child: Int
+object O { const val Child = 1; object Child }
+                                       ^^^^^

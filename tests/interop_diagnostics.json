@@ -2,7 +2,7 @@
   {
     "id": "missing_import",
     "source": "fun f(value: IntArrayList): Int = value.size()",
-    "message": "explicit class import"
+    "message": "not found"
   },
   {
     "id": "missing_class",
@@ -12,12 +12,12 @@
   {
     "id": "missing_member",
     "source": "import yuku.alkitab.util.IntArrayList\nfun f(value: IntArrayList): Int = value.missing()",
-    "message": "missing or overloaded"
+    "message": "No applicable member overload"
   },
   {
     "id": "private_member",
     "source": "import fixtures.ForeignMethods\nfun f(value: ForeignMethods): Int = value.hidden()",
-    "message": "Unsupported"
+    "message": "No applicable member overload"
   },
   {
     "id": "wrong_java_arity",
@@ -27,7 +27,7 @@
   {
     "id": "wrong_java_argument",
     "source": "import yuku.alkitab.util.IntArrayList\nfun f(value: IntArrayList) { value.add(true) }",
-    "message": "Type mismatch"
+    "message": "No applicable member overload"
   },
   {
     "id": "unit_as_int",

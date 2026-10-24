@@ -7,7 +7,7 @@
       "androidbible_unsigned_search"
     ],
     "restrictions": [
-      "Long scalars have separate AndroidBible ten-feature evidence. No floating-point, unsigned types, operator overloading, or general constant folding."
+      "Long scalars have separate AndroidBible ten-feature evidence. No general floating-point arithmetic, unsigned types, operator overloading, or general constant folding."
     ]
   },
   {
@@ -20,7 +20,7 @@
       "character_when_semantics"
     ],
     "restrictions": [
-      "Top-level/general Kotlin overload resolution, default/named arguments and function values are unsupported; bounded exact-signature object overloads are tested separately. Imports resolve supported classes from directory classpaths.",
+      "Bounded general overload resolution and default/named arguments have separate twenty-addition evidence; function values remain unsupported. This suite tests direct calls and exact-signature object overloads.",
       "if/while/when bodies accept a single statement or a block. Functions must pass the conservative return-path check; when proves a return only with an else and every branch returning.",
       "Compiler resource limits and the nesting limit intentionally reject larger constructs.",
       "Bounded Int when expressions/ranges, for-until loops, loop control, postfix Int locals and definite assignment now have separate Io evidence. Subjectless and String/Boolean when have separate AndroidBible ten-feature evidence. Subject declarations and is/collection/guard conditions and trailing condition commas remain unsupported."
@@ -35,7 +35,7 @@
       "java_interop_semantics"
     ],
     "restrictions": [
-      "No nullable declarations, indexed array writes, generic arrays, collection construction, or default/named copyInto arguments."
+      "Nullable scalars and list construction have separate twenty-addition evidence. This entry claims nonnull primitive-array signatures and the listed array operations; generic arrays and default/named copyInto arguments remain outside its scope."
     ]
   },
   {
@@ -70,7 +70,7 @@
       "Emits class-file versions 49 and 52; requires kotlin-stdlib for non-null reference parameter checks, selected String operations and enum entries.",
       "Kotlin metadata and module mappings cover supported top-level functions and bounded classes; enum/object metadata, source line/local-variable tables and general class forms are absent.",
       "Kotlin consumer evidence covers selected public imports and internal/friend/private/nullability boundaries; full application builds remain unvalidated.",
-      "Java support is deliberately bounded: no JAR classpaths, Java construction, fields, static/interface/inherited calls, overloads, generics, varargs, annotated methods or general Kotlin metadata classes; validated Kotlin interfaces are accepted for bounded class implementation, while Java interface calls remain unsupported; unsupported surfaces fail closed.",
+      "Declared Java statics/fields, bounded overloads and selected Kotlin metadata classes have separate twenty-addition evidence. JAR classpaths, Java construction, Java interface/inherited calls, generics, varargs and annotated methods remain unsupported.",
       "Test-only Android Parcel/Parcelable and NonNull stubs provide javac types only; Android parcel behavior and full Java nullability annotation semantics are unvalidated."
     ]
   },
@@ -169,9 +169,9 @@
       "jvm_signatures/korrust.probes.classes.TextStore"
     ],
     "restrictions": [
-      "No open/abstract/data/generic/nested classes, non-private-val constructor parameters, default/named constructor arguments, init blocks or arbitrary field/property initializers. Array type support is restricted to Array<String> with supported construction through Java/Kotlin consumers; general array types and operations are unavailable.",
+      "Data classes have separate ten-addition evidence; mutable/nonproperty/default constructor parameters, omitted constructors and initialized properties have separate twenty-addition evidence. This entry claims final private-val classes only. Open/abstract/generic/nested classes, init blocks and general arrays remain outside scope.",
       "Class member bytecode supports straight-line expressions and return bodies; control-flow/branching members, overloads, inherited Any/Object members, unsupported interface metadata and Java interface implementations fail closed.",
-      "Interface support validates nonnullable ordinary supported signatures/property identity; nullable/generic/suspend/default-parameter and other metadata surfaces remain unsupported."
+      "This entry tests nonnullable interface signatures/property identity; nullable/List member signatures have separate twenty-addition evidence. Generic declarations and suspend interfaces remain unsupported."
     ]
   },
   {
@@ -208,7 +208,7 @@
     ],
     "restrictions": [
       "Interface/companion/anonymous support is bounded to tested declaration and initialization shapes; no general object construction, mutable companion state, named companions, generics or arbitrary initializers.",
-      "Float is supported for abstract interface return descriptors and external Java/Kotlin consumers; general Float arithmetic/literals/source implementations remain unsupported.",
+      "This entry tests abstract Float interface descriptors. Float literals/data properties/nullable boxes have separate twenty-addition evidence; general Float arithmetic remains unsupported.",
       "This report tests simple ASCII $name templates; braced expressions have separate AndroidBible ten-feature evidence. Escaped identifier names and raw strings remain unsupported. Constant-object/enum metadata and complete Kotlin/Android compatibility remain outside this evidence.",
       "Source interface default bodies with reference parameters are explicitly unsupported; abstract reference-parameter declarations retain separate supported-signature checks."
     ]

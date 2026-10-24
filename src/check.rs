@@ -13,6 +13,7 @@ mod objects;
 mod singletons;
 
 pub struct Module {
+    pub constants: Vec<syntax::ConstDecl>,
     pub functions: Vec<Function>,
     pub class_decl: Option<ClassDecl>,
     pub interface_decl: Option<InterfaceDecl>,
@@ -70,18 +71,42 @@ pub enum CompanionValue {
     StringArray(Vec<Vec<u16>>),
     Object {
         owner: String,
-        class_decl: ClassDecl,
+        class_decl: Box<ClassDecl>,
     },
 }
+pub struct ClassField {
+    pub name: String,
+    pub ty: Type,
+    pub private: bool,
+    pub mutable: bool,
+    pub param: Option<usize>,
+    pub initializer: Option<Value>,
+}
+pub struct ClassCompanionProperty {
+    pub name: String,
+    pub ty: Type,
+    pub private: bool,
+    pub mutable: bool,
+    pub value: Value,
+}
+pub struct ClassCompanion {
+    pub owner: String,
+    pub properties: Vec<ClassCompanionProperty>,
+    pub locals: u16,
+}
 pub struct ClassDecl {
+    pub fields: Vec<ClassField>,
+    pub defaults: Vec<Option<Value>>,
+    pub constructor_locals: u16,
+    pub companion: Option<ClassCompanion>,
     pub params: Vec<(String, Type)>,
-    pub public_params: Vec<String>,
     pub data: bool,
     pub interfaces: Vec<String>,
     pub methods: Vec<Function>,
     pub bridges: Vec<JavaMethod>,
 }
 pub struct Function {
+    pub defaults: Vec<Option<Value>>,
     pub name: String,
     pub private: bool,
     pub is_override: bool,
@@ -103,6 +128,19 @@ impl Function {
     }
 }
 pub enum Statement {
+    JavaFieldStore {
+        owner: String,
+        name: String,
+        ty: Type,
+        receiver: Option<Value>,
+        value: Value,
+    },
+    ListSet(Value, Value, Value),
+    FieldStore {
+        name: String,
+        receiver: Value,
+        value: Value,
+    },
     Store(u8, Value),
     Expression(Value),
     Return(Value),
@@ -140,12 +178,31 @@ pub enum StringMethod {
     CompareTo,
 }
 pub enum ValueKind {
+    Float(u32),
+    Box(Box<Value>),
+    Unbox(Box<Value>),
+    New {
+        owner: String,
+        descriptor: String,
+        args: Vec<Value>,
+    },
+    JavaField {
+        owner: String,
+        name: String,
+        receiver: Option<Box<Value>>,
+    },
+    ListFactory {
+        mutable: bool,
+        elements: Vec<Value>,
+    },
+    Abrupt(Vec<Statement>),
     Unit,
     Long(i64),
     Null,
     IsNull(Box<Value>),
     ListSize(Box<Value>),
     ListGet(Box<Value>, Box<Value>),
+    ListSet(Box<Value>, Box<Value>, Box<Value>),
     Let {
         slot: u8,
         value: Box<Value>,
@@ -204,16 +261,37 @@ pub enum ValueKind {
     Length(Box<Value>),
     Index(Box<Value>, Box<Value>),
     Call(usize, Vec<Value>),
+    DefaultCall(usize, Vec<Value>, u32),
     Compare(Box<Value>, Box<Value>),
 }
 impl Value {
     pub fn stack(&self) -> usize {
         match &self.kind {
+            ValueKind::Float(_) => 1,
+            ValueKind::Box(value) | ValueKind::Unbox(value) => value.stack().max(2),
+            ValueKind::JavaField { receiver, .. } => receiver
+                .as_ref()
+                .map_or(1, |v| v.stack())
+                .max(self.ty.slots()),
+            ValueKind::Abrupt(_) => 256,
+            ValueKind::ListFactory { elements, .. } => {
+                elements.iter().map(|v| 4 + v.stack()).max().unwrap_or(2)
+            }
+            ValueKind::New { args, .. } => args
+                .iter()
+                .scan(2, |slots, v| {
+                    let n = *slots + v.stack();
+                    *slots += v.ty.slots();
+                    Some(n)
+                })
+                .max()
+                .unwrap_or(2),
             ValueKind::Unit => 0,
             ValueKind::Long(_) => 2,
             ValueKind::Null => 1,
             ValueKind::IsNull(value) | ValueKind::ListSize(value) => value.stack().max(1),
             ValueKind::ListGet(a, b) => a.stack().max(1 + b.stack()),
+            ValueKind::ListSet(a, b, c) => a.stack().max(1 + b.stack()).max(2 + c.stack()),
             ValueKind::Let { value, body, .. } => value.stack().max(body.stack()),
             ValueKind::NewArray(_, value)
             | ValueKind::Convert(_, value)
@@ -246,6 +324,16 @@ impl Value {
                 .map(|(index, value)| 2 + index + value.stack())
                 .max()
                 .unwrap_or(2),
+            ValueKind::DefaultCall(_, args, _) => args
+                .iter()
+                .scan(0, |slots, v| {
+                    let n = *slots + v.stack();
+                    *slots += v.ty.slots();
+                    Some(n)
+                })
+                .max()
+                .unwrap_or(0)
+                .max(args.iter().map(|v| v.ty.slots()).sum::<usize>() + 2),
             ValueKind::Call(_, args)
             | ValueKind::StaticCall { args, .. }
             | ValueKind::StringCall(_, args)
@@ -270,8 +358,15 @@ struct Local {
     ty: Type,
     mutable: bool,
 }
+type ConstructorSignature<'a> = (&'a str, &'a Vec<(String, Type)>, &'a Vec<Option<Expr>>);
+type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u32);
 struct Checker<'a> {
     classpath: &'a Classpath,
+    constants: &'a HashMap<String, (Type, Expr)>,
+    constructor: Option<ConstructorSignature<'a>>,
+    defaults: &'a Vec<Vec<Option<Expr>>>,
+    function_names: &'a [String],
+    mutable_fields: &'a HashSet<String>,
     extensions: &'a HashSet<usize>,
     classes: &'a HashMap<String, JavaClass>,
     imports: &'a HashMap<String, String>,
@@ -284,6 +379,8 @@ struct Checker<'a> {
     object_methods: &'a HashMap<String, Vec<JavaMethod>>,
     object_fields: &'a HashMap<String, (String, Type)>,
     object_owner: Option<&'a str>,
+    allow_return: bool,
+    refinements: HashMap<u8, Type>,
     initialized: HashSet<u8>,
     loop_depth: usize,
     scopes: Vec<HashMap<String, Local>>,
@@ -291,6 +388,502 @@ struct Checker<'a> {
     result: Type,
 }
 impl Checker<'_> {
+    fn list_call(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        if unresolved_list(&receiver.ty) {
+            return Err(Diagnostic::new(
+                offset,
+                "Cannot infer list element type; empty or null-only factories require an explicit or expected element type",
+            ));
+        }
+        let (element, mutable) = match receiver.ty.base() {
+            Type::List(e) => (e.as_ref().clone(), false),
+            Type::MutableList(e) => (e.as_ref().clone(), true),
+            _ => unreachable!(),
+        };
+        if name == "get" && args.len() == 1 {
+            let index = self.value(&args[0])?;
+            self.require(&index, Type::Int, offset)?;
+            return Ok(Value {
+                ty: element,
+                kind: ValueKind::ListGet(Box::new(receiver), Box::new(index)),
+            });
+        }
+        if name == "isEmpty" && args.is_empty() {
+            return Ok(Value {
+                ty: Type::Boolean,
+                kind: ValueKind::Binary(
+                    "==".into(),
+                    Box::new(Value {
+                        ty: Type::Int,
+                        kind: ValueKind::ListSize(Box::new(receiver)),
+                    }),
+                    Box::new(Value {
+                        ty: Type::Int,
+                        kind: ValueKind::Int(0),
+                    }),
+                ),
+            });
+        }
+        if !mutable {
+            return Err(Diagnostic::new(
+                offset,
+                "Read-only lists support size, get, isEmpty, and indexing",
+            ));
+        }
+        if name == "set" && args.len() == 2 {
+            let index = self.value(&args[0])?;
+            self.require(&index, Type::Int, offset)?;
+            let value = self.value(&args[1])?;
+            let value = self.coerce(value, element.clone(), offset)?;
+            return Ok(Value {
+                ty: element,
+                kind: ValueKind::ListSet(Box::new(receiver), Box::new(index), Box::new(value)),
+            });
+        }
+        let (descriptor, result) = match (name, args.len()) {
+            ("add", 1) => ("(Ljava/lang/Object;)Z", Type::Boolean),
+            ("set", 2) => (
+                "(ILjava/lang/Object;)Ljava/lang/Object;",
+                Type::Java("java/lang/Object".into()),
+            ),
+            _ => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Unsupported mutable list operation",
+                ));
+            }
+        };
+        let mut values = vec![receiver];
+        if name == "set" {
+            let index = self.value(&args[0])?;
+            self.require(&index, Type::Int, offset)?;
+            values.push(index);
+        }
+        let arg = args.last().unwrap();
+        let value = self.value(arg)?;
+        let value = self.coerce(value, element.clone(), arg.offset)?;
+        values.push(if value.ty.is_reference() {
+            value
+        } else {
+            Value {
+                ty: Type::Nullable(Box::new(value.ty.clone())),
+                kind: ValueKind::Box(Box::new(value)),
+            }
+        });
+        let method = JavaMethod {
+            owner: "java/util/List".into(),
+            name: name.into(),
+            descriptor: descriptor.into(),
+            access: 0x0401,
+            unsupported: false,
+            source_property: None,
+            kotlin_params: None,
+            kotlin_result: None,
+            kotlin_internal: false,
+        };
+        let call = Value {
+            ty: result,
+            kind: ValueKind::MemberCall {
+                method,
+                interface: true,
+                args: values,
+            },
+        };
+        if name == "set" {
+            return Err(Diagnostic::new(
+                offset,
+                "Use indexed assignment for mutable list set",
+            ));
+        }
+        Ok(call)
+    }
+    fn checked_defaults(
+        &mut self,
+        defaults: &[Option<Expr>],
+        params: &[(String, Type)],
+        offset: usize,
+    ) -> Result<Vec<Option<Value>>> {
+        if defaults.iter().any(Option::is_some) && params.len() > 32 {
+            return Err(Diagnostic::new(
+                offset,
+                "Default arguments support at most 32 parameters",
+            ));
+        }
+        let allow_return = self.allow_return;
+        self.allow_return = false;
+        let all = self.initialized.clone();
+        let refinements = self.refinements.clone();
+        let mut earlier = HashSet::new();
+        let mut values = Vec::new();
+        for ((name, ty), expr) in params.iter().zip(defaults) {
+            self.refinements = refinements.clone();
+            self.initialized = earlier.clone();
+            let value = expr
+                .as_ref()
+                .map(|expr| {
+                    let value = self.value(expr)?;
+                    self.coerce(value, ty.clone(), expr.offset)
+                })
+                .transpose()?;
+            values.push(value);
+            if let Some(local) = self.local(name) {
+                earlier.insert(local.slot);
+            }
+        }
+        self.initialized = all;
+        self.refinements = refinements;
+        self.allow_return = allow_return;
+        Ok(values)
+    }
+    fn refine(&mut self, condition: &Expr, truth: bool) {
+        if let ExprKind::Unary(op, inner) = &condition.kind {
+            if op == "!" {
+                self.refine(inner, !truth);
+            }
+        }
+        if let ExprKind::Binary(op, left, right) = &condition.kind {
+            if op == "&&" && truth {
+                self.refine(left, true);
+                self.refine(right, true);
+            }
+            if op == "||" && !truth {
+                self.refine(left, false);
+                self.refine(right, false);
+            }
+            let name = match (&left.kind, &right.kind) {
+                (ExprKind::Name(name), ExprKind::Null) | (ExprKind::Null, ExprKind::Name(name)) => {
+                    Some(name)
+                }
+                _ => None,
+            };
+            if let Some(name) = name {
+                if (op == "!=" && truth) || (op == "==" && !truth) {
+                    if let Some(local) = self.local(name) {
+                        if !local.mutable {
+                            if let Type::Nullable(inner) = local.ty {
+                                self.refinements.insert(local.slot, *inner);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    fn applicability(
+        &mut self,
+        params: &[(String, Type)],
+        defaults: &[bool],
+        args: &[Expr],
+        named: bool,
+        offset: usize,
+    ) -> Option<usize> {
+        let mapping = Self::argument_mapping(params, defaults, args, named, offset).ok()?;
+        let before = self.next;
+        let refinements = self.refinements.clone();
+        let initialized = self.initialized.clone();
+        let mut score = 0;
+        let result = (|| {
+            for (arg, i) in args.iter().zip(mapping) {
+                let arg = if let ExprKind::NamedArgument(_, value) = &arg.kind {
+                    value.as_ref()
+                } else {
+                    arg
+                };
+                let value = self.value(arg).ok()?;
+                if value.ty != params[i].1 {
+                    score += if value.ty == Type::Null { 4 } else { 1 };
+                }
+                self.coerce(value, params[i].1.clone(), arg.offset).ok()?;
+            }
+            Some(score * 64 + params.len().saturating_sub(args.len()))
+        })();
+        self.next = before;
+        self.refinements = refinements;
+        self.initialized = initialized;
+        result
+    }
+    fn select_function(
+        &mut self,
+        candidates: &[usize],
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<usize> {
+        let mut applicable = Vec::new();
+        for id in candidates {
+            let params = self.signatures[*id].0.clone();
+            let defaults = self
+                .defaults
+                .get(*id)
+                .map(|v| v.iter().map(Option::is_some).collect::<Vec<_>>())
+                .unwrap_or_else(|| vec![false; params.len()]);
+            if let Some(score) = self.applicability(&params, &defaults, args, true, offset) {
+                applicable.push((score, *id));
+            }
+        }
+        applicable.sort_by_key(|p| p.0);
+        if applicable.is_empty() {
+            return Err(Diagnostic::new(
+                offset,
+                "No applicable function overload or wrong argument count",
+            ));
+        }
+        if applicable.get(1).is_some_and(|p| p.0 == applicable[0].0) {
+            return Err(Diagnostic::new(offset, "Ambiguous function overload"));
+        }
+        Ok(applicable[0].1)
+    }
+    fn select_method(
+        &mut self,
+        methods: &[JavaMethod],
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<JavaMethod> {
+        if args
+            .iter()
+            .any(|a| matches!(a.kind, ExprKind::NamedArgument(_, _)))
+            && methods.iter().all(|m| m.kotlin_params.is_none())
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Named arguments require a Kotlin declaration",
+            ));
+        }
+        let mut applicable = Vec::new();
+        for method in methods {
+            if method.unsupported || method.kotlin_internal {
+                continue;
+            }
+            let Ok((types, _)) = class_method_types(method) else {
+                continue;
+            };
+            let params = method
+                .kotlin_params
+                .as_ref()
+                .map(|v| v.iter().map(|p| (p.0.clone(), p.1.clone())).collect())
+                .unwrap_or_else(|| {
+                    types
+                        .into_iter()
+                        .enumerate()
+                        .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
+                        .collect::<Vec<_>>()
+                });
+            let defaults = method
+                .kotlin_params
+                .as_ref()
+                .map(|v| v.iter().map(|p| p.2).collect())
+                .unwrap_or_else(|| vec![false; params.len()]);
+            if let Some(score) = self.applicability(
+                &params,
+                &defaults,
+                args,
+                method.kotlin_params.is_some(),
+                offset,
+            ) {
+                applicable.push((score, method.clone()));
+            }
+        }
+        applicable.sort_by_key(|p| p.0);
+        if applicable.is_empty() {
+            return Err(Diagnostic::new(
+                offset,
+                "No applicable member overload or wrong argument count",
+            ));
+        }
+        if applicable.get(1).is_some_and(|p| p.0 == applicable[0].0) {
+            return Err(Diagnostic::new(offset, "Ambiguous member overload"));
+        }
+        Ok(applicable.remove(0).1)
+    }
+    fn factory(
+        &mut self,
+        name: &str,
+        type_args: &[Type],
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        if name == "emptyList" && !args.is_empty() || type_args.len() > 1 {
+            return Err(Diagnostic::new(
+                offset,
+                "Unsupported list factory arguments",
+            ));
+        }
+        let mut elements = Vec::new();
+        let mut element = type_args
+            .first()
+            .map(|ty| self.resolve(ty, offset))
+            .transpose()?;
+        for arg in args {
+            let value = self.value(arg)?;
+            if element.is_none() {
+                element = Some(value.ty.clone());
+            }
+            elements.push(self.coerce(value, element.clone().unwrap(), arg.offset)?);
+        }
+        let element = element.unwrap_or(Type::Null);
+        if matches!(element, Type::Unit | Type::ThreadLocal(_)) {
+            return Err(Diagnostic::new(offset, "Unsupported list element type"));
+        }
+        let mutable = name == "mutableListOf";
+        Ok(Value {
+            ty: if mutable {
+                Type::MutableList(Box::new(element))
+            } else {
+                Type::List(Box::new(element))
+            },
+            kind: ValueKind::ListFactory { mutable, elements },
+        })
+    }
+    fn argument_mapping(
+        params: &[(String, Type)],
+        defaults: &[bool],
+        args: &[Expr],
+        named: bool,
+        offset: usize,
+    ) -> Result<Vec<usize>> {
+        let mut used = HashSet::new();
+        let mut mapping = Vec::new();
+        let mut seen_named = false;
+        for (position, arg) in args.iter().enumerate() {
+            let index = if let ExprKind::NamedArgument(name, _) = &arg.kind {
+                if !named {
+                    return Err(Diagnostic::new(
+                        arg.offset,
+                        "Named arguments require a Kotlin declaration",
+                    ));
+                }
+                seen_named = true;
+                params
+                    .iter()
+                    .position(|p| p.0 == *name)
+                    .ok_or_else(|| Diagnostic::new(arg.offset, "Unknown named argument"))?
+            } else {
+                if seen_named {
+                    return Err(Diagnostic::new(
+                        arg.offset,
+                        "Positional arguments after named arguments are not supported",
+                    ));
+                }
+                position
+            };
+            if index >= params.len() || !used.insert(index) {
+                return Err(Diagnostic::new(arg.offset, "Wrong or duplicate arguments"));
+            }
+            mapping.push(index);
+        }
+        if (0..params.len())
+            .any(|i| !used.contains(&i) && !defaults.get(i).copied().unwrap_or(false))
+        {
+            return Err(Diagnostic::new(offset, "Missing required argument"));
+        }
+        Ok(mapping)
+    }
+    fn arguments(
+        &mut self,
+        params: &[(String, Type)],
+        defaults: &[bool],
+        args: &[Expr],
+        named: bool,
+        offset: usize,
+    ) -> Result<CheckedArguments> {
+        if params.len() > 32 && defaults.iter().any(|d| *d) {
+            return Err(Diagnostic::new(
+                offset,
+                "Default arguments support at most 32 parameters",
+            ));
+        }
+        let mapping = Self::argument_mapping(params, defaults, args, named, offset)?;
+        let reordered = mapping.iter().enumerate().any(|(i, p)| i != *p);
+        let mut ordered: Vec<Option<Value>> = (0..params.len()).map(|_| None).collect();
+        let mut lets = Vec::new();
+        for (arg, index) in args.iter().zip(mapping) {
+            let expr = if let ExprKind::NamedArgument(_, expr) = &arg.kind {
+                expr.as_ref()
+            } else {
+                arg
+            };
+            let value = self.value(expr)?;
+            let value = self.coerce(value, params[index].1.clone(), expr.offset)?;
+            ordered[index] = Some(if reordered {
+                let slot = self.allocate_typed_slot(&value.ty, offset)?;
+                let ty = value.ty.clone();
+                lets.push((slot, value));
+                Value {
+                    ty,
+                    kind: ValueKind::Local(slot),
+                }
+            } else {
+                value
+            });
+        }
+        let mut mask = 0;
+        let mut values = Vec::new();
+        for (i, value) in ordered.into_iter().enumerate() {
+            values.push(if let Some(v) = value {
+                v
+            } else {
+                mask |= 1u32 << i;
+                zero_value(&params[i].1)
+            });
+        }
+        Ok((values, lets, mask))
+    }
+    fn wrap_lets(mut value: Value, lets: Vec<(u8, Value)>) -> Value {
+        for (slot, initializer) in lets.into_iter().rev() {
+            value = Value {
+                ty: value.ty.clone(),
+                kind: ValueKind::Let {
+                    slot,
+                    value: Box::new(initializer),
+                    body: Box::new(value),
+                },
+            };
+        }
+        value
+    }
+    fn constructor_call(
+        &mut self,
+        owner: &str,
+        params: &[(String, Type)],
+        defaults: &[bool],
+        args: &[Expr],
+        named: bool,
+        offset: usize,
+    ) -> Result<Value> {
+        let (mut values, lets, mask) = self.arguments(params, defaults, args, named, offset)?;
+        let mut descriptor = format!(
+            "({}",
+            params.iter().map(|p| p.1.descriptor()).collect::<String>()
+        );
+        if mask != 0 {
+            descriptor.push_str("ILkotlin/jvm/internal/DefaultConstructorMarker;");
+            values.push(Value {
+                ty: Type::Int,
+                kind: ValueKind::Int(mask as i32),
+            });
+            values.push(Value {
+                ty: Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
+                kind: ValueKind::Null,
+            });
+        }
+        descriptor.push_str(")V");
+        Ok(Self::wrap_lets(
+            Value {
+                ty: Type::Java(owner.into()),
+                kind: ValueKind::New {
+                    owner: owner.into(),
+                    descriptor,
+                    args: values,
+                },
+            },
+            lets,
+        ))
+    }
     fn safe_access(
         &mut self,
         receiver: &Expr,
@@ -321,11 +914,12 @@ impl Checker<'_> {
             "<safe>".into(),
             Local {
                 slot,
-                ty: inner,
+                ty: receiver.ty.clone(),
                 mutable: false,
             },
         );
         self.scopes.push(scope);
+        self.refinements.insert(slot, inner);
         self.initialized.insert(slot);
         let property = Expr {
             offset,
@@ -347,13 +941,22 @@ impl Checker<'_> {
         let result = self.value(&expression);
         self.scopes.pop();
         self.initialized.remove(&slot);
+        self.refinements.remove(&slot);
         let result = result?;
-        if !result.ty.is_reference() {
+        if result.ty == Type::Unit {
             return Err(Diagnostic::new(
                 offset,
-                "Safe calls returning primitives or Unit are not supported",
+                "Safe calls returning Unit are not supported",
             ));
         }
+        let result = if result.ty.is_reference() {
+            result
+        } else {
+            Value {
+                ty: Type::Nullable(Box::new(result.ty.clone())),
+                kind: ValueKind::Box(Box::new(result)),
+            }
+        };
         let ty = match result.ty.base() {
             Type::Nullable(_) => result.ty.clone(),
             ty => Type::Nullable(Box::new(ty.clone())),
@@ -388,6 +991,7 @@ impl Checker<'_> {
         })
     }
     fn elvis(&mut self, left: &Expr, right: &Expr, offset: usize) -> Result<Value> {
+        let source_left = left;
         let left = self.value(left)?;
         if left.ty == Type::Null {
             let body = self.value(right)?;
@@ -412,7 +1016,17 @@ impl Checker<'_> {
             }
         };
         let right = self.value(right)?;
-        let ty = if right.ty == inner {
+        let abrupt = matches!(right.kind, ValueKind::Abrupt(_));
+        if abrupt {
+            if let ExprKind::Name(name) = &source_left.kind {
+                if let Some(local) = self.local(name) {
+                    if !local.mutable {
+                        self.refinements.insert(local.slot, inner.clone());
+                    }
+                }
+            }
+        }
+        let ty = if right.ty == inner || abrupt {
             inner.clone()
         } else if right.ty == Type::Null || right.ty == Type::Nullable(Box::new(inner.clone())) {
             Type::Nullable(Box::new(inner.clone()))
@@ -430,6 +1044,7 @@ impl Checker<'_> {
                 kind: ValueKind::Local(slot),
             })),
         };
+        let left_ty = left.ty.clone();
         Ok(Value {
             ty: ty.clone(),
             kind: ValueKind::Let {
@@ -439,10 +1054,27 @@ impl Checker<'_> {
                     ty: ty.clone(),
                     kind: ValueKind::If(
                         Box::new(condition),
-                        Box::new(right),
-                        Box::new(Value {
-                            ty,
-                            kind: ValueKind::Local(slot),
+                        Box::new(if abrupt {
+                            Value {
+                                ty: ty.clone(),
+                                kind: right.kind,
+                            }
+                        } else {
+                            right
+                        }),
+                        Box::new(if !ty.is_reference() {
+                            Value {
+                                ty: ty.clone(),
+                                kind: ValueKind::Unbox(Box::new(Value {
+                                    ty: left_ty.clone(),
+                                    kind: ValueKind::Local(slot),
+                                })),
+                            }
+                        } else {
+                            Value {
+                                ty,
+                                kind: ValueKind::Local(slot),
+                            }
                         }),
                     ),
                 }),
@@ -466,40 +1098,189 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
-        let (params, result) = class_method_types(&method)?;
-        if params.len() != args.len() || result == Type::Float || params.contains(&Type::Float) {
-            return Err(Diagnostic::new(
-                offset,
-                "Unsupported member call arguments or Float result",
-            ));
-        }
+        let (types, result) = class_method_types(&method)?;
+        let params = method
+            .kotlin_params
+            .as_ref()
+            .map(|v| {
+                v.iter()
+                    .map(|p| (p.0.clone(), p.1.clone()))
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_else(|| {
+                types
+                    .into_iter()
+                    .enumerate()
+                    .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
+                    .collect()
+            });
+        let defaults = method
+            .kotlin_params
+            .as_ref()
+            .map(|v| v.iter().map(|p| p.2).collect::<Vec<_>>())
+            .unwrap_or_else(|| vec![false; params.len()]);
+        let (mut values, mut lets, mask) = self.arguments(
+            &params,
+            &defaults,
+            args,
+            method.kotlin_params.is_some(),
+            offset,
+        )?;
+        let receiver = if !lets.is_empty() {
+            let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
+            let ty = receiver.ty.clone();
+            lets.insert(0, (slot, receiver));
+            Value {
+                ty,
+                kind: ValueKind::Local(slot),
+            }
+        } else {
+            receiver
+        };
+        values.insert(0, receiver);
         let interface = self
             .classes
             .get(&method.owner)
-            .is_some_and(|class| class.access & 0x0200 != 0);
-        let mut values = vec![receiver];
-        for (arg, ty) in args.iter().zip(params) {
-            let value = self.value(arg)?;
-            values.push(self.coerce(value, ty, arg.offset)?);
-        }
-        Ok(Value {
-            ty: result,
-            kind: ValueKind::MemberCall {
-                method,
-                interface,
+            .is_some_and(|c| c.access & 0x0200 != 0);
+        let kind = if mask == 0 {
+            if interface {
+                ValueKind::MemberCall {
+                    method,
+                    interface,
+                    args: values,
+                }
+            } else {
+                ValueKind::JavaCall {
+                    method,
+                    args: values,
+                }
+            }
+        } else {
+            let descriptor = format!(
+                "(L{};{}ILjava/lang/Object;){}",
+                method.owner,
+                params.iter().map(|p| p.1.descriptor()).collect::<String>(),
+                result.descriptor()
+            );
+            values.push(Value {
+                ty: Type::Int,
+                kind: ValueKind::Int(mask as i32),
+            });
+            values.push(Value {
+                ty: Type::Java("java/lang/Object".into()),
+                kind: ValueKind::Null,
+            });
+            ValueKind::StaticCall {
+                owner: method.owner,
+                name: format!("{}$default", method.name),
+                descriptor,
                 args: values,
-            },
-        })
+            }
+        };
+        Ok(Self::wrap_lets(Value { ty: result, kind }, lets))
     }
     fn resolve(&self, ty: &Type, offset: usize) -> Result<Type> {
         resolve_type(ty, self.imports, offset)
     }
+    #[allow(clippy::only_used_in_recursion)]
     fn coerce(&self, value: Value, expected: Type, offset: usize) -> Result<Value> {
+        if matches!(value.kind, ValueKind::Abrupt(_)) {
+            return Ok(Value {
+                ty: expected,
+                kind: value.kind,
+            });
+        }
         if value.ty == expected {
             return Ok(value);
         }
+        if let Type::Platform(inner) = &expected {
+            if inner.is_reference()
+                && (value.ty == Type::Null
+                    || matches!(&value.ty,Type::Nullable(t) if t.as_ref()==inner.as_ref()))
+            {
+                return Ok(Value {
+                    ty: expected,
+                    kind: value.kind,
+                });
+            }
+        }
+        if value.ty.is_reference()
+            && expected.is_reference()
+            && (expected.is_nullable() || matches!(expected, Type::Platform(_)))
+            && value.ty.descriptor() == expected.descriptor()
+        {
+            return Ok(Value {
+                ty: expected,
+                kind: value.kind,
+            });
+        }
+        if !value.ty.is_reference()
+            && expected.is_reference()
+            && Type::Nullable(Box::new(value.ty.clone())).descriptor() == expected.descriptor()
+        {
+            return Ok(Value {
+                ty: expected,
+                kind: ValueKind::Box(Box::new(value)),
+            });
+        }
+
         if let Type::Nullable(inner) = &expected {
-            if value.ty == Type::Null || value.ty.base() == inner.as_ref() {
+            if value.ty == Type::Null {
+                return Ok(Value {
+                    ty: expected,
+                    kind: value.kind,
+                });
+            }
+            if value.ty.base() == inner.as_ref() && value.ty.is_reference() {
+                return Ok(Value {
+                    ty: expected,
+                    kind: value.kind,
+                });
+            }
+            if !value.ty.is_nullable() {
+                let value = self.coerce(value, inner.as_ref().clone(), offset)?;
+                let boxed = !value.ty.is_reference();
+                return Ok(Value {
+                    ty: expected,
+                    kind: if boxed {
+                        ValueKind::Box(Box::new(value))
+                    } else {
+                        value.kind
+                    },
+                });
+            }
+        }
+        if let (Type::List(expected_element), Type::List(element) | Type::MutableList(element)) =
+            (&expected, &value.ty)
+        {
+            if matches!(expected_element.as_ref(),Type::Nullable(inner) if inner.as_ref()==element.as_ref())
+            {
+                return Ok(Value {
+                    ty: expected,
+                    kind: value.kind,
+                });
+            }
+        }
+        if let (Type::List(expected_element), Type::MutableList(element)) = (&expected, &value.ty) {
+            if expected_element == element {
+                return Ok(Value {
+                    ty: expected,
+                    kind: value.kind,
+                });
+            }
+        }
+        if let (
+            Type::List(element) | Type::MutableList(element),
+            ValueKind::ListFactory { elements, .. },
+        ) = (&expected, &value.kind)
+        {
+            let compatible = matches!(
+                (&expected, &value.ty),
+                (Type::List(_), Type::List(_) | Type::MutableList(_))
+                    | (Type::MutableList(_), Type::MutableList(_))
+            );
+            if elements.is_empty() && unresolved_list(&value.ty) && compatible {
+                let _ = element;
                 return Ok(Value {
                     ty: expected,
                     kind: value.kind,
@@ -527,13 +1308,19 @@ impl Checker<'_> {
             });
         }
         if matches!(value.ty, Type::Platform(_)) && value.ty.base() == &expected {
-            let message = match &value.kind {
-                ValueKind::JavaCall { method, .. } => {
-                    format!("{}(...)", method.name)
+            fn expression_name(kind: &ValueKind) -> String {
+                match kind {
+                    ValueKind::JavaCall { method, .. } | ValueKind::MemberCall { method, .. } => {
+                        format!("{}(...)", method.name)
+                    }
+                    ValueKind::StaticCall { name, .. } => format!("{name}(...)"),
+                    ValueKind::JavaField { name, .. } => name.clone(),
+                    ValueKind::ThreadLocalGet(_, _) => "get(...)".into(),
+                    ValueKind::Let { body, .. } => expression_name(&body.kind),
+                    _ => String::new(),
                 }
-                ValueKind::ThreadLocalGet(_, _) => "get(...)".into(),
-                _ => String::new(),
-            };
+            }
+            let message = expression_name(&value.kind);
             return Ok(Value {
                 ty: expected,
                 kind: ValueKind::NotNull(Box::new(value), message),
@@ -554,6 +1341,7 @@ impl Checker<'_> {
         let ty = match bytes.get(start) {
             Some(b'I') => Type::Int,
             Some(b'J') => Type::Long,
+            Some(b'F') => Type::Float,
             Some(b'B') => Type::Byte,
             Some(b'C') => Type::Char,
             Some(b'Z') => Type::Boolean,
@@ -641,73 +1429,229 @@ impl Checker<'_> {
             .classes
             .get(owner)
             .ok_or_else(|| Diagnostic::new(offset, "Java class requires explicit import"))?;
-        if class.access & 0x200 != 0 {
+        if class.access & 0x0200 != 0 && !class.kotlin_interface {
             return Err(Diagnostic::new(
                 offset,
                 "Java interface calls are not supported",
             ));
         }
         self.check_ancestors(class, name, offset)?;
-        let named: Vec<_> = class
+        let methods: Vec<_> = class
             .methods
             .iter()
-            .filter(|method| method.name == name)
+            .filter(|m| m.name == name && m.access & 1 != 0 && m.access & 8 == 0)
+            .cloned()
             .collect();
-        let methods: Vec<_> = if named.len() == 1 {
-            named
-        } else {
-            named
-                .into_iter()
-                .filter(|method| objects::arity(&method.descriptor) == Some(args.len()))
-                .collect()
-        };
-        if methods.len() != 1 {
-            return Err(Diagnostic::new(
-                offset,
-                format!("Java method missing or overloaded: {name}"),
-            ));
+        let method = self.select_method(&methods, args, offset)?;
+        let (_, result) = class_method_types(&method)?;
+        let imported = method.kotlin_result.is_some();
+        let mut value = self.member_call(method, receiver, args, offset)?;
+        if !imported && result.is_reference() {
+            value.ty = Type::Platform(Box::new(result));
         }
-        let method = methods[0].clone();
-        if method.access & 1 == 0 || method.access & 8 != 0 || method.unsupported {
-            return Err(Diagnostic::new(
-                offset,
-                "Java method is inaccessible, static, generic, annotated, or unsupported",
-            ));
-        }
-        if !method.descriptor.starts_with('(') {
-            return Err(Diagnostic::new(offset, "Invalid Java method descriptor"));
-        }
-        let mut cursor = 1;
-        let mut expected = Vec::new();
-        while method.descriptor.as_bytes().get(cursor) != Some(&b')') {
-            expected.push(self.java_type(&method.descriptor, &mut cursor, offset)?);
-        }
-        cursor += 1;
-        let result = self.java_type(&method.descriptor, &mut cursor, offset)?;
-        if cursor != method.descriptor.len() || expected.contains(&Type::Unit) {
-            return Err(Diagnostic::new(offset, "Invalid Java method descriptor"));
-        }
-        if args.len() != expected.len() {
-            return Err(Diagnostic::new(offset, "Wrong Java argument count"));
-        }
-        let mut values = vec![receiver];
-        for (arg, ty) in args.iter().zip(expected) {
-            let value = self.value(arg)?;
-            if value.ty.base() != &ty || ty == Type::Unit {
-                return Err(Diagnostic::new(arg.offset, "Java argument type mismatch"));
-            }
-            values.push(value);
-        }
+        Ok(value)
+    }
+    fn java_static(
+        &mut self,
+        owner: &str,
+        name: &str,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        let class = self
+            .classes
+            .get(owner)
+            .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java class"))?;
+        self.check_ancestors(class, name, offset)?;
+        let methods: Vec<_> = class
+            .methods
+            .iter()
+            .filter(|m| m.name == name && m.access & 9 == 9)
+            .cloned()
+            .collect();
+        let method = self.select_method(&methods, args, offset)?;
+        let (types, result) = class_method_types(&method)?;
+        let params: Vec<_> = types
+            .into_iter()
+            .enumerate()
+            .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
+            .collect();
+        let (values, lets, _) =
+            self.arguments(&params, &vec![false; params.len()], args, false, offset)?;
         let ty = if result.is_reference() {
             Type::Platform(Box::new(result))
         } else {
             result
         };
+        Ok(Self::wrap_lets(
+            Value {
+                ty,
+                kind: ValueKind::StaticCall {
+                    owner: owner.into(),
+                    name: name.into(),
+                    descriptor: method.descriptor,
+                    args: values,
+                },
+            },
+            lets,
+        ))
+    }
+    fn field_assignment(
+        &mut self,
+        receiver: &Expr,
+        name: &str,
+        expr: &Expr,
+        offset: usize,
+    ) -> Result<Statement> {
+        if matches!(&receiver.kind,ExprKind::Name(n) if n=="this") && self.fields.contains_key(name)
+        {
+            if !self.mutable_fields.contains(name) {
+                return Err(Diagnostic::new(offset, "Cannot reassign val property"));
+            }
+            let value = self.value(expr)?;
+            let value = self.coerce(value, self.fields[name].clone(), offset)?;
+            return Ok(Statement::FieldStore {
+                name: name.into(),
+                receiver: self.receiver_value(offset)?,
+                value,
+            });
+        }
+        let (owner, receiver) = if let ExprKind::Name(alias) = &receiver.kind {
+            if self.local(alias).is_none()
+                && !self.fields.contains_key(alias)
+                && !self.object_fields.contains_key(alias)
+                && !self.constants.contains_key(alias)
+            {
+                if let Some(owner) = self.imports.get(alias) {
+                    (owner.clone(), None)
+                } else {
+                    let value = self.value(receiver)?;
+                    let Type::Java(owner) = value.ty.base() else {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Java field requires a class receiver",
+                        ));
+                    };
+                    (owner.clone(), Some(value))
+                }
+            } else {
+                let value = self.value(receiver)?;
+                let Type::Java(owner) = value.ty.base() else {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Java field requires a class receiver",
+                    ));
+                };
+                (owner.clone(), Some(value))
+            }
+        } else {
+            let value = self.value(receiver)?;
+            let Type::Java(owner) = value.ty.base() else {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Java field requires a class receiver",
+                ));
+            };
+            (owner.clone(), Some(value))
+        };
+        if receiver.as_ref().is_some_and(|v| v.ty.is_nullable()) {
+            return Err(Diagnostic::new(
+                offset,
+                "Nullable field receivers require a not-null assertion",
+            ));
+        }
+        let class = self
+            .classes
+            .get(&owner)
+            .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java class"))?;
+        let field = class
+            .fields
+            .iter()
+            .find(|f| f.name == name)
+            .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java field"))?;
+        if field.access & 0x10 != 0 {
+            return Err(Diagnostic::new(offset, "Cannot assign a final Java field"));
+        }
+        if field.access & 1 == 0
+            || field.unsupported
+            || (field.access & 8 != 0) != receiver.is_none()
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Java field is inaccessible or unsupported",
+            ));
+        }
+        let mut cursor = 0;
+        let ty = java_parameter(self.java_type(&field.descriptor, &mut cursor, offset)?);
+        let value = self.value(expr)?;
+        let value = self.coerce(value, ty.clone(), offset)?;
+        Ok(Statement::JavaFieldStore {
+            owner: field.owner.clone(),
+            name: name.into(),
+            ty,
+            receiver,
+            value,
+        })
+    }
+    fn java_field(
+        &mut self,
+        owner: &str,
+        name: &str,
+        receiver: Option<Value>,
+        offset: usize,
+    ) -> Result<Value> {
+        let class = self
+            .classes
+            .get(owner)
+            .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java class"))?;
+        let field = class
+            .fields
+            .iter()
+            .find(|f| f.name == name)
+            .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java field"))?;
+        if field.access & 1 == 0
+            || field.unsupported
+            || (field.access & 8 != 0) != receiver.is_none()
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Java field is inaccessible or unsupported",
+            ));
+        }
+        let mut cursor = 0;
+        let ty = self.java_type(&field.descriptor, &mut cursor, offset)?;
+        if let Some(constant) = field
+            .constant
+            .as_ref()
+            .filter(|_| field.access & 0x18 == 0x18)
+        {
+            use crate::classpath::JavaConstant as C;
+            let kind = match constant {
+                C::Int(n) if ty == Type::Boolean => ValueKind::Boolean(*n != 0),
+                C::Int(n) => ValueKind::Int(*n),
+                C::Long(n) => ValueKind::Long(*n),
+                C::Float(bits) => ValueKind::Float(*bits),
+                C::String(v) => ValueKind::String(v.clone()),
+            };
+            let value = Value { ty, kind };
+            return Ok(if let Some(receiver) = receiver {
+                let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
+                Self::wrap_lets(value, vec![(slot, receiver)])
+            } else {
+                value
+            });
+        }
+        let ty = if ty.is_reference() {
+            Type::Platform(Box::new(ty))
+        } else {
+            ty
+        };
         Ok(Value {
             ty,
-            kind: ValueKind::JavaCall {
-                method,
-                args: values,
+            kind: ValueKind::JavaField {
+                owner: field.owner.clone(),
+                name: name.into(),
+                receiver: receiver.map(Box::new),
             },
         })
     }
@@ -775,9 +1719,12 @@ impl Checker<'_> {
                 ));
             }
             let typed = match &statement.kind {
+                StatementKind::PropertyAssign(receiver, name, expr) => {
+                    self.field_assignment(receiver, name, expr, offset)?
+                }
                 StatementKind::Declare(name, mutable, annotation) => {
                     let ty = self.resolve(annotation, offset)?;
-                    if matches!(ty, Type::Unit | Type::Float | Type::ThreadLocal(_)) {
+                    if matches!(ty, Type::Unit | Type::ThreadLocal(_)) {
                         return Err(Diagnostic::new(
                             offset,
                             "Unsupported uninitialized local type",
@@ -795,6 +1742,21 @@ impl Checker<'_> {
                 }
                 StatementKind::IndexAssign(array, index, value) => {
                     let array = self.value(array)?;
+                    if let Type::MutableList(element) = array.ty.base() {
+                        let element = element.as_ref().clone();
+                        let index = self.value(index)?;
+                        self.require(&index, Type::Int, offset)?;
+                        let value = self.value(value)?;
+                        let value = self.coerce(value, element, offset)?;
+                        body.push(Statement::ListSet(array, index, value));
+                        continue;
+                    }
+                    if matches!(array.ty.base(), Type::List(_)) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Read-only List does not support indexed assignment",
+                        ));
+                    }
                     let element = match array.ty.base() {
                         Type::IntArray => Type::Int,
                         Type::ByteArray => Type::Byte,
@@ -827,6 +1789,7 @@ impl Checker<'_> {
                     }
                 }
                 StatementKind::ForUntil(name, start, end, source_body) => {
+                    let refinements = self.refinements.clone();
                     let start = self.value(start)?;
                     let end = self.value(end)?;
                     self.require(&start, Type::Int, offset)?;
@@ -840,6 +1803,7 @@ impl Checker<'_> {
                     self.loop_depth -= 1;
                     self.scopes.pop();
                     self.initialized = before;
+                    self.refinements = refinements;
                     Statement::ForUntil {
                         slot,
                         start,
@@ -859,6 +1823,12 @@ impl Checker<'_> {
                         }
                         value = self.coerce(value, self.resolve(ty, offset)?, offset)?;
                     }
+                    if unresolved_list(&value.ty) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Cannot infer list element type; empty or null-only factories require an explicit or expected element type",
+                        ));
+                    }
                     if value.ty == Type::Unit {
                         return Err(Diagnostic::new(offset, "Unit locals are not supported"));
                     }
@@ -866,6 +1836,23 @@ impl Checker<'_> {
                     Statement::Store(slot, value)
                 }
                 StatementKind::Assign(name, expr) => {
+                    if self.local(name).is_none() && self.fields.contains_key(name) {
+                        if !self.mutable_fields.contains(name) {
+                            return Err(Diagnostic::new(
+                                offset,
+                                format!("Cannot reassign val or parameter: {name}"),
+                            ));
+                        }
+                        let value = self.value(expr)?;
+                        let value = self.coerce(value, self.fields[name].clone(), offset)?;
+                        let receiver = self.receiver_value(offset)?;
+                        body.push(Statement::FieldStore {
+                            name: name.clone(),
+                            receiver,
+                            value,
+                        });
+                        continue;
+                    }
                     let local = self.local(name).ok_or_else(|| {
                         if self
                             .members
@@ -949,6 +1936,7 @@ impl Checker<'_> {
                     )
                 }
                 StatementKind::When(subject, branches, otherwise) => {
+                    let before_refinements = self.refinements.clone();
                     let subject = self.value(subject)?;
                     if !matches!(
                         subject.ty,
@@ -970,6 +1958,7 @@ impl Checker<'_> {
                     let mut all_return = otherwise.is_some();
                     for (conditions, branch) in branches {
                         self.initialized = before.clone();
+                        self.refinements = before_refinements.clone();
                         let mut combined = None;
                         for condition in conditions {
                             let left = Value {
@@ -1017,6 +2006,7 @@ impl Checker<'_> {
                         checked.push((combined.unwrap(), branch));
                     }
                     self.initialized = before.clone();
+                    self.refinements = before_refinements.clone();
                     let mut tail = if let Some(otherwise) = otherwise {
                         let (branch, branch_returns) = self.block(otherwise)?;
                         if !branch_returns {
@@ -1038,6 +2028,7 @@ impl Checker<'_> {
                         tail = vec![Statement::If(condition, branch, tail)];
                     }
                     body.extend(tail);
+                    self.refinements = before_refinements;
                     returns |= all_return;
                     continue;
                 }
@@ -1060,14 +2051,26 @@ impl Checker<'_> {
                 }
                 StatementKind::Expression(expr) => Statement::Expression(self.value(expr)?),
                 StatementKind::If(cond, yes, no) => {
+                    let source_condition = cond;
+                    let before_refinements = self.refinements.clone();
                     let cond = self.value(cond)?;
                     self.require(&cond, Type::Boolean, offset)?;
                     let before = self.initialized.clone();
+                    self.refine(source_condition, true);
                     let (yes, y) = self.block(yes)?;
+                    let yes_refinements = self.refinements.clone();
+                    self.refinements = before_refinements.clone();
+                    self.refine(source_condition, false);
                     let yes_initialized = self.initialized.clone();
                     self.initialized = before;
                     let (no, n) = self.block(no)?;
                     let no_initialized = self.initialized.clone();
+                    let no_refinements = self.refinements.clone();
+                    self.refinements = match (y, n) {
+                        (true, false) => no_refinements,
+                        (false, true) => yes_refinements,
+                        _ => before_refinements,
+                    };
                     self.initialized = match (y, n) {
                         (false, false) => yes_initialized
                             .intersection(&no_initialized)
@@ -1084,6 +2087,7 @@ impl Checker<'_> {
                     Statement::If(cond, yes, no)
                 }
                 StatementKind::While(cond, body) => {
+                    let refinements = self.refinements.clone();
                     let cond = self.value(cond)?;
                     self.require(&cond, Type::Boolean, offset)?;
                     let before = self.initialized.clone();
@@ -1091,6 +2095,7 @@ impl Checker<'_> {
                     let (body, _) = self.block(body)?;
                     self.loop_depth -= 1;
                     self.initialized = before;
+                    self.refinements = refinements;
                     Statement::While(cond, body)
                 }
             };
@@ -1115,6 +2120,37 @@ impl Checker<'_> {
                     i64::try_from(*value)
                         .map_err(|_| Diagnostic::new(offset, "Long literal is out of range"))?,
                 ),
+            ),
+            ExprKind::Float(bits) => (Type::Float, ValueKind::Float(*bits)),
+            ExprKind::NamedArgument(_, _) | ExprKind::Generic(_, _) => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Named arguments and generic types require a supported call",
+                ));
+            }
+            ExprKind::Return(expr) => {
+                if !self.allow_return {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Return expressions are not allowed in initializers or default arguments",
+                    ));
+                }
+                let value = match expr {
+                    Some(value) => self.value(value)?,
+                    None => Value {
+                        ty: Type::Unit,
+                        kind: ValueKind::Unit,
+                    },
+                };
+                let value = self.coerce(value, self.result.clone(), offset)?;
+                (
+                    Type::Unit,
+                    ValueKind::Abrupt(vec![Statement::Return(value)]),
+                )
+            }
+            ExprKind::Throw(expr) => (
+                Type::Unit,
+                ValueKind::Abrupt(vec![self.throw_exception(expr, offset)?]),
             ),
             ExprKind::Null => (Type::Null, ValueKind::Null),
             ExprKind::SafeProperty(receiver, name) => {
@@ -1158,19 +2194,27 @@ impl Checker<'_> {
                         "Not-null assertions require reference values",
                     ));
                 }
-                (
-                    match value.ty.base() {
-                        Type::Nullable(inner) => inner.as_ref().clone(),
-                        Type::Null => {
-                            return Err(Diagnostic::new(
-                                offset,
-                                "A null literal has no supported asserted type",
-                            ));
-                        }
-                        ty => ty.clone(),
-                    },
-                    ValueKind::RequireNotNull(Box::new(value)),
-                )
+                let inner = match value.ty.base() {
+                    Type::Nullable(inner) => inner.as_ref().clone(),
+                    Type::Null => {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "A null literal has no supported asserted type",
+                        ));
+                    }
+                    ty => ty.clone(),
+                };
+                if !inner.is_reference() {
+                    let nullable = value.ty.clone();
+                    return Ok(Value {
+                        ty: inner,
+                        kind: ValueKind::Unbox(Box::new(Value {
+                            ty: nullable,
+                            kind: ValueKind::RequireNotNull(Box::new(value)),
+                        })),
+                    });
+                }
+                (inner, ValueKind::RequireNotNull(Box::new(value)))
             }
             ExprKind::Lambda(_) => {
                 return Err(Diagnostic::new(
@@ -1179,6 +2223,7 @@ impl Checker<'_> {
                 ));
             }
             ExprKind::When(subject, branches, otherwise) => {
+                let before_refinements = self.refinements.clone();
                 let subject = self.value(subject)?;
                 if !matches!(
                     subject.ty,
@@ -1192,6 +2237,7 @@ impl Checker<'_> {
                 let slot = self.allocate_typed_slot(&subject.ty, offset)?;
                 let mut checked = Vec::new();
                 for (conditions, branch) in branches {
+                    self.refinements = before_refinements.clone();
                     let mut combined = None;
                     for condition in conditions {
                         let left = Value {
@@ -1235,7 +2281,9 @@ impl Checker<'_> {
                         self.value(branch)?,
                     ));
                 }
+                self.refinements = before_refinements.clone();
                 let mut body = self.value(otherwise)?;
+                self.refinements = before_refinements;
                 if body.ty == Type::Unit {
                     return Err(Diagnostic::new(
                         offset,
@@ -1259,10 +2307,16 @@ impl Checker<'_> {
                 )
             }
             ExprKind::If(condition, yes, no) => {
+                let source_condition = condition;
+                let before_refinements = self.refinements.clone();
                 let condition = self.value(condition)?;
                 self.require(&condition, Type::Boolean, offset)?;
+                self.refine(source_condition, true);
                 let yes = self.value(yes)?;
+                self.refinements = before_refinements.clone();
+                self.refine(source_condition, false);
                 let no = self.value(no)?;
+                self.refinements = before_refinements;
                 if yes.ty == Type::Unit {
                     return Err(Diagnostic::new(
                         offset,
@@ -1305,6 +2359,14 @@ impl Checker<'_> {
                 return Ok(result);
             }
             ExprKind::Name(name) => {
+                if let Some((ty, expr)) = self
+                    .constants
+                    .get(name)
+                    .filter(|_| self.local(name).is_none() && !self.fields.contains_key(name))
+                {
+                    let value = self.value(expr)?;
+                    return self.coerce(value, ty.clone(), offset);
+                }
                 if let Some(local) = if name == "this" {
                     self.receiver.clone()
                 } else {
@@ -1315,6 +2377,25 @@ impl Checker<'_> {
                             offset,
                             format!("Variable must be initialized before use: {name}"),
                         ));
+                    }
+                    if let Some(refined) = self.refinements.get(&local.slot) {
+                        if !local.mutable {
+                            let raw = Value {
+                                ty: local.ty.clone(),
+                                kind: ValueKind::Local(local.slot),
+                            };
+                            return Ok(if refined.is_reference() {
+                                Value {
+                                    ty: refined.clone(),
+                                    kind: raw.kind,
+                                }
+                            } else {
+                                Value {
+                                    ty: refined.clone(),
+                                    kind: ValueKind::Unbox(Box::new(raw)),
+                                }
+                            });
+                        }
                     }
                     (local.ty, ValueKind::Local(local.slot))
                 } else if let Some((owner, ty)) = self.object_fields.get(name) {
@@ -1383,7 +2464,7 @@ impl Checker<'_> {
                     self.require(&inner, Type::Boolean, offset)?;
                     (Type::Boolean, ValueKind::Not(Box::new(inner)))
                 } else {
-                    if !matches!(inner.ty, Type::Int | Type::Long) {
+                    if !matches!(inner.ty, Type::Int | Type::Long | Type::Float) {
                         return Err(Diagnostic::new(
                             offset,
                             "Unary arithmetic requires Int or Long",
@@ -1417,8 +2498,16 @@ impl Checker<'_> {
                         "Range values are supported only by membership and when conditions",
                     ));
                 }
+                let source_left = a;
                 let a = self.value(a)?;
+                let refinements = self.refinements.clone();
+                if op == "&&" || op == "||" {
+                    self.refine(source_left, op == "&&");
+                }
                 let b = self.value(b)?;
+                if op == "&&" || op == "||" {
+                    self.refinements = refinements;
+                }
                 if matches!(op.as_str(), "==" | "!=") && (a.ty == Type::Null || b.ty == Type::Null)
                 {
                     if !a.ty.is_reference() || !b.ty.is_reference() {
@@ -1572,6 +2661,19 @@ impl Checker<'_> {
                     };
                     (Type::Int, ValueKind::Int(value))
                 } else {
+                    if let ExprKind::Name(alias) = &receiver.kind {
+                        if self.local(alias).is_none()
+                            && !self.fields.contains_key(alias)
+                            && !self.object_fields.contains_key(alias)
+                            && !self.constants.contains_key(alias)
+                        {
+                            if let Some(owner) = self.imports.get(alias) {
+                                if self.classes.contains_key(owner) {
+                                    return self.java_field(owner, name, None, offset);
+                                }
+                            }
+                        }
+                    }
                     let receiver = self.value(receiver)?;
                     if receiver.ty.is_nullable() {
                         return Err(Diagnostic::new(
@@ -1579,7 +2681,13 @@ impl Checker<'_> {
                             "Nullable receivers require a safe call or not-null assertion",
                         ));
                     }
-                    if let Type::List(_) = receiver.ty.base() {
+                    if matches!(receiver.ty.base(), Type::List(_) | Type::MutableList(_)) {
+                        if unresolved_list(&receiver.ty) {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Cannot infer list element type; empty or null-only factories require an explicit or expected element type",
+                            ));
+                        }
                         if name != "size" {
                             return Err(Diagnostic::new(
                                 offset,
@@ -1615,6 +2723,29 @@ impl Checker<'_> {
                             return self.member_call(method.clone(), receiver, &[], offset);
                         }
                     }
+                    if let Type::Java(owner) = receiver.ty.base() {
+                        if let Some(class) = self.classes.get(owner) {
+                            if let Some(method) = class
+                                .methods
+                                .iter()
+                                .find(|m| {
+                                    m.source_property.as_deref() == Some(name)
+                                        && m.name == getter_name(name)
+                                })
+                                .cloned()
+                            {
+                                return self.member_call(method, receiver, &[], offset);
+                            }
+                            if class.fields.iter().any(|f| f.name == *name) {
+                                return self.java_field(
+                                    &owner.clone(),
+                                    name,
+                                    Some(receiver),
+                                    offset,
+                                );
+                            }
+                        }
+                    }
                     if receiver.ty == Type::Char && name == "code" {
                         return Ok(Value {
                             ty: Type::Int,
@@ -1644,13 +2775,16 @@ impl Checker<'_> {
             }
             ExprKind::Index(array, index) => {
                 let array = self.value(array)?;
+                if unresolved_list(&array.ty) {
+                    return Err(Diagnostic::new(offset, "Cannot infer list element type"));
+                }
                 if array.ty.is_nullable() {
                     return Err(Diagnostic::new(
                         offset,
                         "Nullable indexing requires a not-null assertion",
                     ));
                 }
-                if let Type::List(element) = array.ty.base() {
+                if let Type::List(element) | Type::MutableList(element) = array.ty.base() {
                     let element = element.as_ref().clone();
                     let index = self.value(index)?;
                     self.require(&index, Type::Int, offset)?;
@@ -1671,6 +2805,19 @@ impl Checker<'_> {
                 (element, ValueKind::Index(Box::new(array), Box::new(index)))
             }
             ExprKind::Call(target, args) => match &target.kind {
+                ExprKind::Generic(target, types) => {
+                    if let ExprKind::Name(name) = &target.kind {
+                        if matches!(name.as_str(), "emptyList" | "listOf" | "mutableListOf")
+                            && self.unshadowed(name)
+                        {
+                            return self.factory(name, types, args, offset);
+                        }
+                    }
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Explicit generic calls are supported only for list factories",
+                    ));
+                }
                 ExprKind::SafeProperty(receiver, name) => {
                     return self.safe_access(receiver, name, Some(args), offset);
                 }
@@ -1681,10 +2828,75 @@ impl Checker<'_> {
                             "Invoking local values is not supported",
                         ));
                     }
+                    if let Some((owner, params, defaults)) = self.constructor {
+                        if self.imports.get(name).is_some_and(|n| n == owner) {
+                            return self.constructor_call(
+                                owner,
+                                params,
+                                &defaults.iter().map(Option::is_some).collect::<Vec<_>>(),
+                                args,
+                                true,
+                                offset,
+                            );
+                        }
+                    }
+                    if let Some(owner) = self.imports.get(name) {
+                        if let Some(class) = self.classes.get(owner) {
+                            let constructors: Vec<_> = class
+                                .methods
+                                .iter()
+                                .filter(|m| {
+                                    m.name == "<init>"
+                                        && m.access & 1 != 0
+                                        && !m.unsupported
+                                        && (!class.kotlin_class || m.kotlin_params.is_some())
+                                })
+                                .cloned()
+                                .collect();
+                            let method = self.select_method(&constructors, args, offset)?;
+                            let (types, _) = class_method_types(&method)?;
+                            let params = method.kotlin_params.clone().unwrap_or_else(|| {
+                                types
+                                    .into_iter()
+                                    .enumerate()
+                                    .map(|(i, t)| (format!("p{i}"), java_parameter(t), false))
+                                    .collect()
+                            });
+                            return self.constructor_call(
+                                owner,
+                                &params
+                                    .iter()
+                                    .map(|p| (p.0.clone(), p.1.clone()))
+                                    .collect::<Vec<_>>(),
+                                &params.iter().map(|p| p.2).collect::<Vec<_>>(),
+                                args,
+                                method.kotlin_params.is_some(),
+                                offset,
+                            );
+                        }
+                    }
+                    if matches!(name.as_str(), "emptyList" | "listOf" | "mutableListOf")
+                        && self.unshadowed(name)
+                    {
+                        return self.factory(name, &[], args, offset);
+                    }
+                    if self.local(name).is_some() {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Invoking local values is not supported",
+                        ));
+                    }
                     if self.object_methods.contains_key(name) {
                         return self.object_call(name, args, None, offset);
                     }
-                    if let Some(method) = self.members.get(name).cloned() {
+                    if self.members.values().any(|m| m.name == *name) {
+                        let candidates = self
+                            .members
+                            .values()
+                            .filter(|m| m.name == *name)
+                            .cloned()
+                            .collect::<Vec<_>>();
+                        let method = self.select_method(&candidates, args, offset)?;
                         if method.source_property.is_some() {
                             return Err(Diagnostic::new(
                                 offset,
@@ -1769,9 +2981,19 @@ impl Checker<'_> {
                             kind: ValueKind::StringFromChars(values),
                         });
                     }
-                    let id = *self.functions.get(name).ok_or_else(|| {
-                        Diagnostic::new(offset, format!("Unresolved function: {name}"))
-                    })?;
+                    let mut candidates: Vec<_> = self
+                        .function_names
+                        .iter()
+                        .enumerate()
+                        .filter(|(_, n)| *n == name)
+                        .map(|(i, _)| i)
+                        .collect();
+                    if candidates.is_empty() {
+                        if let Some(id) = self.functions.get(name) {
+                            candidates.push(*id);
+                        }
+                    }
+                    let id = self.select_function(&candidates, args, offset)?;
                     if self.extensions.contains(&id) {
                         return Err(Diagnostic::new(
                             offset,
@@ -1779,18 +3001,24 @@ impl Checker<'_> {
                         ));
                     }
                     let (params, result) = self.signatures[id].clone();
-                    if args.len() != params.len() {
-                        return Err(Diagnostic::new(
-                            offset,
-                            format!("Wrong argument count for {name}"),
-                        ));
-                    }
-                    let mut values = Vec::new();
-                    for (arg, (_, expected)) in args.iter().zip(&params) {
-                        let value = self.value(arg)?;
-                        values.push(self.coerce(value, expected.clone(), arg.offset)?);
-                    }
-                    (result, ValueKind::Call(id, values))
+                    let defaults = self
+                        .defaults
+                        .get(id)
+                        .map(|v| v.iter().map(Option::is_some).collect::<Vec<_>>())
+                        .unwrap_or_else(|| vec![false; params.len()]);
+                    let (values, lets, mask) =
+                        self.arguments(&params, &defaults, args, true, offset)?;
+                    return Ok(Self::wrap_lets(
+                        Value {
+                            ty: result,
+                            kind: if mask == 0 {
+                                ValueKind::Call(id, values)
+                            } else {
+                                ValueKind::DefaultCall(id, values, mask)
+                            },
+                        },
+                        lets,
+                    ));
                 }
                 ExprKind::Property(receiver, name) => {
                     if self
@@ -1834,6 +3062,19 @@ impl Checker<'_> {
                             },
                         });
                     }
+                    if let ExprKind::Name(alias) = &receiver.kind {
+                        if self.local(alias).is_none()
+                            && !self.fields.contains_key(alias)
+                            && !self.object_fields.contains_key(alias)
+                            && !self.constants.contains_key(alias)
+                        {
+                            if let Some(owner) = self.imports.get(alias) {
+                                if self.classes.contains_key(owner) {
+                                    return self.java_static(owner, name, args, offset);
+                                }
+                            }
+                        }
+                    }
                     let receiver = self.value(receiver)?;
                     if receiver.ty.is_nullable() {
                         return Err(Diagnostic::new(
@@ -1847,6 +3088,9 @@ impl Checker<'_> {
                         && self.object_methods.contains_key(name)
                     {
                         return self.object_call(name, args, Some(receiver), offset);
+                    }
+                    if matches!(receiver.ty.base(), Type::List(_) | Type::MutableList(_)) {
+                        return self.list_call(receiver, name, args, offset);
                     }
                     if let Type::ThreadLocal(element) = receiver.ty.base() {
                         let element = element.as_ref().clone();
@@ -1883,11 +3127,12 @@ impl Checker<'_> {
                     }
                     if matches!(receiver.ty, Type::Int | Type::Byte | Type::Char)
                         && args.is_empty()
-                        && matches!(name.as_str(), "toInt" | "toByte" | "toChar")
+                        && matches!(name.as_str(), "toInt" | "toByte" | "toChar" | "toLong")
                     {
                         let target = match name.as_str() {
                             "toByte" => Type::Byte,
                             "toChar" => Type::Char,
+                            "toLong" => Type::Long,
                             _ => Type::Int,
                         };
                         return Ok(Value {
@@ -1913,16 +3158,22 @@ impl Checker<'_> {
                         .receiver
                         .as_ref()
                         .is_some_and(|this| this.ty == receiver.ty)
+                        && self.members.values().any(|m| m.name == *name)
                     {
-                        if let Some(method) = self.members.get(name).cloned() {
-                            if method.source_property.is_some() {
-                                return Err(Diagnostic::new(
-                                    offset,
-                                    "Kotlin properties cannot be invoked as functions",
-                                ));
-                            }
-                            return self.member_call(method, receiver, args, offset);
+                        let candidates = self
+                            .members
+                            .values()
+                            .filter(|m| m.name == *name)
+                            .cloned()
+                            .collect::<Vec<_>>();
+                        let method = self.select_method(&candidates, args, offset)?;
+                        if method.source_property.is_some() {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Kotlin properties cannot be invoked as functions",
+                            ));
                         }
+                        return self.member_call(method, receiver, args, offset);
                     }
                     if matches!(receiver.ty, Type::Int | Type::Long)
                         && name == "toString"
@@ -2031,11 +3282,14 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
     match ty {
         Type::Nullable(inner) => {
             let inner = resolve_type(inner, imports, offset)?;
-            if !inner.is_reference() || inner.is_nullable() {
+            if inner == Type::Unit || inner.is_nullable() {
                 return Err(Diagnostic::new(offset, "Unsupported nullable type"));
             }
             Ok(Type::Nullable(Box::new(inner)))
         }
+        Type::MutableList(element) => Ok(Type::MutableList(Box::new(resolve_type(
+            element, imports, offset,
+        )?))),
         Type::List(element) => Ok(Type::List(Box::new(resolve_type(
             element, imports, offset,
         )?))),
@@ -2043,6 +3297,9 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
             offset,
             "Explicit ThreadLocal types are not supported; only inferred private array buffers are supported",
         )),
+        Type::Java(name) if name.contains('/') || imports.values().any(|n| n == name) => {
+            Ok(ty.clone())
+        }
         Type::Java(name) => imports
             .get(name)
             .map(|n| Type::Java(n.clone()))
@@ -2055,8 +3312,137 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
         _ => Ok(ty.clone()),
     }
 }
-fn loses_member_type(ty: &Type) -> bool {
-    matches!(ty.base(), Type::Nullable(_) | Type::List(_))
+fn loses_member_type(_ty: &Type) -> bool {
+    false
+}
+fn call_names(expr: &Expr, names: &mut HashSet<String>) {
+    match &expr.kind {
+        ExprKind::Name(_)
+        | ExprKind::Int(_)
+        | ExprKind::Long(_)
+        | ExprKind::Float(_)
+        | ExprKind::Boolean(_)
+        | ExprKind::String(_)
+        | ExprKind::Char(_)
+        | ExprKind::Null => {}
+        ExprKind::Call(target, args) => {
+            if let ExprKind::Name(name) = &target.kind {
+                names.insert(name.clone());
+            }
+            call_names(target, names);
+            for arg in args {
+                call_names(arg, names);
+            }
+        }
+        ExprKind::Property(a, _) | ExprKind::SafeProperty(a, _) => {
+            if let ExprKind::Name(name) = &a.kind {
+                names.insert(name.clone());
+            }
+            call_names(a, names);
+        }
+        ExprKind::Generic(a, _)
+        | ExprKind::NamedArgument(_, a)
+        | ExprKind::Unary(_, a)
+        | ExprKind::NonNull(a)
+        | ExprKind::Lambda(a)
+        | ExprKind::Throw(a)
+        | ExprKind::Increment { value: a, .. } => call_names(a, names),
+        ExprKind::Return(a) => {
+            if let Some(a) = a {
+                call_names(a, names);
+            }
+        }
+        ExprKind::Binary(_, a, b) | ExprKind::Index(a, b) => {
+            call_names(a, names);
+            call_names(b, names);
+        }
+        ExprKind::If(a, b, c) => {
+            call_names(a, names);
+            call_names(b, names);
+            call_names(c, names);
+        }
+        ExprKind::Template(parts) => {
+            for part in parts {
+                call_names(part, names);
+            }
+        }
+        ExprKind::When(subject, branches, tail) => {
+            call_names(subject, names);
+            for (conditions, value) in branches {
+                for condition in conditions {
+                    call_names(condition, names);
+                }
+                call_names(value, names);
+            }
+            call_names(tail, names);
+        }
+    }
+}
+fn body_call_names(body: &[syntax::Statement], names: &mut HashSet<String>) {
+    for statement in body {
+        match &statement.kind {
+            StatementKind::Let(_, _, _, e)
+            | StatementKind::Assign(_, e)
+            | StatementKind::AddAssign(_, e)
+            | StatementKind::Throw(e)
+            | StatementKind::Expression(e) => call_names(e, names),
+            StatementKind::Return(e) => {
+                if let Some(e) = e {
+                    call_names(e, names);
+                }
+            }
+            StatementKind::PropertyAssign(a, _, b) => {
+                call_names(a, names);
+                call_names(b, names);
+            }
+            StatementKind::IndexAssign(a, b, c) => {
+                call_names(a, names);
+                call_names(b, names);
+                call_names(c, names);
+            }
+            StatementKind::If(c, a, b) => {
+                call_names(c, names);
+                body_call_names(a, names);
+                body_call_names(b, names);
+            }
+            StatementKind::While(c, b) => {
+                call_names(c, names);
+                body_call_names(b, names);
+            }
+            StatementKind::ForUntil(_, a, b, body) => {
+                call_names(a, names);
+                call_names(b, names);
+                body_call_names(body, names);
+            }
+            StatementKind::When(e, branches, tail) => {
+                call_names(e, names);
+                for (conditions, body) in branches {
+                    for c in conditions {
+                        call_names(c, names);
+                    }
+                    body_call_names(body, names);
+                }
+                if let Some(tail) = tail {
+                    body_call_names(tail, names);
+                }
+            }
+            StatementKind::Declare(_, _, _) | StatementKind::Continue | StatementKind::Break => {}
+        }
+    }
+}
+fn has_platform(ty: &Type) -> bool {
+    match ty {
+        Type::Platform(_) => true,
+        Type::Nullable(t) | Type::List(t) | Type::MutableList(t) => has_platform(t),
+        _ => false,
+    }
+}
+fn unresolved_list(ty: &Type) -> bool {
+    match ty {
+        Type::List(t) | Type::MutableList(t) => t.as_ref() == &Type::Null || unresolved_list(t),
+        Type::Nullable(t) => unresolved_list(t),
+        _ => false,
+    }
 }
 pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
     if source
@@ -2134,6 +3520,178 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         }
         classes.insert(class.name.clone(), class);
     }
+    let mut referenced = HashSet::new();
+    fn collect_type(ty: &Type, names: &mut HashSet<String>) {
+        match ty {
+            Type::Java(name) => {
+                names.insert(name.clone());
+            }
+            Type::Nullable(inner) | Type::List(inner) | Type::MutableList(inner) => {
+                collect_type(inner, names)
+            }
+            _ => {}
+        }
+    }
+    for function in &source.functions {
+        for (_, ty) in &function.params {
+            collect_type(ty, &mut referenced);
+        }
+        collect_type(&function.result, &mut referenced);
+    }
+    if let Some(class) = &source.class_decl {
+        let owner = if source.package.is_empty() {
+            class.name.clone()
+        } else {
+            format!("{}/{}", source.package.replace('.', "/"), class.name)
+        };
+        imports.insert(class.name.clone(), owner);
+        for interface in &class.interfaces {
+            referenced.insert(interface.clone());
+        }
+        for (_, ty) in &class.params {
+            collect_type(ty, &mut referenced);
+        }
+        for property in &class.properties {
+            collect_type(&property.ty, &mut referenced);
+        }
+        for method in &class.methods {
+            for (_, ty) in &method.function.params {
+                collect_type(ty, &mut referenced);
+            }
+            collect_type(&method.function.result, &mut referenced);
+        }
+    }
+    if let Some(interface) = &source.interface_decl {
+        fn collect_interface(i: &syntax::InterfaceDecl, names: &mut HashSet<String>) {
+            for name in &i.interfaces {
+                names.insert(name.clone());
+            }
+            for p in &i.properties {
+                collect_type(&p.ty, names);
+            }
+            for m in &i.methods {
+                for (_, ty) in &m.function.params {
+                    collect_type(ty, names);
+                }
+                collect_type(&m.function.result, names);
+            }
+            for nested in &i.nested {
+                collect_interface(nested, names);
+            }
+        }
+        collect_interface(interface, &mut referenced);
+        let mut own = vec![interface];
+        while let Some(i) = own.pop() {
+            referenced.remove(&i.name);
+            own.extend(i.nested.iter());
+        }
+    }
+    for name in referenced {
+        if let std::collections::hash_map::Entry::Vacant(entry) = imports.entry(name.clone()) {
+            let owner = if source.package.is_empty() {
+                name.clone()
+            } else {
+                format!("{}/{}", source.package.replace('.', "/"), name)
+            };
+            let class = classpath.load(&owner)?;
+            if class.access & 1 == 0 || class.unsupported {
+                return Err(Diagnostic::new(
+                    0,
+                    "Same-package class is inaccessible or unsupported",
+                ));
+            }
+            entry.insert(owner.clone());
+            classes.insert(owner, class);
+        }
+    }
+    let mut called = HashSet::new();
+    for function in &source.functions {
+        body_call_names(&function.body, &mut called);
+        for expr in function.defaults.iter().flatten() {
+            call_names(expr, &mut called);
+        }
+    }
+    if let Some(class) = &source.class_decl {
+        for method in &class.methods {
+            body_call_names(&method.function.body, &mut called);
+            for expr in method.function.defaults.iter().flatten() {
+                call_names(expr, &mut called);
+            }
+        }
+        for property in &class.properties {
+            body_call_names(&property.body, &mut called);
+            if let Some(e) = &property.initializer {
+                call_names(e, &mut called);
+            }
+        }
+        for expr in class.defaults.iter().flatten() {
+            call_names(expr, &mut called);
+        }
+        if let Some(companion) = &class.companion {
+            for property in &companion.properties {
+                call_names(&property.initializer, &mut called);
+            }
+        }
+    }
+    for alias in called {
+        if imports.contains_key(&alias)
+            || source.functions.iter().any(|f| f.name == alias)
+            || matches!(
+                alias.as_str(),
+                "String"
+                    | "IntArray"
+                    | "ByteArray"
+                    | "CharArray"
+                    | "Character"
+                    | "emptyList"
+                    | "listOf"
+                    | "mutableListOf"
+                    | "IllegalArgumentException"
+                    | "IllegalStateException"
+                    | "IndexOutOfBoundsException"
+                    | "UnsupportedOperationException"
+            )
+        {
+            continue;
+        }
+        let owner = if source.package.is_empty() {
+            alias.clone()
+        } else {
+            format!("{}/{}", source.package.replace('.', "/"), alias)
+        };
+        if let Ok(class) = classpath.load(&owner) {
+            if class.access & 1 == 0 || class.unsupported {
+                return Err(Diagnostic::new(
+                    0,
+                    "Same-package class is inaccessible or unsupported",
+                ));
+            }
+            imports.insert(alias, owner.clone());
+            classes.insert(owner, class);
+        }
+    }
+    let mut constants = HashMap::new();
+    for constant in &source.constants {
+        let (ty, kind) = constant_expr(&constant.value);
+        if constants
+            .insert(
+                constant.name.clone(),
+                (
+                    ty,
+                    Expr {
+                        offset: constant.offset,
+                        kind,
+                    },
+                ),
+            )
+            .is_some()
+        {
+            return Err(Diagnostic::new(
+                constant.offset,
+                "Conflicting constant declaration",
+            ));
+        }
+    }
     if let Some(object) = &source.object_decl {
         if !object.methods.is_empty() || !object.fields.is_empty() {
             return objects::check(object, &source.package, classpath, &imports, &classes);
@@ -2146,12 +3704,13 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
     let mut signatures = Vec::new();
     let mut extensions = HashSet::new();
     for (i, function) in source.functions.iter().enumerate() {
-        if functions.insert(function.name.clone(), i).is_some() {
+        if function.receiver.is_some() && function.defaults.iter().any(Option::is_some) {
             return Err(Diagnostic::new(
                 function.offset,
-                "Function overloads are not supported",
+                "Default arguments on extension functions are unsupported",
             ));
         }
+        functions.entry(function.name.clone()).or_insert(i);
         let mut params = Vec::new();
         if let Some(receiver) = &function.receiver {
             extensions.insert(i);
@@ -2163,11 +3722,7 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         for (name, ty) in &function.params {
             params.push((name.clone(), resolve_type(ty, &imports, function.offset)?));
         }
-        if params
-            .iter()
-            .any(|p| matches!(p.1, Type::Unit | Type::Float))
-            || function.result == Type::Float
-        {
+        if params.iter().any(|p| p.1 == Type::Unit) {
             return Err(Diagnostic::new(
                 function.offset,
                 "Unit parameters are not supported",
@@ -2184,11 +3739,12 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             resolve_type(&function.result, &imports, function.offset)?,
         ));
     }
-    if functions.len() > 65535 {
+    if signatures.len() > 65535 {
         return Err(Diagnostic::new(0, "Too many functions for a JVM class"));
     }
     if let Some(decl) = &source.class_decl {
         return Ok(Module {
+            constants: Vec::new(),
             functions: Vec::new(),
             interface_decl: None,
             object_decl: None,
@@ -2203,6 +3759,30 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             )?),
         });
     }
+    let mut jvm_signatures = HashSet::new();
+    for (function, (params, _)) in source.functions.iter().zip(&signatures) {
+        let key = format!(
+            "{}({})",
+            function.name,
+            params.iter().map(|p| p.1.descriptor()).collect::<String>()
+        );
+        if !jvm_signatures.insert(key) {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Conflicting JVM function signature",
+            ));
+        }
+    }
+    let function_names = source
+        .functions
+        .iter()
+        .map(|f| f.name.clone())
+        .collect::<Vec<_>>();
+    let source_defaults = source
+        .functions
+        .iter()
+        .map(|f| f.defaults.clone())
+        .collect::<Vec<_>>();
     let fields = HashMap::new();
     let members = HashMap::new();
     let companion_fields = HashMap::new();
@@ -2210,6 +3790,11 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
     for (id, function) in source.functions.iter().enumerate() {
         let (params, return_type) = signatures[id].clone();
         let mut checker = Checker {
+            constants: &constants,
+            constructor: None,
+            defaults: &source_defaults,
+            function_names: &function_names,
+            mutable_fields: &HashSet::new(),
             classpath,
             extensions: &extensions,
             classes: &classes,
@@ -2223,6 +3808,8 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             object_methods: &HashMap::new(),
             object_fields: &HashMap::new(),
             object_owner: None,
+            allow_return: true,
+            refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
@@ -2235,6 +3822,16 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         if function.receiver.is_some() {
             checker.receiver = checker.local(&params[0].0);
         }
+        if function.defaults.iter().any(Option::is_some) {
+            if params.len() > 32 {
+                return Err(Diagnostic::new(
+                    function.offset,
+                    "Default arguments support at most 32 parameters",
+                ));
+            }
+            checker.next += 2;
+        }
+        let defaults = checker.checked_defaults(&function.defaults, &params, function.offset)?;
         let (mut body, returns) = checker.block(&function.body)?;
         if !returns {
             if return_type != Type::Unit {
@@ -2253,6 +3850,7 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             params[0].0 = "<this>".into();
         }
         result.push(Function {
+            defaults,
             name: function.name.clone(),
             private: function.private,
             is_override: false,
@@ -2263,6 +3861,7 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         });
     }
     Ok(Module {
+        constants: source.constants.iter().map(clone_constant).collect(),
         functions: result,
         class_decl: None,
         interface_decl: None,
@@ -2305,76 +3904,26 @@ fn check_class(
     if source.data
         && (source.params.is_empty()
             || source.params.len() > 32
-            || source.public_params.len() != source.params.len()
+            || source.param_properties.len() != source.params.len()
             || !source.interfaces.is_empty()
-            || !source.methods.is_empty()
-            || !source.properties.is_empty()
-            || source.params.iter().any(|(_, ty)| {
-                !matches!(
-                    ty,
-                    Type::Int | Type::Long | Type::Byte | Type::Char | Type::Boolean | Type::String
-                )
-            }))
+            || !source.mutable_params.is_empty()
+            || source.public_params.len() != source.params.len())
     {
         return Err(Diagnostic::new(
             source.offset,
-            "Data classes require 1 to 32 public val nonnullable scalar or String parameters and no body members or interfaces",
+            "Data classes require 1 to 32 public val constructor properties without interfaces",
         ));
     }
-    let mut generated = HashSet::new();
-    for name in &source.public_params {
-        if !generated.insert(getter_name(name)) {
-            return Err(Diagnostic::new(
-                source.offset,
-                "Public constructor getter collision",
-            ));
-        }
-    }
-    if source.data {
-        generated.extend([
-            "copy".into(),
-            "copy$default".into(),
-            "equals".into(),
-            "hashCode".into(),
-            "toString".into(),
-        ]);
-        for index in 1..=source.params.len() {
-            generated.insert(format!("component{index}"));
-        }
-    }
-    for property in &source.properties {
-        if loses_member_type(&property.ty) {
-            return Err(Diagnostic::new(
-                property.offset,
-                "Nullable and List class getter signatures are not supported",
-            ));
-        }
-        if generated.contains(&getter_name(&property.name)) {
-            return Err(Diagnostic::new(
-                property.offset,
-                "Public constructor getter collision",
-            ));
-        }
-    }
-    for method in &source.methods {
-        if loses_member_type(&method.function.result)
-            || method
-                .function
-                .params
-                .iter()
-                .any(|(_, ty)| loses_member_type(ty))
-        {
-            return Err(Diagnostic::new(
-                method.function.offset,
-                "Nullable and List class method signatures are not supported",
-            ));
-        }
-        if generated.contains(&method.function.name) {
-            return Err(Diagnostic::new(
-                method.function.offset,
-                "Public constructor getter collision",
-            ));
-        }
+    if source.data
+        && source.methods.iter().any(|m| {
+            m.function.name == "copy"
+                || (1..=source.params.len()).any(|i| m.function.name == format!("component{i}"))
+        })
+    {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Data class member conflicts with generated copy or component methods",
+        ));
     }
     let owner = if let Some(owner) = owner_override {
         owner.into()
@@ -2383,21 +3932,46 @@ fn check_class(
     } else {
         format!("{}/{}", package.replace('.', "/"), source.name)
     };
+    fn data_type(ty: &Type) -> bool {
+        match ty {
+            Type::Int
+            | Type::Long
+            | Type::Byte
+            | Type::Char
+            | Type::Boolean
+            | Type::Float
+            | Type::String
+            | Type::Java(_) => true,
+            Type::Nullable(inner) | Type::List(inner) | Type::MutableList(inner) => {
+                data_type(inner)
+            }
+            _ => false,
+        }
+    }
+    if source.data && source.params.iter().any(|(_, ty)| !data_type(ty)) {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Data classes require supported scalar, nullable, List, or reference constructor properties; arrays are unsupported",
+        ));
+    }
     let mut params = Vec::new();
     let mut fields = HashMap::new();
     for (name, ty) in &source.params {
         let ty = resolve_type(ty, imports, source.offset)?;
-        if matches!(ty, Type::Unit | Type::Float) {
+        if ty == Type::Unit {
             return Err(Diagnostic::new(
                 source.offset,
                 "Unit parameters are not supported",
             ));
         }
-        if fields.insert(name.clone(), ty.clone()).is_some() {
+        if params.iter().any(|(n, _)| n == name) {
             return Err(Diagnostic::new(
                 source.offset,
                 "Conflicting constructor field",
             ));
+        }
+        if source.param_properties.contains(name) {
+            fields.insert(name.clone(), ty.clone());
         }
         params.push((name.clone(), ty));
     }
@@ -2430,27 +4004,283 @@ fn check_class(
         }
     }
 
-    let mut declarations = Vec::new();
-    for property in &source.properties {
-        if property.ty == Type::Unit {
+    let extensions = HashSet::new();
+    let signatures = Vec::new();
+    let functions = HashMap::new();
+    let empty_members = HashMap::new();
+    let mut class_fields = Vec::new();
+    for (i, (name, ty)) in params.iter().enumerate() {
+        if source.param_properties.contains(name) {
+            class_fields.push(ClassField {
+                name: name.clone(),
+                ty: ty.clone(),
+                private: !source.public_params.contains(name),
+                mutable: source.mutable_params.contains(name),
+                param: Some(i),
+                initializer: None,
+            });
+        }
+    }
+    let mut mutable_fields: HashSet<_> = source.mutable_params.iter().cloned().collect();
+    let mut initializer_checker = Checker {
+        classpath,
+        constants: &HashMap::new(),
+        constructor: Some((&owner, &params, &source.defaults)),
+        defaults: &Vec::new(),
+        function_names: &[],
+        mutable_fields: &mutable_fields,
+        extensions: &extensions,
+        classes,
+        imports,
+        signatures: &signatures,
+        receiver: Some(Local {
+            slot: 0,
+            ty: Type::Java(owner.clone()),
+            mutable: false,
+        }),
+        fields: &fields,
+        members: &empty_members,
+        companion_fields,
+        functions: &functions,
+        object_methods: &HashMap::new(),
+        object_fields: &HashMap::new(),
+        object_owner: None,
+        allow_return: true,
+        refinements: HashMap::new(),
+        initialized: HashSet::new(),
+        loop_depth: 0,
+        scopes: vec![HashMap::new()],
+        next: 1,
+        result: Type::Unit,
+    };
+    for (name, ty) in &params {
+        initializer_checker.declare(name, ty.clone(), false, source.offset)?;
+    }
+    if source.defaults.iter().any(Option::is_some) {
+        if params.len() > 32 {
             return Err(Diagnostic::new(
-                property.offset,
-                "Unit properties are not supported",
+                source.offset,
+                "Default arguments support at most 32 parameters",
             ));
         }
+        initializer_checker.next += 2;
+    }
+    let defaults =
+        initializer_checker.checked_defaults(&source.defaults, &params, source.offset)?;
+    let mut constructor_locals = initializer_checker.next;
+    drop(initializer_checker);
+    let mut property_types = HashMap::new();
+    for property in &source.properties {
         if fields.contains_key(&property.name) {
             return Err(Diagnostic::new(
                 property.offset,
                 "Conflicting property declaration",
             ));
         }
+        if let Some(expr) = &property.initializer {
+            let mut checker = Checker {
+                classpath,
+                constants: &HashMap::new(),
+                constructor: Some((&owner, &params, &source.defaults)),
+                defaults: &Vec::new(),
+                function_names: &[],
+                mutable_fields: &mutable_fields,
+                extensions: &extensions,
+                classes,
+                imports,
+                signatures: &signatures,
+                receiver: Some(Local {
+                    slot: 0,
+                    ty: Type::Java(owner.clone()),
+                    mutable: false,
+                }),
+                fields: &fields,
+                members: &empty_members,
+                companion_fields,
+                functions: &functions,
+                object_methods: &HashMap::new(),
+                object_fields: &HashMap::new(),
+                object_owner: None,
+                allow_return: true,
+                refinements: HashMap::new(),
+                initialized: HashSet::new(),
+                loop_depth: 0,
+                scopes: vec![HashMap::new()],
+                next: 1,
+                result: Type::Unit,
+            };
+            for (name, ty) in &params {
+                checker.declare(name, ty.clone(), false, source.offset)?;
+            }
+            checker.next = constructor_locals;
+            checker.allow_return = false;
+            let value = checker.value(expr)?;
+            if property.inferred && has_platform(&value.ty) {
+                return Err(Diagnostic::new(
+                    property.offset,
+                    "Inferred platform property types require an explicit supported type annotation",
+                ));
+            }
+            let value = if property.inferred {
+                value
+            } else {
+                checker.coerce(
+                    value,
+                    resolve_type(&property.ty, imports, property.offset)?,
+                    property.offset,
+                )?
+            };
+            if value.ty == Type::Unit || value.ty == Type::Null {
+                return Err(Diagnostic::new(
+                    property.offset,
+                    "Initialized properties require a supported explicit or inferred type",
+                ));
+            }
+            if unresolved_list(&value.ty) {
+                return Err(Diagnostic::new(
+                    property.offset,
+                    "Cannot infer list element type; empty or null-only factories require an explicit or expected element type",
+                ));
+            }
+            let ty = value.ty.clone();
+            constructor_locals = checker.next;
+            drop(checker);
+            fields.insert(property.name.clone(), ty.clone());
+            property_types.insert(property.name.clone(), ty.clone());
+            if property.mutable {
+                mutable_fields.insert(property.name.clone());
+            }
+            class_fields.push(ClassField {
+                name: property.name.clone(),
+                ty,
+                private: property.private,
+                mutable: property.mutable,
+                param: None,
+                initializer: Some(value),
+            });
+        } else {
+            property_types.insert(
+                property.name.clone(),
+                resolve_type(&property.ty, imports, property.offset)?,
+            );
+        }
+    }
+    if source.companion.is_some() && fields.contains_key("Companion") {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Instance field conflicts with generated Companion field",
+        ));
+    }
+    let mut companion_static_fields = HashMap::new();
+    let mut checked_companion = None;
+    if let Some(companion) = &source.companion {
+        let mut properties = Vec::new();
+        let mut locals = 0;
+        for property in &companion.properties {
+            if property.name == "Companion" || fields.contains_key(&property.name) {
+                return Err(Diagnostic::new(
+                    property.offset,
+                    "Companion backing field conflicts with an instance or generated field",
+                ));
+            }
+            if companion_static_fields.contains_key(&property.name) {
+                return Err(Diagnostic::new(
+                    property.offset,
+                    "Conflicting companion property",
+                ));
+            }
+            let mut checker = Checker {
+                classpath,
+                constants: &HashMap::new(),
+                constructor: Some((&owner, &params, &source.defaults)),
+                defaults: &Vec::new(),
+                function_names: &[],
+                mutable_fields: &HashSet::new(),
+                extensions: &extensions,
+                classes,
+                imports,
+                signatures: &signatures,
+                receiver: None,
+                fields: &HashMap::new(),
+                members: &empty_members,
+                companion_fields,
+                functions: &functions,
+                object_methods: &HashMap::new(),
+                object_fields: &companion_static_fields,
+                object_owner: None,
+                allow_return: true,
+                refinements: HashMap::new(),
+                initialized: HashSet::new(),
+                loop_depth: 0,
+                scopes: vec![HashMap::new()],
+                next: locals,
+                result: Type::Unit,
+            };
+            checker.allow_return = false;
+            let value = checker.value(&property.initializer)?;
+            if property.ty.is_none() && has_platform(&value.ty) {
+                return Err(Diagnostic::new(
+                    property.offset,
+                    "Inferred platform property types require an explicit supported type annotation",
+                ));
+            }
+            let value = if let Some(ty) = &property.ty {
+                checker.coerce(
+                    value,
+                    resolve_type(ty, imports, property.offset)?,
+                    property.offset,
+                )?
+            } else {
+                value
+            };
+            if value.ty == Type::Unit || value.ty == Type::Null {
+                return Err(Diagnostic::new(
+                    property.offset,
+                    "Companion properties require a supported type",
+                ));
+            }
+            if unresolved_list(&value.ty) {
+                return Err(Diagnostic::new(
+                    property.offset,
+                    "Cannot infer list element type; empty or null-only factories require an explicit or expected element type",
+                ));
+            }
+            let ty = value.ty.clone();
+            locals = checker.next;
+            drop(checker);
+            companion_static_fields.insert(property.name.clone(), (owner.clone(), ty.clone()));
+            properties.push(ClassCompanionProperty {
+                name: property.name.clone(),
+                ty,
+                private: property.private,
+                mutable: property.mutable,
+                value,
+            });
+        }
+        checked_companion = Some(ClassCompanion {
+            owner: format!("{owner}$Companion"),
+            properties,
+            locals,
+        });
+    }
+    let mut declarations = Vec::new();
+    for property in &source.properties {
+        if property_types[&property.name] == Type::Unit {
+            return Err(Diagnostic::new(
+                property.offset,
+                "Unit properties are not supported",
+            ));
+        }
+        if property.initializer.is_some() {
+            continue;
+        }
         declarations.push((
             getter_name(&property.name),
-            false,
+            property.private,
             property.is_override,
             Some(property.name.as_str()),
             Vec::new(),
-            &property.ty,
+            &property_types[&property.name],
             &property.body,
             property.offset,
         ));
@@ -2482,9 +4312,35 @@ fn check_class(
             .collect::<Result<Vec<_>>>()?
             .concat();
         let result = resolve_type(result, imports, *offset)?;
+        let descriptor = format!("({params}){}", result.descriptor());
+        members.retain(|_, m| m.name != *name || m.descriptor != descriptor);
         members.insert(
-            name.clone(),
+            format!("{name}({params})"),
             JavaMethod {
+                kotlin_params: Some(
+                    source_params
+                        .iter()
+                        .enumerate()
+                        .map(|(i, (n, t))| {
+                            Ok((
+                                n.clone(),
+                                resolve_type(t, imports, *offset)?,
+                                source
+                                    .methods
+                                    .iter()
+                                    .find(|m| {
+                                        m.function.name == *name
+                                            && m.function.params == *source_params
+                                    })
+                                    .is_some_and(|m| {
+                                        m.function.defaults.get(i).is_some_and(Option::is_some)
+                                    }),
+                            ))
+                        })
+                        .collect::<Result<Vec<_>>>()?,
+                ),
+                kotlin_result: Some(result.clone()),
+                kotlin_internal: false,
                 owner: owner.clone(),
                 name: name.clone(),
                 descriptor: format!("({params}){}", result.descriptor()),
@@ -2508,20 +4364,27 @@ fn check_class(
                 "Any and Object inherited members are not supported",
             ));
         }
-        if !names.insert(name.clone()) {
+        let source_descriptor = format!(
+            "{}({})",
+            name,
+            source_params
+                .iter()
+                .map(|p| p.1.descriptor())
+                .collect::<String>()
+        );
+        if !names.insert(source_descriptor) {
             return Err(Diagnostic::new(
                 offset,
                 "Member overloads and JVM getter collisions are not supported",
             ));
         }
         let result = resolve_type(result, imports, offset)?;
-        if result == Type::Float {
-            return Err(Diagnostic::new(
-                offset,
-                "Float method bodies are not supported",
-            ));
-        }
         let mut checker = Checker {
+            constants: &HashMap::new(),
+            constructor: Some((&owner, &params, &source.defaults)),
+            defaults: &Vec::new(),
+            function_names: &[],
+            mutable_fields: &mutable_fields,
             classpath,
             extensions: &extensions,
             classes,
@@ -2537,8 +4400,10 @@ fn check_class(
             companion_fields,
             functions: &functions,
             object_methods: &HashMap::new(),
-            object_fields: &HashMap::new(),
+            object_fields: &companion_static_fields,
             object_owner: None,
+            allow_return: true,
+            refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
@@ -2559,7 +4424,7 @@ fn check_class(
         }
         for (param, ty) in source_params {
             let ty = resolve_type(&ty, imports, offset)?;
-            if matches!(ty, Type::Unit | Type::Float) {
+            if ty == Type::Unit {
                 return Err(Diagnostic::new(
                     offset,
                     "Unit and Float parameters are not supported",
@@ -2568,6 +4433,27 @@ fn check_class(
             checker.declare(&param, ty.clone(), false, offset)?;
             method_params.push((param, ty));
         }
+        let source_defaults = source
+            .methods
+            .iter()
+            .find(|m| {
+                m.function.name == name
+                    && m.function.params.len() == method_params.len()
+                    && m.function
+                        .params
+                        .iter()
+                        .zip(&method_params)
+                        .all(|((n, t), (rn, rt))| {
+                            n == rn && resolve_type(t, imports, offset).is_ok_and(|t| t == *rt)
+                        })
+            })
+            .map(|m| m.function.defaults.clone())
+            .unwrap_or_else(|| vec![None; method_params.len()]);
+        if source_defaults.iter().any(Option::is_some) {
+            checker.next += 2;
+        }
+        let checked_defaults =
+            checker.checked_defaults(&source_defaults, &method_params, offset)?;
         let (mut body, returns) = checker.block(body)?;
         if !returns {
             if result != Type::Unit {
@@ -2582,6 +4468,7 @@ fn check_class(
             }));
         }
         let method = Function {
+            defaults: checked_defaults,
             name,
             private,
             is_override,
@@ -2595,6 +4482,11 @@ fn check_class(
                 if !is_override
                     || private
                     || method.descriptor() != required.descriptor
+                    || class_method_types(required)?
+                        != (
+                            method.params.iter().map(|p| p.1.clone()).collect(),
+                            method.result.clone(),
+                        )
                     || required.source_property.as_deref() != source_property
                 {
                     return Err(Diagnostic::new(
@@ -2613,11 +4505,92 @@ fn check_class(
         }
         methods.push(method);
     }
+    for field in &class_fields {
+        let property_override = source
+            .properties
+            .iter()
+            .find(|p| p.name == field.name)
+            .is_some_and(|p| p.is_override);
+        let getter = getter_name(&field.name);
+        if let Some(required) = required.get(&getter) {
+            if !property_override
+                || field.private
+                || class_method_types(required)? != (Vec::new(), field.ty.clone())
+                || required.source_property.as_deref() != Some(field.name.as_str())
+            {
+                return Err(Diagnostic::new(
+                    source.offset,
+                    "Interface property implementation requires override and an exact supported signature",
+                ));
+            }
+        } else if property_override {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Property overrides no supported interface declaration",
+            ));
+        }
+        if !field.private {
+            if methods
+                .iter()
+                .any(|m| m.name == getter && m.params.is_empty())
+            {
+                return Err(Diagnostic::new(
+                    source.offset,
+                    "Public constructor getter collision",
+                ));
+            }
+            let receiver = || Value {
+                ty: Type::Java(owner.clone()),
+                kind: ValueKind::Local(0),
+            };
+            methods.push(Function {
+                defaults: Vec::new(),
+                name: getter,
+                private: false,
+                is_override: property_override,
+                params: Vec::new(),
+                result: field.ty.clone(),
+                locals: 1,
+                body: vec![Statement::Return(Value {
+                    ty: field.ty.clone(),
+                    kind: ValueKind::Field(field.name.clone(), Box::new(receiver())),
+                })],
+            });
+            if field.mutable {
+                methods.push(Function {
+                    defaults: Vec::new(),
+                    name: setter_name(&field.name),
+                    private: false,
+                    is_override: false,
+                    params: vec![("<set-?>".into(), field.ty.clone())],
+                    result: Type::Unit,
+                    locals: 1 + field.ty.slots() as u16,
+                    body: vec![
+                        Statement::FieldStore {
+                            name: field.name.clone(),
+                            receiver: receiver(),
+                            value: Value {
+                                ty: field.ty.clone(),
+                                kind: ValueKind::Local(1),
+                            },
+                        },
+                        Statement::Return(Value {
+                            ty: Type::Unit,
+                            kind: ValueKind::Unit,
+                        }),
+                    ],
+                });
+            }
+        }
+    }
     let mut bridges = Vec::new();
     let mut required: Vec<_> = required.into_values().collect();
     required.sort_by(|a, b| a.name.cmp(&b.name));
     for method in required {
-        if names.contains(&method.name) {
+        if methods
+            .iter()
+            .any(|m| m.name == method.name && m.descriptor() == method.descriptor)
+        {
             continue;
         }
         if method.access & 0x0400 != 0 {
@@ -2637,8 +4610,11 @@ fn check_class(
         ));
     }
     Ok(ClassDecl {
+        fields: class_fields,
+        defaults,
+        constructor_locals,
+        companion: checked_companion,
         params,
-        public_params: source.public_params.clone(),
         data: source.data,
         interfaces,
         methods,
@@ -2647,6 +4623,9 @@ fn check_class(
 }
 
 pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type)> {
+    if let (Some(params), Some(result)) = (&method.kotlin_params, &method.kotlin_result) {
+        return Ok((params.iter().map(|p| p.1.clone()).collect(), result.clone()));
+    }
     fn ty(descriptor: &str, cursor: &mut usize) -> Result<Type> {
         let rest = descriptor
             .get(*cursor..)
@@ -2668,6 +4647,12 @@ pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type
             if rest.starts_with(prefix) {
                 *cursor += prefix.len();
                 return Ok(ty);
+            }
+        }
+        if rest.starts_with('L') {
+            if let Some(end) = rest.find(';') {
+                *cursor += end + 1;
+                return Ok(Type::Java(rest[1..end].into()));
             }
         }
         Err(Diagnostic::new(
@@ -2713,4 +4698,54 @@ fn inherited_object_method(name: &str) -> bool {
             | "clone"
             | "finalize"
     )
+}
+
+fn zero_value(ty: &Type) -> Value {
+    Value {
+        ty: ty.clone(),
+        kind: match ty {
+            Type::Long => ValueKind::Long(0),
+            Type::Float => ValueKind::Float(0),
+            Type::Boolean => ValueKind::Boolean(false),
+            t if t.is_reference() => ValueKind::Null,
+            _ => ValueKind::Int(0),
+        },
+    }
+}
+
+fn clone_constant(c: &syntax::ConstDecl) -> syntax::ConstDecl {
+    use syntax::ConstValue as C;
+    syntax::ConstDecl {
+        name: c.name.clone(),
+        offset: c.offset,
+        private: c.private,
+        internal: c.internal,
+        value: match &c.value {
+            C::Int(v) => C::Int(*v),
+            C::Long(v) => C::Long(*v),
+            C::Float(v) => C::Float(*v),
+            C::Char(v) => C::Char(*v),
+            C::Boolean(v) => C::Boolean(*v),
+            C::String(v) => C::String(v.clone()),
+        },
+    }
+}
+fn constant_expr(value: &syntax::ConstValue) -> (Type, ExprKind) {
+    use syntax::ConstValue as C;
+    match value {
+        C::Int(v) => (Type::Int, ExprKind::Int(i64::from(*v))),
+        C::Long(v) => (Type::Long, ExprKind::Long(i128::from(*v))),
+        C::Float(v) => (Type::Float, ExprKind::Float(*v)),
+        C::Char(v) => (Type::Char, ExprKind::Char(*v)),
+        C::Boolean(v) => (Type::Boolean, ExprKind::Boolean(*v)),
+        C::String(v) => (Type::String, ExprKind::String(v.clone())),
+    }
+}
+
+fn java_parameter(ty: Type) -> Type {
+    if ty.is_reference() {
+        Type::Platform(Box::new(ty))
+    } else {
+        ty
+    }
 }

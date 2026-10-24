@@ -1,0 +1,12 @@
+tests/fixtures/ten_features/InternalAccess.kt:3:33: error: cannot access 'class VersesDialogNormalVerses : SingleChapterVerses': it is internal in file.
+import yuku.alkitab.base.dialog.VersesDialogNormalVerses
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/ten_features/InternalAccess.kt:4:33: error: cannot access 'class XrefDialogVerses : SingleChapterVerses': it is internal in file.
+import yuku.alkitab.base.dialog.XrefDialogVerses
+                                ^^^^^^^^^^^^^^^^
+tests/fixtures/ten_features/InternalAccess.kt:6:21: error: cannot access 'class VersesDialogNormalVerses : SingleChapterVerses': it is internal in file.
+fun normal(): Any = VersesDialogNormalVerses(listOf("a"), listOf("1"))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/ten_features/InternalAccess.kt:7:19: error: cannot access 'class XrefDialogVerses : SingleChapterVerses': it is internal in file.
+fun xref(): Any = XrefDialogVerses("missing", listOf(null), listOf("1"))
+                  ^^^^^^^^^^^^^^^^

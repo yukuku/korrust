@@ -1,0 +1,224 @@
+use super::*;
+
+pub(super) fn function(
+    pool: &mut Pool,
+    functions: &[crate::check::Function],
+    function: &crate::check::Function,
+    owner: &str,
+    is_static: bool,
+) -> Result<Option<Vec<u8>>> {
+    if !function.defaults.iter().any(Option::is_some) {
+        return Ok(None);
+    }
+    let start = usize::from(!is_static);
+    let slots: usize = start
+        + function
+            .params
+            .iter()
+            .map(|(_, ty)| ty.slots())
+            .sum::<usize>();
+    let locals = function.locals.max((slots + 2) as u16);
+    let mut body = Code {
+        pool,
+        functions,
+        owner,
+        bytes: Vec::new(),
+        labels: Vec::new(),
+        branches: Vec::new(),
+        loops: Vec::new(),
+        max_stack: 2,
+    };
+    for (index, (slot, (_, ty))) in parameter_slots(&function.params, start)
+        .into_iter()
+        .zip(&function.params)
+        .enumerate()
+    {
+        if let Some(value) = function.defaults.get(index).and_then(Option::as_ref) {
+            let next = body.label();
+            body.bytes.extend([0x15, slots as u8]);
+            body.integer((1u32 << index) as i32)?;
+            body.bytes.push(0x7e);
+            body.branch(0x99, next);
+            body.value(value)?;
+            body.bytes.extend([store_opcode(ty), slot as u8]);
+            body.mark(next);
+        }
+    }
+    if !is_static {
+        body.bytes.push(0x2a);
+    }
+    for (slot, (_, ty)) in parameter_slots(&function.params, start)
+        .into_iter()
+        .zip(&function.params)
+    {
+        body.bytes.extend([load_opcode(ty), slot as u8]);
+    }
+    body.max_stack = body.max_stack.max(slots.max(function.result.slots()));
+    body.method_reference(
+        if is_static {
+            0xb8
+        } else if function.private {
+            0xb7
+        } else {
+            0xb6
+        },
+        owner,
+        &function.name,
+        &function.descriptor(),
+    )?;
+    body.bytes.push(return_opcode(&function.result));
+    let max_stack = body.max_stack as u16;
+    let code = SimpleCode {
+        bytes: body.finish()?,
+        locals,
+        max_stack,
+    };
+    let mut params = Vec::new();
+    if !is_static {
+        params.push(("$this".into(), Type::Java(owner.into())));
+    }
+    params.extend(function.params.clone());
+    params.push(("$mask".into(), Type::Int));
+    params.push((
+        "$marker".into(),
+        Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))),
+    ));
+    let descriptor = format!(
+        "({}){}",
+        params
+            .iter()
+            .map(|(_, ty)| ty.descriptor())
+            .collect::<String>(),
+        function.result.descriptor()
+    );
+    let mut method = simple_method(
+        pool,
+        if function.private { 0x1008 } else { 0x1009 },
+        &format!("{}$default", function.name),
+        &descriptor,
+        code,
+        None,
+        false,
+    )?;
+    frames::attach(pool, &mut method, owner, &params, locals, true)?;
+    Ok(Some(method))
+}
+
+pub(super) fn constructors(
+    pool: &mut Pool,
+    class: &crate::check::ClassDecl,
+    owner: &str,
+) -> Result<Vec<Vec<u8>>> {
+    if !class.defaults.iter().any(Option::is_some) {
+        return Ok(Vec::new());
+    }
+    let slots = 1 + class.params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
+    let locals = class.constructor_locals.max((slots + 2) as u16);
+    let mut body = Code {
+        pool,
+        functions: &class.methods,
+        owner,
+        bytes: Vec::new(),
+        labels: Vec::new(),
+        branches: Vec::new(),
+        loops: Vec::new(),
+        max_stack: 2,
+    };
+    for (index, (slot, (_, ty))) in parameter_slots(&class.params, 1)
+        .into_iter()
+        .zip(&class.params)
+        .enumerate()
+    {
+        if let Some(value) = class.defaults.get(index).and_then(Option::as_ref) {
+            let next = body.label();
+            body.bytes.extend([0x15, slots as u8]);
+            body.integer((1u32 << index) as i32)?;
+            body.bytes.push(0x7e);
+            body.branch(0x99, next);
+            body.value(value)?;
+            body.bytes.extend([store_opcode(ty), slot as u8]);
+            body.mark(next);
+        }
+    }
+    body.bytes.push(0x2a);
+    for (slot, (_, ty)) in parameter_slots(&class.params, 1)
+        .into_iter()
+        .zip(&class.params)
+    {
+        body.bytes.extend([load_opcode(ty), slot as u8]);
+    }
+    let descriptor = format!(
+        "({})V",
+        class
+            .params
+            .iter()
+            .map(|(_, ty)| ty.descriptor())
+            .collect::<String>()
+    );
+    body.method_reference(0xb7, owner, "<init>", &descriptor)?;
+    body.bytes.push(0xb1);
+    let max_stack = body.max_stack.max(slots) as u16;
+    let code = SimpleCode {
+        bytes: body.finish()?,
+        max_stack,
+        locals,
+    };
+    let mut params = class.params.clone();
+    params.push(("$mask".into(), Type::Int));
+    params.push((
+        "$marker".into(),
+        Type::Nullable(Box::new(Type::Java(
+            "kotlin/jvm/internal/DefaultConstructorMarker".into(),
+        ))),
+    ));
+    let descriptor = format!(
+        "({})V",
+        params
+            .iter()
+            .map(|(_, ty)| ty.descriptor())
+            .collect::<String>()
+    );
+    let mut method = simple_method(pool, 0x1001, "<init>", &descriptor, code, None, false)?;
+    frames::attach_constructor(pool, &mut method, owner, &params, locals)?;
+    let mut methods = vec![method];
+    if class.defaults.len() == class.params.len() && class.defaults.iter().all(Option::is_some) {
+        let mut body = Code {
+            pool,
+            functions: &[],
+            owner,
+            bytes: vec![0x2a],
+            labels: Vec::new(),
+            branches: Vec::new(),
+            loops: Vec::new(),
+            max_stack: slots + 2,
+        };
+        for (_, ty) in &class.params {
+            body.bytes.push(if ty.is_reference() {
+                0x01
+            } else if ty == &Type::Long {
+                0x09
+            } else if ty == &Type::Float {
+                0x0b
+            } else {
+                0x03
+            });
+        }
+        body.integer(if class.params.len() == 32 {
+            -1
+        } else {
+            ((1u32 << class.params.len()) - 1) as i32
+        })?;
+        body.bytes.push(0x01);
+        body.method_reference(0xb7, owner, "<init>", &descriptor)?;
+        body.bytes.push(0xb1);
+        let code = SimpleCode {
+            bytes: body.finish()?,
+            max_stack: (slots + 2) as u16,
+            locals: 1,
+        };
+        let mut method = simple_method(pool, 0x0001, "<init>", "()V", code, None, false)?;
+        frames::attach_constructor(pool, &mut method, owner, &[], 1)?;
+        methods.push(method);
+    }
+    Ok(methods)
+}

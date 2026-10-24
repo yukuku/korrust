@@ -5,7 +5,9 @@ use crate::{
 };
 use std::collections::HashMap;
 
+mod class_companion;
 mod data;
+mod defaults;
 mod frames;
 mod interfaces;
 mod objects;
@@ -76,9 +78,42 @@ fn nonnull(ty: &Type) -> bool {
 
 fn generic_type(ty: &Type) -> String {
     match ty {
+        Type::Nullable(inner) if !inner.is_reference() => boxed_descriptor(inner).into(),
         Type::Nullable(inner) | Type::Platform(inner) => generic_type(inner),
-        Type::List(inner) => format!("Ljava/util/List<{}>;", generic_type(inner)),
+        Type::List(inner) | Type::MutableList(inner) => {
+            format!("Ljava/util/List<{}>;", generic_argument(inner))
+        }
         _ => ty.descriptor(),
+    }
+}
+
+fn boxed_owner(ty: &Type) -> &'static str {
+    match ty.base() {
+        Type::Int => "java/lang/Integer",
+        Type::Long => "java/lang/Long",
+        Type::Float => "java/lang/Float",
+        Type::Byte => "java/lang/Byte",
+        Type::Char => "java/lang/Character",
+        Type::Boolean => "java/lang/Boolean",
+        _ => "java/lang/Object",
+    }
+}
+fn boxed_descriptor(ty: &Type) -> &'static str {
+    match ty.base() {
+        Type::Int => "Ljava/lang/Integer;",
+        Type::Long => "Ljava/lang/Long;",
+        Type::Float => "Ljava/lang/Float;",
+        Type::Byte => "Ljava/lang/Byte;",
+        Type::Char => "Ljava/lang/Character;",
+        Type::Boolean => "Ljava/lang/Boolean;",
+        _ => "Ljava/lang/Object;",
+    }
+}
+fn generic_argument(ty: &Type) -> String {
+    if ty.is_reference() {
+        generic_type(ty)
+    } else {
+        boxed_descriptor(ty).into()
     }
 }
 
@@ -125,17 +160,13 @@ fn nullable_result(pool: &mut Pool, method: &mut Vec<u8>, ty: &Type) -> Result<(
 }
 
 fn reference_class(ty: &Type) -> Result<String> {
-    match ty.base() {
-        Type::Nullable(inner) => reference_class(inner),
-        Type::Null => Ok("java/lang/Object".into()),
-        Type::List(_) => Ok("java/util/List".into()),
-        Type::String => Ok("java/lang/String".into()),
-        Type::Java(owner) => Ok(owner.clone()),
-        Type::ThreadLocal(_) => Ok("java/lang/ThreadLocal".into()),
-        Type::IntArray | Type::ByteArray | Type::CharArray | Type::StringArray => {
-            Ok(ty.descriptor())
-        }
-        _ => Err(failure("Expected a reference type")),
+    let descriptor = ty.descriptor();
+    if descriptor.starts_with('L') && descriptor.ends_with(';') {
+        Ok(descriptor[1..descriptor.len() - 1].into())
+    } else if descriptor.starts_with('[') {
+        Ok(descriptor)
+    } else {
+        Err(failure("Expected a reference type"))
     }
 }
 
@@ -152,6 +183,7 @@ fn primitive_array_type(ty: &Type) -> Result<u8> {
 enum Constant {
     Utf8(Vec<u8>),
     Integer(i32),
+    Float(u32),
     Long(i64),
     Reserved,
     Class(u16),
@@ -254,6 +286,10 @@ impl Pool {
                     out.push(3);
                     out.extend(value.to_be_bytes());
                 }
+                Constant::Float(value) => {
+                    out.push(4);
+                    out.extend(value.to_be_bytes());
+                }
                 Constant::Long(value) => {
                     out.push(5);
                     out.extend(value.to_be_bytes());
@@ -301,7 +337,156 @@ struct Code<'a> {
     loops: Vec<(usize, usize)>,
     max_stack: usize,
 }
+fn terminal_block(body: &[Statement]) -> bool {
+    match body.last() {
+        Some(
+            Statement::Return(_)
+            | Statement::Throw(_)
+            | Statement::ThrowException { .. }
+            | Statement::Break
+            | Statement::Continue,
+        ) => true,
+        Some(Statement::Expression(value)) => terminal_value(value),
+        Some(Statement::If(_, yes, no)) => terminal_block(yes) && terminal_block(no),
+        _ => false,
+    }
+}
+fn terminal_value(value: &Value) -> bool {
+    match &value.kind {
+        ValueKind::Abrupt(body) => terminal_block(body),
+        ValueKind::Let { body, .. } => terminal_value(body),
+        ValueKind::If(_, yes, no) => terminal_value(yes) && terminal_value(no),
+        _ => false,
+    }
+}
 impl Code<'_> {
+    fn box_value(&mut self, ty: &Type) -> Result<()> {
+        self.method_reference(
+            0xb8,
+            boxed_owner(ty),
+            "valueOf",
+            &format!("({}){}", ty.descriptor(), boxed_descriptor(ty)),
+        )
+    }
+    fn unbox_value(&mut self, ty: &Type) -> Result<()> {
+        let name = match ty {
+            Type::Int => "intValue",
+            Type::Long => "longValue",
+            Type::Float => "floatValue",
+            Type::Byte => "byteValue",
+            Type::Char => "charValue",
+            Type::Boolean => "booleanValue",
+            _ => return Err(failure("Unsupported primitive unboxing")),
+        };
+        self.method_reference(
+            0xb6,
+            boxed_owner(ty),
+            name,
+            &format!("(){}", ty.descriptor()),
+        )
+    }
+    fn generic_result(&mut self, ty: &Type) -> Result<()> {
+        if ty.is_reference() {
+            return self.class_reference(0xc0, &reference_class(ty)?);
+        }
+        let numeric = matches!(ty, Type::Int | Type::Long | Type::Float | Type::Byte);
+        let owner = if numeric {
+            "java/lang/Number"
+        } else {
+            boxed_owner(ty)
+        };
+        self.class_reference(0xc0, owner)?;
+        if numeric {
+            let name = match ty {
+                Type::Int => "intValue",
+                Type::Long => "longValue",
+                Type::Float => "floatValue",
+                Type::Byte => "byteValue",
+                _ => unreachable!(),
+            };
+            self.method_reference(0xb6, owner, name, &format!("(){}", ty.descriptor()))
+        } else {
+            self.unbox_value(ty)
+        }
+    }
+    fn boxed_value(&mut self, value: &Value) -> Result<()> {
+        match &value.kind {
+            ValueKind::If(condition, yes, no) => {
+                let otherwise = self.label();
+                let end = self.label();
+                self.value(condition)?;
+                self.branch(0x99, otherwise);
+                self.boxed_value(yes)?;
+                if !terminal_value(yes) {
+                    self.branch(0xa7, end);
+                }
+                self.mark(otherwise);
+                self.boxed_value(no)?;
+                self.mark(end);
+                return Ok(());
+            }
+            ValueKind::Let {
+                slot,
+                value: initializer,
+                body,
+            } => {
+                self.value(initializer)?;
+                self.bytes.extend([store_opcode(&initializer.ty), *slot]);
+                return self.boxed_value(body);
+            }
+            ValueKind::Abrupt(body) => return self.block(body),
+            ValueKind::Unbox(asserted) => {
+                if let ValueKind::RequireNotNull(operand) = &asserted.kind {
+                    if self.erased_list_value(operand)? {
+                        self.bytes.push(0x59);
+                        self.method_reference(
+                            0xb8,
+                            "kotlin/jvm/internal/Intrinsics",
+                            "checkNotNull",
+                            "(Ljava/lang/Object;)V",
+                        )?;
+                        return self.class_reference(0xc0, boxed_owner(&value.ty));
+                    }
+                }
+            }
+            _ => {}
+        }
+        if self.erased_list_value(value)? {
+            return self.class_reference(0xc0, boxed_owner(&value.ty));
+        }
+        self.value(value)?;
+        self.box_value(&value.ty)
+    }
+    fn erased_list_value(&mut self, value: &Value) -> Result<bool> {
+        match &value.kind {
+            ValueKind::ListGet(receiver, index) => {
+                self.value(receiver)?;
+                self.value(index)?;
+                let method =
+                    self.pool
+                        .interface_method("java/util/List", "get", "(I)Ljava/lang/Object;")?;
+                self.reference(0xb9, method);
+                self.bytes.extend([2, 0]);
+            }
+            ValueKind::ListSet(receiver, index, element) => {
+                self.value(receiver)?;
+                self.value(index)?;
+                self.value(element)?;
+                if !element.ty.is_reference() {
+                    self.box_value(&element.ty)?;
+                }
+                let method = self.pool.interface_method(
+                    "java/util/List",
+                    "set",
+                    "(ILjava/lang/Object;)Ljava/lang/Object;",
+                )?;
+                self.reference(0xb9, method);
+                self.bytes.extend([3, 0]);
+            }
+            _ => return Ok(false),
+        }
+        Ok(true)
+    }
     fn label(&mut self) -> usize {
         let id = self.labels.len();
         self.labels.push(None);
@@ -372,6 +557,125 @@ impl Code<'_> {
     fn value(&mut self, value: &Value) -> Result<()> {
         self.max_stack = self.max_stack.max(value.stack());
         match &value.kind {
+            ValueKind::Float(bits) => {
+                let constant = self.pool.add(Constant::Float(*bits))?;
+                self.reference(0x13, constant);
+            }
+            ValueKind::Box(inner) => self.boxed_value(inner)?,
+            ValueKind::Unbox(inner) => {
+                if let ValueKind::RequireNotNull(operand) = &inner.kind {
+                    if self.erased_list_value(operand)? {
+                        self.bytes.push(0x59);
+                        self.method_reference(
+                            0xb8,
+                            "kotlin/jvm/internal/Intrinsics",
+                            "checkNotNull",
+                            "(Ljava/lang/Object;)V",
+                        )?;
+                        self.generic_result(&value.ty)?;
+                        return Ok(());
+                    }
+                }
+                self.value(inner)?;
+                self.unbox_value(&value.ty)?;
+            }
+            ValueKind::New {
+                owner,
+                descriptor,
+                args,
+            } => {
+                self.class_reference(0xbb, owner)?;
+                self.bytes.push(0x59);
+                for arg in args {
+                    self.value(arg)?;
+                }
+                self.method_reference(0xb7, owner, "<init>", descriptor)?;
+            }
+            ValueKind::JavaField {
+                owner,
+                name,
+                receiver,
+            } => {
+                if let Some(receiver) = receiver {
+                    self.value(receiver)?;
+                }
+                self.field_reference(
+                    if receiver.is_some() { 0xb4 } else { 0xb2 },
+                    owner,
+                    name,
+                    &value.ty.descriptor(),
+                )?;
+            }
+            ValueKind::ListFactory { mutable, elements } => {
+                if elements.is_empty() && !mutable {
+                    self.method_reference(
+                        0xb8,
+                        "kotlin/collections/CollectionsKt",
+                        "emptyList",
+                        "()Ljava/util/List;",
+                    )?;
+                } else if elements.len() == 1 && !mutable {
+                    self.value(&elements[0])?;
+                    if !elements[0].ty.is_reference() {
+                        self.box_value(&elements[0].ty)?;
+                    }
+                    self.method_reference(
+                        0xb8,
+                        "kotlin/collections/CollectionsKt",
+                        "listOf",
+                        "(Ljava/lang/Object;)Ljava/util/List;",
+                    )?;
+                } else {
+                    self.integer(elements.len() as i32)?;
+                    let element_class = match value.ty.base() {
+                        Type::List(element) | Type::MutableList(element) => {
+                            if element.is_reference() {
+                                reference_class(element)?
+                            } else {
+                                boxed_owner(element).into()
+                            }
+                        }
+                        _ => return Err(failure("Expected a list factory type")),
+                    };
+                    self.class_reference(0xbd, &element_class)?;
+                    for (index, element) in elements.iter().enumerate() {
+                        self.bytes.push(0x59);
+                        self.integer(index as i32)?;
+                        self.value(element)?;
+                        if !element.ty.is_reference() {
+                            self.box_value(&element.ty)?;
+                        }
+                        self.bytes.push(0x53);
+                    }
+                    self.method_reference(
+                        0xb8,
+                        "kotlin/collections/CollectionsKt",
+                        if *mutable { "mutableListOf" } else { "listOf" },
+                        "([Ljava/lang/Object;)Ljava/util/List;",
+                    )?;
+                }
+            }
+            ValueKind::Abrupt(body) => self.block(body)?,
+            ValueKind::DefaultCall(id, args, mask) => {
+                self.max_stack = self
+                    .max_stack
+                    .max(2 + args.iter().map(|value| value.ty.slots()).sum::<usize>());
+                for arg in args {
+                    self.value(arg)?;
+                }
+                self.integer(*mask as i32)?;
+                self.bytes.push(0x01);
+                let function = &self.functions[*id];
+                let descriptor = function
+                    .descriptor()
+                    .replacen(')', "ILjava/lang/Object;)", 1);
+                self.method_reference(
+                    0xb8,
+                    self.owner,
+                    &format!("{}$default", function.name),
+                    &descriptor,
+                )?;
+            }
             ValueKind::Unit => {}
             ValueKind::String(units) => {
                 let constant = self.pool.string_units(units)?;
@@ -387,27 +691,20 @@ impl Code<'_> {
                 self.reference(0xb7, constructor);
                 for part in [a, b] {
                     self.value(part)?;
-                    let descriptor = match part.ty.base() {
-                        Type::Long => "(J)Ljava/lang/StringBuilder;",
-                        Type::String => "(Ljava/lang/String;)Ljava/lang/StringBuilder;",
-                        Type::Int => "(I)Ljava/lang/StringBuilder;",
-                        Type::Boolean => "(Z)Ljava/lang/StringBuilder;",
-                        Type::Nullable(_) | Type::Null => {
+                    let descriptor = if part.ty.is_reference() {
+                        if part.ty.base() == &Type::String {
+                            "(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+                        } else {
                             "(Ljava/lang/Object;)Ljava/lang/StringBuilder;"
                         }
-                        Type::Char
-                        | Type::Byte
-                        | Type::Float
-                        | Type::IntArray
-                        | Type::ByteArray
-                        | Type::ThreadLocal(_)
-                        | Type::CharArray
-                        | Type::StringArray
-                        | Type::Java(_)
-                        | Type::List(_)
-                        | Type::Unit
-                        | Type::Platform(_) => {
-                            return Err(failure("Unsupported string concatenation operand"));
+                    } else {
+                        match part.ty.base() {
+                            Type::Long => "(J)Ljava/lang/StringBuilder;",
+                            Type::Float => "(F)Ljava/lang/StringBuilder;",
+                            Type::Char => "(C)Ljava/lang/StringBuilder;",
+                            Type::Boolean => "(Z)Ljava/lang/StringBuilder;",
+                            Type::Int | Type::Byte => "(I)Ljava/lang/StringBuilder;",
+                            _ => return Err(failure("Unsupported string concatenation operand")),
                         }
                     };
                     let append =
@@ -473,10 +770,11 @@ impl Code<'_> {
                 for arg in args {
                     self.value(arg)?;
                 }
+                let opcode = if method.access & 8 != 0 { 0xb8 } else { 0xb6 };
                 let method = self
                     .pool
                     .method(&method.owner, &method.name, &method.descriptor)?;
-                self.reference(0xb6, method);
+                self.reference(opcode, method);
             }
             ValueKind::Let { slot, value, body } => {
                 self.value(value)?;
@@ -587,7 +885,9 @@ impl Code<'_> {
                 self.value(condition)?;
                 self.branch(0x99, otherwise);
                 self.value(yes)?;
-                self.branch(0xa7, end);
+                if !terminal_value(yes) {
+                    self.branch(0xa7, end);
+                }
                 self.mark(otherwise);
                 self.value(no)?;
                 self.mark(end);
@@ -597,10 +897,12 @@ impl Code<'_> {
                 let method = self.pool.method(
                     "java/lang/String",
                     "valueOf",
-                    if value.ty == Type::Long {
-                        "(J)Ljava/lang/String;"
-                    } else {
-                        "(I)Ljava/lang/String;"
+                    match value.ty {
+                        Type::Long => "(J)Ljava/lang/String;",
+                        Type::Float => "(F)Ljava/lang/String;",
+                        Type::Char => "(C)Ljava/lang/String;",
+                        Type::Boolean => "(Z)Ljava/lang/String;",
+                        _ => "(I)Ljava/lang/String;",
                     },
                 )?;
                 self.reference(0xb8, method);
@@ -695,27 +997,30 @@ impl Code<'_> {
                 self.reference(0xb9, method);
                 self.bytes.extend([1, 0]);
             }
-            ValueKind::ListGet(inner, index) => {
-                self.value(inner)?;
-                self.value(index)?;
-                let method =
-                    self.pool
-                        .interface_method("java/util/List", "get", "(I)Ljava/lang/Object;")?;
-                self.reference(0xb9, method);
-                self.bytes.extend([2, 0]);
-                self.class_reference(0xc0, "java/lang/String")?;
+            ValueKind::ListGet(..) | ValueKind::ListSet(..) => {
+                self.erased_list_value(value)?;
+                self.generic_result(&value.ty)?;
             }
             ValueKind::Boolean(b) => self.bytes.push(if *b { 0x04 } else { 0x03 }),
             ValueKind::Field(name, receiver) => {
                 self.value(receiver)?;
-                let field = self.pool.field(self.owner, name, &value.ty.descriptor())?;
+                let owner = match receiver.ty.base() {
+                    Type::Java(owner) => owner.as_str(),
+                    _ => self.owner,
+                };
+                let field = self.pool.field(owner, name, &value.ty.descriptor())?;
                 self.reference(0xb4, field);
             }
             ValueKind::Local(slot) => self.bytes.extend([load_opcode(&value.ty), *slot]),
             ValueKind::Negate(inner) => {
                 self.value(inner)?;
-                self.bytes
-                    .push(if inner.ty == Type::Long { 0x75 } else { 0x74 });
+                self.bytes.push(if inner.ty == Type::Long {
+                    0x75
+                } else if inner.ty == Type::Float {
+                    0x76
+                } else {
+                    0x74
+                });
             }
             ValueKind::Not(inner) => {
                 self.value(inner)?;
@@ -851,13 +1156,75 @@ impl Code<'_> {
     fn block(&mut self, body: &[Statement]) -> Result<()> {
         for statement in body {
             match statement {
+                Statement::JavaFieldStore {
+                    owner,
+                    name,
+                    ty,
+                    receiver,
+                    value,
+                } => {
+                    let prefix = usize::from(receiver.is_some());
+                    self.max_stack = self.max_stack.max(
+                        receiver
+                            .as_ref()
+                            .map_or(0, Value::stack)
+                            .max(prefix + value.stack()),
+                    );
+                    if let Some(receiver) = receiver {
+                        self.value(receiver)?;
+                    }
+                    self.value(value)?;
+                    self.field_reference(
+                        if receiver.is_some() { 0xb5 } else { 0xb3 },
+                        owner,
+                        name,
+                        &ty.descriptor(),
+                    )?;
+                }
+                Statement::ListSet(receiver, index, value) => {
+                    self.max_stack = self.max_stack.max(
+                        receiver
+                            .stack()
+                            .max(1 + index.stack())
+                            .max(2 + value.stack()),
+                    );
+                    self.value(receiver)?;
+                    self.value(index)?;
+                    self.value(value)?;
+                    if !value.ty.is_reference() {
+                        self.box_value(&value.ty)?;
+                    }
+                    let method = self.pool.interface_method(
+                        "java/util/List",
+                        "set",
+                        "(ILjava/lang/Object;)Ljava/lang/Object;",
+                    )?;
+                    self.reference(0xb9, method);
+                    self.bytes.extend([3, 0, 0x57]);
+                }
+                Statement::FieldStore {
+                    name,
+                    receiver,
+                    value,
+                } => {
+                    self.max_stack = self.max_stack.max(receiver.stack().max(1 + value.stack()));
+                    self.value(receiver)?;
+                    self.value(value)?;
+                    let owner = match receiver.ty.base() {
+                        Type::Java(owner) => owner.as_str(),
+                        _ => self.owner,
+                    };
+                    self.field_reference(0xb5, owner, name, &value.ty.descriptor())?;
+                }
                 Statement::Store(slot, value) => {
                     self.value(value)?;
                     self.bytes.extend([store_opcode(&value.ty), *slot]);
                 }
                 Statement::Return(value) => {
                     self.value(value)?;
-                    self.bytes.push(return_opcode(&value.ty));
+                    if !terminal_value(value) {
+                        self.bytes.push(return_opcode(&value.ty));
+                    }
                 }
                 Statement::Throw(message) => {
                     self.max_stack = self.max_stack.max(2 + message.stack());
@@ -953,7 +1320,7 @@ impl Code<'_> {
                 }
                 Statement::Expression(value) => {
                     self.value(value)?;
-                    if value.ty.base() != &Type::Unit {
+                    if value.ty.base() != &Type::Unit && !terminal_value(value) {
                         self.bytes
                             .push(if value.ty.slots() == 2 { 0x58 } else { 0x57 });
                     }
@@ -964,7 +1331,9 @@ impl Code<'_> {
                     self.value(cond)?;
                     self.branch(0x99, otherwise);
                     self.block(yes)?;
-                    self.branch(0xa7, end);
+                    if !terminal_block(yes) {
+                        self.branch(0xa7, end);
+                    }
                     self.mark(otherwise);
                     self.block(no)?;
                     self.mark(end);
@@ -1064,8 +1433,17 @@ pub fn emit(
         parameter_annotations(&mut pool, &mut method, &function.params)?;
         nullable_result(&mut pool, &mut method, &function.result)?;
         methods.push(method);
+        if let Some(default) =
+            defaults::function(&mut pool, &module.functions, function, owner, true)?
+        {
+            methods.push(default);
+        }
     }
     let metadata = metadata_attribute(&mut pool, metadata)?;
+    let mut fields = Vec::new();
+    for constant in &module.constants {
+        fields.extend(constant_field(&mut pool, constant)?);
+    }
     let mut out = Vec::new();
     u4(&mut out, 0xcafebabe);
     u2(&mut out, 0);
@@ -1075,7 +1453,8 @@ pub fn emit(
     u2(&mut out, class);
     u2(&mut out, parent);
     u2(&mut out, 0);
-    u2(&mut out, 0);
+    u2(&mut out, module.constants.len() as u16);
+    out.extend(fields);
     u2(&mut out, methods.len() as u16);
     for method in methods {
         out.extend(method);
@@ -1435,6 +1814,22 @@ fn object_field(
     Ok(field)
 }
 
+fn constant_field(pool: &mut Pool, constant: &crate::syntax::ConstDecl) -> Result<Vec<u8>> {
+    let (descriptor, value, not_null) = match &constant.value {
+        ConstValue::Int(value) => ("I", pool.add(Constant::Integer(*value))?, false),
+        ConstValue::Long(value) => ("J", pool.add(Constant::Long(*value))?, false),
+        ConstValue::Float(value) => ("F", pool.add(Constant::Float(*value))?, false),
+        ConstValue::Char(value) => ("C", pool.add(Constant::Integer(i32::from(*value)))?, false),
+        ConstValue::Boolean(value) => ("Z", pool.add(Constant::Integer(i32::from(*value)))?, false),
+        ConstValue::String(value) => ("Ljava/lang/String;", pool.string_units(value)?, true),
+    };
+    let mut field = object_field(pool, &constant.name, descriptor, Some(value), not_null)?;
+    if constant.private {
+        field[0..2].copy_from_slice(&0x001au16.to_be_bytes());
+    }
+    Ok(field)
+}
+
 fn emit_object(class: &ObjectClass<'_>, file: &str) -> Result<crate::ClassFile> {
     let owner = &class.lineage.last().unwrap().0;
     let mut pool = Pool::default();
@@ -1445,23 +1840,7 @@ fn emit_object(class: &ObjectClass<'_>, file: &str) -> Result<crate::ClassFile> 
     let parent_constructor = pool.method("java/lang/Object", "<init>", "()V")?;
     let mut fields = object_field(&mut pool, "INSTANCE", &descriptor, None, true)?;
     for constant in &class.decl.constants {
-        let (descriptor, value, not_null) = match &constant.value {
-            ConstValue::Int(value) => ("I", pool.add(Constant::Integer(*value))?, false),
-            ConstValue::Char(value) => {
-                ("C", pool.add(Constant::Integer(i32::from(*value)))?, false)
-            }
-            ConstValue::Boolean(value) => {
-                ("Z", pool.add(Constant::Integer(i32::from(*value)))?, false)
-            }
-            ConstValue::String(value) => ("Ljava/lang/String;", pool.string_units(value)?, true),
-        };
-        fields.extend(object_field(
-            &mut pool,
-            &constant.name,
-            descriptor,
-            Some(value),
-            not_null,
-        )?);
+        fields.extend(constant_field(&mut pool, constant)?);
     }
     let mut constructor_code = SimpleCode::new(1, 1);
     constructor_code.bytes.push(0x2a);
@@ -1654,6 +2033,61 @@ pub fn emit_class(
     emit_class_with(class, owner, file, metadata, 0x0001, |_| Ok(Vec::new()))
 }
 
+pub fn emit_class_files(
+    class: &crate::check::ClassDecl,
+    owner: &str,
+    file: &str,
+    metadata: &crate::metadata::Metadata,
+    companion_metadata: Option<&crate::metadata::Metadata>,
+) -> Result<Vec<crate::ClassFile>> {
+    let mut files = vec![crate::ClassFile {
+        internal_name: owner.into(),
+        bytes: emit_class(class, owner, file, metadata)?,
+    }];
+    if let Some(companion) = &class.companion {
+        files.push(class_companion::emit(
+            companion,
+            owner,
+            file,
+            companion_metadata.ok_or_else(|| failure("Missing class companion metadata"))?,
+        )?);
+    }
+    Ok(files)
+}
+
+fn class_field(pool: &mut Pool, name: &str, ty: &Type, flags: u16) -> Result<Vec<u8>> {
+    let mut field = Vec::new();
+    u2(&mut field, flags);
+    u2(&mut field, pool.utf8(name)?);
+    u2(&mut field, pool.utf8(&ty.descriptor())?);
+    let generic = generic_type(ty);
+    let has_signature = generic != ty.descriptor();
+    u2(
+        &mut field,
+        u16::from(ty.is_reference()) + u16::from(has_signature),
+    );
+    if has_signature {
+        u2(&mut field, pool.utf8("Signature")?);
+        u4(&mut field, 2);
+        u2(&mut field, pool.utf8(&generic)?);
+    }
+    if ty.is_reference() {
+        u2(&mut field, pool.utf8("RuntimeInvisibleAnnotations")?);
+        u4(&mut field, 6);
+        u2(&mut field, 1);
+        u2(
+            &mut field,
+            pool.utf8(if ty.is_nullable() {
+                "Lorg/jetbrains/annotations/Nullable;"
+            } else {
+                "Lorg/jetbrains/annotations/NotNull;"
+            })?,
+        );
+        u2(&mut field, 0);
+    }
+    Ok(field)
+}
+
 fn emit_class_with(
     class: &crate::check::ClassDecl,
     owner: &str,
@@ -1670,35 +2104,13 @@ fn emit_class_with(
         interfaces.push(pool.class(interface)?);
     }
     let mut fields = Vec::new();
-    for (name, ty) in &class.params {
-        u2(&mut fields, 0x0012);
-        u2(&mut fields, pool.utf8(name)?);
-        u2(&mut fields, pool.utf8(&ty.descriptor())?);
-        let generic = generic_type(ty);
-        let has_signature = generic != ty.descriptor();
-        u2(
-            &mut fields,
-            u16::from(ty.is_reference()) + u16::from(has_signature),
-        );
-        if has_signature {
-            u2(&mut fields, pool.utf8("Signature")?);
-            u4(&mut fields, 2);
-            u2(&mut fields, pool.utf8(&generic)?);
-        }
-        if ty.is_reference() {
-            u2(&mut fields, pool.utf8("RuntimeInvisibleAnnotations")?);
-            u4(&mut fields, 6);
-            u2(&mut fields, 1);
-            u2(
-                &mut fields,
-                pool.utf8(if ty.is_nullable() {
-                    "Lorg/jetbrains/annotations/Nullable;"
-                } else {
-                    "Lorg/jetbrains/annotations/NotNull;"
-                })?,
-            );
-            u2(&mut fields, 0);
-        }
+    for field in &class.fields {
+        fields.extend(class_field(
+            &mut pool,
+            &field.name,
+            &field.ty,
+            if field.mutable { 0x0002 } else { 0x0012 },
+        )?);
     }
     let constructor_descriptor = format!(
         "({})V",
@@ -1708,66 +2120,78 @@ fn emit_class_with(
             .map(|(_, ty)| ty.descriptor())
             .collect::<String>()
     );
-    let constructor_slots: usize = 1 + class.params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
-    let mut code = SimpleCode::new(3, constructor_slots as u16);
-    let null_check = pool.method(
-        "kotlin/jvm/internal/Intrinsics",
-        "checkNotNullParameter",
-        "(Ljava/lang/Object;Ljava/lang/String;)V",
-    )?;
+    let constructor_slots = 1 + class.params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
+    let constructor_locals = class.constructor_locals.max(constructor_slots as u16);
+    let mut code = Code {
+        pool: &mut pool,
+        functions: &class.methods,
+        owner,
+        bytes: Vec::new(),
+        labels: Vec::new(),
+        branches: Vec::new(),
+        loops: Vec::new(),
+        max_stack: 3,
+    };
     for (slot, (name, ty)) in parameter_slots(&class.params, 1)
         .into_iter()
         .zip(&class.params)
     {
         if nonnull(ty) {
             code.bytes.extend([0x19, slot as u8]);
-            code.reference(0x13, pool.string(name)?);
-            code.reference(0xb8, null_check);
+            let name = code.pool.string(name)?;
+            code.reference(0x13, name);
+            code.method_reference(
+                0xb8,
+                "kotlin/jvm/internal/Intrinsics",
+                "checkNotNullParameter",
+                "(Ljava/lang/Object;Ljava/lang/String;)V",
+            )?;
         }
     }
     code.bytes.push(0x2a);
-    code.reference(0xb7, pool.method("java/lang/Object", "<init>", "()V")?);
-    for (slot, (name, ty)) in parameter_slots(&class.params, 1)
-        .into_iter()
-        .zip(&class.params)
-    {
+    code.method_reference(0xb7, "java/lang/Object", "<init>", "()V")?;
+    let slots = parameter_slots(&class.params, 1);
+    for field in &class.fields {
+        if field.param.is_none() && field.initializer.is_none() {
+            continue;
+        }
         code.bytes.push(0x2a);
-        code.bytes.extend([load_opcode(ty), slot as u8]);
-        code.reference(0xb5, pool.field(owner, name, &ty.descriptor())?);
+        if let Some(index) = field.param {
+            code.bytes
+                .extend([load_opcode(&field.ty), slots[index] as u8]);
+            code.max_stack = code.max_stack.max(1 + field.ty.slots());
+        } else if let Some(value) = &field.initializer {
+            code.max_stack = code.max_stack.max(1 + value.stack());
+            code.value(value)?;
+        }
+        code.field_reference(0xb5, owner, &field.name, &field.ty.descriptor())?;
     }
     code.bytes.push(0xb1);
-    let constructor_signature = generic_method(&class.params, &Type::Unit);
+    let max_stack = code.max_stack as u16;
+    let code = SimpleCode {
+        bytes: code.finish()?,
+        locals: constructor_locals,
+        max_stack,
+    };
     let mut constructor = simple_method(
         &mut pool,
         constructor_flags,
         "<init>",
         &constructor_descriptor,
         code,
-        constructor_signature.as_deref(),
+        generic_method(&class.params, &Type::Unit).as_deref(),
         false,
     )?;
     parameter_annotations(&mut pool, &mut constructor, &class.params)?;
+    frames::attach_constructor(
+        &mut pool,
+        &mut constructor,
+        owner,
+        &class.params,
+        constructor_locals,
+    )?;
     let mut methods = vec![constructor];
-    for (name, ty) in &class.params {
-        if class.public_params.contains(name) {
-            let mut code = SimpleCode::new(ty.slots() as u16, 1);
-            code.bytes.push(0x2a);
-            code.reference(0xb4, pool.field(owner, name, &ty.descriptor())?);
-            code.bytes.push(return_opcode(ty));
-            let signature = generic_method(&[], ty);
-            let mut getter = simple_method(
-                &mut pool,
-                0x0011,
-                &crate::check::getter_name(name),
-                &format!("(){}", ty.descriptor()),
-                code,
-                signature.as_deref(),
-                nonnull(ty),
-            )?;
-            nullable_result(&mut pool, &mut getter, ty)?;
-            methods.push(getter);
-        }
-    }
+    methods.extend(defaults::constructors(&mut pool, class, owner)?);
     if class.data {
         methods.extend(data::methods(&mut pool, class, owner)?);
     }
@@ -1843,6 +2267,11 @@ fn emit_class_with(
             false,
         )?;
         methods.push(method);
+        if let Some(default) =
+            defaults::function(&mut pool, &class.methods, function, owner, false)?
+        {
+            methods.push(default);
+        }
     }
     for bridge in &class.bridges {
         let (params, result) = crate::check::class_method_types(bridge)?;
@@ -1865,14 +2294,31 @@ fn emit_class_with(
             &bridge.name,
             &bridge.descriptor,
             code,
-            None,
-            result.is_reference(),
+            generic_method(
+                &params
+                    .iter()
+                    .cloned()
+                    .map(|ty| (String::new(), ty))
+                    .collect::<Vec<_>>(),
+                &result,
+            )
+            .as_deref(),
+            nonnull(&result),
         )?;
         let params: Vec<_> = params.into_iter().map(|ty| (String::new(), ty)).collect();
         parameter_annotations(&mut pool, &mut method, &params)?;
+        nullable_result(&mut pool, &mut method, &result)?;
         methods.push(method);
     }
-    let additional_attributes = additional_attributes(&mut pool)?;
+    let mut additional_attributes = additional_attributes(&mut pool)?;
+    if let Some(companion) = &class.companion {
+        class_companion::outer(&mut pool, companion, owner, &mut fields, &mut methods)?;
+        additional_attributes.push(class_companion::inner_attribute(
+            &mut pool,
+            owner,
+            &companion.owner,
+        )?);
+    }
     let source_name = pool.utf8("SourceFile")?;
     let source_file = pool.utf8(file)?;
     let metadata = metadata_attribute(&mut pool, metadata)?;
@@ -1888,7 +2334,14 @@ fn emit_class_with(
     for interface in interfaces {
         u2(&mut out, interface);
     }
-    u2(&mut out, class.params.len() as u16);
+    u2(
+        &mut out,
+        (class.fields.len()
+            + class
+                .companion
+                .as_ref()
+                .map_or(0, |companion| companion.properties.len() + 1)) as u16,
+    );
     out.extend(fields);
     u2(&mut out, methods.len() as u16);
     for method in methods {

@@ -20,6 +20,7 @@ pub enum Type {
     Nullable(Box<Type>),
     Null,
     List(Box<Type>),
+    MutableList(Box<Type>),
 }
 
 impl Type {
@@ -30,8 +31,8 @@ impl Type {
         }
     }
     pub fn is_reference(&self) -> bool {
-        if let Self::Nullable(inner) = self.base() {
-            return inner.is_reference();
+        if matches!(self.base(), Self::Nullable(_)) {
+            return true;
         }
         matches!(
             self.base(),
@@ -44,6 +45,7 @@ impl Type {
                 | Self::ThreadLocal(_)
                 | Self::Null
                 | Self::List(_)
+                | Self::MutableList(_)
         )
     }
     pub fn is_nullable(&self) -> bool {
@@ -74,9 +76,17 @@ impl Type {
             Self::Unit => "V".into(),
             Self::Java(name) => format!("L{name};"),
             Self::ThreadLocal(_) => "Ljava/lang/ThreadLocal;".into(),
-            Self::List(_) => "Ljava/util/List;".into(),
+            Self::List(_) | Self::MutableList(_) => "Ljava/util/List;".into(),
             Self::Null => "Ljava/lang/Object;".into(),
-            Self::Nullable(inner) => inner.descriptor(),
+            Self::Nullable(inner) => match inner.base() {
+                Self::Int => "Ljava/lang/Integer;".into(),
+                Self::Long => "Ljava/lang/Long;".into(),
+                Self::Byte => "Ljava/lang/Byte;".into(),
+                Self::Char => "Ljava/lang/Character;".into(),
+                Self::Boolean => "Ljava/lang/Boolean;".into(),
+                Self::Float => "Ljava/lang/Float;".into(),
+                _ => inner.descriptor(),
+            },
             Self::Platform(_) => unreachable!(),
         }
     }
@@ -87,6 +97,7 @@ pub struct Module {
     pub package: String,
     pub imports: Vec<(String, String, usize)>,
     pub functions: Vec<Function>,
+    pub constants: Vec<ConstDecl>,
     pub enum_decl: Option<EnumDecl>,
     pub object_decl: Option<ObjectDecl>,
     pub class_decl: Option<ClassDecl>,
@@ -132,7 +143,7 @@ pub struct CompanionProperty {
 #[derive(Debug)]
 pub enum CompanionValue {
     StringArray(Vec<Vec<u16>>),
-    Object(ClassDecl),
+    Object(Box<ClassDecl>),
 }
 #[derive(Debug)]
 pub struct EnumDecl {
@@ -170,11 +181,16 @@ pub struct ObjectMethod {
 #[derive(Debug)]
 pub struct ConstDecl {
     pub name: String,
+    pub offset: usize,
+    pub private: bool,
+    pub internal: bool,
     pub value: ConstValue,
 }
 #[derive(Debug)]
 pub enum ConstValue {
     Int(i32),
+    Long(i64),
+    Float(u32),
     Char(u16),
     Boolean(bool),
     String(Vec<u16>),
@@ -186,14 +202,35 @@ pub struct ClassDecl {
     pub internal: bool,
     pub params: Vec<(String, Type)>,
     pub public_params: Vec<String>,
+    pub param_properties: Vec<String>,
+    pub mutable_params: Vec<String>,
+    pub defaults: Vec<Option<Expr>>,
     pub data: bool,
     pub interfaces: Vec<String>,
     pub properties: Vec<PropertyDecl>,
     pub methods: Vec<ClassMethod>,
+    pub companion: Option<ClassCompanion>,
+}
+#[derive(Debug)]
+pub struct ClassCompanion {
+    pub properties: Vec<ClassCompanionProperty>,
+}
+#[derive(Debug)]
+pub struct ClassCompanionProperty {
+    pub name: String,
+    pub offset: usize,
+    pub private: bool,
+    pub mutable: bool,
+    pub ty: Option<Type>,
+    pub initializer: Expr,
 }
 #[derive(Debug)]
 pub struct PropertyDecl {
     pub name: String,
+    pub private: bool,
+    pub mutable: bool,
+    pub inferred: bool,
+    pub initializer: Option<Expr>,
     pub offset: usize,
     pub ty: Type,
     pub body: Vec<Statement>,
@@ -212,6 +249,7 @@ pub struct Function {
     pub internal: bool,
     pub receiver: Option<Type>,
     pub params: Vec<(String, Type)>,
+    pub defaults: Vec<Option<Expr>>,
     pub result: Type,
     pub body: Vec<Statement>,
 }
@@ -225,6 +263,7 @@ pub enum StatementKind {
     Let(String, bool, Option<Type>, Expr),
     Declare(String, bool, Type),
     IndexAssign(Expr, Expr, Expr),
+    PropertyAssign(Expr, String, Expr),
     Continue,
     Break,
     ForUntil(String, Expr, Expr, Vec<Statement>),
@@ -249,6 +288,11 @@ pub struct Expr {
 #[derive(Clone, Debug)]
 pub enum ExprKind {
     Int(i64),
+    Float(u32),
+    NamedArgument(String, Box<Expr>),
+    Generic(Box<Expr>, Vec<Type>),
+    Return(Option<Box<Expr>>),
+    Throw(Box<Expr>),
     Long(i128),
     Null,
     Char(u16),
@@ -287,7 +331,11 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
                     pending.push(branch);
                 }
             }
-            ExprKind::Unary(_, value)
+            ExprKind::Return(Some(value))
+            | ExprKind::Throw(value)
+            | ExprKind::NamedArgument(_, value)
+            | ExprKind::Generic(value, _)
+            | ExprKind::Unary(_, value)
             | ExprKind::Property(value, _)
             | ExprKind::SafeProperty(value, _)
             | ExprKind::NonNull(value)
@@ -709,6 +757,32 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                 text: source[start..i].into(),
                 offset: start,
             });
+        } else if b.is_ascii_digit() {
+            i += 1;
+            let radix = b == b'0' && matches!(bytes.get(i), Some(b'x' | b'X' | b'b' | b'B'));
+            while i < bytes.len() {
+                let current = bytes[i];
+                if current.is_ascii_alphanumeric() || current == b'_' {
+                    i += 1;
+                    if !radix
+                        && matches!(current, b'e' | b'E')
+                        && matches!(bytes.get(i), Some(b'+' | b'-'))
+                    {
+                        i += 1;
+                    }
+                } else if !radix
+                    && current == b'.'
+                    && bytes.get(i + 1).is_some_and(u8::is_ascii_digit)
+                {
+                    i += 1;
+                } else {
+                    break;
+                }
+            }
+            tokens.push(Token {
+                text: source[start..i].into(),
+                offset: start,
+            });
         } else if b.is_ascii_alphanumeric() || b == b'_' {
             i += 1;
             while i < bytes.len() && (bytes[i].is_ascii_alphanumeric() || bytes[i] == b'_') {
@@ -861,29 +935,41 @@ impl Parser {
             })
     }
     fn ty(&mut self) -> Result<Type> {
-        let ty = self.nonnullable_ty()?;
-        if self.take("?") {
-            if !ty.is_reference() {
-                return Err(self.error("Nullable primitive types are not supported"));
-            }
-            Ok(Type::Nullable(Box::new(ty)))
-        } else {
-            Ok(ty)
+        self.depth += 1;
+        if self.depth > 128 {
+            return Err(self.error("Type nesting exceeds the current limit"));
         }
+        let ty = self.nonnullable_ty()?;
+        let ty = if self.take("?") {
+            if ty == Type::Unit {
+                return Err(self.error("Nullable Unit is not supported"));
+            }
+            Type::Nullable(Box::new(ty))
+        } else {
+            ty
+        };
+        self.depth -= 1;
+        Ok(ty)
     }
     fn nonnullable_ty(&mut self) -> Result<Type> {
-        if self.take("List") {
+        if self.at("List") || self.at("MutableList") {
+            let mutable = self.take("MutableList");
+            if !mutable {
+                self.expect("List")?;
+            }
             self.expect("<")?;
             self.lines();
             let element = self.ty()?;
-            if !matches!(&element, Type::String)
-                && !matches!(&element, Type::Nullable(inner) if inner.as_ref() == &Type::String)
-            {
-                return Err(self.error("Only List<String> and List<String?> are supported"));
+            if element == Type::Unit {
+                return Err(self.error("List<Unit> is not supported"));
             }
             self.lines();
             self.expect(">")?;
-            return Ok(Type::List(Box::new(element)));
+            return Ok(if mutable {
+                Type::MutableList(Box::new(element))
+            } else {
+                Type::List(Box::new(element))
+            });
         }
         if self.take("ThreadLocal") {
             self.expect("<")?;
@@ -1066,6 +1152,7 @@ impl Parser {
             "Int"
                 | "Long"
                 | "List"
+                | "MutableList"
                 | "Char"
                 | "Byte"
                 | "Boolean"
@@ -1238,6 +1325,18 @@ impl Parser {
                 name
             } else {
                 let constant = self.constant()?;
+                if constant.private {
+                    return Err(Diagnostic::new(
+                        member_offset,
+                        "Private object constants are not supported",
+                    ));
+                }
+                if matches!(constant.value, ConstValue::Long(_) | ConstValue::Float(_)) {
+                    return Err(Diagnostic::new(
+                        member_offset,
+                        "Object constants support only Int, Char, Boolean, and String literals",
+                    ));
+                }
                 let name = constant.name.clone();
                 constants.push(constant);
                 if constants.len() > 1024 {
@@ -1384,14 +1483,18 @@ impl Parser {
         })
     }
     fn constant(&mut self) -> Result<ConstDecl> {
-        let mut visibility = false;
+        let offset = self.token().offset;
+        let mut visibility = None;
         let mut is_const = false;
         loop {
-            if matches!(self.token().text.as_str(), "public" | "internal") {
-                if visibility {
+            if matches!(
+                self.token().text.as_str(),
+                "public" | "internal" | "private"
+            ) {
+                if visibility.is_some() {
                     return Err(self.error("Conflicting or repeated constant visibility modifiers"));
                 }
-                visibility = true;
+                visibility = Some(self.token().text.clone());
                 self.pos += 1;
             } else if self.take("const") {
                 if is_const {
@@ -1403,13 +1506,8 @@ impl Parser {
             }
             self.lines();
         }
-        if matches!(self.token().text.as_str(), "private" | "protected") {
-            return Err(self.error("Unsupported constant visibility; use public or internal"));
-        }
         if !is_const || !self.take("val") {
-            return Err(self.error(
-                "Only nested named objects and const val literal properties are supported",
-            ));
+            return Err(self.error("Only const val literal properties are supported"));
         }
         self.lines();
         let name = self.declaration_name()?;
@@ -1434,17 +1532,39 @@ impl Parser {
         }
         let token = self.token();
         let (value, ty) = if token.text.as_bytes()[0].is_ascii_digit() {
-            let magnitude = integer_literal(&token.text, token.offset)?;
-            let signed = if negative == Some(true) {
-                -magnitude
-            } else {
-                magnitude
-            };
-            let value = i32::try_from(signed)
-                .map_err(|_| self.error("Int constant literal is out of range"))?;
-            (ConstValue::Int(value), Type::Int)
+            match numeric_literal(&token.text, token.offset)? {
+                ExprKind::Int(value) => {
+                    let value = if negative == Some(true) {
+                        -value
+                    } else {
+                        value
+                    };
+                    let value = i32::try_from(value)
+                        .map_err(|_| self.error("Int constant literal is out of range"))?;
+                    (ConstValue::Int(value), Type::Int)
+                }
+                ExprKind::Long(value) => {
+                    let value = if negative == Some(true) {
+                        -value
+                    } else {
+                        value
+                    };
+                    let value = i64::try_from(value)
+                        .map_err(|_| self.error("Long constant literal is out of range"))?;
+                    (ConstValue::Long(value), Type::Long)
+                }
+                ExprKind::Float(value) => {
+                    let value = if negative == Some(true) {
+                        (-f32::from_bits(value)).to_bits()
+                    } else {
+                        value
+                    };
+                    (ConstValue::Float(value), Type::Float)
+                }
+                _ => unreachable!(),
+            }
         } else if negative.is_some() {
-            return Err(self.error("Const initializers support only signed Int literals or unsigned Char, Boolean, and String literals"));
+            return Err(self.error("Only numeric constant literals may have a sign"));
         } else if token.text.starts_with('\'') {
             (
                 ConstValue::Char(char_literal(&token.text, 0)?.1),
@@ -1455,8 +1575,7 @@ impl Parser {
         } else if token.text == "true" || token.text == "false" {
             (ConstValue::Boolean(token.text == "true"), Type::Boolean)
         } else {
-            return Err(self
-                .error("Const initializers support only Int, Char, Boolean, and String literals"));
+            return Err(self.error("Const initializers require supported scalar literals"));
         };
         if declared_type.is_some_and(|declared| declared != ty) {
             return Err(self.error(
@@ -1468,7 +1587,13 @@ impl Parser {
             return Err(self
                 .error("Const initializers support only literals; expressions are not supported"));
         }
-        Ok(ConstDecl { name, value })
+        Ok(ConstDecl {
+            name,
+            offset,
+            private: visibility.as_deref() == Some("private"),
+            internal: visibility.as_deref() == Some("internal"),
+            value,
+        })
     }
     fn class_decl(&mut self) -> Result<ClassDecl> {
         let offset = self.token().offset;
@@ -1505,55 +1630,78 @@ impl Parser {
         }
         self.lines();
         let name = self.class_name()?;
+        let after_name = self.pos;
         self.lines();
-        if !self.take("(") {
-            return Err(self.error(
-                "Classes require an explicit primary constructor with private val parameters",
-            ));
-        }
-        self.lines();
+        let has_constructor = self.take("(");
         let mut params = Vec::new();
         let mut public_params = Vec::new();
+        let mut param_properties = Vec::new();
+        let mut mutable_params = Vec::new();
+        let mut defaults = Vec::new();
         let mut property_names = std::collections::HashSet::new();
-        if !self.at(")") {
-            loop {
-                let private = self.take("private");
-                if !private {
-                    self.take("public");
-                }
-                self.lines();
-                self.expect("val")?;
-                self.lines();
-                let param_offset = self.token().offset;
-                let param = self.declaration_name()?;
-                if !property_names.insert(param.clone()) {
-                    return Err(Diagnostic::new(
-                        param_offset,
-                        "Duplicate class property name",
-                    ));
-                }
-                self.expect(":")?;
-                self.lines();
-                if !private {
-                    public_params.push(param.clone());
-                }
-                params.push((param, self.ty()?));
-                if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > 254 {
-                    return Err(
-                        self.error("Class constructors support at most 254 parameter slots")
-                    );
-                }
-                self.lines();
-                if !self.take(",") {
-                    break;
-                }
-                self.lines();
-                if self.at(")") {
-                    break;
+        let mut param_names = std::collections::HashSet::new();
+        if has_constructor {
+            self.lines();
+            if !self.at(")") {
+                loop {
+                    let private = self.take("private");
+                    let public = !private && self.take("public");
+                    self.lines();
+                    let mutable = self.take("var");
+                    let property = mutable || self.take("val");
+                    if (private || public) && !property {
+                        return Err(
+                            self.error("Visibility modifiers require a constructor property")
+                        );
+                    }
+                    self.lines();
+                    let param_offset = self.token().offset;
+                    let param = self.declaration_name()?;
+                    if !param_names.insert(param.clone()) {
+                        return Err(Diagnostic::new(
+                            param_offset,
+                            "Duplicate constructor parameter name",
+                        ));
+                    }
+                    self.expect(":")?;
+                    self.lines();
+                    if property {
+                        property_names.insert(param.clone());
+                        param_properties.push(param.clone());
+                        if !private {
+                            public_params.push(param.clone());
+                        }
+                        if mutable {
+                            mutable_params.push(param.clone());
+                        }
+                    }
+                    params.push((param, self.ty()?));
+                    if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > 254 {
+                        return Err(
+                            self.error("Class constructors support at most 254 parameter slots")
+                        );
+                    }
+                    self.lines();
+                    defaults.push(if self.take("=") {
+                        self.lines();
+                        Some(self.expr(0)?)
+                    } else {
+                        None
+                    });
+                    self.lines();
+                    if !self.take(",") {
+                        break;
+                    }
+                    self.lines();
+                    if self.at(")") {
+                        break;
+                    }
                 }
             }
+            self.expect(")")?;
+        } else {
+            self.pos = after_name;
         }
-        self.expect(")")?;
         let after_params = self.pos;
         self.lines();
         let mut interfaces = Vec::new();
@@ -1577,10 +1725,14 @@ impl Parser {
             internal: visibility.as_deref() == Some("internal"),
             params,
             public_params,
+            param_properties,
+            mutable_params,
+            defaults,
             data,
             interfaces,
             properties: Vec::new(),
             methods: Vec::new(),
+            companion: None,
         };
         if !self.take("{") {
             if declaration.interfaces.is_empty() {
@@ -1651,9 +1803,10 @@ impl Parser {
                     function,
                     is_override,
                 });
-            } else if self.take("val") {
-                if member_visibility.as_deref() == Some("private") {
-                    return Err(self.error("Only public class getter properties are supported"));
+            } else if self.at("val") || self.at("var") {
+                let mutable = self.take("var");
+                if !mutable {
+                    self.expect("val")?;
                 }
                 let name_offset = self.token().offset;
                 let property = self.declaration_name()?;
@@ -1663,36 +1816,59 @@ impl Parser {
                         "Duplicate class property name",
                     ));
                 }
-                self.expect(":")?;
-                self.lines();
-                let ty = self.ty()?;
-                self.lines();
-                if !self.take("get") {
-                    return Err(self.error(
-                        "Class properties require an explicit getter without a backing field",
-                    ));
-                }
-                self.expect("(")?;
-                self.expect(")")?;
-                self.lines();
-                let body = if self.take("=") {
+                let declared_type = if self.take(":") {
                     self.lines();
-                    vec![Statement {
-                        offset: self.token().offset,
-                        kind: StatementKind::Return(Some(self.expr(0)?)),
-                    }]
+                    Some(self.ty()?)
                 } else {
-                    self.block()?
+                    None
+                };
+                self.lines();
+                let (initializer, body) = if self.take("=") {
+                    self.lines();
+                    (Some(self.expr(0)?), Vec::new())
+                } else {
+                    if mutable {
+                        return Err(self.error("Mutable computed properties are not supported"));
+                    }
+                    if declared_type.is_none() {
+                        return Err(self.error("Computed properties require an explicit type"));
+                    }
+                    self.expect("get")?;
+                    self.expect("(")?;
+                    self.expect(")")?;
+                    self.lines();
+                    let body = if self.take("=") {
+                        self.lines();
+                        vec![Statement {
+                            offset: self.token().offset,
+                            kind: StatementKind::Return(Some(self.expression_body()?)),
+                        }]
+                    } else {
+                        self.block()?
+                    };
+                    (None, body)
                 };
                 declaration.properties.push(PropertyDecl {
                     name: property,
+                    private: member_visibility.as_deref() == Some("private"),
+                    mutable,
+                    inferred: declared_type.is_none(),
+                    initializer,
                     offset: member_offset,
-                    ty,
+                    ty: declared_type.unwrap_or(Type::Unit),
                     body,
                     is_override,
                 });
+            } else if self.at("companion") {
+                if is_override || member_visibility.is_some() {
+                    return Err(self.error("Class companion modifiers are not supported"));
+                }
+                if declaration.companion.is_some() {
+                    return Err(self.error("Classes support only one companion object"));
+                }
+                declaration.companion = Some(self.class_companion()?);
             } else {
-                return Err(self.error("Only instance functions and explicit getter properties are supported in classes"));
+                return Err(self.error("Only instance functions, properties, and companion properties are supported in classes"));
             }
             if declaration.properties.len() + declaration.methods.len() > 1024 {
                 return Err(self.error("Classes exceed the current 1024-member limit"));
@@ -1701,6 +1877,59 @@ impl Parser {
         }
         self.expect("}")?;
         Ok(())
+    }
+    fn class_companion(&mut self) -> Result<ClassCompanion> {
+        self.expect("companion")?;
+        self.lines();
+        self.expect("object")?;
+        self.lines();
+        self.expect("{")?;
+        self.separators();
+        let mut properties = Vec::new();
+        let mut names = std::collections::HashSet::new();
+        while !self.at("}") {
+            if self.at("<eof>") {
+                return Err(self.error("Unterminated class companion"));
+            }
+            let offset = self.token().offset;
+            let private = self.take("private");
+            if !private {
+                self.take("public");
+            }
+            self.lines();
+            let mutable = self.take("var");
+            if !mutable {
+                self.expect("val")?;
+            }
+            let name = self.declaration_name()?;
+            if !names.insert(name.clone()) {
+                return Err(Diagnostic::new(offset, "Duplicate companion property name"));
+            }
+            let ty = if self.take(":") {
+                self.lines();
+                Some(self.ty()?)
+            } else {
+                None
+            };
+            self.lines();
+            self.expect("=")?;
+            self.lines();
+            let initializer = self.expr(0)?;
+            properties.push(ClassCompanionProperty {
+                name,
+                offset,
+                private,
+                mutable,
+                ty,
+                initializer,
+            });
+            if properties.len() > 256 {
+                return Err(self.error("Companions exceed the current 256-property limit"));
+            }
+            self.end()?;
+        }
+        self.expect("}")?;
+        Ok(ClassCompanion { properties })
     }
     fn interface_decl(&mut self, depth: usize, count: &mut usize) -> Result<InterfaceDecl> {
         let offset = self.token().offset;
@@ -1872,7 +2101,7 @@ impl Parser {
             self.lines();
             Ok(vec![Statement {
                 offset: self.token().offset,
-                kind: StatementKind::Return(Some(self.expr(0)?)),
+                kind: StatementKind::Return(Some(self.expression_body()?)),
             }])
         } else {
             self.block()
@@ -1990,13 +2219,17 @@ impl Parser {
                     internal: false,
                     params: Vec::new(),
                     public_params: Vec::new(),
+                    param_properties: Vec::new(),
+                    mutable_params: Vec::new(),
+                    defaults: Vec::new(),
                     data: false,
                     interfaces: vec![interface],
                     properties: Vec::new(),
                     methods: Vec::new(),
+                    companion: None,
                 };
                 self.class_members(&mut object, &mut std::collections::HashSet::new())?;
-                CompanionValue::Object(object)
+                CompanionValue::Object(Box::new(object))
             } else {
                 return Err(self.error("Companions support only literal String arrays and anonymous interface object initializers"));
             };
@@ -2054,12 +2287,20 @@ impl Parser {
         self.expect("(")?;
         self.lines();
         let mut params = Vec::new();
+        let mut defaults = Vec::new();
         if !self.at(")") {
             loop {
                 let name = self.name()?;
                 self.expect(":")?;
                 self.lines();
                 params.push((name, self.ty()?));
+                self.lines();
+                defaults.push(if self.take("=") {
+                    self.lines();
+                    Some(self.expr(0)?)
+                } else {
+                    None
+                });
                 self.lines();
                 if !self.take(",") {
                     break;
@@ -2084,7 +2325,7 @@ impl Parser {
             self.lines();
             vec![Statement {
                 offset: self.token().offset,
-                kind: StatementKind::Return(Some(self.expr(0)?)),
+                kind: StatementKind::Return(Some(self.expression_body()?)),
             }]
         } else if self.at("{") {
             self.block()?
@@ -2103,6 +2344,7 @@ impl Parser {
                 internal,
                 receiver,
                 params,
+                defaults,
                 result,
                 body,
             },
@@ -2299,13 +2541,21 @@ impl Parser {
         } else {
             let target = self.expr(0)?;
             if self.take("=") {
-                let ExprKind::Index(array, index) = target.kind else {
-                    return Err(
-                        self.error("Only local and array element assignments are supported")
-                    );
-                };
                 self.lines();
-                StatementKind::IndexAssign(*array, *index, self.expr(0)?)
+                let value = self.expr(0)?;
+                match target.kind {
+                    ExprKind::Index(array, index) => {
+                        StatementKind::IndexAssign(*array, *index, value)
+                    }
+                    ExprKind::Property(receiver, name) => {
+                        StatementKind::PropertyAssign(*receiver, name, value)
+                    }
+                    _ => {
+                        return Err(self.error(
+                            "Only locals, array elements, and supported properties can be assigned",
+                        ));
+                    }
+                }
             } else {
                 StatementKind::Expression(target)
             }
@@ -2389,7 +2639,26 @@ impl Parser {
                 kind: ExprKind::Unary(op, Box::new(self.expr(9)?)),
             });
         }
-        let mut expr = if self.take("when") {
+        let mut expr = if self.take("return") {
+            let value = if matches!(
+                self.token().text.as_str(),
+                "\n" | ";" | "}" | ")" | "," | "<eof>"
+            ) {
+                None
+            } else {
+                Some(Box::new(self.expr(0)?))
+            };
+            return Self::bounded(Expr {
+                offset,
+                kind: ExprKind::Return(value),
+            });
+        } else if self.take("throw") {
+            self.lines();
+            return Self::bounded(Expr {
+                offset,
+                kind: ExprKind::Throw(Box::new(self.expr(0)?)),
+            });
+        } else if self.take("when") {
             self.when_expression(offset)?
         } else if self.take("if") {
             self.expect("(")?;
@@ -2451,39 +2720,7 @@ impl Parser {
                 kind: ExprKind::Boolean(value),
             }
         } else if self.token().text.as_bytes()[0].is_ascii_digit() {
-            let kind = if let Some(digits) = self.token().text.strip_suffix('L') {
-                let (digits, radix) = if let Some(hex) = digits
-                    .strip_prefix("0x")
-                    .or_else(|| digits.strip_prefix("0X"))
-                {
-                    (hex, 16)
-                } else if let Some(binary) = digits
-                    .strip_prefix("0b")
-                    .or_else(|| digits.strip_prefix("0B"))
-                {
-                    (binary, 2)
-                } else {
-                    (digits, 10)
-                };
-                if digits.is_empty()
-                    || digits.starts_with('_')
-                    || digits.ends_with('_')
-                    || !digits.chars().all(|c| c == '_' || c.is_digit(radix))
-                {
-                    return Err(self.error(
-                        "Long literals require digits with optional separators between digits",
-                    ));
-                }
-                let normalized = digits.replace('_', "");
-                if radix == 10 && normalized.len() > 1 && normalized.starts_with('0') {
-                    return Err(self.error("Leading zeroes are not allowed in decimal literals"));
-                }
-                let value = i128::from_str_radix(&normalized, radix)
-                    .map_err(|_| self.error("Long literal is out of range"))?;
-                ExprKind::Long(value)
-            } else {
-                ExprKind::Int(integer_literal(&self.token().text, self.token().offset)?)
-            };
+            let kind = numeric_literal(&self.token().text, self.token().offset)?;
             self.pos += 1;
             Expr { offset, kind }
         } else {
@@ -2497,7 +2734,24 @@ impl Parser {
             }
         };
         loop {
-            if self.take("!!") {
+            if self.at("<")
+                && matches!(&expr.kind, ExprKind::Name(name) if matches!(name.as_str(), "listOf" | "mutableListOf" | "emptyList"))
+            {
+                self.expect("<")?;
+                self.lines();
+                let mut arguments = vec![self.ty()?];
+                self.lines();
+                while self.take(",") {
+                    self.lines();
+                    arguments.push(self.ty()?);
+                    self.lines();
+                }
+                self.expect(">")?;
+                expr = Expr {
+                    offset,
+                    kind: ExprKind::Generic(Box::new(expr), arguments),
+                };
+            } else if self.take("!!") {
                 expr = Expr {
                     offset,
                     kind: ExprKind::NonNull(Box::new(expr)),
@@ -2554,7 +2808,23 @@ impl Parser {
                 let mut args = Vec::new();
                 if !self.at(")") {
                     loop {
-                        args.push(self.expr(0)?);
+                        let argument = if self
+                            .tokens
+                            .get(self.pos + 1)
+                            .is_some_and(|token| token.text == "=")
+                        {
+                            let offset = self.token().offset;
+                            let name = self.name()?;
+                            self.expect("=")?;
+                            self.lines();
+                            Expr {
+                                offset,
+                                kind: ExprKind::NamedArgument(name, Box::new(self.expr(0)?)),
+                            }
+                        } else {
+                            self.expr(0)?
+                        };
+                        args.push(argument);
                         self.lines();
                         if !self.take(",") {
                             break;
@@ -2684,9 +2954,21 @@ impl Parser {
             self.expr(0)
         }
     }
+    fn expression_body(&mut self) -> Result<Expr> {
+        Self::validate_expression(self.expr(0)?, false)
+    }
     fn bounded(expr: Expr) -> Result<Expr> {
+        Self::validate_expression(expr, true)
+    }
+    fn validate_expression(expr: Expr, allow_return: bool) -> Result<Expr> {
         let mut pending = vec![(&expr, 1)];
         while let Some((value, depth)) = pending.pop() {
+            if !allow_return && matches!(value.kind, ExprKind::Return(_)) {
+                return Err(Diagnostic::new(
+                    value.offset,
+                    "Returns are not allowed in expression-bodied functions or getters",
+                ));
+            }
             if depth > 128 {
                 return Err(Diagnostic::new(
                     expr.offset,
@@ -2710,7 +2992,11 @@ impl Parser {
                         pending.push((value, depth + 1));
                     }
                 }
-                ExprKind::Increment { value, .. }
+                ExprKind::Return(Some(value))
+                | ExprKind::Throw(value)
+                | ExprKind::NamedArgument(_, value)
+                | ExprKind::Generic(value, _)
+                | ExprKind::Increment { value, .. }
                 | ExprKind::NonNull(value)
                 | ExprKind::Lambda(value) => pending.push((value, depth + 1)),
                 ExprKind::Unary(_, a) | ExprKind::Property(a, _) | ExprKind::SafeProperty(a, _) => {
@@ -2729,6 +3015,86 @@ impl Parser {
         }
         Ok(expr)
     }
+}
+fn numeric_literal(text: &str, offset: usize) -> Result<ExprKind> {
+    let radix_literal = text.starts_with("0x")
+        || text.starts_with("0X")
+        || text.starts_with("0b")
+        || text.starts_with("0B");
+    if !radix_literal && (text.ends_with('f') || text.ends_with('F')) {
+        let digits = &text[..text.len() - 1];
+        let bytes = digits.as_bytes();
+        if bytes.is_empty()
+            || bytes.iter().enumerate().any(|(index, byte)| {
+                *byte == b'_'
+                    && (index == 0
+                        || index + 1 == bytes.len()
+                        || !bytes[index - 1].is_ascii_digit()
+                        || !bytes[index + 1].is_ascii_digit())
+            })
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Float literals require separators between decimal digits",
+            ));
+        }
+        let value: f32 = digits
+            .replace('_', "")
+            .parse()
+            .map_err(|_| Diagnostic::new(offset, "Invalid Float literal"))?;
+        if !value.is_finite() {
+            return Err(Diagnostic::new(offset, "Float literal is out of range"));
+        }
+        return Ok(ExprKind::Float(value.to_bits()));
+    }
+    if let Some(digits) = text.strip_suffix('L') {
+        let (digits, radix) = if let Some(hex) = digits
+            .strip_prefix("0x")
+            .or_else(|| digits.strip_prefix("0X"))
+        {
+            (hex, 16)
+        } else if let Some(binary) = digits
+            .strip_prefix("0b")
+            .or_else(|| digits.strip_prefix("0B"))
+        {
+            (binary, 2)
+        } else {
+            (digits, 10)
+        };
+        if digits.is_empty()
+            || digits.starts_with('_')
+            || digits.ends_with('_')
+            || !digits.chars().all(|c| c == '_' || c.is_digit(radix))
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Long literals require digits with optional separators between digits",
+            ));
+        }
+        let normalized = digits.replace('_', "");
+        if radix == 10 && normalized.len() > 1 && normalized.starts_with('0') {
+            return Err(Diagnostic::new(
+                offset,
+                "Leading zeroes are not allowed in decimal literals",
+            ));
+        }
+        let value = i128::from_str_radix(&normalized, radix)
+            .map_err(|_| Diagnostic::new(offset, "Long literal is out of range"))?;
+        return Ok(ExprKind::Long(value));
+    }
+    if !radix_literal
+        && (text.contains('.')
+            || text.contains('e')
+            || text.contains('E')
+            || text.ends_with('d')
+            || text.ends_with('D'))
+    {
+        return Err(Diagnostic::new(
+            offset,
+            "Double literals are not supported; use a Float suffix",
+        ));
+    }
+    Ok(ExprKind::Int(integer_literal(text, offset)?))
 }
 fn integer_literal(text: &str, offset: usize) -> Result<i64> {
     if let Some(digits) = text.strip_prefix("0x").or_else(|| text.strip_prefix("0X")) {
@@ -2799,6 +3165,7 @@ pub fn parse(source: &str) -> Result<Module> {
         imports.push((alias, name, offset));
     }
     let mut functions = Vec::new();
+    let mut constants = Vec::new();
     let mut enum_decl = None;
     let mut object_decl = None;
     let mut class_decl = None;
@@ -2806,7 +3173,8 @@ pub fn parse(source: &str) -> Result<Module> {
     while !p.at("<eof>") {
         if interface_decl.is_some()
             || (p.starts_interface()
-                && (!functions.is_empty()
+                && (!constants.is_empty()
+                    || !functions.is_empty()
                     || enum_decl.is_some()
                     || object_decl.is_some()
                     || class_decl.is_some()))
@@ -2817,21 +3185,29 @@ pub fn parse(source: &str) -> Result<Module> {
         }
         if class_decl.is_some()
             || (p.starts_class()
-                && (!functions.is_empty() || enum_decl.is_some() || object_decl.is_some()))
+                && (!constants.is_empty()
+                    || !functions.is_empty()
+                    || enum_decl.is_some()
+                    || object_decl.is_some()))
         {
             return Err(p.error("Only one top-level class without other declarations is supported"));
         }
         if object_decl.is_some()
-            || (p.starts_object() && (!functions.is_empty() || enum_decl.is_some()))
+            || (p.starts_object()
+                && (!constants.is_empty() || !functions.is_empty() || enum_decl.is_some()))
         {
             return Err(
                 p.error("Only one top-level object without other declarations is supported")
             );
         }
-        if enum_decl.is_some() || (p.starts_enum() && !functions.is_empty()) {
+        if enum_decl.is_some()
+            || (p.starts_enum() && (!functions.is_empty() || !constants.is_empty()))
+        {
             return Err(p.error("Only one enum class without other declarations is supported"));
         }
-        if p.starts_enum() {
+        if p.starts_declaration("const") {
+            constants.push(p.constant()?);
+        } else if p.starts_enum() {
             enum_decl = Some(p.enum_decl()?);
         } else if p.starts_object() {
             object_decl = Some(p.object_decl(1, &mut 0)?);
@@ -2845,6 +3221,7 @@ pub fn parse(source: &str) -> Result<Module> {
         p.end()?;
     }
     if functions.is_empty()
+        && constants.is_empty()
         && enum_decl.is_none()
         && object_decl.is_none()
         && class_decl.is_none()
@@ -2856,9 +3233,183 @@ pub fn parse(source: &str) -> Result<Module> {
         package,
         imports,
         functions,
+        constants,
         enum_decl,
         object_decl,
         class_decl,
         interface_decl,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn nullable_primitives_use_reference_descriptors_and_slots() {
+        for (ty, descriptor) in [
+            (Type::Int, "Ljava/lang/Integer;"),
+            (Type::Long, "Ljava/lang/Long;"),
+            (Type::Byte, "Ljava/lang/Byte;"),
+            (Type::Char, "Ljava/lang/Character;"),
+            (Type::Boolean, "Ljava/lang/Boolean;"),
+            (Type::Float, "Ljava/lang/Float;"),
+        ] {
+            let nullable = Type::Nullable(Box::new(ty));
+            assert!(nullable.is_reference());
+            assert_eq!(nullable.slots(), 1);
+            assert_eq!(nullable.descriptor(), descriptor);
+        }
+    }
+
+    #[test]
+    fn constructor_parameters_distinguish_properties_and_initializers() {
+        let module = parse(
+            "class C(seed: Int, var value: Int = 1, private val hidden: Long = 2L) {\n\
+             var doubled = seed * 2\n\
+             private val xs: MutableList<Int?> = mutableListOf<Int?>()\n\
+             val computed: Int get() = value\n\
+             companion object { val IDLE = C(seed = 0) }\n\
+             }",
+        )
+        .unwrap();
+        let class = module.class_decl.unwrap();
+        assert_eq!(class.param_properties, ["value", "hidden"]);
+        assert_eq!(class.mutable_params, ["value"]);
+        assert_eq!(class.public_params, ["value"]);
+        assert_eq!(class.defaults.len(), class.params.len());
+        assert!(class.defaults[0].is_none());
+        assert!(class.defaults[1].is_some());
+        assert!(class.properties[0].inferred);
+        assert!(class.properties[0].initializer.is_some());
+        assert!(class.properties[0].body.is_empty());
+        assert!(class.properties[1].private);
+        assert_eq!(
+            class.properties[1].ty,
+            Type::MutableList(Box::new(Type::Nullable(Box::new(Type::Int))))
+        );
+        assert!(class.properties[2].initializer.is_none());
+        assert!(!class.properties[2].body.is_empty());
+        assert_eq!(class.companion.unwrap().properties[0].name, "IDLE");
+        assert!(parse("class Implicit { val x = 1 }").is_ok());
+        assert!(parse("class Empty").is_ok());
+        assert!(parse("data class D(val x: Int = 1) { val y: Int get() = x }").is_ok());
+    }
+
+    #[test]
+    fn scalar_constants_and_float_exponents_preserve_values() {
+        let module = parse(
+            "private const val answer = 42\n\
+             internal const val count = -9223372036854775808L\n\
+             const val scale = -1.25e+2F\n\
+             fun fraction(): Float = 1e-2f\n\
+             fun range(x: Int): Boolean = x in 1..3",
+        )
+        .unwrap();
+        assert!(module.constants[0].private);
+        assert!(module.constants[1].internal);
+        assert!(matches!(
+            module.constants[1].value,
+            ConstValue::Long(i64::MIN)
+        ));
+        assert!(
+            matches!(module.constants[2].value, ConstValue::Float(bits) if bits == (-125.0f32).to_bits())
+        );
+        assert!(matches!(
+            &module.functions[0].body[0].kind,
+            StatementKind::Return(Some(Expr { kind: ExprKind::Float(bits), .. })) if *bits == 0.01f32.to_bits()
+        ));
+        assert!(parse("fun f(): Float = 1.5").is_err());
+        assert!(parse("fun f(): Float = 1e100f").is_err());
+        assert!(parse("fun f(): Float = 1_.0f").is_err());
+    }
+
+    #[test]
+    fn terminal_elvis_named_defaults_and_generic_factory_parse() {
+        let module = parse(
+            "fun fallback(x: String?): String { return x ?: return \"missing\" }\n\
+             fun failure(x: String?): String = x ?: throw IllegalArgumentException(\"missing\")\n\
+             fun f(x: Int = 1, y: Int = x + 1): Int = g(y = y, x = x)\n\
+             fun list(): List<Int> = emptyList<Int>()",
+        )
+        .unwrap();
+        assert!(matches!(
+            &module.functions[0].body[0].kind,
+            StatementKind::Return(Some(Expr { kind: ExprKind::Binary(operator, _, right), .. }))
+                if operator == "?:" && matches!(right.kind, ExprKind::Return(Some(_)))
+        ));
+        assert!(matches!(
+            &module.functions[1].body[0].kind,
+            StatementKind::Return(Some(Expr { kind: ExprKind::Binary(_, _, right), .. }))
+                if matches!(right.kind, ExprKind::Throw(_))
+        ));
+        assert!(module.functions[2].defaults.iter().all(Option::is_some));
+        assert!(matches!(
+            &module.functions[2].body[0].kind,
+            StatementKind::Return(Some(Expr { kind: ExprKind::Call(_, args), .. }))
+                if matches!(&args[0].kind, ExprKind::NamedArgument(name, _) if name == "y")
+        ));
+        assert!(matches!(
+            &module.functions[3].body[0].kind,
+            StatementKind::Return(Some(Expr { kind: ExprKind::Call(target, _), .. }))
+                if matches!(&target.kind, ExprKind::Generic(_, types) if types == &[Type::Int])
+        ));
+    }
+
+    #[test]
+    fn expression_bodies_reject_explicit_returns() {
+        for text in [
+            "fun f(x: String?): String = x ?: return \"missing\"",
+            "fun f(x: String?): String = if (true) x ?: return \"missing\" else \"ok\"",
+            "class C { fun f(x: String?): String = x ?: return \"missing\" }",
+            "object O { fun f(x: String?): String = x ?: return \"missing\" }",
+            "interface I { fun f(x: String?): String = x ?: return \"missing\" }",
+            "class C(val x: String?) { val y: String get() = x ?: return \"missing\" }",
+        ] {
+            assert!(parse(text).is_err(), "unexpected acceptance: {text}");
+        }
+        assert!(parse("fun f(x: String?): String { return x ?: return \"missing\" }").is_ok());
+        assert!(
+            parse("fun f(x: String?): String = x ?: throw IllegalArgumentException(\"missing\")")
+                .is_ok()
+        );
+    }
+
+    #[test]
+    fn property_assignments_preserve_receiver_expressions() {
+        let module = parse("fun f(value: Owner): Unit {\nJavaApi.changing = 1\nvalue.mutable = 2\nvalue.child.mutable = 3\n}").unwrap();
+        let body = &module.functions[0].body;
+        assert!(
+            matches!(&body[0].kind, StatementKind::PropertyAssign(Expr { kind: ExprKind::Name(name), .. }, field, _) if name == "JavaApi" && field == "changing")
+        );
+        assert!(
+            matches!(&body[1].kind, StatementKind::PropertyAssign(Expr { kind: ExprKind::Name(name), .. }, field, _) if name == "value" && field == "mutable")
+        );
+        assert!(
+            matches!(&body[2].kind, StatementKind::PropertyAssign(Expr { kind: ExprKind::Property(_, child), .. }, field, _) if child == "child" && field == "mutable")
+        );
+    }
+
+    #[test]
+    fn new_class_forms_preserve_unsupported_boundaries() {
+        for text in [
+            "class C { init {} }",
+            "object E { private const val N = 1 }",
+            "object E { const val N = 1L }",
+            "object E { const val N = 1.0f }",
+            "class C: Base()",
+            "class C { companion object Named {} }",
+            "class C { companion object { fun f(): Int = 1 } }",
+            "fun f(x: Unit?): Unit {}",
+            "const val x = 1\nenum class E",
+        ] {
+            assert!(parse(text).is_err(), "unexpected acceptance: {text}");
+        }
+        let deep = format!(
+            "fun f(x: {}Int{}): Unit {{}}",
+            "List<".repeat(129),
+            ">".repeat(129)
+        );
+        assert!(parse(&deep).is_err());
+    }
 }

@@ -42,7 +42,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 7. Primitive arrays with construction, indexing, writes, and selected copying operations.
 8. String arrays with indexing and constructor-field support.
 9. Character conversion APIs and String construction from character arrays.
-10. Java instance-method calls through directory classpaths.
+10. Java instance and static method calls through directory classpaths.
 11. Bare enum classes with generated JVM enum methods.
 12. Named and nested objects containing literal constants.
 13. Object methods with selected JVM annotations and exact-signature overloads.
@@ -56,14 +56,29 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 21. Long values, arithmetic, bitwise operations, comparisons, and conversions to strings.
 22. Public read-only constructor properties with generated getters.
 23. Data classes with generated components, copy, equality, hash, and string methods.
-24. Nullable references, null comparisons, and not-null assertions.
-25. Reference-returning safe calls with short-circuit evaluation.
-26. Elvis expressions with lazy fallback evaluation.
-27. String lists with typed signatures, size, and indexed reads.
+24. Nullable references and primitives with boxing, null comparisons, and not-null assertions.
+25. Safe calls returning references or boxed primitives.
+26. Elvis expressions with lazy fallbacks, returns, and throws.
+27. Typed lists of strings, primitives, nullable values, and application objects.
 28. String, Boolean, and Long when subjects.
 29. Subjectless when statements and expressions.
 30. Braced string templates containing supported expressions.
 31. Owned-output tracking and stale-output cleanup when recompiling a source.
+32. Top-level literal constants with Kotlin metadata.
+33. Java field reads and writes, including volatile fields.
+34. Bounded overload resolution for Kotlin and Java calls.
+35. Implicit no-argument constructors.
+36. Constructor parameters that do not become properties.
+37. Mutable constructor properties with generated getters and setters.
+38. Instance properties initialized in declaration order.
+39. Source-defined constructor calls with named arguments.
+40. Default function, method, and constructor arguments.
+41. Companion properties initialized once in declaration order.
+42. Nullable and list-typed class and interface member signatures.
+43. Null-check smart casts for stable local variables and parameters.
+44. List factories with selected mutable-list operations.
+45. Data-class properties containing nullable values, lists, and Float values.
+46. Data-class body methods and computed properties.
 
 ## Project contract
 
