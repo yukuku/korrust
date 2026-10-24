@@ -3,6 +3,7 @@ use crate::{Diagnostic, Result};
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Type {
     Int,
+    Long,
     Byte,
     Char,
     Boolean,
@@ -16,6 +17,9 @@ pub enum Type {
     Java(String),
     ThreadLocal(Box<Type>),
     Platform(Box<Type>),
+    Nullable(Box<Type>),
+    Null,
+    List(Box<Type>),
 }
 
 impl Type {
@@ -26,6 +30,9 @@ impl Type {
         }
     }
     pub fn is_reference(&self) -> bool {
+        if let Self::Nullable(inner) = self.base() {
+            return inner.is_reference();
+        }
         matches!(
             self.base(),
             Self::IntArray
@@ -35,11 +42,26 @@ impl Type {
                 | Self::String
                 | Self::Java(_)
                 | Self::ThreadLocal(_)
+                | Self::Null
+                | Self::List(_)
         )
+    }
+    pub fn is_nullable(&self) -> bool {
+        matches!(self.base(), Self::Nullable(_) | Self::Null)
+    }
+    pub fn slots(&self) -> usize {
+        if self.base() == &Self::Long {
+            2
+        } else if self.base() == &Self::Unit {
+            0
+        } else {
+            1
+        }
     }
     pub fn descriptor(&self) -> String {
         match self.base() {
             Self::Int => "I".into(),
+            Self::Long => "J".into(),
             Self::Byte => "B".into(),
             Self::Char => "C".into(),
             Self::Boolean => "Z".into(),
@@ -52,6 +74,9 @@ impl Type {
             Self::Unit => "V".into(),
             Self::Java(name) => format!("L{name};"),
             Self::ThreadLocal(_) => "Ljava/lang/ThreadLocal;".into(),
+            Self::List(_) => "Ljava/util/List;".into(),
+            Self::Null => "Ljava/lang/Object;".into(),
+            Self::Nullable(inner) => inner.descriptor(),
             Self::Platform(_) => unreachable!(),
         }
     }
@@ -85,6 +110,7 @@ pub struct InterfaceProperty {
     pub ty: Type,
     pub body: Option<Vec<Statement>>,
     pub is_override: bool,
+    pub mutable: bool,
 }
 #[derive(Debug)]
 pub struct InterfaceMethod {
@@ -119,6 +145,8 @@ pub struct ObjectDecl {
     pub name: String,
     pub offset: usize,
     pub internal: bool,
+    pub annotations: Vec<String>,
+    pub interfaces: Vec<String>,
     pub constants: Vec<ConstDecl>,
     pub objects: Vec<ObjectDecl>,
     pub fields: Vec<ObjectField>,
@@ -157,6 +185,8 @@ pub struct ClassDecl {
     pub offset: usize,
     pub internal: bool,
     pub params: Vec<(String, Type)>,
+    pub public_params: Vec<String>,
+    pub data: bool,
     pub interfaces: Vec<String>,
     pub properties: Vec<PropertyDecl>,
     pub methods: Vec<ClassMethod>,
@@ -211,14 +241,16 @@ pub enum StatementKind {
         Option<Vec<Statement>>,
     ),
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Expr {
     pub kind: ExprKind,
     pub offset: usize,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum ExprKind {
     Int(i64),
+    Long(i128),
+    Null,
     Char(u16),
     Boolean(bool),
     String(Vec<u16>),
@@ -228,6 +260,7 @@ pub enum ExprKind {
     Unary(String, Box<Expr>),
     Binary(String, Box<Expr>, Box<Expr>),
     Property(Box<Expr>, String),
+    SafeProperty(Box<Expr>, String),
     Call(Box<Expr>, Vec<Expr>),
     Index(Box<Expr>, Box<Expr>),
     Increment { value: Box<Expr>, prefix: bool },
@@ -235,13 +268,156 @@ pub enum ExprKind {
     Lambda(Box<Expr>),
     When(Box<Expr>, Vec<(Vec<Expr>, Expr)>, Box<Expr>),
 }
+fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
+    let mut pending = vec![expression];
+    while let Some(expression) = pending.pop() {
+        expression.offset += offset;
+        match &mut expression.kind {
+            ExprKind::Template(parts) => pending.extend(parts),
+            ExprKind::If(condition, yes, no) => {
+                pending.push(condition);
+                pending.push(yes);
+                pending.push(no);
+            }
+            ExprKind::When(subject, branches, otherwise) => {
+                pending.push(subject);
+                pending.push(otherwise);
+                for (conditions, branch) in branches {
+                    pending.extend(conditions);
+                    pending.push(branch);
+                }
+            }
+            ExprKind::Unary(_, value)
+            | ExprKind::Property(value, _)
+            | ExprKind::SafeProperty(value, _)
+            | ExprKind::NonNull(value)
+            | ExprKind::Lambda(value)
+            | ExprKind::Increment { value, .. } => pending.push(value),
+            ExprKind::Binary(_, left, right) | ExprKind::Index(left, right) => {
+                pending.push(left);
+                pending.push(right);
+            }
+            ExprKind::Call(target, args) => {
+                pending.push(target);
+                pending.extend(args);
+            }
+            _ => {}
+        }
+    }
+}
 #[derive(Debug, Clone)]
 struct Token {
     text: String,
     offset: usize,
 }
 
+fn quoted_end(source: &str, start: usize, depth: usize) -> Result<usize> {
+    if depth > 64 {
+        return Err(Diagnostic::new(
+            start,
+            "String interpolation nesting exceeds the current limit",
+        ));
+    }
+    let bytes = source.as_bytes();
+    if bytes[start..].starts_with(b"\"\"\"") {
+        return Err(Diagnostic::new(
+            start,
+            "Raw triple-quoted strings are not supported",
+        ));
+    }
+    let mut i = start + 1;
+    while i < bytes.len() {
+        match bytes[i] {
+            b'"' => return Ok(i + 1),
+            b'\\' => i += 2,
+            b'\n' | b'\r' => {
+                return Err(Diagnostic::new(
+                    i,
+                    "Newlines are not allowed in ordinary strings",
+                ));
+            }
+            b'$' if bytes.get(i + 1) == Some(&b'{') => {
+                i = template_end(source, i + 2, depth + 1)? + 1
+            }
+            _ => i += 1,
+        }
+    }
+    Err(Diagnostic::new(start, "Unterminated string literal"))
+}
+fn template_end(source: &str, start: usize, depth: usize) -> Result<usize> {
+    if depth > 64 {
+        return Err(Diagnostic::new(
+            start,
+            "String interpolation nesting exceeds the current limit",
+        ));
+    }
+    let bytes = source.as_bytes();
+    let mut i = start;
+    let mut braces = 1;
+    while i < bytes.len() {
+        match bytes[i] {
+            b'"' => i = quoted_end(source, i, depth + 1)?,
+            b'\'' => i = char_literal(source, i)?.0,
+            b'/' if bytes.get(i + 1) == Some(&b'/') => {
+                while i < bytes.len() && bytes[i] != b'\n' {
+                    i += 1;
+                }
+            }
+            b'/' if bytes.get(i + 1) == Some(&b'*') => {
+                let mut comments = 1;
+                i += 2;
+                while i < bytes.len() && comments > 0 {
+                    if bytes[i..].starts_with(b"/*") {
+                        comments += 1;
+                        i += 2;
+                    } else if bytes[i..].starts_with(b"*/") {
+                        comments -= 1;
+                        i += 2;
+                    } else {
+                        i += 1;
+                    }
+                }
+                if comments > 0 {
+                    return Err(Diagnostic::new(start, "Unterminated block comment"));
+                }
+            }
+            b'{' => {
+                braces += 1;
+                if braces > 128 {
+                    return Err(Diagnostic::new(
+                        i,
+                        "String interpolation nesting exceeds the current limit",
+                    ));
+                }
+                i += 1;
+            }
+            b'}' => {
+                braces -= 1;
+                if braces == 0 {
+                    return Ok(i);
+                }
+                i += 1;
+            }
+            _ => i += 1,
+        }
+    }
+    Err(Diagnostic::new(
+        start,
+        "Unterminated braced string interpolation",
+    ))
+}
+
 fn string_parts(source: &str, start: usize) -> Result<(usize, Vec<Expr>)> {
+    string_parts_depth(source, start, 0)
+}
+
+fn string_parts_depth(source: &str, start: usize, depth: usize) -> Result<(usize, Vec<Expr>)> {
+    if depth > 64 {
+        return Err(Diagnostic::new(
+            start,
+            "String interpolation nesting exceeds the current limit",
+        ));
+    }
     let bytes = source.as_bytes();
     if bytes[start..].starts_with(b"\"\"\"") {
         return Err(Diagnostic::new(
@@ -304,6 +480,39 @@ fn string_parts(source: &str, start: usize) -> Result<(usize, Vec<Expr>)> {
                     _ => return Err(Diagnostic::new(escape, "Illegal string escape")),
                 };
                 units.push(unit);
+                i += 1;
+            }
+            b'$' if bytes.get(i + 1) == Some(&b'{') => {
+                parts.push(Expr {
+                    offset: start,
+                    kind: ExprKind::String(std::mem::take(&mut units)),
+                });
+                let expression_start = i + 2;
+                i = template_end(source, expression_start, depth + 1)?;
+                let mut tokens = lex(&source[expression_start..i])?;
+                for token in &mut tokens {
+                    token.offset += expression_start;
+                }
+                let mut parser = Parser {
+                    tokens,
+                    pos: 0,
+                    depth: depth + 1,
+                };
+                parser.lines();
+                let expression = parser.expr(0)?;
+                parser.lines();
+                if !parser.at("<eof>") {
+                    return Err(
+                        parser.error("Braced string templates require one supported expression")
+                    );
+                }
+                parts.push(expression);
+                if parts.len() > 256 {
+                    return Err(Diagnostic::new(
+                        start,
+                        "String interpolation exceeds the current limit",
+                    ));
+                }
                 i += 1;
             }
             b'$' if bytes
@@ -489,7 +698,7 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                 });
             }
         } else if b == b'"' {
-            i = string_parts(source, start)?.0;
+            i = quoted_end(source, start, 0)?;
             tokens.push(Token {
                 text: source[start..i].into(),
                 offset: start,
@@ -500,7 +709,7 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                 text: source[start..i].into(),
                 offset: start,
             });
-        } else if b.is_ascii_alphabetic() || b == b'_' {
+        } else if b.is_ascii_alphanumeric() || b == b'_' {
             i += 1;
             while i < bytes.len() && (bytes[i].is_ascii_alphanumeric() || bytes[i] == b'_') {
                 i += 1;
@@ -509,27 +718,7 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                 text: source[start..i].into(),
                 offset: start,
             });
-        } else if b.is_ascii_digit() {
-            if b == b'0'
-                && bytes
-                    .get(i + 1)
-                    .is_some_and(|next| *next == b'x' || *next == b'X')
-            {
-                i += 2;
-                while i < bytes.len() && (bytes[i].is_ascii_alphanumeric() || bytes[i] == b'_') {
-                    i += 1;
-                }
-            } else {
-                i += 1;
-                while i < bytes.len() && bytes[i].is_ascii_digit() {
-                    i += 1;
-                }
-            }
-            tokens.push(Token {
-                text: source[start..i].into(),
-                offset: start,
-            });
-        } else if b"(){}[]:.,;=+-*/%<>!@".contains(&b) || b == b'&' || b == b'|' {
+        } else if b"(){}[]:.,;=+-*/%<>!@?".contains(&b) || b == b'&' || b == b'|' {
             i += 1;
             if i < bytes.len()
                 && matches!(
@@ -547,6 +736,8 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                         | b"!!"
                         | b".."
                         | b"::"
+                        | b"?."
+                        | b"?:"
                 )
             {
                 i += 1;
@@ -670,6 +861,30 @@ impl Parser {
             })
     }
     fn ty(&mut self) -> Result<Type> {
+        let ty = self.nonnullable_ty()?;
+        if self.take("?") {
+            if !ty.is_reference() {
+                return Err(self.error("Nullable primitive types are not supported"));
+            }
+            Ok(Type::Nullable(Box::new(ty)))
+        } else {
+            Ok(ty)
+        }
+    }
+    fn nonnullable_ty(&mut self) -> Result<Type> {
+        if self.take("List") {
+            self.expect("<")?;
+            self.lines();
+            let element = self.ty()?;
+            if !matches!(&element, Type::String)
+                && !matches!(&element, Type::Nullable(inner) if inner.as_ref() == &Type::String)
+            {
+                return Err(self.error("Only List<String> and List<String?> are supported"));
+            }
+            self.lines();
+            self.expect(">")?;
+            return Ok(Type::List(Box::new(element)));
+        }
         if self.take("ThreadLocal") {
             self.expect("<")?;
             self.lines();
@@ -695,6 +910,7 @@ impl Parser {
         }
         let ty = match self.token().text.as_str() {
             "Int" => Type::Int,
+            "Long" => Type::Long,
             "Byte" => Type::Byte,
             "Char" => Type::Char,
             "Boolean" => Type::Boolean,
@@ -713,7 +929,7 @@ impl Parser {
         self.starts_declaration("enum")
     }
     fn starts_object(&self) -> bool {
-        self.starts_declaration("object")
+        self.at("@") || self.starts_declaration("object")
     }
     fn starts_class(&self) -> bool {
         self.starts_declaration("class")
@@ -848,6 +1064,8 @@ impl Parser {
         if matches!(
             self.token().text.as_str(),
             "Int"
+                | "Long"
+                | "List"
                 | "Char"
                 | "Byte"
                 | "Boolean"
@@ -873,6 +1091,23 @@ impl Parser {
     }
     fn object_decl(&mut self, depth: usize, class_count: &mut usize) -> Result<ObjectDecl> {
         let offset = self.token().offset;
+        let mut annotations = Vec::new();
+        while self.take("@") {
+            let mut name = self.declaration_name()?;
+            while self.take(".") {
+                name.push('/');
+                name.push_str(&self.declaration_name()?);
+            }
+            if self.at("(") || self.at(":") {
+                return Err(self
+                    .error("Object annotation arguments and use-site targets are not supported"));
+            }
+            annotations.push(name);
+            self.lines();
+        }
+        if depth > 1 && !annotations.is_empty() {
+            return Err(self.error("Annotated nested objects are not supported"));
+        }
         if depth > 16 {
             return Err(self.error("Object nesting exceeds the current 16-class depth limit"));
         }
@@ -899,20 +1134,49 @@ impl Parser {
         }
         self.lines();
         let name = self.class_name()?;
+        let mut interfaces = Vec::new();
         let after_name = self.pos;
         self.lines();
+        if self.take(":") {
+            loop {
+                self.lines();
+                let mut interface = self.declaration_name()?;
+                while self.take(".") {
+                    interface.push('/');
+                    interface.push_str(&self.declaration_name()?);
+                }
+                interfaces.push(interface);
+                if interfaces.len() > 128 {
+                    return Err(self.error("Object exceeds the current 128-interface limit"));
+                }
+                self.lines();
+                if !self.take(",") {
+                    break;
+                }
+            }
+        }
+        let after_header = self.pos;
+        if depth > 1 && !interfaces.is_empty() {
+            return Err(self.error("Nested object supertypes are not supported"));
+        }
         if !self.take("{") {
             if matches!(self.token().text.as_str(), "(" | ":" | "<" | "where") {
                 return Err(
                     self.error("Object constructors, supertypes, and generics are not supported")
                 );
             }
-            self.pos = after_name;
+            self.pos = if interfaces.is_empty() {
+                after_name
+            } else {
+                after_header
+            };
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
                 return Ok(ObjectDecl {
                     name,
                     offset,
                     internal: visibility.as_deref() == Some("internal"),
+                    annotations,
+                    interfaces,
                     constants: Vec::new(),
                     objects: Vec::new(),
                     fields: Vec::new(),
@@ -932,7 +1196,7 @@ impl Parser {
                 return Err(self.error("Unterminated object body"));
             }
             let member_offset = self.token().offset;
-            let member_name = if self.starts_object() {
+            let member_name = if self.starts_object() && !self.at("@") {
                 let object = self.object_decl(depth + 1, class_count)?;
                 let name = object.name.clone();
                 objects.push(object);
@@ -1009,6 +1273,8 @@ impl Parser {
             name,
             offset,
             internal: visibility.as_deref() == Some("internal"),
+            annotations,
+            interfaces,
             constants,
             objects,
             fields,
@@ -1208,6 +1474,7 @@ impl Parser {
         let offset = self.token().offset;
         let mut visibility = None;
         let mut final_modifier = false;
+        let mut data = false;
         loop {
             if matches!(self.token().text.as_str(), "public" | "internal") {
                 if visibility.is_some() {
@@ -1215,6 +1482,11 @@ impl Parser {
                 }
                 visibility = Some(self.token().text.clone());
                 self.pos += 1;
+            } else if self.take("data") {
+                if data {
+                    return Err(self.error("Repeated data modifier"));
+                }
+                data = true;
             } else if self.take("final") {
                 if final_modifier {
                     return Err(self.error("Repeated final class modifier"));
@@ -1241,13 +1513,13 @@ impl Parser {
         }
         self.lines();
         let mut params = Vec::new();
+        let mut public_params = Vec::new();
         let mut property_names = std::collections::HashSet::new();
         if !self.at(")") {
             loop {
-                if !self.take("private") {
-                    return Err(
-                        self.error("Only private val primary constructor parameters are supported")
-                    );
+                let private = self.take("private");
+                if !private {
+                    self.take("public");
                 }
                 self.lines();
                 self.expect("val")?;
@@ -1262,8 +1534,11 @@ impl Parser {
                 }
                 self.expect(":")?;
                 self.lines();
+                if !private {
+                    public_params.push(param.clone());
+                }
                 params.push((param, self.ty()?));
-                if params.len() > 254 {
+                if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > 254 {
                     return Err(
                         self.error("Class constructors support at most 254 parameter slots")
                     );
@@ -1301,6 +1576,8 @@ impl Parser {
             offset,
             internal: visibility.as_deref() == Some("internal"),
             params,
+            public_params,
+            data,
             interfaces,
             properties: Vec::new(),
             methods: Vec::new(),
@@ -1540,7 +1817,11 @@ impl Parser {
                         has_body,
                         is_override,
                     });
-                } else if self.take("val") {
+                } else if self.at("val") || self.at("var") {
+                    let mutable = self.take("var");
+                    if !mutable {
+                        self.expect("val")?;
+                    }
                     let name = self.declaration_name()?;
                     if !names.insert(name.clone()) {
                         return Err(Diagnostic::new(offset, "Duplicate interface member name"));
@@ -1551,6 +1832,11 @@ impl Parser {
                     let after_type = self.pos;
                     self.lines();
                     let body = if self.take("get") {
+                        if mutable {
+                            return Err(self.error(
+                                "Mutable interface properties require abstract default accessors",
+                            ));
+                        }
                         Some(self.getter_body()?)
                     } else {
                         self.pos = after_type;
@@ -1562,6 +1848,7 @@ impl Parser {
                         ty,
                         body,
                         is_override,
+                        mutable,
                     });
                 } else {
                     return Err(self.error("Only public interface properties, functions, nested interfaces, and companion objects are supported"));
@@ -1702,6 +1989,8 @@ impl Parser {
                     offset,
                     internal: false,
                     params: Vec::new(),
+                    public_params: Vec::new(),
+                    data: false,
                     interfaces: vec![interface],
                     properties: Vec::new(),
                     methods: Vec::new(),
@@ -1753,6 +2042,7 @@ impl Parser {
                     "Char" => Type::Char,
                     "String" => Type::String,
                     "Int" => Type::Int,
+                    "Long" => Type::Long,
                     "Boolean" => Type::Boolean,
                     _ => Type::Java(first),
                 }),
@@ -1892,11 +2182,19 @@ impl Parser {
                 Some(self.expr(0)?)
             })
         } else if self.take("when") {
-            self.expect("(")?;
-            self.lines();
-            let subject = self.expr(0)?;
-            self.lines();
-            self.expect(")")?;
+            let subjectless = !self.at("(");
+            let subject = if self.take("(") {
+                self.lines();
+                let subject = self.expr(0)?;
+                self.lines();
+                self.expect(")")?;
+                subject
+            } else {
+                Expr {
+                    offset,
+                    kind: ExprKind::Boolean(true),
+                }
+            };
             self.lines();
             self.expect("{")?;
             self.separators();
@@ -1920,6 +2218,11 @@ impl Parser {
                         self.lines();
                         if !self.take(",") {
                             break;
+                        }
+                        if subjectless {
+                            return Err(
+                                self.error("Subjectless when conditions cannot be comma-separated")
+                            );
                         }
                         self.lines();
                     }
@@ -2052,7 +2355,11 @@ impl Parser {
             }
             self.pos += if negated_membership { 2 } else { 1 };
             self.lines();
-            let right = self.expr(precedence + 1)?;
+            let right = self.expr(if op == "?:" {
+                precedence
+            } else {
+                precedence + 1
+            })?;
             let offset = left.offset;
             left = Expr {
                 offset,
@@ -2109,7 +2416,7 @@ impl Parser {
         } else if self.token().text.starts_with('"') {
             let mut parts = string_parts(&self.token().text, 0)?.1;
             for part in &mut parts {
-                part.offset += offset;
+                shift_expression_offsets(part, offset);
             }
             self.pos += 1;
             if parts.len() == 1 && matches!(parts[0].kind, ExprKind::String(_)) {
@@ -2129,6 +2436,11 @@ impl Parser {
                 offset,
                 kind: ExprKind::Char(value),
             }
+        } else if self.take("null") {
+            Expr {
+                offset,
+                kind: ExprKind::Null,
+            }
         } else if self.at("true") || self.at("false") {
             let value = self.take("true");
             if !value {
@@ -2139,12 +2451,41 @@ impl Parser {
                 kind: ExprKind::Boolean(value),
             }
         } else if self.token().text.as_bytes()[0].is_ascii_digit() {
-            let value = integer_literal(&self.token().text, self.token().offset)?;
+            let kind = if let Some(digits) = self.token().text.strip_suffix('L') {
+                let (digits, radix) = if let Some(hex) = digits
+                    .strip_prefix("0x")
+                    .or_else(|| digits.strip_prefix("0X"))
+                {
+                    (hex, 16)
+                } else if let Some(binary) = digits
+                    .strip_prefix("0b")
+                    .or_else(|| digits.strip_prefix("0B"))
+                {
+                    (binary, 2)
+                } else {
+                    (digits, 10)
+                };
+                if digits.is_empty()
+                    || digits.starts_with('_')
+                    || digits.ends_with('_')
+                    || !digits.chars().all(|c| c == '_' || c.is_digit(radix))
+                {
+                    return Err(self.error(
+                        "Long literals require digits with optional separators between digits",
+                    ));
+                }
+                let normalized = digits.replace('_', "");
+                if radix == 10 && normalized.len() > 1 && normalized.starts_with('0') {
+                    return Err(self.error("Leading zeroes are not allowed in decimal literals"));
+                }
+                let value = i128::from_str_radix(&normalized, radix)
+                    .map_err(|_| self.error("Long literal is out of range"))?;
+                ExprKind::Long(value)
+            } else {
+                ExprKind::Int(integer_literal(&self.token().text, self.token().offset)?)
+            };
             self.pos += 1;
-            Expr {
-                offset,
-                kind: ExprKind::Int(value),
-            }
+            Expr { offset, kind }
         } else {
             Expr {
                 offset,
@@ -2186,6 +2527,12 @@ impl Parser {
                         offset,
                         kind: ExprKind::Call(Box::new(Expr { offset, kind }), vec![lambda]),
                     },
+                };
+            } else if self.take("?.") {
+                let name = self.name()?;
+                expr = Expr {
+                    offset,
+                    kind: ExprKind::SafeProperty(Box::new(expr), name),
                 };
             } else if self.take(".") {
                 let name = self.name()?;
@@ -2256,11 +2603,19 @@ impl Parser {
         }
     }
     fn when_expression(&mut self, offset: usize) -> Result<Expr> {
-        self.expect("(")?;
-        self.lines();
-        let subject = self.expr(0)?;
-        self.lines();
-        self.expect(")")?;
+        let subjectless = !self.at("(");
+        let subject = if self.take("(") {
+            self.lines();
+            let subject = self.expr(0)?;
+            self.lines();
+            self.expect(")")?;
+            subject
+        } else {
+            Expr {
+                offset,
+                kind: ExprKind::Boolean(true),
+            }
+        };
         self.lines();
         self.expect("{")?;
         self.separators();
@@ -2285,6 +2640,11 @@ impl Parser {
                     self.lines();
                     if !self.take(",") {
                         break;
+                    }
+                    if subjectless {
+                        return Err(
+                            self.error("Subjectless when conditions cannot be comma-separated")
+                        );
                     }
                     self.lines();
                 }
@@ -2353,7 +2713,9 @@ impl Parser {
                 ExprKind::Increment { value, .. }
                 | ExprKind::NonNull(value)
                 | ExprKind::Lambda(value) => pending.push((value, depth + 1)),
-                ExprKind::Unary(_, a) | ExprKind::Property(a, _) => pending.push((a, depth + 1)),
+                ExprKind::Unary(_, a) | ExprKind::Property(a, _) | ExprKind::SafeProperty(a, _) => {
+                    pending.push((a, depth + 1))
+                }
                 ExprKind::Binary(_, a, b) | ExprKind::Index(a, b) => {
                     pending.push((a, depth + 1));
                     pending.push((b, depth + 1));
@@ -2395,6 +2757,7 @@ fn precedence(op: &str) -> Option<u8> {
         "||" => Some(1),
         "&&" => Some(2),
         "==" | "!=" => Some(3),
+        "?:" => Some(4),
         "<" | ">" | "<=" | ">=" | "in" | "!in" => Some(4),
         "shl" | "shr" | "ushr" | "and" | "or" | "xor" => Some(5),
         ".." => Some(6),

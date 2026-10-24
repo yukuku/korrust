@@ -1,0 +1,9 @@
+tests/fixtures/consumers/InternalClassAccess.kt:1:26: error: cannot access 'class Yes2SingleChapterVerses : SingleChapterVerses': it is internal in file.
+import yuku.alkitab.yes2.Yes2SingleChapterVerses
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/consumers/InternalClassAccess.kt:2:19: error: cannot access 'class Yes2SingleChapterVerses : SingleChapterVerses': it is internal in file.
+fun leak(): Int = Yes2SingleChapterVerses(arrayOf("x")).verseCount
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/consumers/InternalClassAccess.kt:2:57: error: cannot access 'class Yes2SingleChapterVerses : SingleChapterVerses': it is internal in file.
+fun leak(): Int = Yes2SingleChapterVerses(arrayOf("x")).verseCount
+                                                        ^^^^^^^^^^

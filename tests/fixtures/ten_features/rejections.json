@@ -1,0 +1,114 @@
+[
+  {
+    "id": "nullable_primitive",
+    "source": "fun f(value: Int?): Int? = value",
+    "scope": "Nullable primitive boxing is outside the reference-only subset.",
+    "candidate_diagnostic": "Nullable primitive types are not supported"
+  },
+  {
+    "id": "safe_primitive_result",
+    "source": "fun f(value: String?): String = \"${value?.isEmpty()}\"",
+    "scope": "Safe calls returning a primitive require boxing and are rejected.",
+    "candidate_diagnostic": "Safe calls returning primitives or Unit are not supported"
+  },
+  {
+    "id": "general_list_element",
+    "source": "fun f(values: List<Int>): Int = values.size",
+    "scope": "Only exact List<String> and List<String?> element types are supported.",
+    "candidate_diagnostic": "Only List<String> and List<String?> are supported"
+  },
+  {
+    "id": "list_factory",
+    "source": "fun f(): List<String> = listOf(\"a\")",
+    "scope": "Collection factories are outside the bounded list surface.",
+    "candidate_diagnostic": "Unresolved function: listOf"
+  },
+  {
+    "id": "list_mutation",
+    "source": "fun f(values: List<String>) { values[0] = \"a\" }",
+    "invalid": true,
+    "scope": "Read-only List indexed assignment is invalid Kotlin and must reject.",
+    "candidate_diagnostic": "Array assignment supports IntArray, ByteArray, and CharArray",
+    "official_diagnostic": "no 'set' operator method providing array access"
+  },
+  {
+    "id": "data_nullable_property",
+    "source": "data class E(val value: String?)",
+    "scope": "Generated data-class members are bounded to nonnull scalar/String properties.",
+    "candidate_diagnostic": "Data classes require 1 to 32 public val nonnullable scalar or String parameters"
+  },
+  {
+    "id": "data_mutable_property",
+    "source": "data class E(var value: Int)",
+    "scope": "Generated data-class members are bounded to read-only public constructor properties.",
+    "candidate_diagnostic": "Expected val, found var"
+  },
+  {
+    "id": "data_body",
+    "source": "data class E(val value: Int) { fun doubled(): Int = value + value }",
+    "scope": "Data-class bodies remain outside the bounded generated-member implementation.",
+    "candidate_diagnostic": "Data classes require 1 to 32 public val nonnullable scalar or String parameters"
+  },
+  {
+    "id": "data_constructor_default",
+    "source": "data class E(val value: Int = 1)",
+    "scope": "Constructor parameter defaults are separate from generated copy defaults.",
+    "candidate_diagnostic": "Expected ), found ="
+  },
+  {
+    "id": "public_mutable_constructor",
+    "source": "class E(var value: Int)",
+    "scope": "Ordinary constructor properties are read-only in this subset.",
+    "candidate_diagnostic": "Expected val, found var"
+  },
+  {
+    "id": "nullable_without_smartcast",
+    "source": "fun f(value: String?): String { if (value != null) { return value }; return \"missing\" }",
+    "scope": "Flow-sensitive smart casts are outside the nullable reference subset.",
+    "candidate_diagnostic": "Type mismatch: expected String, found Nullable(String)"
+  },
+  {
+    "id": "when_subject_declaration",
+    "source": "fun f(value: String): Int = when (val text = value) { \"a\" -> 1; else -> 2 }",
+    "scope": "When subject declarations remain unsupported.",
+    "candidate_diagnostic": "Expected an identifier"
+  },
+  {
+    "id": "when_missing_else",
+    "source": "fun f(value: String): Int = when (value) { \"a\" -> 1 }",
+    "invalid": true,
+    "scope": "A bounded when expression requires an explicit else branch.",
+    "candidate_diagnostic": "When expressions require an explicit else branch",
+    "official_diagnostic": "'when' expression must be exhaustive"
+  },
+  {
+    "id": "null_to_nonnull",
+    "source": "fun f(): String = null",
+    "invalid": true,
+    "scope": "A null expression cannot satisfy a nonnull reference return contract.",
+    "candidate_diagnostic": "Type mismatch: expected String, found Null",
+    "official_diagnostic": "null cannot be a value of a non-null type"
+  },
+  {
+    "id": "nullable_dereference",
+    "source": "fun f(value: String?): String = value.substring(0)",
+    "invalid": true,
+    "scope": "Dereferencing a nullable receiver without a safe call remains invalid Kotlin.",
+    "candidate_diagnostic": "Nullable receivers require a safe call or not-null assertion",
+    "official_diagnostic": "only safe (?.) or non-null asserted (!!.) calls"
+  },
+  {
+    "id": "minimum_long_literal_suffix",
+    "source": "fun f(): Long = -9223372036854775808L",
+    "invalid": true,
+    "scope": "Pinned Kotlin rejects the out-of-range positive L-suffixed token even under unary negation; express Long minimum with MIN_VALUE or arithmetic.",
+    "candidate_diagnostic": "Long literal is out of range",
+    "official_diagnostic": "value out of range"
+  },
+  {
+    "id": "nullable_structural_equality",
+    "source": "fun f(a: String?, b: String?): Boolean = a == b",
+    "scope": "Nullable references support comparison with null; general nullable structural equality remains unsupported.",
+    "candidate_diagnostic": "Nullable operands support only equality with null and Elvis"
+  }
+]

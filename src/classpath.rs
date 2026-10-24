@@ -483,11 +483,33 @@ fn metadata_name(strings: &[String], index: Option<u64>) -> Result<&str> {
 
 fn metadata_type<'a>(bytes: &[u8], strings: &'a [String]) -> Result<&'a str> {
     let ty = Proto::parse(bytes)?;
-    ty.allowed(&[1, 3, 6])?;
+    ty.allowed(&[1, 2, 3, 6])?;
     if ty.integer(1)?.unwrap_or(0) != 0 || ty.integer(3)?.unwrap_or(0) != 0 {
         return Err(invalid());
     }
-    match metadata_name(strings, ty.integer(6)?)? {
+    let name = metadata_name(strings, ty.integer(6)?)?;
+    let arguments = ty.messages(2)?;
+    if name == "kotlin/Array" {
+        let [argument] = arguments.as_slice() else {
+            return Err(invalid());
+        };
+        let argument = Proto::parse(argument)?;
+        argument.allowed(&[1, 2])?;
+        let element = Proto::parse(argument.bytes(2)?.ok_or_else(invalid)?)?;
+        element.allowed(&[1, 3, 6])?;
+        if argument.integer(1)?.unwrap_or(2) != 2
+            || element.integer(1)?.unwrap_or(0) != 0
+            || element.integer(3)?.unwrap_or(0) != 0
+            || metadata_name(strings, element.integer(6)?)? != "kotlin/String"
+        {
+            return Err(invalid());
+        }
+        return Ok("[Ljava/lang/String;");
+    }
+    if !arguments.is_empty() {
+        return Err(invalid());
+    }
+    match name {
         "kotlin/Int" => Ok("I"),
         "kotlin/Boolean" => Ok("Z"),
         "kotlin/Byte" => Ok("B"),
@@ -498,6 +520,8 @@ fn metadata_type<'a>(bytes: &[u8], strings: &'a [String]) -> Result<&'a str> {
         "kotlin/Double" => Ok("D"),
         "kotlin/String" => Ok("Ljava/lang/String;"),
         "kotlin/IntArray" => Ok("[I"),
+        "kotlin/ByteArray" => Ok("[B"),
+        "kotlin/CharArray" => Ok("[C"),
         "kotlin/Unit" => Ok("V"),
         _ => Err(invalid()),
     }
@@ -582,7 +606,8 @@ fn kotlin_interface(
             _ => return Err(invalid()),
         }
     }
-    if version.as_deref() != Some(&[2, 3, 0])
+    let legacy_marker = version.as_deref() == Some(&[2, 1, 0]) && class.methods.is_empty();
+    if (version.as_deref() != Some(&[2, 3, 0]) && !legacy_marker)
         || kind != Some(1)
         || extra != Some(48)
         || class.access != 0x0601
@@ -605,7 +630,31 @@ fn kotlin_interface(
     let size = usize::try_from(varint(&mut reader)?).map_err(|_| invalid())?;
     let strings = metadata_strings(reader.take(size)?, &strings.ok_or_else(invalid)?)?;
     let proto = Proto::parse(reader.take(bytes.len() - reader.offset)?)?;
-    proto.allowed(&[1, 3, 4, 6, 7, 9, 10, 101, 104])?;
+    proto.allowed(&[1, 3, 4, 6, 7, 9, 10, 31, 32, 101, 104])?;
+    if proto.integer(31)?.is_some() || proto.bytes(32)?.is_some() {
+        if !class.methods.is_empty() || proto.integer(31)? != Some(0) {
+            return Err(invalid());
+        }
+        let table = Proto::parse(proto.bytes(32)?.ok_or_else(invalid)?)?;
+        table.allowed(&[1])?;
+        let requirements = table.messages(1)?;
+        if requirements.len() != 1 {
+            return Err(invalid());
+        }
+        let requirement = Proto::parse(requirements[0])?;
+        requirement.allowed(&[1, 2, 3, 6])?;
+        let version = if let Some(full) = requirement.integer(2)? {
+            (full & 255, (full >> 8) & 255, full >> 16)
+        } else {
+            let compact = requirement.integer(1)?.ok_or_else(invalid)?;
+            (compact & 7, (compact >> 3) & 15, compact >> 7)
+        };
+        let kind = requirement.integer(6)?.unwrap_or(0);
+        let limit = if kind == 1 { (2, 3, 21) } else { (2, 3, 0) };
+        if kind > 2 || requirement.integer(3)?.unwrap_or(1) > 2 || version > limit {
+            return Err(invalid());
+        }
+    }
     if proto.integer(1)?.unwrap_or(6) != 102
         || metadata_name(&strings, proto.integer(3)?)?.replace('.', "$") != class.name
     {
@@ -685,12 +734,21 @@ fn kotlin_interface(
     }
     for bytes in proto.messages(10)? {
         let property = Proto::parse(bytes)?;
-        property.allowed(&[2, 3, 7, 11, 100])?;
+        property.allowed(&[2, 3, 7, 8, 11, 100])?;
         let flags = property.integer(11)?.unwrap_or(518);
-        if flags & !0x236 != 0 || flags & 0x200 == 0 {
+        let mutable = flags & 0x100 != 0;
+        if flags & !0x736 != 0
+            || flags & 0x200 == 0
+            || (flags & 0x400 != 0) != mutable
+            || mutable && flags & 0x30 != 0x20
+            || !mutable && property.integer(8)?.is_some()
+        {
             return Err(invalid());
         }
         let name = metadata_name(&strings, property.integer(2)?)?;
+        if mutable && !name.is_ascii() {
+            return Err(invalid());
+        }
         let ty = metadata_type(property.bytes(3)?.ok_or_else(invalid)?, &strings)?;
         if ty == "V" {
             return Err(invalid());
@@ -708,10 +766,13 @@ fn kotlin_interface(
             };
         let descriptor = format!("(){ty}");
         let signature = Proto::parse(property.bytes(100)?.ok_or_else(invalid)?)?;
-        signature.allowed(&[3])?;
+        signature.allowed(if mutable { &[3, 4] } else { &[3] })?;
         metadata_signature(signature.bytes(3)?, &strings, &getter, &descriptor)?;
         let getter_flags = property.integer(7)?.unwrap_or(flags & 0x3f);
-        if getter_flags & !0x76 != 0 || getter_flags & 0x3f != flags & 0x3f {
+        if getter_flags & !0x76 != 0
+            || getter_flags & 0x3f != flags & 0x3f
+            || mutable && getter_flags != flags & 0x3f
+        {
             return Err(invalid());
         }
         validate(&getter, &descriptor, flags & 0x3f)?;
@@ -721,6 +782,22 @@ fn kotlin_interface(
             .position(|m| m.name == getter && m.descriptor == descriptor)
             .ok_or_else(invalid)?;
         properties[index] = Some(name.to_owned());
+        if mutable {
+            let setter = crate::check::setter_name(name);
+            let descriptor = format!("({ty})V");
+            metadata_signature(signature.bytes(4)?, &strings, &setter, &descriptor)?;
+            let setter_flags = property.integer(8)?.unwrap_or(flags & 0x3f);
+            if setter_flags != flags & 0x3f {
+                return Err(invalid());
+            }
+            validate(&setter, &descriptor, setter_flags)?;
+            let index = class
+                .methods
+                .iter()
+                .position(|method| method.name == setter && method.descriptor == descriptor)
+                .ok_or_else(invalid)?;
+            properties[index] = Some(name.to_owned());
+        }
     }
     for (index, method) in class.methods.iter().enumerate() {
         if !seen[index] && method.access & 8 == 0 {
@@ -1083,6 +1160,94 @@ mod tests {
         );
     }
     #[test]
+    fn mutable_property_metadata_requires_matching_public_abstract_setters() {
+        let (metadata, mut class, mut attributes) = fixture_metadata(false, &[], 1830, 0, 38);
+        assert!(kotlin_interface(&metadata, &class, &attributes).is_err());
+        class.methods.push(JavaMethod {
+            owner: class.name.clone(),
+            name: "setItemCount".into(),
+            descriptor: "(I)V".into(),
+            access: 0x0401,
+            unsupported: false,
+            source_property: None,
+        });
+        attributes.push(Attributes::default());
+        assert_eq!(
+            kotlin_interface(&metadata, &class, &attributes).unwrap(),
+            [
+                Some("itemCount".into()),
+                None,
+                None,
+                Some("itemCount".into())
+            ]
+        );
+        class.methods[3].descriptor = "(B)V".into();
+        assert!(kotlin_interface(&metadata, &class, &attributes).is_err());
+        class.methods[3].descriptor = "(I)V".into();
+        class.methods[3].access = 1;
+        assert!(kotlin_interface(&metadata, &class, &attributes).is_err());
+    }
+
+    #[test]
+    fn mutable_property_metadata_names_reject_non_ascii_and_empty_without_panicking() {
+        for name in ["isÄ", ""] {
+            let (mut metadata, mut class, mut attributes) =
+                fixture_metadata(false, &[], 1830, 0, 38);
+            let AnnotationValue::Array(strings) = &mut metadata.values[4].1 else {
+                panic!()
+            };
+            strings[2] = AnnotationValue::String(name.into());
+            strings[4] = AnnotationValue::String(name.into());
+            class.methods[0].name = name.into();
+            class.methods.push(JavaMethod {
+                owner: class.name.clone(),
+                name: "setItemCount".into(),
+                descriptor: "(I)V".into(),
+                access: 0x0401,
+                unsupported: false,
+                source_property: None,
+            });
+            attributes.push(Attributes::default());
+            assert!(kotlin_interface(&metadata, &class, &attributes).is_err());
+        }
+    }
+
+    #[test]
+    fn array_property_metadata_accepts_only_exact_nonnullable_string_elements() {
+        let strings = [
+            "kotlin/Array",
+            "kotlin/String",
+            "kotlin/ByteArray",
+            "kotlin/CharArray",
+        ]
+        .map(str::to_owned);
+        for (index, descriptor) in [(2, "[B"), (3, "[C")] {
+            assert_eq!(
+                metadata_type(&proto_integer(6, index), &strings).unwrap(),
+                descriptor
+            );
+        }
+        for (projection, nullable, extra, expected) in [
+            (2, 0, vec![], true),
+            (1, 0, vec![], false),
+            (3, 0, vec![], false),
+            (2, 1, vec![], false),
+            (2, 0, proto_bytes(2, &[]), false),
+        ] {
+            let element = [proto_integer(6, 1), proto_integer(3, nullable), extra].concat();
+            let argument = [proto_integer(1, projection), proto_bytes(2, &element)].concat();
+            let ty = [proto_integer(6, 0), proto_bytes(2, &argument)].concat();
+            assert_eq!(metadata_type(&ty, &strings).is_ok(), expected);
+        }
+        assert!(
+            metadata_type(
+                &[proto_integer(6, 2), proto_bytes(2, &[])].concat(),
+                &strings
+            )
+            .is_err()
+        );
+    }
+    #[test]
     fn kotlin_interface_nullable_generic_extension_suspend_and_default_arguments_are_rejected() {
         for (nullable, extra, property_flags, parameter_flags, function_flags) in [
             (true, vec![], 550, 0, 38),
@@ -1143,6 +1308,77 @@ mod tests {
         }
         assert!(Proto::parse(&[0x80; 11]).is_err());
         assert!(Proto::parse(&[10, 255]).is_err());
+    }
+    #[test]
+    fn kotlin_legacy_markers_validate_version_requirements_without_accepting_members() {
+        let class = JavaClass {
+            name: "sample/Marker".into(),
+            access: 0x0601,
+            super_name: Some("java/lang/Object".into()),
+            interfaces: Vec::new(),
+            methods: Vec::new(),
+            unsupported: true,
+            kotlin_interface: false,
+        };
+        for (version, kind, expected) in
+            [(33, 1, true), (26, 0, true), (3, 1, false), (33, 3, false)]
+        {
+            let table = proto_bytes(1, &proto_integer(1, 2));
+            let requirement = [proto_integer(1, version), proto_integer(6, kind)].concat();
+            let proto = [
+                proto_integer(1, 102),
+                proto_integer(3, 0),
+                proto_bytes(6, &proto_integer(6, 1)),
+                proto_integer(31, 0),
+                proto_bytes(32, &proto_bytes(1, &requirement)),
+            ]
+            .concat();
+            let data: String = [vec![0, table.len() as u8], table, proto]
+                .concat()
+                .into_iter()
+                .map(char::from)
+                .collect();
+            let metadata = Annotation {
+                name: "Lkotlin/Metadata;".into(),
+                values: vec![
+                    (
+                        "mv".into(),
+                        AnnotationValue::Array(
+                            [2, 1, 0]
+                                .into_iter()
+                                .map(AnnotationValue::Integer)
+                                .collect(),
+                        ),
+                    ),
+                    ("k".into(), AnnotationValue::Integer(1)),
+                    ("xi".into(), AnnotationValue::Integer(48)),
+                    (
+                        "d1".into(),
+                        AnnotationValue::Array(vec![AnnotationValue::String(data)]),
+                    ),
+                    (
+                        "d2".into(),
+                        AnnotationValue::Array(
+                            ["sample/Marker", "kotlin/Any"]
+                                .into_iter()
+                                .map(|value| AnnotationValue::String(value.into()))
+                                .collect(),
+                        ),
+                    ),
+                ],
+            };
+            assert_eq!(kotlin_interface(&metadata, &class, &[]).is_ok(), expected);
+            let mut with_member = class.clone();
+            with_member.methods.push(JavaMethod {
+                owner: class.name.clone(),
+                name: "required".into(),
+                descriptor: "()V".into(),
+                access: 0x0401,
+                unsupported: false,
+                source_property: None,
+            });
+            assert!(kotlin_interface(&metadata, &with_member, &[Attributes::default()]).is_err());
+        }
     }
     #[test]
     fn metadata_predefined_names_and_descriptor_operations_are_bounded() {

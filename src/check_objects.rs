@@ -21,6 +21,14 @@ pub(super) fn check(
     let mut object_methods: HashMap<String, Vec<JavaMethod>> = HashMap::new();
     for method in &source.methods {
         let function = &method.function;
+        if loses_member_type(&function.result)
+            || function.params.iter().any(|(_, ty)| loses_member_type(ty))
+        {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Nullable and List object method signatures are not supported",
+            ));
+        }
         for (annotation, active) in [
             ("JvmStatic", method.jvm_static),
             ("Throws", !method.throws.is_empty()),
@@ -43,7 +51,13 @@ pub(super) fn check(
                 "Object member extensions, internal members, and private JvmStatic methods are not supported",
             ));
         }
-        if function.params.len() > if method.jvm_static { 255 } else { 254 } {
+        if function
+            .params
+            .iter()
+            .map(|(_, ty)| ty.slots())
+            .sum::<usize>()
+            > if method.jvm_static { 255 } else { 254 }
+        {
             return Err(Diagnostic::new(
                 function.offset,
                 "Too many object method parameters",
@@ -316,6 +330,8 @@ pub(super) fn check(
         interface_decl: None,
         object_decl: Some(DynamicObject {
             owner,
+            interfaces: Vec::new(),
+            serializable: false,
             fields,
             methods,
         }),

@@ -170,7 +170,13 @@ pub fn compile_all_with_classpath(
             declaration,
             &internal_name,
             file_name,
-            &metadata::for_object(&module, &internal_name, &field_types)?,
+            &metadata::for_object(
+                &module,
+                &internal_name,
+                &field_types,
+                &declaration.interfaces,
+                declaration.serializable,
+            )?,
         );
     }
     if let Some(declaration) = &module.object_decl {

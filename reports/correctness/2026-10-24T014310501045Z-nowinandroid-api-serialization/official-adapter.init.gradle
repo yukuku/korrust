@@ -1,0 +1,102 @@
+
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+gradle.projectsEvaluated {
+    if (gradle.rootProject.findProject(':feature:bookmarks:api') == null) return
+    def moduleNames = new JsonSlurper().parseText(System.getenv('KORRUST_BUILD_MODULES'))
+    def moduleArtifacts = new JsonSlurper().parseText(System.getenv('KORRUST_BUILD_MODULE_ARTIFACTS'))
+    def variants = ['demoDebug', 'demoRelease', 'prodDebug', 'prodRelease']
+    moduleNames.each { moduleName ->
+        def selected = gradle.rootProject.project(":" + moduleName)
+        def artifacts = new File(moduleArtifacts[moduleName])
+        def selectedTasks = variants.collect { 'compile' + it.capitalize() + 'Kotlin' }
+        selectedTasks.each { taskName ->
+            selected.tasks.named(taskName).configure { task ->
+                if (System.getenv('KORRUST_BUILD_MODE') == 'korrust') {
+                    task.setActions([])
+                    task.outputs.upToDateWhen { false }
+                    task.outputs.cacheIf { false }
+                    task.doLast {
+                        def request = [
+                            module: moduleName,
+                            task: task.path,
+                            compiler: System.getenv('KORRUST_BUILD_COMPILER'),
+                            sources: task.sources.files.findAll { it.name.endsWith('.kt') }.collect { it.absolutePath }.sort(),
+                            classpath: task.libraries.files.collect { it.absolutePath }.sort(),
+                            destination: task.destinationDirectory.get().asFile.absolutePath,
+                            stage: new File(selected.layout.buildDirectory.get().asFile, "tmp/korrust/${taskName}").absolutePath,
+                            options: [jvm_target: task.compilerOptions.jvmTarget.get().target,
+                                      module_name: task.moduleName.get(),
+                                      free_compiler_args: task.compilerOptions.freeCompilerArgs.get(),
+                                      language_version: task.compilerOptions.languageVersion.orNull?.version,
+                                      api_version: task.compilerOptions.apiVersion.orNull?.version],
+                            work_dir: selected.rootDir.absolutePath,
+                            trace: new File(artifacts, "${taskName}.json").absolutePath,
+                        ]
+                        def requestFile = new File(artifacts, "${taskName}-request.json")
+                        requestFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(request))
+                        def process = new ProcessBuilder([
+                            System.getenv('KORRUST_BUILD_PYTHON'), System.getenv('KORRUST_BUILD_TOOL'),
+                            '--compile-request', requestFile.absolutePath,
+                        ]).directory(selected.rootDir).redirectErrorStream(true).start()
+                        process.inputStream.withReader { reader ->
+                            reader.eachLine { line -> selected.logger.lifecycle(line) }
+                        }
+                        if (process.waitFor() != 0) {
+                            throw new GradleException("Korrust failed for ${task.path}; official production Kotlin fallback is disabled")
+                        }
+                    }
+                }
+            }
+        }
+        selected.tasks.register('korrustBuildModel') {
+            variants.each { mustRunAfter selected.tasks.named('bundle' + it.capitalize() + 'Aar') }
+            doLast {
+                def variantModels = [:]
+                variants.each { variant ->
+                    def suffix = variant.capitalize()
+                    def kotlin = selected.tasks.named('compile' + suffix + 'Kotlin').get()
+                    def java = selected.tasks.named('compile' + suffix + 'JavaWithJavac').get()
+                    variantModels[variant] = [
+                        compiler_arguments: kotlin.serializedCompilerArguments,
+                        sources: kotlin.sources.files.findAll { it.name.endsWith('.kt') }.collect { it.absolutePath }.sort(),
+                        kotlin_classes: kotlin.destinationDirectory.get().asFile.absolutePath,
+                        java_classes: java.destinationDirectory.get().asFile.absolutePath,
+                        classpath: kotlin.libraries.files.collect { it.absolutePath }.sort(),
+                        java_classpath: java.classpath.files.collect { it.absolutePath }.sort(),
+                        aar: new File(selected.layout.buildDirectory.get().asFile, "outputs/aar/${selected.name}-${variant.replaceAll(/([A-Z])/, '-$1').toLowerCase()}.aar").absolutePath,
+                        options: [kotlin_jvm_target: kotlin.compilerOptions.jvmTarget.get().target,
+                                  kotlin_module_name: kotlin.moduleName.get(),
+                                  free_compiler_args: kotlin.compilerOptions.freeCompilerArgs.get(),
+                                  language_version: kotlin.compilerOptions.languageVersion.orNull?.version,
+                                  api_version: kotlin.compilerOptions.apiVersion.orNull?.version,
+                                  java_source_compatibility: java.sourceCompatibility,
+                                  java_target_compatibility: java.targetCompatibility],
+                    ]
+                }
+                def releaseKotlin = selected.tasks.named('compileDemoReleaseKotlin').get()
+                def model = [
+                    module: moduleName,
+                    variants: variantModels,
+                    kotlin_classes: variantModels.demoRelease.kotlin_classes,
+                    java_classes: variantModels.demoRelease.java_classes,
+                    debug_kotlin_classes: variantModels.demoDebug.kotlin_classes,
+                    classpath: variantModels.demoRelease.classpath,
+                    java_classpath: variantModels.demoRelease.java_classpath,
+                    aar: variantModels.demoRelease.aar,
+                    debug_aar: variantModels.demoDebug.aar,
+                    resolved_kotlin_compiler_version: releaseKotlin.'getKotlinCompilerVersion$kotlin_gradle_plugin_common'().get().toString(),
+                    resolved_kotlin_compiler_classpath: releaseKotlin.'getDefaultCompilerClasspath$kotlin_gradle_plugin_common'().files.collect { it.absolutePath }.sort(),
+                    resolved_serialization_plugin_classpath: releaseKotlin.pluginClasspath.files.findAll { it.name.contains('serialization') }.collect { it.absolutePath }.sort(),
+                    options: variantModels.demoRelease.options + [production_tasks: selectedTasks,
+                        dependencies_compiler: 'normal Gradle Kotlin/Java/KSP compilers for unselected modules'],
+                    sdk_directory: selected.extensions.getByName('androidComponents').sdkComponents.sdkDirectory.get().asFile.absolutePath,
+                    min_sdk: selected.android.defaultConfig.minSdk,
+                    agp_d8_classpath: [Class.forName('com.android.tools.r8.D8', true, selected.plugins.findPlugin('com.android.library').class.classLoader).protectionDomain.codeSource.location.toURI().path],
+                ]
+                new File(artifacts, 'gradle-model.json').text = JsonOutput.prettyPrint(JsonOutput.toJson(model))
+            }
+        }
+    }
+}

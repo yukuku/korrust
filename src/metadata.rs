@@ -146,6 +146,7 @@ fn imported_name<'a>(name: &str, imports: Imports<'a>) -> Result<&'a str> {
 
 fn descriptor(ty: &Type, imports: Imports<'_>) -> Result<String> {
     match ty {
+        Type::Nullable(inner) => descriptor(inner, imports),
         Type::Java(name) => Ok(format!("L{};", imported_name(name, imports)?)),
         Type::Platform(_) => Err(Diagnostic::new(
             0,
@@ -156,9 +157,23 @@ fn descriptor(ty: &Type, imports: Imports<'_>) -> Result<String> {
 }
 
 fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<Proto> {
+    if let Type::Nullable(inner) = ty {
+        let mut proto = type_proto(inner, imports, strings)?;
+        proto.number(3, 1);
+        return Ok(proto);
+    }
     let mut proto = Proto::default();
     let name = match ty {
         Type::Int => "kotlin/Int",
+        Type::Long => "kotlin/Long",
+        Type::Null => "kotlin/Nothing",
+        Type::Nullable(_) => unreachable!(),
+        Type::List(inner) => {
+            let mut argument = Proto::default();
+            argument.message(2, &type_proto(inner, imports, strings)?);
+            proto.message(2, &argument);
+            "kotlin/collections/List"
+        }
         Type::Byte => "kotlin/Byte",
         Type::Char => "kotlin/Char",
         Type::Boolean => "kotlin/Boolean",
@@ -279,13 +294,13 @@ fn class_metadata(
     let mut proto = Proto::default();
     proto.number(
         1,
-        if anonymous {
+        (if anonymous {
             10
         } else if class.internal {
             0
         } else {
             6
-        },
+        }) | if class.data { 1024 } else { 0 },
     );
     let class_id = if anonymous {
         internal_name.into()
@@ -332,7 +347,8 @@ fn class_metadata(
     }
     for (name, ty) in &class.params {
         let mut property = Proto::default();
-        property.number(11, 514);
+        let public = class.public_params.contains(name);
+        property.number(11, if public { 518 } else { 514 });
         property.number(2, strings.id(name)?);
         property.message(3, &type_proto(ty, imports, &mut strings)?);
         let mut signature = Proto::default();
@@ -340,8 +356,76 @@ fn class_metadata(
             1,
             &method_signature(name, &descriptor(ty, imports)?, &mut strings)?,
         );
+        if public {
+            signature.message(
+                3,
+                &method_signature(
+                    &crate::check::getter_name(name),
+                    &format!("(){}", descriptor(ty, imports)?),
+                    &mut strings,
+                )?,
+            );
+        }
         property.message(100, &signature);
         proto.message(10, &property);
+    }
+    if class.data {
+        for (index, (_, ty)) in class.params.iter().enumerate() {
+            let name = format!("component{}", index + 1);
+            let mut function = Proto::default();
+            function.number(9, 454);
+            function.number(2, strings.id(&name)?);
+            function.message(3, &type_proto(ty, imports, &mut strings)?);
+            function.message(
+                100,
+                &method_signature(
+                    &name,
+                    &format!("(){}", descriptor(ty, imports)?),
+                    &mut strings,
+                )?,
+            );
+            proto.message(9, &function);
+        }
+        let mut copy = Proto::default();
+        copy.number(9, 198);
+        copy.number(2, strings.id("copy")?);
+        let mut result = Proto::default();
+        result.number(6, strings.id(&internal_name.replace('$', "."))?);
+        copy.message(3, &result);
+        let mut desc = String::from("(");
+        for (name, ty) in &class.params {
+            let mut param = parameter(name, ty, imports, &mut strings)?;
+            param.number(1, 2);
+            copy.message(6, &param);
+            desc.push_str(&descriptor(ty, imports)?);
+        }
+        desc.push_str(&format!(")L{internal_name};"));
+        copy.message(100, &method_signature("copy", &desc, &mut strings)?);
+        proto.message(9, &copy);
+        for (name, result, flags) in [
+            ("equals", Type::Boolean, 66006),
+            ("hashCode", Type::Int, 65750),
+            ("toString", Type::String, 65750),
+        ] {
+            let mut function = Proto::default();
+            function.number(9, flags);
+            function.number(2, strings.id(name)?);
+            function.message(3, &type_proto(&result, imports, &mut strings)?);
+            let desc = if name == "equals" {
+                let mut any = Proto::default();
+                any.number(6, strings.id("kotlin/Any")?);
+                any.number(3, 1);
+                let mut parameter = Proto::default();
+                parameter.number(2, strings.id("other")?);
+                parameter.message(3, &any);
+                function.message(6, &parameter);
+                "(Ljava/lang/Object;)Z".into()
+            } else {
+                format!("(){}", result.descriptor())
+            };
+            function.message(100, &method_signature(name, &desc, &mut strings)?);
+            proto.message(9, &function);
+        }
     }
     for property in &class.properties {
         let mut declaration = Proto::default();
@@ -409,7 +493,10 @@ fn interface_metadata(
     for property in &interface.properties {
         let mut declaration = Proto::default();
         let flags = 6 | if property.body.is_some() { 16 } else { 32 };
-        declaration.number(11, flags | 512);
+        declaration.number(
+            11,
+            flags | 512 | if property.mutable { 256 | 1024 } else { 0 },
+        );
         declaration.number(2, strings.id(&property.name)?);
         declaration.message(3, &type_proto(&property.ty, imports, &mut strings)?);
         if property.body.is_some() {
@@ -424,6 +511,16 @@ fn interface_metadata(
                 &mut strings,
             )?,
         );
+        if property.mutable {
+            signature.message(
+                4,
+                &method_signature(
+                    &crate::check::setter_name(&property.name),
+                    &format!("({})V", descriptor(&property.ty, imports)?),
+                    &mut strings,
+                )?,
+            );
+        }
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }
@@ -579,6 +676,8 @@ pub(crate) fn for_object(
     module: &Module,
     owner: &str,
     fields: &[(String, Type)],
+    interfaces: &[String],
+    serializable: bool,
 ) -> Result<Metadata> {
     let object = module
         .object_decl
@@ -598,15 +697,37 @@ pub(crate) fn for_object(
     }
     let mut strings = Strings::default();
     let mut proto = Proto::default();
-    proto.number(1, if object.internal { 320 } else { 326 });
+    proto.number(
+        1,
+        (if object.internal { 320 } else { 326 }) | u32::from(serializable),
+    );
     proto.number(3, strings.id(&owner.replace('$', "."))?);
-    let mut supertype = Proto::default();
-    supertype.number(6, strings.id("kotlin/Any")?);
-    proto.message(6, &supertype);
+    for name in if interfaces.is_empty() {
+        vec!["kotlin/Any"]
+    } else {
+        interfaces.iter().map(String::as_str).collect()
+    } {
+        let mut supertype = Proto::default();
+        supertype.number(6, strings.id(&name.replace('$', "."))?);
+        proto.message(6, &supertype);
+    }
     let mut constructor = Proto::default();
     constructor.number(1, 2);
     constructor.message(100, &method_signature("<init>", "()V", &mut strings)?);
     proto.message(8, &constructor);
+    if serializable {
+        let mut function = Proto::default();
+        function.number(2, strings.id("serializer")?);
+        let mut result = Proto::default();
+        result.number(6, strings.id("kotlinx/serialization/KSerializer")?);
+        let mut argument = Proto::default();
+        let mut ty = Proto::default();
+        ty.number(6, strings.id(&owner.replace('$', "."))?);
+        argument.message(2, &ty);
+        result.message(2, &argument);
+        function.message(3, &result);
+        proto.message(9, &function);
+    }
     for method in &object.methods {
         let flags = u32::from(method.jvm_static) | if method.inline { 1024 } else { 0 };
         proto.message(

@@ -102,6 +102,7 @@ pub(super) struct Builder {
     pub(super) fields: Vec<Vec<u8>>,
     pub(super) methods: Vec<Vec<u8>>,
     pub(super) attributes: Vec<Vec<u8>>,
+    pub(super) annotations: Vec<String>,
 }
 
 impl Builder {
@@ -129,6 +130,7 @@ impl Builder {
             fields: Vec::new(),
             methods: Vec::new(),
             attributes: Vec::new(),
+            annotations: Vec::new(),
         })
     }
     pub(super) fn field(
@@ -164,7 +166,11 @@ impl Builder {
         u4(&mut source, 2);
         u2(&mut source, self.pool.utf8(file)?);
         attributes.push(source);
-        attributes.push(metadata_attribute(&mut self.pool, metadata)?);
+        attributes.push(metadata_attribute_with_annotations(
+            &mut self.pool,
+            metadata,
+            &self.annotations,
+        )?);
         let mut bytes = Vec::new();
         u4(&mut bytes, 0xcafebabe);
         u2(&mut bytes, 0);
@@ -216,8 +222,8 @@ fn static_descriptor(owner: &str, descriptor: &str) -> String {
 
 fn arguments(code: &mut SimpleCode, params: &[(String, Type)]) {
     code.bytes.push(0x2a);
-    for (index, (_, ty)) in params.iter().enumerate() {
-        code.bytes.extend([load_opcode(ty), (index + 1) as u8]);
+    for (slot, (_, ty)) in parameter_slots(params, 1).into_iter().zip(params) {
+        code.bytes.extend([load_opcode(ty), slot as u8]);
     }
 }
 
@@ -226,9 +232,9 @@ fn parameter_checks(
     code: &mut SimpleCode,
     params: &[(String, Type)],
 ) -> Result<()> {
-    for (index, (name, ty)) in params.iter().enumerate() {
-        if ty.is_reference() {
-            code.bytes.extend([0x19, (index + 1) as u8]);
+    for (slot, (name, ty)) in parameter_slots(params, 1).into_iter().zip(params) {
+        if nonnull(ty) {
+            code.bytes.extend([0x19, slot as u8]);
             code.reference(0x13, pool.string(name)?);
             code.reference(
                 0xb8,
@@ -262,8 +268,19 @@ fn default_forward(
     function: &crate::check::Function,
 ) -> Result<Vec<u8>> {
     let mut code = SimpleCode::new(
-        (function.params.len() + 1).max(2) as u16,
-        (function.params.len() + 1) as u16,
+        (function
+            .params
+            .iter()
+            .map(|(_, ty)| ty.slots())
+            .sum::<usize>()
+            + 1)
+        .max(2) as u16,
+        (function
+            .params
+            .iter()
+            .map(|(_, ty)| ty.slots())
+            .sum::<usize>()
+            + 1) as u16,
     );
     parameter_checks(pool, &mut code, &function.params)?;
     arguments(&mut code, &function.params);
@@ -297,7 +314,10 @@ fn default_access(
     params: &[(String, Type)],
     result: &Type,
 ) -> Result<Vec<u8>> {
-    let mut code = SimpleCode::new((params.len() + 1) as u16, (params.len() + 1) as u16);
+    let mut code = SimpleCode::new(
+        (params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() + 1).max(2) as u16,
+        (params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() + 1) as u16,
+    );
     arguments(&mut code, params);
     code.reference(0xb7, pool.interface_method(owner, name, descriptor)?);
     code.bytes.push(return_opcode(result));
@@ -317,7 +337,10 @@ fn helper_prefix(
     interface: &InterfaceDecl,
     params: &[(String, Type)],
 ) -> Result<SimpleCode> {
-    let mut code = SimpleCode::new(2, (params.len() + 1) as u16);
+    let mut code = SimpleCode::new(
+        2,
+        (params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() + 1) as u16,
+    );
     if let Some(companion) = &interface.companion {
         code.reference(
             0xb2,
@@ -389,7 +412,9 @@ fn helper_inherited(
     let (types, result) = crate::check::class_method_types(inherited)?;
     let params: Vec<_> = types.into_iter().map(|ty| (String::new(), ty)).collect();
     let mut code = helper_prefix(&mut builder.pool, interface, &params)?;
-    code.max_stack = code.max_stack.max((params.len() + 1) as u16);
+    code.max_stack = code
+        .max_stack
+        .max((params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() + 1) as u16);
     arguments(&mut code, &params);
     code.reference(
         0xb8,
@@ -426,7 +451,9 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
         ValueKind::NewArray(_, value)
         | ValueKind::Convert(_, value)
         | ValueKind::ThreadLocalGet(value, _)
-        | ValueKind::RequireNotNull(value) => collect_value(value, accesses),
+        | ValueKind::RequireNotNull(value)
+        | ValueKind::IsNull(value)
+        | ValueKind::ListSize(value) => collect_value(value, accesses),
         ValueKind::ThreadLocalSet(a, b) | ValueKind::CopyOf(a, b) => {
             collect_value(a, accesses);
             collect_value(b, accesses);
@@ -452,7 +479,8 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
         ValueKind::StringConcat(a, b)
         | ValueKind::Binary(_, a, b)
         | ValueKind::Index(a, b)
-        | ValueKind::Compare(a, b) => {
+        | ValueKind::Compare(a, b)
+        | ValueKind::ListGet(a, b) => {
             collect_value(a, accesses);
             collect_value(b, accesses);
         }
@@ -472,6 +500,8 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
         }
         ValueKind::Unit
         | ValueKind::Int(_)
+        | ValueKind::Long(_)
+        | ValueKind::Null
         | ValueKind::Boolean(_)
         | ValueKind::String(_)
         | ValueKind::Local(_) => {}
@@ -704,13 +734,12 @@ fn interface_classes(
         builder.field("Companion", &format!("L{};", companion.owner), 0x0019, true)?;
     }
     for method in &interface.methods {
-        if method
-            .source_property
-            .as_ref()
-            .is_some_and(|property| crate::check::getter_name(property) != method.function.name)
-        {
+        if method.source_property.as_ref().is_some_and(|property| {
+            crate::check::getter_name(property) != method.function.name
+                && crate::check::setter_name(property) != method.function.name
+        }) {
             return Err(failure(
-                "Interface getter lowering does not match its source property",
+                "Interface accessor lowering does not match its source property",
             ));
         }
         let method = if method.has_body {

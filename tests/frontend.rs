@@ -23,7 +23,7 @@ fn rejects_invalid_bindings_and_types() {
             "Conflicting",
         ),
         ("fun f(): Int = missing", "Unresolved"),
-        ("fun f(): Int = true + 1", "Type mismatch"),
+        ("fun f(): Int = true + 1", "Arithmetic requires"),
         ("fun f(): Boolean = 1", "Type mismatch"),
         (
             "fun f(): Int { if (1) { return 1 }; return 2 }",
@@ -56,7 +56,7 @@ fn preserves_statement_boundaries_and_rejects_unsupported_syntax() {
         "fun f(): Int { val x = 1 val y = 2; return x }",
         "newline or semicolon",
     );
-    rejects("fun f(): Int = 2147483648", "out of range");
+    rejects("fun f(): Int = 2147483648", "Type mismatch");
     rejects("fun f(): Int = 01", "Leading zeroes");
 
     rejects("fun f(): Int = 1 /*", "Unterminated");
@@ -301,10 +301,7 @@ fn accepts_statement_when_and_checks_return_paths_and_scopes() {
 #[test]
 fn rejects_unsupported_when_forms_and_malformed_entries() {
     for source in [
-        "fun f() { when { true -> return } }",
         "fun f() { when (val n = 1) { else -> return } }",
-        "fun f() { when (true) { true -> return } }",
-        "fun f() { when (\"x\") { \"x\" -> return } }",
         "fun f(a: CharArray) { when (a) { else -> return } }",
         "fun f() { when (1) { 'a' -> return } }",
         "fun f() { when ('a') { 97 -> return } }",
@@ -767,7 +764,6 @@ fn rejects_unsupported_class_surface_and_mixed_declarations() {
         "class E<T>()",
         "class E private constructor()",
         "class E(x: Int)",
-        "class E(val x: Int)",
         "class E(private var x: Int)",
         "class E(private val x: Int = 1)",
         "class E(private val x: Int, private val x: Int)",
@@ -1013,6 +1009,7 @@ fn supports_if_expressions_integer_strings_templates_and_explicit_throws() {
         r#"fun f(n: Int, b: Boolean, s: String): String = "$s:$n:$b""#,
         r#"fun f(n: Int): String = "\$n/$n/\u0000\uD800""#,
         r#"fun f(n: Int): String { throw IllegalArgumentException("n=$n") }"#,
+        r#"fun f(n: Int): String = "${n}""#,
     ] {
         assert!(
             compile(source, "Expressions.kt").is_ok(),
@@ -1025,10 +1022,6 @@ fn supports_if_expressions_integer_strings_templates_and_explicit_throws() {
     rejects(
         r#"fun f(c: Char): String = "$c""#,
         "String templates support only",
-    );
-    rejects(
-        r#"fun f(n: Int): String = "${n}""#,
-        "Only simple ASCII name",
     );
     rejects(
         r#"fun f(n: Int): String = "$`n`""#,
@@ -1050,6 +1043,20 @@ fn supports_if_expressions_integer_strings_templates_and_explicit_throws() {
 }
 
 #[test]
+fn accepts_abstract_mutable_interface_properties() {
+    for source in [
+        "interface Surface { var count: Int; var isReady: Boolean; var isTitle: String }",
+        "interface Surface { var bytes: ByteArray; var chars: CharArray; var names: Array<String> }",
+        "interface Surface { val count: Int; interface Mutable : Surface { override var count: Int } }",
+    ] {
+        assert!(
+            korrust::compile_all(source, "Surface.kt").is_ok(),
+            "{source}"
+        );
+    }
+}
+
+#[test]
 fn rejects_unsupported_interface_and_companion_forms() {
     for source in [
         "private interface E",
@@ -1058,7 +1065,7 @@ fn rejects_unsupported_interface_and_companion_forms() {
         "fun interface E { fun f() }",
         "interface E<T>",
         "interface E()",
-        "interface E { var x: Int }",
+        "interface E { var x: Int get() = 1 }",
         "interface E { val x: Int = 1 }",
         "interface E { private fun f() {} }",
         "interface E { fun String.extension(): Int = 1 }",
@@ -1307,4 +1314,108 @@ fn rejects_invalid_loop_membership_increment_and_when_boundaries() {
             "accepted {source}"
         );
     }
+}
+
+#[test]
+fn accepts_ten_bounded_androidbible_language_additions() {
+    for source in [
+        "fun f(a: Long, b: Int): Long { var n: Long = a + 1L; n = n shl b; return n xor Long.MIN_VALUE }",
+        "class Entry(val timestamp: Long, val text: String, private val hidden: Int)",
+        "data class Entry(val timestamp: Long, val text: String)",
+        "fun f(value: String?): String? = value\nfun absent(): String? = null",
+        "fun f(value: String?): String? = value?.removePrefix(\"x\")",
+        "fun f(value: String?): String = value ?: \"missing\"",
+        "fun f(values: List<String?>, index: Int): String = values[index] ?: \"missing\"",
+        "fun f(value: String): Int = when (value) { \"a\", \"b\" -> 1; else -> 2 }\nfun g(value: Boolean): Int = when (value) { true -> 1; else -> 0 }",
+        "fun f(value: Int): Int = when { value < 0 -> -1; value == 0 -> 0; else -> 1 }",
+        r#"fun f(value: Int): String = "${if (value > 0) "positive=${value + 1}" else "none"}""#,
+    ] {
+        let result = compile(source, "Ten.kt");
+        assert!(result.is_ok(), "rejected {source}: {:?}", result.err());
+    }
+}
+
+#[test]
+fn rejects_unsupported_or_invalid_ten_feature_boundaries() {
+    for source in [
+        "fun f(): Long = -9223372036854775808L",
+        "fun f(value: Int?): Int? = value",
+        r#"fun f(value: String?): String = "${value?.isEmpty()}""#,
+        "fun f(values: List<Int>): Int = values.size",
+        "fun f(): List<String> = listOf(\"a\")",
+        "fun f(): String = null",
+        "fun f(value: String?): String = value.substring(0)",
+        "data class Entry(val text: String?)",
+        "data class Entry(var text: String)",
+        "data class Entry(val text: String = \"default\")",
+        "class Entry(var text: String)",
+        "fun f(value: Int): Int = when { value, 1 -> 1; else -> 2 }",
+    ] {
+        assert!(
+            compile(source, "InvalidTen.kt").is_err(),
+            "accepted {source}"
+        );
+    }
+    let too_many = (0..33)
+        .map(|index| format!("val p{index}: Int"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    assert!(compile(&format!("data class Entry({too_many})"), "TooMany.kt").is_err());
+}
+
+#[test]
+fn long_parameters_and_locals_enforce_jvm_slot_widths() {
+    let parameters = (0..127)
+        .map(|index| format!("p{index}: Long"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    assert!(
+        compile(
+            &format!("fun f({parameters}, flag: Int): Long = p126"),
+            "StaticSlots.kt"
+        )
+        .is_ok()
+    );
+    assert!(
+        compile(
+            &format!("fun f({parameters}, extra: Long): Long = extra"),
+            "StaticOverflow.kt"
+        )
+        .is_err()
+    );
+    assert!(
+        compile(
+            &format!(
+                "fun f({parameters}, flag: Int): Long {{ val extra: Long = 0L; return extra }}"
+            ),
+            "LocalOverflow.kt"
+        )
+        .is_err()
+    );
+    let fields = (0..127)
+        .map(|index| format!("private val p{index}: Long"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    assert!(compile(&format!("class Wide({fields})"), "Wide.kt").is_ok());
+    assert!(
+        compile(
+            &format!("class Wide({fields}, private val extra: Long)"),
+            "WideOverflow.kt"
+        )
+        .is_err()
+    );
+    assert!(
+        compile(
+            &format!("class Wide() {{ fun f({parameters}): Long = p126 }}"),
+            "WideMethod.kt"
+        )
+        .is_ok()
+    );
+    assert!(
+        compile(
+            &format!("class Wide() {{ fun f({parameters}, extra: Long): Long = extra }}"),
+            "WideMethodOverflow.kt"
+        )
+        .is_err()
+    );
 }

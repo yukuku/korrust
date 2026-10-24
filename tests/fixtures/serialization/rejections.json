@@ -1,0 +1,14 @@
+[
+  {"id": "annotation_empty_arguments", "source": "import kotlinx.serialization.Serializable\n@Serializable() object Rejected", "reason": "serialization annotation arguments"},
+  {"id": "custom_serializer_argument", "source": "import kotlinx.serialization.Serializable\n@Serializable(with = Custom::class) object Rejected", "reason": "custom serialization"},
+  {"id": "serial_name_annotation", "source": "import kotlinx.serialization.Serializable\nimport kotlinx.serialization.SerialName\n@Serializable @SerialName(\"renamed\") object Rejected", "reason": "custom serial name"},
+  {"id": "serializable_class", "source": "import kotlinx.serialization.Serializable\n@Serializable class Rejected", "reason": "serializable class"},
+  {"id": "serializable_data_object", "source": "import kotlinx.serialization.Serializable\n@Serializable data object Rejected", "reason": "data object"},
+  {"id": "serializable_property", "source": "import kotlinx.serialization.Serializable\n@Serializable object Rejected { const val field = 1 }", "reason": "nonempty serializable object"},
+  {"id": "serializable_function", "source": "import kotlinx.serialization.Serializable\n@Serializable object Rejected { fun value(): Int = 1 }", "reason": "nonempty serializable object"},
+  {"id": "serializable_nested", "source": "import kotlinx.serialization.Serializable\n@Serializable object Rejected { object Nested }", "reason": "nested serializable object body"},
+  {"id": "duplicate_annotation", "source": "import kotlinx.serialization.Serializable\n@Serializable @Serializable object Rejected", "reason": "duplicate annotation"},
+  {"id": "unknown_annotation", "source": "@Missing object Rejected", "reason": "unknown object annotation"},
+  {"id": "missing_annotation_import", "source": "@Serializable object Rejected", "reason": "unresolved annotation"},
+  {"id": "duplicate_marker", "source": "import kotlinx.serialization.Serializable\nimport androidx.navigation3.runtime.NavKey\n@Serializable object Rejected : NavKey, NavKey", "reason": "duplicate marker"}
+]

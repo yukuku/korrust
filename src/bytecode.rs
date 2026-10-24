@@ -5,6 +5,8 @@ use crate::{
 };
 use std::collections::HashMap;
 
+mod data;
+mod frames;
 mod interfaces;
 mod objects;
 pub use interfaces::emit_interfaces;
@@ -23,6 +25,8 @@ fn u4(out: &mut Vec<u8>, value: u32) {
 fn load_opcode(ty: &Type) -> u8 {
     if ty.is_reference() {
         0x19
+    } else if ty == &Type::Long {
+        0x16
     } else if ty == &Type::Float {
         0x17
     } else {
@@ -32,6 +36,8 @@ fn load_opcode(ty: &Type) -> u8 {
 fn store_opcode(ty: &Type) -> u8 {
     if ty.is_reference() {
         0x3a
+    } else if ty == &Type::Long {
+        0x37
     } else if ty == &Type::Float {
         0x38
     } else {
@@ -43,6 +49,8 @@ fn return_opcode(ty: &Type) -> u8 {
         0xb1
     } else if ty.is_reference() {
         0xb0
+    } else if ty == &Type::Long {
+        0xad
     } else if ty == &Type::Float {
         0xae
     } else {
@@ -50,8 +58,77 @@ fn return_opcode(ty: &Type) -> u8 {
     }
 }
 
+fn parameter_slots(params: &[(String, Type)], start: usize) -> Vec<usize> {
+    let mut slot = start;
+    params
+        .iter()
+        .map(|(_, ty)| {
+            let current = slot;
+            slot += ty.slots();
+            current
+        })
+        .collect()
+}
+
+fn nonnull(ty: &Type) -> bool {
+    ty.is_reference() && !ty.is_nullable() && !matches!(ty, Type::Platform(_))
+}
+
+fn generic_type(ty: &Type) -> String {
+    match ty {
+        Type::Nullable(inner) | Type::Platform(inner) => generic_type(inner),
+        Type::List(inner) => format!("Ljava/util/List<{}>;", generic_type(inner)),
+        _ => ty.descriptor(),
+    }
+}
+
+fn generic_method(params: &[(String, Type)], result: &Type) -> Option<String> {
+    let signature = format!(
+        "({}){}",
+        params
+            .iter()
+            .map(|(_, ty)| generic_type(ty))
+            .collect::<String>(),
+        generic_type(result)
+    );
+    let descriptor = format!(
+        "({}){}",
+        params
+            .iter()
+            .map(|(_, ty)| ty.descriptor())
+            .collect::<String>(),
+        result.descriptor()
+    );
+    (signature != descriptor).then_some(signature)
+}
+
+fn add_method_attribute(method: &mut Vec<u8>, attribute: Vec<u8>) {
+    let count = u16::from_be_bytes([method[6], method[7]]) + 1;
+    method[6..8].copy_from_slice(&count.to_be_bytes());
+    method.extend(attribute);
+}
+
+fn nullable_result(pool: &mut Pool, method: &mut Vec<u8>, ty: &Type) -> Result<()> {
+    if ty.is_reference() && ty.is_nullable() {
+        let mut attribute = Vec::new();
+        u2(&mut attribute, pool.utf8("RuntimeInvisibleAnnotations")?);
+        u4(&mut attribute, 6);
+        u2(&mut attribute, 1);
+        u2(
+            &mut attribute,
+            pool.utf8("Lorg/jetbrains/annotations/Nullable;")?,
+        );
+        u2(&mut attribute, 0);
+        add_method_attribute(method, attribute);
+    }
+    Ok(())
+}
+
 fn reference_class(ty: &Type) -> Result<String> {
     match ty.base() {
+        Type::Nullable(inner) => reference_class(inner),
+        Type::Null => Ok("java/lang/Object".into()),
+        Type::List(_) => Ok("java/util/List".into()),
         Type::String => Ok("java/lang/String".into()),
         Type::Java(owner) => Ok(owner.clone()),
         Type::ThreadLocal(_) => Ok("java/lang/ThreadLocal".into()),
@@ -75,6 +152,8 @@ fn primitive_array_type(ty: &Type) -> Result<u8> {
 enum Constant {
     Utf8(Vec<u8>),
     Integer(i32),
+    Long(i64),
+    Reserved,
     Class(u16),
     String(u16),
     NameType(u16, u16),
@@ -92,11 +171,19 @@ impl Pool {
         if let Some(index) = self.indices.get(&entry) {
             return Ok(*index);
         }
-        if self.entries.len() >= 65534 {
+        let width = if matches!(entry, Constant::Long(_)) {
+            2
+        } else {
+            1
+        };
+        if self.entries.len() + width > 65534 {
             return Err(failure("JVM constant pool limit exceeded"));
         }
         let index = (self.entries.len() + 1) as u16;
         self.entries.push(entry.clone());
+        if width == 2 {
+            self.entries.push(Constant::Reserved);
+        }
         self.indices.insert(entry, index);
         Ok(index)
     }
@@ -167,6 +254,11 @@ impl Pool {
                     out.push(3);
                     out.extend(value.to_be_bytes());
                 }
+                Constant::Long(value) => {
+                    out.push(5);
+                    out.extend(value.to_be_bytes());
+                }
+                Constant::Reserved => {}
                 Constant::Class(index) => {
                     out.push(7);
                     u2(out, *index);
@@ -296,9 +388,13 @@ impl Code<'_> {
                 for part in [a, b] {
                     self.value(part)?;
                     let descriptor = match part.ty.base() {
+                        Type::Long => "(J)Ljava/lang/StringBuilder;",
                         Type::String => "(Ljava/lang/String;)Ljava/lang/StringBuilder;",
                         Type::Int => "(I)Ljava/lang/StringBuilder;",
                         Type::Boolean => "(Z)Ljava/lang/StringBuilder;",
+                        Type::Nullable(_) | Type::Null => {
+                            "(Ljava/lang/Object;)Ljava/lang/StringBuilder;"
+                        }
                         Type::Char
                         | Type::Byte
                         | Type::Float
@@ -308,6 +404,7 @@ impl Code<'_> {
                         | Type::CharArray
                         | Type::StringArray
                         | Type::Java(_)
+                        | Type::List(_)
                         | Type::Unit
                         | Type::Platform(_) => {
                             return Err(failure("Unsupported string concatenation operand"));
@@ -393,6 +490,7 @@ impl Code<'_> {
             ValueKind::Convert(target, value) => {
                 self.value(value)?;
                 match target {
+                    Type::Long => self.bytes.push(0x85),
                     Type::Byte => self.bytes.push(0x91),
                     Type::Char => self.bytes.push(0x92),
                     Type::Int => {}
@@ -496,9 +594,15 @@ impl Code<'_> {
             }
             ValueKind::IntToString(value) => {
                 self.value(value)?;
-                let method =
-                    self.pool
-                        .method("java/lang/String", "valueOf", "(I)Ljava/lang/String;")?;
+                let method = self.pool.method(
+                    "java/lang/String",
+                    "valueOf",
+                    if value.ty == Type::Long {
+                        "(J)Ljava/lang/String;"
+                    } else {
+                        "(I)Ljava/lang/String;"
+                    },
+                )?;
                 self.reference(0xb8, method);
             }
             ValueKind::CompanionArray { owner, name } => {
@@ -525,7 +629,7 @@ impl Code<'_> {
                     )?;
                     self.reference(0xb9, constant);
                     self.bytes.extend([
-                        u8::try_from(args.len())
+                        u8::try_from(args.iter().map(|v| v.ty.slots()).sum::<usize>())
                             .map_err(|_| failure("Too many interface call arguments"))?,
                         0,
                     ]);
@@ -570,6 +674,37 @@ impl Code<'_> {
                 self.reference(0xb8, check);
             }
             ValueKind::Int(n) => self.integer(*n)?,
+            ValueKind::Long(n) => {
+                if matches!(*n, 0 | 1) {
+                    self.bytes.push(0x09 + *n as u8);
+                } else {
+                    let constant = self.pool.add(Constant::Long(*n))?;
+                    self.reference(0x14, constant);
+                }
+            }
+            ValueKind::Null => self.bytes.push(0x01),
+            ValueKind::IsNull(inner) => {
+                self.value(inner)?;
+                self.comparison(0xc6);
+            }
+            ValueKind::ListSize(inner) => {
+                self.value(inner)?;
+                let method = self
+                    .pool
+                    .interface_method("java/util/List", "size", "()I")?;
+                self.reference(0xb9, method);
+                self.bytes.extend([1, 0]);
+            }
+            ValueKind::ListGet(inner, index) => {
+                self.value(inner)?;
+                self.value(index)?;
+                let method =
+                    self.pool
+                        .interface_method("java/util/List", "get", "(I)Ljava/lang/Object;")?;
+                self.reference(0xb9, method);
+                self.bytes.extend([2, 0]);
+                self.class_reference(0xc0, "java/lang/String")?;
+            }
             ValueKind::Boolean(b) => self.bytes.push(if *b { 0x04 } else { 0x03 }),
             ValueKind::Field(name, receiver) => {
                 self.value(receiver)?;
@@ -579,7 +714,8 @@ impl Code<'_> {
             ValueKind::Local(slot) => self.bytes.extend([load_opcode(&value.ty), *slot]),
             ValueKind::Negate(inner) => {
                 self.value(inner)?;
-                self.bytes.push(0x74);
+                self.bytes
+                    .push(if inner.ty == Type::Long { 0x75 } else { 0x74 });
             }
             ValueKind::Not(inner) => {
                 self.value(inner)?;
@@ -645,6 +781,49 @@ impl Code<'_> {
             ValueKind::Binary(op, a, b) => {
                 self.value(a)?;
                 self.value(b)?;
+                if a.ty == Type::Long {
+                    match op.as_str() {
+                        "+" => self.bytes.push(0x61),
+                        "-" => self.bytes.push(0x65),
+                        "*" => self.bytes.push(0x69),
+                        "/" => self.bytes.push(0x6d),
+                        "%" => self.bytes.push(0x71),
+                        "shl" => self.bytes.push(0x79),
+                        "shr" => self.bytes.push(0x7b),
+                        "ushr" => self.bytes.push(0x7d),
+                        "and" => self.bytes.push(0x7f),
+                        "or" => self.bytes.push(0x81),
+                        "xor" => self.bytes.push(0x83),
+                        "==" | "!=" | "<" | ">=" | ">" | "<=" => {
+                            self.bytes.push(0x94);
+                            self.comparison(match op.as_str() {
+                                "==" => 0x99,
+                                "!=" => 0x9a,
+                                "<" => 0x9b,
+                                ">=" => 0x9c,
+                                ">" => 0x9d,
+                                _ => 0x9e,
+                            });
+                        }
+                        _ => return Err(failure("Unsupported Long operation")),
+                    }
+                    return Ok(());
+                }
+                if a.ty.is_reference() || b.ty.is_reference() {
+                    if !matches!(op.as_str(), "==" | "!=") {
+                        return Err(failure("Unsupported reference operation"));
+                    }
+                    self.method_reference(
+                        0xb8,
+                        "kotlin/jvm/internal/Intrinsics",
+                        "areEqual",
+                        "(Ljava/lang/Object;Ljava/lang/Object;)Z",
+                    )?;
+                    if op == "!=" {
+                        self.bytes.extend([0x04, 0x82]);
+                    }
+                    return Ok(());
+                }
                 match op.as_str() {
                     "+" => self.bytes.push(0x60),
                     "-" => self.bytes.push(0x64),
@@ -775,7 +954,8 @@ impl Code<'_> {
                 Statement::Expression(value) => {
                     self.value(value)?;
                     if value.ty.base() != &Type::Unit {
-                        self.bytes.push(0x57);
+                        self.bytes
+                            .push(if value.ty.slots() == 2 { 0x58 } else { 0x57 });
                     }
                 }
                 Statement::If(cond, yes, no) => {
@@ -828,13 +1008,10 @@ pub fn emit(
     let mut pool = Pool::default();
     let class = pool.class(owner)?;
     let parent = pool.class("java/lang/Object")?;
-    let code_name = pool.utf8("Code")?;
     let source_name = pool.utf8("SourceFile")?;
     let source_file = pool.utf8(file)?;
     let mut methods = Vec::new();
     for function in &module.functions {
-        let name = pool.utf8(&function.name)?;
-        let descriptor = pool.utf8(&function.descriptor())?;
         let mut code = Code {
             pool: &mut pool,
             functions: &module.functions,
@@ -846,9 +1023,12 @@ pub fn emit(
             max_stack: 2,
         };
         if !function.private {
-            for (i, (name, ty)) in function.params.iter().enumerate() {
-                if ty.is_reference() && !matches!(ty, Type::Platform(_)) {
-                    code.bytes.extend([0x19, i as u8]);
+            for (slot, (name, ty)) in parameter_slots(&function.params, 0)
+                .into_iter()
+                .zip(&function.params)
+            {
+                if nonnull(ty) {
+                    code.bytes.extend([0x19, slot as u8]);
                     let name = code.pool.string(if name.starts_with("$this$") {
                         "<this>"
                     } else {
@@ -868,19 +1048,21 @@ pub fn emit(
         let max_stack = u16::try_from(code.max_stack)
             .map_err(|_| failure("JVM operand stack limit exceeded"))?;
         let bytes = code.finish()?;
-        let mut method = Vec::new();
-        u2(&mut method, if function.private { 0x001a } else { 0x0019 });
-        u2(&mut method, name);
-        u2(&mut method, descriptor);
-        u2(&mut method, 1);
-        u2(&mut method, code_name);
-        u4(&mut method, (12 + bytes.len()) as u32);
-        u2(&mut method, max_stack);
-        u2(&mut method, function.locals);
-        u4(&mut method, bytes.len() as u32);
-        method.extend(bytes);
-        u2(&mut method, 0);
-        u2(&mut method, 0);
+        let mut method = simple_method(
+            &mut pool,
+            if function.private { 0x001a } else { 0x0019 },
+            &function.name,
+            &function.descriptor(),
+            SimpleCode {
+                bytes,
+                max_stack,
+                locals: function.locals,
+            },
+            generic_method(&function.params, &function.result).as_deref(),
+            nonnull(&function.result),
+        )?;
+        parameter_annotations(&mut pool, &mut method, &function.params)?;
+        nullable_result(&mut pool, &mut method, &function.result)?;
         methods.push(method);
     }
     let metadata = metadata_attribute(&mut pool, metadata)?;
@@ -1368,13 +1550,25 @@ pub fn emit_objects(decl: &ObjectDecl, owner: &str, file: &str) -> Result<Vec<cr
 }
 
 fn metadata_attribute(pool: &mut Pool, metadata: &crate::metadata::Metadata) -> Result<Vec<u8>> {
+    metadata_attribute_with_annotations(pool, metadata, &[])
+}
+
+fn metadata_attribute_with_annotations(
+    pool: &mut Pool,
+    metadata: &crate::metadata::Metadata,
+    annotations: &[String],
+) -> Result<Vec<u8>> {
     fn integer(pool: &mut Pool, out: &mut Vec<u8>, value: i32) -> Result<()> {
         out.push(b'I');
         u2(out, pool.add(Constant::Integer(value))?);
         Ok(())
     }
     let mut annotation = Vec::new();
-    u2(&mut annotation, 1);
+    u2(&mut annotation, (annotations.len() + 1) as u16);
+    for name in annotations {
+        u2(&mut annotation, pool.utf8(name)?);
+        u2(&mut annotation, 0);
+    }
     u2(&mut annotation, pool.utf8("Lkotlin/Metadata;")?);
     u2(&mut annotation, if metadata.kind == 3 { 3 } else { 5 });
     u2(&mut annotation, pool.utf8("mv")?);
@@ -1434,7 +1628,11 @@ fn parameter_annotations(
         if ty.is_reference() {
             u2(
                 &mut annotation,
-                pool.utf8("Lorg/jetbrains/annotations/NotNull;")?,
+                pool.utf8(if ty.is_nullable() {
+                    "Lorg/jetbrains/annotations/Nullable;"
+                } else {
+                    "Lorg/jetbrains/annotations/NotNull;"
+                })?,
             );
             u2(&mut annotation, 0);
         }
@@ -1476,14 +1674,28 @@ fn emit_class_with(
         u2(&mut fields, 0x0012);
         u2(&mut fields, pool.utf8(name)?);
         u2(&mut fields, pool.utf8(&ty.descriptor())?);
-        u2(&mut fields, u16::from(ty.is_reference()));
+        let generic = generic_type(ty);
+        let has_signature = generic != ty.descriptor();
+        u2(
+            &mut fields,
+            u16::from(ty.is_reference()) + u16::from(has_signature),
+        );
+        if has_signature {
+            u2(&mut fields, pool.utf8("Signature")?);
+            u4(&mut fields, 2);
+            u2(&mut fields, pool.utf8(&generic)?);
+        }
         if ty.is_reference() {
             u2(&mut fields, pool.utf8("RuntimeInvisibleAnnotations")?);
             u4(&mut fields, 6);
             u2(&mut fields, 1);
             u2(
                 &mut fields,
-                pool.utf8("Lorg/jetbrains/annotations/NotNull;")?,
+                pool.utf8(if ty.is_nullable() {
+                    "Lorg/jetbrains/annotations/Nullable;"
+                } else {
+                    "Lorg/jetbrains/annotations/NotNull;"
+                })?,
             );
             u2(&mut fields, 0);
         }
@@ -1496,38 +1708,69 @@ fn emit_class_with(
             .map(|(_, ty)| ty.descriptor())
             .collect::<String>()
     );
-    let mut code = SimpleCode::new(2, (class.params.len() + 1) as u16);
+    let constructor_slots: usize = 1 + class.params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
+    let mut code = SimpleCode::new(3, constructor_slots as u16);
     let null_check = pool.method(
         "kotlin/jvm/internal/Intrinsics",
         "checkNotNullParameter",
         "(Ljava/lang/Object;Ljava/lang/String;)V",
     )?;
-    for (index, (name, ty)) in class.params.iter().enumerate() {
-        if ty.is_reference() {
-            code.bytes.extend([0x19, (index + 1) as u8]);
+    for (slot, (name, ty)) in parameter_slots(&class.params, 1)
+        .into_iter()
+        .zip(&class.params)
+    {
+        if nonnull(ty) {
+            code.bytes.extend([0x19, slot as u8]);
             code.reference(0x13, pool.string(name)?);
             code.reference(0xb8, null_check);
         }
     }
     code.bytes.push(0x2a);
     code.reference(0xb7, pool.method("java/lang/Object", "<init>", "()V")?);
-    for (index, (name, ty)) in class.params.iter().enumerate() {
+    for (slot, (name, ty)) in parameter_slots(&class.params, 1)
+        .into_iter()
+        .zip(&class.params)
+    {
         code.bytes.push(0x2a);
-        code.bytes.extend([load_opcode(ty), (index + 1) as u8]);
+        code.bytes.extend([load_opcode(ty), slot as u8]);
         code.reference(0xb5, pool.field(owner, name, &ty.descriptor())?);
     }
     code.bytes.push(0xb1);
+    let constructor_signature = generic_method(&class.params, &Type::Unit);
     let mut constructor = simple_method(
         &mut pool,
         constructor_flags,
         "<init>",
         &constructor_descriptor,
         code,
-        None,
+        constructor_signature.as_deref(),
         false,
     )?;
     parameter_annotations(&mut pool, &mut constructor, &class.params)?;
     let mut methods = vec![constructor];
+    for (name, ty) in &class.params {
+        if class.public_params.contains(name) {
+            let mut code = SimpleCode::new(ty.slots() as u16, 1);
+            code.bytes.push(0x2a);
+            code.reference(0xb4, pool.field(owner, name, &ty.descriptor())?);
+            code.bytes.push(return_opcode(ty));
+            let signature = generic_method(&[], ty);
+            let mut getter = simple_method(
+                &mut pool,
+                0x0011,
+                &crate::check::getter_name(name),
+                &format!("(){}", ty.descriptor()),
+                code,
+                signature.as_deref(),
+                nonnull(ty),
+            )?;
+            nullable_result(&mut pool, &mut getter, ty)?;
+            methods.push(getter);
+        }
+    }
+    if class.data {
+        methods.extend(data::methods(&mut pool, class, owner)?);
+    }
     for function in &class.methods {
         if function.body.iter().enumerate().any(|(index, statement)| {
             matches!(statement, Statement::Return(_) | Statement::Throw(_))
@@ -1548,9 +1791,12 @@ fn emit_class_with(
             max_stack: 2,
         };
         if !function.private {
-            for (index, (name, ty)) in function.params.iter().enumerate() {
-                if ty.is_reference() {
-                    code.bytes.extend([0x19, (index + 1) as u8]);
+            for (slot, (name, ty)) in parameter_slots(&function.params, 1)
+                .into_iter()
+                .zip(&function.params)
+            {
+                if nonnull(ty) {
+                    code.bytes.extend([0x19, slot as u8]);
                     let name = code.pool.string(name)?;
                     code.reference(0x13, name);
                     let check = code.pool.method(
@@ -1563,14 +1809,12 @@ fn emit_class_with(
             }
         }
         code.block(&function.body)?;
-        if !code.branches.is_empty() {
-            return Err(failure("Control flow in class members is not supported"));
-        }
+        let max_stack = u16::try_from(code.max_stack)
+            .map_err(|_| failure("JVM operand stack limit exceeded"))?;
         let code = SimpleCode {
-            max_stack: u16::try_from(code.max_stack)
-                .map_err(|_| failure("JVM operand stack limit exceeded"))?,
+            max_stack,
             locals: function.locals,
-            bytes: code.bytes,
+            bytes: code.finish()?,
         };
         let flags = if function.private {
             0x0012
@@ -1585,18 +1829,30 @@ fn emit_class_with(
             &function.name,
             &function.descriptor(),
             code,
-            None,
-            function.result.is_reference(),
+            generic_method(&function.params, &function.result).as_deref(),
+            nonnull(&function.result),
         )?;
         parameter_annotations(&mut pool, &mut method, &function.params)?;
+        nullable_result(&mut pool, &mut method, &function.result)?;
+        frames::attach(
+            &mut pool,
+            &mut method,
+            owner,
+            &function.params,
+            function.locals,
+            false,
+        )?;
         methods.push(method);
     }
     for bridge in &class.bridges {
         let (params, result) = crate::check::class_method_types(bridge)?;
-        let mut code = SimpleCode::new((params.len() + 1) as u16, (params.len() + 1) as u16);
+        let count = 1 + params.iter().map(Type::slots).sum::<usize>();
+        let mut code = SimpleCode::new(count.max(result.slots()) as u16, count as u16);
         code.bytes.push(0x2a);
-        for (index, ty) in params.iter().enumerate() {
-            code.bytes.extend([load_opcode(ty), (index + 1) as u8]);
+        let mut slot = 1;
+        for ty in &params {
+            code.bytes.extend([load_opcode(ty), slot as u8]);
+            slot += ty.slots();
         }
         code.reference(
             0xb7,

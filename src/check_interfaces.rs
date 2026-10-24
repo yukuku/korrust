@@ -32,6 +32,8 @@ fn register_names(
     if matches!(
         source.name.as_str(),
         "Int"
+            | "Long"
+            | "List"
             | "Char"
             | "Float"
             | "Boolean"
@@ -125,6 +127,12 @@ fn register_classes(
     let mut methods = Vec::new();
     let mut names = HashSet::new();
     for property in &source.properties {
+        if loses_member_type(&property.ty) {
+            return Err(Diagnostic::new(
+                property.offset,
+                "Nullable and List interface member signatures are not supported",
+            ));
+        }
         let ty = resolve_type(&property.ty, &imports, property.offset)?;
         if ty == Type::Unit {
             return Err(Diagnostic::new(
@@ -145,16 +153,45 @@ fn register_classes(
             },
             property.offset,
         )?;
+        if property.mutable {
+            add_method(
+                &mut methods,
+                &mut names,
+                JavaMethod {
+                    owner: owner.into(),
+                    name: setter_name(&property.name),
+                    descriptor: format!("({})V", ty.descriptor()),
+                    access: 0x0401,
+                    unsupported: false,
+                    source_property: Some(property.name.clone()),
+                },
+                property.offset,
+            )?;
+        }
     }
     for method in &source.methods {
         let function = &method.function;
+        if loses_member_type(&function.result)
+            || function.params.iter().any(|(_, ty)| loses_member_type(ty))
+        {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Nullable and List interface member signatures are not supported",
+            ));
+        }
         if function.private || function.internal || function.receiver.is_some() {
             return Err(Diagnostic::new(
                 function.offset,
                 "Source interface members require public non-extension declarations",
             ));
         }
-        if function.params.len() > 254 {
+        if function
+            .params
+            .iter()
+            .map(|(_, ty)| ty.slots())
+            .sum::<usize>()
+            > 254
+        {
             return Err(Diagnostic::new(
                 function.offset,
                 "Instance methods support at most 254 parameter slots",
@@ -360,6 +397,17 @@ fn check_interface(
     let mut methods = Vec::new();
     for property in &source.properties {
         let name = getter_name(&property.name);
+        let setter = setter_name(&property.name);
+        if !property.mutable
+            && inherited
+                .get(&setter)
+                .is_some_and(|method| method.source_property.as_deref() == Some(&property.name))
+        {
+            return Err(Diagnostic::new(
+                property.offset,
+                "A mutable interface property cannot be overridden by val",
+            ));
+        }
         let method = &members[&name];
         check_override(
             method,
@@ -386,6 +434,29 @@ fn check_interface(
             has_body: property.body.is_some(),
             source_property: Some(property.name.clone()),
         });
+        if property.mutable {
+            let method = &members[&setter];
+            let is_override = property.is_override && inherited.contains_key(&setter);
+            check_override(method, is_override, inherited.get(&setter), property.offset)?;
+            methods.push(InterfaceMethod {
+                function: check_function(
+                    &setter,
+                    &[("value".into(), property.ty.clone())],
+                    &Type::Unit,
+                    None,
+                    is_override,
+                    property.offset,
+                    owner,
+                    classpath,
+                    &imports,
+                    classes,
+                    &members,
+                    &companion_fields,
+                )?,
+                has_body: false,
+                source_property: Some(property.name.clone()),
+            });
+        }
     }
     for method in &source.methods {
         let source_function = &method.function;
@@ -654,6 +725,59 @@ interface Catalog {
         assert!(error.message.contains(message), "{}", error.message);
     }
     #[test]
+    fn mutable_properties_emit_both_accessors_and_reads_select_the_getter() {
+        let interface = checked("interface Surface { var count: Int; var isReady: Boolean; var isTitle: String; fun current(): Int = count; fun own(): Boolean = this.isReady }").unwrap().interface_decl.unwrap();
+        let signatures = interface
+            .methods
+            .iter()
+            .map(|method| (method.function.name.as_str(), method.function.descriptor()))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            signatures,
+            [
+                ("getCount", "()I".into()),
+                ("setCount", "(I)V".into()),
+                ("isReady", "()Z".into()),
+                ("setReady", "(Z)V".into()),
+                ("isTitle", "()Ljava/lang/String;".into()),
+                ("setTitle", "(Ljava/lang/String;)V".into()),
+                ("current", "()I".into()),
+                ("own", "()Z".into()),
+            ]
+        );
+        let inherited = checked("interface Root { val count: Int; interface Child : Root { override var count: Int; interface Grandchild : Child { override var count: Int } } }").unwrap().interface_decl.unwrap();
+        assert_eq!(inherited.nested[0].methods.len(), 2);
+        assert_eq!(inherited.nested[0].nested[0].methods.len(), 2);
+        for (source, diagnostic) in [
+            (
+                "interface Root { var count: Int; interface Child : Root { override val count: Int } }",
+                "cannot be overridden by val",
+            ),
+            (
+                "interface Root { var count: Int; interface Child : Root { override var count: Byte } }",
+                "Conflicting inherited interface signature",
+            ),
+            (
+                "interface Root { var count: Int; fun setCount(value: Int) }",
+                "collisions",
+            ),
+            (
+                "interface Root { var isReady: Boolean; var ready: Boolean }",
+                "collisions",
+            ),
+            (
+                "interface Root { var count: Int; fun write() { count = 1 } }",
+                "Property assignments",
+            ),
+            (
+                "interface Root { var count: Int; fun write() { count += 1 } }",
+                "Property assignments",
+            ),
+        ] {
+            rejects(source, diagnostic);
+        }
+    }
+    #[test]
     fn source_interfaces_share_expression_checks_and_preserve_nested_inherited_defaults() {
         let module = checked(CATALOG).unwrap();
         let interface = module.interface_decl.unwrap();
@@ -750,7 +874,10 @@ interface Catalog {
             "Float",
         );
         rejects("interface Root { val f: Float get() = 1 }", "Float");
-        rejects("interface Root { fun f(): String? }", "Unsupported token");
+        rejects(
+            "interface Root { fun f(): String? }",
+            "Nullable and List interface",
+        );
         rejects(
             r#"interface Root { companion object { val VALUES = arrayOf("a") } }"#,
             "private",

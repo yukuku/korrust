@@ -1,0 +1,2 @@
+package life
+object Signal

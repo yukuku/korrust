@@ -9,6 +9,8 @@ use std::collections::{HashMap, HashSet};
 mod interfaces;
 #[path = "check_objects.rs"]
 mod objects;
+#[path = "check_singletons.rs"]
+mod singletons;
 
 pub struct Module {
     pub functions: Vec<Function>,
@@ -18,6 +20,8 @@ pub struct Module {
 }
 pub struct DynamicObject {
     pub owner: String,
+    pub interfaces: Vec<String>,
+    pub serializable: bool,
     pub fields: Vec<ObjectField>,
     pub methods: Vec<ObjectMethod>,
 }
@@ -71,6 +75,8 @@ pub enum CompanionValue {
 }
 pub struct ClassDecl {
     pub params: Vec<(String, Type)>,
+    pub public_params: Vec<String>,
+    pub data: bool,
     pub interfaces: Vec<String>,
     pub methods: Vec<Function>,
     pub bridges: Vec<JavaMethod>,
@@ -135,6 +141,11 @@ pub enum StringMethod {
 }
 pub enum ValueKind {
     Unit,
+    Long(i64),
+    Null,
+    IsNull(Box<Value>),
+    ListSize(Box<Value>),
+    ListGet(Box<Value>, Box<Value>),
     Let {
         slot: u8,
         value: Box<Value>,
@@ -199,6 +210,10 @@ impl Value {
     pub fn stack(&self) -> usize {
         match &self.kind {
             ValueKind::Unit => 0,
+            ValueKind::Long(_) => 2,
+            ValueKind::Null => 1,
+            ValueKind::IsNull(value) | ValueKind::ListSize(value) => value.stack().max(1),
+            ValueKind::ListGet(a, b) => a.stack().max(1 + b.stack()),
             ValueKind::Let { value, body, .. } => value.stack().max(body.stack()),
             ValueKind::NewArray(_, value)
             | ValueKind::Convert(_, value)
@@ -214,15 +229,15 @@ impl Value {
             ValueKind::IntToString(value) => value.stack(),
             ValueKind::CompanionArray { .. } => 1,
             ValueKind::NewIntArray(v) => v.stack().max(1),
-            ValueKind::Field(_, receiver) => receiver.stack(),
+            ValueKind::Field(_, receiver) => receiver.stack().max(self.ty.slots()),
             ValueKind::NotNull(v, _) => v.stack().max(3),
             ValueKind::Int(_)
             | ValueKind::Boolean(_)
             | ValueKind::String(_)
-            | ValueKind::Local(_) => 1,
+            | ValueKind::Local(_) => self.ty.slots(),
             ValueKind::Negate(v) | ValueKind::Not(v) | ValueKind::Length(v) => v.stack().max(2),
             ValueKind::Binary(_, a, b) | ValueKind::Index(a, b) | ValueKind::Compare(a, b) => {
-                a.stack().max(1 + b.stack())
+                a.stack().max(a.ty.slots() + b.stack())
             }
             ValueKind::StringConcat(a, b) => 2.max(1 + a.stack()).max(1 + b.stack()),
             ValueKind::StringFromChars(args) => args
@@ -238,10 +253,14 @@ impl Value {
             | ValueKind::JavaCall { args, .. }
             | ValueKind::MemberCall { args, .. } => args
                 .iter()
-                .enumerate()
-                .map(|(i, v)| i + v.stack())
+                .scan(0, |slots, v| {
+                    let stack = *slots + v.stack();
+                    *slots += v.ty.slots();
+                    Some(stack)
+                })
                 .max()
-                .unwrap_or(1),
+                .unwrap_or(1)
+                .max(self.ty.slots()),
         }
     }
 }
@@ -272,6 +291,164 @@ struct Checker<'a> {
     result: Type,
 }
 impl Checker<'_> {
+    fn safe_access(
+        &mut self,
+        receiver: &Expr,
+        name: &str,
+        args: Option<&Vec<Expr>>,
+        offset: usize,
+    ) -> Result<Value> {
+        let receiver = self.value(receiver)?;
+        let inner = match receiver.ty.base() {
+            Type::Nullable(inner) => inner.as_ref().clone(),
+            Type::Null => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Safe calls on literal null have no supported receiver type",
+                ));
+            }
+            ty if ty.is_reference() => ty.clone(),
+            _ => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Safe calls require reference receivers",
+                ));
+            }
+        };
+        let slot = self.allocate_slot(offset)?;
+        let mut scope = HashMap::new();
+        scope.insert(
+            "<safe>".into(),
+            Local {
+                slot,
+                ty: inner,
+                mutable: false,
+            },
+        );
+        self.scopes.push(scope);
+        self.initialized.insert(slot);
+        let property = Expr {
+            offset,
+            kind: ExprKind::Property(
+                Box::new(Expr {
+                    offset,
+                    kind: ExprKind::Name("<safe>".into()),
+                }),
+                name.into(),
+            ),
+        };
+        let expression = match args {
+            Some(args) => Expr {
+                offset,
+                kind: ExprKind::Call(Box::new(property), args.clone()),
+            },
+            None => property,
+        };
+        let result = self.value(&expression);
+        self.scopes.pop();
+        self.initialized.remove(&slot);
+        let result = result?;
+        if !result.ty.is_reference() {
+            return Err(Diagnostic::new(
+                offset,
+                "Safe calls returning primitives or Unit are not supported",
+            ));
+        }
+        let ty = match result.ty.base() {
+            Type::Nullable(_) => result.ty.clone(),
+            ty => Type::Nullable(Box::new(ty.clone())),
+        };
+        let condition = Value {
+            ty: Type::Boolean,
+            kind: ValueKind::IsNull(Box::new(Value {
+                ty: receiver.ty.clone(),
+                kind: ValueKind::Local(slot),
+            })),
+        };
+        Ok(Value {
+            ty: ty.clone(),
+            kind: ValueKind::Let {
+                slot,
+                value: Box::new(receiver),
+                body: Box::new(Value {
+                    ty: ty.clone(),
+                    kind: ValueKind::If(
+                        Box::new(condition),
+                        Box::new(Value {
+                            ty: ty.clone(),
+                            kind: ValueKind::Null,
+                        }),
+                        Box::new(Value {
+                            ty,
+                            kind: result.kind,
+                        }),
+                    ),
+                }),
+            },
+        })
+    }
+    fn elvis(&mut self, left: &Expr, right: &Expr, offset: usize) -> Result<Value> {
+        let left = self.value(left)?;
+        if left.ty == Type::Null {
+            let body = self.value(right)?;
+            let slot = self.allocate_slot(offset)?;
+            return Ok(Value {
+                ty: body.ty.clone(),
+                kind: ValueKind::Let {
+                    slot,
+                    value: Box::new(left),
+                    body: Box::new(body),
+                },
+            });
+        }
+        let inner = match left.ty.base() {
+            Type::Nullable(inner) | Type::Platform(inner) => inner.as_ref().clone(),
+            ty if ty.is_reference() => ty.clone(),
+            _ => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Elvis requires a reference left operand",
+                ));
+            }
+        };
+        let right = self.value(right)?;
+        let ty = if right.ty == inner {
+            inner.clone()
+        } else if right.ty == Type::Null || right.ty == Type::Nullable(Box::new(inner.clone())) {
+            Type::Nullable(Box::new(inner.clone()))
+        } else {
+            return Err(Diagnostic::new(
+                offset,
+                "Elvis operands require the same supported reference type",
+            ));
+        };
+        let slot = self.allocate_slot(offset)?;
+        let condition = Value {
+            ty: Type::Boolean,
+            kind: ValueKind::IsNull(Box::new(Value {
+                ty: left.ty.clone(),
+                kind: ValueKind::Local(slot),
+            })),
+        };
+        Ok(Value {
+            ty: ty.clone(),
+            kind: ValueKind::Let {
+                slot,
+                value: Box::new(left),
+                body: Box::new(Value {
+                    ty: ty.clone(),
+                    kind: ValueKind::If(
+                        Box::new(condition),
+                        Box::new(right),
+                        Box::new(Value {
+                            ty,
+                            kind: ValueKind::Local(slot),
+                        }),
+                    ),
+                }),
+            },
+        })
+    }
     fn receiver_value(&self, offset: usize) -> Result<Value> {
         let receiver = self
             .receiver
@@ -321,6 +498,25 @@ impl Checker<'_> {
         if value.ty == expected {
             return Ok(value);
         }
+        if let Type::Nullable(inner) = &expected {
+            if value.ty == Type::Null || value.ty.base() == inner.as_ref() {
+                return Ok(Value {
+                    ty: expected,
+                    kind: value.kind,
+                });
+            }
+        }
+        if expected == Type::Long
+            && value.ty == Type::Int
+            && matches!(value.kind, ValueKind::Int(_))
+        {
+            if let ValueKind::Int(n) = value.kind {
+                return Ok(Value {
+                    ty: Type::Long,
+                    kind: ValueKind::Long(i64::from(n)),
+                });
+            }
+        }
         if expected == Type::Byte
             && value.ty == Type::Int
             && matches!(value.kind, ValueKind::Int(n) if (-128..=127).contains(&n))
@@ -357,6 +553,7 @@ impl Checker<'_> {
         *cursor += 1;
         let ty = match bytes.get(start) {
             Some(b'I') => Type::Int,
+            Some(b'J') => Type::Long,
             Some(b'B') => Type::Byte,
             Some(b'C') => Type::Char,
             Some(b'Z') => Type::Boolean,
@@ -524,12 +721,24 @@ impl Checker<'_> {
                 format!("Conflicting local declaration: {name}"),
             ));
         }
-        let slot = self.allocate_slot(offset)?;
+        let slot = self.allocate_typed_slot(&ty, offset)?;
         self.initialized.insert(slot);
         self.scopes
             .last_mut()
             .unwrap()
             .insert(name.into(), Local { slot, ty, mutable });
+        Ok(slot)
+    }
+    fn allocate_typed_slot(&mut self, ty: &Type, offset: usize) -> Result<u8> {
+        let width = ty.slots() as u16;
+        if self.next + width > 256 {
+            return Err(Diagnostic::new(
+                offset,
+                "More than 256 local slots are not supported",
+            ));
+        }
+        let slot = self.next as u8;
+        self.next += width;
         Ok(slot)
     }
     fn allocate_slot(&mut self, offset: usize) -> Result<u8> {
@@ -658,7 +867,16 @@ impl Checker<'_> {
                 }
                 StatementKind::Assign(name, expr) => {
                     let local = self.local(name).ok_or_else(|| {
-                        if self.fields.contains_key(name) {
+                        if self
+                            .members
+                            .values()
+                            .any(|method| method.source_property.as_deref() == Some(name))
+                        {
+                            Diagnostic::new(
+                                offset,
+                                "Property assignments in method bodies are not supported",
+                            )
+                        } else if self.fields.contains_key(name) {
                             Diagnostic::new(
                                 offset,
                                 format!("Cannot reassign val or parameter: {name}"),
@@ -680,7 +898,16 @@ impl Checker<'_> {
                 }
                 StatementKind::AddAssign(name, expr) => {
                     let local = self.local(name).ok_or_else(|| {
-                        if self.fields.contains_key(name) {
+                        if self
+                            .members
+                            .values()
+                            .any(|method| method.source_property.as_deref() == Some(name))
+                        {
+                            Diagnostic::new(
+                                offset,
+                                "Property assignments in method bodies are not supported",
+                            )
+                        } else if self.fields.contains_key(name) {
                             Diagnostic::new(
                                 offset,
                                 format!("Cannot reassign val or parameter: {name}"),
@@ -695,10 +922,10 @@ impl Checker<'_> {
                             format!("Cannot reassign val or parameter: {name}"),
                         ));
                     }
-                    if local.ty != Type::Int {
+                    if !matches!(local.ty, Type::Int | Type::Long) {
                         return Err(Diagnostic::new(
                             offset,
-                            "+= supports only mutable Int locals",
+                            "+= supports only mutable Int and Long locals",
                         ));
                     }
                     if !self.initialized.contains(&local.slot) {
@@ -708,29 +935,34 @@ impl Checker<'_> {
                         ));
                     }
                     let right = self.value(expr)?;
-                    self.require(&right, Type::Int, expr.offset)?;
+                    self.require(&right, local.ty.clone(), expr.offset)?;
                     let left = Value {
-                        ty: Type::Int,
+                        ty: local.ty.clone(),
                         kind: ValueKind::Local(local.slot),
                     };
                     Statement::Store(
                         local.slot,
                         Value {
-                            ty: Type::Int,
+                            ty: local.ty.clone(),
                             kind: ValueKind::Binary("+".into(), Box::new(left), Box::new(right)),
                         },
                     )
                 }
                 StatementKind::When(subject, branches, otherwise) => {
                     let subject = self.value(subject)?;
-                    if !matches!(subject.ty, Type::Int | Type::Char) {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "when subjects support only Int and Char",
-                        ));
+                    if !matches!(
+                        subject.ty,
+                        Type::Int
+                            | Type::Char
+                            | Type::Byte
+                            | Type::Long
+                            | Type::String
+                            | Type::Boolean
+                    ) {
+                        return Err(Diagnostic::new(offset, "Unsupported when subject type"));
                     }
                     let subject_type = subject.ty.clone();
-                    let slot = self.allocate_slot(offset)?;
+                    let slot = self.allocate_typed_slot(&subject.ty, offset)?;
                     body.push(Statement::Store(slot, subject));
                     let before = self.initialized.clone();
                     let mut continuing = Vec::new();
@@ -754,7 +986,8 @@ impl Checker<'_> {
                                 self.range_contains(left, range, condition.offset)?
                             } else {
                                 let right = self.value(condition)?;
-                                self.require(&right, subject_type.clone(), condition.offset)?;
+                                let right =
+                                    self.coerce(right, subject_type.clone(), condition.offset)?;
                                 Value {
                                     ty: Type::Boolean,
                                     kind: ValueKind::Binary(
@@ -869,13 +1102,24 @@ impl Checker<'_> {
     fn value(&mut self, expr: &Expr) -> Result<Value> {
         let offset = expr.offset;
         let (ty, kind) = match &expr.kind {
-            ExprKind::Int(value) => (
-                Type::Int,
-                ValueKind::Int(
-                    i32::try_from(*value)
-                        .map_err(|_| Diagnostic::new(offset, "Int literal is out of range"))?,
+            ExprKind::Int(value) => {
+                if let Ok(value) = i32::try_from(*value) {
+                    (Type::Int, ValueKind::Int(value))
+                } else {
+                    (Type::Long, ValueKind::Long(*value))
+                }
+            }
+            ExprKind::Long(value) => (
+                Type::Long,
+                ValueKind::Long(
+                    i64::try_from(*value)
+                        .map_err(|_| Diagnostic::new(offset, "Long literal is out of range"))?,
                 ),
             ),
+            ExprKind::Null => (Type::Null, ValueKind::Null),
+            ExprKind::SafeProperty(receiver, name) => {
+                return self.safe_access(receiver, name, None, offset);
+            }
             ExprKind::Char(value) => (Type::Char, ValueKind::Int(i32::from(*value))),
             ExprKind::Boolean(value) => (Type::Boolean, ValueKind::Boolean(*value)),
             ExprKind::String(value) => (Type::String, ValueKind::String(value.clone())),
@@ -915,7 +1159,16 @@ impl Checker<'_> {
                     ));
                 }
                 (
-                    value.ty.base().clone(),
+                    match value.ty.base() {
+                        Type::Nullable(inner) => inner.as_ref().clone(),
+                        Type::Null => {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "A null literal has no supported asserted type",
+                            ));
+                        }
+                        ty => ty.clone(),
+                    },
                     ValueKind::RequireNotNull(Box::new(value)),
                 )
             }
@@ -927,13 +1180,16 @@ impl Checker<'_> {
             }
             ExprKind::When(subject, branches, otherwise) => {
                 let subject = self.value(subject)?;
-                if !matches!(subject.ty, Type::Int | Type::Char | Type::Byte) {
+                if !matches!(
+                    subject.ty,
+                    Type::Int | Type::Char | Type::Byte | Type::Long | Type::String | Type::Boolean
+                ) {
                     return Err(Diagnostic::new(
                         offset,
-                        "when expression subjects support Int, Byte, and Char",
+                        "Unsupported when expression subject type",
                     ));
                 }
-                let slot = self.allocate_slot(offset)?;
+                let slot = self.allocate_typed_slot(&subject.ty, offset)?;
                 let mut checked = Vec::new();
                 for (conditions, branch) in branches {
                     let mut combined = None;
@@ -952,7 +1208,7 @@ impl Checker<'_> {
                             self.range_contains(left, range, condition.offset)?
                         } else {
                             let right = self.value(condition)?;
-                            self.require(&right, subject.ty.clone(), condition.offset)?;
+                            let right = self.coerce(right, subject.ty.clone(), condition.offset)?;
                             Value {
                                 ty: Type::Boolean,
                                 kind: ValueKind::Binary(
@@ -1031,10 +1287,14 @@ impl Checker<'_> {
                 };
                 for part in parts {
                     let value = self.value(part)?;
-                    if !matches!(value.ty, Type::String | Type::Int | Type::Boolean) {
+                    if !matches!(
+                        value.ty,
+                        Type::String | Type::Int | Type::Long | Type::Boolean | Type::Null
+                    ) && !matches!(&value.ty, Type::Nullable(inner) if inner.as_ref() == &Type::String)
+                    {
                         return Err(Diagnostic::new(
                             part.offset,
-                            "String templates support only String, Int, and Boolean values",
+                            "String templates support only String, nullable String, null, Int, Long, and Boolean values",
                         ));
                     }
                     result = Value {
@@ -1085,11 +1345,10 @@ impl Checker<'_> {
                             }),
                         ),
                     )
-                } else if let Some(method) = self
-                    .members
-                    .values()
-                    .find(|method| method.source_property.as_deref() == Some(name))
-                {
+                } else if let Some(method) = self.members.values().find(|method| {
+                    method.source_property.as_deref() == Some(name)
+                        && method.name == getter_name(name)
+                }) {
                     let receiver = self.receiver_value(offset)?;
                     return self.member_call(method.clone(), receiver, &[], offset);
                 } else if let Some((owner, ty)) = self.companion_fields.get(name) {
@@ -1105,6 +1364,14 @@ impl Checker<'_> {
                 }
             }
             ExprKind::Unary(op, inner) => {
+                if let ExprKind::Int(n) = inner.kind {
+                    if op == "-" && n <= i64::from(i32::MAX) {
+                        return Ok(Value {
+                            ty: Type::Int,
+                            kind: ValueKind::Int(-(n as i32)),
+                        });
+                    }
+                }
                 if op == "-" && matches!(inner.kind, ExprKind::Int(2147483648)) {
                     return Ok(Value {
                         ty: Type::Int,
@@ -1116,14 +1383,22 @@ impl Checker<'_> {
                     self.require(&inner, Type::Boolean, offset)?;
                     (Type::Boolean, ValueKind::Not(Box::new(inner)))
                 } else {
-                    self.require(&inner, Type::Int, offset)?;
+                    if !matches!(inner.ty, Type::Int | Type::Long) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Unary arithmetic requires Int or Long",
+                        ));
+                    }
                     if op == "+" {
                         return Ok(inner);
                     }
-                    (Type::Int, ValueKind::Negate(Box::new(inner)))
+                    (inner.ty.clone(), ValueKind::Negate(Box::new(inner)))
                 }
             }
             ExprKind::Binary(op, a, b) => {
+                if op == "?:" {
+                    return self.elvis(a, b, offset);
+                }
                 if op == "in" || op == "!in" {
                     let value = self.value(a)?;
                     let value = self.range_contains(value, b, offset)?;
@@ -1144,17 +1419,85 @@ impl Checker<'_> {
                 }
                 let a = self.value(a)?;
                 let b = self.value(b)?;
+                if matches!(op.as_str(), "==" | "!=") && (a.ty == Type::Null || b.ty == Type::Null)
+                {
+                    if !a.ty.is_reference() || !b.ty.is_reference() {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Null equality requires reference operands",
+                        ));
+                    }
+                    let a_slot = self.allocate_slot(offset)?;
+                    let b_slot = self.allocate_slot(offset)?;
+                    let (slot, ty) = if b.ty == Type::Null {
+                        (a_slot, a.ty.clone())
+                    } else {
+                        (b_slot, b.ty.clone())
+                    };
+                    let test = Value {
+                        ty: Type::Boolean,
+                        kind: ValueKind::IsNull(Box::new(Value {
+                            ty,
+                            kind: ValueKind::Local(slot),
+                        })),
+                    };
+                    let test = if op == "==" {
+                        test
+                    } else {
+                        Value {
+                            ty: Type::Boolean,
+                            kind: ValueKind::Not(Box::new(test)),
+                        }
+                    };
+                    return Ok(Value {
+                        ty: Type::Boolean,
+                        kind: ValueKind::Let {
+                            slot: a_slot,
+                            value: Box::new(a),
+                            body: Box::new(Value {
+                                ty: Type::Boolean,
+                                kind: ValueKind::Let {
+                                    slot: b_slot,
+                                    value: Box::new(b),
+                                    body: Box::new(test),
+                                },
+                            }),
+                        },
+                    });
+                }
+                if op == "+"
+                    && a.ty == Type::String
+                    && (b.ty == Type::Null
+                        || matches!(&b.ty,Type::Nullable(inner) if inner.as_ref() == &Type::String))
+                {
+                    return Ok(Value {
+                        ty: Type::String,
+                        kind: ValueKind::StringConcat(Box::new(a), Box::new(b)),
+                    });
+                }
+                if a.ty.is_nullable() || b.ty.is_nullable() {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Nullable operands support only equality with null and Elvis",
+                    ));
+                }
                 if matches!(a.ty, Type::Unit | Type::Float)
                     || matches!(b.ty, Type::Unit | Type::Float)
-                    || matches!(a.ty.base(), Type::Java(_) | Type::ThreadLocal(_))
-                    || matches!(b.ty.base(), Type::Java(_) | Type::ThreadLocal(_))
+                    || matches!(
+                        a.ty.base(),
+                        Type::Java(_) | Type::ThreadLocal(_) | Type::List(_)
+                    )
+                    || matches!(
+                        b.ty.base(),
+                        Type::Java(_) | Type::ThreadLocal(_) | Type::List(_)
+                    )
                     || matches!(a.ty, Type::Platform(_)) && a.ty.base() == &Type::String
                     || matches!(b.ty, Type::Platform(_)) && b.ty.base() == &Type::String
                 {
                     return Err(Diagnostic::new(offset, "Unsupported value operand type"));
                 }
                 if op == "+" && a.ty == Type::String {
-                    if !matches!(b.ty, Type::String | Type::Int | Type::Boolean) {
+                    if !matches!(b.ty, Type::String | Type::Int | Type::Long | Type::Boolean) {
                         return Err(Diagnostic::new(
                             offset,
                             "String concatenation supports only String, Int, and Boolean operands",
@@ -1182,7 +1525,7 @@ impl Checker<'_> {
                     self.require(&b, a.ty.clone(), offset)?;
                     Type::Boolean
                 } else if matches!(op.as_str(), "<" | ">" | "<=" | ">=") {
-                    if !matches!(a.ty, Type::Int | Type::Char) {
+                    if !matches!(a.ty, Type::Int | Type::Char | Type::Long) {
                         return Err(Diagnostic::new(
                             offset,
                             "Ordered comparisons require Int or Char",
@@ -1191,14 +1534,30 @@ impl Checker<'_> {
                     self.require(&b, a.ty.clone(), offset)?;
                     Type::Boolean
                 } else {
-                    self.require(&a, Type::Int, offset)?;
-                    self.require(&b, Type::Int, offset)?;
-                    Type::Int
+                    if !matches!(a.ty, Type::Int | Type::Long) {
+                        return Err(Diagnostic::new(offset, "Arithmetic requires Int or Long"));
+                    }
+                    let expected = if matches!(op.as_str(), "shl" | "shr" | "ushr") {
+                        Type::Int
+                    } else {
+                        a.ty.clone()
+                    };
+                    self.require(&b, expected, offset)?;
+                    a.ty.clone()
                 };
                 (ty, ValueKind::Binary(op.clone(), Box::new(a), Box::new(b)))
             }
             ExprKind::Property(receiver, name) => {
-                if matches!(&receiver.kind, ExprKind::Name(n) if n == "Int")
+                if matches!(&receiver.kind, ExprKind::Name(n) if n == "Long")
+                    && self.unshadowed("Long")
+                {
+                    let value = match name.as_str() {
+                        "MIN_VALUE" => i64::MIN,
+                        "MAX_VALUE" => i64::MAX,
+                        _ => return Err(Diagnostic::new(offset, "Unsupported Long member")),
+                    };
+                    (Type::Long, ValueKind::Long(value))
+                } else if matches!(&receiver.kind, ExprKind::Name(n) if n == "Int")
                     && self.unshadowed("Int")
                 {
                     let value = match name.as_str() {
@@ -1214,6 +1573,24 @@ impl Checker<'_> {
                     (Type::Int, ValueKind::Int(value))
                 } else {
                     let receiver = self.value(receiver)?;
+                    if receiver.ty.is_nullable() {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Nullable receivers require a safe call or not-null assertion",
+                        ));
+                    }
+                    if let Type::List(_) = receiver.ty.base() {
+                        if name != "size" {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Lists support only size and indexing",
+                            ));
+                        }
+                        return Ok(Value {
+                            ty: Type::Int,
+                            kind: ValueKind::ListSize(Box::new(receiver)),
+                        });
+                    }
                     if self
                         .receiver
                         .as_ref()
@@ -1231,11 +1608,10 @@ impl Checker<'_> {
                         .as_ref()
                         .is_some_and(|this| this.ty == receiver.ty)
                     {
-                        if let Some(method) = self
-                            .members
-                            .values()
-                            .find(|method| method.source_property.as_deref() == Some(name))
-                        {
+                        if let Some(method) = self.members.values().find(|method| {
+                            method.source_property.as_deref() == Some(name)
+                                && method.name == getter_name(name)
+                        }) {
                             return self.member_call(method.clone(), receiver, &[], offset);
                         }
                     }
@@ -1268,6 +1644,21 @@ impl Checker<'_> {
             }
             ExprKind::Index(array, index) => {
                 let array = self.value(array)?;
+                if array.ty.is_nullable() {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Nullable indexing requires a not-null assertion",
+                    ));
+                }
+                if let Type::List(element) = array.ty.base() {
+                    let element = element.as_ref().clone();
+                    let index = self.value(index)?;
+                    self.require(&index, Type::Int, offset)?;
+                    return Ok(Value {
+                        ty: element,
+                        kind: ValueKind::ListGet(Box::new(array), Box::new(index)),
+                    });
+                }
                 let element = match array.ty.base() {
                     Type::IntArray => Type::Int,
                     Type::ByteArray => Type::Byte,
@@ -1280,6 +1671,9 @@ impl Checker<'_> {
                 (element, ValueKind::Index(Box::new(array), Box::new(index)))
             }
             ExprKind::Call(target, args) => match &target.kind {
+                ExprKind::SafeProperty(receiver, name) => {
+                    return self.safe_access(receiver, name, Some(args), offset);
+                }
                 ExprKind::Name(name) => {
                     if self.local(name).is_some() {
                         return Err(Diagnostic::new(
@@ -1441,6 +1835,12 @@ impl Checker<'_> {
                         });
                     }
                     let receiver = self.value(receiver)?;
+                    if receiver.ty.is_nullable() {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Nullable receivers require a safe call or not-null assertion",
+                        ));
+                    }
                     if self
                         .object_owner
                         .is_some_and(|owner| receiver.ty == Type::Java(owner.into()))
@@ -1524,7 +1924,10 @@ impl Checker<'_> {
                             return self.member_call(method, receiver, args, offset);
                         }
                     }
-                    if receiver.ty == Type::Int && name == "toString" && args.is_empty() {
+                    if matches!(receiver.ty, Type::Int | Type::Long)
+                        && name == "toString"
+                        && args.is_empty()
+                    {
                         return Ok(Value {
                             ty: Type::String,
                             kind: ValueKind::IntToString(Box::new(receiver)),
@@ -1626,6 +2029,16 @@ impl Checker<'_> {
 }
 fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> Result<Type> {
     match ty {
+        Type::Nullable(inner) => {
+            let inner = resolve_type(inner, imports, offset)?;
+            if !inner.is_reference() || inner.is_nullable() {
+                return Err(Diagnostic::new(offset, "Unsupported nullable type"));
+            }
+            Ok(Type::Nullable(Box::new(inner)))
+        }
+        Type::List(element) => Ok(Type::List(Box::new(resolve_type(
+            element, imports, offset,
+        )?))),
         Type::ThreadLocal(_) => Err(Diagnostic::new(
             offset,
             "Explicit ThreadLocal types are not supported; only inferred private array buffers are supported",
@@ -1642,7 +2055,17 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
         _ => Ok(ty.clone()),
     }
 }
+fn loses_member_type(ty: &Type) -> bool {
+    matches!(ty.base(), Type::Nullable(_) | Type::List(_))
+}
 pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
+    if source
+        .object_decl
+        .as_ref()
+        .is_some_and(|object| !object.annotations.is_empty() || !object.interfaces.is_empty())
+    {
+        return singletons::check(source, classpath);
+    }
     let mut imports = HashMap::new();
     let mut classes = HashMap::new();
     for (alias, name, offset) in &source.imports {
@@ -1679,6 +2102,8 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         if matches!(
             alias.as_str(),
             "Int"
+                | "Long"
+                | "List"
                 | "Byte"
                 | "ByteArray"
                 | "ThreadLocal"
@@ -1748,7 +2173,7 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
                 "Unit parameters are not supported",
             ));
         }
-        if params.len() > 255 {
+        if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > 255 {
             return Err(Diagnostic::new(
                 function.offset,
                 "JVM methods support at most 255 parameter slots",
@@ -1858,6 +2283,15 @@ pub(crate) fn getter_name(name: &str) -> String {
     }
 }
 
+pub(crate) fn setter_name(name: &str) -> String {
+    let suffix = if getter_name(name) == name {
+        &name[2..]
+    } else {
+        name
+    };
+    format!("set{}{}", suffix[..1].to_ascii_uppercase(), &suffix[1..])
+}
+
 #[allow(clippy::too_many_arguments)]
 fn check_class(
     source: &syntax::ClassDecl,
@@ -1868,6 +2302,80 @@ fn check_class(
     companion_fields: &HashMap<String, (String, Type)>,
     owner_override: Option<&str>,
 ) -> Result<ClassDecl> {
+    if source.data
+        && (source.params.is_empty()
+            || source.params.len() > 32
+            || source.public_params.len() != source.params.len()
+            || !source.interfaces.is_empty()
+            || !source.methods.is_empty()
+            || !source.properties.is_empty()
+            || source.params.iter().any(|(_, ty)| {
+                !matches!(
+                    ty,
+                    Type::Int | Type::Long | Type::Byte | Type::Char | Type::Boolean | Type::String
+                )
+            }))
+    {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Data classes require 1 to 32 public val nonnullable scalar or String parameters and no body members or interfaces",
+        ));
+    }
+    let mut generated = HashSet::new();
+    for name in &source.public_params {
+        if !generated.insert(getter_name(name)) {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Public constructor getter collision",
+            ));
+        }
+    }
+    if source.data {
+        generated.extend([
+            "copy".into(),
+            "copy$default".into(),
+            "equals".into(),
+            "hashCode".into(),
+            "toString".into(),
+        ]);
+        for index in 1..=source.params.len() {
+            generated.insert(format!("component{index}"));
+        }
+    }
+    for property in &source.properties {
+        if loses_member_type(&property.ty) {
+            return Err(Diagnostic::new(
+                property.offset,
+                "Nullable and List class getter signatures are not supported",
+            ));
+        }
+        if generated.contains(&getter_name(&property.name)) {
+            return Err(Diagnostic::new(
+                property.offset,
+                "Public constructor getter collision",
+            ));
+        }
+    }
+    for method in &source.methods {
+        if loses_member_type(&method.function.result)
+            || method
+                .function
+                .params
+                .iter()
+                .any(|(_, ty)| loses_member_type(ty))
+        {
+            return Err(Diagnostic::new(
+                method.function.offset,
+                "Nullable and List class method signatures are not supported",
+            ));
+        }
+        if generated.contains(&method.function.name) {
+            return Err(Diagnostic::new(
+                method.function.offset,
+                "Public constructor getter collision",
+            ));
+        }
+    }
     let owner = if let Some(owner) = owner_override {
         owner.into()
     } else if package.is_empty() {
@@ -1893,7 +2401,7 @@ fn check_class(
         }
         params.push((name.clone(), ty));
     }
-    if params.len() > 254 {
+    if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > 254 {
         return Err(Diagnostic::new(
             source.offset,
             "Instance methods support at most 254 parameter slots",
@@ -2038,7 +2546,12 @@ fn check_class(
             result: result.clone(),
         };
         let mut method_params = Vec::new();
-        if source_params.len() > 254 {
+        if source_params
+            .iter()
+            .map(|(_, ty)| ty.slots())
+            .sum::<usize>()
+            > 254
+        {
             return Err(Diagnostic::new(
                 offset,
                 "Instance methods support at most 254 parameter slots",
@@ -2125,6 +2638,8 @@ fn check_class(
     }
     Ok(ClassDecl {
         params,
+        public_params: source.public_params.clone(),
+        data: source.data,
         interfaces,
         methods,
         bridges,
@@ -2143,6 +2658,7 @@ pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type
             ("[B", Type::ByteArray),
             ("[C", Type::CharArray),
             ("I", Type::Int),
+            ("J", Type::Long),
             ("B", Type::Byte),
             ("C", Type::Char),
             ("Z", Type::Boolean),
@@ -2166,7 +2682,9 @@ pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type
     let mut params = Vec::new();
     while method.descriptor.as_bytes().get(cursor) != Some(&b')') {
         let param = ty(&method.descriptor, &mut cursor)?;
-        if param == Type::Unit || params.len() >= 254 {
+        if param == Type::Unit
+            || params.iter().map(Type::slots).sum::<usize>() + param.slots() > 254
+        {
             return Err(Diagnostic::new(
                 0,
                 "Unsupported interface method parameters",

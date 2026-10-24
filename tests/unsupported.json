@@ -1,15 +1,5 @@
 [
   {
-    "id": "string_templates",
-    "source": "fun f(x: Int): String = \"value=${x}\"",
-    "feature_name": "string_template_expressions"
-  },
-  {
-    "id": "classes",
-    "source": "class Example(val value: Int)",
-    "feature_name": "nonprivate_constructor_properties"
-  },
-  {
     "id": "nullable_types",
     "source": "fun f(x: Int?): Int? = x"
   },
@@ -24,15 +14,6 @@
   {
     "id": "escaped_string_template",
     "source": "fun f(x: Int): String = \"$`x`\""
-  },
-  {
-    "id": "when_expression",
-    "source": "fun f(n: Int): Int = when { n > 0 -> 1; else -> 2 }",
-    "feature_name": "subjectless_when_expressions"
-  },
-  {
-    "id": "when_subjectless",
-    "source": "fun f(n: Int): Int { when { n > 0 -> return 1; else -> return 0 } }"
   },
   {
     "id": "when_range",
@@ -56,10 +37,6 @@
     "id": "char_array_write",
     "source": "fun f(a: Array<Char>) { a[0] = 'a' }",
     "feature_name": "generic_char_arrays"
-  },
-  {
-    "id": "when_boolean_subject",
-    "source": "fun f(b: Boolean): Int { when (b) { true -> return 1; false -> return 0 } }"
   },
   {
     "id": "when_trailing_condition_comma",
@@ -205,7 +182,7 @@
   {
     "id": "class_constructor_parameter_without_property",
     "source": "class C(value: Int)",
-    "message": "Only private val primary constructor parameters"
+    "message": "Expected val"
   },
   {
     "id": "class_generic_array_element",
@@ -242,9 +219,9 @@
     "message": "Only public or internal plain interfaces"
   },
   {
-    "id": "interface_mutable_property",
-    "source": "interface I { var value: Int }",
-    "message": "Only public interface properties, functions, nested interfaces, and companion objects"
+    "id": "interface_mutable_default_accessor",
+    "source": "interface I { var value: Int get() = 0; set(value) {} }",
+    "message": "Mutable interface properties require abstract default accessors"
   },
   {
     "id": "interface_named_companion",

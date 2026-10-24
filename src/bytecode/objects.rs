@@ -54,9 +54,12 @@ fn method(pool: &mut Pool, owner: &str, declaration: &ObjectMethod) -> Result<Ve
         max_stack: 2,
     };
     if !function.private {
-        for (index, (name, ty)) in function.params.iter().enumerate() {
-            if ty.is_reference() {
-                let slot = index + usize::from(!declaration.jvm_static);
+        for (slot, (name, ty)) in
+            parameter_slots(&function.params, usize::from(!declaration.jvm_static))
+                .into_iter()
+                .zip(&function.params)
+        {
+            if nonnull(ty) {
                 code.bytes.extend([0x19, slot as u8]);
                 let constant = code.pool.string(name)?;
                 code.reference(0x13, constant);
@@ -87,7 +90,7 @@ fn method(pool: &mut Pool, owner: &str, declaration: &ObjectMethod) -> Result<Ve
         &function.descriptor(),
         code,
         None,
-        !function.private && function.result.is_reference(),
+        !function.private && nonnull(&function.result),
     )?;
     if !function.private {
         parameter_annotations(pool, &mut method, &function.params)?;
@@ -257,7 +260,25 @@ pub fn emit_dynamic_object(
     if object.owner != owner {
         return Err(failure("Object class identity mismatch"));
     }
-    let mut builder = Builder::new(owner, 49, 0x0031, &[])?;
+    let mut builder = Builder::new(owner, 49, 0x0031, &object.interfaces)?;
+    if object.serializable {
+        builder
+            .annotations
+            .push("Lkotlinx/serialization/Serializable;".into());
+        builder.field("$cachedSerializer$delegate", "Lkotlin/Lazy;", 0x101a, false)?;
+        let mut signature = Vec::new();
+        u2(&mut signature, builder.pool.utf8("Signature")?);
+        u4(&mut signature, 2);
+        u2(
+            &mut signature,
+            builder
+                .pool
+                .utf8("Lkotlin/Lazy<Lkotlinx/serialization/KSerializer<Ljava/lang/Object;>;>;")?,
+        );
+        let field = builder.fields.last_mut().unwrap();
+        field[6..8].copy_from_slice(&1u16.to_be_bytes());
+        field.extend(signature);
+    }
     builder.field("INSTANCE", &format!("L{owner};"), 0x0019, true)?;
     for property in &object.fields {
         builder.fields.push(field(&mut builder.pool, property)?);
@@ -278,6 +299,63 @@ pub fn emit_dynamic_object(
         None,
         false,
     )?);
+    if object.serializable {
+        let mut getter = SimpleCode::new(1, 1);
+        getter.reference(
+            0xb2,
+            builder
+                .pool
+                .field(owner, "$cachedSerializer$delegate", "Lkotlin/Lazy;")?,
+        );
+        getter.reference(
+            0xb9,
+            builder
+                .pool
+                .interface_method("kotlin/Lazy", "getValue", "()Ljava/lang/Object;")?,
+        );
+        getter.bytes.extend([1, 0]);
+        getter.reference(
+            0xc0,
+            builder.pool.class("kotlinx/serialization/KSerializer")?,
+        );
+        getter.bytes.push(0xb0);
+        builder.methods.push(simple_method(
+            &mut builder.pool,
+            0x1012,
+            "get$cachedSerializer",
+            "()Lkotlinx/serialization/KSerializer;",
+            getter,
+            None,
+            false,
+        )?);
+        let mut code = SimpleCode::new(1, 1);
+        code.bytes.push(0x2a);
+        code.reference(
+            0xb7,
+            builder.pool.method(
+                owner,
+                "get$cachedSerializer",
+                "()Lkotlinx/serialization/KSerializer;",
+            )?,
+        );
+        code.bytes.push(0xb0);
+        let signature = format!("()Lkotlinx/serialization/KSerializer<L{owner};>;");
+        let mut method = simple_method(
+            &mut builder.pool,
+            0x0011,
+            "serializer",
+            "()Lkotlinx/serialization/KSerializer;",
+            code,
+            None,
+            true,
+        )?;
+        let mut attribute = Vec::new();
+        u2(&mut attribute, builder.pool.utf8("Signature")?);
+        u4(&mut attribute, 2);
+        u2(&mut attribute, builder.pool.utf8(&signature)?);
+        add_attribute(&mut method, attribute)?;
+        builder.methods.push(method);
+    }
     for declaration in &object.methods {
         builder
             .methods
@@ -303,6 +381,37 @@ pub fn emit_dynamic_object(
             .pool
             .field(owner, "INSTANCE", &format!("L{owner};"))?,
     );
+    if object.serializable {
+        initializer.reference(
+            0xb2,
+            builder.pool.field(
+                "kotlin/LazyThreadSafetyMode",
+                "PUBLICATION",
+                "Lkotlin/LazyThreadSafetyMode;",
+            )?,
+        );
+        let supplier = format!("{owner}$SerializerSupplier");
+        initializer.reference(
+            0xb2,
+            builder
+                .pool
+                .field(&supplier, "INSTANCE", &format!("L{supplier};"))?,
+        );
+        initializer.reference(
+            0xb8,
+            builder.pool.method(
+                "kotlin/LazyKt",
+                "lazy",
+                "(Lkotlin/LazyThreadSafetyMode;Lkotlin/jvm/functions/Function0;)Lkotlin/Lazy;",
+            )?,
+        );
+        initializer.reference(
+            0xb3,
+            builder
+                .pool
+                .field(owner, "$cachedSerializer$delegate", "Lkotlin/Lazy;")?,
+        );
+    }
     for property in &object.fields {
         let supplier = supplier_name(owner, property);
         initializer.reference(0xbb, builder.pool.class(&supplier)?);
@@ -334,8 +443,102 @@ pub fn emit_dynamic_object(
         false,
     )?);
     let mut classes = vec![builder.finish(file, metadata, &[])?];
+    if object.serializable {
+        classes.push(serializer_supplier(owner, file)?);
+    }
     for property in &object.fields {
         classes.push(supplier(owner, property, file)?);
     }
     Ok(classes)
+}
+
+fn serializer_supplier(owner: &str, file: &str) -> Result<crate::ClassFile> {
+    let name = format!("{owner}$SerializerSupplier");
+    let mut builder = Builder::new(
+        &name,
+        49,
+        0x1030,
+        &["kotlin/jvm/functions/Function0".into()],
+    )?;
+    builder.field("INSTANCE", &format!("L{name};"), 0x0018, false)?;
+    let mut code = SimpleCode::new(1, 1);
+    code.bytes.push(0x2a);
+    code.reference(
+        0xb7,
+        builder.pool.method("java/lang/Object", "<init>", "()V")?,
+    );
+    code.bytes.push(0xb1);
+    builder.methods.push(simple_method(
+        &mut builder.pool,
+        2,
+        "<init>",
+        "()V",
+        code,
+        None,
+        false,
+    )?);
+    let mut code = SimpleCode::new(2, 0);
+    code.reference(0xbb, builder.class);
+    code.bytes.push(0x59);
+    code.reference(0xb7, builder.pool.method(&name, "<init>", "()V")?);
+    code.reference(
+        0xb3,
+        builder
+            .pool
+            .field(&name, "INSTANCE", &format!("L{name};"))?,
+    );
+    code.bytes.push(0xb1);
+    builder.methods.push(simple_method(
+        &mut builder.pool,
+        8,
+        "<clinit>",
+        "()V",
+        code,
+        None,
+        false,
+    )?);
+    let mut code = SimpleCode::new(5, 1);
+    code.reference(
+        0xbb,
+        builder
+            .pool
+            .class("kotlinx/serialization/internal/ObjectSerializer")?,
+    );
+    code.bytes.push(0x59);
+    code.reference(0x13, builder.pool.string(&owner.replace('/', "."))?);
+    code.reference(
+        0xb2,
+        builder
+            .pool
+            .field(owner, "INSTANCE", &format!("L{owner};"))?,
+    );
+    code.bytes.push(0x03);
+    code.reference(0xbd, builder.pool.class("java/lang/annotation/Annotation")?);
+    code.reference(
+        0xb7,
+        builder.pool.method(
+            "kotlinx/serialization/internal/ObjectSerializer",
+            "<init>",
+            "(Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/annotation/Annotation;)V",
+        )?,
+    );
+    code.bytes.push(0xb0);
+    builder.methods.push(simple_method(
+        &mut builder.pool,
+        0x0011,
+        "invoke",
+        "()Ljava/lang/Object;",
+        code,
+        None,
+        true,
+    )?);
+    builder.finish(
+        file,
+        &Metadata {
+            kind: 3,
+            data1: Vec::new(),
+            data2: Vec::new(),
+        },
+        &[],
+    )
 }
