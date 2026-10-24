@@ -375,10 +375,36 @@ def main():
                 raise AssertionError("Rejected input produced output")
             cases.append({"id": "diagnostics/" + fixture["id"], "outcome": "pass",
                           "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."})
+        def supported_regression(fixture, source, dependencies):
+            regression = fixture["supported_regression"]
+            directory = work / "supported-regressions" / fixture["id"]
+            directory.mkdir(parents=True)
+            java_source = directory / "RegressionCheck.java"
+            java_source.write_text("public class RegressionCheck { public static void main(String[] args) {\n" + regression["java_assertions"] + "\nSystem.out.println(\"ok\"); } }\n")
+            outputs = {}
+            for provider, tool in [("official", kotlinc), ("candidate", compiler)]:
+                output = directory / provider
+                args = [tool, source, *(["-cp", cp(*dependencies)] if dependencies else []), *([] if provider == "candidate" else options), "-d", output]
+                run("Compile supported regression " + fixture["id"] + " with " + provider, args)
+                outputs[provider] = output
+            driver_output = directory / "drivers"
+            run("Compile Java regression caller " + fixture["id"] + " against official Kotlin", [javac, "-cp", cp(outputs["official"], *dependencies, stdlib), "-d", driver_output, java_source])
+            for provider, output in outputs.items():
+                result = run("Run supported regression " + fixture["id"] + " against " + provider, [java, "-Xverify:all", "-cp", cp(driver_output, output, *dependencies, stdlib), "RegressionCheck"])
+                if result.stdout != "ok\n":
+                    raise AssertionError("Unexpected regression output: " + fixture["id"])
+            signatures = [run("Inspect supported regression ABI " + fixture["id"] + " from " + provider, [javap, "-p", "-s", "-classpath", output, regression["facade"]]).stdout for provider, output in outputs.items()]
+            if signatures[0] != signatures[1]:
+                raise AssertionError("Regression JVM signatures differ: " + fixture["id"])
+            cases.append({"id": "regressions/" + fixture["id"], "outcome": "pass", "scope": "Former unsupported fixture now compiles with both providers; Java caller compiled against official output runs independent assertions against each provider under JVM verification all; javap signatures match.", "source_sha256": sha(source), "driver_sha256": sha(java_source)})
+
         for fixture in json.loads((ROOT / "tests/unsupported.json").read_text()):
             source = work / (fixture["id"] + ".kt")
             source.write_text(fixture["source"])
             fixture_cp = ["-cp", str(foreign)] if fixture.get("classpath") else []
+            if fixture.get("supported_regression"):
+                supported_regression(fixture, source, [foreign] if fixture.get("classpath") else [])
+                continue
             run("Reference acceptance: " + fixture["id"], [kotlinc, source, *fixture_cp, *options, "-d", work / "unsupported-reference"])
             actual = run("Explicit unsupported rejection: " + fixture["id"], [compiler, source, *fixture_cp, "-d", work / ("unsupported-" + fixture["id"])], allowed=(1,))
             if fixture.get("message") and fixture["message"] not in actual.stderr:
@@ -391,13 +417,37 @@ def main():
         classpath_probe.write_text("import yuku.alkitab.util.IntArrayList\nfun f(value: IntArrayList): Int = value.size()")
         empty_classpath = work / "empty-classpath"
         empty_classpath.mkdir()
-        run("Classpath alias and ordered directory search", [compiler, classpath_probe, "--classpath", cp(empty_classpath, foreign), "-d", work / "classpath-alias"])
-        for entry in [stdlib, work / "absent-classpath"]:
+        classpath_driver = work / "ClasspathCheck.java"
+        classpath_driver.write_text("public class ClasspathCheck { public static void main(String[] args) { yuku.alkitab.util.IntArrayList value = new yuku.alkitab.util.IntArrayList(); for (int i = 0; i != 6; ++i) { if (ClasspathProbeKt.f(value) != i) throw new AssertionError(\"size \" + i); value.add(i); } System.out.println(\"classpath:ok\"); } }\n")
+        classpath_inputs = [("directory", foreign)]
+        for label, compression in [("stored_jar", zipfile.ZIP_STORED), ("deflated_jar", zipfile.ZIP_DEFLATED)]:
+            archive = work / (label + ".jar")
+            with zipfile.ZipFile(archive, "w", compression=compression) as jar:
+                for path in sorted(foreign.rglob("*")):
+                    if path.is_file():
+                        jar.write(path, path.relative_to(foreign).as_posix())
+            classpath_inputs.append((label, archive))
+        for label, entry in classpath_inputs:
+            destinations = {}
+            for provider, tool in [("official", kotlinc), ("candidate", compiler)]:
+                output = work / ("classpath-" + label + "-" + provider)
+                run("Compile classpath runtime probe " + label + " with " + provider, [tool, classpath_probe, "--classpath" if provider == "candidate" else "-cp", cp(empty_classpath, entry), *([] if provider == "candidate" else options), "-d", output])
+                destinations[provider] = output
+            driver_output = work / ("classpath-" + label + "-drivers")
+            run("Compile classpath Java caller against official " + label, [javac, "-cp", cp(destinations["official"], entry, stdlib), "-d", driver_output, classpath_driver])
+            for provider, output in destinations.items():
+                result = run("Run classpath probe " + label + " against " + provider, [java, "-Xverify:all", "-cp", cp(driver_output, output, entry, stdlib), "ClasspathCheck"])
+                if result.stdout != "classpath:ok\n":
+                    raise AssertionError("Classpath runtime probe failed: " + label)
+            cases.append({"id": "interop_classpath/" + label, "outcome": "pass", "scope": "Both compilers resolve the original Java IntArrayList through directory or stored/deflated JAR classpaths after an empty entry; an official-compiled Java caller independently checks six sizes against both outputs with JVM verification all.", "classpath_entry_sha256": sha(entry) if entry.is_file() else None})
+        malformed = work / "malformed-classpath.jar"
+        malformed.write_bytes(b"This is not a ZIP archive")
+        for entry, marker in [(malformed, "zip"), (work / "absent-classpath.jar", "existing directory")]:
             output = work / ("invalid-classpath-" + entry.name)
-            rejected = run("Reject unsupported or missing classpath entry", [compiler, classpath_probe, "-cp", entry, "-d", output], allowed=(1,))
-            if "existing directory" not in rejected.stderr or output.exists():
+            rejected = run("Reject malformed or missing classpath entry", [compiler, classpath_probe, "-cp", entry, "-d", output], allowed=(1,))
+            if marker not in rejected.stderr.lower() or "Classpath" not in rejected.stderr or output.exists():
                 raise AssertionError("Classpath configuration rejection was not explicit")
-        cases.append({"id": "interop_diagnostics/classpath_configuration", "outcome": "pass", "scope": "--classpath alias, multiple ordered directories, nonexistent directory and unsupported JAR entry rejection."})
+        cases.append({"id": "interop_diagnostics/classpath_configuration", "outcome": "pass", "scope": "--classpath alias and ordered search through an empty entry; directory and real stored/deflated JAR runtime probes above; malformed ZIP and nonexistent JAR entries explicitly reject without producing output."})
         for fixture in json.loads((ROOT / "tests/interop_diagnostics.json").read_text()):
             source = work / (fixture["id"] + ".kt")
             source.write_text(fixture["source"])
@@ -419,6 +469,9 @@ def main():
         for fixture in json.loads((ROOT / "tests/interop_unsupported.json").read_text()):
             source = work / (fixture["id"] + ".kt")
             source.write_text(fixture["source"])
+            if fixture.get("supported_regression"):
+                supported_regression(fixture, source, [foreign])
+                continue
             run("Reference Java interop acceptance: " + fixture["id"], [kotlinc, source, "-cp", foreign, *options, "-d", work / "interop-unsupported-reference"])
             output = work / ("interop-unsupported-" + fixture["id"])
             actual = run("Explicit Java interop unsupported rejection: " + fixture["id"], [compiler, source, "-cp", foreign, "-d", output], allowed=(1,))

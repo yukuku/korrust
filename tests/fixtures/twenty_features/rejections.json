@@ -35,7 +35,7 @@
     "id": "overload_ambiguity",
     "source": "import twenty.dep.JavaApi\nfun f(): String = JavaApi.ambiguous(null)",
     "invalid": true,
-    "candidate_diagnostic": "Ambiguous member overload",
+    "candidate_diagnostic": "Ambiguous overload",
     "official_diagnostic": "overload resolution ambiguity",
     "scope": "Unrelated nullable Java overloads cannot be selected from null."
   },
@@ -75,7 +75,7 @@
     "id": "java_named_argument",
     "source": "import twenty.dep.JavaApi\nfun f(): Int = JavaApi.sum(a = 1, b = 2)",
     "invalid": true,
-    "candidate_diagnostic": "Named arguments require a Kotlin declaration",
+    "candidate_diagnostic": "Named arguments are not allowed for Java declarations",
     "official_diagnostic": "named arguments",
     "scope": "Java methods do not support Kotlin named arguments."
   },

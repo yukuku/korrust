@@ -19,6 +19,7 @@ pub(super) fn outer(
     owner: &str,
     fields: &mut Vec<u8>,
     methods: &mut Vec<Vec<u8>>,
+    lambdas: &[crate::check::LambdaDecl],
 ) -> Result<()> {
     fields.extend(class_field(
         pool,
@@ -78,6 +79,9 @@ pub(super) fn outer(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
         max_stack: 3,
     };
     code.class_reference(0xbb, &companion.owner)?;

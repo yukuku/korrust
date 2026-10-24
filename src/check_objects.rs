@@ -18,6 +18,7 @@ pub(super) fn check(
     } else {
         format!("{}/{}", package.replace('.', "/"), source.name)
     };
+    let lambdas = Rc::new(RefCell::new(Vec::new()));
     let mut object_methods: HashMap<String, Vec<JavaMethod>> = HashMap::new();
     for method in &source.methods {
         let function = &method.function;
@@ -71,7 +72,7 @@ pub(super) fn check(
         }
         let mut descriptor = String::from("(");
         for (_, ty) in &function.params {
-            let ty = resolve_type(ty, imports, function.offset)?;
+            let ty = resolve_type_checked(ty, imports, function.offset, classpath, classes)?;
             if matches!(ty, Type::Unit | Type::Float | Type::ThreadLocal(_)) {
                 return Err(Diagnostic::new(
                     function.offset,
@@ -81,7 +82,13 @@ pub(super) fn check(
             descriptor.push_str(&ty.descriptor());
         }
         descriptor.push(')');
-        let result = resolve_type(&function.result, imports, function.offset)?;
+        let result = resolve_type_checked(
+            &function.result,
+            imports,
+            function.offset,
+            classpath,
+            classes,
+        )?;
         if matches!(result, Type::Float | Type::ThreadLocal(_)) {
             return Err(Diagnostic::new(
                 function.offset,
@@ -108,6 +115,7 @@ pub(super) fn check(
             ));
         }
         overloads.push(JavaMethod {
+            library: None,
             kotlin_params: None,
             kotlin_result: None,
             kotlin_internal: false,
@@ -202,6 +210,14 @@ pub(super) fn check(
         let signatures = Vec::new();
         let extensions = HashSet::new();
         let mut checker = Checker {
+            lambdas: lambdas.clone(),
+            captured: HashMap::new(),
+            captured_cells: HashMap::new(),
+            cells: HashMap::new(),
+            cell_names: HashSet::new(),
+            lambda_owner: owner.clone(),
+            inline_result: None,
+            nonlocal_result: None,
             constants: &HashMap::new(),
             constructor: None,
             defaults: &Vec::new(),
@@ -212,6 +228,7 @@ pub(super) fn check(
             classes,
             imports,
             signatures: &signatures,
+            source_type_params: &[],
             receiver: None,
             fields: &empty_fields,
             members: &empty_members,
@@ -257,8 +274,22 @@ pub(super) fn check(
                 "Default arguments on object methods are unsupported",
             ));
         }
-        let result = resolve_type(&function.result, imports, function.offset)?;
+        let result = resolve_type_checked(
+            &function.result,
+            imports,
+            function.offset,
+            classpath,
+            classes,
+        )?;
         let mut checker = Checker {
+            lambdas: lambdas.clone(),
+            captured: HashMap::new(),
+            captured_cells: HashMap::new(),
+            cells: HashMap::new(),
+            cell_names: HashSet::new(),
+            lambda_owner: owner.clone(),
+            inline_result: None,
+            nonlocal_result: None,
             constants: &HashMap::new(),
             constructor: None,
             defaults: &Vec::new(),
@@ -269,6 +300,7 @@ pub(super) fn check(
             classes,
             imports,
             signatures: &signatures,
+            source_type_params: &[],
             receiver: if method.jvm_static {
                 None
             } else {
@@ -295,7 +327,7 @@ pub(super) fn check(
         };
         let mut params = Vec::new();
         for (name, ty) in &function.params {
-            let ty = resolve_type(ty, imports, function.offset)?;
+            let ty = resolve_type_checked(ty, imports, function.offset, classpath, classes)?;
             checker.declare(name, ty.clone(), false, function.offset)?;
             params.push((name.clone(), ty));
         }
@@ -340,6 +372,13 @@ pub(super) fn check(
         }
         methods.push(ObjectMethod {
             function: Function {
+                type_params: resolve_parameters(
+                    &function.type_params,
+                    imports,
+                    classpath,
+                    function.offset,
+                    classes,
+                )?,
                 defaults: Vec::new(),
                 name: function.name.clone(),
                 private: function.private,
@@ -355,6 +394,7 @@ pub(super) fn check(
         });
     }
     Ok(Module {
+        lambdas: Rc::try_unwrap(lambdas).ok().unwrap().into_inner(),
         constants: Vec::new(),
         functions: Vec::new(),
         class_decl: None,

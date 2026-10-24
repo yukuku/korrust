@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-24T08:56:23.440429+00:00",
+  "status": "failed",
+  "compiler": {},
+  "reference_compiler": {},
+  "inputs": {
+    "official_build": {
+      "path": "target/nowinandroid-api-artifacts/official/build.json",
+      "sha256": "cabf3a744694719fad06242579ea6b52dd5bf552ab162bc45b0b6dd46920d8d2",
+      "command": [
+        "/workspace/korrust-setup/gradle-9.7.1/bin/gradle",
+        "--init-script",
+        "/workspace/korrust/target/nowinandroid-api-artifacts/official/adapter.init.gradle",
+        "--no-configuration-cache",
+        "--no-build-cache",
+        "-Dorg.gradle.isolated-projects=false",
+        "--max-workers=4",
+        "--console=plain",
+        "--stacktrace",
+        ":feature:bookmarks:api:clean",
+        ":feature:search:api:clean",
+        ":feature:bookmarks:api:bundleDemoDebugAar",
+        ":feature:bookmarks:api:bundleDemoReleaseAar",
+        ":feature:bookmarks:api:bundleProdDebugAar",
+        ":feature:bookmarks:api:bundleProdReleaseAar",
+        ":feature:search:api:bundleDemoDebugAar",
+        ":feature:search:api:bundleDemoReleaseAar",
+        ":feature:search:api:bundleProdDebugAar",
+        ":feature:search:api:bundleProdReleaseAar",
+        ":feature:bookmarks:api:korrustBuildModel",
+        ":feature:search:api:korrustBuildModel"
+      ]
+    },
+    "candidate_build": {
+      "path": "target/nowinandroid-api-artifacts/korrust/build.json",
+      "sha256": "fd58f80794e2fa45840ff6658f7a8ddd410446835513012298b5c083956402a5",
+      "command": [
+        "/workspace/korrust-setup/gradle-9.7.1/bin/gradle",
+        "--init-script",
+        "/workspace/korrust/target/nowinandroid-api-artifacts/korrust/adapter.init.gradle",
+        "--no-configuration-cache",
+        "--no-build-cache",
+        "-Dorg.gradle.isolated-projects=false",
+        "--max-workers=4",
+        "--console=plain",
+        "--stacktrace",
+        ":feature:bookmarks:api:clean",
+        ":feature:search:api:clean",
+        ":feature:bookmarks:api:bundleDemoDebugAar",
+        ":feature:bookmarks:api:bundleDemoReleaseAar",
+        ":feature:bookmarks:api:bundleProdDebugAar",
+        ":feature:bookmarks:api:bundleProdReleaseAar",
+        ":feature:search:api:bundleDemoDebugAar",
+        ":feature:search:api:bundleDemoReleaseAar",
+        ":feature:search:api:bundleProdDebugAar",
+        ":feature:search:api:bundleProdReleaseAar",
+        ":feature:bookmarks:api:korrustBuildModel",
+        ":feature:search:api:korrustBuildModel"
+      ]
+    }
+  },
+  "commands": [],
+  "evidence": [
+    "reports/correctness/2026-10-24T085623440429Z-nowinandroid-api-serialization/official-build.json",
+    "reports/correctness/2026-10-24T085623440429Z-nowinandroid-api-serialization/official-adapter.init.gradle",
+    "reports/correctness/2026-10-24T085623440429Z-nowinandroid-api-serialization/official-gradle.log",
+    "reports/correctness/2026-10-24T085623440429Z-nowinandroid-api-serialization/candidate-build.json",
+    "reports/correctness/2026-10-24T085623440429Z-nowinandroid-api-serialization/candidate-adapter.init.gradle",
+    "reports/correctness/2026-10-24T085623440429Z-nowinandroid-api-serialization/candidate-gradle.log"
+  ],
+  "cases": [
+    {
+      "id": "gradle/official",
+      "outcome": "pass",
+      "scope": "Complete selected API module real Gradle/AGP release AAR builds; no selected production Kotlin fallback."
+    },
+    {
+      "id": "gradle/candidate",
+      "outcome": "pass",
+      "scope": "Complete selected API module real Gradle/AGP release AAR builds; no selected production Kotlin fallback."
+    },
+    {
+      "id": "harness_failure",
+      "outcome": "fail",
+      "message": "Candidate binary changed since Gradle build"
+    }
+  ],
+  "environment": {
+    "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "machine": "x86_64"
+  },
+  "selection": "Complete unchanged pinned Now in Android feature:bookmarks:api and feature:search:api modules, real Gradle/AGP builds and packaged release AARs. Selected production Kotlin exclusively Korrust; ordinary dependency/build Kotlin uses official compilers. Bounded empty @Serializable singleton objects with marker interfaces; no general serialization-plugin, full-app, Android-device runtime or performance claim.",
+  "counts": {
+    "pass": 2,
+    "fail": 1
+  },
+  "finished_at": "2026-10-24T08:56:23.458763+00:00"
+}

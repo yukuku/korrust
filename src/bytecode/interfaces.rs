@@ -254,7 +254,7 @@ fn abstract_method(pool: &mut Pool, function: &crate::check::Function) -> Result
     u2(&mut method, 0x0401);
     u2(&mut method, pool.utf8(&function.name)?);
     u2(&mut method, pool.utf8(&function.descriptor())?);
-    let signature = generic_method(&function.params, &function.result);
+    let signature = generic_function(function);
     u2(
         &mut method,
         u16::from(nonnull(&function.result)) + u16::from(signature.is_some()),
@@ -309,7 +309,7 @@ fn default_forward(
         &function.name,
         &function.descriptor(),
         code,
-        generic_method(&function.params, &function.result).as_deref(),
+        generic_function(function).as_deref(),
         nonnull(&function.result),
     )?;
     parameter_annotations(pool, &mut method, &function.params)?;
@@ -376,6 +376,7 @@ fn helper_body(
     builder: &mut Builder,
     interface: &InterfaceDecl,
     function: &crate::check::Function,
+    lambdas: &[crate::check::LambdaDecl],
 ) -> Result<()> {
     let mut prefix = helper_prefix(&mut builder.pool, interface, &function.params)?;
     parameter_checks(&mut builder.pool, &mut prefix, &function.params)?;
@@ -387,6 +388,9 @@ fn helper_body(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
         max_stack: 2,
     };
     code.block(&function.body)?;
@@ -460,9 +464,13 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
             collect_value(index, accesses);
             collect_value(value, accesses);
         }
-        ValueKind::Box(value) | ValueKind::Unbox(value) => collect_value(value, accesses),
+        ValueKind::Box(value)
+        | ValueKind::Unbox(value)
+        | ValueKind::CellIncrement { cell: value, .. } => collect_value(value, accesses),
         ValueKind::Abrupt(body) => collect_block(body, accesses),
         ValueKind::New { args, .. }
+        | ValueKind::CompiledInline { args, .. }
+        | ValueKind::Lambda { captures: args, .. }
         | ValueKind::DefaultCall(_, args, _)
         | ValueKind::ListFactory { elements: args, .. } => {
             for value in args {
@@ -477,6 +485,12 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
         ValueKind::Let { value, body, .. } => {
             collect_value(value, accesses);
             collect_value(body, accesses);
+        }
+        ValueKind::FunctionInvoke { function, args } => {
+            collect_value(function, accesses);
+            for arg in args {
+                collect_value(arg, accesses);
+            }
         }
         ValueKind::NewArray(_, value)
         | ValueKind::Convert(_, value)
@@ -581,6 +595,7 @@ fn collect_block(body: &[Statement], accesses: &mut HashSet<(String, String)>) {
             Statement::Store(_, value)
             | Statement::Expression(value)
             | Statement::Return(value)
+            | Statement::NonLocalReturn(value)
             | Statement::Throw(value) => collect_value(value, accesses),
             Statement::If(condition, yes, no) => {
                 collect_value(condition, accesses);
@@ -612,15 +627,21 @@ fn collect_accesses(interface: &InterfaceDecl, accesses: &mut HashSet<(String, S
     }
 }
 
+struct EmitContext<'a> {
+    file: &'a str,
+    all: &'a BTreeMap<String, Metadata>,
+    lambdas: &'a [crate::check::LambdaDecl],
+}
+
 fn companion_classes(
     companion: &CompanionDecl,
     interface: &InterfaceDecl,
-    file: &str,
-    all: &BTreeMap<String, Metadata>,
+    context: &EmitContext<'_>,
     ancestors: &[Relation],
     accesses: &HashSet<(String, String)>,
     output: &mut Vec<crate::ClassFile>,
 ) -> Result<()> {
+    let (file, all, lambdas) = (context.file, context.all, context.lambdas);
     let mut builder = Builder::new(&companion.owner, 52, 0x0031, &[])?;
     let singleton_descriptor = format!("L{};", companion.owner);
     builder.field("$$INSTANCE", &singleton_descriptor, 0x1018, false)?;
@@ -748,8 +769,14 @@ fn companion_classes(
             let mut relations = ancestors.to_vec();
             relations.push(Relation::member(&companion.owner, &interface.owner, 0x0019));
             relations.push(Relation::anonymous(owner));
-            let bytes =
-                emit_class_with(class_decl, owner, file, metadata(all, owner)?, 0, |pool| {
+            let bytes = emit_class_with(
+                class_decl,
+                owner,
+                file,
+                metadata(all, owner)?,
+                0,
+                lambdas,
+                |pool| {
                     let mut attributes = Vec::new();
                     if let Some(inner) = inner_attribute(pool, &relations)? {
                         attributes.push(inner);
@@ -761,7 +788,8 @@ fn companion_classes(
                     u2(&mut enclosing, 0);
                     attributes.push(enclosing);
                     Ok(attributes)
-                })?;
+                },
+            )?;
             output.push(crate::ClassFile {
                 internal_name: owner.clone(),
                 bytes,
@@ -773,12 +801,12 @@ fn companion_classes(
 
 fn interface_classes(
     interface: &InterfaceDecl,
-    file: &str,
-    all: &BTreeMap<String, Metadata>,
+    context: &EmitContext<'_>,
     ancestors: &[Relation],
     accesses: &HashSet<(String, String)>,
     output: &mut Vec<crate::ClassFile>,
 ) -> Result<()> {
+    let (file, all, lambdas) = (context.file, context.all, context.lambdas);
     let mut builder = Builder::new(&interface.owner, 52, 0x0601, &interface.interfaces)?;
     if let Some(companion) = &interface.companion {
         builder.field("Companion", &format!("L{};", companion.owner), 0x0019, true)?;
@@ -868,7 +896,7 @@ fn interface_classes(
     if has_defaults {
         let mut builder = Builder::new(&helper_owner, 49, 0x0031, &[])?;
         for method in interface.methods.iter().filter(|method| method.has_body) {
-            helper_body(&mut builder, interface, &method.function)?;
+            helper_body(&mut builder, interface, &method.function, lambdas)?;
         }
         for inherited in &interface.defaults {
             helper_inherited(&mut builder, interface, inherited)?;
@@ -888,10 +916,10 @@ fn interface_classes(
     for nested in &interface.nested {
         let mut ancestors = ancestors.to_vec();
         ancestors.push(Relation::member(&nested.owner, &interface.owner, 0x0609));
-        interface_classes(nested, file, all, &ancestors, accesses, output)?;
+        interface_classes(nested, context, &ancestors, accesses, output)?;
     }
     if let Some(companion) = &interface.companion {
-        companion_classes(companion, interface, file, all, ancestors, accesses, output)?;
+        companion_classes(companion, interface, context, ancestors, accesses, output)?;
     }
     Ok(())
 }
@@ -900,10 +928,17 @@ pub fn emit_interfaces(
     interface: &InterfaceDecl,
     file: &str,
     all: &BTreeMap<String, Metadata>,
+    lambdas: &[crate::check::LambdaDecl],
 ) -> Result<Vec<crate::ClassFile>> {
     let mut accesses = HashSet::new();
     collect_accesses(interface, &mut accesses);
     let mut output = Vec::new();
-    interface_classes(interface, file, all, &[], &accesses, &mut output)?;
+    interface_classes(
+        interface,
+        &EmitContext { file, all, lambdas },
+        &[],
+        &accesses,
+        &mut output,
+    )?;
     Ok(output)
 }

@@ -1,0 +1,9 @@
+tests/fixtures/simple_androidbible/InternalAccess.kt:3:26: error: cannot access 'class Yes1SingleChapterVerses : SingleChapterVerses': it is internal in file.
+import yuku.alkitab.yes1.Yes1SingleChapterVerses
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/simple_androidbible/InternalAccess.kt:5:5: error: 'public' function exposes its 'internal' return type 'Yes1SingleChapterVerses'.
+fun outside() = Yes1SingleChapterVerses(arrayOf("x"))
+    ^^^^^^^
+tests/fixtures/simple_androidbible/InternalAccess.kt:5:17: error: cannot access 'class Yes1SingleChapterVerses : SingleChapterVerses': it is internal in file.
+fun outside() = Yes1SingleChapterVerses(arrayOf("x"))
+                ^^^^^^^^^^^^^^^^^^^^^^^

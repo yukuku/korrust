@@ -1,6 +1,7 @@
 mod bytecode;
 mod check;
 mod classpath;
+mod compiled_inline;
 mod metadata;
 
 use std::path::PathBuf;
@@ -119,7 +120,6 @@ pub fn compile_all_with_classpath(
     }
     let module = syntax::parse(source)?;
     let classpath = classpath::Classpath::new(classpath)?;
-    let typed = check::check(&module, &classpath)?;
     let class_name = module
         .enum_decl
         .as_ref()
@@ -149,16 +149,22 @@ pub fn compile_all_with_classpath(
     } else {
         format!("{}/{}", module.package.replace('.', "/"), class_name)
     };
+    let typed = check::check_with_owner(&module, &classpath, &internal_name)?;
+    let with_lambdas = |mut files: Vec<ClassFile>| -> Result<Vec<ClassFile>> {
+        files.extend(bytecode::emit_lambdas(&typed, &internal_name, file_name)?);
+        Ok(files)
+    };
     if module.interface_decl.is_some() {
         let declaration = typed
             .interface_decl
             .as_ref()
             .ok_or_else(|| Diagnostic::new(0, "Interface checking did not produce an interface"))?;
-        return bytecode::emit_interfaces(
+        return with_lambdas(bytecode::emit_interfaces(
             declaration,
             file_name,
             &metadata::for_interfaces(&module, &internal_name)?,
-        );
+            &typed.lambdas,
+        )?);
     }
     if let Some(declaration) = &typed.object_decl {
         let field_types = declaration
@@ -166,7 +172,7 @@ pub fn compile_all_with_classpath(
             .iter()
             .map(|field| (field.name.clone(), field.ty.clone()))
             .collect::<Vec<_>>();
-        return bytecode::emit_dynamic_object(
+        return with_lambdas(bytecode::emit_dynamic_object(
             declaration,
             &internal_name,
             file_name,
@@ -177,10 +183,15 @@ pub fn compile_all_with_classpath(
                 &declaration.interfaces,
                 declaration.serializable,
             )?,
-        );
+            &typed.lambdas,
+        )?);
     }
     if let Some(declaration) = &module.object_decl {
-        return bytecode::emit_objects(declaration, &internal_name, file_name);
+        return with_lambdas(bytecode::emit_objects(
+            declaration,
+            &internal_name,
+            file_name,
+        )?);
     }
     if let Some(source_declaration) = &module.class_decl {
         let declaration = typed
@@ -192,7 +203,7 @@ pub fn compile_all_with_classpath(
             .as_ref()
             .map(|companion| metadata::for_class_companion(companion, &module.imports))
             .transpose()?;
-        return bytecode::emit_class_files(
+        return with_lambdas(bytecode::emit_class_files(
             declaration,
             &internal_name,
             file_name,
@@ -203,7 +214,8 @@ pub fn compile_all_with_classpath(
                 &module.imports,
             )?,
             companion_metadata.as_ref(),
-        );
+            &typed.lambdas,
+        )?);
     }
     let bytes = match &module.enum_decl {
         Some(declaration) => bytecode::emit_enum(declaration, &internal_name, file_name)?,
@@ -214,8 +226,8 @@ pub fn compile_all_with_classpath(
             &metadata::for_checked_package(&module, &typed)?,
         )?,
     };
-    Ok(vec![ClassFile {
-        internal_name,
+    with_lambdas(vec![ClassFile {
+        internal_name: internal_name.clone(),
         bytes,
     }])
 }

@@ -15,12 +15,50 @@ pub enum Type {
     String,
     Unit,
     Java(String),
+    Parameterized {
+        name: String,
+        arguments: Vec<TypeArgument>,
+    },
+    Parameter {
+        name: String,
+        upper_bound: Box<Type>,
+    },
+    Function {
+        params: Vec<Type>,
+        result: Box<Type>,
+    },
     ThreadLocal(Box<Type>),
     Platform(Box<Type>),
     Nullable(Box<Type>),
     Null,
     List(Box<Type>),
     MutableList(Box<Type>),
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Variance {
+    Invariant,
+    In,
+    Out,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TypeArgument {
+    pub variance: Variance,
+    pub ty: Option<Type>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TypeParameter {
+    pub name: String,
+    pub variance: Variance,
+    pub bounds: Vec<Type>,
+}
+
+#[derive(Clone, Debug)]
+pub struct LambdaParameter {
+    pub name: String,
+    pub ty: Option<Type>,
 }
 
 impl Type {
@@ -42,6 +80,9 @@ impl Type {
                 | Self::StringArray
                 | Self::String
                 | Self::Java(_)
+                | Self::Parameterized { .. }
+                | Self::Parameter { .. }
+                | Self::Function { .. }
                 | Self::ThreadLocal(_)
                 | Self::Null
                 | Self::List(_)
@@ -74,7 +115,17 @@ impl Type {
             Self::StringArray => "[Ljava/lang/String;".into(),
             Self::String => "Ljava/lang/String;".into(),
             Self::Unit => "V".into(),
-            Self::Java(name) => format!("L{name};"),
+            Self::Java(name) | Self::Parameterized { name, .. } => format!("L{name};"),
+            Self::Parameter { upper_bound, .. } => {
+                if upper_bound.is_reference() {
+                    upper_bound.descriptor()
+                } else {
+                    Self::Nullable(upper_bound.clone()).descriptor()
+                }
+            }
+            Self::Function { params, .. } => {
+                format!("Lkotlin/jvm/functions/Function{};", params.len())
+            }
             Self::ThreadLocal(_) => "Ljava/lang/ThreadLocal;".into(),
             Self::List(_) | Self::MutableList(_) => "Ljava/util/List;".into(),
             Self::Null => "Ljava/lang/Object;".into(),
@@ -248,17 +299,18 @@ pub struct Function {
     pub private: bool,
     pub internal: bool,
     pub receiver: Option<Type>,
+    pub type_params: Vec<TypeParameter>,
     pub params: Vec<(String, Type)>,
     pub defaults: Vec<Option<Expr>>,
     pub result: Type,
     pub body: Vec<Statement>,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Statement {
     pub kind: StatementKind,
     pub offset: usize,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum StatementKind {
     Let(String, bool, Option<Type>, Expr),
     Declare(String, bool, Type),
@@ -307,9 +359,20 @@ pub enum ExprKind {
     SafeProperty(Box<Expr>, String),
     Call(Box<Expr>, Vec<Expr>),
     Index(Box<Expr>, Box<Expr>),
-    Increment { value: Box<Expr>, prefix: bool },
+    Increment {
+        value: Box<Expr>,
+        prefix: bool,
+    },
     NonNull(Box<Expr>),
     Lambda(Box<Expr>),
+    LambdaWithParams {
+        params: Option<Vec<LambdaParameter>>,
+        body: Vec<Statement>,
+    },
+    CallableReference {
+        receiver: Option<Box<Expr>>,
+        name: String,
+    },
     When(Box<Expr>, Vec<(Vec<Expr>, Expr)>, Box<Expr>),
 }
 fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
@@ -317,6 +380,11 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
     while let Some(expression) = pending.pop() {
         expression.offset += offset;
         match &mut expression.kind {
+            ExprKind::CallableReference {
+                receiver: Some(value),
+                ..
+            } => pending.push(value),
+            ExprKind::LambdaWithParams { body, .. } => shift_statement_offsets(body, offset),
             ExprKind::Template(parts) => pending.extend(parts),
             ExprKind::If(condition, yes, no) => {
                 pending.push(condition);
@@ -348,6 +416,55 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
             ExprKind::Call(target, args) => {
                 pending.push(target);
                 pending.extend(args);
+            }
+            _ => {}
+        }
+    }
+}
+fn shift_statement_offsets(statements: &mut [Statement], offset: usize) {
+    for statement in statements {
+        statement.offset += offset;
+        match &mut statement.kind {
+            StatementKind::Let(_, _, _, value)
+            | StatementKind::Assign(_, value)
+            | StatementKind::AddAssign(_, value)
+            | StatementKind::Return(Some(value))
+            | StatementKind::Throw(value)
+            | StatementKind::Expression(value) => shift_expression_offsets(value, offset),
+            StatementKind::IndexAssign(target, index, value) => {
+                shift_expression_offsets(target, offset);
+                shift_expression_offsets(index, offset);
+                shift_expression_offsets(value, offset);
+            }
+            StatementKind::PropertyAssign(target, _, value) => {
+                shift_expression_offsets(target, offset);
+                shift_expression_offsets(value, offset);
+            }
+            StatementKind::ForUntil(_, from, to, body) => {
+                shift_expression_offsets(from, offset);
+                shift_expression_offsets(to, offset);
+                shift_statement_offsets(body, offset);
+            }
+            StatementKind::If(condition, yes, no) => {
+                shift_expression_offsets(condition, offset);
+                shift_statement_offsets(yes, offset);
+                shift_statement_offsets(no, offset);
+            }
+            StatementKind::While(condition, body) => {
+                shift_expression_offsets(condition, offset);
+                shift_statement_offsets(body, offset);
+            }
+            StatementKind::When(subject, branches, otherwise) => {
+                shift_expression_offsets(subject, offset);
+                for (conditions, body) in branches {
+                    for condition in conditions {
+                        shift_expression_offsets(condition, offset);
+                    }
+                    shift_statement_offsets(body, offset);
+                }
+                if let Some(body) = otherwise {
+                    shift_statement_offsets(body, offset);
+                }
             }
             _ => {}
         }
@@ -545,6 +662,7 @@ fn string_parts_depth(source: &str, start: usize, depth: usize) -> Result<(usize
                     tokens,
                     pos: 0,
                     depth: depth + 1,
+                    type_parameters: Vec::new(),
                 };
                 parser.lines();
                 let expression = parser.expr(0)?;
@@ -838,6 +956,7 @@ struct Parser {
     tokens: Vec<Token>,
     pos: usize,
     depth: usize,
+    type_parameters: Vec<TypeParameter>,
 }
 impl Parser {
     fn token(&self) -> &Token {
@@ -952,49 +1071,159 @@ impl Parser {
         Ok(ty)
     }
     fn nonnullable_ty(&mut self) -> Result<Type> {
-        if self.at("List") || self.at("MutableList") {
-            let mutable = self.take("MutableList");
-            if !mutable {
-                self.expect("List")?;
-            }
-            self.expect("<")?;
+        if self.take("(") {
             self.lines();
-            let element = self.ty()?;
-            if element == Type::Unit {
-                return Err(self.error("List<Unit> is not supported"));
+            let mut params = Vec::new();
+            if !self.at(")") {
+                loop {
+                    if self
+                        .tokens
+                        .get(self.pos + 1)
+                        .is_some_and(|token| token.text == ":")
+                    {
+                        self.name()?;
+                        self.expect(":")?;
+                        self.lines();
+                    }
+                    params.push(self.ty()?);
+                    self.lines();
+                    if !self.take(",") {
+                        break;
+                    }
+                    self.lines();
+                    if self.at(")") {
+                        break;
+                    }
+                }
             }
-            self.lines();
-            self.expect(">")?;
-            return Ok(if mutable {
-                Type::MutableList(Box::new(element))
+            self.expect(")")?;
+            if self.take("->") {
+                self.lines();
+                if params.len() > 22 {
+                    return Err(
+                        self.error("Function types with more than 22 parameters are unsupported")
+                    );
+                }
+                return Ok(Type::Function {
+                    params,
+                    result: Box::new(self.ty()?),
+                });
+            }
+            return if params.len() == 1 {
+                Ok(params.remove(0))
             } else {
-                Type::List(Box::new(element))
-            });
+                Err(self.error("Parenthesized types require one type or a function arrow"))
+            };
         }
-        if self.take("ThreadLocal") {
-            self.expect("<")?;
+        if self.at("suspend") {
+            return Err(self.error("Suspend function types are unsupported"));
+        }
+        let mut name = self.name()?;
+        while self.take(".") {
+            name.push('/');
+            name.push_str(&self.name()?);
+        }
+        self.named_ty(name)
+    }
+    fn type_arguments(&mut self) -> Result<Vec<TypeArgument>> {
+        self.expect("<")?;
+        self.lines();
+        let mut arguments = Vec::new();
+        loop {
+            let variance = if self.take("in") {
+                Variance::In
+            } else if self.take("out") {
+                Variance::Out
+            } else {
+                Variance::Invariant
+            };
             self.lines();
-            let element = self.ty()?;
+            let ty = if self.take("*") {
+                if variance != Variance::Invariant {
+                    return Err(self.error("Star projections cannot have variance modifiers"));
+                }
+                None
+            } else {
+                Some(self.ty()?)
+            };
+            arguments.push(TypeArgument { variance, ty });
             self.lines();
-            self.expect(">")?;
-            if !matches!(element, Type::ByteArray | Type::CharArray) {
-                return Err(self.error(
-                    "Only ThreadLocal<ByteArray> and ThreadLocal<CharArray> are supported",
-                ));
+            if !self.take(",") {
+                break;
             }
-            return Ok(Type::ThreadLocal(Box::new(element)));
-        }
-        if self.take("Array") {
-            self.expect("<")?;
             self.lines();
-            if !self.take("String") {
+            if self.at(">") {
+                break;
+            }
+        }
+        self.expect(">")?;
+        Ok(arguments)
+    }
+    fn named_ty(&mut self, name: String) -> Result<Type> {
+        if self.at("<") {
+            let arguments = self.type_arguments()?;
+            let covariant = matches!(
+                name.as_str(),
+                "List"
+                    | "Set"
+                    | "Collection"
+                    | "Iterable"
+                    | "kotlin/collections/List"
+                    | "kotlin/collections/Set"
+                    | "kotlin/collections/Collection"
+                    | "kotlin/collections/Iterable"
+            );
+            let conflict = covariant
+                && arguments
+                    .iter()
+                    .any(|argument| argument.variance == Variance::In)
+                || matches!(name.as_str(), "Map" | "kotlin/collections/Map")
+                    && arguments
+                        .get(1)
+                        .is_some_and(|argument| argument.variance == Variance::In)
+                || matches!(name.as_str(), "Comparable" | "kotlin/Comparable")
+                    && arguments.iter().any(|argument| {
+                        argument.ty.is_some() && argument.variance == Variance::Out
+                    });
+            if conflict {
+                return Err(self.error("Type projection conflicts with declaration-site variance"));
+            }
+            if arguments.len() == 1 && arguments[0].variance == Variance::Invariant {
+                if let Some(element) = &arguments[0].ty {
+                    match name.as_str() {
+                        "List" | "MutableList" if *element != Type::Unit => {
+                            return Ok(if name == "List" {
+                                Type::List(Box::new(element.clone()))
+                            } else {
+                                Type::MutableList(Box::new(element.clone()))
+                            });
+                        }
+                        "Array" if *element == Type::String => return Ok(Type::StringArray),
+                        "ThreadLocal" if matches!(element, Type::ByteArray | Type::CharArray) => {
+                            return Ok(Type::ThreadLocal(Box::new(element.clone())));
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            if name == "Array" {
                 return Err(self.error("Only Array<String> is supported among generic array types"));
             }
-            self.lines();
-            self.expect(">")?;
-            return Ok(Type::StringArray);
+            return Ok(Type::Parameterized { name, arguments });
         }
-        let ty = match self.token().text.as_str() {
+        if let Some(parameter) = self
+            .type_parameters
+            .iter()
+            .find(|parameter| parameter.name == name)
+        {
+            return Ok(Type::Parameter {
+                name,
+                upper_bound: Box::new(parameter.bounds.first().cloned().unwrap_or_else(|| {
+                    Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))
+                })),
+            });
+        }
+        Ok(match name.as_str() {
             "Int" => Type::Int,
             "Long" => Type::Long,
             "Byte" => Type::Byte,
@@ -1006,10 +1235,72 @@ impl Parser {
             "CharArray" => Type::CharArray,
             "String" => Type::String,
             "Unit" => Type::Unit,
-            _ => return Ok(Type::Java(self.name()?)),
-        };
-        self.pos += 1;
-        Ok(ty)
+            "Any" => Type::Java("java/lang/Object".into()),
+            "CharSequence" => Type::Java("java/lang/CharSequence".into()),
+            _ => Type::Java(name),
+        })
+    }
+    fn type_parameters(&mut self) -> Result<Vec<TypeParameter>> {
+        if !self.take("<") {
+            return Ok(Vec::new());
+        }
+        self.lines();
+        let mut parameters = Vec::new();
+        loop {
+            if matches!(self.token().text.as_str(), "in" | "out" | "reified") {
+                return Err(self.error(
+                    "Variance and reified modifiers on function type parameters are unsupported",
+                ));
+            }
+            let name = self.name()?;
+            if parameters
+                .iter()
+                .any(|parameter: &TypeParameter| parameter.name == name)
+            {
+                return Err(self.error("Duplicate type parameter"));
+            }
+            let mut parameter = TypeParameter {
+                name,
+                variance: Variance::Invariant,
+                bounds: Vec::new(),
+            };
+            self.type_parameters.push(parameter.clone());
+            if self.take(":") {
+                self.lines();
+                let bound = self.ty()?;
+                let primitive_bound = match bound.base() {
+                    Type::Nullable(inner) => inner.base(),
+                    other => other,
+                };
+                if matches!(
+                    primitive_bound,
+                    Type::Int
+                        | Type::Long
+                        | Type::Byte
+                        | Type::Char
+                        | Type::Boolean
+                        | Type::Float
+                        | Type::Unit
+                ) || matches!(primitive_bound,Type::Java(name) if matches!(name.as_str(),"java/lang/Integer"|"java/lang/Long"|"java/lang/Byte"|"java/lang/Character"|"java/lang/Boolean"|"java/lang/Float"|"java/lang/Short"|"java/lang/Double"|"kotlin/Int"|"kotlin/Long"|"kotlin/Byte"|"kotlin/Char"|"kotlin/Boolean"|"kotlin/Float"|"kotlin/Short"|"kotlin/Double"|"kotlin/Unit"))
+                {
+                    return Err(self
+                        .error("Primitive and Unit source type parameter bounds are unsupported"));
+                }
+                parameter.bounds.push(bound);
+                *self.type_parameters.last_mut().unwrap() = parameter.clone();
+            }
+            parameters.push(parameter);
+            self.lines();
+            if !self.take(",") {
+                break;
+            }
+            self.lines();
+            if self.at(">") {
+                break;
+            }
+        }
+        self.expect(">")?;
+        Ok(parameters)
     }
     fn starts_enum(&self) -> bool {
         self.starts_declaration("enum")
@@ -2266,21 +2557,18 @@ impl Parser {
         let private = visibility.as_deref() == Some("private");
         let internal = visibility.as_deref() == Some("internal");
         self.expect("fun")?;
+        let type_parameter_count = self.type_parameters.len();
+        let type_params = self.type_parameters()?;
         let first = self.name()?;
-        let (receiver, name) = if self.take(".") {
-            (
-                Some(match first.as_str() {
-                    "IntArray" => Type::IntArray,
-                    "CharArray" => Type::CharArray,
-                    "Char" => Type::Char,
-                    "String" => Type::String,
-                    "Int" => Type::Int,
-                    "Long" => Type::Long,
-                    "Boolean" => Type::Boolean,
-                    _ => Type::Java(first),
-                }),
-                self.name()?,
-            )
+        let (receiver, name) = if self.at("<") || self.at("?") || self.at(".") {
+            let receiver = self.named_ty(first)?;
+            let receiver = if self.take("?") {
+                Type::Nullable(Box::new(receiver))
+            } else {
+                receiver
+            };
+            self.expect(".")?;
+            (Some(receiver), self.name()?)
         } else {
             (None, first)
         };
@@ -2318,6 +2606,11 @@ impl Parser {
         } else {
             Type::Unit
         };
+        if self.at("where") {
+            return Err(
+                self.error("Multiple type parameter bounds in where clauses are unsupported")
+            );
+        }
         let after_signature = self.pos;
         self.lines();
         let mut has_body = true;
@@ -2336,6 +2629,7 @@ impl Parser {
         } else {
             return Err(self.error("Expected a function body"));
         };
+        self.type_parameters.truncate(type_parameter_count);
         Ok((
             Function {
                 name,
@@ -2343,6 +2637,7 @@ impl Parser {
                 private,
                 internal,
                 receiver,
+                type_params,
                 params,
                 defaults,
                 result,
@@ -2676,6 +2971,16 @@ impl Parser {
                 offset,
                 kind: ExprKind::If(Box::new(condition), Box::new(yes), Box::new(no)),
             }
+        } else if self.at("{") {
+            self.lambda()?
+        } else if self.take("::") {
+            Expr {
+                offset,
+                kind: ExprKind::CallableReference {
+                    receiver: None,
+                    name: self.name()?,
+                },
+            }
         } else if self.take("(") {
             self.lines();
             let expr = self.expr(0)?;
@@ -2735,21 +3040,23 @@ impl Parser {
         };
         loop {
             if self.at("<")
-                && matches!(&expr.kind, ExprKind::Name(name) if matches!(name.as_str(), "listOf" | "mutableListOf" | "emptyList"))
+                && matches!(
+                    expr.kind,
+                    ExprKind::Name(_) | ExprKind::Property(_, _) | ExprKind::SafeProperty(_, _)
+                )
+                && let Some(arguments) = self.call_type_arguments()
             {
-                self.expect("<")?;
-                self.lines();
-                let mut arguments = vec![self.ty()?];
-                self.lines();
-                while self.take(",") {
-                    self.lines();
-                    arguments.push(self.ty()?);
-                    self.lines();
-                }
-                self.expect(">")?;
                 expr = Expr {
                     offset,
                     kind: ExprKind::Generic(Box::new(expr), arguments),
+                };
+            } else if self.take("::") {
+                expr = Expr {
+                    offset,
+                    kind: ExprKind::CallableReference {
+                        receiver: Some(Box::new(expr)),
+                        name: self.name()?,
+                    },
                 };
             } else if self.take("!!") {
                 expr = Expr {
@@ -2765,10 +3072,7 @@ impl Parser {
                     },
                 };
             } else if self.at("{") {
-                let lambda = Expr {
-                    offset: self.token().offset,
-                    kind: ExprKind::Lambda(Box::new(self.expression_branch()?)),
-                };
+                let lambda = self.lambda()?;
                 expr = match expr.kind {
                     ExprKind::Call(target, mut arguments) => {
                         arguments.push(lambda);
@@ -2943,6 +3247,102 @@ impl Parser {
             kind: ExprKind::When(Box::new(subject), branches, Box::new(otherwise)),
         })
     }
+    fn call_type_arguments(&mut self) -> Option<Vec<Type>> {
+        let position = self.pos;
+        let depth = self.depth;
+        let result = self.type_arguments().ok().and_then(|arguments| {
+            if !self.at("(") && !self.at("{") {
+                return None;
+            }
+            arguments
+                .into_iter()
+                .map(|argument| {
+                    if argument.variance == Variance::Invariant {
+                        argument.ty
+                    } else {
+                        None
+                    }
+                })
+                .collect()
+        });
+        if result.is_none() {
+            self.pos = position;
+            self.depth = depth;
+        }
+        result
+    }
+    fn lambda(&mut self) -> Result<Expr> {
+        let offset = self.token().offset;
+        self.expect("{")?;
+        self.depth += 1;
+        if self.depth > 128 {
+            return Err(self.error("Lambda nesting exceeds the current limit"));
+        }
+        self.separators();
+        let start = self.pos;
+        let depth = self.depth;
+        let params = if self.take("->") {
+            Some(Vec::new())
+        } else {
+            let mut parameters = Vec::new();
+            let parsed = (|| -> Result<()> {
+                loop {
+                    let name = if self.take("_") {
+                        "_".into()
+                    } else {
+                        self.name()?
+                    };
+                    let ty = if self.take(":") {
+                        self.lines();
+                        Some(self.ty()?)
+                    } else {
+                        None
+                    };
+                    parameters.push(LambdaParameter { name, ty });
+                    self.lines();
+                    if !self.take(",") {
+                        break;
+                    }
+                    self.lines();
+                }
+                self.expect("->")
+            })();
+            if parsed.is_ok() {
+                Some(parameters)
+            } else {
+                self.pos = start;
+                self.depth = depth;
+                None
+            }
+        };
+        self.separators();
+        let mut body = Vec::new();
+        while !self.at("}") {
+            if self.at("<eof>") {
+                return Err(self.error("Unterminated lambda"));
+            }
+            body.push(self.statement()?);
+            self.end()?;
+        }
+        self.expect("}")?;
+        self.depth -= 1;
+        if params.is_none()
+            && body.len() == 1
+            && matches!(body[0].kind, StatementKind::Expression(_))
+        {
+            let StatementKind::Expression(value) = body.remove(0).kind else {
+                unreachable!()
+            };
+            return Ok(Expr {
+                offset,
+                kind: ExprKind::Lambda(Box::new(value)),
+            });
+        }
+        Ok(Expr {
+            offset,
+            kind: ExprKind::LambdaWithParams { params, body },
+        })
+    }
     fn expression_branch(&mut self) -> Result<Expr> {
         if self.take("{") {
             self.lines();
@@ -2981,6 +3381,10 @@ impl Parser {
                     pending.push((yes, depth + 1));
                     pending.push((no, depth + 1));
                 }
+                ExprKind::CallableReference {
+                    receiver: Some(receiver),
+                    ..
+                } => pending.push((receiver, depth + 1)),
                 ExprKind::Template(parts) => {
                     pending.extend(parts.iter().map(|part| (part, depth + 1)))
                 }
@@ -3137,6 +3541,7 @@ pub fn parse(source: &str) -> Result<Module> {
         tokens: lex(source)?,
         pos: 0,
         depth: 0,
+        type_parameters: Vec::new(),
     };
     p.separators();
     let mut package = String::new();
@@ -3154,11 +3559,17 @@ pub fn parse(source: &str) -> Result<Module> {
         let mut name = p.name()?;
         let mut alias = name.clone();
         while p.take(".") {
-            alias = p.name()?;
+            alias = if p.take("*") { "*".into() } else { p.name()? };
             name.push('/');
             name.push_str(&alias);
+            if alias == "*" {
+                break;
+            }
         }
         if p.take("as") {
+            if alias == "*" {
+                return Err(p.error("Wildcard imports cannot be aliased"));
+            }
             alias = p.name()?;
         }
         p.end()?;
@@ -3244,6 +3655,99 @@ pub fn parse(source: &str) -> Result<Module> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn generic_function_types_and_projections_preserve_structure() {
+        let module = parse("import demo.Box\nfun <T: Any> identity(value: T, callback: ((T) -> String)?): Box<out T> = make<T>(value)\nfun projections(value: Box<*>, sink: Box<in String>): Unit {}\nfun <T> List<T>.head(): T = get(0)").unwrap();
+        let function = &module.functions[0];
+        assert_eq!(function.type_params.len(), 1);
+        assert_eq!(
+            function.type_params[0].bounds,
+            vec![Type::Java("java/lang/Object".into())]
+        );
+        assert!(matches!(&function.params[0].1, Type::Parameter { name, .. } if name == "T"));
+        assert!(
+            matches!(&function.params[1].1, Type::Nullable(inner) if matches!(inner.as_ref(), Type::Function { params, result } if params.len() == 1 && **result == Type::String))
+        );
+        assert!(
+            matches!(&function.result, Type::Parameterized { name, arguments } if name == "Box" && arguments[0].variance == Variance::Out)
+        );
+        assert!(
+            matches!(&module.functions[1].params[0].1, Type::Parameterized { arguments, .. } if arguments[0].ty.is_none())
+        );
+        assert!(
+            matches!(&module.functions[1].params[1].1, Type::Parameterized { arguments, .. } if arguments[0].variance == Variance::In)
+        );
+        assert!(
+            matches!(&module.functions[2].receiver, Some(Type::List(inner)) if matches!(inner.as_ref(), Type::Parameter { name, .. } if name == "T"))
+        );
+        assert!(
+            matches!(&function.body[0].kind, StatementKind::Return(Some(Expr { kind: ExprKind::Call(target, _), .. })) if matches!(&target.kind, ExprKind::Generic(_, arguments) if matches!(&arguments[0], Type::Parameter { name, .. } if name == "T")))
+        );
+    }
+
+    #[test]
+    fn lambdas_callable_references_and_comparisons_remain_distinct() {
+        let module = parse("fun f(x: Int): Unit {\nval implicit = { it + 1 }\nval explicit = { x: Int, _ -> val next = x + 1; next }\nval zero = { -> 1 }\nval statements = { val next = 1; next }\nconsume(::top, String::length, value::method)\nval less = x < 3\nval generic = api.call<String>(\"ok\")\n}").unwrap();
+        let body = &module.functions[0].body;
+        assert!(matches!(
+            &body[0].kind,
+            StatementKind::Let(
+                _,
+                _,
+                _,
+                Expr {
+                    kind: ExprKind::Lambda(_),
+                    ..
+                }
+            )
+        ));
+        assert!(
+            matches!(&body[1].kind, StatementKind::Let(_, _, _, Expr { kind: ExprKind::LambdaWithParams { params: Some(params), body }, .. }) if params.len() == 2 && params[0].ty == Some(Type::Int) && body.len() == 2)
+        );
+        assert!(
+            matches!(&body[2].kind, StatementKind::Let(_, _, _, Expr { kind: ExprKind::LambdaWithParams { params: Some(params), .. }, .. }) if params.is_empty())
+        );
+        assert!(
+            matches!(&body[3].kind, StatementKind::Let(_, _, _, Expr { kind: ExprKind::LambdaWithParams { params: None, body }, .. }) if body.len() == 2)
+        );
+        assert!(
+            matches!(&body[4].kind, StatementKind::Expression(Expr { kind: ExprKind::Call(_, arguments), .. }) if arguments.iter().all(|argument| matches!(argument.kind, ExprKind::CallableReference { .. })))
+        );
+        assert!(
+            matches!(&body[5].kind, StatementKind::Let(_, _, _, Expr { kind: ExprKind::Binary(operator, _, _), .. }) if operator == "<")
+        );
+        assert!(
+            matches!(&body[6].kind, StatementKind::Let(_, _, _, Expr { kind: ExprKind::Call(target, _), .. }) if matches!(target.kind, ExprKind::Generic(_, _)))
+        );
+    }
+
+    #[test]
+    fn unsupported_generic_modifiers_and_function_arities_are_diagnosed() {
+        for source in [
+            "fun <reified T> f(value: T): T = value",
+            "fun <out T> f(value: T): T = value",
+            "fun <T: Long> f(value: T): T = value",
+            "fun <T: Int?> f(value: T): T = value",
+            "fun <T: Unit> f(value: T): T = value",
+            "fun <T> f(value: T): T where T: Any = value",
+            "fun f(value: suspend () -> Unit): Unit {}",
+            "fun f(value: List<in String>): Unit {}",
+            "fun f(value: Comparable<out String>): Unit {}",
+        ] {
+            assert!(parse(source).is_err(), "{source}");
+        }
+        let source = format!(
+            "fun f(value: ({}) -> Int): Unit {{}}",
+            vec!["Int"; 23].join(",")
+        );
+        assert!(parse(&source).unwrap_err().message.contains("22"));
+        let parameter = Type::Parameter {
+            name: "T".into(),
+            upper_bound: Box::new(Type::Int),
+        };
+        assert_eq!(parameter.descriptor(), "Ljava/lang/Integer;");
+    }
 
     #[test]
     fn nullable_primitives_use_reference_descriptors_and_slots() {

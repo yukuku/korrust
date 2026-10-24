@@ -9,9 +9,12 @@ mod class_companion;
 mod data;
 mod defaults;
 mod frames;
+mod inline;
 mod interfaces;
+mod lambdas;
 mod objects;
 pub use interfaces::emit_interfaces;
+pub use lambdas::emit_lambdas;
 pub use objects::emit_dynamic_object;
 
 fn failure(message: &str) -> Diagnostic {
@@ -73,7 +76,22 @@ fn parameter_slots(params: &[(String, Type)], start: usize) -> Vec<usize> {
 }
 
 fn nonnull(ty: &Type) -> bool {
-    ty.is_reference() && !ty.is_nullable() && !matches!(ty, Type::Platform(_))
+    match ty {
+        Type::Parameter { upper_bound, .. } => nonnull(upper_bound),
+        _ => ty.is_reference() && !ty.is_nullable() && !matches!(ty, Type::Platform(_)),
+    }
+}
+
+fn nullability_annotation(ty: &Type) -> Option<&'static str> {
+    if !ty.is_reference() {
+        None
+    } else if ty.is_nullable() {
+        Some("Lorg/jetbrains/annotations/Nullable;")
+    } else if nonnull(ty) {
+        Some("Lorg/jetbrains/annotations/NotNull;")
+    } else {
+        None
+    }
 }
 
 fn generic_type(ty: &Type) -> String {
@@ -83,6 +101,36 @@ fn generic_type(ty: &Type) -> String {
         Type::List(inner) | Type::MutableList(inner) => {
             format!("Ljava/util/List<{}>;", generic_argument(inner))
         }
+        Type::Function { params, result } => format!(
+            "Lkotlin/jvm/functions/Function{}<{}{}>;",
+            params.len(),
+            params.iter().map(generic_argument).collect::<String>(),
+            if result.base() == &Type::Unit {
+                "Lkotlin/Unit;".into()
+            } else {
+                generic_argument(result)
+            }
+        ),
+        Type::Parameterized { name, arguments } => format!(
+            "L{name}<{}>;",
+            arguments
+                .iter()
+                .map(|arg| match &arg.ty {
+                    None => "*".into(),
+                    Some(ty) => format!(
+                        "{}{}",
+                        match arg.variance {
+                            crate::syntax::Variance::Invariant => "",
+                            crate::syntax::Variance::In => "-",
+                            crate::syntax::Variance::Out if name == "java/util/List" =>
+                                covariant_wildcard(ty),
+                            crate::syntax::Variance::Out => "+",
+                        },
+                        generic_argument(ty)
+                    ),
+                })
+                .collect::<String>()
+        ),
         _ => ty.descriptor(),
     }
 }
@@ -110,10 +158,54 @@ fn boxed_descriptor(ty: &Type) -> &'static str {
     }
 }
 fn generic_argument(ty: &Type) -> String {
-    if ty.is_reference() {
+    if ty.base() == &Type::Unit {
+        "Lkotlin/Unit;".into()
+    } else if ty.is_reference() {
         generic_type(ty)
     } else {
         boxed_descriptor(ty).into()
+    }
+}
+
+fn covariant_wildcard(ty: &Type) -> &'static str {
+    match ty.base() {
+        Type::Nullable(inner) => covariant_wildcard(inner),
+        Type::Int
+        | Type::Long
+        | Type::Float
+        | Type::Byte
+        | Type::Char
+        | Type::Boolean
+        | Type::String
+        | Type::Unit
+        | Type::IntArray
+        | Type::ByteArray
+        | Type::CharArray
+        | Type::StringArray => "",
+        _ => "+",
+    }
+}
+
+fn generic_parameter(ty: &Type) -> String {
+    match ty {
+        Type::Nullable(inner) | Type::Platform(inner) if inner.is_reference() => {
+            generic_parameter(inner)
+        }
+        Type::Function { params, result } => format!(
+            "Lkotlin/jvm/functions/Function{}<{}{}{}>;",
+            params.len(),
+            params
+                .iter()
+                .map(|t| format!("-{}", generic_argument(t)))
+                .collect::<String>(),
+            covariant_wildcard(result),
+            if result.base() == &Type::Unit {
+                "Lkotlin/Unit;".into()
+            } else {
+                generic_argument(result)
+            }
+        ),
+        _ => generic_type(ty),
     }
 }
 
@@ -122,7 +214,7 @@ fn generic_method(params: &[(String, Type)], result: &Type) -> Option<String> {
         "({}){}",
         params
             .iter()
-            .map(|(_, ty)| generic_type(ty))
+            .map(|(_, ty)| generic_parameter(ty))
             .collect::<String>(),
         generic_type(result)
     );
@@ -135,6 +227,102 @@ fn generic_method(params: &[(String, Type)], result: &Type) -> Option<String> {
         result.descriptor()
     );
     (signature != descriptor).then_some(signature)
+}
+
+fn generic_function(function: &crate::check::Function) -> Option<String> {
+    if function.type_params.is_empty() {
+        return generic_method(&function.params, &function.result);
+    }
+    fn scoped(ty: &Type, names: &[&str], argument: bool) -> String {
+        match ty {
+            Type::Parameter { name, .. } if names.contains(&name.as_str()) => format!("T{name};"),
+            Type::Nullable(inner) if !inner.is_reference() => boxed_descriptor(inner).into(),
+            Type::Nullable(inner) | Type::Platform(inner) => scoped(inner, names, argument),
+            Type::List(inner) | Type::MutableList(inner) => {
+                format!("Ljava/util/List<{}>;", scoped(inner, names, true))
+            }
+            Type::Function { params, result } => format!(
+                "Lkotlin/jvm/functions/Function{}<{}{}>;",
+                params.len(),
+                params
+                    .iter()
+                    .map(|t| scoped(t, names, true))
+                    .collect::<String>(),
+                scoped(result, names, true)
+            ),
+            Type::Parameterized { name, arguments } => format!(
+                "L{name}<{}>;",
+                arguments
+                    .iter()
+                    .map(|a| match &a.ty {
+                        None => "*".into(),
+                        Some(t) => format!(
+                            "{}{}",
+                            match a.variance {
+                                crate::syntax::Variance::Invariant => "",
+                                crate::syntax::Variance::In => "-",
+                                crate::syntax::Variance::Out if name == "java/util/List" =>
+                                    covariant_wildcard(t),
+                                crate::syntax::Variance::Out => "+",
+                            },
+                            scoped(t, names, true)
+                        ),
+                    })
+                    .collect::<String>()
+            ),
+            Type::Unit if argument => "Lkotlin/Unit;".into(),
+            _ if argument => generic_argument(ty),
+            _ => generic_type(ty),
+        }
+    }
+    let names: Vec<_> = function
+        .type_params
+        .iter()
+        .map(|t| t.name.as_str())
+        .collect();
+    let declarations = function
+        .type_params
+        .iter()
+        .map(|p| {
+            let bounds = if p.bounds.is_empty() {
+                "Ljava/lang/Object;".into()
+            } else {
+                p.bounds
+                    .iter()
+                    .map(|b| scoped(b, &names, true))
+                    .collect::<Vec<_>>()
+                    .join(":")
+            };
+            format!("{}:{bounds}", p.name)
+        })
+        .collect::<String>();
+    fn parameter(ty: &Type, names: &[&str]) -> String {
+        match ty {
+            Type::Nullable(inner) | Type::Platform(inner) if inner.is_reference() => {
+                parameter(inner, names)
+            }
+            Type::Function { params, result } => format!(
+                "Lkotlin/jvm/functions/Function{}<{}{}{}>;",
+                params.len(),
+                params
+                    .iter()
+                    .map(|t| format!("-{}", scoped(t, names, true)))
+                    .collect::<String>(),
+                covariant_wildcard(result),
+                scoped(result, names, true)
+            ),
+            _ => scoped(ty, names, false),
+        }
+    }
+    Some(format!(
+        "<{declarations}>({}){}",
+        function
+            .params
+            .iter()
+            .map(|(_, t)| parameter(t, &names))
+            .collect::<String>(),
+        scoped(&function.result, &names, false)
+    ))
 }
 
 fn add_method_attribute(method: &mut Vec<u8>, attribute: Vec<u8>) {
@@ -168,6 +356,70 @@ fn reference_class(ty: &Type) -> Result<String> {
     } else {
         Err(failure("Expected a reference type"))
     }
+}
+
+fn invocation_types(descriptor: &str) -> Result<(Vec<Type>, Type)> {
+    fn ty(bytes: &[u8], cursor: &mut usize) -> Result<Type> {
+        let start = *cursor;
+        let tag = *bytes
+            .get(*cursor)
+            .ok_or_else(|| failure("Invalid JVM invocation descriptor"))?;
+        *cursor += 1;
+        Ok(match tag {
+            b'I' => Type::Int,
+            b'J' => Type::Long,
+            b'F' => Type::Float,
+            b'B' => Type::Byte,
+            b'C' => Type::Char,
+            b'Z' => Type::Boolean,
+            b'V' => Type::Unit,
+            b'L' => {
+                let end = bytes[*cursor..]
+                    .iter()
+                    .position(|b| *b == b';')
+                    .ok_or_else(|| failure("Invalid JVM invocation reference"))?
+                    + *cursor;
+                let name = String::from_utf8(bytes[*cursor..end].to_vec())
+                    .map_err(|_| failure("Invalid JVM invocation reference"))?;
+                *cursor = end + 1;
+                if name == "java/lang/String" {
+                    Type::String
+                } else {
+                    Type::Java(name)
+                }
+            }
+            b'[' => {
+                ty(bytes, cursor)?;
+                match &bytes[start..*cursor] {
+                    b"[I" => Type::IntArray,
+                    b"[B" => Type::ByteArray,
+                    b"[C" => Type::CharArray,
+                    b"[Ljava/lang/String;" => Type::StringArray,
+                    _ => return Err(failure("Unsupported JVM invocation array type")),
+                }
+            }
+            _ => return Err(failure("Unsupported JVM invocation descriptor")),
+        })
+    }
+    let bytes = descriptor.as_bytes();
+    if bytes.first() != Some(&b'(') {
+        return Err(failure("Invalid JVM invocation descriptor"));
+    }
+    let mut cursor = 1;
+    let mut params = Vec::new();
+    while bytes.get(cursor) != Some(&b')') {
+        let param = ty(bytes, &mut cursor)?;
+        if param == Type::Unit {
+            return Err(failure("Invalid void JVM parameter"));
+        }
+        params.push(param);
+    }
+    cursor += 1;
+    let result = ty(bytes, &mut cursor)?;
+    if cursor != bytes.len() {
+        return Err(failure("Invalid JVM invocation descriptor"));
+    }
+    Ok((params, result))
 }
 
 fn primitive_array_type(ty: &Type) -> Result<u8> {
@@ -336,11 +588,15 @@ struct Code<'a> {
     branches: Vec<(usize, usize)>,
     loops: Vec<(usize, usize)>,
     max_stack: usize,
+    lambdas: &'a [crate::check::LambdaDecl],
+    inline_local_maps: Vec<Vec<u16>>,
+    inline_returns: Vec<usize>,
 }
 fn terminal_block(body: &[Statement]) -> bool {
     match body.last() {
         Some(
             Statement::Return(_)
+            | Statement::NonLocalReturn(_)
             | Statement::Throw(_)
             | Statement::ThrowException { .. }
             | Statement::Break
@@ -360,6 +616,48 @@ fn terminal_value(value: &Value) -> bool {
     }
 }
 impl Code<'_> {
+    fn adapt_value(&mut self, from: &Type, to: &Type) -> Result<()> {
+        if from.base() == &Type::Unit {
+            if to.base() != &Type::Unit {
+                if !to.is_reference() {
+                    return Err(failure("Cannot adapt Unit to a primitive JVM value"));
+                }
+                self.field_reference(0xb2, "kotlin/Unit", "INSTANCE", "Lkotlin/Unit;")?;
+            }
+        } else if to.base() == &Type::Unit {
+            self.bytes.push(if from.slots() == 2 { 0x58 } else { 0x57 });
+        } else if from.is_reference() && !to.is_reference() {
+            self.generic_result(to)?;
+        } else if !from.is_reference() && to.is_reference() {
+            self.box_value(from)?;
+            let target = reference_class(to)?;
+            if target != "java/lang/Object" && target != boxed_owner(from) {
+                self.class_reference(0xc0, &target)?;
+            }
+        } else if from.is_reference() && to.is_reference() && from.descriptor() != to.descriptor() {
+            let target = reference_class(to)?;
+            if target != "java/lang/Object" {
+                self.class_reference(0xc0, &target)?;
+            }
+        } else if from.descriptor() != to.descriptor() {
+            return Err(failure("Unsupported JVM primitive adaptation"));
+        }
+        Ok(())
+    }
+    fn call_arguments(&mut self, args: &[Value], params: &[Type]) -> Result<()> {
+        if args.len() != params.len() {
+            return Err(failure("JVM invocation argument count mismatch"));
+        }
+        let mut slots = 0;
+        for (arg, param) in args.iter().zip(params) {
+            self.max_stack = self.max_stack.max(slots + arg.stack() + 2);
+            self.value(arg)?;
+            self.adapt_value(&arg.ty, param)?;
+            slots += param.slots();
+        }
+        self.max_stack = self.max_stack.max(slots);
+        Ok(())
+    }
     fn box_value(&mut self, ty: &Type) -> Result<()> {
         self.method_reference(
             0xb8,
@@ -431,7 +729,8 @@ impl Code<'_> {
                 body,
             } => {
                 self.value(initializer)?;
-                self.bytes.extend([store_opcode(&initializer.ty), *slot]);
+                self.bytes
+                    .extend([store_opcode(&initializer.ty), self.local_slot(*slot)?]);
                 return self.boxed_value(body);
             }
             ValueKind::Abrupt(body) => return self.block(body),
@@ -557,6 +856,59 @@ impl Code<'_> {
     fn value(&mut self, value: &Value) -> Result<()> {
         self.max_stack = self.max_stack.max(value.stack());
         match &value.kind {
+            ValueKind::CompiledInline {
+                method,
+                args,
+                local_base,
+                lambda_bases,
+            } => {
+                self.compiled_inline(method, args, *local_base, lambda_bases, &value.ty)?;
+            }
+            ValueKind::Lambda { owner, captures } => {
+                self.class_reference(0xbb, owner)?;
+                self.bytes.push(0x59);
+                for capture in captures {
+                    self.value(capture)?;
+                }
+                self.max_stack = self
+                    .max_stack
+                    .max(2 + captures.iter().map(|v| v.ty.slots()).sum::<usize>());
+                self.method_reference(
+                    0xb7,
+                    owner,
+                    "<init>",
+                    &format!(
+                        "({})V",
+                        captures
+                            .iter()
+                            .map(|v| v.ty.descriptor())
+                            .collect::<String>()
+                    ),
+                )?;
+            }
+            ValueKind::FunctionInvoke { function, args } => {
+                let Type::Function { params, .. } = function.ty.base() else {
+                    return Err(failure("Expected a function type for invoke"));
+                };
+                if params.len() != args.len() || params.len() > 22 {
+                    return Err(failure("Unsupported function invocation arity"));
+                }
+                self.value(function)?;
+                for arg in args {
+                    self.value(arg)?;
+                    self.adapt_value(&arg.ty, &Type::Java("java/lang/Object".into()))?;
+                }
+                self.max_stack = self.max_stack.max(3 + args.len() * 2);
+                let owner = format!("kotlin/jvm/functions/Function{}", params.len());
+                let descriptor = format!(
+                    "({})Ljava/lang/Object;",
+                    "Ljava/lang/Object;".repeat(params.len())
+                );
+                let method = self.pool.interface_method(&owner, "invoke", &descriptor)?;
+                self.reference(0xb9, method);
+                self.bytes.extend([(args.len() + 1) as u8, 0]);
+                self.adapt_value(&Type::Java("java/lang/Object".into()), &value.ty)?;
+            }
             ValueKind::Float(bits) => {
                 let constant = self.pool.add(Constant::Float(*bits))?;
                 self.reference(0x13, constant);
@@ -599,12 +951,20 @@ impl Code<'_> {
                 if let Some(receiver) = receiver {
                     self.value(receiver)?;
                 }
+                let object_cell = owner == "kotlin/jvm/internal/Ref$ObjectRef" && name == "element";
                 self.field_reference(
                     if receiver.is_some() { 0xb4 } else { 0xb2 },
                     owner,
                     name,
-                    &value.ty.descriptor(),
+                    &if object_cell {
+                        "Ljava/lang/Object;".into()
+                    } else {
+                        value.ty.descriptor()
+                    },
                 )?;
+                if object_cell {
+                    self.adapt_value(&Type::Java("java/lang/Object".into()), &value.ty)?;
+                }
             }
             ValueKind::ListFactory { mutable, elements } => {
                 if elements.is_empty() && !mutable {
@@ -660,12 +1020,11 @@ impl Code<'_> {
                 self.max_stack = self
                     .max_stack
                     .max(2 + args.iter().map(|value| value.ty.slots()).sum::<usize>());
-                for arg in args {
-                    self.value(arg)?;
-                }
+                let function = &self.functions[*id];
+                let (params, result) = invocation_types(&function.descriptor())?;
+                self.call_arguments(args, &params)?;
                 self.integer(*mask as i32)?;
                 self.bytes.push(0x01);
-                let function = &self.functions[*id];
                 let descriptor = function
                     .descriptor()
                     .replacen(')', "ILjava/lang/Object;)", 1);
@@ -675,6 +1034,7 @@ impl Code<'_> {
                     &format!("{}$default", function.name),
                     &descriptor,
                 )?;
+                self.adapt_value(&result, &value.ty)?;
             }
             ValueKind::Unit => {}
             ValueKind::String(units) => {
@@ -767,18 +1127,22 @@ impl Code<'_> {
                 self.reference(opcode, method);
             }
             ValueKind::JavaCall { method, args } => {
-                for arg in args {
-                    self.value(arg)?;
+                let (mut params, result) = invocation_types(&method.descriptor)?;
+                if method.access & 8 == 0 {
+                    params.insert(0, Type::Java(method.owner.clone()));
                 }
+                self.call_arguments(args, &params)?;
                 let opcode = if method.access & 8 != 0 { 0xb8 } else { 0xb6 };
-                let method = self
+                let constant = self
                     .pool
                     .method(&method.owner, &method.name, &method.descriptor)?;
-                self.reference(opcode, method);
+                self.reference(opcode, constant);
+                self.adapt_value(&result, &value.ty)?;
             }
             ValueKind::Let { slot, value, body } => {
                 self.value(value)?;
-                self.bytes.extend([store_opcode(&value.ty), *slot]);
+                self.bytes
+                    .extend([store_opcode(&value.ty), self.local_slot(*slot)?]);
                 self.value(body)?;
             }
             ValueKind::NewArray(array_type, size) => {
@@ -854,19 +1218,31 @@ impl Code<'_> {
                 descriptor,
                 args,
             } => {
-                for arg in args {
-                    self.value(arg)?;
-                }
+                let (params, result) = invocation_types(descriptor)?;
+                self.call_arguments(args, &params)?;
                 self.method_reference(0xb8, owner, name, descriptor)?;
+                self.adapt_value(&result, &value.ty)?;
             }
             ValueKind::Increment { slot, prefix } => {
+                let slot = self.local_slot(*slot)?;
                 if *prefix {
-                    self.bytes.extend([0x84, *slot, 1]);
+                    self.bytes.extend([0x84, slot, 1]);
                 }
-                self.bytes.extend([0x15, *slot]);
+                self.bytes.extend([0x15, slot]);
                 if !*prefix {
-                    self.bytes.extend([0x84, *slot, 1]);
+                    self.bytes.extend([0x84, slot, 1]);
                 }
+            }
+            ValueKind::CellIncrement { cell, prefix } => {
+                self.value(cell)?;
+                self.bytes.push(0x59);
+                self.field_reference(0xb4, "kotlin/jvm/internal/Ref$IntRef", "element", "I")?;
+                if *prefix {
+                    self.bytes.extend([0x04, 0x60, 0x5a]);
+                } else {
+                    self.bytes.extend([0x5a, 0x04, 0x60]);
+                }
+                self.field_reference(0xb5, "kotlin/jvm/internal/Ref$IntRef", "element", "I")?;
             }
             ValueKind::RequireNotNull(inner) => {
                 self.value(inner)?;
@@ -920,9 +1296,9 @@ impl Code<'_> {
                 interface,
                 args,
             } => {
-                for arg in args {
-                    self.value(arg)?;
-                }
+                let (mut params, result) = invocation_types(&method.descriptor)?;
+                params.insert(0, Type::Java(method.owner.clone()));
+                self.call_arguments(args, &params)?;
                 if *interface {
                     let constant = self.pool.interface_method(
                         &method.owner,
@@ -931,7 +1307,7 @@ impl Code<'_> {
                     )?;
                     self.reference(0xb9, constant);
                     self.bytes.extend([
-                        u8::try_from(args.iter().map(|v| v.ty.slots()).sum::<usize>())
+                        u8::try_from(params.iter().map(Type::slots).sum::<usize>())
                             .map_err(|_| failure("Too many interface call arguments"))?,
                         0,
                     ]);
@@ -941,6 +1317,7 @@ impl Code<'_> {
                             .method(&method.owner, &method.name, &method.descriptor)?;
                     self.reference(if method.access & 2 != 0 { 0xb7 } else { 0xb6 }, constant);
                 }
+                self.adapt_value(&result, &value.ty)?;
             }
             ValueKind::NewIntArray(size) => {
                 self.value(size)?;
@@ -1011,7 +1388,9 @@ impl Code<'_> {
                 let field = self.pool.field(owner, name, &value.ty.descriptor())?;
                 self.reference(0xb4, field);
             }
-            ValueKind::Local(slot) => self.bytes.extend([load_opcode(&value.ty), *slot]),
+            ValueKind::Local(slot) => self
+                .bytes
+                .extend([load_opcode(&value.ty), self.local_slot(*slot)?]),
             ValueKind::Negate(inner) => {
                 self.value(inner)?;
                 self.bytes.push(if inner.ty == Type::Long {
@@ -1048,14 +1427,19 @@ impl Code<'_> {
                 self.reference(0xb8, method);
             }
             ValueKind::Call(id, args) => {
-                for arg in args {
-                    self.value(arg)?;
-                }
                 let function = &self.functions[*id];
-                let method =
-                    self.pool
-                        .method(self.owner, &function.name, &function.descriptor())?;
+                let (params, result) = invocation_types(&function.descriptor())?;
+                self.call_arguments(args, &params)?;
+                let name = if function.private && !self.lambdas.is_empty() {
+                    format!("access${}", function.name)
+                } else {
+                    function.name.clone()
+                };
+                let method = self
+                    .pool
+                    .method(self.owner, &name, &function.descriptor())?;
                 self.reference(0xb8, method);
+                self.adapt_value(&result, &value.ty)?;
             }
             ValueKind::Binary(op, a, b) if op == "&&" || op == "||" => {
                 let short = self.label();
@@ -1218,9 +1602,19 @@ impl Code<'_> {
                 }
                 Statement::Store(slot, value) => {
                     self.value(value)?;
-                    self.bytes.extend([store_opcode(&value.ty), *slot]);
+                    self.bytes
+                        .extend([store_opcode(&value.ty), self.local_slot(*slot)?]);
                 }
                 Statement::Return(value) => {
+                    if self.inline_return(value)? {
+                        continue;
+                    }
+                    self.value(value)?;
+                    if !terminal_value(value) {
+                        self.bytes.push(return_opcode(&value.ty));
+                    }
+                }
+                Statement::NonLocalReturn(value) => {
                     self.value(value)?;
                     if !terminal_value(value) {
                         self.bytes.push(return_opcode(&value.ty));
@@ -1299,22 +1693,24 @@ impl Code<'_> {
                     end,
                     body,
                 } => {
+                    let slot = self.local_slot(*slot)?;
+                    let end_slot = self.local_slot(*end_slot)?;
                     self.value(start)?;
-                    self.bytes.extend([0x36, *slot]);
+                    self.bytes.extend([0x36, slot]);
                     self.value(end)?;
-                    self.bytes.extend([0x36, *end_slot]);
+                    self.bytes.extend([0x36, end_slot]);
                     let head = self.label();
                     let step = self.label();
                     let done = self.label();
                     self.mark(head);
-                    self.bytes.extend([0x15, *slot, 0x15, *end_slot]);
+                    self.bytes.extend([0x15, slot, 0x15, end_slot]);
                     self.max_stack = self.max_stack.max(2);
                     self.branch(0xa2, done);
                     self.loops.push((step, done));
                     self.block(body)?;
                     self.loops.pop();
                     self.mark(step);
-                    self.bytes.extend([0x84, *slot, 1]);
+                    self.bytes.extend([0x84, slot, 1]);
                     self.branch(0xa7, head);
                     self.mark(done);
                 }
@@ -1389,6 +1785,9 @@ pub fn emit(
             labels: Vec::new(),
             branches: Vec::new(),
             loops: Vec::new(),
+            lambdas: &module.lambdas,
+            inline_local_maps: Vec::new(),
+            inline_returns: Vec::new(),
             max_stack: 2,
         };
         if !function.private {
@@ -1427,15 +1826,48 @@ pub fn emit(
                 max_stack,
                 locals: function.locals,
             },
-            generic_method(&function.params, &function.result).as_deref(),
+            generic_function(function).as_deref(),
             nonnull(&function.result),
         )?;
         parameter_annotations(&mut pool, &mut method, &function.params)?;
         nullable_result(&mut pool, &mut method, &function.result)?;
         methods.push(method);
-        if let Some(default) =
-            defaults::function(&mut pool, &module.functions, function, owner, true)?
-        {
+        if function.private && !module.lambdas.is_empty() {
+            let slots = function
+                .params
+                .iter()
+                .map(|(_, ty)| ty.slots())
+                .sum::<usize>();
+            let mut code = SimpleCode::new(slots.max(function.result.slots()) as u16, slots as u16);
+            for (slot, (_, ty)) in parameter_slots(&function.params, 0)
+                .into_iter()
+                .zip(&function.params)
+            {
+                code.bytes.extend([load_opcode(ty), slot as u8]);
+            }
+            code.reference(
+                0xb8,
+                pool.method(owner, &function.name, &function.descriptor())?,
+            );
+            code.bytes.push(return_opcode(&function.result));
+            methods.push(simple_method(
+                &mut pool,
+                0x1009,
+                &format!("access${}", function.name),
+                &function.descriptor(),
+                code,
+                None,
+                false,
+            )?);
+        }
+        if let Some(default) = defaults::function(
+            &mut pool,
+            &module.functions,
+            function,
+            owner,
+            true,
+            &module.lambdas,
+        )? {
             methods.push(default);
         }
     }
@@ -1996,23 +2428,20 @@ fn parameter_annotations(
     method: &mut Vec<u8>,
     params: &[(String, Type)],
 ) -> Result<()> {
-    if !params.iter().any(|(_, ty)| ty.is_reference()) {
+    if !params
+        .iter()
+        .any(|(_, ty)| nullability_annotation(ty).is_some())
+    {
         return Ok(());
     }
     let mut annotation = Vec::new();
     annotation
         .push(u8::try_from(params.len()).map_err(|_| failure("Too many annotated parameters"))?);
     for (_, ty) in params {
-        u2(&mut annotation, u16::from(ty.is_reference()));
-        if ty.is_reference() {
-            u2(
-                &mut annotation,
-                pool.utf8(if ty.is_nullable() {
-                    "Lorg/jetbrains/annotations/Nullable;"
-                } else {
-                    "Lorg/jetbrains/annotations/NotNull;"
-                })?,
-            );
+        let nullable = nullability_annotation(ty);
+        u2(&mut annotation, u16::from(nullable.is_some()));
+        if let Some(nullable) = nullable {
+            u2(&mut annotation, pool.utf8(nullable)?);
             u2(&mut annotation, 0);
         }
     }
@@ -2024,25 +2453,19 @@ fn parameter_annotations(
     Ok(())
 }
 
-pub fn emit_class(
-    class: &crate::check::ClassDecl,
-    owner: &str,
-    file: &str,
-    metadata: &crate::metadata::Metadata,
-) -> Result<Vec<u8>> {
-    emit_class_with(class, owner, file, metadata, 0x0001, |_| Ok(Vec::new()))
-}
-
 pub fn emit_class_files(
     class: &crate::check::ClassDecl,
     owner: &str,
     file: &str,
     metadata: &crate::metadata::Metadata,
     companion_metadata: Option<&crate::metadata::Metadata>,
+    lambdas: &[crate::check::LambdaDecl],
 ) -> Result<Vec<crate::ClassFile>> {
     let mut files = vec![crate::ClassFile {
         internal_name: owner.into(),
-        bytes: emit_class(class, owner, file, metadata)?,
+        bytes: emit_class_with(class, owner, file, metadata, 0x0001, lambdas, |_| {
+            Ok(Vec::new())
+        })?,
     }];
     if let Some(companion) = &class.companion {
         files.push(class_companion::emit(
@@ -2062,27 +2485,21 @@ fn class_field(pool: &mut Pool, name: &str, ty: &Type, flags: u16) -> Result<Vec
     u2(&mut field, pool.utf8(&ty.descriptor())?);
     let generic = generic_type(ty);
     let has_signature = generic != ty.descriptor();
+    let annotation = nullability_annotation(ty);
     u2(
         &mut field,
-        u16::from(ty.is_reference()) + u16::from(has_signature),
+        u16::from(annotation.is_some()) + u16::from(has_signature),
     );
     if has_signature {
         u2(&mut field, pool.utf8("Signature")?);
         u4(&mut field, 2);
         u2(&mut field, pool.utf8(&generic)?);
     }
-    if ty.is_reference() {
+    if let Some(annotation) = annotation {
         u2(&mut field, pool.utf8("RuntimeInvisibleAnnotations")?);
         u4(&mut field, 6);
         u2(&mut field, 1);
-        u2(
-            &mut field,
-            pool.utf8(if ty.is_nullable() {
-                "Lorg/jetbrains/annotations/Nullable;"
-            } else {
-                "Lorg/jetbrains/annotations/NotNull;"
-            })?,
-        );
+        u2(&mut field, pool.utf8(annotation)?);
         u2(&mut field, 0);
     }
     Ok(field)
@@ -2094,6 +2511,7 @@ fn emit_class_with(
     file: &str,
     metadata: &crate::metadata::Metadata,
     constructor_flags: u16,
+    lambdas: &[crate::check::LambdaDecl],
     additional_attributes: impl FnOnce(&mut Pool) -> Result<Vec<Vec<u8>>>,
 ) -> Result<Vec<u8>> {
     let mut pool = Pool::default();
@@ -2130,6 +2548,9 @@ fn emit_class_with(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
         max_stack: 3,
     };
     for (slot, (name, ty)) in parameter_slots(&class.params, 1)
@@ -2191,7 +2612,7 @@ fn emit_class_with(
         constructor_locals,
     )?;
     let mut methods = vec![constructor];
-    methods.extend(defaults::constructors(&mut pool, class, owner)?);
+    methods.extend(defaults::constructors(&mut pool, class, owner, lambdas)?);
     if class.data {
         methods.extend(data::methods(&mut pool, class, owner)?);
     }
@@ -2212,6 +2633,9 @@ fn emit_class_with(
             labels: Vec::new(),
             branches: Vec::new(),
             loops: Vec::new(),
+            lambdas,
+            inline_local_maps: Vec::new(),
+            inline_returns: Vec::new(),
             max_stack: 2,
         };
         if !function.private {
@@ -2253,7 +2677,7 @@ fn emit_class_with(
             &function.name,
             &function.descriptor(),
             code,
-            generic_method(&function.params, &function.result).as_deref(),
+            generic_function(function).as_deref(),
             nonnull(&function.result),
         )?;
         parameter_annotations(&mut pool, &mut method, &function.params)?;
@@ -2268,7 +2692,7 @@ fn emit_class_with(
         )?;
         methods.push(method);
         if let Some(default) =
-            defaults::function(&mut pool, &class.methods, function, owner, false)?
+            defaults::function(&mut pool, &class.methods, function, owner, false, lambdas)?
         {
             methods.push(default);
         }
@@ -2312,7 +2736,14 @@ fn emit_class_with(
     }
     let mut additional_attributes = additional_attributes(&mut pool)?;
     if let Some(companion) = &class.companion {
-        class_companion::outer(&mut pool, companion, owner, &mut fields, &mut methods)?;
+        class_companion::outer(
+            &mut pool,
+            companion,
+            owner,
+            &mut fields,
+            &mut methods,
+            lambdas,
+        )?;
         additional_attributes.push(class_companion::inner_attribute(
             &mut pool,
             owner,

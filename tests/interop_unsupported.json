@@ -1,7 +1,11 @@
 [
   {
     "id": "java_generic_method",
-    "source": "import fixtures.ForeignMethods\nfun f(value: ForeignMethods): String = value.generic(\"x\")"
+    "source": "import fixtures.ForeignMethods\nfun f(value: ForeignMethods): String = value.generic(\"x\")",
+    "supported_regression": {
+      "facade": "Java_generic_methodKt",
+      "java_assertions": "if (!\"x\".equals(Java_generic_methodKt.f(new fixtures.ForeignMethods()))) throw new AssertionError(\"generic instance method\");"
+    }
   },
   {
     "id": "java_annotated_method",
@@ -13,11 +17,19 @@
   },
   {
     "id": "java_hierarchy_overload",
-    "source": "import fixtures.ChildMethods\nfun f(value: ChildMethods): Int = value.value(1)"
+    "source": "import fixtures.ChildMethods\nfun f(value: ChildMethods): Int = value.value(1)",
+    "supported_regression": {
+      "facade": "Java_hierarchy_overloadKt",
+      "java_assertions": "if (Java_hierarchy_overloadKt.f(new fixtures.ChildMethods()) != 1) throw new AssertionError(\"inherited overload resolution\");"
+    }
   },
   {
     "id": "java_interface",
-    "source": "import fixtures.ForeignInterface\nfun f(value: ForeignInterface): Int = value.value()"
+    "source": "import fixtures.ForeignInterface\nfun f(value: ForeignInterface): Int = value.value()",
+    "supported_regression": {
+      "facade": "Java_interfaceKt",
+      "java_assertions": "if (Java_interfaceKt.f(new fixtures.ForeignInterface() { public int value() { return 29; } }) != 29) throw new AssertionError(\"interface dispatch\");\nif (Java_interfaceKt.f(new fixtures.ForeignInterface() { public int value() { return -7; } }) != -7) throw new AssertionError(\"interface implementation\");"
+    }
   },
   {
     "id": "java_annotated_class",

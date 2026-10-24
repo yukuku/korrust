@@ -242,6 +242,14 @@ fn transfer(
             let value = pop(&mut frame)?;
             frame.stack.extend([value.clone(), value]);
         }
+        0x5a => {
+            let top = pop(&mut frame)?;
+            let below = pop(&mut frame)?;
+            if top == Verification::Long || below == Verification::Long {
+                return Err(failure("Invalid category-2 operand for dup_x1"));
+            }
+            frame.stack.extend([top.clone(), below, top]);
+        }
         0x60..=0x73 | 0x78..=0x83 => {
             pop(&mut frame)?;
             let value = pop(&mut frame)?;
@@ -403,7 +411,7 @@ fn attach_with_constructor(
     constructor: bool,
 ) -> Result<()> {
     let length = u32::from_be_bytes(method[18..22].try_into().unwrap()) as usize;
-    let bytes = &method[22..22 + length];
+    let mut bytes = method[22..22 + length].to_vec();
     let mut initial = Frame {
         locals: vec![Verification::Top; locals as usize],
         stack: Vec::new(),
@@ -437,7 +445,7 @@ fn attach_with_constructor(
     merge(&mut states, 0, initial.clone(), &mut queue)?;
     loop {
         while let Some(offset) = queue.pop_front() {
-            let (frame, successors) = transfer(pool, bytes, offset, states[&offset].clone())?;
+            let (frame, successors) = transfer(pool, &bytes, offset, states[&offset].clone())?;
             for next in successors {
                 if next >= length || offsets.binary_search(&next).is_err() {
                     return Err(failure(
@@ -454,14 +462,28 @@ fn attach_with_constructor(
         else {
             break;
         };
+        let end = offsets
+            .iter()
+            .copied()
+            .find(|offset| *offset > dead && states.contains_key(offset))
+            .unwrap_or(length);
+        bytes[dead..end].fill(0);
+        bytes[end - 1] = 0xbf;
+        offsets.clear();
+        let mut cursor = 0;
+        while cursor < length {
+            offsets.push(cursor);
+            cursor += instruction_len(bytes[cursor])?;
+        }
         let mut frame = states
             .range(..dead)
             .next_back()
             .map(|(_, frame)| frame.clone())
             .unwrap_or_else(|| initial.clone());
-        frame.stack.clear();
+        frame.stack = vec![Verification::Object("java/lang/Throwable".into())];
         merge(&mut states, dead, frame, &mut queue)?;
     }
+    method[22..22 + length].copy_from_slice(&bytes);
     let mut table = Vec::new();
     u2(&mut table, (states.len() - 1) as u16);
     let mut previous: isize = -1;

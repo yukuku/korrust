@@ -1,0 +1,142 @@
+[
+  {
+    "id": "jar_classpath",
+    "fixture": "JarClasspath.kt",
+    "facade": "interop.probes.JarClasspathKt",
+    "expected": 7,
+    "scope": "JAR classpath discovery and method calls"
+  },
+  {
+    "id": "kotlin_metadata",
+    "fixture": "KotlinMetadata.kt",
+    "facade": "interop.probes.KotlinMetadataKt",
+    "expected": "metadata",
+    "scope": "Kotlin metadata type-parameter and callable reconstruction"
+  },
+  {
+    "id": "top_level_imports",
+    "fixture": "TopLevelImports.kt",
+    "facade": "interop.probes.TopLevelImportsKt",
+    "expected": 18,
+    "scope": "Imported compiled top-level Kotlin functions"
+  },
+  {
+    "id": "java_generic_signatures",
+    "fixture": "JavaGeneric.kt",
+    "facade": "interop.probes.JavaGenericKt",
+    "expected": "signature",
+    "scope": "Java Signature attributes and generic argument/result substitution"
+  },
+  {
+    "id": "type_variables_bounds",
+    "fixture": "Bounds.kt",
+    "facade": "interop.probes.BoundsKt",
+    "expected": 9,
+    "scope": "Kotlin and Java bounded type variables"
+  },
+  {
+    "id": "generic_inference",
+    "fixture": "Inference.kt",
+    "facade": "interop.probes.InferenceKt",
+    "expected": "inferred",
+    "scope": "Generic call inference from argument types"
+  },
+  {
+    "id": "variance_projections",
+    "fixture": "Variance.kt",
+    "facade": "interop.probes.VarianceKt",
+    "expected": "first",
+    "scope": "Use-site projections and wildcard Java generic parameters"
+  },
+  {
+    "id": "annotations_platform",
+    "fixture": "Nullability.kt",
+    "facade": "interop.probes.NullabilityKt",
+    "expected": "platform",
+    "scope": "Java nullability annotations and platform coercion checks"
+  },
+  {
+    "id": "overload_specificity",
+    "fixture": "Specificity.kt",
+    "facade": "interop.probes.SpecificityKt",
+    "expected": "string",
+    "scope": "Kotlin/Java subtype specificity, generic versus concrete candidates, null arguments and defaulted parameter ties"
+  },
+  {
+    "id": "compiled_extensions",
+    "fixture": "Extensions.kt",
+    "facade": "interop.probes.ExtensionsKt",
+    "expected": 12,
+    "scope": "Imported extension metadata and receiver lowering against both custom library and actual pinned kotlin.text.repeat"
+  },
+  {
+    "id": "library_properties",
+    "fixture": "Properties.kt",
+    "facade": "interop.probes.PropertiesKt",
+    "expected": 49,
+    "scope": "Imported Kotlin getter/setter properties and separately compiled internal-setter visibility"
+  },
+  {
+    "id": "imported_named_defaults",
+    "fixture": "Defaults.kt",
+    "facade": "interop.probes.DefaultsKt",
+    "expected": 28,
+    "scope": "Compiled Kotlin parameter names and default-mask ABI"
+  },
+  {
+    "id": "function_invocation",
+    "fixture": "FunctionInvocation.kt",
+    "facade": "interop.probes.FunctionInvocationKt",
+    "expected": 27,
+    "scope": "Function type signatures, boxing and invoke"
+  },
+  {
+    "id": "capturing_lambdas",
+    "fixture": "Captures.kt",
+    "facade": "interop.probes.CapturesKt",
+    "expected": 10,
+    "scope": "Immutable captured locals and mutable captured cells"
+  },
+  {
+    "id": "contextual_lambda_inference",
+    "fixture": "LambdaInference.kt",
+    "facade": "interop.probes.LambdaInferenceKt",
+    "expected": 8,
+    "scope": "Expected function parameter types and implicit it"
+  },
+  {
+    "id": "callable_references",
+    "fixture": "References.kt",
+    "facade": "interop.probes.ReferencesKt",
+    "expected": 14,
+    "scope": "Bound and unbound callable reference receivers"
+  },
+  {
+    "id": "inherited_dispatch",
+    "fixture": "Dispatch.kt",
+    "facade": "interop.probes.DispatchKt",
+    "expected": 12,
+    "scope": "Inherited virtual and interface dispatch through library types"
+  },
+  {
+    "id": "java_sam",
+    "fixture": "Sam.kt",
+    "facade": "interop.probes.SamKt",
+    "expected": 12,
+    "scope": "Java SAM conversion with captured value"
+  },
+  {
+    "id": "compiled_inline",
+    "fixture": "Inline.kt",
+    "facade": "interop.probes.InlineKt",
+    "expected": 17,
+    "scope": "Actual compiled inline bytecode expanded at call site"
+  },
+  {
+    "id": "nonlocal_inline_returns",
+    "fixture": "Nonlocal.kt",
+    "facade": "interop.probes.NonlocalKt",
+    "expected": 37,
+    "scope": "Non-local returns through an imported compiled inline function"
+  }
+]

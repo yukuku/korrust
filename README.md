@@ -6,9 +6,10 @@ Created by **Randy Sugianto (Yuku)** ([**@yukuku**](https://github.com/yukuku)).
 
 ## Run
 
-Install Rust, Python, and JDK 21. Cargo should be on PATH; the test harness also checks `~/.cargo/bin`.
+Install Rust, Python, and JDK 21, and set `JAVA_HOME` to that JDK. Cargo should be on PATH; the test harness also checks `~/.cargo/bin`.
 
 ```sh
+cargo fetch --locked
 python3 tools/setup_reference.py
 python3 tools/check.py
 ```
@@ -23,7 +24,7 @@ cargo run --release --locked --offline -- benchmarks/sources/androidbible/Alkita
 
 Open the [HTML reports](target/reports-html/index.html); see [report generation and automatic watching](reports/README.md#html-viewer).
 
-Use [feature reports](reports/features/) to assess the tested subset and limitations. The command accepts one source file and an output directory. Pass compiled Java dependency directories with `-cp <classpath>`; separate multiple directories with the platform path separator (`:` on macOS/Linux). The differential harness prepares its Java dependencies automatically.
+Use [feature reports](reports/features/) to assess the tested subset and limitations. The command accepts one source file and an output directory. Pass dependency directories or JAR files with `-cp <classpath>`; separate entries with the platform path separator (`:` on macOS/Linux). JDK classes are read from `JAVA_HOME/jmods/java.base.jmod` after explicit dependencies. The differential harness prepares its dependencies automatically.
 
 Use a dedicated output directory. Korrust records ownership of emitted classes and Kotlin package metadata there and refuses to overwrite unowned or externally modified outputs. Recompiling a source removes obsolete outputs previously emitted by that source.
 
@@ -79,6 +80,26 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 44. List factories with selected mutable-list operations.
 45. Data-class properties containing nullable values, lists, and Float values.
 46. Data-class body methods and computed properties.
+47. Dependencies loaded directly from JAR files.
+48. Kotlin library metadata for classes, functions, and properties.
+49. Imported top-level declarations across compiled files and modules.
+50. Java generic signatures decoded from dependency class files.
+51. Type parameters, substitution, and checked generic bounds.
+52. Generic call type arguments inferred from supported argument constraints.
+53. Generic inheritance, variance, and supported type projections.
+54. Library nullability annotations and Java platform types.
+55. Overload resolution using generic constraints and candidate specificity.
+56. Extension functions resolved from compiled Kotlin libraries.
+57. Library properties accessed through their getters and setters.
+58. Named and default arguments for imported Kotlin functions.
+59. Function types with boxed JVM invocation bridges.
+60. Lambdas capturing immutable locals and shared mutable cells.
+61. Lambda parameter and result types inferred from expected contexts.
+62. Bound, unbound, and top-level function references.
+63. Inherited member resolution and virtual or interface dispatch.
+64. Lambda conversion to Java single-method interfaces.
+65. Supported compiled inline bytecode expanded at call sites.
+66. Non-local returns from supported inline lambda arguments.
 
 ## Project contract
 

@@ -1,0 +1,134 @@
+[
+  {
+    "id": "wrong_generic_argument",
+    "invalid": true,
+    "source": "import interop.dep.JavaApi\nfun bad(): String = JavaApi.identity<String>(1)",
+    "candidate_diagnostic_regex": "No applicable member overload|Type mismatch|Argument type|Conflicting generic type constraints"
+  },
+  {
+    "id": "wrong_generic_bound",
+    "invalid": true,
+    "source": "import interop.dep.JavaApi\nfun bad(): Int = JavaApi.bounded<Int>(1)",
+    "candidate_diagnostic_regex": "upper bound|generic constraint"
+  },
+  {
+    "id": "annotated_nullable_dereference",
+    "invalid": true,
+    "source": "import interop.dep.JavaApi\nfun bad(): Int = JavaApi.nullable().length",
+    "candidate_diagnostic_regex": "nullable|safe.call|Non-null receiver"
+  },
+  {
+    "id": "java_named_argument",
+    "invalid": true,
+    "source": "import interop.dep.JavaApi\nfun bad(): String = JavaApi.choose(value = \"x\")",
+    "candidate_diagnostic_regex": "Named arguments require a Kotlin declaration|Java.*named|named.*Java"
+  },
+  {
+    "id": "unknown_kotlin_named_argument",
+    "invalid": true,
+    "source": "import interop.lib.defaults\nfun bad(): Int = defaults(unknown = 4)",
+    "candidate_diagnostic_regex": "Unknown named argument"
+  },
+  {
+    "id": "missing_kotlin_argument",
+    "invalid": true,
+    "source": "import interop.lib.lifted\nfun bad(): Int = lifted()",
+    "candidate_diagnostic_regex": "Missing required argument|wrong argument count"
+  },
+  {
+    "id": "wrong_function_result",
+    "invalid": true,
+    "source": "import interop.lib.applyValue\nfun bad(): Int = applyValue(1) { \"wrong\" }",
+    "candidate_diagnostic_regex": "Type mismatch|No applicable member overload|Expected.*Int"
+  },
+  {
+    "id": "nonlocal_ordinary_lambda",
+    "invalid": true,
+    "source": "import interop.lib.applyValue\nfun bad(): Int { applyValue(1) { return 2 }; return 3 }",
+    "candidate_diagnostic_regex": "Non-local return requires an inline lambda"
+  },
+  {
+    "id": "read_only_library_property",
+    "invalid": true,
+    "source": "import interop.lib.libraryNumber\nfun bad(): Int { libraryNumber = 2; return 1 }",
+    "candidate_diagnostic_regex": "read.only|cannot.*assign|cannot.*reassign"
+  },
+  {
+    "id": "projected_list_write",
+    "invalid": true,
+    "source": "fun bad(value: MutableList<out String>): Int { value.add(\"x\"); return 1 }",
+    "candidate_diagnostic_regex": "project|variance|read.only|No applicable member overload|Type mismatch"
+  },
+  {
+    "id": "noinline_nonlocal_return",
+    "invalid": true,
+    "source": "import interop.lib.noinlineGate\nfun bad(): Int { noinlineGate { return 2 }; return 3 }",
+    "candidate_diagnostic_regex": "Non-local return requires an inline lambda"
+  },
+  {
+    "id": "crossinline_nonlocal_return",
+    "invalid": true,
+    "source": "import interop.lib.crossinlineGate\nfun bad(): Int { crossinlineGate { return 2 }; return 3 }",
+    "candidate_diagnostic_regex": "Non-local return requires an inline lambda"
+  },
+  {
+    "id": "unbound_reference_receiver",
+    "invalid": true,
+    "source": "import interop.lib.Counter\nimport interop.lib.BaseSource\nfun bad(): Int { val block: (BaseSource, Int) -> Int = Counter::add; return 1 }",
+    "candidate_diagnostic_regex": "Unbound callable reference receiver"
+  },
+  {
+    "id": "inline_allocation",
+    "invalid": false,
+    "source": "import interop.lib.allocationGate\nfun boundary(): Int = allocationGate { 3 }",
+    "candidate_diagnostic_regex": "Unsupported compiled inline body"
+  },
+  {
+    "id": "inline_exception_handler",
+    "invalid": false,
+    "source": "import interop.lib.handlerGate\nfun boundary(): Int = handlerGate { 3 }",
+    "candidate_diagnostic_regex": "Unsupported compiled inline body"
+  },
+  {
+    "id": "ambiguous_overload_specificity",
+    "invalid": true,
+    "source": "fun ambiguous(a: String, b: Any, c: Any): Int = 1\nfun ambiguous(a: Any, b: String, c: String): Int = 2\nfun bad(): Int = ambiguous(\"a\", \"b\", \"c\")",
+    "candidate_diagnostic_regex": "Ambiguous.*overload"
+  },
+  {
+    "id": "internal_library_setter",
+    "invalid": true,
+    "source": "import interop.visibility.libraryRestricted\nfun bad(): Int { libraryRestricted = 9; return libraryRestricted }",
+    "candidate_diagnostic_regex": "Cannot access internal library declaration|inaccessible.*setter|internal.*setter"
+  },
+  {
+    "id": "generic_classifier_arity",
+    "invalid": true,
+    "source": "import java.util.Map\nfun bad(value: Map<String>): Int = 1",
+    "candidate_diagnostic_regex": "Wrong number of type arguments"
+  },
+  {
+    "id": "generic_classifier_bound",
+    "invalid": true,
+    "source": "import java.lang.Enum\nfun bad(value: Enum<String>): Int = 1",
+    "candidate_diagnostic_regex": "upper bound"
+  },
+  {
+    "id": "raw_java_classifier",
+    "invalid": true,
+    "source": "import java.util.ArrayList\nfun bad(value: ArrayList): Int = 1",
+    "candidate_diagnostic_regex": "generic classifiers require explicit type arguments|requires? type arguments"
+  },
+  {
+    "id": "primitive_source_type_bound",
+    "invalid": false,
+    "source": "fun <T : Long> longIdentity(value: T): T = value\nfun boundary(): Long = longIdentity<Long>(4L)",
+    "candidate_diagnostic_regex": "Primitive and Unit source type parameter bounds are unsupported"
+  },
+  {
+    "id": "overloaded_object_name_not_sam",
+    "invalid": true,
+    "source": "import interop.dep.JavaApi\nfun bad(): Int = JavaApi.requireNotSam { }",
+    "candidate_diagnostic_regex": "SAM conversion requires one abstract method|No applicable member overload"
+  }
+]

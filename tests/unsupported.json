@@ -5,7 +5,11 @@
   },
   {
     "id": "generic_overloads",
-    "source": "fun <T> f(x: T): T = x\nfun f(x: Int): Int = x"
+    "source": "fun <T> f(x: T): T = x\nfun f(x: Int): Int = x",
+    "supported_regression": {
+      "facade": "Generic_overloadsKt",
+      "java_assertions": "if (!\"generic\".equals(Generic_overloadsKt.f(\"generic\"))) throw new AssertionError(\"generic overload\");\nif (Generic_overloadsKt.f(19) != 19) throw new AssertionError(\"primitive overload\");\nif (Generic_overloadsKt.f((Object) null) != null) throw new AssertionError(\"nullable generic bound\");"
+    }
   },
   {
     "id": "unconditional_loop_analysis",
@@ -106,7 +110,11 @@
   },
   {
     "id": "object_supertype",
-    "source": "object O : java.io.Serializable {}"
+    "source": "object O : java.io.Serializable {}",
+    "supported_regression": {
+      "facade": "O",
+      "java_assertions": "try {\n    if (!(O.INSTANCE instanceof java.io.Serializable)) throw new AssertionError(\"Serializable marker\");\n    if (O.INSTANCE == null || O.INSTANCE != O.INSTANCE) throw new AssertionError(\"singleton field\");\n    if (!java.lang.reflect.Modifier.isFinal(O.class.getModifiers())) throw new AssertionError(\"final object class\");\n    if (O.class.getDeclaredConstructors().length != 1 || !java.lang.reflect.Modifier.isPrivate(O.class.getDeclaredConstructor().getModifiers())) throw new AssertionError(\"private singleton constructor\");\n    java.io.ByteArrayOutputStream bytes = new java.io.ByteArrayOutputStream();\n    try (java.io.ObjectOutputStream output = new java.io.ObjectOutputStream(bytes)) { output.writeObject(O.INSTANCE); }\n    Object restored;\n    try (java.io.ObjectInputStream input = new java.io.ObjectInputStream(new java.io.ByteArrayInputStream(bytes.toByteArray()))) { restored = input.readObject(); }\n    if (restored.getClass() != O.class || !(restored instanceof java.io.Serializable)) throw new AssertionError(\"serialized class\");\n    if (restored == O.INSTANCE) throw new AssertionError(\"plain Serializable object has no readResolve\");\n} catch (Exception failure) { throw new AssertionError(failure); }"
+    }
   },
   {
     "id": "object_data",

@@ -6,6 +6,7 @@ pub(super) fn function(
     function: &crate::check::Function,
     owner: &str,
     is_static: bool,
+    lambdas: &[crate::check::LambdaDecl],
 ) -> Result<Option<Vec<u8>>> {
     if !function.defaults.iter().any(Option::is_some) {
         return Ok(None);
@@ -26,6 +27,9 @@ pub(super) fn function(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
         max_stack: 2,
     };
     for (index, (slot, (_, ty))) in parameter_slots(&function.params, start)
@@ -108,6 +112,7 @@ pub(super) fn constructors(
     pool: &mut Pool,
     class: &crate::check::ClassDecl,
     owner: &str,
+    lambdas: &[crate::check::LambdaDecl],
 ) -> Result<Vec<Vec<u8>>> {
     if !class.defaults.iter().any(Option::is_some) {
         return Ok(Vec::new());
@@ -122,6 +127,9 @@ pub(super) fn constructors(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
         max_stack: 2,
     };
     for (index, (slot, (_, ty))) in parameter_slots(&class.params, 1)
@@ -190,6 +198,9 @@ pub(super) fn constructors(
             labels: Vec::new(),
             branches: Vec::new(),
             loops: Vec::new(),
+            lambdas,
+            inline_local_maps: Vec::new(),
+            inline_returns: Vec::new(),
             max_stack: slots + 2,
         };
         for (_, ty) in &class.params {

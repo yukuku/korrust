@@ -1,0 +1,16 @@
+target/checks/2026-10-24T092319618461Z-library-interop/Boundary_java_named_argument.kt:2:29: error: none of the following candidates is applicable:
+
+static fun choose(p0: Any!): String!
+static fun choose(p0: CharSequence!): String!
+static fun choose(p0: String!): String!
+fun bad(): String = JavaApi.choose(value = "x")
+                            ^^^^^^
+target/checks/2026-10-24T092319618461Z-library-interop/Boundary_java_named_argument.kt:2:29: error: no value passed for parameter 'p0'.
+fun bad(): String = JavaApi.choose(value = "x")
+                            ^^^^^^
+target/checks/2026-10-24T092319618461Z-library-interop/Boundary_java_named_argument.kt:2:36: error: named arguments are prohibited for non-Kotlin functions.
+fun bad(): String = JavaApi.choose(value = "x")
+                                   ^^^^^
+target/checks/2026-10-24T092319618461Z-library-interop/Boundary_java_named_argument.kt:2:36: error: no parameter with name 'value' found.
+fun bad(): String = JavaApi.choose(value = "x")
+                                   ^^^^^

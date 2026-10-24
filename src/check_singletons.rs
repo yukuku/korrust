@@ -152,6 +152,7 @@ pub(super) fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Mo
         interfaces.push(name);
     }
     Ok(Module {
+        lambdas: Vec::new(),
         constants: Vec::new(),
         functions: Vec::new(),
         class_decl: None,

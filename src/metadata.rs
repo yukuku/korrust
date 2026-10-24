@@ -4,7 +4,7 @@ use crate::{
     Diagnostic, Result,
     syntax::{
         ClassDecl, CompanionDecl, CompanionValue, ConstDecl, ConstValue, Function, InterfaceDecl,
-        Module, Type,
+        Module, Type, Variance,
     },
 };
 
@@ -155,11 +155,63 @@ fn descriptor(ty: &Type, imports: Imports<'_>) -> Result<String> {
         Type::Nullable(inner) if inner.is_reference() => descriptor(inner, imports),
         Type::Nullable(_) => Ok(ty.descriptor()),
         Type::Java(name) => Ok(format!("L{};", imported_name(name, imports)?)),
+        Type::Parameterized { name, .. } => Ok(format!("L{};", jvm_classifier(name, imports)?)),
+        Type::Parameter { upper_bound, .. } => {
+            if upper_bound.is_reference() {
+                descriptor(upper_bound, imports)
+            } else {
+                descriptor(&Type::Nullable(upper_bound.clone()), imports)
+            }
+        }
         Type::Platform(_) => Err(Diagnostic::new(
             0,
             "Platform types in source metadata are unsupported",
         )),
         _ => Ok(ty.descriptor()),
+    }
+}
+
+fn jvm_classifier<'a>(name: &'a str, imports: Imports<'a>) -> Result<&'a str> {
+    match name {
+        "List" | "MutableList" | "kotlin/collections/List" | "kotlin/collections/MutableList" => {
+            Ok("java/util/List")
+        }
+        "Set" | "MutableSet" | "kotlin/collections/Set" | "kotlin/collections/MutableSet" => {
+            Ok("java/util/Set")
+        }
+        "Map" | "MutableMap" | "kotlin/collections/Map" | "kotlin/collections/MutableMap" => {
+            Ok("java/util/Map")
+        }
+        "Collection"
+        | "MutableCollection"
+        | "kotlin/collections/Collection"
+        | "kotlin/collections/MutableCollection" => Ok("java/util/Collection"),
+        "Iterable"
+        | "MutableIterable"
+        | "kotlin/collections/Iterable"
+        | "kotlin/collections/MutableIterable" => Ok("java/lang/Iterable"),
+        "ThreadLocal" => Ok("java/lang/ThreadLocal"),
+        _ => imported_name(name, imports),
+    }
+}
+
+fn metadata_classifier<'a>(name: &'a str, imports: Imports<'a>) -> Result<&'a str> {
+    match name {
+        "List" => Ok("kotlin/collections/List"),
+        "MutableList" => Ok("kotlin/collections/MutableList"),
+        "Set" => Ok("kotlin/collections/Set"),
+        "MutableSet" => Ok("kotlin/collections/MutableSet"),
+        "Map" => Ok("kotlin/collections/Map"),
+        "MutableMap" => Ok("kotlin/collections/MutableMap"),
+        "Collection" => Ok("kotlin/collections/Collection"),
+        "MutableCollection" => Ok("kotlin/collections/MutableCollection"),
+        "Iterable" => Ok("kotlin/collections/Iterable"),
+        "MutableIterable" => Ok("kotlin/collections/MutableIterable"),
+        "Array" => Ok("kotlin/Array"),
+        "ThreadLocal" => Ok("java/lang/ThreadLocal"),
+        "java/lang/Object" => Ok("kotlin/Any"),
+        "java/lang/CharSequence" => Ok("kotlin/CharSequence"),
+        _ => imported_name(name, imports),
     }
 }
 
@@ -173,7 +225,10 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
     let name = match ty {
         Type::Int => "kotlin/Int",
         Type::Long => "kotlin/Long",
-        Type::Null => "kotlin/Nothing",
+        Type::Null => {
+            proto.number(3, 1);
+            "kotlin/Nothing"
+        }
         Type::Nullable(_) => unreachable!(),
         Type::List(inner) | Type::MutableList(inner) => {
             let mut argument = Proto::default();
@@ -206,8 +261,42 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
             proto.message(2, &argument);
             "java/lang/ThreadLocal"
         }
+        Type::Parameterized { name, arguments } => {
+            for argument in arguments {
+                let mut value = Proto::default();
+                value.number(
+                    1,
+                    match (&argument.ty, argument.variance) {
+                        (None, _) => 3,
+                        (_, Variance::In) => 0,
+                        (_, Variance::Out) => 1,
+                        (_, Variance::Invariant) => 2,
+                    },
+                );
+                if let Some(ty) = &argument.ty {
+                    value.message(2, &type_proto(ty, imports, strings)?);
+                }
+                proto.message(2, &value);
+            }
+            let name = metadata_classifier(name, imports)?.replace('$', ".");
+            proto.number(6, strings.id(&name)?);
+            return Ok(proto);
+        }
+        Type::Parameter { name, .. } => {
+            proto.number(9, strings.id(name)?);
+            return Ok(proto);
+        }
+        Type::Function { params, result } => {
+            for ty in params.iter().chain(std::iter::once(result.as_ref())) {
+                let mut argument = Proto::default();
+                argument.message(2, &type_proto(ty, imports, strings)?);
+                proto.message(2, &argument);
+            }
+            proto.number(6, strings.id(&format!("kotlin/Function{}", params.len()))?);
+            return Ok(proto);
+        }
         Type::Java(name) => {
-            let name = imported_name(name, imports)?.replace('$', ".");
+            let name = metadata_classifier(name, imports)?.replace('$', ".");
             proto.number(6, strings.id(&name)?);
             return Ok(proto);
         }
@@ -271,6 +360,23 @@ fn function_with_flags(
     };
     proto.number(9, visibility | modality | extra_flags);
     proto.number(2, strings.id(&function.name)?);
+    for (index, parameter) in function.type_params.iter().enumerate() {
+        let mut declaration = Proto::default();
+        declaration.number(1, index as u32);
+        declaration.number(2, strings.id(&parameter.name)?);
+        declaration.number(
+            4,
+            match parameter.variance {
+                Variance::In => 0,
+                Variance::Out => 1,
+                Variance::Invariant => 2,
+            },
+        );
+        for bound in &parameter.bounds {
+            declaration.message(5, &type_proto(bound, imports, strings)?);
+        }
+        proto.message(4, &declaration);
+    }
     proto.message(3, &type_proto(&function.result, imports, strings)?);
     let mut desc = String::from("(");
     if let Some(receiver) = &function.receiver {
@@ -533,6 +639,48 @@ pub(crate) fn for_checked_class(
             (Type::Java(alias), Type::Java(owner)) => {
                 bindings.push((alias.clone(), owner.clone(), 0))
             }
+            (
+                Type::Parameterized {
+                    name: alias,
+                    arguments: source,
+                },
+                Type::Parameterized {
+                    name: owner,
+                    arguments: checked,
+                },
+            ) => {
+                bindings.push((alias.clone(), owner.clone(), 0));
+                for (source, checked) in source.iter().zip(checked) {
+                    if let (Some(source), Some(checked)) = (&source.ty, &checked.ty) {
+                        bind(source, checked, bindings);
+                    }
+                }
+            }
+            (
+                Type::Parameter {
+                    upper_bound: source,
+                    ..
+                },
+                Type::Parameter {
+                    upper_bound: checked,
+                    ..
+                },
+            ) => bind(source, checked, bindings),
+            (
+                Type::Function {
+                    params: source,
+                    result: source_result,
+                },
+                Type::Function {
+                    params: checked,
+                    result: checked_result,
+                },
+            ) => {
+                for (source, checked) in source.iter().zip(checked) {
+                    bind(source, checked, bindings);
+                }
+                bind(source_result, checked_result, bindings);
+            }
             (Type::Nullable(a), Type::Nullable(b))
             | (Type::List(a), Type::List(b))
             | (Type::MutableList(a), Type::MutableList(b)) => bind(a, b, bindings),
@@ -558,6 +706,44 @@ pub(crate) fn for_checked_class(
                 .find(|(name, _, _)| name == alias)
                 .map(|(_, imported, _)| imported == owner)
                 .unwrap_or_else(|| owner.rsplit('/').next() == Some(alias.as_str())),
+            (
+                Type::Parameterized {
+                    name: source,
+                    arguments: a,
+                },
+                Type::Parameterized {
+                    name: checked,
+                    arguments: b,
+                },
+            ) => {
+                same_type(
+                    &Type::Java(source.clone()),
+                    &Type::Java(checked.clone()),
+                    imports,
+                ) && a.len() == b.len()
+                    && a.iter().zip(b).all(|(a, b)| {
+                        a.variance == b.variance
+                            && match (&a.ty, &b.ty) {
+                                (Some(a), Some(b)) => same_type(a, b, imports),
+                                (None, None) => true,
+                                _ => false,
+                            }
+                    })
+            }
+            (
+                Type::Function {
+                    params: a,
+                    result: ar,
+                },
+                Type::Function {
+                    params: b,
+                    result: br,
+                },
+            ) => {
+                a.len() == b.len()
+                    && a.iter().zip(b).all(|(a, b)| same_type(a, b, imports))
+                    && same_type(ar, br, imports)
+            }
             (Type::Nullable(a), Type::Nullable(b))
             | (Type::List(a), Type::List(b))
             | (Type::MutableList(a), Type::MutableList(b)) => same_type(a, b, imports),
@@ -1022,6 +1208,48 @@ pub(crate) fn for_checked_package(
             (Type::Java(alias), Type::Java(owner)) => {
                 bindings.push((alias.clone(), owner.clone(), 0))
             }
+            (
+                Type::Parameterized {
+                    name: alias,
+                    arguments: source,
+                },
+                Type::Parameterized {
+                    name: owner,
+                    arguments: checked,
+                },
+            ) => {
+                bindings.push((alias.clone(), owner.clone(), 0));
+                for (source, checked) in source.iter().zip(checked) {
+                    if let (Some(source), Some(checked)) = (&source.ty, &checked.ty) {
+                        bind(source, checked, bindings);
+                    }
+                }
+            }
+            (
+                Type::Parameter {
+                    upper_bound: source,
+                    ..
+                },
+                Type::Parameter {
+                    upper_bound: checked,
+                    ..
+                },
+            ) => bind(source, checked, bindings),
+            (
+                Type::Function {
+                    params: source,
+                    result: source_result,
+                },
+                Type::Function {
+                    params: checked,
+                    result: checked_result,
+                },
+            ) => {
+                for (source, checked) in source.iter().zip(checked) {
+                    bind(source, checked, bindings);
+                }
+                bind(source_result, checked_result, bindings);
+            }
             (Type::Nullable(a), Type::Nullable(b))
             | (Type::List(a), Type::List(b))
             | (Type::MutableList(a), Type::MutableList(b))
@@ -1096,6 +1324,155 @@ pub(crate) fn module_mapping(facades: &[String]) -> Vec<u8> {
 mod tests {
     use super::*;
 
+    fn fields(bytes: &[u8]) -> Vec<(u32, Option<u64>, Vec<u8>)> {
+        fn varint(bytes: &mut &[u8]) -> u64 {
+            let mut value = 0;
+            for shift in (0..64).step_by(7) {
+                let byte = bytes[0];
+                *bytes = &bytes[1..];
+                value |= u64::from(byte & 127) << shift;
+                if byte < 128 {
+                    return value;
+                }
+            }
+            panic!("invalid protobuf varint")
+        }
+        let mut bytes = bytes;
+        let mut result = Vec::new();
+        while !bytes.is_empty() {
+            let tag = varint(&mut bytes);
+            match tag & 7 {
+                0 => result.push(((tag >> 3) as u32, Some(varint(&mut bytes)), Vec::new())),
+                2 => {
+                    let length = varint(&mut bytes) as usize;
+                    result.push(((tag >> 3) as u32, None, bytes[..length].to_vec()));
+                    bytes = &bytes[length..];
+                }
+                _ => panic!("unexpected protobuf wire type"),
+            }
+        }
+        result
+    }
+
+    #[test]
+    fn metadata_keeps_projections_type_parameters_and_nullable_functions() {
+        let module = crate::syntax::parse("import demo.Box\nfun <T: CharSequence> transform(value: Box<out T>, ignored: Box<*>, callback: ((T) -> String)?): T = value.get()").unwrap();
+        let function = &module.functions[0];
+        let mut strings = Strings::default();
+        let proto = function_proto(function, false, &module.imports, &mut strings).unwrap();
+        let function_fields = fields(&proto.0);
+        let declaration = fields(
+            &function_fields
+                .iter()
+                .find(|(number, _, _)| *number == 4)
+                .unwrap()
+                .2,
+        );
+        let name = declaration
+            .iter()
+            .find(|(number, _, _)| *number == 2)
+            .unwrap()
+            .1
+            .unwrap();
+        assert_eq!(strings.values[name as usize], "T");
+        let bound = fields(
+            &declaration
+                .iter()
+                .find(|(number, _, _)| *number == 5)
+                .unwrap()
+                .2,
+        );
+        let classifier = bound
+            .iter()
+            .find(|(number, _, _)| *number == 6)
+            .unwrap()
+            .1
+            .unwrap();
+        assert_eq!(strings.values[classifier as usize], "kotlin/CharSequence");
+        let result = fields(
+            &function_fields
+                .iter()
+                .find(|(number, _, _)| *number == 3)
+                .unwrap()
+                .2,
+        );
+        assert!(result.iter().any(|(number, _, _)| *number == 9));
+        assert!(!result.iter().any(|(number, _, _)| *number == 6));
+        let projected = type_proto(&function.params[0].1, &module.imports, &mut strings).unwrap();
+        let projected_fields = fields(&projected.0);
+        let argument = fields(
+            &projected_fields
+                .iter()
+                .find(|(number, _, _)| *number == 2)
+                .unwrap()
+                .2,
+        );
+        assert!(
+            argument
+                .iter()
+                .any(|(number, value, _)| *number == 1 && *value == Some(1))
+        );
+        let star = type_proto(&function.params[1].1, &module.imports, &mut strings).unwrap();
+        let star_fields = fields(&star.0);
+        let argument = fields(
+            &star_fields
+                .iter()
+                .find(|(number, _, _)| *number == 2)
+                .unwrap()
+                .2,
+        );
+        assert_eq!(argument, vec![(1, Some(3), Vec::new())]);
+        let callback = type_proto(&function.params[2].1, &module.imports, &mut strings).unwrap();
+        let callback_fields = fields(&callback.0);
+        assert!(
+            callback_fields
+                .iter()
+                .any(|(number, value, _)| *number == 3 && *value == Some(1))
+        );
+        let classifier = callback_fields
+            .iter()
+            .find(|(number, _, _)| *number == 6)
+            .unwrap()
+            .1
+            .unwrap();
+        assert_eq!(strings.values[classifier as usize], "kotlin/Function1");
+        assert_eq!(
+            callback_fields
+                .iter()
+                .filter(|(number, _, _)| *number == 2)
+                .count(),
+            2
+        );
+        assert_eq!(
+            descriptor(&function.params[0].1, &module.imports).unwrap(),
+            "Ldemo/Box;"
+        );
+        assert_eq!(
+            descriptor(&function.params[2].1, &module.imports).unwrap(),
+            "Lkotlin/jvm/functions/Function1;"
+        );
+        assert_eq!(
+            descriptor(&function.params[0].1, &[]).unwrap_err().message,
+            "Metadata type requires an explicit import: Box"
+        );
+    }
+
+    #[test]
+    fn source_platform_metadata_requires_an_explicit_supported_representation() {
+        let mut strings = Strings::default();
+        let error = match type_proto(&Type::Platform(Box::new(Type::String)), &[], &mut strings) {
+            Err(error) => error,
+            Ok(_) => panic!("platform type was accepted"),
+        };
+        assert!(error.message.contains("Platform types"));
+        let null = type_proto(&Type::Null, &[], &mut strings).unwrap();
+        assert!(
+            fields(&null.0)
+                .iter()
+                .any(|(field, value, _)| *field == 3 && *value == Some(1))
+        );
+    }
+
     #[test]
     fn byte_encoding_preserves_all_bytes_and_modified_utf8_limits() {
         let bytes: Vec<_> = (0..=255).cycle().take(150_000).collect();
@@ -1137,8 +1514,10 @@ mod tests {
                 .unwrap();
         let ty = Type::Java("resolved/External".into());
         let checked = crate::check::Module {
+            lambdas: Vec::new(),
             constants: Vec::new(),
             functions: vec![crate::check::Function {
+                type_params: Vec::new(),
                 defaults: Vec::new(),
                 name: "echo".into(),
                 private: false,

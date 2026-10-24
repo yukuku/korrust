@@ -14,8 +14,10 @@ pub(super) fn check(
     };
     register_names(source, &owner, "", &mut imports)?;
     register_classes(source, &owner, &imports, &mut classes)?;
-    let interface = check_interface(source, &owner, classpath, &imports, &classes)?;
+    let lambdas = Rc::new(RefCell::new(Vec::new()));
+    let interface = check_interface(source, &owner, classpath, &imports, &classes, &lambdas)?;
     Ok(Module {
+        lambdas: Rc::try_unwrap(lambdas).ok().unwrap().into_inner(),
         constants: Vec::new(),
         functions: Vec::new(),
         class_decl: None,
@@ -145,6 +147,7 @@ fn register_classes(
             &mut methods,
             &mut names,
             JavaMethod {
+                library: None,
                 kotlin_params: Some(Vec::new()),
                 kotlin_result: Some(ty.clone()),
                 kotlin_internal: false,
@@ -162,6 +165,7 @@ fn register_classes(
                 &mut methods,
                 &mut names,
                 JavaMethod {
+                    library: None,
                     kotlin_params: Some(vec![("value".into(), ty.clone(), false)]),
                     kotlin_result: Some(Type::Unit),
                     kotlin_internal: false,
@@ -226,6 +230,7 @@ fn register_classes(
             &mut methods,
             &mut names,
             JavaMethod {
+                library: None,
                 kotlin_params: Some(
                     function
                         .params
@@ -255,6 +260,7 @@ fn register_classes(
         .insert(
             owner.into(),
             JavaClass {
+                library: None,
                 fields: Vec::new(),
                 kotlin_class: false,
                 name: owner.into(),
@@ -386,6 +392,7 @@ fn check_interface(
     classpath: &Classpath,
     imports: &HashMap<String, String>,
     classes: &HashMap<String, JavaClass>,
+    lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
 ) -> Result<InterfaceDecl> {
     let imports = body_imports(source, owner, imports);
     let class = &classes[owner];
@@ -458,6 +465,7 @@ fn check_interface(
             classes,
             &members,
             &companion_fields,
+            lambdas,
         )?;
         methods.push(InterfaceMethod {
             function,
@@ -482,6 +490,7 @@ fn check_interface(
                     classes,
                     &members,
                     &companion_fields,
+                    lambdas,
                 )?,
                 has_body: false,
                 source_property: Some(property.name.clone()),
@@ -497,7 +506,7 @@ fn check_interface(
             inherited.get(&source_function.name),
             source_function.offset,
         )?;
-        let function = check_function(
+        let mut function = check_function(
             &source_function.name,
             &source_function.params,
             &source_function.result,
@@ -510,6 +519,14 @@ fn check_interface(
             classes,
             &members,
             &companion_fields,
+            lambdas,
+        )?;
+        function.type_params = resolve_parameters(
+            &source_function.type_params,
+            &imports,
+            classpath,
+            source_function.offset,
+            classes,
         )?;
         methods.push(InterfaceMethod {
             function,
@@ -545,6 +562,7 @@ fn check_interface(
                         classes,
                         &companion_fields,
                         Some(&object_owner),
+                        lambdas,
                     )?;
                     (
                         Type::Java(interface.clone()),
@@ -577,6 +595,7 @@ fn check_interface(
             classpath,
             &imports,
             classes,
+            lambdas,
         )?);
     }
     let mut defaults: Vec<_> = members
@@ -639,13 +658,22 @@ fn check_function(
     classes: &HashMap<String, JavaClass>,
     members: &HashMap<String, JavaMethod>,
     companion_fields: &HashMap<String, (String, Type)>,
+    lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
 ) -> Result<Function> {
-    let result = resolve_type(result, imports, offset)?;
+    let result = resolve_type_checked(result, imports, offset, classpath, classes)?;
     let fields = HashMap::new();
     let functions = HashMap::new();
     let signatures = Vec::new();
     let extensions = HashSet::new();
     let mut checker = Checker {
+        lambdas: lambdas.clone(),
+        captured: HashMap::new(),
+        captured_cells: HashMap::new(),
+        cells: HashMap::new(),
+        cell_names: HashSet::new(),
+        lambda_owner: owner.into(),
+        inline_result: None,
+        nonlocal_result: None,
         constants: &HashMap::new(),
         constructor: None,
         defaults: &Vec::new(),
@@ -656,6 +684,7 @@ fn check_function(
         classes,
         imports,
         signatures: &signatures,
+        source_type_params: &[],
         receiver: Some(Local {
             slot: 0,
             ty: Type::Java(owner.into()),
@@ -678,7 +707,7 @@ fn check_function(
     };
     let mut params = Vec::new();
     for (param, ty) in source_params {
-        let ty = resolve_type(ty, imports, offset)?;
+        let ty = resolve_type_checked(ty, imports, offset, classpath, classes)?;
         if body.is_some() && ty.is_reference() {
             return Err(Diagnostic::new(
                 offset,
@@ -719,6 +748,7 @@ fn check_function(
         Vec::new()
     };
     Ok(Function {
+        type_params: Vec::new(),
         defaults: Vec::new(),
         name: name.into(),
         private: false,
@@ -941,7 +971,7 @@ interface Catalog {
         );
         rejects(
             "interface Root { fun item(index: Int): String; fun text(): String = item(true) }",
-            "No applicable member",
+            "Type mismatch",
         );
         rejects(
             "interface Root { val value: Int; fun text(): String = getValue().toString() }",
@@ -957,6 +987,7 @@ interface Catalog {
         let classes = HashMap::from([(
             "Foreign".into(),
             JavaClass {
+                library: None,
                 fields: Vec::new(),
                 kotlin_class: false,
                 name: "Foreign".into(),
@@ -964,6 +995,7 @@ interface Catalog {
                 super_name: Some("java/lang/Object".into()),
                 interfaces: vec![],
                 methods: vec![JavaMethod {
+                    library: None,
                     kotlin_params: None,
                     kotlin_result: None,
                     kotlin_internal: false,
@@ -995,6 +1027,14 @@ interface Catalog {
                 panic!()
             };
             let mut checker = Checker {
+                lambdas: Rc::new(RefCell::new(Vec::new())),
+                captured: HashMap::new(),
+                captured_cells: HashMap::new(),
+                cells: HashMap::new(),
+                cell_names: HashSet::new(),
+                lambda_owner: "Korrust".into(),
+                inline_result: None,
+                nonlocal_result: None,
                 constants: &HashMap::new(),
                 constructor: None,
                 defaults: &Vec::new(),
@@ -1005,6 +1045,7 @@ interface Catalog {
                 classes: &classes,
                 imports: &imports,
                 signatures: &signatures,
+                source_type_params: &[],
                 receiver: None,
                 fields: &empty_fields,
                 members: &empty_members,
@@ -1075,6 +1116,7 @@ interface Catalog {
             let classes = HashMap::from([(
                 "foreign/Parent".into(),
                 JavaClass {
+                    library: None,
                     fields: Vec::new(),
                     kotlin_class: false,
                     name: "foreign/Parent".into(),
@@ -1082,6 +1124,7 @@ interface Catalog {
                     super_name: Some("java/lang/Object".into()),
                     interfaces: vec![],
                     methods: vec![JavaMethod {
+                        library: None,
                         kotlin_params: None,
                         kotlin_result: None,
                         kotlin_internal: false,
@@ -1123,6 +1166,7 @@ interface Catalog {
                     &classes,
                     &HashMap::new(),
                     None,
+                    &Rc::new(RefCell::new(Vec::new())),
                 )
                 .unwrap();
                 assert_eq!(class.bridges.len(), 1);

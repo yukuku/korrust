@@ -9,6 +9,9 @@ fn code<'a>(pool: &'a mut Pool, owner: &'a str) -> Code<'a> {
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        lambdas: &[],
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
         max_stack: 4,
     }
 }

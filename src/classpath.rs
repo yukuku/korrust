@@ -1,14 +1,22 @@
-use std::{fs, path::PathBuf};
+use std::path::PathBuf;
+
+mod archive;
+mod metadata;
+mod signature;
+
+use crate::syntax::TypeParameter;
 
 use crate::{Diagnostic, Result, syntax::Type};
 
 #[derive(Clone)]
 pub(crate) struct Classpath {
     paths: Vec<PathBuf>,
+    cache: std::cell::RefCell<std::collections::HashMap<String, JavaClass>>,
 }
 
 #[derive(Clone, Debug)]
 pub(crate) struct JavaClass {
+    pub library: Option<LibraryClass>,
     pub name: String,
     pub access: u16,
     pub super_name: Option<String>,
@@ -40,6 +48,7 @@ pub(crate) enum JavaConstant {
 
 #[derive(Clone, Debug)]
 pub(crate) struct JavaMethod {
+    pub library: Option<LibraryMethod>,
     pub owner: String,
     pub name: String,
     pub descriptor: String,
@@ -51,62 +60,108 @@ pub(crate) struct JavaMethod {
     pub kotlin_internal: bool,
 }
 
+#[derive(Clone, Debug)]
+pub(crate) struct LibraryClass {
+    pub type_parameters: Vec<TypeParameter>,
+    pub supertypes: Vec<Type>,
+    pub package: Option<String>,
+    pub multifile_facade: Option<String>,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct LibraryMethod {
+    pub source_name: String,
+    pub type_parameters: Vec<TypeParameter>,
+    pub receiver: Option<Type>,
+    pub inline: bool,
+    pub code: Option<JavaCode>,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct JavaCode {
+    pub max_stack: u16,
+    pub max_locals: u16,
+    pub bytes: Vec<u8>,
+    pub exception_handlers: u16,
+    pub constants: std::sync::Arc<std::collections::BTreeMap<u16, InlineConstant>>,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) enum InlineConstant {
+    Class(String),
+    Integer(i32),
+    Long(i64),
+    Float(u32),
+    String(Vec<u16>),
+    Field {
+        owner: String,
+        name: String,
+        descriptor: String,
+    },
+    Method {
+        owner: String,
+        name: String,
+        descriptor: String,
+        interface: bool,
+    },
+}
+
 impl Classpath {
     pub fn new(paths: &[PathBuf]) -> Result<Self> {
-        for path in paths {
-            if !path.is_dir() {
-                return Err(Diagnostic::new(
-                    0,
-                    format!(
-                        "Classpath entry {} must be an existing directory; JAR and ZIP classpaths are unsupported",
-                        path.display()
-                    ),
-                ));
-            }
-        }
+        archive::validate(paths)?;
         Ok(Self {
             paths: paths.to_vec(),
+            cache: Default::default(),
         })
     }
 
     pub fn load(&self, internal_name: &str) -> Result<JavaClass> {
+        if let Some(class) = self.cache.borrow().get(internal_name) {
+            return Ok(class.clone());
+        }
+        let class = self.load_uncached(internal_name)?;
+        self.cache
+            .borrow_mut()
+            .insert(internal_name.into(), class.clone());
+        Ok(class)
+    }
+
+    fn load_uncached(&self, internal_name: &str) -> Result<JavaClass> {
         if !valid_name(internal_name) {
             return Err(Diagnostic::new(0, "Invalid Java class internal name"));
         }
         let package_info = internal_name
             .rsplit_once('/')
-            .map(|(package, _)| format!("{package}/package-info.class"))
+            .map(|(p, _)| format!("{p}/package-info.class"))
             .unwrap_or_else(|| "package-info.class".into());
-        for directory in &self.paths {
-            let path = directory.join(&package_info);
-            match fs::metadata(&path) {
-                Ok(_) => {
-                    return Err(Diagnostic::new(
-                        0,
-                        format!(
-                            "Java package metadata {} is unsupported because it may define nullability defaults",
-                            path.display()
-                        ),
-                    ));
-                }
-                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-                Err(error) => {
-                    return Err(Diagnostic::new(0, format!("{}: {error}", path.display())));
-                }
+        for path in &self.paths {
+            if archive::read(path, &package_info)?.is_some() {
+                return Err(Diagnostic::new(
+                    0,
+                    format!(
+                        "Java package metadata {} is unsupported because it may define nullability defaults",
+                        path.display()
+                    ),
+                ));
             }
         }
-        for directory in &self.paths {
-            let path = directory.join(format!("{internal_name}.class"));
-            match fs::read(&path) {
-                Ok(bytes) => {
-                    return parse(&bytes, internal_name).map_err(|mut error| {
-                        error.message = format!("{}: {}", path.display(), error.message);
-                        error
-                    });
-                }
-                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
-                Err(error) => {
-                    return Err(Diagnostic::new(0, format!("{}: {error}", path.display())));
+        for path in &self.paths {
+            if let Some(bytes) = archive::read(path, &format!("{internal_name}.class"))? {
+                return parse(&bytes, internal_name).map_err(|mut e| {
+                    e.message = format!("{}!{internal_name}: {}", path.display(), e.message);
+                    e
+                });
+            }
+        }
+        if internal_name.starts_with("java/") || internal_name.starts_with("javax/") {
+            if let Some(java_home) = std::env::var_os("JAVA_HOME") {
+                let jmod = PathBuf::from(java_home).join("jmods/java.base.jmod");
+                if jmod.is_file() {
+                    if let Some(bytes) =
+                        archive::read(&jmod, &format!("classes/{internal_name}.class"))?
+                    {
+                        return parse(&bytes, internal_name);
+                    }
                 }
             }
         }
@@ -117,6 +172,64 @@ impl Classpath {
                 internal_name.replace('/', ".")
             ),
         ))
+    }
+
+    pub fn package_classes(&self, package: &str) -> Result<Vec<JavaClass>> {
+        let package = package.replace('.', "/");
+        if !package.is_empty() && !valid_name(&package) {
+            return Err(invalid());
+        }
+        let mut names = std::collections::BTreeSet::new();
+        for path in &self.paths {
+            for name in archive::names(path, &package)? {
+                if name.ends_with(".kotlin_module") {
+                    let bytes = archive::read(path, &name)?.ok_or_else(invalid)?;
+                    for part in metadata::module_parts(&bytes, &package)? {
+                        names.insert(part);
+                    }
+                } else if let Some(class) = name.strip_suffix(".class") {
+                    names.insert(class.to_owned());
+                }
+            }
+        }
+        names.into_iter().map(|name| self.load(&name)).collect()
+    }
+
+    pub fn methods(&self, internal_name: &str) -> Result<Vec<JavaMethod>> {
+        fn visit(
+            cp: &Classpath,
+            name: &str,
+            seen: &mut std::collections::HashSet<String>,
+            methods: &mut Vec<JavaMethod>,
+        ) -> Result<()> {
+            if !seen.insert(name.into()) || name == "java/lang/Object" {
+                return Ok(());
+            }
+            if seen.len() > 256 {
+                return Err(invalid());
+            }
+            let class = cp.load(name)?;
+            for method in class.methods {
+                if !methods
+                    .iter()
+                    .any(|m| m.name == method.name && m.descriptor == method.descriptor)
+                {
+                    methods.push(method);
+                }
+            }
+            for parent in class.super_name.iter().chain(class.interfaces.iter()) {
+                visit(cp, parent, seen, methods)?;
+            }
+            Ok(())
+        }
+        let mut methods = Vec::new();
+        visit(
+            self,
+            internal_name,
+            &mut std::collections::HashSet::new(),
+            &mut methods,
+        )?;
+        Ok(methods)
     }
 }
 
@@ -170,6 +283,8 @@ enum Constant {
     Float(u32),
     Long(i64),
     String(u16),
+    NameAndType(u16, u16),
+    Reference(u8, u16, u16),
 }
 fn utf8(pool: &[Constant], index: u16) -> Result<&str> {
     match pool.get(usize::from(index)) {
@@ -182,6 +297,51 @@ fn class_name(pool: &[Constant], index: u16) -> Result<&str> {
         Some(Constant::Class(value)) => utf8(pool, *value),
         _ => Err(invalid()),
     }
+}
+
+fn inline_constants(pool: &[Constant]) -> Result<std::collections::BTreeMap<u16, InlineConstant>> {
+    let mut result = std::collections::BTreeMap::new();
+    for (index, value) in pool.iter().enumerate() {
+        let value = match value {
+            Constant::Class(name) => Some(InlineConstant::Class(utf8(pool, *name)?.into())),
+            Constant::Integer(value) => Some(InlineConstant::Integer(*value as i32)),
+            Constant::Long(value) => Some(InlineConstant::Long(*value)),
+            Constant::Float(value) => Some(InlineConstant::Float(*value)),
+            Constant::String(index) => match pool.get(usize::from(*index)) {
+                Some(Constant::Utf8(_, units)) => Some(InlineConstant::String(units.clone())),
+                _ => return Err(invalid()),
+            },
+            Constant::Reference(tag, owner, signature) => {
+                let owner = class_name(pool, *owner)?.to_owned();
+                let Some(Constant::NameAndType(name, descriptor)) =
+                    pool.get(usize::from(*signature))
+                else {
+                    return Err(invalid());
+                };
+                let name = utf8(pool, *name)?.to_owned();
+                let descriptor = utf8(pool, *descriptor)?.to_owned();
+                Some(if *tag == 9 {
+                    InlineConstant::Field {
+                        owner,
+                        name,
+                        descriptor,
+                    }
+                } else {
+                    InlineConstant::Method {
+                        owner,
+                        name,
+                        descriptor,
+                        interface: *tag == 11,
+                    }
+                })
+            }
+            _ => None,
+        };
+        if let Some(value) = value {
+            result.insert(u16::try_from(index).map_err(|_| invalid())?, value);
+        }
+    }
+    Ok(result)
 }
 
 fn modified_utf8_units(bytes: &[u8]) -> Result<Vec<u16>> {
@@ -249,6 +409,7 @@ struct Attributes {
     parameter_annotations: Vec<Vec<Annotation>>,
     signature: Option<String>,
     constant: Option<u16>,
+    code: Option<JavaCode>,
 }
 
 fn annotation_value(
@@ -310,7 +471,11 @@ fn annotation(reader: &mut Reader<'_>, pool: &[Constant], depth: usize) -> Resul
     Ok(Annotation { name, values })
 }
 
-fn attributes(reader: &mut Reader<'_>, pool: &[Constant]) -> Result<Attributes> {
+fn attributes(
+    reader: &mut Reader<'_>,
+    pool: &[Constant],
+    constants: &std::sync::Arc<std::collections::BTreeMap<u16, InlineConstant>>,
+) -> Result<Attributes> {
     let mut result = Attributes::default();
     for _ in 0..reader.u2()? {
         let name = utf8(pool, reader.u2()?)?;
@@ -343,6 +508,32 @@ fn attributes(reader: &mut Reader<'_>, pool: &[Constant]) -> Result<Attributes> 
                     return Err(invalid());
                 }
                 result.signature = Some(utf8(pool, data.u2()?)?.to_owned());
+            }
+            "Code" => {
+                if result.code.is_some() {
+                    return Err(invalid());
+                }
+                let max_stack = data.u2()?;
+                let max_locals = data.u2()?;
+                let size = usize::try_from(data.u4()?).map_err(|_| invalid())?;
+                if size > 65535 {
+                    return Err(invalid());
+                }
+                let code = data.take(size)?.to_vec();
+                let exception_handlers = data.u2()?;
+                data.take(usize::from(exception_handlers) * 8)?;
+                for _ in 0..data.u2()? {
+                    utf8(pool, data.u2()?)?;
+                    let size = usize::try_from(data.u4()?).map_err(|_| invalid())?;
+                    data.take(size)?;
+                }
+                result.code = Some(JavaCode {
+                    max_stack,
+                    max_locals,
+                    bytes: code,
+                    exception_handlers,
+                    constants: constants.clone(),
+                });
             }
             "ConstantValue" => {
                 if result.constant.is_some() {
@@ -448,7 +639,7 @@ impl<'a> Proto<'a> {
 
 fn metadata_strings(table: &[u8], strings: &[String]) -> Result<Vec<String>> {
     let table = Proto::parse(table)?;
-    table.allowed(&[1])?;
+    table.allowed(&[1, 5])?;
     let predefined = [
         "kotlin/Any",
         "kotlin/Nothing",
@@ -476,11 +667,29 @@ fn metadata_strings(table: &[u8], strings: &[String]) -> Result<Vec<String>> {
         "kotlin/ShortArray",
         "kotlin/BooleanArray",
         "kotlin/CharArray",
+        "kotlin/Cloneable",
+        "kotlin/Annotation",
+        "kotlin/collections/Iterable",
+        "kotlin/collections/MutableIterable",
+        "kotlin/collections/Collection",
+        "kotlin/collections/MutableCollection",
+        "kotlin/collections/List",
+        "kotlin/collections/MutableList",
+        "kotlin/collections/Set",
+        "kotlin/collections/MutableSet",
+        "kotlin/collections/Map",
+        "kotlin/collections/MutableMap",
+        "kotlin/collections/Map.Entry",
+        "kotlin/collections/MutableMap.MutableEntry",
+        "kotlin/collections/Iterator",
+        "kotlin/collections/MutableIterator",
+        "kotlin/collections/ListIterator",
+        "kotlin/collections/MutableListIterator",
     ];
     let mut result = Vec::new();
     for record in table.messages(1)? {
         let record = Proto::parse(record)?;
-        record.allowed(&[1, 2, 3, 6])?;
+        record.allowed(&[1, 2, 3, 4, 5, 6])?;
         let range = record.integer(1)?.unwrap_or(1);
         if range == 0 || range > strings.len() as u64 {
             return Err(invalid());
@@ -497,6 +706,30 @@ fn metadata_strings(table: &[u8], strings: &[String]) -> Result<Vec<String>> {
                 value = std::str::from_utf8(bytes)
                     .map_err(|_| invalid())?
                     .to_owned();
+            }
+            let substring = metadata::numbers(&record, 4)?;
+            if !substring.is_empty() {
+                let [start, end] = substring.as_slice() else {
+                    return Err(invalid());
+                };
+                let units: Vec<u16> = value.encode_utf16().collect();
+                value = String::from_utf16(
+                    units
+                        .get(*start as usize..*end as usize)
+                        .ok_or_else(invalid)?,
+                )
+                .map_err(|_| invalid())?;
+            }
+            let replacement = metadata::numbers(&record, 5)?;
+            if !replacement.is_empty() {
+                let [from, to] = replacement.as_slice() else {
+                    return Err(invalid());
+                };
+                let from = char::from_u32(u32::try_from(*from).map_err(|_| invalid())?)
+                    .ok_or_else(invalid)?;
+                let to = char::from_u32(u32::try_from(*to).map_err(|_| invalid())?)
+                    .ok_or_else(invalid)?;
+                value = value.replace(from, &to.to_string());
             }
             match record.integer(3)?.unwrap_or(0) {
                 0 => {}
@@ -1303,7 +1536,9 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
             3 => Constant::Integer(reader.u4()?),
             4 => Constant::Float(reader.u4()?),
             8 => Constant::String(reader.u2()?),
-            9 | 10 | 11 | 12 | 17 | 18 => {
+            9..=11 => Constant::Reference(tag, reader.u2()?, reader.u2()?),
+            12 => Constant::NameAndType(reader.u2()?, reader.u2()?),
+            17 | 18 => {
                 reader.take(4)?;
                 Constant::Empty
             }
@@ -1333,6 +1568,7 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
             pool.push(Constant::Empty);
         }
     }
+    let constants = std::sync::Arc::new(inline_constants(&pool)?);
     let access = reader.u2()?;
     let name = class_name(&pool, reader.u2()?)?.to_owned();
     if name != expected || !valid_name(&name) {
@@ -1363,7 +1599,7 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
         let access = reader.u2()?;
         let field_name = utf8(&pool, reader.u2()?)?.to_owned();
         let descriptor = utf8(&pool, reader.u2()?)?.to_owned();
-        let attrs = attributes(&mut reader, &pool)?;
+        let attrs = attributes(&mut reader, &pool, &constants)?;
         let constant = attrs
             .constant
             .map(
@@ -1407,13 +1643,14 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
         let access = reader.u2()?;
         let method_name = utf8(&pool, reader.u2()?)?.to_owned();
         let descriptor = utf8(&pool, reader.u2()?)?.to_owned();
-        let attrs = attributes(&mut reader, &pool)?;
+        let attrs = attributes(&mut reader, &pool, &constants)?;
         let unsupported = attrs.unsupported
             || attrs.annotated
             || attrs.signature.is_some()
             || access & (0x0040 | 0x0080 | 0x1000) != 0;
         method_attributes.push(attrs);
         methods.push(JavaMethod {
+            library: None,
             owner: name.clone(),
             name: method_name,
             descriptor,
@@ -1425,11 +1662,12 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
             kotlin_internal: false,
         });
     }
-    let attrs = attributes(&mut reader, &pool)?;
+    let attrs = attributes(&mut reader, &pool, &constants)?;
     if reader.offset != bytes.len() {
         return Err(invalid());
     }
     let mut class = JavaClass {
+        library: None,
         name,
         access,
         super_name,
@@ -1466,6 +1704,20 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
             }
         }
     }
+    if let Some(metadata) = attrs
+        .annotations
+        .iter()
+        .find(|a| a.name == "Lkotlin/Metadata;")
+    {
+        if class.unsupported || class.library.is_none() {
+            let mut candidate = class.clone();
+            if metadata::attach(metadata, &mut candidate, &method_attributes).is_ok() {
+                class = candidate;
+            }
+        }
+    } else {
+        let _ = signature::attach(&mut class, &attrs, &method_attributes);
+    }
     Ok(class)
 }
 
@@ -1479,6 +1731,47 @@ mod tests {
         bytes.extend_from_slice(&[0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
         bytes
     }
+    #[test]
+    fn package_metadata_exposes_top_level_names_and_defaults() {
+        let files =
+            crate::compile_all("fun answer(value: Int = 7): Int = value", "Answer.kt").unwrap();
+        let file = files
+            .iter()
+            .find(|f| f.internal_name == "AnswerKt")
+            .unwrap();
+        let class = parse(&file.bytes, "AnswerKt").unwrap();
+        assert!(!class.unsupported);
+        assert_eq!(class.library.as_ref().unwrap().package.as_deref(), Some(""));
+        let method = class.methods.iter().find(|m| m.name == "answer").unwrap();
+        assert!(!method.unsupported);
+        assert_eq!(
+            method.kotlin_params.as_ref().unwrap(),
+            &[("value".into(), Type::Int, true)]
+        );
+    }
+
+    #[test]
+    fn classpath_order_selects_the_first_class() {
+        use std::io::Write;
+        let directory =
+            std::env::temp_dir().join(format!("korrust-classpath-order-{}", std::process::id()));
+        std::fs::create_dir_all(&directory).unwrap();
+        let first = directory.join("first.jar");
+        let second = directory.join("second.jar");
+        for (path, access) in [(&first, 1u8), (&second, 17u8)] {
+            let mut bytes = minimal();
+            bytes[18] = access;
+            let mut zip = zip::ZipWriter::new(std::fs::File::create(path).unwrap());
+            zip.start_file("A.class", zip::write::FileOptions::default())
+                .unwrap();
+            zip.write_all(&bytes).unwrap();
+            zip.finish().unwrap();
+        }
+        let cp = Classpath::new(&[first, second]).unwrap();
+        assert_eq!(cp.load("A").unwrap().access, 1);
+        std::fs::remove_dir_all(directory).unwrap();
+    }
+
     #[test]
     fn emitted_kotlin_metadata_retains_typed_constructor_names_defaults_and_properties() {
         let files = crate::compile_all(
@@ -1609,7 +1902,7 @@ mod tests {
         assert!(parse(&bytes, "A").is_err());
     }
     #[test]
-    fn ordinary_class_annotations_are_unsupported() {
+    fn empty_class_annotation_tables_are_supported() {
         let name = b"RuntimeInvisibleAnnotations";
         let mut bytes = minimal();
         bytes[9] = 4;
@@ -1619,6 +1912,11 @@ mod tests {
         let end = bytes.len();
         bytes[end - 2..].copy_from_slice(&[0, 1]);
         bytes.extend_from_slice(&[0, 3, 0, 0, 0, 2, 0, 0]);
+        assert!(!parse(&bytes, "A").unwrap().unsupported);
+        let end = bytes.len();
+        bytes[end - 3] = 6;
+        bytes[end - 1] = 1;
+        bytes.extend_from_slice(&[0, 1, 0, 0]);
         assert!(parse(&bytes, "A").unwrap().unsupported);
     }
     #[test]
@@ -1766,6 +2064,7 @@ mod tests {
         ]
         .into_iter()
         .map(|(name, descriptor, access)| JavaMethod {
+            library: None,
             owner: "sample/Index".into(),
             name: name.into(),
             descriptor: descriptor.into(),
@@ -1778,6 +2077,7 @@ mod tests {
         })
         .collect();
         let class = JavaClass {
+            library: None,
             name: "sample/Index".into(),
             access: 0x0601,
             super_name: Some("java/lang/Object".into()),
@@ -1804,6 +2104,7 @@ mod tests {
         let (metadata, mut class, mut attributes) = fixture_metadata(false, &[], 1830, 0, 38);
         assert!(kotlin_interface(&metadata, &class, &attributes).is_err());
         class.methods.push(JavaMethod {
+            library: None,
             owner: class.name.clone(),
             name: "setItemCount".into(),
             descriptor: "(I)V".into(),
@@ -1832,6 +2133,79 @@ mod tests {
     }
 
     #[test]
+    fn unsupported_kotlin_parameters_retain_callable_identity() {
+        let (metadata, mut class, attributes) = fixture_metadata(false, &[], 550, 4, 38);
+        metadata::attach(&metadata, &mut class, &attributes).unwrap();
+        let method = class.methods.iter().find(|m| m.name == "item").unwrap();
+        assert!(method.unsupported);
+        assert_eq!(method.library.as_ref().unwrap().source_name, "item");
+        assert!(method.kotlin_params.is_none());
+    }
+
+    #[test]
+    fn general_metadata_retains_internal_setter_visibility() {
+        let (mut metadata, mut class, mut attributes) = fixture_metadata(false, &[], 1830, 0, 38);
+        class.methods.push(JavaMethod {
+            library: None,
+            owner: class.name.clone(),
+            name: "setItemCount".into(),
+            descriptor: "(I)V".into(),
+            access: 0x0401,
+            unsupported: true,
+            source_property: None,
+            kotlin_params: None,
+            kotlin_result: None,
+            kotlin_internal: false,
+        });
+        attributes.push(Attributes::default());
+        let (strings, payload) = metadata_payload(&metadata).unwrap();
+        let proto = Proto::parse(&payload).unwrap();
+        let payload = proto
+            .0
+            .into_iter()
+            .flat_map(|(number, value)| match value {
+                ProtoValue::Integer(value) => proto_integer(number, value),
+                ProtoValue::Bytes(bytes) => {
+                    let bytes = if number == 10 {
+                        [bytes, &proto_integer(8, 32)].concat()
+                    } else {
+                        bytes.to_vec()
+                    };
+                    proto_bytes(number, &bytes)
+                }
+            })
+            .collect::<Vec<_>>();
+        let table = proto_bytes(1, &proto_integer(1, strings.len() as u64));
+        let data = [vec![0, table.len() as u8], table, payload]
+            .concat()
+            .into_iter()
+            .map(char::from)
+            .collect::<String>();
+        metadata
+            .values
+            .iter_mut()
+            .find(|(name, _)| name == "d1")
+            .unwrap()
+            .1 = AnnotationValue::Array(vec![AnnotationValue::String(data)]);
+        metadata::attach(&metadata, &mut class, &attributes).unwrap();
+        let getter = class
+            .methods
+            .iter()
+            .find(|m| m.name == "getItemCount")
+            .unwrap();
+        let setter = class
+            .methods
+            .iter()
+            .find(|m| m.name == "setItemCount")
+            .unwrap();
+        assert!(!getter.unsupported);
+        assert!(!getter.kotlin_internal);
+        assert!(!setter.unsupported);
+        assert!(setter.kotlin_internal);
+        assert_eq!(setter.source_property.as_deref(), Some("itemCount"));
+    }
+
+    #[test]
     fn mutable_property_metadata_names_reject_non_ascii_and_empty_without_panicking() {
         for name in ["isÄ", ""] {
             let (mut metadata, mut class, mut attributes) =
@@ -1843,6 +2217,7 @@ mod tests {
             strings[4] = AnnotationValue::String(name.into());
             class.methods[0].name = name.into();
             class.methods.push(JavaMethod {
+                library: None,
                 owner: class.name.clone(),
                 name: "setItemCount".into(),
                 descriptor: "(I)V".into(),
@@ -1971,6 +2346,7 @@ mod tests {
     #[test]
     fn kotlin_legacy_markers_validate_version_requirements_without_accepting_members() {
         let class = JavaClass {
+            library: None,
             name: "sample/Marker".into(),
             access: 0x0601,
             super_name: Some("java/lang/Object".into()),
@@ -2031,6 +2407,7 @@ mod tests {
             assert_eq!(kotlin_interface(&metadata, &class, &[]).is_ok(), expected);
             let mut with_member = class.clone();
             with_member.methods.push(JavaMethod {
+                library: None,
                 owner: class.name.clone(),
                 name: "required".into(),
                 descriptor: "()V".into(),

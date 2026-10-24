@@ -4,6 +4,20 @@ use crate::{
     syntax::{self, Expr, ExprKind, StatementKind, Type},
 };
 use std::collections::{HashMap, HashSet};
+use std::{cell::RefCell, rc::Rc};
+
+#[path = "check_captures.rs"]
+mod captures;
+#[path = "check_functions.rs"]
+mod function_values;
+#[path = "check_library.rs"]
+mod library;
+#[path = "check_overloads.rs"]
+mod overloads;
+#[path = "check_references.rs"]
+mod references;
+#[path = "check_relations.rs"]
+mod relations;
 
 #[path = "check_interfaces.rs"]
 mod interfaces;
@@ -12,7 +26,14 @@ mod objects;
 #[path = "check_singletons.rs"]
 mod singletons;
 
+pub struct LambdaDecl {
+    pub owner: String,
+    pub captures: Vec<(String, Type)>,
+    pub function: Function,
+    pub interface: Option<JavaMethod>,
+}
 pub struct Module {
+    pub lambdas: Vec<LambdaDecl>,
     pub constants: Vec<syntax::ConstDecl>,
     pub functions: Vec<Function>,
     pub class_decl: Option<ClassDecl>,
@@ -106,6 +127,7 @@ pub struct ClassDecl {
     pub bridges: Vec<JavaMethod>,
 }
 pub struct Function {
+    pub type_params: Vec<syntax::TypeParameter>,
     pub defaults: Vec<Option<Value>>,
     pub name: String,
     pub private: bool,
@@ -144,6 +166,7 @@ pub enum Statement {
     Store(u8, Value),
     Expression(Value),
     Return(Value),
+    NonLocalReturn(Value),
     If(Value, Vec<Statement>, Vec<Statement>),
     While(Value, Vec<Statement>),
     Throw(Value),
@@ -178,6 +201,24 @@ pub enum StringMethod {
     CompareTo,
 }
 pub enum ValueKind {
+    CompiledInline {
+        method: JavaMethod,
+        args: Vec<Value>,
+        local_base: u16,
+        lambda_bases: Vec<Option<u16>>,
+    },
+    Lambda {
+        owner: String,
+        captures: Vec<Value>,
+    },
+    FunctionInvoke {
+        function: Box<Value>,
+        args: Vec<Value>,
+    },
+    CellIncrement {
+        cell: Box<Value>,
+        prefix: bool,
+    },
     Float(u32),
     Box(Box<Value>),
     Unbox(Box<Value>),
@@ -267,6 +308,26 @@ pub enum ValueKind {
 impl Value {
     pub fn stack(&self) -> usize {
         match &self.kind {
+            ValueKind::CellIncrement { cell, .. } => cell.stack().max(5),
+            ValueKind::CompiledInline { args, .. } => {
+                args.iter().map(Value::stack).max().unwrap_or(1).max(256)
+            }
+            ValueKind::Lambda { captures, .. } => captures
+                .iter()
+                .scan(2, |n, v| {
+                    let m = *n + v.stack();
+                    *n += v.ty.slots();
+                    Some(m)
+                })
+                .max()
+                .unwrap_or(2),
+            ValueKind::FunctionInvoke { function, args } => function.stack().max(
+                args.iter()
+                    .enumerate()
+                    .map(|(i, v)| i + 1 + v.stack().max(2))
+                    .max()
+                    .unwrap_or(1),
+            ),
             ValueKind::Float(_) => 1,
             ValueKind::Box(value) | ValueKind::Unbox(value) => value.stack().max(2),
             ValueKind::JavaField { receiver, .. } => receiver
@@ -360,7 +421,16 @@ struct Local {
 }
 type ConstructorSignature<'a> = (&'a str, &'a Vec<(String, Type)>, &'a Vec<Option<Expr>>);
 type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u32);
+type CallableParameters = (Vec<(String, Type)>, Vec<bool>);
 struct Checker<'a> {
+    lambdas: Rc<RefCell<Vec<LambdaDecl>>>,
+    captured: HashMap<String, (String, Type)>,
+    captured_cells: HashMap<String, Type>,
+    cells: HashMap<u8, String>,
+    cell_names: HashSet<String>,
+    lambda_owner: String,
+    inline_result: Option<Type>,
+    nonlocal_result: Option<Type>,
     classpath: &'a Classpath,
     constants: &'a HashMap<String, (Type, Expr)>,
     constructor: Option<ConstructorSignature<'a>>,
@@ -371,6 +441,7 @@ struct Checker<'a> {
     classes: &'a HashMap<String, JavaClass>,
     imports: &'a HashMap<String, String>,
     signatures: &'a Vec<(Vec<(String, Type)>, Type)>,
+    source_type_params: &'a [Vec<syntax::TypeParameter>],
     receiver: Option<Local>,
     fields: &'a HashMap<String, Type>,
     members: &'a HashMap<String, JavaMethod>,
@@ -477,6 +548,7 @@ impl Checker<'_> {
             }
         });
         let method = JavaMethod {
+            library: None,
             owner: "java/util/List".into(),
             name: name.into(),
             descriptor: descriptor.into(),
@@ -575,18 +647,19 @@ impl Checker<'_> {
             }
         }
     }
-    fn applicability(
+    fn applicability_result(
         &mut self,
         params: &[(String, Type)],
         defaults: &[bool],
         args: &[Expr],
         named: bool,
         offset: usize,
-    ) -> Option<usize> {
-        let mapping = Self::argument_mapping(params, defaults, args, named, offset).ok()?;
+    ) -> Result<usize> {
+        let mapping = Self::argument_mapping(params, defaults, args, named, offset)?;
         let before = self.next;
         let refinements = self.refinements.clone();
         let initialized = self.initialized.clone();
+        let lambda_count = self.lambdas.borrow().len();
         let mut score = 0;
         let result = (|| {
             for (arg, i) in args.iter().zip(mapping) {
@@ -595,14 +668,27 @@ impl Checker<'_> {
                 } else {
                     arg
                 };
-                let value = self.value(arg).ok()?;
+                let value = if matches!(
+                    arg.kind,
+                    ExprKind::Lambda(_)
+                        | ExprKind::LambdaWithParams { .. }
+                        | ExprKind::CallableReference { .. }
+                ) {
+                    self.argument_value(arg, &params[i].1)?
+                } else {
+                    let context = self.inline_result.take();
+                    let value = self.value(arg);
+                    self.inline_result = context;
+                    value?
+                };
                 if value.ty != params[i].1 {
                     score += if value.ty == Type::Null { 4 } else { 1 };
                 }
-                self.coerce(value, params[i].1.clone(), arg.offset).ok()?;
+                self.coerce(value, params[i].1.clone(), arg.offset)?;
             }
-            Some(score * 64 + params.len().saturating_sub(args.len()))
+            Ok(score * 64 + params.len().saturating_sub(args.len()))
         })();
+        self.lambdas.borrow_mut().truncate(lambda_count);
         self.next = before;
         self.refinements = refinements;
         self.initialized = initialized;
@@ -614,29 +700,74 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<usize> {
+        self.select_function_types(candidates, args, &[], offset)
+    }
+    fn select_function_types(
+        &mut self,
+        candidates: &[usize],
+        args: &[Expr],
+        explicit: &[Type],
+        offset: usize,
+    ) -> Result<usize> {
         let mut applicable = Vec::new();
+        let mut errors = Vec::new();
         for id in candidates {
-            let params = self.signatures[*id].0.clone();
+            let next = self.next;
+            let count = self.lambdas.borrow().len();
+            let specialized = self.specialize_source(*id, args, explicit, offset);
+            self.next = next;
+            self.lambdas.borrow_mut().truncate(count);
+            let (params, _) = match specialized {
+                Ok(signature) => signature,
+                Err(error) => {
+                    errors.push(error);
+                    continue;
+                }
+            };
             let defaults = self
                 .defaults
                 .get(*id)
                 .map(|v| v.iter().map(Option::is_some).collect::<Vec<_>>())
                 .unwrap_or_else(|| vec![false; params.len()]);
-            if let Some(score) = self.applicability(&params, &defaults, args, true, offset) {
-                applicable.push((score, *id));
+            match self.applicability_result(&params, &defaults, args, true, offset) {
+                Ok(_) => applicable.push((*id, defaults)),
+                Err(error) => errors.push(error),
             }
         }
-        applicable.sort_by_key(|p| p.0);
         if applicable.is_empty() {
+            if errors.len() == 1 {
+                return Err(errors.pop().unwrap());
+            }
             return Err(Diagnostic::new(
                 offset,
                 "No applicable function overload or wrong argument count",
             ));
         }
-        if applicable.get(1).is_some_and(|p| p.0 == applicable[0].0) {
-            return Err(Diagnostic::new(offset, "Ambiguous function overload"));
-        }
-        Ok(applicable[0].1)
+        let parameters = applicable
+            .iter()
+            .map(|(id, _)| self.signatures[*id].0.clone())
+            .collect::<Vec<_>>();
+        let defaults = applicable
+            .iter()
+            .map(|(_, defaults)| defaults.clone())
+            .collect::<Vec<_>>();
+        let generic = applicable
+            .iter()
+            .map(|(id, _)| {
+                self.source_type_params
+                    .get(*id)
+                    .is_some_and(|p| !p.is_empty())
+            })
+            .collect::<Vec<_>>();
+        let selected = self.most_specific(
+            &parameters,
+            &defaults,
+            &vec![true; applicable.len()],
+            args,
+            &generic,
+            offset,
+        )?;
+        Ok(applicable[selected].0)
     }
     fn select_method(
         &mut self,
@@ -644,61 +775,155 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<JavaMethod> {
+        self.select_method_types(methods, args, &[], offset)
+    }
+    fn select_method_types(
+        &mut self,
+        methods: &[JavaMethod],
+        args: &[Expr],
+        explicit: &[Type],
+        offset: usize,
+    ) -> Result<JavaMethod> {
         if args
             .iter()
-            .any(|a| matches!(a.kind, ExprKind::NamedArgument(_, _)))
-            && methods.iter().all(|m| m.kotlin_params.is_none())
+            .any(|a| matches!(a.kind, ExprKind::NamedArgument(..)))
+            && !methods.is_empty()
+            && methods.iter().all(|m| !self.method_named(m))
         {
             return Err(Diagnostic::new(
                 offset,
-                "Named arguments require a Kotlin declaration",
+                "Named arguments are not allowed for Java declarations",
             ));
         }
         let mut applicable = Vec::new();
-        for method in methods {
-            if method.unsupported || method.kotlin_internal {
+        let mut failures = Vec::new();
+        for original in methods {
+            if original.unsupported || original.kotlin_internal {
                 continue;
             }
-            let Ok((types, _)) = class_method_types(method) else {
-                continue;
+            let next = self.next;
+            let count = self.lambdas.borrow().len();
+            let specialized = self.specialize_method(original, args, explicit, offset);
+            self.next = next;
+            self.lambdas.borrow_mut().truncate(count);
+            let method = match specialized {
+                Ok(method) => method,
+                Err(error) => {
+                    failures.push(error);
+                    continue;
+                }
             };
-            let params = method
-                .kotlin_params
-                .as_ref()
-                .map(|v| v.iter().map(|p| (p.0.clone(), p.1.clone())).collect())
-                .unwrap_or_else(|| {
-                    types
-                        .into_iter()
-                        .enumerate()
-                        .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
-                        .collect::<Vec<_>>()
-                });
-            let defaults = method
-                .kotlin_params
-                .as_ref()
-                .map(|v| v.iter().map(|p| p.2).collect())
-                .unwrap_or_else(|| vec![false; params.len()]);
-            if let Some(score) = self.applicability(
+            let (params, defaults) = Self::method_parameters(&method)?;
+            let previous = self.inline_result.clone();
+            self.inline_result = if method.library.as_ref().is_some_and(|l| l.inline)
+                && (self.allow_return || self.nonlocal_result.is_some())
+            {
+                Some(
+                    self.nonlocal_result
+                        .clone()
+                        .unwrap_or_else(|| self.result.clone()),
+                )
+            } else {
+                None
+            };
+            let score = self.applicability_result(
                 &params,
                 &defaults,
                 args,
-                method.kotlin_params.is_some(),
+                self.method_named(&method),
                 offset,
-            ) {
-                applicable.push((score, method.clone()));
+            );
+            self.inline_result = previous;
+            match score {
+                Ok(_) => applicable.push((method, original.clone())),
+                Err(error) => failures.push(error),
             }
         }
-        applicable.sort_by_key(|p| p.0);
         if applicable.is_empty() {
+            if failures.len() == 1 {
+                return Err(failures.pop().unwrap());
+            }
+            if !methods.is_empty() && methods.iter().all(|m| m.kotlin_internal) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Cannot access internal library declaration",
+                ));
+            }
+            if methods.iter().any(|m| m.unsupported) && failures.is_empty() {
+                return Err(Diagnostic::new(offset, "Unsupported library declaration"));
+            }
+            return Err(Diagnostic::new(offset, "No applicable member overload"));
+        }
+        if applicable.len() > 1
+            && applicable.iter().any(|(_, m)| {
+                m.library
+                    .as_ref()
+                    .is_some_and(|l| l.type_parameters.iter().any(|p| p.bounds.len() > 1))
+            })
+        {
             return Err(Diagnostic::new(
                 offset,
-                "No applicable member overload or wrong argument count",
+                "Overload specificity with intersection bounds is unsupported",
             ));
         }
-        if applicable.get(1).is_some_and(|p| p.0 == applicable[0].0) {
-            return Err(Diagnostic::new(offset, "Ambiguous member overload"));
+        let declarations = applicable
+            .iter()
+            .map(|(_, m)| Self::method_parameters(m))
+            .collect::<Result<Vec<_>>>()?;
+        let parameters = declarations
+            .iter()
+            .map(|(p, _)| p.clone())
+            .collect::<Vec<_>>();
+        let defaults = declarations.into_iter().map(|(_, d)| d).collect::<Vec<_>>();
+        let named = applicable
+            .iter()
+            .map(|(_, m)| self.method_named(m))
+            .collect::<Vec<_>>();
+        let generic = applicable
+            .iter()
+            .map(|(_, m)| {
+                m.library
+                    .as_ref()
+                    .is_some_and(|l| !l.type_parameters.is_empty())
+            })
+            .collect::<Vec<_>>();
+        let selected =
+            self.most_specific(&parameters, &defaults, &named, args, &generic, offset)?;
+        Ok(applicable.swap_remove(selected).0)
+    }
+    fn method_parameters(method: &JavaMethod) -> Result<CallableParameters> {
+        if let Some(params) = &method.kotlin_params {
+            return Ok((
+                params.iter().map(|p| (p.0.clone(), p.1.clone())).collect(),
+                params.iter().map(|p| p.2).collect(),
+            ));
         }
-        Ok(applicable.remove(0).1)
+        let (types, _) = class_method_types(method)?;
+        let count = types.len();
+        Ok((
+            types
+                .into_iter()
+                .enumerate()
+                .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
+                .collect(),
+            vec![false; count],
+        ))
+    }
+    fn method_named(&self, method: &JavaMethod) -> bool {
+        (method.library.is_none() && method.kotlin_params.is_some())
+            || (method.owner == self.lambda_owner
+                && self
+                    .members
+                    .values()
+                    .any(|m| m.name == method.name && m.descriptor == method.descriptor))
+            || self
+                .classes
+                .get(&method.owner)
+                .is_some_and(|c| c.kotlin_class)
+            || self
+                .classpath
+                .load(&method.owner)
+                .is_ok_and(|c| c.kotlin_class)
     }
     fn factory(
         &mut self,
@@ -779,7 +1004,10 @@ impl Checker<'_> {
         if (0..params.len())
             .any(|i| !used.contains(&i) && !defaults.get(i).copied().unwrap_or(false))
         {
-            return Err(Diagnostic::new(offset, "Missing required argument"));
+            return Err(Diagnostic::new(
+                offset,
+                "Wrong argument count: missing required argument",
+            ));
         }
         Ok(mapping)
     }
@@ -807,8 +1035,7 @@ impl Checker<'_> {
             } else {
                 arg
             };
-            let value = self.value(expr)?;
-            let value = self.coerce(value, params[index].1.clone(), expr.offset)?;
+            let value = self.argument_value(expr, &params[index].1)?;
             ordered[index] = Some(if reordered {
                 let slot = self.allocate_typed_slot(&value.ty, offset)?;
                 let ty = value.ty.clone();
@@ -1098,7 +1325,19 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
-        let (types, result) = class_method_types(&method)?;
+        if method.kotlin_internal {
+            return Err(Diagnostic::new(
+                offset,
+                "Cannot access internal library member",
+            ));
+        }
+        if method.unsupported {
+            return Err(Diagnostic::new(offset, "Unsupported library member"));
+        }
+        let (types, mut result) = class_method_types(&method)?;
+        if method.kotlin_result.is_none() && result.is_reference() {
+            result = Type::Platform(Box::new(result));
+        }
         let params = method
             .kotlin_params
             .as_ref()
@@ -1119,13 +1358,8 @@ impl Checker<'_> {
             .as_ref()
             .map(|v| v.iter().map(|p| p.2).collect::<Vec<_>>())
             .unwrap_or_else(|| vec![false; params.len()]);
-        let (mut values, mut lets, mask) = self.arguments(
-            &params,
-            &defaults,
-            args,
-            method.kotlin_params.is_some(),
-            offset,
-        )?;
+        let (mut values, mut lets, mask) =
+            self.arguments(&params, &defaults, args, self.method_named(&method), offset)?;
         let receiver = if !lets.is_empty() {
             let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
             let ty = receiver.ty.clone();
@@ -1141,7 +1375,11 @@ impl Checker<'_> {
         let interface = self
             .classes
             .get(&method.owner)
-            .is_some_and(|c| c.access & 0x0200 != 0);
+            .is_some_and(|c| c.access & 0x0200 != 0)
+            || self
+                .classpath
+                .load(&method.owner)
+                .is_ok_and(|c| c.access & 0x0200 != 0);
         let kind = if mask == 0 {
             if interface {
                 ValueKind::MemberCall {
@@ -1159,8 +1397,8 @@ impl Checker<'_> {
             let descriptor = format!(
                 "(L{};{}ILjava/lang/Object;){}",
                 method.owner,
-                params.iter().map(|p| p.1.descriptor()).collect::<String>(),
-                result.descriptor()
+                method.descriptor[1..method.descriptor.find(')').unwrap()].to_owned(),
+                &method.descriptor[method.descriptor.find(')').unwrap() + 1..]
             );
             values.push(Value {
                 ty: Type::Int,
@@ -1180,7 +1418,9 @@ impl Checker<'_> {
         Ok(Self::wrap_lets(Value { ty: result, kind }, lets))
     }
     fn resolve(&self, ty: &Type, offset: usize) -> Result<Type> {
-        resolve_type(ty, self.imports, offset)
+        let ty = resolve_type(ty, self.imports, offset)?;
+        self.validate_type_arguments(&ty, offset)?;
+        Ok(ty)
     }
     #[allow(clippy::only_used_in_recursion)]
     fn coerce(&self, value: Value, expected: Type, offset: usize) -> Result<Value> {
@@ -1192,6 +1432,24 @@ impl Checker<'_> {
         }
         if value.ty == expected {
             return Ok(value);
+        }
+        if self.subtype(&value.ty, &expected)
+            && !(matches!(value.ty, Type::Platform(_))
+                && !expected.is_nullable()
+                && !matches!(expected, Type::Platform(_)))
+        {
+            if value.ty.is_reference() {
+                return Ok(Value {
+                    ty: expected,
+                    kind: value.kind,
+                });
+            }
+            if expected.is_reference() {
+                return Ok(Value {
+                    ty: expected,
+                    kind: ValueKind::Box(Box::new(value)),
+                });
+            }
         }
         if let Type::Platform(inner) = &expected {
             if inner.is_reference()
@@ -1208,6 +1466,7 @@ impl Checker<'_> {
             && expected.is_reference()
             && (expected.is_nullable() || matches!(expected, Type::Platform(_)))
             && value.ty.descriptor() == expected.descriptor()
+            && self.subtype(&value.ty, &expected)
         {
             return Ok(Value {
                 ty: expected,
@@ -1422,34 +1681,53 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
-        let Type::Java(owner) = receiver.ty.base() else {
-            unreachable!()
-        };
+        let owner = library::type_owner(&receiver.ty)
+            .ok_or_else(|| Diagnostic::new(offset, "Unsupported member receiver"))?;
         let class = self
             .classes
             .get(owner)
-            .ok_or_else(|| Diagnostic::new(offset, "Java class requires explicit import"))?;
-        if class.access & 0x0200 != 0 && !class.kotlin_interface {
+            .cloned()
+            .map(Ok)
+            .unwrap_or_else(|| self.classpath.load(owner))?;
+        let inherited = match self.classpath.methods(owner) {
+            Ok(methods) => methods,
+            Err(_) if class.library.is_none() && self.classes.contains_key(owner) => {
+                class.methods.clone()
+            }
+            Err(error) => return Err(error),
+        };
+        let methods = inherited
+            .into_iter()
+            .filter(|m| m.name == name && m.access & 9 == 1)
+            .collect::<Vec<_>>();
+        if methods.is_empty() {
+            return self.extension_call(receiver, name, args, &[], offset);
+        }
+        let projected = methods
+            .iter()
+            .any(|m| relations::projected_input(m, &receiver.ty, &class, self.classpath));
+        let methods = methods
+            .into_iter()
+            .filter(|m| !relations::projected_input(m, &receiver.ty, &class, self.classpath))
+            .map(|m| library::specialize_receiver(m, &receiver.ty, &class, self.classpath))
+            .collect::<Vec<_>>();
+        if projected && methods.is_empty() {
             return Err(Diagnostic::new(
                 offset,
-                "Java interface calls are not supported",
+                "Cannot write through an out or star type projection",
             ));
         }
-        self.check_ancestors(class, name, offset)?;
-        let methods: Vec<_> = class
-            .methods
-            .iter()
-            .filter(|m| m.name == name && m.access & 1 != 0 && m.access & 8 == 0)
-            .cloned()
-            .collect();
-        let method = self.select_method(&methods, args, offset)?;
-        let (_, result) = class_method_types(&method)?;
-        let imported = method.kotlin_result.is_some();
-        let mut value = self.member_call(method, receiver, args, offset)?;
-        if !imported && result.is_reference() {
-            value.ty = Type::Platform(Box::new(result));
-        }
-        Ok(value)
+        let method = match self.select_method(&methods, args, offset) {
+            Ok(method) => method,
+            Err(_) if projected => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Cannot write through an out or star type projection",
+                ));
+            }
+            Err(error) => return Err(error),
+        };
+        self.member_call(method, receiver, args, offset)
     }
     fn java_static(
         &mut self,
@@ -1458,43 +1736,14 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
-        let class = self
-            .classes
-            .get(owner)
-            .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java class"))?;
-        self.check_ancestors(class, name, offset)?;
-        let methods: Vec<_> = class
-            .methods
-            .iter()
-            .filter(|m| m.name == name && m.access & 9 == 9)
-            .cloned()
-            .collect();
-        let method = self.select_method(&methods, args, offset)?;
-        let (types, result) = class_method_types(&method)?;
-        let params: Vec<_> = types
+        let methods = self
+            .classpath
+            .methods(owner)?
             .into_iter()
-            .enumerate()
-            .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
-            .collect();
-        let (values, lets, _) =
-            self.arguments(&params, &vec![false; params.len()], args, false, offset)?;
-        let ty = if result.is_reference() {
-            Type::Platform(Box::new(result))
-        } else {
-            result
-        };
-        Ok(Self::wrap_lets(
-            Value {
-                ty,
-                kind: ValueKind::StaticCall {
-                    owner: owner.into(),
-                    name: name.into(),
-                    descriptor: method.descriptor,
-                    args: values,
-                },
-            },
-            lets,
-        ))
+            .filter(|m| m.name == name && m.access & 9 == 9)
+            .collect::<Vec<_>>();
+        let method = self.select_method(&methods, args, offset)?;
+        self.library_static_call(method, args, offset)
     }
     fn field_assignment(
         &mut self,
@@ -1707,6 +1956,15 @@ impl Checker<'_> {
         }
     }
     fn block(&mut self, source: &[syntax::Statement]) -> Result<(Vec<Statement>, bool)> {
+        self.block_scoped(source, true)
+    }
+    fn block_scoped(
+        &mut self,
+        source: &[syntax::Statement],
+        pop_scope: bool,
+    ) -> Result<(Vec<Statement>, bool)> {
+        self.cell_names
+            .extend(captures::lambda_capture_names(source));
         self.scopes.push(HashMap::new());
         let mut body = Vec::new();
         let mut returns = false;
@@ -1736,7 +1994,22 @@ impl Checker<'_> {
                             "Uninitialized val declarations are not supported",
                         ));
                     }
-                    let slot = self.declare(name, ty, *mutable, offset)?;
+                    let slot = self.declare(name, ty.clone(), *mutable, offset)?;
+                    if self.cell_names.contains(name) {
+                        let owner = Self::cell_owner(&ty);
+                        self.cells.insert(slot, owner.clone());
+                        body.push(Statement::Store(
+                            slot,
+                            Value {
+                                ty: Type::Java(owner.clone()),
+                                kind: ValueKind::New {
+                                    owner,
+                                    descriptor: "()V".into(),
+                                    args: Vec::new(),
+                                },
+                            },
+                        ));
+                    }
                     self.initialized.remove(&slot);
                     continue;
                 }
@@ -1813,7 +2086,11 @@ impl Checker<'_> {
                     }
                 }
                 StatementKind::Let(name, mutable, annotation, expr) => {
-                    let mut value = self.value(expr)?;
+                    let mut value = if let Some(ty) = annotation {
+                        self.expected_value(expr, &self.resolve(ty, offset)?)?
+                    } else {
+                        self.value(expr)?
+                    };
                     if let Some(ty) = annotation {
                         if matches!(ty, Type::ThreadLocal(_)) {
                             return Err(Diagnostic::new(
@@ -1833,9 +2110,77 @@ impl Checker<'_> {
                         return Err(Diagnostic::new(offset, "Unit locals are not supported"));
                     }
                     let slot = self.declare(name, value.ty.clone(), *mutable, offset)?;
-                    Statement::Store(slot, value)
+                    if *mutable && self.cell_names.contains(name) {
+                        let owner = Self::cell_owner(&value.ty);
+                        self.cells.insert(slot, owner.clone());
+                        body.push(Statement::Store(
+                            slot,
+                            Value {
+                                ty: Type::Java(owner.clone()),
+                                kind: ValueKind::New {
+                                    owner: owner.clone(),
+                                    descriptor: "()V".into(),
+                                    args: Vec::new(),
+                                },
+                            },
+                        ));
+                        self.cell_store(
+                            Value {
+                                ty: Type::Java(owner),
+                                kind: ValueKind::Local(slot),
+                            },
+                            value.ty.clone(),
+                            value,
+                            offset,
+                        )?
+                    } else {
+                        Statement::Store(slot, value)
+                    }
                 }
                 StatementKind::Assign(name, expr) => {
+                    if self.local(name).is_none()
+                        && !self.captured.contains_key(name)
+                        && !self.fields.contains_key(name)
+                        && !self.object_fields.contains_key(name)
+                        && !self.constants.contains_key(name)
+                    {
+                        let setters = self
+                            .library_candidates(name)
+                            .into_iter()
+                            .filter(|m| {
+                                m.source_property.is_some()
+                                    && m.kotlin_params.as_ref().is_some_and(|p| p.len() == 1)
+                            })
+                            .collect::<Vec<_>>();
+                        if !setters.is_empty() {
+                            let method =
+                                self.select_method(&setters, std::slice::from_ref(expr), offset)?;
+                            body.push(Statement::Expression(self.library_static_call(
+                                method,
+                                std::slice::from_ref(expr),
+                                offset,
+                            )?));
+                            continue;
+                        }
+                        if self
+                            .library_candidates(name)
+                            .iter()
+                            .any(|m| m.source_property.is_some())
+                        {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Cannot reassign read-only library property",
+                            ));
+                        }
+                    }
+                    if let Some((cell, ty)) = self.cell_binding(name) {
+                        let value = self.expected_value(expr, &ty)?;
+                        if let Some(local) = self.local(name) {
+                            self.initialized.insert(local.slot);
+                        }
+                        body.push(self.cell_store(cell, ty, value, offset)?);
+                        continue;
+                    }
                     if self.local(name).is_none() && self.fields.contains_key(name) {
                         if !self.mutable_fields.contains(name) {
                             return Err(Diagnostic::new(
@@ -1884,6 +2229,25 @@ impl Checker<'_> {
                     Statement::Store(local.slot, value)
                 }
                 StatementKind::AddAssign(name, expr) => {
+                    if let Some((cell, ty)) = self.cell_binding(name) {
+                        if !matches!(ty, Type::Int | Type::Long) {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Captured += requires Int or Long",
+                            ));
+                        }
+                        let left = self.value(&Expr {
+                            offset,
+                            kind: ExprKind::Name(name.clone()),
+                        })?;
+                        let right = self.expected_value(expr, &ty)?;
+                        let value = Value {
+                            ty: ty.clone(),
+                            kind: ValueKind::Binary("+".into(), Box::new(left), Box::new(right)),
+                        };
+                        body.push(self.cell_store(cell, ty, value, offset)?);
+                        continue;
+                    }
                     let local = self.local(name).ok_or_else(|| {
                         if self
                             .members
@@ -2033,16 +2397,30 @@ impl Checker<'_> {
                     continue;
                 }
                 StatementKind::Return(expr) => {
+                    if !self.allow_return && self.nonlocal_result.is_none() {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Non-local return requires an inline lambda",
+                        ));
+                    }
+                    let expected = self
+                        .nonlocal_result
+                        .clone()
+                        .unwrap_or_else(|| self.result.clone());
                     let value = match expr {
-                        Some(expr) => self.value(expr)?,
+                        Some(expr) => self.expected_value(expr, &expected)?,
                         None => Value {
                             ty: Type::Unit,
                             kind: ValueKind::Unit,
                         },
                     };
-                    let value = self.coerce(value, self.result.clone(), offset)?;
+                    let value = self.coerce(value, expected, offset)?;
                     returns = true;
-                    Statement::Return(value)
+                    if self.nonlocal_result.is_some() {
+                        Statement::NonLocalReturn(value)
+                    } else {
+                        Statement::Return(value)
+                    }
                 }
                 StatementKind::Throw(expr) => {
                     let statement = self.throw_exception(expr, offset)?;
@@ -2101,7 +2479,9 @@ impl Checker<'_> {
             };
             body.push(typed);
         }
-        self.scopes.pop();
+        if pop_scope {
+            self.scopes.pop();
+        }
         Ok((body, returns))
     }
     fn value(&mut self, expr: &Expr) -> Result<Value> {
@@ -2129,10 +2509,10 @@ impl Checker<'_> {
                 ));
             }
             ExprKind::Return(expr) => {
-                if !self.allow_return {
+                if !self.allow_return && self.nonlocal_result.is_none() {
                     return Err(Diagnostic::new(
                         offset,
-                        "Return expressions are not allowed in initializers or default arguments",
+                        "Return expressions require an enclosing function or inline lambda",
                     ));
                 }
                 let value = match expr {
@@ -2142,11 +2522,17 @@ impl Checker<'_> {
                         kind: ValueKind::Unit,
                     },
                 };
-                let value = self.coerce(value, self.result.clone(), offset)?;
-                (
-                    Type::Unit,
-                    ValueKind::Abrupt(vec![Statement::Return(value)]),
-                )
+                let expected = self
+                    .nonlocal_result
+                    .clone()
+                    .unwrap_or_else(|| self.result.clone());
+                let value = self.coerce(value, expected, offset)?;
+                let statement = if self.nonlocal_result.is_some() {
+                    Statement::NonLocalReturn(value)
+                } else {
+                    Statement::Return(value)
+                };
+                (self.result.clone(), ValueKind::Abrupt(vec![statement]))
             }
             ExprKind::Throw(expr) => (
                 Type::Unit,
@@ -2166,6 +2552,18 @@ impl Checker<'_> {
                         "Increment supports mutable Int locals only",
                     ));
                 };
+                if let Some((cell, ty)) = self.cell_binding(name) {
+                    if ty != Type::Int {
+                        return Err(Diagnostic::new(offset, "Captured increment requires Int"));
+                    }
+                    return Ok(Value {
+                        ty: Type::Int,
+                        kind: ValueKind::CellIncrement {
+                            cell: Box::new(cell),
+                            prefix: *prefix,
+                        },
+                    });
+                }
                 let local = self
                     .local(name)
                     .ok_or_else(|| Diagnostic::new(offset, "Increment requires a local"))?;
@@ -2216,7 +2614,9 @@ impl Checker<'_> {
                 }
                 (inner, ValueKind::RequireNotNull(Box::new(value)))
             }
-            ExprKind::Lambda(_) => {
+            ExprKind::Lambda(_)
+            | ExprKind::LambdaWithParams { .. }
+            | ExprKind::CallableReference { .. } => {
                 return Err(Diagnostic::new(
                     offset,
                     "Lambdas are supported only in private ThreadLocal array initializers",
@@ -2359,6 +2759,49 @@ impl Checker<'_> {
                 return Ok(result);
             }
             ExprKind::Name(name) => {
+                let getters = self
+                    .library_candidates(name)
+                    .into_iter()
+                    .filter(|m| {
+                        m.source_property.is_some()
+                            && m.kotlin_params.as_ref().is_some_and(|p| p.is_empty())
+                    })
+                    .collect::<Vec<_>>();
+                if !getters.is_empty()
+                    && self.local(name).is_none()
+                    && !self.captured.contains_key(name)
+                    && !self.fields.contains_key(name)
+                    && !self.constants.contains_key(name)
+                    && !self.object_fields.contains_key(name)
+                    && !self.companion_fields.contains_key(name)
+                {
+                    let method = self.select_method(&getters, &[], offset)?;
+                    return self.library_static_call(method, &[], offset);
+                }
+                if let Some((cell, ty)) = self.cell_binding(name) {
+                    if let Some(local) = self.local(name) {
+                        if !self.initialized.contains(&local.slot) {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Captured variable must be initialized before use",
+                            ));
+                        }
+                    }
+                    return Ok(self.cell_read(cell, ty));
+                }
+                if let Some((owner, ty)) = self.captured.get(name) {
+                    return Ok(Value {
+                        ty: ty.clone(),
+                        kind: ValueKind::JavaField {
+                            owner: owner.clone(),
+                            name: name.clone(),
+                            receiver: Some(Box::new(Value {
+                                ty: Type::Java(owner.clone()),
+                                kind: ValueKind::Local(0),
+                            })),
+                        },
+                    });
+                }
                 if let Some((ty, expr)) = self
                     .constants
                     .get(name)
@@ -2723,8 +3166,9 @@ impl Checker<'_> {
                             return self.member_call(method.clone(), receiver, &[], offset);
                         }
                     }
-                    if let Type::Java(owner) = receiver.ty.base() {
-                        if let Some(class) = self.classes.get(owner) {
+                    if let Some(owner) = library::type_owner(&receiver.ty).map(str::to_owned) {
+                        let loaded = self.classpath.load(&owner).ok();
+                        if let Some(class) = self.classes.get(&owner).or(loaded.as_ref()) {
                             if let Some(method) = class
                                 .methods
                                 .iter()
@@ -2813,20 +3257,56 @@ impl Checker<'_> {
                             return self.factory(name, types, args, offset);
                         }
                     }
-                    return Err(Diagnostic::new(
-                        offset,
-                        "Explicit generic calls are supported only for list factories",
-                    ));
+                    if let ExprKind::Name(name) = &target.kind {
+                        if self.function_names.iter().any(|n| n == name) {
+                            return self.source_call(name, args, types, offset);
+                        }
+                    }
+                    let methods = match &target.kind {
+                        ExprKind::Name(name) => self.library_candidates(name),
+                        ExprKind::Property(receiver, name) => {
+                            if let ExprKind::Name(alias) = &receiver.kind {
+                                if let Some(owner) = self.imports.get(alias) {
+                                    if self.classes.contains_key(owner) {
+                                        let methods = self
+                                            .classpath
+                                            .methods(owner)?
+                                            .into_iter()
+                                            .filter(|m| m.name == *name && m.access & 9 == 9)
+                                            .collect::<Vec<_>>();
+                                        let method = self
+                                            .select_method_types(&methods, args, types, offset)?;
+                                        return self.library_static_call(method, args, offset);
+                                    }
+                                }
+                            }
+                            let value = self.value(receiver)?;
+                            return self.extension_call(value, name, args, types, offset);
+                        }
+                        _ => Vec::new(),
+                    };
+                    let method = self.select_method_types(&methods, args, types, offset)?;
+                    return self.library_static_call(method, args, offset);
                 }
                 ExprKind::SafeProperty(receiver, name) => {
                     return self.safe_access(receiver, name, Some(args), offset);
                 }
                 ExprKind::Name(name) => {
-                    if self.local(name).is_some() {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Invoking local values is not supported",
-                        ));
+                    if self.local(name).is_some() || self.captured.contains_key(name) {
+                        let function = self.value(target)?;
+                        return self.function_invoke(function, args, offset);
+                    }
+                    let imported = self
+                        .library_candidates(name)
+                        .into_iter()
+                        .filter(|m| {
+                            m.source_property.is_none()
+                                && m.library.as_ref().is_none_or(|l| l.receiver.is_none())
+                        })
+                        .collect::<Vec<_>>();
+                    if !imported.is_empty() {
+                        let method = self.select_method(&imported, args, offset)?;
+                        return self.library_static_call(method, args, offset);
                     }
                     if let Some((owner, params, defaults)) = self.constructor {
                         if self.imports.get(name).is_some_and(|n| n == owner) {
@@ -2981,44 +3461,7 @@ impl Checker<'_> {
                             kind: ValueKind::StringFromChars(values),
                         });
                     }
-                    let mut candidates: Vec<_> = self
-                        .function_names
-                        .iter()
-                        .enumerate()
-                        .filter(|(_, n)| *n == name)
-                        .map(|(i, _)| i)
-                        .collect();
-                    if candidates.is_empty() {
-                        if let Some(id) = self.functions.get(name) {
-                            candidates.push(*id);
-                        }
-                    }
-                    let id = self.select_function(&candidates, args, offset)?;
-                    if self.extensions.contains(&id) {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Calling declared Kotlin extensions is not supported",
-                        ));
-                    }
-                    let (params, result) = self.signatures[id].clone();
-                    let defaults = self
-                        .defaults
-                        .get(id)
-                        .map(|v| v.iter().map(Option::is_some).collect::<Vec<_>>())
-                        .unwrap_or_else(|| vec![false; params.len()]);
-                    let (values, lets, mask) =
-                        self.arguments(&params, &defaults, args, true, offset)?;
-                    return Ok(Self::wrap_lets(
-                        Value {
-                            ty: result,
-                            kind: if mask == 0 {
-                                ValueKind::Call(id, values)
-                            } else {
-                                ValueKind::DefaultCall(id, values, mask)
-                            },
-                        },
-                        lets,
-                    ));
+                    return self.source_call(name, args, &[], offset);
                 }
                 ExprKind::Property(receiver, name) => {
                     if self
@@ -3076,6 +3519,9 @@ impl Checker<'_> {
                         }
                     }
                     let receiver = self.value(receiver)?;
+                    if name == "invoke" && matches!(receiver.ty, Type::Function { .. }) {
+                        return self.function_invoke(receiver, args, offset);
+                    }
                     if receiver.ty.is_nullable() {
                         return Err(Diagnostic::new(
                             offset,
@@ -3184,7 +3630,16 @@ impl Checker<'_> {
                             kind: ValueKind::IntToString(Box::new(receiver)),
                         });
                     }
-                    if matches!(receiver.ty.base(), Type::Java(_)) {
+                    if self
+                        .library_candidates(name)
+                        .iter()
+                        .any(|m| m.library.as_ref().is_some_and(|l| l.receiver.is_some()))
+                    {
+                        return self.extension_call(receiver, name, args, &[], offset);
+                    }
+                    if library::type_owner(&receiver.ty).is_some()
+                        && receiver.ty.base() != &Type::String
+                    {
                         return self.java_call(receiver, name, args, offset);
                     }
                     if receiver.ty.base() == &Type::IntArray && name == "copyInto" {
@@ -3280,6 +3735,42 @@ impl Checker<'_> {
 }
 fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> Result<Type> {
     match ty {
+        Type::Parameter { name, upper_bound } => Ok(Type::Parameter {
+            name: name.clone(),
+            upper_bound: Box::new(resolve_type(upper_bound, imports, offset)?),
+        }),
+        Type::Function { params, result } => Ok(Type::Function {
+            params: params
+                .iter()
+                .map(|p| resolve_type(p, imports, offset))
+                .collect::<Result<Vec<_>>>()?,
+            result: Box::new(resolve_type(result, imports, offset)?),
+        }),
+        Type::Parameterized { name, arguments } => {
+            if name == "Array" {
+                return Err(Diagnostic::new(offset, "Only Array<String> is supported"));
+            }
+            let resolved = resolve_type(&Type::Java(name.clone()), imports, offset)?;
+            let Type::Java(name) = resolved else {
+                unreachable!()
+            };
+            Ok(Type::Parameterized {
+                name,
+                arguments: arguments
+                    .iter()
+                    .map(|a| {
+                        Ok(syntax::TypeArgument {
+                            variance: a.variance,
+                            ty: a
+                                .ty
+                                .as_ref()
+                                .map(|t| resolve_type(t, imports, offset))
+                                .transpose()?,
+                        })
+                    })
+                    .collect::<Result<Vec<_>>>()?,
+            })
+        }
         Type::Nullable(inner) => {
             let inner = resolve_type(inner, imports, offset)?;
             if inner == Type::Unit || inner.is_nullable() {
@@ -3297,6 +3788,31 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
             offset,
             "Explicit ThreadLocal types are not supported; only inferred private array buffers are supported",
         )),
+        Type::Java(name)
+            if matches!(
+                name.as_str(),
+                "List"
+                    | "MutableList"
+                    | "Collection"
+                    | "MutableCollection"
+                    | "Iterable"
+                    | "Set"
+                    | "MutableSet"
+                    | "Map"
+                    | "MutableMap"
+            ) =>
+        {
+            Ok(Type::Java(
+                match name.as_str() {
+                    "List" | "MutableList" => "java/util/List",
+                    "Collection" | "MutableCollection" => "java/util/Collection",
+                    "Iterable" => "java/lang/Iterable",
+                    "Set" | "MutableSet" => "java/util/Set",
+                    _ => "java/util/Map",
+                }
+                .into(),
+            ))
+        }
         Type::Java(name) if name.contains('/') || imports.values().any(|n| n == name) => {
             Ok(ty.clone())
         }
@@ -3311,6 +3827,39 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
             }),
         _ => Ok(ty.clone()),
     }
+}
+fn resolve_type_checked(
+    ty: &Type,
+    imports: &HashMap<String, String>,
+    offset: usize,
+    classpath: &Classpath,
+    classes: &HashMap<String, JavaClass>,
+) -> Result<Type> {
+    let ty = resolve_type(ty, imports, offset)?;
+    relations::validate_type_arguments_with_classes(&ty, classpath, classes, offset)?;
+    Ok(ty)
+}
+fn resolve_parameters(
+    parameters: &[syntax::TypeParameter],
+    imports: &HashMap<String, String>,
+    classpath: &Classpath,
+    offset: usize,
+    classes: &HashMap<String, JavaClass>,
+) -> Result<Vec<syntax::TypeParameter>> {
+    parameters
+        .iter()
+        .map(|parameter| {
+            Ok(syntax::TypeParameter {
+                name: parameter.name.clone(),
+                variance: parameter.variance,
+                bounds: parameter
+                    .bounds
+                    .iter()
+                    .map(|bound| resolve_type_checked(bound, imports, offset, classpath, classes))
+                    .collect::<Result<Vec<_>>>()?,
+            })
+        })
+        .collect()
 }
 fn loses_member_type(_ty: &Type) -> bool {
     false
@@ -3347,6 +3896,12 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
         | ExprKind::Lambda(a)
         | ExprKind::Throw(a)
         | ExprKind::Increment { value: a, .. } => call_names(a, names),
+        ExprKind::LambdaWithParams { body, .. } => body_call_names(body, names),
+        ExprKind::CallableReference { receiver, .. } => {
+            if let Some(receiver) = receiver {
+                call_names(receiver, names);
+            }
+        }
         ExprKind::Return(a) => {
             if let Some(a) = a {
                 call_names(a, names);
@@ -3444,7 +3999,15 @@ fn unresolved_list(ty: &Type) -> bool {
         _ => false,
     }
 }
+#[cfg(test)]
 pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
+    check_with_owner(source, classpath, "Korrust")
+}
+pub fn check_with_owner(
+    source: &syntax::Module,
+    classpath: &Classpath,
+    owner: &str,
+) -> Result<Module> {
     if source
         .object_decl
         .as_ref()
@@ -3455,6 +4018,61 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
     let mut imports = HashMap::new();
     let mut classes = HashMap::new();
     for (alias, name, offset) in &source.imports {
+        if alias == "*" {
+            let package = name.trim_end_matches("/*");
+            let package_classes = classpath.package_classes(package)?;
+            if package_classes.is_empty() {
+                return Err(Diagnostic::new(
+                    *offset,
+                    "Unresolved wildcard import package",
+                ));
+            }
+            for class in package_classes {
+                if class.access & 1 == 0 {
+                    continue;
+                }
+                if class.library.as_ref().is_some_and(|l| l.package.is_some()) {
+                    for method in &class.methods {
+                        if method.access & 9 == 9 {
+                            let source_name = method
+                                .source_property
+                                .as_deref()
+                                .or_else(|| method.library.as_ref().map(|l| l.source_name.as_str()))
+                                .unwrap_or(&method.name);
+                            imports
+                                .entry(source_name.into())
+                                .or_insert_with(|| format!("{}::{source_name}", class.name));
+                        }
+                    }
+                } else {
+                    if class.unsupported {
+                        continue;
+                    }
+                    let simple = class.name.rsplit('/').next().unwrap().to_owned();
+                    imports.entry(simple).or_insert_with(|| class.name.clone());
+                }
+                classes.insert(class.name.clone(), class);
+            }
+            continue;
+        }
+        if classpath.load(name).is_err() {
+            if let Some((package, member)) = name.rsplit_once('/') {
+                let mut found = false;
+                for class in classpath.package_classes(package)? {
+                    if class.methods.iter().any(|m| {
+                        m.source_property.as_deref() == Some(member)
+                            || m.library.as_ref().is_some_and(|l| l.source_name == member)
+                    }) {
+                        imports.insert(alias.clone(), format!("{}::{member}", class.name));
+                        classes.insert(class.name.clone(), class);
+                        found = true;
+                    }
+                }
+                if found {
+                    continue;
+                }
+            }
+        }
         if source
             .class_decl
             .as_ref()
@@ -3544,7 +4162,22 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         } else {
             format!("{}/{}", source.package.replace('.', "/"), class.name)
         };
-        imports.insert(class.name.clone(), owner);
+        imports.insert(class.name.clone(), owner.clone());
+        classes.insert(
+            owner.clone(),
+            JavaClass {
+                library: None,
+                name: owner,
+                access: 1,
+                super_name: Some("java/lang/Object".into()),
+                interfaces: Vec::new(),
+                methods: Vec::new(),
+                fields: Vec::new(),
+                kotlin_class: true,
+                unsupported: false,
+                kotlin_interface: false,
+            },
+        );
         for interface in &class.interfaces {
             referenced.insert(interface.clone());
         }
@@ -3588,7 +4221,7 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
     }
     for name in referenced {
         if let std::collections::hash_map::Entry::Vacant(entry) = imports.entry(name.clone()) {
-            let owner = if source.package.is_empty() {
+            let owner = if source.package.is_empty() || name.contains('/') {
                 name.clone()
             } else {
                 format!("{}/{}", source.package.replace('.', "/"), name)
@@ -3704,6 +4337,11 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
     let mut signatures = Vec::new();
     let mut extensions = HashSet::new();
     for (i, function) in source.functions.iter().enumerate() {
+        for parameter in &function.type_params {
+            for bound in &parameter.bounds {
+                resolve_type_checked(bound, &imports, function.offset, classpath, &classes)?;
+            }
+        }
         if function.receiver.is_some() && function.defaults.iter().any(Option::is_some) {
             return Err(Diagnostic::new(
                 function.offset,
@@ -3716,11 +4354,14 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             extensions.insert(i);
             params.push((
                 format!("$this${}", function.name),
-                resolve_type(receiver, &imports, function.offset)?,
+                resolve_type_checked(receiver, &imports, function.offset, classpath, &classes)?,
             ));
         }
         for (name, ty) in &function.params {
-            params.push((name.clone(), resolve_type(ty, &imports, function.offset)?));
+            params.push((
+                name.clone(),
+                resolve_type_checked(ty, &imports, function.offset, classpath, &classes)?,
+            ));
         }
         if params.iter().any(|p| p.1 == Type::Unit) {
             return Err(Diagnostic::new(
@@ -3736,27 +4377,37 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         }
         signatures.push((
             params,
-            resolve_type(&function.result, &imports, function.offset)?,
+            resolve_type_checked(
+                &function.result,
+                &imports,
+                function.offset,
+                classpath,
+                &classes,
+            )?,
         ));
     }
     if signatures.len() > 65535 {
         return Err(Diagnostic::new(0, "Too many functions for a JVM class"));
     }
+    let lambdas = Rc::new(RefCell::new(Vec::new()));
     if let Some(decl) = &source.class_decl {
+        let class_decl = check_class(
+            decl,
+            &source.package,
+            classpath,
+            &imports,
+            &classes,
+            &HashMap::new(),
+            None,
+            &lambdas,
+        )?;
         return Ok(Module {
+            lambdas: Rc::try_unwrap(lambdas).ok().unwrap().into_inner(),
             constants: Vec::new(),
             functions: Vec::new(),
             interface_decl: None,
             object_decl: None,
-            class_decl: Some(check_class(
-                decl,
-                &source.package,
-                classpath,
-                &imports,
-                &classes,
-                &HashMap::new(),
-                None,
-            )?),
+            class_decl: Some(class_decl),
         });
     }
     let mut jvm_signatures = HashSet::new();
@@ -3778,6 +4429,11 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         .iter()
         .map(|f| f.name.clone())
         .collect::<Vec<_>>();
+    let source_type_params = source
+        .functions
+        .iter()
+        .map(|f| f.type_params.clone())
+        .collect::<Vec<_>>();
     let source_defaults = source
         .functions
         .iter()
@@ -3790,6 +4446,14 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
     for (id, function) in source.functions.iter().enumerate() {
         let (params, return_type) = signatures[id].clone();
         let mut checker = Checker {
+            lambdas: lambdas.clone(),
+            captured: HashMap::new(),
+            captured_cells: HashMap::new(),
+            cells: HashMap::new(),
+            cell_names: HashSet::new(),
+            lambda_owner: owner.into(),
+            inline_result: None,
+            nonlocal_result: None,
             constants: &constants,
             constructor: None,
             defaults: &source_defaults,
@@ -3800,6 +4464,7 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             classes: &classes,
             imports: &imports,
             signatures: &signatures,
+            source_type_params: &source_type_params,
             receiver: None,
             fields: &fields,
             members: &members,
@@ -3850,6 +4515,13 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             params[0].0 = "<this>".into();
         }
         result.push(Function {
+            type_params: resolve_parameters(
+                &function.type_params,
+                &imports,
+                classpath,
+                function.offset,
+                &classes,
+            )?,
             defaults,
             name: function.name.clone(),
             private: function.private,
@@ -3861,6 +4533,7 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
         });
     }
     Ok(Module {
+        lambdas: Rc::try_unwrap(lambdas).ok().unwrap().into_inner(),
         constants: source.constants.iter().map(clone_constant).collect(),
         functions: result,
         class_decl: None,
@@ -3900,6 +4573,7 @@ fn check_class(
     classes: &HashMap<String, JavaClass>,
     companion_fields: &HashMap<String, (String, Type)>,
     owner_override: Option<&str>,
+    lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
 ) -> Result<ClassDecl> {
     if source.data
         && (source.params.is_empty()
@@ -3957,7 +4631,7 @@ fn check_class(
     let mut params = Vec::new();
     let mut fields = HashMap::new();
     for (name, ty) in &source.params {
-        let ty = resolve_type(ty, imports, source.offset)?;
+        let ty = resolve_type_checked(ty, imports, source.offset, classpath, classes)?;
         if ty == Type::Unit {
             return Err(Diagnostic::new(
                 source.offset,
@@ -4023,6 +4697,15 @@ fn check_class(
     }
     let mut mutable_fields: HashSet<_> = source.mutable_params.iter().cloned().collect();
     let mut initializer_checker = Checker {
+        source_type_params: &[],
+        lambdas: lambdas.clone(),
+        captured: HashMap::new(),
+        captured_cells: HashMap::new(),
+        cells: HashMap::new(),
+        cell_names: HashSet::new(),
+        lambda_owner: owner.clone(),
+        inline_result: None,
+        nonlocal_result: None,
         classpath,
         constants: &HashMap::new(),
         constructor: Some((&owner, &params, &source.defaults)),
@@ -4079,6 +4762,14 @@ fn check_class(
         }
         if let Some(expr) = &property.initializer {
             let mut checker = Checker {
+                lambdas: lambdas.clone(),
+                captured: HashMap::new(),
+                captured_cells: HashMap::new(),
+                cells: HashMap::new(),
+                cell_names: HashSet::new(),
+                lambda_owner: owner.clone(),
+                inline_result: None,
+                nonlocal_result: None,
                 classpath,
                 constants: &HashMap::new(),
                 constructor: Some((&owner, &params, &source.defaults)),
@@ -4089,6 +4780,7 @@ fn check_class(
                 classes,
                 imports,
                 signatures: &signatures,
+                source_type_params: &[],
                 receiver: Some(Local {
                     slot: 0,
                     ty: Type::Java(owner.clone()),
@@ -4126,7 +4818,13 @@ fn check_class(
             } else {
                 checker.coerce(
                     value,
-                    resolve_type(&property.ty, imports, property.offset)?,
+                    resolve_type_checked(
+                        &property.ty,
+                        imports,
+                        property.offset,
+                        classpath,
+                        classes,
+                    )?,
                     property.offset,
                 )?
             };
@@ -4161,7 +4859,7 @@ fn check_class(
         } else {
             property_types.insert(
                 property.name.clone(),
-                resolve_type(&property.ty, imports, property.offset)?,
+                resolve_type_checked(&property.ty, imports, property.offset, classpath, classes)?,
             );
         }
     }
@@ -4190,6 +4888,14 @@ fn check_class(
                 ));
             }
             let mut checker = Checker {
+                lambdas: lambdas.clone(),
+                captured: HashMap::new(),
+                captured_cells: HashMap::new(),
+                cells: HashMap::new(),
+                cell_names: HashSet::new(),
+                lambda_owner: owner.clone(),
+                inline_result: None,
+                nonlocal_result: None,
                 classpath,
                 constants: &HashMap::new(),
                 constructor: Some((&owner, &params, &source.defaults)),
@@ -4200,6 +4906,7 @@ fn check_class(
                 classes,
                 imports,
                 signatures: &signatures,
+                source_type_params: &[],
                 receiver: None,
                 fields: &HashMap::new(),
                 members: &empty_members,
@@ -4227,7 +4934,7 @@ fn check_class(
             let value = if let Some(ty) = &property.ty {
                 checker.coerce(
                     value,
-                    resolve_type(ty, imports, property.offset)?,
+                    resolve_type_checked(ty, imports, property.offset, classpath, classes)?,
                     property.offset,
                 )?
             } else {
@@ -4308,15 +5015,19 @@ fn check_class(
     for (name, private, _, property, source_params, result, _, offset) in &declarations {
         let params = source_params
             .iter()
-            .map(|(_, ty)| resolve_type(ty, imports, *offset).map(|ty| ty.descriptor()))
+            .map(|(_, ty)| {
+                resolve_type_checked(ty, imports, *offset, classpath, classes)
+                    .map(|ty| ty.descriptor())
+            })
             .collect::<Result<Vec<_>>>()?
             .concat();
-        let result = resolve_type(result, imports, *offset)?;
+        let result = resolve_type_checked(result, imports, *offset, classpath, classes)?;
         let descriptor = format!("({params}){}", result.descriptor());
         members.retain(|_, m| m.name != *name || m.descriptor != descriptor);
         members.insert(
             format!("{name}({params})"),
             JavaMethod {
+                library: None,
                 kotlin_params: Some(
                     source_params
                         .iter()
@@ -4324,7 +5035,7 @@ fn check_class(
                         .map(|(i, (n, t))| {
                             Ok((
                                 n.clone(),
-                                resolve_type(t, imports, *offset)?,
+                                resolve_type_checked(t, imports, *offset, classpath, classes)?,
                                 source
                                     .methods
                                     .iter()
@@ -4378,8 +5089,16 @@ fn check_class(
                 "Member overloads and JVM getter collisions are not supported",
             ));
         }
-        let result = resolve_type(result, imports, offset)?;
+        let result = resolve_type_checked(result, imports, offset, classpath, classes)?;
         let mut checker = Checker {
+            lambdas: lambdas.clone(),
+            captured: HashMap::new(),
+            captured_cells: HashMap::new(),
+            cells: HashMap::new(),
+            cell_names: HashSet::new(),
+            lambda_owner: owner.clone(),
+            inline_result: None,
+            nonlocal_result: None,
             constants: &HashMap::new(),
             constructor: Some((&owner, &params, &source.defaults)),
             defaults: &Vec::new(),
@@ -4390,6 +5109,7 @@ fn check_class(
             classes,
             imports,
             signatures: &signatures,
+            source_type_params: &[],
             receiver: Some(Local {
                 slot: 0,
                 ty: Type::Java(owner.clone()),
@@ -4423,7 +5143,7 @@ fn check_class(
             ));
         }
         for (param, ty) in source_params {
-            let ty = resolve_type(&ty, imports, offset)?;
+            let ty = resolve_type_checked(&ty, imports, offset, classpath, classes)?;
             if ty == Type::Unit {
                 return Err(Diagnostic::new(
                     offset,
@@ -4444,7 +5164,9 @@ fn check_class(
                         .iter()
                         .zip(&method_params)
                         .all(|((n, t), (rn, rt))| {
-                            n == rn && resolve_type(t, imports, offset).is_ok_and(|t| t == *rt)
+                            n == rn
+                                && resolve_type_checked(t, imports, offset, classpath, classes)
+                                    .is_ok_and(|t| t == *rt)
                         })
             })
             .map(|m| m.function.defaults.clone())
@@ -4468,6 +5190,18 @@ fn check_class(
             }));
         }
         let method = Function {
+            type_params: resolve_parameters(
+                &source
+                    .methods
+                    .iter()
+                    .find(|m| m.function.offset == offset)
+                    .map(|m| m.function.type_params.clone())
+                    .unwrap_or_default(),
+                imports,
+                classpath,
+                offset,
+                classes,
+            )?,
             defaults: checked_defaults,
             name,
             private,
@@ -4544,6 +5278,7 @@ fn check_class(
                 kind: ValueKind::Local(0),
             };
             methods.push(Function {
+                type_params: Vec::new(),
                 defaults: Vec::new(),
                 name: getter,
                 private: false,
@@ -4558,6 +5293,7 @@ fn check_class(
             });
             if field.mutable {
                 methods.push(Function {
+                    type_params: Vec::new(),
                     defaults: Vec::new(),
                     name: setter_name(&field.name),
                     private: false,

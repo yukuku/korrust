@@ -36,7 +36,12 @@ fn jvm_static(pool: &mut Pool) -> Result<Vec<u8>> {
     Ok(attribute)
 }
 
-fn method(pool: &mut Pool, owner: &str, declaration: &ObjectMethod) -> Result<Vec<u8>> {
+fn method(
+    pool: &mut Pool,
+    owner: &str,
+    declaration: &ObjectMethod,
+    lambdas: &[crate::check::LambdaDecl],
+) -> Result<Vec<u8>> {
     let function = &declaration.function;
     if declaration.inline && (!function.private || declaration.jvm_static) {
         return Err(failure(
@@ -51,6 +56,9 @@ fn method(pool: &mut Pool, owner: &str, declaration: &ObjectMethod) -> Result<Ve
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
         max_stack: 2,
     };
     if !function.private {
@@ -138,7 +146,12 @@ fn field(pool: &mut Pool, field: &ObjectField) -> Result<Vec<u8>> {
     Ok(bytes)
 }
 
-fn factory(pool: &mut Pool, owner: &str, field: &ObjectField) -> Result<Vec<u8>> {
+fn factory(
+    pool: &mut Pool,
+    owner: &str,
+    field: &ObjectField,
+    lambdas: &[crate::check::LambdaDecl],
+) -> Result<Vec<u8>> {
     let ObjectInitializer::ThreadLocalArray {
         array_type,
         size,
@@ -152,6 +165,9 @@ fn factory(pool: &mut Pool, owner: &str, field: &ObjectField) -> Result<Vec<u8>>
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
         max_stack: 1,
     };
     code.value(size)?;
@@ -256,6 +272,7 @@ pub fn emit_dynamic_object(
     owner: &str,
     file: &str,
     metadata: &Metadata,
+    lambdas: &[crate::check::LambdaDecl],
 ) -> Result<Vec<crate::ClassFile>> {
     if object.owner != owner {
         return Err(failure("Object class identity mismatch"));
@@ -359,12 +376,12 @@ pub fn emit_dynamic_object(
     for declaration in &object.methods {
         builder
             .methods
-            .push(method(&mut builder.pool, owner, declaration)?);
+            .push(method(&mut builder.pool, owner, declaration, lambdas)?);
     }
     for property in &object.fields {
         builder
             .methods
-            .push(factory(&mut builder.pool, owner, property)?);
+            .push(factory(&mut builder.pool, owner, property, lambdas)?);
     }
     for property in &object.fields {
         builder
