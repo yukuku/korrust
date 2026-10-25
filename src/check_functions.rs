@@ -5,7 +5,7 @@ impl Checker<'_> {
         let context = self.inline_result.clone();
         if !matches!(
             expr.kind,
-            ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
+            ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. } | ExprKind::Labeled(..)
         ) {
             self.inline_result = None;
         }
@@ -14,6 +14,14 @@ impl Checker<'_> {
         result
     }
     pub(super) fn expected_value(&mut self, expr: &Expr, expected: &Type) -> Result<Value> {
+        if let ExprKind::Labeled(label, value) = &expr.kind {
+            if matches!(
+                value.kind,
+                ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
+            ) {
+                return self.lambda_context(value, expected, None, false, Some(label));
+            }
+        }
         if matches!(
             expr.kind,
             ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
@@ -23,7 +31,11 @@ impl Checker<'_> {
         if matches!(expr.kind, ExprKind::CallableReference { .. }) {
             return self.callable_reference(expr, expected);
         }
-        let value = self.value(expr)?;
+        let mut value = self.value(expr)?;
+        if control::expression_terminates(expr) {
+            value.ty = expected.clone();
+            return Ok(value);
+        }
         self.coerce(value, expected.clone(), expr.offset)
     }
 
@@ -33,17 +45,36 @@ impl Checker<'_> {
         expected: &Type,
         interface: Option<JavaMethod>,
     ) -> Result<Value> {
-        let Type::Function { params, result } = expected.base() else {
-            if let Some((method, function)) = self.sam_function(expected, expr.offset)? {
-                return self.lambda(expr, &function, Some(method)).map(|mut value| {
-                    value.ty = expected.clone();
-                    value
-                });
+        self.lambda_context(expr, expected, interface, false, None)
+    }
+
+    pub(super) fn lambda_context(
+        &mut self,
+        expr: &Expr,
+        expected: &Type,
+        interface: Option<JavaMethod>,
+        local_return: bool,
+        label: Option<&str>,
+    ) -> Result<Value> {
+        let (params, result, receiver_type) = match expected.base() {
+            Type::Function { params, result } => (params, result, None),
+            Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => (params, result, Some(receiver.as_ref().clone())),
+            _ => {
+                if let Some((method, function)) = self.sam_function(expected, expr.offset)? {
+                    return self.lambda(expr, &function, Some(method)).map(|mut value| {
+                        value.ty = expected.clone();
+                        value
+                    });
+                }
+                return Err(Diagnostic::new(
+                    expr.offset,
+                    "Lambda requires a function or SAM expected type",
+                ));
             }
-            return Err(Diagnostic::new(
-                expr.offset,
-                "Lambda requires a function or SAM expected type",
-            ));
         };
         let (declared, mut statements) = match &expr.kind {
             ExprKind::Lambda(value) => (
@@ -98,24 +129,32 @@ impl Checker<'_> {
             self.lambdas.borrow().len()
         );
         let mut capture_names = captures::free_names(&statements, &names);
-        if capture_names.iter().any(|name| {
-            self.local(name).is_none()
-                && !self.captured.contains_key(name)
-                && (name == "this"
-                    || self.fields.contains_key(name)
-                    || self
-                        .members
-                        .values()
-                        .any(|m| m.name == *name || m.source_property.as_deref() == Some(name))
-                    || self.object_fields.contains_key(name)
-                    || self.object_methods.contains_key(name))
-        }) {
-            return Err(Diagnostic::new(
-                expr.offset,
-                "Implicit receiver capture in lambdas is unsupported",
-            ));
+        let implicit_receiver = receiver_type.is_none()
+            && capture_names.iter().any(|name| {
+                self.local(name).is_none()
+                    && !self.captured.contains_key(name)
+                    && (name == "this"
+                        || self.receiver.is_some()
+                            && !self.functions.contains_key(name)
+                            && !self.constants.contains_key(name)
+                            && !self.imports.contains_key(name)
+                        || self.fields.contains_key(name)
+                        || self
+                            .members
+                            .values()
+                            .any(|m| m.name == *name || m.source_property.as_deref() == Some(name)))
+            });
+        if implicit_receiver {
+            capture_names.insert("this".into());
         }
-        capture_names.retain(|name| self.local(name).is_some() || self.captured.contains_key(name));
+        if receiver_type.is_some() {
+            capture_names.remove("this");
+        }
+        capture_names.retain(|name| {
+            self.local(name).is_some()
+                || self.captured.contains_key(name)
+                || name == "this" && self.receiver.is_some()
+        });
         let mut capture_names = capture_names
             .into_iter()
             .filter(|name| !names.contains(name))
@@ -125,8 +164,21 @@ impl Checker<'_> {
         let mut fields = Vec::new();
         let mut captured = HashMap::new();
         let mut captured_cells = HashMap::new();
+        let mut readonly_cells = Vec::new();
         for name in capture_names {
+            if self
+                .local(&name)
+                .is_some_and(|local| !self.initialized.contains(&local.slot))
+            {
+                return Err(Diagnostic::new(
+                    expr.offset,
+                    format!("Variable {name} must be initialized before capture"),
+                ));
+            }
             let value = if let Some((cell, ty)) = self.cell_binding(&name) {
+                if self.cell_is_readonly(&name) {
+                    readonly_cells.push(name.clone());
+                }
                 captured_cells.insert(name.clone(), ty);
                 cell
             } else {
@@ -145,6 +197,9 @@ impl Checker<'_> {
             fields.push((name, value.ty.clone()));
             captures.push(value);
         }
+        let own_receiver = receiver_type.is_some();
+        let receiver_fields = HashMap::new();
+        let receiver_members = HashMap::new();
         let mut checker = Checker {
             lambdas: self.lambdas.clone(),
             captured,
@@ -153,7 +208,11 @@ impl Checker<'_> {
             cell_names: HashSet::new(),
             lambda_owner: self.lambda_owner.clone(),
             inline_result: None,
-            nonlocal_result: self.inline_result.clone(),
+            nonlocal_result: if local_return {
+                None
+            } else {
+                self.inline_result.clone()
+            },
             classpath: self.classpath,
             constants: self.constants,
             constructor: self.constructor,
@@ -166,15 +225,24 @@ impl Checker<'_> {
             signatures: self.signatures,
             source_type_params: self.source_type_params,
             source_infix: self.source_infix,
+            source_operator: self.source_operator,
             receiver: None,
-            fields: self.fields,
-            members: self.members,
+            fields: if own_receiver {
+                &receiver_fields
+            } else {
+                self.fields
+            },
+            members: if own_receiver {
+                &receiver_members
+            } else {
+                self.members
+            },
             companion_fields: self.companion_fields,
             functions: self.functions,
             object_methods: self.object_methods,
             object_fields: self.object_fields,
             object_owner: self.object_owner,
-            allow_return: false,
+            allow_return: local_return,
             refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
@@ -182,20 +250,69 @@ impl Checker<'_> {
             next: 1,
             result: result.as_ref().clone(),
         };
-        let function_params = names
+        for name in readonly_cells {
+            checker.scopes[0].insert(
+                format!("<readonlyCell:{name}>"),
+                Local {
+                    slot: 0,
+                    ty: Type::Unit,
+                    mutable: false,
+                },
+            );
+        }
+        let mut function_params = names
             .into_iter()
             .zip(params.iter().cloned())
             .collect::<Vec<_>>();
+        if let Some(receiver) = receiver_type {
+            function_params.insert(0, ("this".into(), receiver));
+        }
+        if let Some(label) = label {
+            checker.scopes[0].insert(
+                format!("<return@{label}>"),
+                Local {
+                    slot: 0,
+                    ty: Type::Unit,
+                    mutable: false,
+                },
+            );
+        }
         for (name, ty) in &function_params {
-            checker.declare(name, ty.clone(), false, expr.offset)?;
+            let slot = checker.declare(name, ty.clone(), false, expr.offset)?;
+            if name == "this" {
+                checker.receiver = Some(Local {
+                    slot,
+                    ty: ty.clone(),
+                    mutable: false,
+                });
+            }
+        }
+        let mut receiver_setup = Vec::new();
+        if implicit_receiver {
+            let (_, ty) = checker.captured.get("this").cloned().unwrap();
+            let value = Value {
+                ty: ty.clone(),
+                kind: ValueKind::JavaField {
+                    owner: owner.clone(),
+                    name: "this".into(),
+                    receiver: Some(Box::new(Value {
+                        ty: Type::Java(owner.clone()),
+                        kind: ValueKind::Local(0),
+                    })),
+                },
+            };
+            let slot = checker.allocate_typed_slot(&ty, expr.offset)?;
+            checker.receiver = Some(Local {
+                slot,
+                ty,
+                mutable: false,
+            });
+            receiver_setup.push(Statement::Store(slot, value));
         }
         let last = statements.pop();
         let (mut body, returns) = checker.block_scoped(&statements, false)?;
-        if returns {
-            return Err(Diagnostic::new(
-                expr.offset,
-                "Lambda body cannot unconditionally terminate before its result",
-            ));
+        if returns && last.is_some() {
+            return Err(Diagnostic::new(expr.offset, "Unreachable lambda result"));
         }
         match last {
             Some(syntax::Statement {
@@ -234,6 +351,8 @@ impl Checker<'_> {
             })),
             None => return Err(Diagnostic::new(expr.offset, "Lambda must produce a result")),
         }
+        receiver_setup.append(&mut body);
+        let body = receiver_setup;
         self.lambdas.borrow_mut().push(LambdaDecl {
             owner: owner.clone(),
             captures: fields,
@@ -268,14 +387,22 @@ impl Checker<'_> {
                 "Nullable function values require a safe call or not-null assertion",
             ));
         }
-        let Type::Function { params, result } = function.ty.base() else {
-            return Err(Diagnostic::new(offset, "Value is not a function"));
+        let (params, result) = match function.ty.base() {
+            Type::Function { params, result } => (params.clone(), result.as_ref().clone()),
+            Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => {
+                let mut all = vec![receiver.as_ref().clone()];
+                all.extend(params.clone());
+                (all, result.as_ref().clone())
+            }
+            _ => return Err(Diagnostic::new(offset, "Value is not a function")),
         };
         if args.len() != params.len() {
             return Err(Diagnostic::new(offset, "Function argument count mismatch"));
         }
-        let result = result.as_ref().clone();
-        let params = params.clone();
         let values = args
             .iter()
             .zip(params)
@@ -290,7 +417,11 @@ impl Checker<'_> {
         })
     }
 
-    fn sam_function(&self, expected: &Type, offset: usize) -> Result<Option<(JavaMethod, Type)>> {
+    pub(super) fn sam_function(
+        &self,
+        expected: &Type,
+        offset: usize,
+    ) -> Result<Option<(JavaMethod, Type)>> {
         let Some(owner) = library::type_owner(expected) else {
             return Ok(None);
         };
@@ -364,15 +495,15 @@ mod tests {
         assert!(error.message.contains("Non-local return"));
     }
     #[test]
-    fn ordinary_methods_retain_lambdas_and_reject_receiver_capture() {
+    fn ordinary_methods_retain_lambdas_and_capture_receivers() {
         let module = checked(
             "class Holder { fun run(): Int { val n=4; val fn: () -> Int = { n+1 }; return fn() } }",
         )
         .unwrap();
         assert_eq!(module.lambdas.len(), 1);
-        assert!(module.lambdas[0].owner.starts_with("Holder$lambda$"));
-        let error=checked("class Holder(val n: Int) { fun run(): Int { val fn: () -> Int = { n }; return fn() } }").err().unwrap();
-        assert!(error.message.contains("Implicit receiver capture"));
+        assert!(module.lambdas[0].owner.contains("$lambda$"));
+        let module=checked("class Holder(val n: Int) { fun run(): Int { val fn: () -> Int = { n }; return fn() } }").unwrap();
+        assert_eq!(module.lambdas[0].captures[0].0, "this");
     }
     #[test]
     fn same_source_classifiers_validate_recursively_without_classpath_outputs() {
@@ -486,6 +617,7 @@ mod shadowing_tests {
             JavaClass {
                 library: Some(crate::classpath::LibraryClass {
                     type_parameters: Vec::new(),
+                    type_aliases: Vec::new(),
                     supertypes: Vec::new(),
                     package: Some("foreign".into()),
                     multifile_facade: None,
@@ -505,6 +637,8 @@ mod shadowing_tests {
                         receiver: None,
                         inline: false,
                         infix: false,
+                        operator: false,
+                        kotlin_public: true,
                         code: None,
                     }),
                     owner: "foreign/Library".into(),
@@ -540,6 +674,7 @@ mod shadowing_tests {
             signatures: &Vec::new(),
             source_type_params: &[],
             source_infix: &HashSet::new(),
+            source_operator: &HashSet::new(),
             receiver: None,
             fields: &HashMap::new(),
             members: &HashMap::new(),
@@ -579,5 +714,106 @@ mod shadowing_tests {
         assert!(
             matches!(&lambdas[0].function.body[0],Statement::Return(Value {kind:ValueKind::JavaField {owner,..},..}) if owner.starts_with("Shadowed$lambda$"))
         );
+    }
+}
+
+impl Checker<'_> {
+    pub(super) fn local_function(
+        &mut self,
+        function: &syntax::Function,
+    ) -> Result<(Vec<Statement>, bool)> {
+        if !function.type_params.is_empty()
+            || function.receiver.is_some()
+            || function.defaults.iter().any(Option::is_some)
+        {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Generic local functions, local extension functions, and local default arguments are unsupported",
+            ));
+        }
+        let params = function
+            .params
+            .iter()
+            .map(|(_, ty)| self.resolve(ty, function.offset))
+            .collect::<Result<Vec<_>>>()?;
+        let result = if function.result_inferred {
+            let scope_count = self.scopes.len();
+            let next = self.next;
+            let initialized = self.initialized.clone();
+            let refinements = self.refinements.clone();
+            let cells = self.cells.clone();
+            let cell_names = self.cell_names.clone();
+            let loop_depth = self.loop_depth;
+            let lambda_count = self.lambdas.borrow().len();
+            self.scopes.push(HashMap::new());
+            let inferred = (|| {
+                for ((name, _), ty) in function.params.iter().zip(&params) {
+                    self.declare(name, ty.clone(), false, function.offset)?;
+                }
+                let Some(syntax::Statement {
+                    kind: StatementKind::Return(Some(expr)),
+                    ..
+                }) = function.body.first()
+                else {
+                    return Err(Diagnostic::new(
+                        function.offset,
+                        "Local function return type cannot be inferred",
+                    ));
+                };
+                self.value(expr).map(|value| value.ty)
+            })();
+            self.scopes.truncate(scope_count);
+            self.next = next;
+            self.initialized = initialized;
+            self.refinements = refinements;
+            self.cells = cells;
+            self.cell_names = cell_names;
+            self.loop_depth = loop_depth;
+            self.lambdas.borrow_mut().truncate(lambda_count);
+            inferred?
+        } else {
+            self.resolve(&function.result, function.offset)?
+        };
+        let ty = Type::Function {
+            params,
+            result: Box::new(result),
+        };
+        let slot = self.declare(&function.name, ty.clone(), false, function.offset)?;
+        let owner = Self::cell_owner(&ty);
+        self.cells.insert(slot, owner.clone());
+        let cell = Value {
+            ty: Type::Java(owner.clone()),
+            kind: ValueKind::Local(slot),
+        };
+        let mut body = vec![Statement::Store(
+            slot,
+            Value {
+                ty: Type::Java(owner.clone()),
+                kind: ValueKind::New {
+                    owner,
+                    descriptor: "()V".into(),
+                    args: Vec::new(),
+                },
+            },
+        )];
+        let expr = Expr {
+            offset: function.offset,
+            kind: ExprKind::LambdaWithParams {
+                params: Some(
+                    function
+                        .params
+                        .iter()
+                        .map(|(name, ty)| syntax::LambdaParameter {
+                            name: name.clone(),
+                            ty: Some(ty.clone()),
+                        })
+                        .collect(),
+                ),
+                body: function.body.clone(),
+            },
+        };
+        let value = self.lambda_context(&expr, &ty, None, true, Some(&function.name))?;
+        body.push(self.cell_store(cell, ty, value, function.offset)?);
+        Ok((body, false))
     }
 }

@@ -22,11 +22,19 @@
   {
     "id": "when_range",
     "source": "fun f(n: Int): Int { when (n) { in listOf(1, 2, 3) -> return 1; else -> return 0 } }",
-    "feature_name": "collection_membership_when"
+    "feature_name": "collection_membership_when",
+    "supported_regression": {
+      "facade": "When_rangeKt",
+      "java_assertions": "if (When_rangeKt.f(1) != 1 || When_rangeKt.f(3) != 1 || When_rangeKt.f(0) != 0 || When_rangeKt.f(4) != 0) throw new AssertionError(\"collection when membership\");"
+    }
   },
   {
     "id": "when_subject_variable",
-    "source": "fun f(n: Int): Int { when (val v = n) { 1 -> return v; else -> return 0 } }"
+    "source": "fun f(n: Int): Int { when (val v = n) { 1 -> return v; else -> return 0 } }",
+    "supported_regression": {
+      "facade": "When_subject_variableKt",
+      "java_assertions": "if (When_subject_variableKt.f(1) != 1 || When_subject_variableKt.f(2) != 0) throw new AssertionError(\"scoped when subject\");"
+    }
   },
   {
     "id": "char_arithmetic",
@@ -35,12 +43,20 @@
   {
     "id": "char_array_construction",
     "source": "fun f(n: Int): Array<Char> = Array(n) { 'a' }",
-    "feature_name": "generic_array_construction"
+    "feature_name": "generic_array_construction",
+    "supported_regression": {
+      "facade": "Char_array_constructionKt",
+      "java_assertions": "if (Char_array_constructionKt.f(0).length != 0) throw new AssertionError(\"empty boxed Char array\");\nCharacter[] values = Char_array_constructionKt.f(3);\nif (values.length != 3 || values[0] != 'a' || values[1] != 'a' || values[2] != 'a') throw new AssertionError(\"boxed Char array contents\");\ntry { Char_array_constructionKt.f(-1); throw new AssertionError(\"negative array length\"); } catch (NegativeArraySizeException expected) {}"
+    }
   },
   {
     "id": "char_array_write",
     "source": "fun f(a: Array<Char>) { a[0] = 'a' }",
-    "feature_name": "generic_char_arrays"
+    "feature_name": "generic_char_arrays",
+    "supported_regression": {
+      "facade": "Char_array_writeKt",
+      "java_assertions": "Character[] values = new Character[] { 'z' };\nChar_array_writeKt.f(values);\nif (values[0] != 'a') throw new AssertionError(\"boxed Char array write\");\ntry { Char_array_writeKt.f(new Character[0]); throw new AssertionError(\"array bounds\"); } catch (ArrayIndexOutOfBoundsException expected) {}"
+    }
   },
   {
     "id": "when_trailing_condition_comma",
@@ -71,16 +87,26 @@
   {
     "id": "enum_mixed_declarations",
     "source": "enum class E { A }\nfun number(): Int = 1",
-    "message": "Only one enum class"
+    "supported_regression": {
+      "facade": "E",
+      "java_assertions": "if (E.values().length != 1 || E.values()[0] != E.A || Enum_mixed_declarationsKt.number() != 1) throw new AssertionError(\"enum and facade\");"
+    }
   },
   {
     "id": "enum_multiple_declarations",
     "source": "enum class E { A }\nenum class F { B }",
-    "message": "Only one enum class"
+    "supported_regression": {
+      "facade": "E",
+      "java_assertions": "if (E.values().length != 1 || E.valueOf(\"A\") != E.A || F.values().length != 1 || F.valueOf(\"B\") != F.B) throw new AssertionError(\"multiple enum declarations\");"
+    }
   },
   {
     "id": "enum_nested",
-    "source": "class Outer { enum class E { A } }"
+    "source": "class Outer { enum class E { A } }",
+    "supported_regression": {
+      "facade": "Outer$E",
+      "java_assertions": "if (Outer.E.values().length != 1 || Outer.E.valueOf(\"A\") != Outer.E.A) throw new AssertionError(\"nested enum\");\nif (Outer.E.class.getDeclaringClass() != Outer.class || !java.lang.reflect.Modifier.isStatic(Outer.E.class.getModifiers())) throw new AssertionError(\"nested enum owner\");"
+    }
   },
   {
     "id": "enum_private_visibility",
@@ -97,7 +123,11 @@
   },
   {
     "id": "object_nonconst_property",
-    "source": "object O { val V = 1 }"
+    "source": "object O { val V = 1 }",
+    "supported_regression": {
+      "facade": "O",
+      "java_assertions": "if (O.INSTANCE.getV() != 1 || O.INSTANCE != O.INSTANCE) throw new AssertionError(\"initialized singleton property\");"
+    }
   },
   {
     "id": "object_method",
@@ -106,7 +136,11 @@
   },
   {
     "id": "object_init",
-    "source": "object O { init {} }"
+    "source": "object O { init {} }",
+    "supported_regression": {
+      "facade": "O",
+      "java_assertions": "if (O.INSTANCE == null || O.INSTANCE != O.INSTANCE) throw new AssertionError(\"singleton initialization\");"
+    }
   },
   {
     "id": "object_supertype",
@@ -122,15 +156,27 @@
   },
   {
     "id": "object_nested_class",
-    "source": "object O { class Child }"
+    "source": "object O { class Child }",
+    "supported_regression": {
+      "facade": "O$Child",
+      "java_assertions": "if (new O.Child().getClass().getDeclaringClass() != O.class || !java.lang.reflect.Modifier.isStatic(O.Child.class.getModifiers())) throw new AssertionError(\"nested singleton class\");"
+    }
   },
   {
     "id": "object_mixed_declarations",
-    "source": "object O {}\nfun number(): Int = 1"
+    "source": "object O {}\nfun number(): Int = 1",
+    "supported_regression": {
+      "facade": "Object_mixed_declarationsKt",
+      "java_assertions": "if (O.INSTANCE == null || Object_mixed_declarationsKt.number() != 1) throw new AssertionError(\"singleton and facade\");"
+    }
   },
   {
     "id": "object_multiple_declarations",
-    "source": "object O {}\nobject P {}"
+    "source": "object O {}\nobject P {}",
+    "supported_regression": {
+      "facade": "O",
+      "java_assertions": "if (O.INSTANCE == null || P.INSTANCE == null || O.INSTANCE.getClass() == (Object) P.INSTANCE.getClass()) throw new AssertionError(\"distinct singleton declarations\");"
+    }
   },
   {
     "id": "object_private_visibility",
@@ -140,7 +186,10 @@
   {
     "id": "object_private_const",
     "source": "object O { private const val V = 1 }",
-    "message": "Private object constants are not supported"
+    "supported_regression": {
+      "facade": "O",
+      "java_assertions": "try {\n    java.lang.reflect.Field value = O.class.getDeclaredField(\"V\");\n    if (!java.lang.reflect.Modifier.isPrivate(value.getModifiers()) || !java.lang.reflect.Modifier.isStatic(value.getModifiers()) || !java.lang.reflect.Modifier.isFinal(value.getModifiers())) throw new AssertionError(\"private constant flags\");\n    value.setAccessible(true);\n    if (value.getInt(null) != 1) throw new AssertionError(\"private constant value\");\n} catch (ReflectiveOperationException failure) { throw new AssertionError(failure); }"
+    }
   },
   {
     "id": "object_reserved_const_instance",
@@ -162,7 +211,11 @@
   },
   {
     "id": "object_const_long",
-    "source": "object O { const val V = 2147483648 }"
+    "source": "object O { const val V = 2147483648 }",
+    "supported_regression": {
+      "facade": "O",
+      "java_assertions": "if (O.V != 2147483648L) throw new AssertionError(\"inferred Long singleton constant\");"
+    }
   },
   {
     "id": "object_const_byte",
@@ -175,38 +228,64 @@
   {
     "id": "class_open",
     "source": "open class C(private val elements: Array<String>)",
-    "message": "Only ordinary final classes"
+    "supported_regression": {
+      "facade": "C",
+      "java_assertions": "if (java.lang.reflect.Modifier.isFinal(C.class.getModifiers()) || new C(new String[] { \"value\" }) == null) throw new AssertionError(\"open class\");"
+    }
   },
   {
     "id": "class_secondary_constructor",
-    "source": "class C { constructor(value: Int) {} }"
+    "source": "class C { constructor(value: Int) {} }",
+    "supported_regression": {
+      "facade": "C",
+      "java_assertions": "if (new C(7) == null || C.class.getDeclaredConstructors().length != 1 || C.class.getDeclaredConstructors()[0].getParameterTypes()[0] != int.class) throw new AssertionError(\"secondary constructor without implicit primary\");"
+    }
   },
   {
     "id": "class_custom_mutable_accessor",
-    "source": "class C { var value: Int = 1; set(value) { field = value } }"
+    "source": "class C { var value: Int = 1; set(value) { field = value } }",
+    "supported_regression": {
+      "facade": "C",
+      "java_assertions": "C value = new C();\nif (value.getValue() != 1) throw new AssertionError(\"initial backing field\");\nvalue.setValue(9);\nif (value.getValue() != 9) throw new AssertionError(\"custom setter backing field\");"
+    }
   },
   {
     "id": "class_constructor_lambda_capture",
-    "source": "class C(value: Int) { val callback: () -> Int = { value } }"
+    "source": "class C(value: Int) { val callback: () -> Int = { value } }",
+    "supported_regression": {
+      "facade": "C",
+      "java_assertions": "C first = new C(7), second = new C(19);\nif (((Number) first.getCallback().invoke()).intValue() != 7 || ((Number) second.getCallback().invoke()).intValue() != 19 || ((Number) first.getCallback().invoke()).intValue() != 7) throw new AssertionError(\"constructor parameter capture survives with independent instances\");"
+    }
   },
   {
     "id": "class_generic_array_element",
     "source": "class C(private val values: Array<Int>)",
-    "message": "Only Array<String> is supported"
+    "supported_regression": {
+      "facade": "C",
+      "java_assertions": "if (new C(new Integer[] { 1, 2 }) == null) throw new AssertionError(\"boxed array constructor\");\ntry {\n    if (C.class.getDeclaredField(\"values\").getType() != Integer[].class) throw new AssertionError(\"boxed array descriptor\");\n} catch (ReflectiveOperationException failure) { throw new AssertionError(failure); }"
+    }
   },
   {
     "id": "class_delegated_property",
-    "source": "class C { val other: Int by lazy { 1 } }"
+    "source": "class C { val other: Int by lazy { 1 } }",
+    "feature_name": "delegate_without_stdlib_classpath"
   },
   {
     "id": "class_any_override",
     "source": "class C(private val elements: Array<String>) { override fun toString(): String = elements[0] }",
-    "message": "Any and Object inherited members are not supported"
+    "supported_regression": {
+      "facade": "C",
+      "java_assertions": "if (!\"value\".equals(new C(new String[] { \"value\" }).toString())) throw new AssertionError(\"Object method override\");"
+    }
   },
   {
     "id": "class_interface_function_type_member",
     "source": "import korrust.fixtures.NullableText\nclass C(private val elements: Array<String>) : NullableText { override fun text(): String = elements[0]; fun map(action: () -> String): String = action() }",
-    "classpath": true
+    "classpath": true,
+    "supported_regression": {
+      "facade": "C",
+      "java_assertions": "C value = new C(new String[] { \"value\" });\nkorrust.fixtures.NullableText contract = value;\nif (!\"value\".equals(contract.text()) || !\"mapped\".equals(value.map(() -> \"mapped\"))) throw new AssertionError(\"nullable interface return strengthening and function member\");"
+    }
   },
   {
     "id": "class_builtin_shadow",
@@ -241,25 +320,44 @@
   {
     "id": "interface_companion_plain_value",
     "source": "interface I { companion object { val value = 1 } }",
-    "message": "Companions support only"
+    "supported_regression": {
+      "facade": "I",
+      "java_assertions": "if (I.Companion == null || I.Companion.getValue() != 1) throw new AssertionError(\"general interface companion state\");"
+    }
   },
   {
     "id": "interface_float_default",
-    "source": "interface I { fun f(): Float = 1.0f }"
+    "source": "interface I { fun f(): Float = 1.0f }",
+    "supported_regression": {
+      "facade": "I",
+      "java_assertions": "I value = new I() { public float f() { return I.DefaultImpls.f(this); } };\nif (Float.floatToIntBits(value.f()) != Float.floatToIntBits(1.0f)) throw new AssertionError(\"Float interface default\");"
+    }
   },
   {
     "id": "interface_reference_default_parameter",
     "source": "interface I { fun f(value: String): String = value }",
-    "message": "Interface default bodies with reference parameters are not supported"
+    "supported_regression": {
+      "facade": "I",
+      "java_assertions": "I value = new I() { public String f(String input) { return I.DefaultImpls.f(this, input); } };\nif (!\"value\".equals(value.f(\"value\"))) throw new AssertionError(\"reference interface default\");\ntry { value.f(null); throw new AssertionError(\"nonnull default parameter\"); } catch (NullPointerException expected) {}"
+    }
   },
   {
     "id": "io_explicit_threadlocal_field",
     "source": "object O { private val buffer: ThreadLocal<ByteArray> = ThreadLocal.withInitial { ByteArray(1) } }",
-    "message": "Object private field types must be inferred"
+    "supported_regression": {
+      "facade": "O",
+      "java_assertions": "try {\n    java.lang.reflect.Field field = O.class.getDeclaredField(\"buffer\");\n    field.setAccessible(true);\n    ThreadLocal<?> buffer = (ThreadLocal<?>) field.get(null);\n    Object first = buffer.get();\n    if (!(first instanceof byte[]) || ((byte[]) first).length != 1 || buffer.get() != first) throw new AssertionError(\"typed ThreadLocal allocation\");\n    Object[] other = new Object[1];\n    Thread thread = new Thread(() -> other[0] = buffer.get());\n    thread.start(); thread.join();\n    if (!(other[0] instanceof byte[]) || other[0] == first || ((byte[]) other[0]).length != 1) throw new AssertionError(\"ThreadLocal isolation\");\n} catch (Exception failure) { throw new AssertionError(failure); }",
+      "supplier_fields": {
+        "buffer": "byte"
+      }
+    }
   },
   {
     "id": "io_arbitrary_supplier",
     "source": "object O { private val buffer = ThreadLocal.withInitial { 1 } }",
-    "message": "single array allocation"
+    "supported_regression": {
+      "facade": "O",
+      "java_assertions": "try {\n    java.lang.reflect.Field field = O.class.getDeclaredField(\"buffer\");\n    field.setAccessible(true);\n    ThreadLocal<?> buffer = (ThreadLocal<?>) field.get(null);\n    if (!Integer.valueOf(1).equals(buffer.get())) throw new AssertionError(\"generic scalar Supplier value\");\n    java.lang.reflect.Type signature = field.getGenericType();\n    if (!(signature instanceof java.lang.reflect.ParameterizedType) || ((java.lang.reflect.ParameterizedType) signature).getActualTypeArguments()[0] != Integer.class) throw new AssertionError(\"generic ThreadLocal field signature\");\n    ThreadLocal.class.getMethod(\"set\", Object.class).invoke(buffer, Integer.valueOf(7));\n    Object[] other = new Object[1];\n    Thread thread = new Thread(() -> other[0] = buffer.get());\n    thread.start(); thread.join();\n    if (!Integer.valueOf(1).equals(other[0]) || !Integer.valueOf(7).equals(buffer.get())) throw new AssertionError(\"generic scalar ThreadLocal isolation\");\n} catch (Exception failure) { throw new AssertionError(failure); }"
+    }
   }
 ]

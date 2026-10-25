@@ -1,0 +1,1 @@
+fun f(value: IntArrayList): Int = value.size()

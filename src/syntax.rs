@@ -12,6 +12,12 @@ pub enum Type {
     ByteArray,
     CharArray,
     StringArray,
+    Array(Box<Type>),
+    ReceiverFunction {
+        receiver: Box<Type>,
+        params: Vec<Type>,
+        result: Box<Type>,
+    },
     String,
     Unit,
     Java(String),
@@ -78,6 +84,8 @@ impl Type {
                 | Self::ByteArray
                 | Self::CharArray
                 | Self::StringArray
+                | Self::Array(_)
+                | Self::ReceiverFunction { .. }
                 | Self::String
                 | Self::Java(_)
                 | Self::Parameterized { .. }
@@ -113,6 +121,20 @@ impl Type {
             Self::ByteArray => "[B".into(),
             Self::CharArray => "[C".into(),
             Self::StringArray => "[Ljava/lang/String;".into(),
+            Self::Array(element) => {
+                if **element == Self::Unit {
+                    return "[Lkotlin/Unit;".into();
+                }
+                let boxed = if element.is_reference() {
+                    element.as_ref().clone()
+                } else {
+                    Self::Nullable(element.clone())
+                };
+                format!("[{}", boxed.descriptor())
+            }
+            Self::ReceiverFunction { params, .. } => {
+                format!("Lkotlin/jvm/functions/Function{};", params.len() + 1)
+            }
             Self::String => "Ljava/lang/String;".into(),
             Self::Unit => "V".into(),
             Self::Java(name) | Self::Parameterized { name, .. } => format!("L{name};"),
@@ -143,18 +165,42 @@ impl Type {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Module {
     pub package: String,
     pub imports: Vec<(String, String, usize)>,
     pub functions: Vec<Function>,
     pub constants: Vec<ConstDecl>,
+    pub properties: Vec<PropertyDecl>,
     pub enum_decl: Option<EnumDecl>,
     pub object_decl: Option<ObjectDecl>,
     pub class_decl: Option<ClassDecl>,
     pub interface_decl: Option<InterfaceDecl>,
+    pub declarations: Vec<Declaration>,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
+pub enum Declaration {
+    Class(ClassDecl),
+    Object(ObjectDecl),
+    Interface(InterfaceDecl),
+    Enum(EnumDecl),
+}
+#[derive(Clone, Debug)]
+pub struct SecondaryConstructor {
+    pub offset: usize,
+    pub params: Vec<(String, Type)>,
+    pub defaults: Vec<Option<Expr>>,
+    pub delegation: String,
+    pub arguments: Vec<Expr>,
+    pub body: Vec<Statement>,
+}
+#[derive(Clone, Debug)]
+pub struct CatchClause {
+    pub name: String,
+    pub ty: Type,
+    pub body: Vec<Statement>,
+}
+#[derive(Clone, Debug)]
 pub struct InterfaceDecl {
     pub name: String,
     pub offset: usize,
@@ -163,9 +209,10 @@ pub struct InterfaceDecl {
     pub properties: Vec<InterfaceProperty>,
     pub methods: Vec<InterfaceMethod>,
     pub nested: Vec<InterfaceDecl>,
+    pub declarations: Vec<Declaration>,
     pub companion: Option<CompanionDecl>,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct InterfaceProperty {
     pub name: String,
     pub offset: usize,
@@ -174,35 +221,38 @@ pub struct InterfaceProperty {
     pub is_override: bool,
     pub mutable: bool,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct InterfaceMethod {
     pub function: Function,
     pub has_body: bool,
     pub is_override: bool,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct CompanionDecl {
     pub properties: Vec<CompanionProperty>,
+    pub fields: Vec<ClassCompanionProperty>,
+    pub methods: Vec<ClassMethod>,
+    pub initializers: Vec<(usize, Vec<Statement>)>,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct CompanionProperty {
     pub name: String,
     pub offset: usize,
     pub private: bool,
     pub value: CompanionValue,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum CompanionValue {
     StringArray(Vec<Vec<u16>>),
     Object(Box<ClassDecl>),
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct EnumDecl {
     pub name: String,
     pub offset: usize,
     pub entries: Vec<(String, usize)>,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ObjectDecl {
     pub name: String,
     pub offset: usize,
@@ -213,23 +263,33 @@ pub struct ObjectDecl {
     pub objects: Vec<ObjectDecl>,
     pub fields: Vec<ObjectField>,
     pub methods: Vec<ObjectMethod>,
+    pub initializers: Vec<(usize, Vec<Statement>)>,
+    pub nested: Vec<Declaration>,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ObjectField {
+    pub is_override: bool,
     pub name: String,
     pub offset: usize,
     pub private: bool,
-    pub initializer: Expr,
+    pub initializer: Option<Expr>,
+    pub ty: Option<Type>,
+    pub mutable: bool,
+    pub body: Vec<Statement>,
+    pub setter: Option<(String, Vec<Statement>)>,
+    pub delegate: Option<Expr>,
+    pub lateinit: bool,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ObjectMethod {
+    pub is_override: bool,
     pub function: Function,
     pub jvm_static: bool,
     pub throws: Vec<String>,
     pub inline: bool,
     pub suppress: Vec<String>,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ConstDecl {
     pub name: String,
     pub offset: usize,
@@ -237,7 +297,7 @@ pub struct ConstDecl {
     pub internal: bool,
     pub value: ConstValue,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum ConstValue {
     Int(i32),
     Long(i64),
@@ -246,14 +306,16 @@ pub enum ConstValue {
     Boolean(bool),
     String(Vec<u16>),
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ClassDecl {
+    pub primary_constructor: bool,
     pub name: String,
     pub offset: usize,
     pub internal: bool,
     pub params: Vec<(String, Type)>,
     pub public_params: Vec<String>,
     pub param_properties: Vec<String>,
+    pub override_params: Vec<String>,
     pub mutable_params: Vec<String>,
     pub defaults: Vec<Option<Expr>>,
     pub data: bool,
@@ -261,24 +323,37 @@ pub struct ClassDecl {
     pub properties: Vec<PropertyDecl>,
     pub methods: Vec<ClassMethod>,
     pub companion: Option<ClassCompanion>,
+    pub initializers: Vec<(usize, Vec<Statement>)>,
+    pub nested: Vec<Declaration>,
+    pub secondary_constructors: Vec<SecondaryConstructor>,
+    pub super_class: Option<(String, Vec<Expr>)>,
+    pub open: bool,
+    pub abstract_: bool,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ClassCompanion {
     pub properties: Vec<ClassCompanionProperty>,
+    pub methods: Vec<ClassMethod>,
+    pub initializers: Vec<(usize, Vec<Statement>)>,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ClassCompanionProperty {
     pub name: String,
     pub offset: usize,
     pub private: bool,
     pub mutable: bool,
     pub ty: Option<Type>,
-    pub initializer: Expr,
+    pub initializer: Option<Expr>,
+    pub body: Vec<Statement>,
+    pub setter: Option<(String, Vec<Statement>)>,
+    pub delegate: Option<Expr>,
+    pub lateinit: bool,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct PropertyDecl {
     pub name: String,
     pub private: bool,
+    pub protected: bool,
     pub mutable: bool,
     pub inferred: bool,
     pub initializer: Option<Expr>,
@@ -286,24 +361,33 @@ pub struct PropertyDecl {
     pub ty: Type,
     pub body: Vec<Statement>,
     pub is_override: bool,
+    pub setter: Option<(String, Vec<Statement>)>,
+    pub delegate: Option<Expr>,
+    pub lateinit: bool,
+    pub open: bool,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ClassMethod {
     pub function: Function,
     pub is_override: bool,
+    pub open: bool,
+    pub has_body: bool,
 }
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Function {
     pub name: String,
     pub offset: usize,
     pub private: bool,
+    pub protected: bool,
     pub internal: bool,
     pub infix: bool,
+    pub operator: bool,
     pub receiver: Option<Type>,
     pub type_params: Vec<TypeParameter>,
     pub params: Vec<(String, Type)>,
     pub defaults: Vec<Option<Expr>>,
     pub result: Type,
+    pub result_inferred: bool,
     pub body: Vec<Statement>,
 }
 #[derive(Clone, Debug)]
@@ -313,9 +397,16 @@ pub struct Statement {
 }
 #[derive(Clone, Debug)]
 pub enum StatementKind {
+    Block(Vec<Statement>),
+    LocalFunction(Box<Function>),
+    Labeled(String, Box<Statement>),
+    BreakLabel(String),
+    ContinueLabel(String),
+    Destructure(Vec<Option<String>>, bool, Expr),
     Let(String, bool, Option<Type>, Expr),
     Declare(String, bool, Type),
     IndexAssign(Expr, Expr, Expr),
+    IndicesAssign(Expr, Vec<Expr>, Expr),
     PropertyAssign(Expr, String, Expr),
     Continue,
     Break,
@@ -330,6 +421,12 @@ pub enum StatementKind {
     If(Expr, Vec<Statement>, Vec<Statement>),
     While(Expr, Vec<Statement>),
     DoWhile(Expr, Vec<Statement>),
+    WhenBinding(
+        String,
+        Expr,
+        Vec<(Vec<Expr>, Vec<Statement>)>,
+        Option<Vec<Statement>>,
+    ),
     When(
         Expr,
         Vec<(Vec<Expr>, Vec<Statement>)>,
@@ -343,6 +440,16 @@ pub struct Expr {
 }
 #[derive(Clone, Debug)]
 pub enum ExprKind {
+    Block(Vec<Statement>),
+    Try {
+        body: Vec<Statement>,
+        catches: Vec<CatchClause>,
+        finally: Vec<Statement>,
+    },
+    Labeled(String, Box<Expr>),
+    LabeledReturn(String, Option<Box<Expr>>),
+    WhenBinding(String, Box<Expr>, Vec<(Vec<Expr>, Expr)>, Box<Expr>),
+    Indices(Box<Expr>, Vec<Expr>),
     Int(i64),
     Float(u32),
     NamedArgument(String, Box<Expr>),
@@ -389,6 +496,33 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
     while let Some(expression) = pending.pop() {
         expression.offset += offset;
         match &mut expression.kind {
+            ExprKind::Block(body) => shift_statement_offsets(body, offset),
+            ExprKind::Try {
+                body,
+                catches,
+                finally,
+            } => {
+                shift_statement_offsets(body, offset);
+                for catch in catches {
+                    shift_statement_offsets(&mut catch.body, offset);
+                }
+                shift_statement_offsets(finally, offset);
+            }
+            ExprKind::Labeled(_, value) | ExprKind::LabeledReturn(_, Some(value)) => {
+                pending.push(value)
+            }
+            ExprKind::Indices(target, indices) => {
+                pending.push(target);
+                pending.extend(indices);
+            }
+            ExprKind::WhenBinding(_, subject, branches, otherwise) => {
+                pending.push(subject);
+                pending.push(otherwise);
+                for (conditions, branch) in branches {
+                    pending.extend(conditions);
+                    pending.push(branch);
+                }
+            }
             ExprKind::CallableReference {
                 receiver: Some(value),
                 ..
@@ -436,6 +570,25 @@ fn shift_statement_offsets(statements: &mut [Statement], offset: usize) {
     for statement in statements {
         statement.offset += offset;
         match &mut statement.kind {
+            StatementKind::Block(body) => shift_statement_offsets(body, offset),
+            StatementKind::LocalFunction(function) => {
+                function.offset += offset;
+                for value in function.defaults.iter_mut().flatten() {
+                    shift_expression_offsets(value, offset);
+                }
+                shift_statement_offsets(&mut function.body, offset);
+            }
+            StatementKind::Labeled(_, statement) => {
+                shift_statement_offsets(std::slice::from_mut(statement), offset)
+            }
+            StatementKind::Destructure(_, _, value) => shift_expression_offsets(value, offset),
+            StatementKind::IndicesAssign(target, indices, value) => {
+                shift_expression_offsets(target, offset);
+                for index in indices {
+                    shift_expression_offsets(index, offset);
+                }
+                shift_expression_offsets(value, offset);
+            }
             StatementKind::Let(_, _, _, value)
             | StatementKind::Assign(_, value)
             | StatementKind::AddAssign(_, value)
@@ -468,7 +621,8 @@ fn shift_statement_offsets(statements: &mut [Statement], offset: usize) {
                 shift_expression_offsets(condition, offset);
                 shift_statement_offsets(body, offset);
             }
-            StatementKind::When(subject, branches, otherwise) => {
+            StatementKind::When(subject, branches, otherwise)
+            | StatementKind::WhenBinding(_, subject, branches, otherwise) => {
                 shift_expression_offsets(subject, offset);
                 for (conditions, body) in branches {
                     for condition in conditions {
@@ -1105,11 +1259,44 @@ impl Parser {
             return Err(self.error("Suspend function types are unsupported"));
         }
         let mut name = self.name()?;
-        while self.take(".") {
+        while self.at(".")
+            && self
+                .tokens
+                .get(self.pos + 1)
+                .is_some_and(|token| token.text != "(")
+        {
+            self.pos += 1;
             name.push('/');
             name.push_str(&self.name()?);
         }
-        self.named_ty(name)
+        let receiver = self.named_ty(name)?;
+        let position = self.pos;
+        let receiver = if self.take("?") {
+            Type::Nullable(Box::new(receiver))
+        } else {
+            receiver
+        };
+        if self.take(".") {
+            let function = self.nonnullable_ty()?;
+            if let Type::Function { params, result } = function {
+                if params.len() >= 22 {
+                    return Err(
+                        self.error("Receiver function types support at most 21 value parameters")
+                    );
+                }
+                return Ok(Type::ReceiverFunction {
+                    receiver: Box::new(receiver),
+                    params,
+                    result,
+                });
+            }
+            return Err(self.error("A receiver type must be followed by a function type"));
+        }
+        self.pos = position;
+        Ok(match receiver {
+            Type::Nullable(inner) => *inner,
+            other => other,
+        })
     }
     fn type_arguments(&mut self) -> Result<Vec<TypeArgument>> {
         self.expect("<")?;
@@ -1184,7 +1371,15 @@ impl Parser {
                                 Type::MutableList(Box::new(element.clone()))
                             });
                         }
+                        "Array" if *element == Type::Unit => {
+                            return Err(
+                                self.error("Array<Unit> element operations are unsupported")
+                            );
+                        }
                         "Array" if *element == Type::String => return Ok(Type::StringArray),
+                        "Array" if *element != Type::Unit => {
+                            return Ok(Type::Array(Box::new(element.clone())));
+                        }
                         "ThreadLocal" if matches!(element, Type::ByteArray | Type::CharArray) => {
                             return Ok(Type::ThreadLocal(Box::new(element.clone())));
                         }
@@ -1192,9 +1387,7 @@ impl Parser {
                     }
                 }
             }
-            if name == "Array" {
-                return Err(self.error("Only Array<String> is supported among generic array types"));
-            }
+
             return Ok(Type::Parameterized { name, arguments });
         }
         if let Some(parameter) = self
@@ -1320,6 +1513,9 @@ impl Parser {
                         | "external"
                         | "inline"
                         | "infix"
+                        | "operator"
+                        | "lateinit"
+                        | "override"
                         | "value"
                         | "companion"
                         | "\n"
@@ -1546,6 +1742,8 @@ impl Parser {
                     objects: Vec::new(),
                     fields: Vec::new(),
                     methods: Vec::new(),
+                    initializers: Vec::new(),
+                    nested: Vec::new(),
                 });
             }
             return Err(self.error("Only plain named singleton objects are supported"));
@@ -1555,12 +1753,25 @@ impl Parser {
         let mut objects = Vec::new();
         let mut fields = Vec::new();
         let mut methods = Vec::new();
+        let mut initializers = Vec::new();
+        let mut nested = Vec::new();
         let mut names = std::collections::HashSet::new();
         while !self.at("}") {
             if self.at("<eof>") {
                 return Err(self.error("Unterminated object body"));
             }
             let member_offset = self.token().offset;
+            if self.take("init") {
+                self.lines();
+                initializers.push((member_offset, self.block()?));
+                self.end()?;
+                continue;
+            }
+            if self.starts_class() || self.starts_enum() || self.starts_interface() {
+                nested.push(self.declaration()?);
+                self.end()?;
+                continue;
+            }
             let member_name = if self.starts_object() && !self.at("@") {
                 let object = self.object_decl(depth + 1, class_count)?;
                 let name = object.name.clone();
@@ -1573,48 +1784,41 @@ impl Parser {
                 }
                 self.end()?;
                 continue;
-            } else if self.at("private")
-                && self.tokens[self.pos + 1..]
-                    .iter()
-                    .find(|token| token.text != "\n")
-                    .is_some_and(|token| token.text == "val")
+            } else if self.starts_declaration("val")
+                || self.starts_declaration("var")
+                || self.at("lateinit")
             {
-                self.expect("private")?;
-                self.lines();
-                self.expect("val")?;
-                let name = self.declaration_name()?;
-                if self.at(":") {
-                    return Err(self.error(
-                        "Object private field types must be inferred from supported initializers",
-                    ));
+                let is_override = self.take("override");
+                let private = self.take("private");
+                if !private {
+                    self.take("public");
+                    self.take("internal");
                 }
-                self.expect("=")?;
                 self.lines();
-                let initializer = self.expr(0)?;
+                let lateinit = self.take("lateinit");
+                self.lines();
+                let property = self.property(member_offset, private, false, lateinit, false)?;
+                let name = property.name.clone();
                 fields.push(ObjectField {
-                    name: name.clone(),
-                    offset: member_offset,
-                    private: true,
-                    initializer,
+                    is_override,
+                    name: property.name,
+                    offset: property.offset,
+                    private: property.private,
+                    initializer: property.initializer,
+                    ty: if property.inferred {
+                        None
+                    } else {
+                        Some(property.ty)
+                    },
+                    mutable: property.mutable,
+                    body: property.body,
+                    setter: property.setter,
+                    delegate: property.delegate,
+                    lateinit: property.lateinit,
                 });
-                if fields.len() > 256 {
-                    return Err(self.error("Objects exceed the current 256-private-field limit"));
-                }
                 name
             } else {
                 let constant = self.constant()?;
-                if constant.private {
-                    return Err(Diagnostic::new(
-                        member_offset,
-                        "Private object constants are not supported",
-                    ));
-                }
-                if matches!(constant.value, ConstValue::Long(_) | ConstValue::Float(_)) {
-                    return Err(Diagnostic::new(
-                        member_offset,
-                        "Object constants support only Int, Char, Boolean, and String literals",
-                    ));
-                }
                 let name = constant.name.clone();
                 constants.push(constant);
                 if constants.len() > 1024 {
@@ -1640,12 +1844,6 @@ impl Parser {
             self.end()?;
         }
         self.expect("}")?;
-        if depth > 1 && (!fields.is_empty() || !methods.is_empty()) {
-            return Err(Diagnostic::new(
-                offset,
-                "Nested objects with initialized fields or methods are not supported",
-            ));
-        }
         Ok(ObjectDecl {
             name,
             offset,
@@ -1656,6 +1854,8 @@ impl Parser {
             objects,
             fields,
             methods,
+            initializers,
+            nested,
         })
     }
     fn object_method(&mut self) -> Result<ObjectMethod> {
@@ -1716,6 +1916,8 @@ impl Parser {
         let mut visibility = None;
         let mut inline = false;
         let mut infix = false;
+        let mut operator = false;
+        let mut is_override = false;
         loop {
             if matches!(
                 self.token().text.as_str(),
@@ -1728,6 +1930,13 @@ impl Parser {
                 }
                 visibility = Some(self.token().text.clone());
                 self.pos += 1;
+            } else if self.take("override") {
+                is_override = true;
+            } else if self.take("operator") {
+                if operator {
+                    return Err(self.error("Repeated operator modifier"));
+                }
+                operator = true;
             } else if self.take("infix") {
                 if infix {
                     return Err(self.error("Repeated infix modifier"));
@@ -1753,6 +1962,7 @@ impl Parser {
         function.offset = offset;
         function.private = visibility.as_deref() == Some("private");
         function.infix = infix;
+        function.operator = operator;
         Self::validate_infix_function(&function)?;
         if function.receiver.is_some() {
             return Err(Diagnostic::new(
@@ -1761,6 +1971,7 @@ impl Parser {
             ));
         }
         Ok(ObjectMethod {
+            is_override,
             function,
             jvm_static,
             throws: throws.unwrap_or_default(),
@@ -1825,9 +2036,11 @@ impl Parser {
                     } else {
                         value
                     };
-                    let value = i32::try_from(value)
-                        .map_err(|_| self.error("Int constant literal is out of range"))?;
-                    (ConstValue::Int(value), Type::Int)
+                    if declared_type == Some(Type::Long) || i32::try_from(value).is_err() {
+                        (ConstValue::Long(value), Type::Long)
+                    } else {
+                        (ConstValue::Int(value as i32), Type::Int)
+                    }
                 }
                 ExprKind::Long(value) => {
                     let value = if negative == Some(true) {
@@ -1886,6 +2099,8 @@ impl Parser {
         let mut visibility = None;
         let mut final_modifier = false;
         let mut data = false;
+        let mut open = false;
+        let mut abstract_ = false;
         loop {
             if matches!(self.token().text.as_str(), "public" | "internal") {
                 if visibility.is_some() {
@@ -1898,6 +2113,13 @@ impl Parser {
                     return Err(self.error("Repeated data modifier"));
                 }
                 data = true;
+            } else if self.take("abstract") {
+                abstract_ = true;
+            } else if self.take("open") {
+                if open {
+                    return Err(self.error("Repeated open modifier"));
+                }
+                open = true;
             } else if self.take("final") {
                 if final_modifier {
                     return Err(self.error("Repeated final class modifier"));
@@ -1922,6 +2144,7 @@ impl Parser {
         let mut params = Vec::new();
         let mut public_params = Vec::new();
         let mut param_properties = Vec::new();
+        let mut override_params = Vec::new();
         let mut mutable_params = Vec::new();
         let mut defaults = Vec::new();
         let mut property_names = std::collections::HashSet::new();
@@ -1930,6 +2153,7 @@ impl Parser {
             self.lines();
             if !self.at(")") {
                 loop {
+                    let is_override = self.take("override");
                     let private = self.take("private");
                     let public = !private && self.take("public");
                     self.lines();
@@ -1952,6 +2176,9 @@ impl Parser {
                     self.expect(":")?;
                     self.lines();
                     if property {
+                        if is_override {
+                            override_params.push(param.clone());
+                        }
                         property_names.insert(param.clone());
                         param_properties.push(param.clone());
                         if !private {
@@ -1989,15 +2216,30 @@ impl Parser {
             self.pos = after_name;
         }
         let after_params = self.pos;
+        let mut after_header = after_params;
         self.lines();
         let mut interfaces = Vec::new();
+        let mut super_class = None;
         if self.take(":") {
             self.lines();
             loop {
-                interfaces.push(self.declaration_name()?);
+                let mut name = self.declaration_name()?;
+                while self.take(".") {
+                    name.push('/');
+                    name.push_str(&self.declaration_name()?);
+                }
+                if self.at("(") {
+                    if super_class.is_some() {
+                        return Err(self.error("Only one superclass constructor is allowed"));
+                    }
+                    super_class = Some((name, self.arguments()?));
+                } else {
+                    interfaces.push(name);
+                }
                 if interfaces.len() > 32 {
                     return Err(self.error("Classes exceed the current 32-interface limit"));
                 }
+                after_header = self.pos;
                 self.lines();
                 if !self.take(",") {
                     break;
@@ -2006,12 +2248,14 @@ impl Parser {
             }
         }
         let mut declaration = ClassDecl {
+            primary_constructor: true,
             name,
             offset,
             internal: visibility.as_deref() == Some("internal"),
             params,
             public_params,
             param_properties,
+            override_params,
             mutable_params,
             defaults,
             data,
@@ -2019,19 +2263,23 @@ impl Parser {
             properties: Vec::new(),
             methods: Vec::new(),
             companion: None,
+            initializers: Vec::new(),
+            nested: Vec::new(),
+            secondary_constructors: Vec::new(),
+            super_class,
+            open,
+            abstract_,
         };
         if !self.take("{") {
-            if declaration.interfaces.is_empty() {
-                self.pos = after_params;
-            }
-            if matches!(self.token().text.as_str(), "\n" | ";" | "<eof>") {
+            self.pos = after_header;
+            if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
                 return Ok(declaration);
             }
-            return Err(self.error(
-                "Only imported interface supertypes without constructor calls are supported",
-            ));
+            return Err(self.error("Expected a class body or declaration separator"));
         }
         self.class_members(&mut declaration, &mut property_names)?;
+        declaration.primary_constructor =
+            has_constructor || declaration.secondary_constructors.is_empty();
         Ok(declaration)
     }
     fn class_members(
@@ -2044,189 +2292,412 @@ impl Parser {
             if self.at("<eof>") {
                 return Err(self.error("Unterminated class body"));
             }
-            let member_offset = self.token().offset;
-            let mut is_override = false;
-            let mut member_visibility = None;
-            let mut infix = false;
-            loop {
-                if self.take("override") {
-                    if is_override {
-                        return Err(self.error("Repeated override modifier"));
-                    }
-                    is_override = true;
-                } else if self.take("infix") {
-                    if infix {
-                        return Err(self.error("Repeated infix modifier"));
-                    }
-                    infix = true;
-                } else if matches!(
-                    self.token().text.as_str(),
-                    "public" | "private" | "internal" | "protected"
-                ) {
-                    if member_visibility.is_some() {
-                        return Err(
-                            self.error("Conflicting or repeated member visibility modifiers")
-                        );
-                    }
-                    member_visibility = Some(self.token().text.clone());
-                    self.pos += 1;
-                } else {
-                    break;
-                }
+            let offset = self.token().offset;
+            if self.take("init") {
                 self.lines();
-            }
-            if matches!(member_visibility.as_deref(), Some("internal" | "protected")) {
-                return Err(self.error("Internal and protected class members are not supported"));
-            }
-            if infix && !self.at("fun") {
-                return Err(self.error("The infix modifier applies only to functions"));
-            }
-            if self.at("fun") {
-                if is_override && member_visibility.as_deref() == Some("private") {
-                    return Err(self.error("Overrides cannot be private"));
-                }
-                let mut function = self.function()?;
-                function.offset = member_offset;
-                function.private = member_visibility.as_deref() == Some("private");
-                function.infix = infix;
-                Self::validate_infix_function(&function)?;
-                if function.receiver.is_some() {
-                    return Err(Diagnostic::new(
-                        member_offset,
-                        "Member extension functions are not supported",
-                    ));
-                }
-                declaration.methods.push(ClassMethod {
-                    function,
-                    is_override,
-                });
-            } else if self.at("val") || self.at("var") {
-                let mutable = self.take("var");
-                if !mutable {
-                    self.expect("val")?;
-                }
-                let name_offset = self.token().offset;
-                let property = self.declaration_name()?;
-                if !property_names.insert(property.clone()) {
-                    return Err(Diagnostic::new(
-                        name_offset,
-                        "Duplicate class property name",
-                    ));
-                }
-                let declared_type = if self.take(":") {
-                    self.lines();
-                    Some(self.ty()?)
-                } else {
-                    None
-                };
-                self.lines();
-                let (initializer, body) = if self.take("=") {
-                    self.lines();
-                    (Some(self.expr(0)?), Vec::new())
-                } else {
-                    if mutable {
-                        return Err(self.error("Mutable computed properties are not supported"));
-                    }
-                    if declared_type.is_none() {
-                        return Err(self.error("Computed properties require an explicit type"));
-                    }
-                    self.expect("get")?;
-                    self.expect("(")?;
-                    self.expect(")")?;
-                    self.lines();
-                    let body = if self.take("=") {
-                        self.lines();
-                        vec![Statement {
-                            offset: self.token().offset,
-                            kind: StatementKind::Return(Some(self.expression_body()?)),
-                        }]
-                    } else {
-                        self.block()?
-                    };
-                    (None, body)
-                };
-                declaration.properties.push(PropertyDecl {
-                    name: property,
-                    private: member_visibility.as_deref() == Some("private"),
-                    mutable,
-                    inferred: declared_type.is_none(),
-                    initializer,
-                    offset: member_offset,
-                    ty: declared_type.unwrap_or(Type::Unit),
-                    body,
-                    is_override,
-                });
+                declaration.initializers.push((offset, self.block()?));
+            } else if !self.at("companion")
+                && (self.starts_class()
+                    || self.starts_enum()
+                    || self.starts_object()
+                    || self.starts_interface())
+            {
+                declaration.nested.push(self.declaration()?);
+            } else if self.at("constructor") {
+                declaration
+                    .secondary_constructors
+                    .push(self.secondary_constructor()?);
             } else if self.at("companion") {
-                if is_override || member_visibility.is_some() {
-                    return Err(self.error("Class companion modifiers are not supported"));
-                }
                 if declaration.companion.is_some() {
                     return Err(self.error("Classes support only one companion object"));
                 }
                 declaration.companion = Some(self.class_companion()?);
             } else {
-                return Err(self.error("Only instance functions, properties, and companion properties are supported in classes"));
-            }
-            if declaration.properties.len() + declaration.methods.len() > 1024 {
-                return Err(self.error("Classes exceed the current 1024-member limit"));
+                let mut is_override = false;
+                let mut visibility = None;
+                let mut infix = false;
+                let mut operator = false;
+                let mut open = false;
+                let mut final_ = false;
+                let mut lateinit = false;
+                let mut abstract_ = false;
+                loop {
+                    if self.take("override") {
+                        if is_override {
+                            return Err(self.error("Repeated override modifier"));
+                        }
+                        is_override = true;
+                    } else if self.take("infix") {
+                        if infix {
+                            return Err(self.error("Repeated infix modifier"));
+                        }
+                        infix = true;
+                    } else if self.take("operator") {
+                        if operator {
+                            return Err(self.error("Repeated operator modifier"));
+                        }
+                        operator = true;
+                    } else if self.take("abstract") {
+                        abstract_ = true;
+                        open = true;
+                    } else if self.take("open") {
+                        open = true;
+                    } else if self.take("final") {
+                        if final_ {
+                            return Err(self.error("Repeated final modifier"));
+                        }
+                        final_ = true;
+                    } else if self.take("lateinit") {
+                        lateinit = true;
+                    } else if matches!(
+                        self.token().text.as_str(),
+                        "public" | "private" | "internal" | "protected"
+                    ) {
+                        if visibility.is_some() {
+                            return Err(
+                                self.error("Conflicting or repeated member visibility modifiers")
+                            );
+                        }
+                        visibility = Some(self.token().text.clone());
+                        self.pos += 1;
+                    } else {
+                        break;
+                    }
+                    self.lines();
+                }
+                if final_ && open {
+                    return Err(self.error("Conflicting open/abstract and final modifiers"));
+                }
+                open = !final_ && (open || is_override);
+                if self.at("fun") {
+                    if lateinit {
+                        return Err(self.error("The lateinit modifier applies only to properties"));
+                    }
+                    let (mut function, has_body) = self.function_body(abstract_)?;
+                    function.offset = offset;
+                    function.private = visibility.as_deref() == Some("private");
+                    function.protected = visibility.as_deref() == Some("protected");
+                    function.internal = visibility.as_deref() == Some("internal");
+                    function.infix = infix;
+                    function.operator = operator;
+                    Self::validate_infix_function(&function)?;
+                    declaration.methods.push(ClassMethod {
+                        function,
+                        is_override,
+                        open,
+                        has_body,
+                    });
+                } else if self.at("val") || self.at("var") {
+                    if infix {
+                        return Err(self.error("The infix modifier applies only to functions"));
+                    }
+                    let mut property = self.property(
+                        offset,
+                        visibility.as_deref() == Some("private"),
+                        is_override,
+                        lateinit,
+                        open,
+                    )?;
+                    property.protected = visibility.as_deref() == Some("protected");
+                    if !property_names.insert(property.name.clone()) {
+                        return Err(Diagnostic::new(offset, "Duplicate class property name"));
+                    }
+                    declaration.properties.push(property);
+                } else {
+                    return Err(self.error("Expected a class member declaration"));
+                }
             }
             self.end()?;
         }
-        self.expect("}")?;
-        Ok(())
+        self.expect("}")
+    }
+    fn declaration(&mut self) -> Result<Declaration> {
+        self.depth += 1;
+        if self.depth > 16 {
+            return Err(self.error("Declaration nesting exceeds the current limit"));
+        }
+        let result = if self.starts_enum() {
+            Ok(Declaration::Enum(self.enum_decl()?))
+        } else if self.starts_class() {
+            Ok(Declaration::Class(self.class_decl()?))
+        } else if self.starts_interface() {
+            Ok(Declaration::Interface(self.interface_decl(1, &mut 0)?))
+        } else {
+            Ok(Declaration::Object(self.object_decl(1, &mut 0)?))
+        };
+        self.depth -= 1;
+        result
+    }
+    fn property(
+        &mut self,
+        offset: usize,
+        private: bool,
+        is_override: bool,
+        lateinit: bool,
+        open: bool,
+    ) -> Result<PropertyDecl> {
+        let mutable = self.take("var");
+        if !mutable {
+            self.expect("val")?;
+        }
+        let name = self.declaration_name()?;
+        let ty = if self.take(":") {
+            self.lines();
+            Some(self.ty()?)
+        } else {
+            None
+        };
+        let after_type = self.pos;
+        self.lines();
+        let mut initializer = None;
+        let mut delegate = None;
+        if self.take("=") {
+            self.lines();
+            initializer = Some(self.expr(0)?);
+        } else if self.take("by") {
+            self.lines();
+            delegate = Some(self.expr(0)?);
+        } else {
+            self.pos = after_type;
+        }
+        let mut body = Vec::new();
+        let mut setter = None;
+        let mut has_getter = false;
+        loop {
+            let save = self.pos;
+            self.separators();
+            if self.take("get") {
+                if has_getter {
+                    return Err(self.error("Repeated property getter"));
+                }
+                has_getter = true;
+                body = self.getter_body()?;
+            } else if self.take("set") {
+                if !mutable {
+                    return Err(self.error("Read-only properties cannot have setters"));
+                }
+                if setter.is_some() {
+                    return Err(self.error("Repeated property setter"));
+                }
+                self.expect("(")?;
+                let parameter = self.name()?;
+                if self.take(":") {
+                    let parameter_type = self.ty()?;
+                    if ty.as_ref() != Some(&parameter_type) {
+                        return Err(self.error(
+                            "Setter parameter types require the matching explicit property type",
+                        ));
+                    }
+                }
+                self.expect(")")?;
+                self.lines();
+                let statements = if self.take("=") {
+                    self.lines();
+                    vec![Statement {
+                        offset: self.token().offset,
+                        kind: StatementKind::Expression(self.expression_body()?),
+                    }]
+                } else {
+                    self.block()?
+                };
+                setter = Some((parameter, statements));
+            } else {
+                self.pos = save;
+                break;
+            }
+        }
+        if lateinit
+            && (!mutable
+                || ty.is_none()
+                || initializer.is_some()
+                || delegate.is_some()
+                || !body.is_empty()
+                || setter.is_some())
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Lateinit requires a typed mutable property without an initializer or custom accessor",
+            ));
+        }
+        if initializer.is_none() && delegate.is_none() && body.is_empty() && !lateinit {
+            return Err(Diagnostic::new(
+                offset,
+                "Properties require an initializer, delegate, getter, or lateinit modifier",
+            ));
+        }
+        Ok(PropertyDecl {
+            name,
+            private,
+            protected: false,
+            mutable,
+            inferred: ty.is_none(),
+            initializer,
+            offset,
+            ty: ty.unwrap_or(Type::Unit),
+            body,
+            is_override,
+            setter,
+            delegate,
+            lateinit,
+            open,
+        })
+    }
+    fn arguments(&mut self) -> Result<Vec<Expr>> {
+        self.expect("(")?;
+        self.lines();
+        let mut arguments = Vec::new();
+        while !self.at(")") {
+            let argument = if self
+                .tokens
+                .get(self.pos + 1)
+                .is_some_and(|token| token.text == "=")
+            {
+                let offset = self.token().offset;
+                let name = self.name()?;
+                self.expect("=")?;
+                self.lines();
+                Expr {
+                    offset,
+                    kind: ExprKind::NamedArgument(name, Box::new(self.expr(0)?)),
+                }
+            } else {
+                self.expr(0)?
+            };
+            arguments.push(argument);
+            self.lines();
+            if !self.take(",") {
+                break;
+            }
+            self.lines();
+        }
+        self.expect(")")?;
+        Ok(arguments)
+    }
+    fn secondary_constructor(&mut self) -> Result<SecondaryConstructor> {
+        let offset = self.token().offset;
+        self.expect("constructor")?;
+        self.expect("(")?;
+        self.lines();
+        let mut params = Vec::new();
+        let mut defaults = Vec::new();
+        while !self.at(")") {
+            let name = self.declaration_name()?;
+            self.expect(":")?;
+            self.lines();
+            params.push((name, self.ty()?));
+            self.lines();
+            defaults.push(if self.take("=") {
+                self.lines();
+                Some(self.expr(0)?)
+            } else {
+                None
+            });
+            self.lines();
+            if !self.take(",") {
+                break;
+            }
+            self.lines();
+        }
+        self.expect(")")?;
+        let after_parameters = self.pos;
+        self.lines();
+        let (delegation, arguments) = if self.take(":") {
+            self.lines();
+            let delegation = if self.take("this") {
+                "this"
+            } else if self.take("super") {
+                "super"
+            } else {
+                return Err(self.error("Constructor delegation must call this or super"));
+            }
+            .to_string();
+            (delegation, self.arguments()?)
+        } else {
+            self.pos = after_parameters;
+            ("super".into(), Vec::new())
+        };
+        let after_header = self.pos;
+        self.lines();
+        let body = if self.at("{") {
+            self.block()?
+        } else {
+            self.pos = after_header;
+            Vec::new()
+        };
+        Ok(SecondaryConstructor {
+            offset,
+            params,
+            defaults,
+            delegation,
+            arguments,
+            body,
+        })
     }
     fn class_companion(&mut self) -> Result<ClassCompanion> {
         self.expect("companion")?;
         self.lines();
         self.expect("object")?;
+        let after_header = self.pos;
         self.lines();
-        self.expect("{")?;
-        self.separators();
-        let mut properties = Vec::new();
-        let mut names = std::collections::HashSet::new();
-        while !self.at("}") {
-            if self.at("<eof>") {
-                return Err(self.error("Unterminated class companion"));
+        if !self.take("{") {
+            self.pos = after_header;
+            if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
+                return Ok(ClassCompanion {
+                    properties: Vec::new(),
+                    methods: Vec::new(),
+                    initializers: Vec::new(),
+                });
             }
-            let offset = self.token().offset;
-            let private = self.take("private");
-            if !private {
-                self.take("public");
-            }
-            self.lines();
-            let mutable = self.take("var");
-            if !mutable {
-                self.expect("val")?;
-            }
-            let name = self.declaration_name()?;
-            if !names.insert(name.clone()) {
-                return Err(Diagnostic::new(offset, "Duplicate companion property name"));
-            }
-            let ty = if self.take(":") {
-                self.lines();
-                Some(self.ty()?)
-            } else {
-                None
-            };
-            self.lines();
-            self.expect("=")?;
-            self.lines();
-            let initializer = self.expr(0)?;
-            properties.push(ClassCompanionProperty {
-                name,
-                offset,
-                private,
-                mutable,
-                ty,
-                initializer,
-            });
-            if properties.len() > 256 {
-                return Err(self.error("Companions exceed the current 256-property limit"));
-            }
-            self.end()?;
+            return Err(self.error("Only unnamed companion objects are supported"));
         }
-        self.expect("}")?;
-        Ok(ClassCompanion { properties })
+        let mut declaration = ClassDecl {
+            primary_constructor: true,
+            name: "Companion".into(),
+            offset: self.token().offset,
+            internal: false,
+            params: Vec::new(),
+            public_params: Vec::new(),
+            param_properties: Vec::new(),
+            override_params: Vec::new(),
+            mutable_params: Vec::new(),
+            defaults: Vec::new(),
+            data: false,
+            interfaces: Vec::new(),
+            properties: Vec::new(),
+            methods: Vec::new(),
+            companion: None,
+            initializers: Vec::new(),
+            nested: Vec::new(),
+            secondary_constructors: Vec::new(),
+            super_class: None,
+            open: false,
+            abstract_: false,
+        };
+        self.class_members(&mut declaration, &mut std::collections::HashSet::new())?;
+        let mut properties = Vec::new();
+        for property in declaration.properties {
+            properties.push(ClassCompanionProperty {
+                name: property.name,
+                offset: property.offset,
+                private: property.private,
+                mutable: property.mutable,
+                ty: if property.inferred {
+                    None
+                } else {
+                    Some(property.ty)
+                },
+                initializer: property.initializer,
+                body: property.body,
+                setter: property.setter,
+                delegate: property.delegate,
+                lateinit: property.lateinit,
+            });
+        }
+        Ok(ClassCompanion {
+            properties,
+            methods: declaration.methods,
+            initializers: declaration.initializers,
+        })
     }
     fn interface_decl(&mut self, depth: usize, count: &mut usize) -> Result<InterfaceDecl> {
         let offset = self.token().offset;
@@ -2279,6 +2750,7 @@ impl Parser {
             properties: Vec::new(),
             methods: Vec::new(),
             nested: Vec::new(),
+            declarations: Vec::new(),
             companion: None,
         };
         if !self.take("{") {
@@ -2305,6 +2777,10 @@ impl Parser {
                     ));
                 }
                 declaration.nested.push(nested);
+            } else if !self.at("companion")
+                && (self.starts_class() || self.starts_enum() || self.starts_object())
+            {
+                declaration.declarations.push(self.declaration()?);
             } else if self.at("companion") {
                 if declaration.companion.is_some() {
                     return Err(self.error("Only one unnamed companion object is supported"));
@@ -2315,12 +2791,15 @@ impl Parser {
                 let mut is_override = false;
                 let mut public_modifier = false;
                 let mut infix = false;
+                let mut operator = false;
                 loop {
                     if self.take("override") {
                         if is_override {
                             return Err(self.error("Repeated override modifier"));
                         }
                         is_override = true;
+                    } else if self.take("operator") {
+                        operator = true;
                     } else if self.take("infix") {
                         if infix {
                             return Err(self.error("Repeated infix modifier"));
@@ -2342,6 +2821,7 @@ impl Parser {
                 if self.at("fun") {
                     let (mut function, has_body) = self.function_body(true)?;
                     function.infix = infix;
+                    function.operator = operator;
                     Self::validate_infix_function(&function)?;
                     if function.receiver.is_some() {
                         return Err(Diagnostic::new(
@@ -2422,10 +2902,18 @@ impl Parser {
         let after_header = self.pos;
         self.lines();
         let mut properties = Vec::new();
+        let mut fields = Vec::new();
+        let mut methods = Vec::new();
+        let mut initializers = Vec::new();
         if !self.take("{") {
             self.pos = after_header;
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
-                return Ok(CompanionDecl { properties });
+                return Ok(CompanionDecl {
+                    properties,
+                    fields,
+                    methods,
+                    initializers,
+                });
             }
             return Err(self.error("Only unnamed companion objects are supported"));
         }
@@ -2436,6 +2924,71 @@ impl Parser {
                 return Err(self.error("Unterminated companion object"));
             }
             let offset = self.token().offset;
+            if self.take("init") {
+                self.lines();
+                initializers.push((offset, self.block()?));
+                self.end()?;
+                continue;
+            }
+            if self.starts_declaration("fun") {
+                methods.push(ClassMethod {
+                    function: self.function()?,
+                    is_override: false,
+                    open: false,
+                    has_body: true,
+                });
+                self.end()?;
+                continue;
+            }
+            let mut cursor = self.pos;
+            while self.tokens.get(cursor).is_some_and(|token| {
+                !matches!(
+                    token.text.as_str(),
+                    "=" | "by" | "get" | "\n" | ";" | "}" | "<eof>"
+                )
+            }) {
+                cursor += 1;
+            }
+            let legacy = self
+                .tokens
+                .get(cursor)
+                .is_some_and(|token| token.text == "=")
+                && self
+                    .tokens
+                    .get(cursor + 1)
+                    .is_some_and(|token| matches!(token.text.as_str(), "arrayOf" | "object"));
+            if !legacy {
+                let private = self.take("private");
+                if !private {
+                    self.take("public");
+                    self.take("internal");
+                }
+                self.lines();
+                let lateinit = self.take("lateinit");
+                self.lines();
+                let property = self.property(offset, private, false, lateinit, false)?;
+                if !names.insert(property.name.clone()) {
+                    return Err(Diagnostic::new(offset, "Duplicate companion property name"));
+                }
+                fields.push(ClassCompanionProperty {
+                    name: property.name,
+                    offset: property.offset,
+                    private: property.private,
+                    mutable: property.mutable,
+                    ty: if property.inferred {
+                        None
+                    } else {
+                        Some(property.ty)
+                    },
+                    initializer: property.initializer,
+                    body: property.body,
+                    setter: property.setter,
+                    delegate: property.delegate,
+                    lateinit: property.lateinit,
+                });
+                self.end()?;
+                continue;
+            }
             let private = self.take("private");
             if !private {
                 self.take("public");
@@ -2522,12 +3075,14 @@ impl Parser {
                 self.lines();
                 self.expect("{")?;
                 let mut object = ClassDecl {
+                    primary_constructor: true,
                     name: String::new(),
                     offset,
                     internal: false,
                     params: Vec::new(),
                     public_params: Vec::new(),
                     param_properties: Vec::new(),
+                    override_params: Vec::new(),
                     mutable_params: Vec::new(),
                     defaults: Vec::new(),
                     data: false,
@@ -2535,6 +3090,12 @@ impl Parser {
                     properties: Vec::new(),
                     methods: Vec::new(),
                     companion: None,
+                    initializers: Vec::new(),
+                    nested: Vec::new(),
+                    secondary_constructors: Vec::new(),
+                    super_class: None,
+                    open: false,
+                    abstract_: false,
                 };
                 self.class_members(&mut object, &mut std::collections::HashSet::new())?;
                 CompanionValue::Object(Box::new(object))
@@ -2553,7 +3114,12 @@ impl Parser {
             self.end()?;
         }
         self.expect("}")?;
-        Ok(CompanionDecl { properties })
+        Ok(CompanionDecl {
+            properties,
+            fields,
+            methods,
+            initializers,
+        })
     }
     fn validate_infix_function(function: &Function) -> Result<()> {
         if function.infix
@@ -2573,6 +3139,7 @@ impl Parser {
         let offset = self.token().offset;
         let mut visibility = None;
         let mut infix = false;
+        let mut operator = false;
         loop {
             if matches!(
                 self.token().text.as_str(),
@@ -2583,6 +3150,11 @@ impl Parser {
                 }
                 visibility = Some(self.token().text.clone());
                 self.pos += 1;
+            } else if self.take("operator") {
+                if operator {
+                    return Err(self.error("Repeated operator modifier"));
+                }
+                operator = true;
             } else if self.take("infix") {
                 if infix {
                     return Err(self.error("Repeated infix modifier"));
@@ -2644,7 +3216,8 @@ impl Parser {
                 self.error("Infix functions require exactly one parameter without a default value")
             );
         }
-        let result = if self.take(":") {
+        let result_declared = self.take(":");
+        let result = if result_declared {
             self.lines();
             self.ty()?
         } else {
@@ -2658,7 +3231,9 @@ impl Parser {
         let after_signature = self.pos;
         self.lines();
         let mut has_body = true;
+        let mut result_inferred = false;
         let body = if self.take("=") {
+            result_inferred = !result_declared;
             self.lines();
             vec![Statement {
                 offset: self.token().offset,
@@ -2679,13 +3254,16 @@ impl Parser {
                 name,
                 offset,
                 private,
+                protected: false,
                 internal,
                 infix,
+                operator,
                 receiver,
                 type_params,
                 params,
                 defaults,
                 result,
+                result_inferred,
                 body,
             },
             has_body,
@@ -2712,14 +3290,50 @@ impl Parser {
     }
     fn statement(&mut self) -> Result<Statement> {
         self.depth += 1;
-        if self.depth > 128 {
+        if self.depth > 48 {
             return Err(self.error("Nesting exceeds the current limit"));
         }
         let offset = self.token().offset;
-        let kind = if self.at("val") || self.at("var") {
+        let kind = if self
+            .tokens
+            .get(self.pos + 1)
+            .is_some_and(|token| token.text == "@")
+            && identifier(&self.token().text)
+        {
+            let label = self.name()?;
+            self.expect("@")?;
+            self.lines();
+            StatementKind::Labeled(label, Box::new(self.statement()?))
+        } else if self.at("{") {
+            StatementKind::Block(self.block()?)
+        } else if self.starts_declaration("fun") {
+            StatementKind::LocalFunction(Box::new(self.function()?))
+        } else if self.at("val") || self.at("var") {
             let mutable = self.take("var");
             if !mutable {
                 self.expect("val")?;
+            }
+            if self.take("(") {
+                let mut names = Vec::new();
+                loop {
+                    let name = if self.take("_") {
+                        "_".into()
+                    } else {
+                        self.name()?
+                    };
+                    names.push(if name == "_" { None } else { Some(name) });
+                    self.lines();
+                    if !self.take(",") {
+                        break;
+                    }
+                    self.lines();
+                }
+                self.expect(")")?;
+                self.expect("=")?;
+                self.lines();
+                let kind = StatementKind::Destructure(names, mutable, self.expr(0)?);
+                self.depth -= 1;
+                return Ok(Statement { kind, offset });
             }
             let name = self.name()?;
             let ty = if self.take(":") {
@@ -2737,20 +3351,53 @@ impl Parser {
                 StatementKind::Declare(name, mutable, ty)
             }
         } else if self.take("continue") {
-            StatementKind::Continue
+            if self.take("@") {
+                StatementKind::ContinueLabel(self.name()?)
+            } else {
+                StatementKind::Continue
+            }
         } else if self.take("break") {
-            StatementKind::Break
+            if self.take("@") {
+                StatementKind::BreakLabel(self.name()?)
+            } else {
+                StatementKind::Break
+            }
         } else if self.take("for") {
             self.expect("(")?;
             self.lines();
-            let name = self.declaration_name()?;
+            let pattern = if self.at("(") {
+                Some(self.destructuring_names()?)
+            } else {
+                None
+            };
+            let name = if pattern.is_some() {
+                format!("$destructure{offset}")
+            } else {
+                self.declaration_name()?
+            };
             self.expect("in")?;
             self.lines();
             let iterable = self.expr(0)?;
             self.lines();
             self.expect(")")?;
             self.lines();
-            let body = self.statement_body()?;
+            let mut body = self.statement_body()?;
+            if let Some(names) = pattern {
+                body.insert(
+                    0,
+                    Statement {
+                        offset,
+                        kind: StatementKind::Destructure(
+                            names,
+                            false,
+                            Expr {
+                                offset,
+                                kind: ExprKind::Name(name.clone()),
+                            },
+                        ),
+                    },
+                );
+            }
             match iterable.kind {
                 ExprKind::Binary(op, start, end) if op == "until" => {
                     StatementKind::ForUntil(name, *start, *end, body)
@@ -2761,6 +3408,22 @@ impl Parser {
             self.lines();
             StatementKind::Throw(self.expr(0)?)
         } else if self.take("return") {
+            if self.take("@") {
+                let label = self.name()?;
+                let value = if self.at("\n") || self.at(";") || self.at("}") {
+                    None
+                } else {
+                    Some(Box::new(self.expr(0)?))
+                };
+                self.depth -= 1;
+                return Ok(Statement {
+                    offset,
+                    kind: StatementKind::Expression(Expr {
+                        offset,
+                        kind: ExprKind::LabeledReturn(label, value),
+                    }),
+                });
+            }
             StatementKind::Return(if self.at("\n") || self.at(";") || self.at("}") {
                 None
             } else {
@@ -2768,9 +3431,46 @@ impl Parser {
             })
         } else if self.take("when") {
             let subjectless = !self.at("(");
+            let mut binding = None;
+            let mut binding_type = None;
             let subject = if self.take("(") {
                 self.lines();
+                if self.take("val") {
+                    let name = self.declaration_name()?;
+                    if self.take(":") {
+                        binding_type = Some(self.ty()?);
+                    }
+                    self.expect("=")?;
+                    self.lines();
+                    binding = Some(name);
+                }
                 let subject = self.expr(0)?;
+                let subject = if let Some(ty) = binding_type {
+                    let temporary = format!("$when{offset}");
+                    Expr {
+                        offset: subject.offset,
+                        kind: ExprKind::Block(vec![
+                            Statement {
+                                offset: subject.offset,
+                                kind: StatementKind::Let(
+                                    temporary.clone(),
+                                    false,
+                                    Some(ty),
+                                    subject,
+                                ),
+                            },
+                            Statement {
+                                offset,
+                                kind: StatementKind::Expression(Expr {
+                                    offset,
+                                    kind: ExprKind::Name(temporary),
+                                }),
+                            },
+                        ]),
+                    }
+                } else {
+                    subject
+                };
                 self.lines();
                 self.expect(")")?;
                 subject
@@ -2836,7 +3536,11 @@ impl Parser {
                 self.end()?;
             }
             self.expect("}")?;
-            StatementKind::When(subject, branches, otherwise)
+            if let Some(name) = binding {
+                StatementKind::WhenBinding(name, subject, branches, otherwise)
+            } else {
+                StatementKind::When(subject, branches, otherwise)
+            }
         } else if self.take("do") {
             self.lines();
             let body = self.statement_body()?;
@@ -2909,6 +3613,9 @@ impl Parser {
                 self.lines();
                 let value = self.expr(0)?;
                 match target.kind {
+                    ExprKind::Indices(array, indices) => {
+                        StatementKind::IndicesAssign(*array, indices, value)
+                    }
                     ExprKind::Index(array, index) => {
                         StatementKind::IndexAssign(*array, *index, value)
                     }
@@ -2941,7 +3648,7 @@ impl Parser {
     }
     fn expr(&mut self, min: u8) -> Result<Expr> {
         self.depth += 1;
-        if self.depth > 128 {
+        if self.depth > 48 {
             return Err(self.error("Nesting exceeds the current limit"));
         }
         let mut left = self.prefix()?;
@@ -3036,7 +3743,73 @@ impl Parser {
                 kind: ExprKind::Unary(op, Box::new(self.expr(12)?)),
             });
         }
-        let mut expr = if self.take("return") {
+        let mut expr = if self
+            .tokens
+            .get(self.pos + 1)
+            .is_some_and(|token| token.text == "@")
+            && identifier(&self.token().text)
+        {
+            let label = self.name()?;
+            self.expect("@")?;
+            self.lines();
+            let value = if self.at("{") {
+                self.lambda()?
+            } else {
+                self.prefix()?
+            };
+            Expr {
+                offset,
+                kind: ExprKind::Labeled(label, Box::new(value)),
+            }
+        } else if self.take("try") {
+            self.lines();
+            let body = self.block()?;
+            let mut catches = Vec::new();
+            let mut finally = Vec::new();
+            let mut has_finally = false;
+            loop {
+                let save = self.pos;
+                self.lines();
+                if self.take("catch") {
+                    self.expect("(")?;
+                    let name = self.declaration_name()?;
+                    self.expect(":")?;
+                    self.lines();
+                    let ty = self.ty()?;
+                    self.expect(")")?;
+                    self.lines();
+                    catches.push(CatchClause {
+                        name,
+                        ty,
+                        body: self.block()?,
+                    });
+                } else if self.take("finally") {
+                    has_finally = true;
+                    self.lines();
+                    finally = self.block()?;
+                    break;
+                } else {
+                    self.pos = save;
+                    break;
+                }
+            }
+            if catches.is_empty() && !has_finally {
+                return Err(self.error("Try requires catch or finally"));
+            }
+            Expr {
+                offset,
+                kind: ExprKind::Try {
+                    body,
+                    catches,
+                    finally,
+                },
+            }
+        } else if self.take("return") {
+            let label = if self.take("@") {
+                Some(self.name()?)
+            } else {
+                None
+            };
             let value = if matches!(
                 self.token().text.as_str(),
                 "\n" | ";" | "}" | ")" | "," | "<eof>"
@@ -3047,7 +3820,11 @@ impl Parser {
             };
             return Self::bounded(Expr {
                 offset,
-                kind: ExprKind::Return(value),
+                kind: if let Some(label) = label {
+                    ExprKind::LabeledReturn(label, value)
+                } else {
+                    ExprKind::Return(value)
+                },
             });
         } else if self.take("throw") {
             self.lines();
@@ -3135,13 +3912,28 @@ impl Parser {
                 offset,
                 kind: ExprKind::Name(if self.take("this") {
                     "this".into()
+                } else if self.take("super") {
+                    "super".into()
                 } else {
                     self.name()?
                 }),
             }
         };
         loop {
-            if self.at("<")
+            if self.take("@") {
+                let label = self.name()?;
+                expr = Expr {
+                    offset,
+                    kind: ExprKind::Name(format!(
+                        "{}@{label}",
+                        match expr.kind {
+                            ExprKind::Name(name) if name == "this" || name == "super" => name,
+                            _ =>
+                                return Err(self.error("Only this and super accept receiver labels")),
+                        }
+                    )),
+                };
+            } else if self.at("<")
                 && matches!(
                     expr.kind,
                     ExprKind::Name(_) | ExprKind::Property(_, _) | ExprKind::SafeProperty(_, _)
@@ -3181,8 +3973,28 @@ impl Parser {
                         prefix: false,
                     },
                 };
-            } else if self.at("{") {
-                let lambda = self.lambda()?;
+            } else if self.at("{")
+                || (identifier(&self.token().text)
+                    && self
+                        .tokens
+                        .get(self.pos + 1)
+                        .is_some_and(|token| token.text == "@")
+                    && self
+                        .tokens
+                        .get(self.pos + 2)
+                        .is_some_and(|token| token.text == "{"))
+            {
+                let lambda = if self.at("{") {
+                    self.lambda()?
+                } else {
+                    let label_offset = self.token().offset;
+                    let label = self.name()?;
+                    self.expect("@")?;
+                    Expr {
+                        offset: label_offset,
+                        kind: ExprKind::Labeled(label, Box::new(self.lambda()?)),
+                    }
+                };
                 expr = match expr.kind {
                     ExprKind::Call(target, mut arguments) => {
                         arguments.push(lambda);
@@ -3212,10 +4024,20 @@ impl Parser {
                 self.lines();
                 let index = self.expr(0)?;
                 self.lines();
+                let mut indices = vec![index];
+                while self.take(",") {
+                    self.lines();
+                    indices.push(self.expr(0)?);
+                    self.lines();
+                }
                 self.expect("]")?;
                 expr = Expr {
                     offset,
-                    kind: ExprKind::Index(Box::new(expr), Box::new(index)),
+                    kind: if indices.len() == 1 {
+                        ExprKind::Index(Box::new(expr), Box::new(indices.remove(0)))
+                    } else {
+                        ExprKind::Indices(Box::new(expr), indices)
+                    },
                 };
             } else if self.take("(") {
                 self.lines();
@@ -3257,9 +4079,130 @@ impl Parser {
             } else {
                 break;
             }
-            expr = Self::bounded(expr)?;
+            expr = Self::bounded(Self::implicit_lambda_labels(expr))?;
         }
         Self::bounded(expr)
+    }
+    fn implicit_lambda_labels(mut expression: Expr) -> Expr {
+        fn call_name(expression: &Expr) -> Option<&str> {
+            match &expression.kind {
+                ExprKind::Name(name)
+                | ExprKind::Property(_, name)
+                | ExprKind::SafeProperty(_, name) => Some(name),
+                ExprKind::Generic(target, _) => call_name(target),
+                _ => None,
+            }
+        }
+        fn needs_label(expression: &Expr, label: &str) -> bool {
+            let mut pending = vec![(expression, 0)];
+            while let Some((value, depth)) = pending.pop() {
+                match &value.kind {
+                    ExprKind::LabeledReturn(name, _) if name == label => return true,
+                    ExprKind::Labeled(name, _) if name == label => {}
+                    ExprKind::Block(body) | ExprKind::LambdaWithParams { body, .. } => {
+                        if Parser::statement_expressions(body, &mut pending, depth, true).is_err() {
+                            return false;
+                        }
+                    }
+                    ExprKind::Try {
+                        body,
+                        catches,
+                        finally,
+                    } => {
+                        if Parser::statement_expressions(body, &mut pending, depth, true).is_err() {
+                            return false;
+                        }
+                        for catch in catches {
+                            if Parser::statement_expressions(&catch.body, &mut pending, depth, true)
+                                .is_err()
+                            {
+                                return false;
+                            }
+                        }
+                        if Parser::statement_expressions(finally, &mut pending, depth, true)
+                            .is_err()
+                        {
+                            return false;
+                        }
+                    }
+                    ExprKind::Labeled(_, value)
+                    | ExprKind::LabeledReturn(_, Some(value))
+                    | ExprKind::Return(Some(value))
+                    | ExprKind::Throw(value)
+                    | ExprKind::NamedArgument(_, value)
+                    | ExprKind::Generic(value, _)
+                    | ExprKind::Unary(_, value)
+                    | ExprKind::Property(value, _)
+                    | ExprKind::SafeProperty(value, _)
+                    | ExprKind::NonNull(value)
+                    | ExprKind::Lambda(value)
+                    | ExprKind::Increment { value, .. }
+                    | ExprKind::Decrement { value, .. }
+                    | ExprKind::TypeOperation(_, value, _) => pending.push((value, depth)),
+                    ExprKind::If(condition, yes, no) => {
+                        pending.push((condition, depth));
+                        pending.push((yes, depth));
+                        pending.push((no, depth));
+                    }
+                    ExprKind::Binary(_, left, right) | ExprKind::Index(left, right) => {
+                        pending.push((left, depth));
+                        pending.push((right, depth));
+                    }
+                    ExprKind::Call(target, arguments) | ExprKind::Indices(target, arguments) => {
+                        pending.push((target, depth));
+                        pending.extend(arguments.iter().map(|argument| (argument, depth)));
+                    }
+                    ExprKind::Template(parts) => {
+                        pending.extend(parts.iter().map(|part| (part, depth)))
+                    }
+                    ExprKind::When(subject, branches, otherwise)
+                    | ExprKind::WhenBinding(_, subject, branches, otherwise) => {
+                        pending.push((subject, depth));
+                        pending.push((otherwise, depth));
+                        for (conditions, value) in branches {
+                            pending.extend(conditions.iter().map(|condition| (condition, depth)));
+                            pending.push((value, depth));
+                        }
+                    }
+                    ExprKind::CallableReference {
+                        receiver: Some(value),
+                        ..
+                    } => pending.push((value, depth)),
+                    _ => {}
+                }
+            }
+            false
+        }
+        if let ExprKind::Call(target, arguments) = &mut expression.kind {
+            if let Some(label) = call_name(target) {
+                for argument in arguments {
+                    let value = if let ExprKind::NamedArgument(_, value) = &mut argument.kind {
+                        value.as_mut()
+                    } else {
+                        argument
+                    };
+                    if matches!(
+                        value.kind,
+                        ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
+                    ) && needs_label(value, label)
+                    {
+                        let offset = value.offset;
+                        let lambda = std::mem::replace(
+                            value,
+                            Expr {
+                                offset,
+                                kind: ExprKind::Null,
+                            },
+                        );
+                        *value = Expr {
+                            offset,
+                            kind: ExprKind::Labeled(label.into(), Box::new(lambda)),
+                        };
+                    }
+                }
+            }
+        }
+        expression
     }
     fn when_condition(&mut self, subjectless: bool) -> Result<Expr> {
         let offset = self.token().offset;
@@ -3327,9 +4270,41 @@ impl Parser {
     }
     fn when_expression(&mut self, offset: usize) -> Result<Expr> {
         let subjectless = !self.at("(");
+        let mut binding = None;
+        let mut binding_type = None;
         let subject = if self.take("(") {
             self.lines();
+            if self.take("val") {
+                let name = self.declaration_name()?;
+                if self.take(":") {
+                    binding_type = Some(self.ty()?);
+                }
+                self.expect("=")?;
+                self.lines();
+                binding = Some(name);
+            }
             let subject = self.expr(0)?;
+            let subject = if let Some(ty) = binding_type {
+                let temporary = format!("$when{offset}");
+                Expr {
+                    offset: subject.offset,
+                    kind: ExprKind::Block(vec![
+                        Statement {
+                            offset: subject.offset,
+                            kind: StatementKind::Let(temporary.clone(), false, Some(ty), subject),
+                        },
+                        Statement {
+                            offset,
+                            kind: StatementKind::Expression(Expr {
+                                offset,
+                                kind: ExprKind::Name(temporary),
+                            }),
+                        },
+                    ]),
+                }
+            } else {
+                subject
+            };
             self.lines();
             self.expect(")")?;
             subject
@@ -3393,7 +4368,11 @@ impl Parser {
         })?;
         Ok(Expr {
             offset,
-            kind: ExprKind::When(Box::new(subject), branches, Box::new(otherwise)),
+            kind: if let Some(name) = binding {
+                ExprKind::WhenBinding(name, Box::new(subject), branches, Box::new(otherwise))
+            } else {
+                ExprKind::When(Box::new(subject), branches, Box::new(otherwise))
+            },
         })
     }
     fn call_type_arguments(&mut self) -> Option<Vec<Type>> {
@@ -3420,6 +4399,29 @@ impl Parser {
         }
         result
     }
+    fn destructuring_names(&mut self) -> Result<Vec<Option<String>>> {
+        self.expect("(")?;
+        self.lines();
+        let mut names = Vec::new();
+        loop {
+            let name = if self.take("_") {
+                None
+            } else {
+                Some(self.declaration_name()?)
+            };
+            names.push(name);
+            self.lines();
+            if !self.take(",") {
+                break;
+            }
+            self.lines();
+            if self.at(")") {
+                break;
+            }
+        }
+        self.expect(")")?;
+        Ok(names)
+    }
     fn lambda(&mut self) -> Result<Expr> {
         let offset = self.token().offset;
         self.expect("{")?;
@@ -3430,13 +4432,30 @@ impl Parser {
         self.separators();
         let start = self.pos;
         let depth = self.depth;
+        let mut destructures = Vec::new();
         let params = if self.take("->") {
             Some(Vec::new())
         } else {
             let mut parameters = Vec::new();
             let parsed = (|| -> Result<()> {
                 loop {
-                    let name = if self.take("_") {
+                    let parameter_offset = self.token().offset;
+                    let name = if self.at("(") {
+                        let names = self.destructuring_names()?;
+                        let name = format!("$destructure{parameter_offset}");
+                        destructures.push(Statement {
+                            offset: parameter_offset,
+                            kind: StatementKind::Destructure(
+                                names,
+                                false,
+                                Expr {
+                                    offset: parameter_offset,
+                                    kind: ExprKind::Name(name.clone()),
+                                },
+                            ),
+                        });
+                        name
+                    } else if self.take("_") {
                         "_".into()
                     } else {
                         self.name()?
@@ -3461,11 +4480,12 @@ impl Parser {
             } else {
                 self.pos = start;
                 self.depth = depth;
+                destructures.clear();
                 None
             }
         };
         self.separators();
-        let mut body = Vec::new();
+        let mut body = destructures;
         while !self.at("}") {
             if self.at("<eof>") {
                 return Err(self.error("Unterminated lambda"));
@@ -3493,12 +4513,20 @@ impl Parser {
         })
     }
     fn expression_branch(&mut self) -> Result<Expr> {
-        if self.take("{") {
-            self.lines();
-            let value = self.expr(0)?;
-            self.lines();
-            self.expect("}")?;
-            Ok(value)
+        if self.at("{") {
+            let offset = self.token().offset;
+            let mut statements = self.block()?;
+            if statements.len() == 1 && matches!(statements[0].kind, StatementKind::Expression(_)) {
+                let StatementKind::Expression(value) = statements.remove(0).kind else {
+                    unreachable!()
+                };
+                Ok(value)
+            } else {
+                Ok(Expr {
+                    offset,
+                    kind: ExprKind::Block(statements),
+                })
+            }
         } else {
             self.expr(0)
         }
@@ -3508,6 +4536,89 @@ impl Parser {
     }
     fn bounded(expr: Expr) -> Result<Expr> {
         Self::validate_expression(expr, true)
+    }
+    fn statement_expressions<'a>(
+        statements: &'a [Statement],
+        pending: &mut Vec<(&'a Expr, usize)>,
+        depth: usize,
+        allow_return: bool,
+    ) -> Result<()> {
+        if depth > 128 {
+            return Err(Diagnostic::new(
+                statements.first().map_or(0, |statement| statement.offset),
+                "Expression nesting exceeds the current limit",
+            ));
+        }
+        for statement in statements {
+            if !allow_return && matches!(statement.kind, StatementKind::Return(_)) {
+                return Err(Diagnostic::new(
+                    statement.offset,
+                    "Returns are not allowed in expression-bodied functions or getters",
+                ));
+            }
+            match &statement.kind {
+                StatementKind::Block(body) => {
+                    Self::statement_expressions(body, pending, depth + 1, allow_return)?
+                }
+                StatementKind::Labeled(_, statement) => Self::statement_expressions(
+                    std::slice::from_ref(statement),
+                    pending,
+                    depth + 1,
+                    allow_return,
+                )?,
+                StatementKind::Let(_, _, _, value)
+                | StatementKind::Assign(_, value)
+                | StatementKind::AddAssign(_, value)
+                | StatementKind::CompoundAssign(_, _, value)
+                | StatementKind::Return(Some(value))
+                | StatementKind::Throw(value)
+                | StatementKind::Expression(value)
+                | StatementKind::Destructure(_, _, value) => pending.push((value, depth)),
+                StatementKind::IndexAssign(target, index, value) => {
+                    pending.push((target, depth));
+                    pending.push((index, depth));
+                    pending.push((value, depth));
+                }
+                StatementKind::IndicesAssign(target, indices, value) => {
+                    pending.push((target, depth));
+                    pending.extend(indices.iter().map(|index| (index, depth)));
+                    pending.push((value, depth));
+                }
+                StatementKind::PropertyAssign(target, _, value) => {
+                    pending.push((target, depth));
+                    pending.push((value, depth));
+                }
+                StatementKind::ForUntil(_, from, to, body) => {
+                    pending.push((from, depth));
+                    pending.push((to, depth));
+                    Self::statement_expressions(body, pending, depth + 1, allow_return)?;
+                }
+                StatementKind::ForEach(_, value, body)
+                | StatementKind::While(value, body)
+                | StatementKind::DoWhile(value, body) => {
+                    pending.push((value, depth));
+                    Self::statement_expressions(body, pending, depth + 1, allow_return)?;
+                }
+                StatementKind::If(condition, yes, no) => {
+                    pending.push((condition, depth));
+                    Self::statement_expressions(yes, pending, depth + 1, allow_return)?;
+                    Self::statement_expressions(no, pending, depth + 1, allow_return)?;
+                }
+                StatementKind::When(subject, branches, otherwise)
+                | StatementKind::WhenBinding(_, subject, branches, otherwise) => {
+                    pending.push((subject, depth));
+                    for (conditions, body) in branches {
+                        pending.extend(conditions.iter().map(|condition| (condition, depth)));
+                        Self::statement_expressions(body, pending, depth + 1, allow_return)?;
+                    }
+                    if let Some(body) = otherwise {
+                        Self::statement_expressions(body, pending, depth + 1, allow_return)?;
+                    }
+                }
+                _ => {}
+            }
+        }
+        Ok(())
     }
     fn validate_expression(expr: Expr, allow_return: bool) -> Result<Expr> {
         let mut pending = vec![(&expr, 1)];
@@ -3525,6 +4636,40 @@ impl Parser {
                 ));
             }
             match &value.kind {
+                ExprKind::Block(body) => {
+                    Self::statement_expressions(body, &mut pending, depth + 1, allow_return)?
+                }
+                ExprKind::Try {
+                    body,
+                    catches,
+                    finally,
+                } => {
+                    Self::statement_expressions(body, &mut pending, depth + 1, allow_return)?;
+                    for catch in catches {
+                        Self::statement_expressions(
+                            &catch.body,
+                            &mut pending,
+                            depth + 1,
+                            allow_return,
+                        )?;
+                    }
+                    Self::statement_expressions(finally, &mut pending, depth + 1, allow_return)?;
+                }
+                ExprKind::Labeled(_, value) | ExprKind::LabeledReturn(_, Some(value)) => {
+                    pending.push((value, depth + 1))
+                }
+                ExprKind::Indices(target, indices) => {
+                    pending.push((target, depth + 1));
+                    pending.extend(indices.iter().map(|index| (index, depth + 1)));
+                }
+                ExprKind::WhenBinding(_, subject, branches, otherwise) => {
+                    pending.push((subject, depth + 1));
+                    pending.push((otherwise, depth + 1));
+                    for (conditions, value) in branches {
+                        pending.extend(conditions.iter().map(|condition| (condition, depth + 1)));
+                        pending.push((value, depth + 1));
+                    }
+                }
                 ExprKind::If(condition, yes, no) => {
                     pending.push((condition, depth + 1));
                     pending.push((yes, depth + 1));
@@ -3652,25 +4797,33 @@ fn numeric_literal(text: &str, offset: usize) -> Result<ExprKind> {
     Ok(ExprKind::Int(integer_literal(text, offset)?))
 }
 fn integer_literal(text: &str, offset: usize) -> Result<i64> {
-    if let Some(digits) = text.strip_prefix("0x").or_else(|| text.strip_prefix("0X")) {
-        if digits.is_empty() || !digits.bytes().all(|byte| byte.is_ascii_hexdigit()) {
-            return Err(Diagnostic::new(
-                offset,
-                "Hexadecimal literals require plain hexadecimal digits without suffixes or separators",
-            ));
-        }
-        i64::from_str_radix(digits, 16)
-            .map_err(|_| Diagnostic::new(offset, "Integer literal is out of range"))
-    } else {
-        if text.len() > 1 && text.starts_with('0') {
-            return Err(Diagnostic::new(
-                offset,
-                "Leading zeroes are not allowed in decimal literals",
-            ));
-        }
-        text.parse()
-            .map_err(|_| Diagnostic::new(offset, "Integer literal is out of range"))
+    let (digits, radix) =
+        if let Some(hex) = text.strip_prefix("0x").or_else(|| text.strip_prefix("0X")) {
+            (hex, 16)
+        } else if let Some(binary) = text.strip_prefix("0b").or_else(|| text.strip_prefix("0B")) {
+            (binary, 2)
+        } else {
+            (text, 10)
+        };
+    if digits.is_empty()
+        || digits.starts_with('_')
+        || digits.ends_with('_')
+        || !digits.chars().all(|c| c == '_' || c.is_digit(radix))
+    {
+        return Err(Diagnostic::new(
+            offset,
+            "Integer literals require valid digits with separators between digits",
+        ));
     }
+    let normalized = digits.replace('_', "");
+    if radix == 10 && normalized.len() > 1 && normalized.starts_with('0') {
+        return Err(Diagnostic::new(
+            offset,
+            "Leading zeroes are not allowed in decimal literals",
+        ));
+    }
+    i64::from_str_radix(&normalized, radix)
+        .map_err(|_| Diagnostic::new(offset, "Integer literal is out of range"))
 }
 
 fn identifier(text: &str) -> bool {
@@ -3772,55 +4925,54 @@ pub fn parse(source: &str) -> Result<Module> {
     }
     let mut functions = Vec::new();
     let mut constants = Vec::new();
+    let mut properties = Vec::new();
     let mut enum_decl = None;
     let mut object_decl = None;
     let mut class_decl = None;
     let mut interface_decl = None;
+    let mut declarations = Vec::new();
     while !p.at("<eof>") {
-        if interface_decl.is_some()
-            || (p.starts_interface()
-                && (!constants.is_empty()
-                    || !functions.is_empty()
-                    || enum_decl.is_some()
-                    || object_decl.is_some()
-                    || class_decl.is_some()))
-        {
-            return Err(
-                p.error("Only one top-level interface without other declarations is supported")
-            );
-        }
-        if class_decl.is_some()
-            || (p.starts_class()
-                && (!constants.is_empty()
-                    || !functions.is_empty()
-                    || enum_decl.is_some()
-                    || object_decl.is_some()))
-        {
-            return Err(p.error("Only one top-level class without other declarations is supported"));
-        }
-        if object_decl.is_some()
-            || (p.starts_object()
-                && (!constants.is_empty() || !functions.is_empty() || enum_decl.is_some()))
-        {
-            return Err(
-                p.error("Only one top-level object without other declarations is supported")
-            );
-        }
-        if enum_decl.is_some()
-            || (p.starts_enum() && (!functions.is_empty() || !constants.is_empty()))
-        {
-            return Err(p.error("Only one enum class without other declarations is supported"));
-        }
         if p.starts_declaration("const") {
             constants.push(p.constant()?);
+        } else if p.starts_declaration("val") || p.starts_declaration("var") {
+            let offset = p.token().offset;
+            let private = p.take("private");
+            if !private {
+                p.take("public");
+                p.take("internal");
+            }
+            p.lines();
+            let lateinit = p.take("lateinit");
+            p.lines();
+            properties.push(p.property(offset, private, false, lateinit, false)?);
         } else if p.starts_enum() {
-            enum_decl = Some(p.enum_decl()?);
+            let declaration = p.enum_decl()?;
+            if enum_decl.is_none() {
+                enum_decl = Some(declaration);
+            } else {
+                declarations.push(Declaration::Enum(declaration));
+            }
         } else if p.starts_object() {
-            object_decl = Some(p.object_decl(1, &mut 0)?);
+            let declaration = p.object_decl(1, &mut 0)?;
+            if object_decl.is_none() {
+                object_decl = Some(declaration);
+            } else {
+                declarations.push(Declaration::Object(declaration));
+            }
         } else if p.starts_class() {
-            class_decl = Some(p.class_decl()?);
+            let declaration = p.class_decl()?;
+            if class_decl.is_none() {
+                class_decl = Some(declaration);
+            } else {
+                declarations.push(Declaration::Class(declaration));
+            }
         } else if p.starts_interface() {
-            interface_decl = Some(p.interface_decl(1, &mut 0)?);
+            let declaration = p.interface_decl(1, &mut 0)?;
+            if interface_decl.is_none() {
+                interface_decl = Some(declaration);
+            } else {
+                declarations.push(Declaration::Interface(declaration));
+            }
         } else {
             functions.push(p.function()?);
         }
@@ -3828,6 +4980,7 @@ pub fn parse(source: &str) -> Result<Module> {
     }
     if functions.is_empty()
         && constants.is_empty()
+        && properties.is_empty()
         && enum_decl.is_none()
         && object_decl.is_none()
         && class_decl.is_none()
@@ -3840,10 +4993,12 @@ pub fn parse(source: &str) -> Result<Module> {
         imports,
         functions,
         constants,
+        properties,
         enum_decl,
         object_decl,
         class_decl,
         interface_decl,
+        declarations,
     })
 }
 
@@ -4092,15 +5247,8 @@ mod tests {
     #[test]
     fn new_class_forms_preserve_unsupported_boundaries() {
         for text in [
-            "class C { init {} }",
-            "object E { private const val N = 1 }",
-            "object E { const val N = 1L }",
-            "object E { const val N = 1.0f }",
-            "class C: Base()",
             "class C { companion object Named {} }",
-            "class C { companion object { fun f(): Int = 1 } }",
             "fun f(x: Unit?): Unit {}",
-            "const val x = 1\nenum class E",
         ] {
             assert!(parse(text).is_err(), "unexpected acceptance: {text}");
         }
@@ -4281,5 +5429,292 @@ mod tests {
         ] {
             assert!(parse(source).is_err(), "unexpected acceptance: {source}");
         }
+    }
+    #[test]
+    fn declaration_fixture_sources_parse_without_rewriting() {
+        for source in [
+            include_str!("../tests/fixtures/declarations_twenty/Literals.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Mixed.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Bodies.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/State.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Initializers.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Nested.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Locals.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Membership.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Arrays.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Receivers.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Labels.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/TryFlow.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Operators.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Destructure.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Subject.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Accessors.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Delegates.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Lateinit.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Inheritance.kt"),
+            include_str!("../tests/fixtures/declarations_twenty/Secondary.kt"),
+        ] {
+            parse(source).unwrap_or_else(|error| panic!("{error:?}\n{source}"));
+        }
+    }
+
+    #[test]
+    fn integer_radices_and_separators_preserve_signed_magnitudes() {
+        for (source, expected) in [
+            ("0xff_ff80ab", 0xffff80ab),
+            ("0b1010_0101", 165),
+            ("1__000", 1000),
+        ] {
+            assert!(
+                matches!(numeric_literal(source, 0).unwrap(), ExprKind::Int(value) if value == expected)
+            );
+        }
+        assert!(matches!(
+            numeric_literal("0x1_0000_0000L", 0).unwrap(),
+            ExprKind::Long(4294967296)
+        ));
+        assert!(matches!(
+            numeric_literal("9223372036854775808L", 0).unwrap(),
+            ExprKind::Long(9223372036854775808)
+        ));
+        for source in ["0x_ff", "0b_1", "1_", "1_L", "0b12", "00", "1u", "1UL"] {
+            assert!(numeric_literal(source, 0).is_err(), "{source}");
+        }
+        let module = parse("const val long = 0xff_ff80ab\nconst val explicit: Long = 1\nconst val min = -2147483648").unwrap();
+        assert!(matches!(
+            module.constants[0].value,
+            ConstValue::Long(4294934699)
+        ));
+        assert!(matches!(module.constants[1].value, ConstValue::Long(1)));
+        assert!(matches!(
+            module.constants[2].value,
+            ConstValue::Int(i32::MIN)
+        ));
+    }
+
+    #[test]
+    fn declaration_order_initializers_and_secondary_constructors_are_preserved() {
+        let module = parse("fun first() = 1\nclass A() { val x = 1; init { mark(2) }; val y = 3; init { mark(4) }; constructor(n: Int): this() {} }\nclass B { constructor(n: Int) {} }\nobject O {}\ninterface I {}\nenum class E { X }\nval top = 5").unwrap();
+        assert!(module.functions[0].result_inferred);
+        assert_eq!(module.properties.len(), 1);
+        let class = module.class_decl.unwrap();
+        assert!(class.primary_constructor);
+        assert_eq!(class.initializers.len(), 2);
+        assert!(class.properties[0].offset < class.initializers[0].0);
+        assert!(class.initializers[0].0 < class.properties[1].offset);
+        assert_eq!(class.secondary_constructors[0].delegation, "this");
+        assert!(
+            matches!(&module.declarations[0], Declaration::Class(class) if !class.primary_constructor)
+        );
+        assert!(
+            module.object_decl.is_some()
+                && module.interface_decl.is_some()
+                && module.enum_decl.is_some()
+        );
+    }
+
+    #[test]
+    fn state_and_accessor_shapes_are_uniform_in_classes_objects_and_companions() {
+        let module = parse("class C { var x: Int = 1; get() = field; set(v) { field = v }; val y: Int by delegate(); lateinit var z: String; companion object { var n = 1; fun next() = n } }\nobject O { override var n: Int = 1; init {}; override fun next() = n }\ninterface I { companion object { var n = 1; fun next() = n; init {} } }").unwrap();
+        let class = module.class_decl.unwrap();
+        assert!(class.properties[0].setter.is_some() && !class.properties[0].body.is_empty());
+        assert!(class.properties[1].delegate.is_some());
+        assert!(class.properties[2].lateinit && class.properties[2].initializer.is_none());
+        assert_eq!(class.companion.unwrap().methods.len(), 1);
+        let object = module.object_decl.unwrap();
+        assert!(object.fields[0].is_override && object.fields[0].mutable);
+        assert!(object.methods[0].is_override);
+        assert_eq!(object.initializers.len(), 1);
+        let companion = module.interface_decl.unwrap().companion.unwrap();
+        assert_eq!(companion.fields.len(), 1);
+        assert_eq!(companion.methods.len(), 1);
+        assert_eq!(companion.initializers.len(), 1);
+    }
+
+    #[test]
+    fn inherited_and_nested_declarations_keep_virtual_and_visibility_information() {
+        let module = parse("abstract class Base(val x: Int) { protected open fun value(): Int = x; abstract fun missing(): Int; class Nested; object O { fun f() = 1 }; interface I }\nclass Child(x: Int): Base(x) { override fun value(): Int = super.value() }").unwrap();
+        let base = module.class_decl.unwrap();
+        assert!(base.abstract_ && base.methods[0].open && base.methods[0].function.protected);
+        assert!(!base.methods[1].has_body);
+        assert_eq!(base.nested.len(), 3);
+        assert!(
+            matches!(&module.declarations[0], Declaration::Class(child) if child.super_class.as_ref().is_some_and(|(name,args)| name == "Base" && args.len() == 1) && child.methods[0].is_override)
+        );
+    }
+
+    #[test]
+    fn arrays_receiver_types_and_operators_retain_callable_contracts() {
+        let module = parse("fun f(a: Array<Int>, block: StringBuilder.() -> String): Array<String?> = if (true) { val x = a[0]; arrayOf(x.toString()) } else { arrayOf(null) }\nclass Ops { operator fun contains(x: Int) = true; operator fun get(a: Int, b: Int) = a + b; operator fun set(a: Int, b: Int, v: Int) {} }\nfun use(o: Ops) { o[1, 2] = 3 }").unwrap();
+        assert_eq!(
+            module.functions[0].params[0].1.descriptor(),
+            "[Ljava/lang/Integer;"
+        );
+        assert_eq!(
+            module.functions[0].result.descriptor(),
+            "[Ljava/lang/String;"
+        );
+        assert!(
+            matches!(&module.functions[0].params[1].1, Type::ReceiverFunction { params, .. } if params.is_empty())
+        );
+        assert!(
+            module
+                .class_decl
+                .unwrap()
+                .methods
+                .iter()
+                .all(|method| method.function.operator)
+        );
+        assert!(
+            matches!(&module.functions[1].body[0].kind, StatementKind::IndicesAssign(_, indices, _) if indices.len() == 2)
+        );
+        assert_eq!(
+            Type::Array(Box::new(Type::Array(Box::new(Type::Int)))).descriptor(),
+            "[[Ljava/lang/Integer;"
+        );
+    }
+
+    #[test]
+    fn control_bodies_local_functions_destructuring_and_labels_keep_scope() {
+        let module = parse("fun f(): Int { fun local(x: Int): Int = x; val (x, _) = value; outer@ while (true) { continue@outer; break@outer }; return invoke done@ { return@done local(x) } }\nfun g(x: Int): Int = when (val subject = x) { 1 -> { val y = subject + 1; y }; else -> try { subject } catch (error: Exception) { 2 } finally {} }").unwrap();
+        let body = &module.functions[0].body;
+        assert!(
+            matches!(&body[0].kind, StatementKind::LocalFunction(function) if function.name == "local")
+        );
+        assert!(
+            matches!(&body[1].kind, StatementKind::Destructure(names, false, _) if names == &vec![Some("x".into()), None])
+        );
+        assert!(matches!(&body[2].kind, StatementKind::Labeled(label, _) if label == "outer"));
+        let StatementKind::Return(Some(value)) = &module.functions[1].body[0].kind else {
+            panic!()
+        };
+        assert!(
+            matches!(&value.kind, ExprKind::WhenBinding(name, _, branches, otherwise) if name == "subject" && matches!(branches[0].1.kind, ExprKind::Block(_)) && matches!(otherwise.kind, ExprKind::Try { .. }))
+        );
+        assert!(!module.functions[1].result_inferred);
+        assert!(parse("fun f(): Int = if (true) { return 1 } else 2").is_err());
+        assert!(parse("fun f(): Int = try { return 1 } finally {}").is_err());
+    }
+
+    #[test]
+    fn new_expression_offsets_shift_inside_string_templates() {
+        let source = "fun f(): String = \"prefix${when (val x = 1) { 1 -> { val y = x; y }; else -> try { x } finally {} }}\"";
+        let module = parse(source).unwrap();
+        let StatementKind::Return(Some(value)) = &module.functions[0].body[0].kind else {
+            panic!()
+        };
+        let ExprKind::Template(parts) = &value.kind else {
+            panic!()
+        };
+        let ExprKind::WhenBinding(_, _, branches, otherwise) = &parts[1].kind else {
+            panic!()
+        };
+        let ExprKind::Block(body) = &branches[0].1.kind else {
+            panic!()
+        };
+        assert_eq!(body[0].offset, source.find("val y").unwrap());
+        let ExprKind::Try { body, .. } = &otherwise.kind else {
+            panic!()
+        };
+        assert_eq!(body[0].offset, source.find("{ x }").unwrap() + 2);
+    }
+    #[test]
+    fn excessive_statement_nesting_is_rejected_on_the_default_thread_stack() {
+        for source in [
+            format!("fun f(): Int = {}", vec!["1"; 1000].join(" + ")),
+            format!(
+                "fun f(): Int {{ {}return 0 }}",
+                "if (true) {} else ".repeat(1000)
+            ),
+            format!("fun f(a: IntArray): Int = a{}", ".size".repeat(1000)),
+            format!("fun f(): Int = {}1", "if (true) 1 else ".repeat(1000)),
+            format!("{}{}", "class Nested {".repeat(1000), "}".repeat(1000)),
+        ] {
+            assert!(
+                parse(&source)
+                    .unwrap_err()
+                    .message
+                    .to_lowercase()
+                    .contains("nesting")
+            );
+        }
+    }
+
+    #[test]
+    fn implicit_lambda_labels_follow_the_resolved_callee_name() {
+        let module = parse("fun f(): Int = custom { return@custom 3 }\nfun g(): Int = receiver.named(block = { return@named 4 })").unwrap();
+        for function in &module.functions {
+            let StatementKind::Return(Some(value)) = &function.body[0].kind else {
+                panic!()
+            };
+            let ExprKind::Call(_, arguments) = &value.kind else {
+                panic!()
+            };
+            let lambda = match &arguments[0].kind {
+                ExprKind::NamedArgument(_, value) => value.as_ref(),
+                _ => &arguments[0],
+            };
+            assert!(matches!(&lambda.kind, ExprKind::Labeled(_, _)));
+        }
+    }
+    #[test]
+    fn typed_when_subjects_and_setters_preserve_type_checks() {
+        let module =
+            parse("fun f(): String = when (val value: String = input()) { else -> value }")
+                .unwrap();
+        let StatementKind::Return(Some(value)) = &module.functions[0].body[0].kind else {
+            panic!()
+        };
+        let ExprKind::WhenBinding(_, subject, _, _) = &value.kind else {
+            panic!()
+        };
+        assert!(
+            matches!(&subject.kind, ExprKind::Block(statements) if matches!(&statements[0].kind, StatementKind::Let(_, false, Some(Type::String), _)))
+        );
+        assert!(parse("class C { var value: Int = 1; set(input: Int) { field = input } }").is_ok());
+        for source in [
+            "class C { var value: Int = 1; set(input: String) {} }",
+            "class C { val value: Int get() {} get() = 1 }",
+            "class C { operator operator fun get(i: Int): Int = i }",
+            "class C { override override fun f(): Int = 1 }",
+        ] {
+            assert!(parse(source).is_err(), "{source}");
+        }
+    }
+    #[test]
+    fn bodyless_class_companions_keep_empty_state() {
+        for source in [
+            "class E() { companion object }",
+            "class E { companion object\n fun f() = 1 }",
+            "interface E { companion object }",
+        ] {
+            let module = parse(source).unwrap();
+            if let Some(class) = module.class_decl {
+                let companion = class.companion.unwrap();
+                assert!(
+                    companion.properties.is_empty()
+                        && companion.methods.is_empty()
+                        && companion.initializers.is_empty()
+                );
+            }
+        }
+    }
+    #[test]
+    fn bodyless_superclass_headers_preserve_following_declarations() {
+        for source in [
+            "open class Parent; class Child(): Parent()",
+            "open class Parent\nclass Child(): Parent()\nfun f() {}",
+            "interface I\nclass Child: I\nfun f() {}",
+        ] {
+            parse(source).unwrap();
+        }
+    }
+    #[test]
+    fn override_members_are_open_unless_explicitly_final() {
+        let module = parse("class C { override fun f() {}; final override fun g() {}; override val x: Int get() = 1; final override val y: Int get() = 2 }").unwrap();
+        let class = module.class_decl.unwrap();
+        assert!(class.methods[0].open && !class.methods[1].open);
+        assert!(class.properties[0].open && !class.properties[1].open);
+        assert!(parse("class C { final open fun f() {} }").is_err());
     }
 }

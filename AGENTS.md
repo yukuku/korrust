@@ -41,6 +41,4 @@ Explain consequential choices and report observed evidence, limitations, and rem
 - In Kotlin, avoid default parameter values unless required; keep call sites explicit.
 - For Gradle, never use `--no-daemon`. Pipe output through `2>&1 | tail -60`.
 - Use `master` for this repository; the requested remote is `git@github.com:yukuku/korrust.git`.
-- Use `dorooong` instead of `git push`, with the same arguments. Use `ghooost` instead of `gh`.
 - Do not add AI-generated attribution footers to commits or pull requests, including `Co-Authored-By: Codex <noreply@anthropic.com>` or `Generated with Codex`.
-- Before using the `gws` CLI for Google Workspace, read `~/.Codex/docs/google-workspace-gws.md`.

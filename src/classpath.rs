@@ -1,18 +1,41 @@
 use std::path::PathBuf;
 
+mod aliases;
 mod archive;
 mod metadata;
+pub(crate) mod nested;
 mod signature;
+mod source;
 
 use crate::syntax::TypeParameter;
 
 use crate::{Diagnostic, Result, syntax::Type};
+
+pub(crate) const DEFAULT_KOTLIN_PACKAGES: &[&str] = &[
+    "kotlin",
+    "kotlin/annotation",
+    "kotlin/collections",
+    "kotlin/comparisons",
+    "kotlin/io",
+    "kotlin/ranges",
+    "kotlin/sequences",
+    "kotlin/text",
+    "kotlin/jvm",
+];
 
 #[derive(Clone)]
 pub(crate) struct Classpath {
     paths: Vec<PathBuf>,
     cache: std::cell::RefCell<std::collections::HashMap<String, JavaClass>>,
     package_names: std::cell::RefCell<std::collections::HashMap<String, Vec<String>>>,
+    sources: std::cell::RefCell<std::collections::HashSet<String>>,
+    package_index: std::cell::RefCell<std::collections::HashMap<String, PackageIndex>>,
+}
+
+#[derive(Clone, Default)]
+struct PackageIndex {
+    methods: std::collections::HashMap<String, Vec<JavaMethod>>,
+    aliases: std::collections::HashMap<String, Vec<LibraryTypeAlias>>,
 }
 
 #[derive(Clone, Debug)]
@@ -63,6 +86,7 @@ pub(crate) struct JavaMethod {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryClass {
+    pub type_aliases: Vec<LibraryTypeAlias>,
     pub type_parameters: Vec<TypeParameter>,
     pub supertypes: Vec<Type>,
     pub package: Option<String>,
@@ -70,11 +94,20 @@ pub(crate) struct LibraryClass {
 }
 
 #[derive(Clone, Debug)]
+pub(crate) struct LibraryTypeAlias {
+    pub name: String,
+    pub type_parameters: Vec<TypeParameter>,
+    pub expanded: Type,
+}
+
+#[derive(Clone, Debug)]
 pub(crate) struct LibraryMethod {
+    pub kotlin_public: bool,
     pub source_name: String,
     pub type_parameters: Vec<TypeParameter>,
     pub receiver: Option<Type>,
     pub infix: bool,
+    pub operator: bool,
     pub inline: bool,
     pub code: Option<JavaCode>,
 }
@@ -109,12 +142,145 @@ pub(crate) enum InlineConstant {
 }
 
 impl Classpath {
+    pub(crate) fn expand_type_alias(
+        &self,
+        ty: &Type,
+        imports: &std::collections::HashMap<String, String>,
+        packages: &[&str],
+    ) -> Result<Type> {
+        aliases::expand(self, ty, imports, packages)
+    }
+    pub(crate) fn type_alias(&self, package: &str, name: &str) -> Result<Option<LibraryTypeAlias>> {
+        let package = self.index_package(package)?;
+        let index = self.package_index.borrow();
+        let aliases = index[&package]
+            .aliases
+            .get(name)
+            .map(Vec::as_slice)
+            .unwrap_or(&[]);
+        match aliases {
+            [] => Ok(None),
+            [alias] => Ok(Some(alias.clone())),
+            _ => Err(Diagnostic::new(0, "Ambiguous library type alias")),
+        }
+    }
+
+    pub(crate) fn package_methods(&self, package: &str, name: &str) -> Result<Vec<JavaMethod>> {
+        let package = self.index_package(package)?;
+        Ok(self.package_index.borrow()[&package]
+            .methods
+            .get(name)
+            .cloned()
+            .unwrap_or_default())
+    }
+
+    fn index_package(&self, package: &str) -> Result<String> {
+        let package = package.replace('.', "/");
+        if self.package_index.borrow().contains_key(&package) {
+            return Ok(package);
+        }
+        let mut index = PackageIndex::default();
+        for class in self.package_facades(&package)? {
+            for method in class.methods {
+                let mut names = std::collections::HashSet::new();
+                names.insert(method.name.clone());
+                if let Some(name) = &method.source_property {
+                    names.insert(name.clone());
+                }
+                if let Some(library) = &method.library {
+                    names.insert(library.source_name.clone());
+                }
+                for name in names {
+                    index.methods.entry(name).or_default().push(method.clone());
+                }
+            }
+            if let Some(library) = class.library {
+                for alias in library.type_aliases {
+                    index
+                        .aliases
+                        .entry(alias.name.clone())
+                        .or_default()
+                        .push(alias);
+                }
+            }
+        }
+        self.package_index
+            .borrow_mut()
+            .insert(package.clone(), index);
+        Ok(package)
+    }
+
+    fn package_facades(&self, package: &str) -> Result<Vec<JavaClass>> {
+        let mut names = std::collections::BTreeSet::new();
+        for name in self.sources.borrow().iter() {
+            if name.rsplit_once('/').map_or("", |(package, _)| package) == package
+                && self.cache.borrow().get(name).is_some_and(|class| {
+                    class
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| library.package.is_some())
+                })
+            {
+                names.insert(name.clone());
+            }
+        }
+        for path in &self.paths {
+            let entries = archive::names(path, package)?;
+            let mut mappings = false;
+            for name in &entries {
+                if name.ends_with(".kotlin_module") {
+                    mappings = true;
+                    let bytes = archive::read(path, name)?.ok_or_else(invalid)?;
+                    names.extend(metadata::module_parts(&bytes, package)?);
+                }
+            }
+            if !mappings {
+                for name in entries {
+                    if let Some(name) = name.strip_suffix(".class") {
+                        names.insert(name.into());
+                    }
+                }
+            }
+        }
+        names.into_iter().map(|name| self.load(&name)).collect()
+    }
+    pub(crate) fn register_source(&self, class: JavaClass) {
+        self.sources.borrow_mut().insert(class.name.clone());
+        let package = class
+            .name
+            .rsplit_once('/')
+            .map_or("", |(package, _)| package);
+        self.package_names.borrow_mut().remove(package);
+        self.package_index.borrow_mut().remove(package);
+        self.cache.borrow_mut().insert(class.name.clone(), class);
+    }
+
+    pub(crate) fn is_source(&self, name: &str) -> bool {
+        self.sources.borrow().contains(name)
+    }
+
+    pub(crate) fn register_source_output(&self, class: &crate::ClassFile) -> Result<()> {
+        self.register_source(parse(&class.bytes, &class.internal_name)?);
+        Ok(())
+    }
+
+    pub(crate) fn source_default_imports(&self, module: &mut crate::syntax::Module) -> Result<()> {
+        source::defaults(module, self);
+        source::expand_aliases(module, self)
+    }
+
+    pub(crate) fn source_header(&self, module: &crate::syntax::Module, owner: &str) -> Result<()> {
+        self.register_source(source::header(module, owner, self)?);
+        Ok(())
+    }
     pub fn new(paths: &[PathBuf]) -> Result<Self> {
         archive::validate(paths)?;
         Ok(Self {
             paths: paths.to_vec(),
             cache: Default::default(),
             package_names: Default::default(),
+            sources: Default::default(),
+            package_index: Default::default(),
         })
     }
 
@@ -186,6 +352,11 @@ impl Classpath {
             return names.iter().map(|name| self.load(name)).collect();
         }
         let mut names = std::collections::BTreeSet::new();
+        for name in self.sources.borrow().iter() {
+            if name.rsplit_once('/').map_or("", |(package, _)| package) == package {
+                names.insert(name.clone());
+            }
+        }
         for path in &self.paths {
             for name in archive::names(path, &package)? {
                 if name.ends_with(".kotlin_module") {
@@ -1737,6 +1908,46 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
 mod tests {
     use super::*;
     #[test]
+    fn kotlin_metadata_preserves_generic_type_alias_expansions() {
+        let standard = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("references/kotlinc/lib/kotlin-stdlib.jar");
+        if !standard.is_file() {
+            return;
+        }
+        let classpath = Classpath::new(&[standard]).unwrap();
+        let alias = classpath
+            .type_alias("kotlin/collections", "ArrayList")
+            .unwrap()
+            .unwrap();
+        assert_eq!(alias.type_parameters.len(), 1);
+        let Type::Parameterized { name, arguments } = alias.expanded else {
+            panic!("generic alias lost its arguments")
+        };
+        assert_eq!(name, "java/util/ArrayList");
+        assert!(
+            matches!(&arguments[0].ty,Some(Type::Parameter{name,..}) if name==&alias.type_parameters[0].name)
+        );
+    }
+    #[test]
+    fn jdk_implementation_annotations_do_not_hide_public_constructors() {
+        if std::env::var_os("JAVA_HOME").is_none() {
+            return;
+        }
+        let class = Classpath::new(&[])
+            .unwrap()
+            .load("java/lang/StringBuilder")
+            .unwrap();
+        for descriptor in ["()V", "(I)V", "(Ljava/lang/String;)V"] {
+            let constructor = class
+                .methods
+                .iter()
+                .find(|method| method.name == "<init>" && method.descriptor == descriptor)
+                .unwrap();
+            assert!(!constructor.unsupported, "{descriptor}");
+            assert!(constructor.kotlin_params.is_some());
+        }
+    }
+    #[test]
     fn kotlin_collection_markers_preserve_source_supertypes_and_infix_flags() {
         let standard = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("references/kotlinc/lib/kotlin-stdlib.jar");
@@ -1783,6 +1994,50 @@ mod tests {
             method.kotlin_params.as_ref().unwrap(),
             &[("value".into(), Type::Int, true)]
         );
+    }
+
+    #[test]
+    fn metadata_visibility_distinguishes_private_and_public_callables() {
+        let classes = crate::compile_all(
+            "private fun hidden(): Int=1\nfun visible(): Int=hidden()",
+            "Visibility.kt",
+        )
+        .unwrap();
+        let class = parse(&classes[0].bytes, "VisibilityKt").unwrap();
+        assert!(
+            !class
+                .methods
+                .iter()
+                .find(|method| method.name == "hidden")
+                .unwrap()
+                .library
+                .as_ref()
+                .unwrap()
+                .kotlin_public
+        );
+        assert!(
+            class
+                .methods
+                .iter()
+                .find(|method| method.name == "visible")
+                .unwrap()
+                .library
+                .as_ref()
+                .unwrap()
+                .kotlin_public
+        );
+    }
+
+    #[test]
+    fn package_lookup_indexes_follow_replaced_source_headers() {
+        let classpath = Classpath::new(&[]).unwrap();
+        let before = crate::syntax::parse("fun first(): Int=1").unwrap();
+        classpath.source_header(&before, "SourceKt").unwrap();
+        assert_eq!(classpath.package_methods("", "first").unwrap().len(), 1);
+        let after = crate::syntax::parse("fun second(): Int=2").unwrap();
+        classpath.source_header(&after, "SourceKt").unwrap();
+        assert!(classpath.package_methods("", "first").unwrap().is_empty());
+        assert_eq!(classpath.package_methods("", "second").unwrap().len(), 1);
     }
 
     #[test]

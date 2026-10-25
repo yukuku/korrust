@@ -1,0 +1,17 @@
+import declarations.probes.*;
+import declarations.library.*;
+import declarations.support.Trace;
+import java.util.Arrays;
+public final class DeclarationsCheck_nested_declarations {
+    static int checks;
+    static void check(boolean condition) { checks++; if (!condition) throw new AssertionError("check " + checks + " events=" + Trace.events); }
+    static void events(String expected) { check(Trace.events.equals(expected)); }
+    public static void main(String[] args) {
+        Trace.clear();
+        switch (args[0]) {
+            case "nested_declarations": check(NestedKt.nested() == 10); check(new Outer.Nested(6).getValue() == 6); check(Outer.Holder.INSTANCE.getValue() == 8); break;
+            default: throw new AssertionError(args[0]);
+        }
+        System.out.println("{\"checks\":" + checks + "}");
+    }
+}

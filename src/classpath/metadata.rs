@@ -136,7 +136,7 @@ impl<'a> Context<'a> {
             return Err(invalid());
         }
         let p = Proto::parse(bytes)?;
-        p.allowed(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14])?;
+        p.allowed(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 100])?;
         if p.integer(1)?.unwrap_or(0) != 0 || p.bytes(10)?.is_some() || p.integer(11)?.is_some() {
             return Err(invalid());
         }
@@ -204,8 +204,13 @@ impl<'a> Context<'a> {
                 "kotlin/IntArray" => Type::IntArray,
                 "kotlin/ByteArray" => Type::ByteArray,
                 "kotlin/CharArray" => Type::CharArray,
-                "kotlin/Array" if arguments.len() == 1 && arguments[0].ty == Some(Type::String) => {
-                    Type::StringArray
+                "kotlin/Array" if arguments.len() == 1 && arguments[0].ty.is_some() => {
+                    let inner = arguments.remove(0).ty.ok_or_else(invalid)?;
+                    if inner == Type::String {
+                        Type::StringArray
+                    } else {
+                        Type::Array(Box::new(inner))
+                    }
                 }
                 "kotlin/collections/List" | "kotlin/collections/MutableList"
                     if arguments.len() == 1
@@ -225,9 +230,24 @@ impl<'a> Context<'a> {
                         .map(|a| a.ty.ok_or_else(invalid))
                         .collect::<Result<Vec<_>>>()?;
                     let result = Box::new(types.pop().ok_or_else(invalid)?);
-                    Type::Function {
-                        params: types,
-                        result,
+                    let extension = p.messages(100)?.into_iter().any(|bytes| {
+                        Proto::parse(bytes)
+                            .ok()
+                            .and_then(|annotation| annotation.integer(1).ok().flatten())
+                            .and_then(|id| self.strings.get(id as usize))
+                            .is_some_and(|name| name == "kotlin/ExtensionFunctionType")
+                    });
+                    if extension && !types.is_empty() {
+                        Type::ReceiverFunction {
+                            receiver: Box::new(types.remove(0)),
+                            params: types,
+                            result,
+                        }
+                    } else {
+                        Type::Function {
+                            params: types,
+                            result,
+                        }
                     }
                 }
                 _ => {
@@ -562,10 +582,12 @@ fn attach_member(
     method.source_property = property;
     method.unsupported = false;
     method.library = Some(LibraryMethod {
+        kotlin_public: flags & 14 == 6,
         source_name: name.into(),
         type_parameters,
         receiver,
         infix: flags & 512 != 0,
+        operator: flags & 256 != 0,
         inline: flags & 1024 != 0,
         code: attributes[*index].code.clone(),
     });
@@ -600,10 +622,16 @@ fn remember_callable(
             && method.library.is_none()
         {
             method.library = Some(LibraryMethod {
+                kotlin_public: member
+                    .integer(if name == "<init>" { 1 } else { 9 })?
+                    .unwrap_or(6)
+                    & 14
+                    == 6,
                 source_name: name.into(),
                 type_parameters: Vec::new(),
                 receiver: None,
                 infix: false,
+                operator: false,
                 inline: false,
                 code: None,
             });
@@ -722,7 +750,27 @@ pub(super) fn attach(
     } else {
         None
     };
+    let mut type_aliases = Vec::new();
+    if kind != 1 {
+        for bytes in proto.messages(5)? {
+            let alias = Proto::parse(bytes)?;
+            let flags = alias.integer(1)?.unwrap_or(6);
+            if flags & 14 != 6 {
+                continue;
+            }
+            let mut context = ctx.clone();
+            let parameters = context.type_parameters(&alias, 3)?;
+            if let Ok(expanded) = context.field(&alias, 6, 7) {
+                type_aliases.push(LibraryTypeAlias {
+                    name: metadata_name(&strings, alias.integer(2)?)?.into(),
+                    type_parameters: parameters,
+                    expanded,
+                });
+            }
+        }
+    }
     class.library = Some(LibraryClass {
+        type_aliases,
         type_parameters: parameters,
         supertypes,
         package,
@@ -734,7 +782,7 @@ pub(super) fn attach(
     class.unsupported = kind == 1
         && (class_flags & 14 == 0
             || class_flags & (512 | 2048 | 4096 | 8192) != 0
-            || !matches!((class_flags >> 6) & 7, 0 | 1));
+            || !matches!((class_flags >> 6) & 7, 0 | 1 | 5 | 6));
     for method in &mut class.methods {
         method.unsupported = true;
     }
@@ -809,7 +857,7 @@ pub(super) fn attach(
         let property = Proto::parse(bytes)?;
         let parsed = (|| -> Result<()> {
             let flags = property.integer(11)?.unwrap_or(518);
-            if flags & (1 << 15 | 1 << 12 | 1 << 16) != 0 {
+            if flags & (1 << 16) != 0 {
                 return Err(invalid());
             }
             let name = metadata_name(&strings, property.integer(2)?)?;

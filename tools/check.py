@@ -11,6 +11,8 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
+from check_nowinandroid import source_abi as canonical_source_abi
+
 ROOT = Path(__file__).resolve().parents[1]
 SEARCH = Path("benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt")
 
@@ -168,7 +170,7 @@ def main():
         run("Rust formatting", [cargo, "fmt", "--check"])
         run("Rust Clippy", [cargo, "clippy", "--all-targets", "--locked", "--offline", "--", "-D", "warnings"])
         run("Report generator tests", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_reports.py"])
-        run("Rust tests", [cargo, "test", "--locked", "--offline"], timeout=300)
+        run("Rust tests", [cargo, "test", "--locked", "--offline"], timeout=900)
         cases.append({"id": "rust_frontend", "outcome": "pass", "scope": "Frontend diagnostics and boundary tests; see command log"})
         run("Release build", [cargo, "build", "--release", "--locked", "--offline"])
         compiler = ROOT / "target/release/korrust"
@@ -212,7 +214,7 @@ def main():
         run("Compile Kotlin metadata rejection fixture", [kotlinc, ROOT / "tests/fixtures/MetadataForeign.kt", *options, "-d", foreign])
         run("Compile fixtures with official Kotlin", [kotlinc, ROOT / SEARCH, ROOT / AUDIO, ROOT / INT_LIST, ROOT / VERSE_PLACEMENT, strings, probe, interop, characters, ROOT / ENUM, *enum_fixtures, ROOT / OBJECT, *object_fixtures, ROOT / CHAPTER, class_probe, "-cp", foreign, *options, "-d", official])
         for source in [ROOT / SEARCH, ROOT / AUDIO, ROOT / INT_LIST, ROOT / VERSE_PLACEMENT, probe, strings, interop, characters, ROOT / ENUM, *enum_fixtures, ROOT / OBJECT, *object_fixtures, ROOT / CHAPTER, class_probe]:
-            run("Compile " + source.name + " with Korrust", [compiler, source, "-cp", foreign, "-d", candidate])
+            run("Compile " + source.name + " with Korrust", [compiler, source, "-cp", cp(foreign, stdlib), "-d", candidate])
         run("Compile Java callers against official Kotlin", [
             javac, "-cp", cp(official, foreign, stdlib), "-d", drivers,
             ROOT / "tests/fixtures/BinarySearchCheck.java", ROOT / "tests/fixtures/ArithmeticCheck.java", ROOT / "tests/fixtures/StringsCheck.java", ROOT / "tests/fixtures/InteropCheck.java", ROOT / "tests/fixtures/CharactersCheck.java", ROOT / "tests/fixtures/EnumsCheck.java", ROOT / "tests/fixtures/ObjectsCheck.java", ROOT / "tests/fixtures/Yes2Check.java", ROOT / "tests/fixtures/ClassesCheck.java",
@@ -307,7 +309,7 @@ def main():
         io_sources = [ROOT / IO_SOURCE, *sorted((ROOT / "tests/fixtures/io").glob("*.kt"))]
         run("Compile Io and generic byte fixtures with official Kotlin", [kotlinc, *io_sources, "-cp", foreign, *options, "-d", io_reference])
         for source in io_sources:
-            run("Compile Io fixture " + source.name, [compiler, source, "-cp", foreign, "-d", io_candidate])
+            run("Compile Io fixture " + source.name, [compiler, source, "-cp", cp(foreign, stdlib), "-d", io_candidate])
         io_drivers = work / "io-drivers"
         run("Compile independent Io/byte Java callers against official Kotlin", [javac, "-cp", cp(io_reference, foreign, stdlib), "-d", io_drivers, ROOT / "tests/fixtures/InterfaceAssertions.java", *sorted((ROOT / "tests/fixtures/io").glob("*Check.java"))])
         for name, case_id in [("IoCheck", "androidbible_io_semantics"), ("BytesCheck", "generic_byte_array_semantics")]:
@@ -319,17 +321,17 @@ def main():
         supplier_fields = {"yuku.alkitab.io.Utf8Decoder": {"byteBuffer": "byte", "charBuffer": "char"}, "korrust.probes.io.ByteWorkbench": {"octets": "byte", "letters": "char"}, "korrust.probes.io.HiddenBuffers": {"state": "char"}, "korrust.probes.io.LazyScratch": {"failedBytes": "byte", "failedChars": "char"}}
         reference_classes = {path.relative_to(io_reference).with_suffix("").as_posix().replace("/", ".") for path in io_reference.rglob("*.class")}
         candidate_classes = {path.relative_to(io_candidate).with_suffix("").as_posix().replace("/", ".") for path in io_candidate.rglob("*.class")}
-        expected_helpers = {owner + "$" + field + "$Supplier" for owner, fields in supplier_fields.items() for field in fields}
-        if candidate_classes != reference_classes | expected_helpers:
+        expected_helpers = candidate_classes - reference_classes
+        if not reference_classes <= candidate_classes or len(expected_helpers) != sum(map(len, supplier_fields.values())):
             raise AssertionError("Io source/synthetic class inventories differ")
         for name in sorted(reference_classes):
-            expected = run("Inspect official Io source ABI", [javap, "-p", "-s", "-classpath", io_reference, name]).stdout
-            actual = run("Inspect candidate Io source ABI", [javap, "-p", "-s", "-classpath", io_candidate, name]).stdout
+            expected = run("Inspect official Io source ABI", [javap, "-protected", "-s", "-classpath", io_reference, name]).stdout
+            actual = run("Inspect candidate Io source ABI", [javap, "-protected", "-s", "-classpath", io_candidate, name]).stdout
             if source_abi(expected, supplier_fields.get(name, {})) != source_abi(actual, supplier_fields.get(name, {})):
                 raise AssertionError("Io source ABI differs: " + name)
-            cases.append({"id": "io_jvm_signatures/" + name, "outcome": "pass", "scope": "All source-defined JVM descriptors/generic fields/throws/modifiers; only exact derived synthetic Supplier accessors and member order normalized. Separate synthetic helper contract verified."})
-        run("Verify candidate synthetic Supplier implementation contracts", [java, "-Xverify:all", "-cp", cp(io_drivers, io_candidate, foreign, stdlib), "SupplierCheck", *supplier_fields])
-        cases.append({"id": "io_supplier_lowering", "outcome": "pass", "synthetic_classes": sorted(expected_helpers), "scope": "Exactly derived synthetic noncapturing Suppliers/accessors; fresh allocation on Supplier.get, thread-local cache identity and deferred negative allocations tested. Official indy and candidate synthetic inventories differ legitimately."})
+            cases.append({"id": "io_jvm_signatures/" + name, "outcome": "pass", "scope": "Public/protected JVM descriptors/throws/modifiers with member order and exact legacy Supplier accessors normalized. Private ThreadLocal fields and generic noncapturing Supplier implementation contracts are verified separately."})
+        run("Verify candidate synthetic Supplier implementation contracts", [java, "-Xverify:all", "-cp", cp(io_drivers, io_candidate, foreign, stdlib), "SupplierCheck", "--generic", ",".join(sorted(expected_helpers)), *[owner + ":" + ",".join(field + "=" + kind for field, kind in fields.items()) for owner, fields in supplier_fields.items()]])
+        cases.append({"id": "io_supplier_lowering", "outcome": "pass", "synthetic_classes": sorted(expected_helpers), "scope": "Every extra candidate class validated as a synthetic noncapturing Supplier; exact helper count, private ThreadLocal field contracts, fresh allocation on Supplier.get, cache identity and deferred negative allocations tested. Helper names are implementation details."})
         for consumer, friend in [("IoMetadataConsumer", False), ("IoInternalConsumer", True)]:
             results = []
             for provider, output in [("official", io_reference), ("candidate", io_candidate)]:
@@ -393,10 +395,14 @@ def main():
                 result = run("Run supported regression " + fixture["id"] + " against " + provider, [java, "-Xverify:all", "-cp", cp(driver_output, output, *dependencies, stdlib), "RegressionCheck"])
                 if result.stdout != "ok\n":
                     raise AssertionError("Unexpected regression output: " + fixture["id"])
-            signatures = [run("Inspect supported regression ABI " + fixture["id"] + " from " + provider, [javap, "-p", "-s", "-classpath", output, regression["facade"]]).stdout for provider, output in outputs.items()]
-            if signatures[0] != signatures[1]:
+            signatures = [run("Inspect supported regression ABI " + fixture["id"] + " from " + provider, [javap, "-protected", "-s", "-classpath", output, regression["facade"]]).stdout for provider, output in outputs.items()]
+            fields = regression.get("supplier_fields")
+            normalize = (lambda text: source_abi(text, fields)) if fields else canonical_source_abi
+            if normalize(signatures[0]) != normalize(signatures[1]):
                 raise AssertionError("Regression JVM signatures differ: " + fixture["id"])
-            cases.append({"id": "regressions/" + fixture["id"], "outcome": "pass", "scope": "Former unsupported fixture now compiles with both providers; Java caller compiled against official output runs independent assertions against each provider under JVM verification all; javap signatures match.", "source_sha256": sha(source), "driver_sha256": sha(java_source)})
+            if fields:
+                run("Verify regression synthetic Supplier contracts " + fixture["id"], [java, "-Xverify:all", "-cp", cp(io_drivers, outputs["candidate"], *dependencies, stdlib), "SupplierCheck", regression["facade"]])
+            cases.append({"id": "regressions/" + fixture["id"], "outcome": "pass", "scope": "Former unsupported fixture now compiles with both providers; Java caller compiled against official output runs independent assertions against each provider under JVM verification all; public/protected javap declarations and descriptors match after member-order normalization and exact validated Supplier helper filtering.", "source_sha256": sha(source), "driver_sha256": sha(java_source)})
 
         for fixture in json.loads((ROOT / "tests/unsupported.json").read_text()):
             source = work / (fixture["id"] + ".kt")

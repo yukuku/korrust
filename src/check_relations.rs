@@ -44,6 +44,7 @@ pub(super) fn substitute(ty: &Type, substitutions: &HashMap<String, Type>) -> Ty
                 Type::Platform(Box::new(inner))
             }
         }
+        Type::Array(inner) => Type::Array(Box::new(substitute(inner, substitutions))),
         Type::List(inner) => Type::List(Box::new(substitute(inner, substitutions))),
         Type::MutableList(inner) => Type::MutableList(Box::new(substitute(inner, substitutions))),
         Type::ThreadLocal(inner) => Type::ThreadLocal(Box::new(substitute(inner, substitutions))),
@@ -56,6 +57,18 @@ pub(super) fn substitute(ty: &Type, substitutions: &HashMap<String, Type>) -> Ty
                     ty: argument.ty.as_ref().map(|ty| substitute(ty, substitutions)),
                 })
                 .collect(),
+        },
+        Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::ReceiverFunction {
+            receiver: Box::new(substitute(receiver, substitutions)),
+            params: params
+                .iter()
+                .map(|ty| substitute(ty, substitutions))
+                .collect(),
+            result: Box::new(substitute(result, substitutions)),
         },
         Type::Function { params, result } => Type::Function {
             params: params
@@ -229,12 +242,22 @@ fn mentions(ty: &Type, name: &str) -> bool {
         } => parameter == name,
         Type::Nullable(inner)
         | Type::Platform(inner)
+        | Type::Array(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
         | Type::ThreadLocal(inner) => mentions(inner, name),
         Type::Parameterized { arguments, .. } => arguments
             .iter()
             .any(|argument| argument.ty.as_ref().is_some_and(|ty| mentions(ty, name))),
+        Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            mentions(receiver, name)
+                || params.iter().any(|ty| mentions(ty, name))
+                || mentions(result, name)
+        }
         Type::Function { params, result } => {
             params.iter().any(|ty| mentions(ty, name)) || mentions(result, name)
         }
@@ -426,6 +449,56 @@ fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> b
     if matches!(expected, Type::Java(name) if name == "java/lang/Object") {
         return actual != &Type::Unit;
     }
+    if matches!((actual, expected), (Type::StringArray, Type::Array(element)) | (Type::Array(element), Type::StringArray) if element.as_ref() == &Type::String)
+    {
+        return true;
+    }
+    fn function_parts(ty: &Type) -> Option<(Vec<&Type>, &Type)> {
+        match ty {
+            Type::Function { params, result } => Some((params.iter().collect(), result)),
+            Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => {
+                let mut all = vec![receiver.as_ref()];
+                all.extend(params.iter());
+                Some((all, result))
+            }
+            _ => None,
+        }
+    }
+    if let (Some((a, ar)), Some((e, er))) = (function_parts(actual), function_parts(expected)) {
+        return a.len() == e.len()
+            && a.iter()
+                .zip(e)
+                .all(|(a, e)| subtype_at(cp, e, a, depth + 1))
+            && subtype_at(cp, ar, er, depth + 1);
+    }
+    if let (Type::Array(a), Type::Array(e)) = (actual, expected) {
+        return a == e;
+    }
+    if let (
+        Type::ReceiverFunction {
+            receiver: ar,
+            params: ap,
+            result: av,
+        },
+        Type::ReceiverFunction {
+            receiver: er,
+            params: ep,
+            result: ev,
+        },
+    ) = (actual, expected)
+    {
+        return subtype_at(cp, er, ar, depth + 1)
+            && ap.len() == ep.len()
+            && ap
+                .iter()
+                .zip(ep)
+                .all(|(a, e)| subtype_at(cp, e, a, depth + 1))
+            && subtype_at(cp, av, ev, depth + 1);
+    }
     if let (
         Type::Function {
             params: actual,
@@ -608,11 +681,23 @@ pub(super) fn validate_type_arguments_with_classes(
                 }
             }
             Type::Nullable(inner)
+            | Type::Array(inner)
             | Type::List(inner)
             | Type::MutableList(inner)
             | Type::ThreadLocal(inner) => validate(inner, cp, classes, offset, depth + 1)?,
             Type::Platform(_) => {}
             Type::Parameter { .. } => {}
+            Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => {
+                validate(receiver, cp, classes, offset, depth + 1)?;
+                for parameter in params {
+                    validate(parameter, cp, classes, offset, depth + 1)?;
+                }
+                validate(result, cp, classes, offset, depth + 1)?;
+            }
             Type::Function { params, result } => {
                 for parameter in params {
                     validate(parameter, cp, classes, offset, depth + 1)?;
@@ -711,6 +796,34 @@ impl Checker<'_> {
                 };
                 self.infer_constraints(inner, actual, substitutions, fixed, depth + 1)
             }
+            Type::Array(element) => {
+                if let Type::Array(actual) = actual.base() {
+                    self.infer_constraints(element, actual, substitutions, fixed, depth + 1)
+                } else {
+                    true
+                }
+            }
+            Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => {
+                if let Type::ReceiverFunction {
+                    receiver: ar,
+                    params: ap,
+                    result: av,
+                } = actual.base()
+                {
+                    self.infer_constraints(receiver, ar, substitutions, fixed, depth + 1)
+                        && params.len() == ap.len()
+                        && params.iter().zip(ap).all(|(p, a)| {
+                            self.infer_constraints(p, a, substitutions, fixed, depth + 1)
+                        })
+                        && self.infer_constraints(result, av, substitutions, fixed, depth + 1)
+                } else {
+                    true
+                }
+            }
             Type::Function { params, result } => {
                 let Type::Function {
                     params: actual_params,
@@ -770,7 +883,40 @@ impl Checker<'_> {
         fixed: &HashSet<String>,
         parameters: &HashSet<String>,
     ) -> Result<()> {
+        if let ExprKind::Labeled(_, inner) = &expr.kind {
+            return self.infer_lambda_result(pattern, inner, substitutions, fixed, parameters);
+        }
+        if let Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        } = pattern.base()
+        {
+            let receiver = substitute(receiver, substitutions);
+            let old_receiver = self.receiver.clone();
+            let next = self.next;
+            let initialized = self.initialized.clone();
+            let slot = self.allocate_typed_slot(&receiver, expr.offset)?;
+            self.receiver = Some(Local {
+                slot,
+                ty: receiver,
+                mutable: false,
+            });
+            let function = Type::Function {
+                params: params.clone(),
+                result: result.clone(),
+            };
+            let inferred =
+                self.infer_lambda_result(&function, expr, substitutions, fixed, parameters);
+            self.receiver = old_receiver;
+            self.next = next;
+            self.initialized = initialized;
+            return inferred;
+        }
         let Type::Function { params, result } = pattern.base() else {
+            if let Some((_, function)) = self.sam_function(pattern, expr.offset)? {
+                return self.infer_lambda_result(&function, expr, substitutions, fixed, parameters);
+            }
             return Ok(());
         };
         let (declared, body) = match &expr.kind {
@@ -963,6 +1109,8 @@ impl Checker<'_> {
                 receiver: None,
                 inline: false,
                 infix: false,
+                operator: false,
+                kotlin_public: true,
                 code: None,
             }),
         };
@@ -1039,6 +1187,7 @@ impl Checker<'_> {
                 ExprKind::Lambda(_)
                     | ExprKind::LambdaWithParams { .. }
                     | ExprKind::CallableReference { .. }
+                    | ExprKind::Labeled(..)
             ) {
                 continue;
             }
@@ -1112,6 +1261,7 @@ mod tests {
             nonlocal_result: None,
             source_type_params: &[],
             source_infix: &HashSet::new(),
+            source_operator: &HashSet::new(),
             classpath: cp,
             constants: &HashMap::new(),
             constructor: None,

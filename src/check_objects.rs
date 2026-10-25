@@ -1,6 +1,6 @@
 use super::*;
 
-pub(super) fn check(
+fn legacy_check(
     source: &syntax::ObjectDecl,
     package: &str,
     classpath: &Classpath,
@@ -117,6 +117,8 @@ pub(super) fn check(
         overloads.push(JavaMethod {
             library: function.infix.then(|| crate::classpath::LibraryMethod {
                 source_name: function.name.clone(),
+                operator: function.operator,
+                kotlin_public: !function.private && !function.protected && !function.internal,
                 type_parameters: Vec::new(),
                 receiver: None,
                 infix: true,
@@ -143,7 +145,12 @@ pub(super) fn check(
                 "Object initializer fields must be unique private vals",
             ));
         }
-        let ExprKind::Call(target, arguments) = &field.initializer.kind else {
+        let ExprKind::Call(target, arguments) = &field
+            .initializer
+            .as_ref()
+            .ok_or_else(|| Diagnostic::new(field.offset, "Property requires an initializer"))?
+            .kind
+        else {
             return Err(Diagnostic::new(
                 field.offset,
                 "Object fields require ThreadLocal.withInitial array suppliers",
@@ -237,6 +244,7 @@ pub(super) fn check(
             signatures: &signatures,
             source_type_params: &[],
             source_infix: &HashSet::new(),
+            source_operator: &HashSet::new(),
             receiver: None,
             fields: &empty_fields,
             members: &empty_members,
@@ -258,6 +266,7 @@ pub(super) fn check(
         let ty = Type::ThreadLocal(Box::new(array_type.clone()));
         object_fields.insert(field.name.clone(), (owner.clone(), ty.clone()));
         fields.push(ObjectField {
+            mutable: field.mutable,
             name: field.name.clone(),
             ty,
             initializer: ObjectInitializer::ThreadLocalArray {
@@ -310,6 +319,7 @@ pub(super) fn check(
             signatures: &signatures,
             source_type_params: &[],
             source_infix: &HashSet::new(),
+            source_operator: &HashSet::new(),
             receiver: if method.jvm_static {
                 None
             } else {
@@ -403,12 +413,21 @@ pub(super) fn check(
         });
     }
     Ok(Module {
+        exposed_fields: HashMap::new(),
+        properties: Vec::new(),
+        initializers: Vec::new(),
+        locals: 0,
         lambdas: Rc::try_unwrap(lambdas).ok().unwrap().into_inner(),
         constants: Vec::new(),
         functions: Vec::new(),
         class_decl: None,
         interface_decl: None,
         object_decl: Some(DynamicObject {
+            bridges: Vec::new(),
+            exposed_fields: HashMap::new(),
+            constants: source.constants.clone(),
+            initializers: Vec::new(),
+            locals: 0,
             owner,
             interfaces: Vec::new(),
             serializable: false,
@@ -416,6 +435,728 @@ pub(super) fn check(
             methods,
         }),
     })
+}
+
+pub(super) fn infer_legacy_field(
+    source: &syntax::ObjectDecl,
+    field: &syntax::ObjectField,
+    package: &str,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+    classes: &HashMap<String, JavaClass>,
+) -> Result<Type> {
+    let mut isolated = source.clone();
+    isolated.fields = vec![field.clone()];
+    isolated.methods.clear();
+    isolated.constants.clear();
+    isolated.objects.clear();
+    let checked = legacy_check(&isolated, package, classpath, imports, classes)?;
+    Ok(checked.object_decl.unwrap().fields.pop().unwrap().ty)
+}
+
+pub(super) fn check(
+    source: &syntax::ObjectDecl,
+    package: &str,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+    classes: &HashMap<String, JavaClass>,
+    owner_override: Option<&str>,
+) -> Result<Module> {
+    let owner = owner_override.map(str::to_owned).unwrap_or_else(|| {
+        if package.is_empty() {
+            source.name.clone()
+        } else {
+            format!("{}/{}", package.replace('.', "/"), source.name)
+        }
+    });
+    let lambdas = Rc::new(RefCell::new(Vec::new()));
+    let mut context =
+        declarations::DeclarationContext::new(&owner, classpath, imports, classes, &lambdas);
+    for constant in &source.constants {
+        let (ty, kind) = constant_expr(&constant.value);
+        context.constants.insert(
+            constant.name.clone(),
+            (
+                ty,
+                Expr {
+                    kind,
+                    offset: constant.offset,
+                },
+            ),
+        );
+    }
+    for method in &source.methods {
+        let function = &method.function;
+        if method.jvm_static && method.is_override {
+            return Err(Diagnostic::new(
+                function.offset,
+                "A JvmStatic method cannot implement an instance override",
+            ));
+        }
+        for (name, active) in [
+            ("JvmStatic", method.jvm_static),
+            ("Throws", !method.throws.is_empty()),
+            ("Suppress", !method.suppress.is_empty()),
+        ] {
+            if active && (source.name == name || imports.contains_key(name)) {
+                return Err(Diagnostic::new(
+                    function.offset,
+                    "Shadowed builtin object annotations are not supported",
+                ));
+            }
+        }
+        for name in &method.throws {
+            if source.name == *name
+                || source.fields.iter().any(|f| f.name == *name)
+                || source.methods.iter().any(|m| m.function.name == *name)
+            {
+                return Err(Diagnostic::new(
+                    function.offset,
+                    "Throws exception class literals cannot be shadowed by object declarations",
+                ));
+            }
+        }
+        if method.inline && !function.private {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Only private inline object methods are supported",
+            ));
+        }
+        if function.internal {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Internal object methods are unsupported",
+            ));
+        }
+        if function.receiver.is_some() {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Member extensions are unsupported",
+            ));
+        }
+        let params = function
+            .params
+            .iter()
+            .map(|(_, t)| resolve_type_checked(t, imports, function.offset, classpath, classes))
+            .collect::<Result<Vec<_>>>()?;
+        let result = resolve_type_checked(
+            &function.result,
+            imports,
+            function.offset,
+            classpath,
+            classes,
+        )?;
+        let descriptor = format!(
+            "({}){}",
+            params.iter().map(Type::descriptor).collect::<String>(),
+            result.descriptor()
+        );
+        let methods = context
+            .object_methods
+            .entry(function.name.clone())
+            .or_default();
+        if methods
+            .iter()
+            .any(|m| m.descriptor.split(')').next() == descriptor.split(')').next())
+        {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Conflicting object method parameter signature",
+            ));
+        }
+        methods.push(JavaMethod {
+            owner: owner.clone(),
+            name: function.name.clone(),
+            descriptor,
+            access: (if function.private { 2 } else { 1 }) | if method.jvm_static { 8 } else { 0 },
+            unsupported: false,
+            source_property: None,
+            kotlin_params: Some(
+                function
+                    .params
+                    .iter()
+                    .zip(&params)
+                    .enumerate()
+                    .map(|(i, ((n, _), ty))| {
+                        (
+                            n.clone(),
+                            ty.clone(),
+                            function.defaults.get(i).is_some_and(Option::is_some),
+                        )
+                    })
+                    .collect(),
+            ),
+            kotlin_result: Some(result),
+            kotlin_internal: function.internal,
+            library: Some(crate::classpath::LibraryMethod {
+                source_name: function.name.clone(),
+                type_parameters: function.type_params.clone(),
+                receiver: None,
+                infix: function.infix,
+                operator: function.operator,
+                kotlin_public: !function.private && !function.protected && !function.internal,
+                inline: method.inline,
+                code: None,
+            }),
+        });
+    }
+    let mut implemented_interfaces = Vec::new();
+    let mut required = HashMap::new();
+    for name in &source.interfaces {
+        let name = imports.get(name).cloned().unwrap_or_else(|| name.clone());
+        let class = classes
+            .get(&name)
+            .cloned()
+            .map(Ok)
+            .unwrap_or_else(|| classpath.load(&name))?;
+        for method in interfaces::interface_methods(&class, classes, source.offset)?.into_values() {
+            required.insert(
+                declarations::member_key(&method.name, &method.descriptor),
+                method,
+            );
+        }
+        implemented_interfaces.push(name);
+    }
+    if let Ok(object) = classpath.load("java/lang/Object") {
+        for method in object.methods {
+            if source
+                .methods
+                .iter()
+                .any(|m| m.function.name == method.name)
+                && method.access & 8 == 0
+            {
+                required.insert(
+                    declarations::member_key(&method.name, &method.descriptor),
+                    method,
+                );
+            }
+        }
+    }
+    for method in required.values() {
+        context.members.insert(
+            declarations::member_key(&method.name, &method.descriptor),
+            method.clone(),
+        );
+    }
+    let mut fields = Vec::new();
+    let mut initializers = Vec::new();
+    let mut locals = 0;
+    let mut delegated_accessors = Vec::new();
+    let mut ordered = source
+        .fields
+        .iter()
+        .map(|f| (f.offset, Some(f), None))
+        .chain(source.initializers.iter().map(|(o, b)| (*o, None, Some(b))))
+        .collect::<Vec<_>>();
+    ordered.sort_by_key(|entry| entry.0);
+    for (_, field, block) in ordered {
+        if let Some(block) = block {
+            let mut checker = context.checker(false, locals, Type::Unit);
+            checker.allow_return = false;
+            let (body, _) = checker.block(block)?;
+            locals = checker.next;
+            initializers.extend(body);
+            continue;
+        }
+        let field = field.unwrap();
+        if field.name == "INSTANCE" || context.static_fields.contains_key(&field.name) {
+            return Err(Diagnostic::new(field.offset, "Conflicting object property"));
+        }
+        if field.delegate.is_some() {
+            let property = syntax::PropertyDecl {
+                name: field.name.clone(),
+                private: field.private,
+                protected: false,
+                mutable: field.mutable,
+                inferred: field.ty.is_none(),
+                initializer: None,
+                offset: field.offset,
+                ty: field.ty.clone().unwrap_or(Type::Unit),
+                body: field.body.clone(),
+                is_override: field.is_override,
+                setter: field.setter.clone(),
+                delegate: field.delegate.clone(),
+                lateinit: field.lateinit,
+                open: false,
+            };
+            let delegated = delegates::check_property(
+                &property,
+                &context,
+                &owner,
+                &owner,
+                true,
+                true,
+                &[],
+                locals,
+            )?;
+            let metadata_type = delegated.metadata.ty.clone();
+            initializers.push(Statement::JavaFieldStore {
+                owner: owner.clone(),
+                name: delegated.metadata_name.clone(),
+                ty: metadata_type.clone(),
+                receiver: None,
+                value: delegated.metadata,
+            });
+            fields.push(ObjectField {
+                name: delegated.metadata_name,
+                ty: metadata_type.clone(),
+                mutable: false,
+                initializer: ObjectInitializer::Value {
+                    value: default_value(&metadata_type),
+                    locals: 0,
+                },
+            });
+            let delegate_type = delegated.field.ty.clone();
+            initializers.push(Statement::JavaFieldStore {
+                owner: owner.clone(),
+                name: delegated.field.name.clone(),
+                ty: delegate_type.clone(),
+                receiver: None,
+                value: delegated.field.initializer.unwrap(),
+            });
+            fields.push(ObjectField {
+                name: delegated.field.name,
+                ty: delegate_type.clone(),
+                mutable: false,
+                initializer: ObjectInitializer::Value {
+                    value: default_value(&delegate_type),
+                    locals: 0,
+                },
+            });
+            context
+                .static_fields
+                .insert(field.name.clone(), (owner.clone(), delegated.property_type));
+            if field.mutable {
+                context.mutable_fields.insert(field.name.clone());
+            }
+            locals = delegated.locals;
+            delegated_accessors.extend(delegated.methods);
+            continue;
+        }
+        let thread_local = field.initializer.as_ref().is_some_and(|e|matches!(&e.kind,ExprKind::Call(target,_) if matches!(&target.kind,ExprKind::Property(receiver,name) if name=="withInitial" && matches!(&receiver.kind,ExprKind::Name(n) if n=="ThreadLocal"))));
+        if thread_local
+            && !source.methods.iter().any(|m| {
+                matches!(
+                    m.function.name.as_str(),
+                    "ByteArray" | "CharArray" | "IntArray"
+                )
+            })
+            && field
+                .ty
+                .as_ref()
+                .is_none_or(|ty| matches!(ty, Type::ThreadLocal(_)))
+        {
+            let mut isolated = source.clone();
+            isolated.fields = vec![field.clone()];
+            isolated.methods.clear();
+            isolated.constants.clear();
+            isolated.objects.clear();
+            if let Ok(checked) = legacy_check(&isolated, package, classpath, imports, classes) {
+                let mut checked = checked.object_decl.unwrap().fields;
+                let field = checked.pop().unwrap();
+                context
+                    .static_fields
+                    .insert(field.name.clone(), (owner.clone(), field.ty.clone()));
+                fields.push(field);
+                continue;
+            }
+        }
+        context
+            .static_fields
+            .entry(field.name.clone())
+            .or_insert_with(|| (owner.clone(), Type::Unit));
+        let mut checker = context.checker(false, locals, Type::Unit);
+        checker.allow_return = false;
+        let value = field
+            .initializer
+            .as_ref()
+            .map(|e| {
+                if let Some(ty) = &field.ty {
+                    let ty = resolve_type_checked(ty, imports, field.offset, classpath, classes)?;
+                    checker.expected_value(e, &ty)
+                } else {
+                    checker.value(e)
+                }
+            })
+            .transpose()?;
+        let ty = if let Some(ty) = &field.ty {
+            resolve_type_checked(ty, imports, field.offset, classpath, classes)?
+        } else {
+            value.as_ref().map(|v| v.ty.clone()).ok_or_else(|| {
+                Diagnostic::new(field.offset, "Property requires a type or initializer")
+            })?
+        };
+        if ty == Type::Unit || ty == Type::Null {
+            return Err(Diagnostic::new(
+                field.offset,
+                "Property requires a supported type",
+            ));
+        }
+        if field.lateinit
+            && (!field.mutable
+                || !ty.is_reference()
+                || ty.is_nullable()
+                || field.initializer.is_some())
+        {
+            return Err(Diagnostic::new(
+                field.offset,
+                "lateinit requires an uninitialized mutable non-null reference property",
+            ));
+        }
+        if let Some(value) = value {
+            let value = checker.coerce(value, ty.clone(), field.offset)?;
+            initializers.push(Statement::JavaFieldStore {
+                owner: owner.clone(),
+                name: field.name.clone(),
+                ty: ty.clone(),
+                receiver: None,
+                value,
+            });
+        }
+        locals = checker.next;
+        drop(checker);
+        context
+            .static_fields
+            .insert(field.name.clone(), (owner.clone(), ty.clone()));
+        if field.mutable {
+            context.mutable_fields.insert(field.name.clone());
+        }
+        fields.push(ObjectField {
+            name: field.name.clone(),
+            ty: ty.clone(),
+            mutable: field.mutable,
+            initializer: ObjectInitializer::Value {
+                value: default_value(&ty),
+                locals: 0,
+            },
+        });
+    }
+    for field in &source.fields {
+        let ty = context.static_fields[&field.name].1.clone();
+        for (prefix, name, result, params, active) in [
+            (
+                "#get:",
+                getter_name(&field.name),
+                ty.clone(),
+                Vec::<(String, Type)>::new(),
+                !field.body.is_empty() || field.lateinit || field.delegate.is_some(),
+            ),
+            (
+                "#set:",
+                setter_name(&field.name),
+                Type::Unit,
+                vec![("value".into(), ty.clone())],
+                field.setter.is_some() || field.delegate.is_some(),
+            ),
+        ] {
+            if active {
+                context.members.insert(
+                    format!("{prefix}{}", field.name),
+                    JavaMethod {
+                        library: None,
+                        owner: owner.clone(),
+                        name,
+                        descriptor: format!(
+                            "({}){}",
+                            params.iter().map(|p| p.1.descriptor()).collect::<String>(),
+                            result.descriptor()
+                        ),
+                        access: if field.private { 2 } else { 1 },
+                        unsupported: false,
+                        source_property: Some(field.name.clone()),
+                        kotlin_params: Some(
+                            params
+                                .iter()
+                                .map(|(n, t)| (n.clone(), t.clone(), false))
+                                .collect(),
+                        ),
+                        kotlin_result: Some(result),
+                        kotlin_internal: false,
+                    },
+                );
+            }
+        }
+    }
+    let mut methods = delegated_accessors
+        .into_iter()
+        .map(|function| ObjectMethod {
+            function,
+            jvm_static: false,
+            throws: Vec::new(),
+            inline: false,
+        })
+        .collect::<Vec<_>>();
+    for method in &source.methods {
+        let function =
+            context.function(&method.function, !method.jvm_static, method.is_override)?;
+        let inherited_key = declarations::member_key(&function.name, &function.descriptor());
+        if let Some(parent) = required.get(&inherited_key) {
+            if !method.is_override || parent.access & 16 != 0 {
+                return Err(Diagnostic::new(
+                    method.function.offset,
+                    "Inherited method implementation requires override of an open member",
+                ));
+            }
+        } else if method.is_override {
+            return Err(Diagnostic::new(
+                method.function.offset,
+                "Member overrides no inherited declaration",
+            ));
+        }
+        if let Some(parent) = required.get(&inherited_key) {
+            if function.descriptor() != parent.descriptor
+                || parent.source_property.is_some()
+                || !declarations::override_signature(
+                    parent,
+                    &function
+                        .params
+                        .iter()
+                        .map(|p| p.1.clone())
+                        .collect::<Vec<_>>(),
+                    &function.result,
+                )?
+            {
+                return Err(Diagnostic::new(
+                    method.function.offset,
+                    "Object override requires an exact supported inherited signature",
+                ));
+            }
+        }
+        let throws = method
+            .throws
+            .iter()
+            .map(|name| {
+                exception_owner(imports.get(name).map(String::as_str).unwrap_or(name))
+                    .map(str::to_owned)
+                    .ok_or_else(|| {
+                        Diagnostic::new(
+                            method.function.offset,
+                            "Unsupported Throws annotation class",
+                        )
+                    })
+            })
+            .collect::<Result<Vec<_>>>()?;
+        methods.push(ObjectMethod {
+            function,
+            jvm_static: method.jvm_static,
+            throws,
+            inline: method.inline,
+        });
+    }
+    for field in &source.fields {
+        if field.delegate.is_some() {
+            continue;
+        }
+        let ty = context.static_fields[&field.name].1.clone();
+        if field.private && field.body.is_empty() && field.setter.is_none() && !field.lateinit {
+            continue;
+        }
+        if let Some(required) =
+            required.get(&declarations::member_key(&getter_name(&field.name), "()V"))
+        {
+            if !field.is_override || class_method_types(required)? != (Vec::new(), ty.clone()) {
+                return Err(Diagnostic::new(
+                    field.offset,
+                    "Interface property implementation requires override and an exact signature",
+                ));
+            }
+        }
+        let mut accessor_context = context.clone();
+        accessor_context.members.insert(
+            "#backing".into(),
+            JavaMethod {
+                library: None,
+                owner: owner.clone(),
+                name: field.name.clone(),
+                descriptor: format!("(){}", ty.descriptor()),
+                access: 8,
+                unsupported: false,
+                source_property: None,
+                kotlin_params: None,
+                kotlin_result: None,
+                kotlin_internal: false,
+            },
+        );
+        let source_property = syntax::ClassCompanionProperty {
+            name: field.name.clone(),
+            offset: field.offset,
+            private: field.private,
+            mutable: field.mutable,
+            ty: Some(ty.clone()),
+            initializer: field.initializer.clone(),
+            body: field.body.clone(),
+            setter: field.setter.clone(),
+            delegate: field.delegate.clone(),
+            lateinit: field.lateinit,
+        };
+        let read = Value {
+            ty: ty.clone(),
+            kind: ValueKind::StaticField {
+                owner: owner.clone(),
+                name: field.name.clone(),
+            },
+        };
+        let body = if field.lateinit {
+            declarations::lateinit_getter(read, &field.name)
+        } else {
+            vec![Statement::Return(read)]
+        };
+        let function = if field.body.is_empty() {
+            Function {
+                type_params: Vec::new(),
+                defaults: Vec::new(),
+                name: getter_name(&field.name),
+                private: field.private,
+                is_override: field.is_override,
+                params: Vec::new(),
+                result: ty.clone(),
+                locals: 1,
+                body,
+            }
+        } else {
+            accessor_context.function(
+                &declarations::accessor_source(
+                    getter_name(&field.name),
+                    &source_property,
+                    Vec::new(),
+                    ty.clone(),
+                    field.body.clone(),
+                ),
+                true,
+                field.is_override,
+            )?
+        };
+        methods.push(ObjectMethod {
+            function,
+            jvm_static: false,
+            throws: Vec::new(),
+            inline: false,
+        });
+        if field.mutable {
+            if let Some((parameter, body)) = &field.setter {
+                let function = accessor_context.function(
+                    &declarations::accessor_source(
+                        setter_name(&field.name),
+                        &source_property,
+                        vec![(parameter.clone(), ty.clone())],
+                        Type::Unit,
+                        body.clone(),
+                    ),
+                    true,
+                    field.is_override,
+                )?;
+                methods.push(ObjectMethod {
+                    function,
+                    jvm_static: false,
+                    throws: Vec::new(),
+                    inline: false,
+                });
+                continue;
+            }
+            methods.push(ObjectMethod {
+                function: Function {
+                    type_params: Vec::new(),
+                    defaults: Vec::new(),
+                    name: setter_name(&field.name),
+                    private: false,
+                    is_override: false,
+                    params: vec![("value".into(), ty.clone())],
+                    result: Type::Unit,
+                    locals: 1 + ty.slots() as u16,
+                    body: vec![
+                        Statement::JavaFieldStore {
+                            owner: owner.clone(),
+                            name: field.name.clone(),
+                            ty: ty.clone(),
+                            receiver: None,
+                            value: Value {
+                                ty,
+                                kind: ValueKind::Local(1),
+                            },
+                        },
+                        Statement::Return(Value {
+                            ty: Type::Unit,
+                            kind: ValueKind::Unit,
+                        }),
+                    ],
+                },
+                jvm_static: false,
+                throws: Vec::new(),
+                inline: false,
+            });
+        }
+    }
+    let mut bridges = Vec::new();
+    for method in required.into_values() {
+        if methods
+            .iter()
+            .any(|m| m.function.name == method.name && m.function.descriptor() == method.descriptor)
+        {
+            continue;
+        }
+        if method.access & 0x0400 != 0 {
+            return Err(Diagnostic::new(
+                source.offset,
+                format!("Missing interface implementation: {}", method.name),
+            ));
+        }
+        if classpath
+            .load(&method.owner)
+            .is_ok_and(|c| c.kotlin_interface)
+        {
+            bridges.push(declarations::direct_default_bridge(
+                method,
+                &implemented_interfaces,
+                classpath,
+                source.offset,
+            )?);
+        }
+    }
+    bridges.sort_by(|a, b| a.name.cmp(&b.name).then(a.descriptor.cmp(&b.descriptor)));
+    drop(context);
+    Ok(Module {
+        exposed_fields: HashMap::new(),
+        properties: Vec::new(),
+        initializers: Vec::new(),
+        locals: 0,
+        lambdas: Rc::try_unwrap(lambdas).ok().unwrap().into_inner(),
+        constants: source.constants.clone(),
+        functions: Vec::new(),
+        class_decl: None,
+        interface_decl: None,
+        object_decl: Some(DynamicObject {
+            bridges,
+            exposed_fields: source
+                .fields
+                .iter()
+                .filter(|f| f.lateinit)
+                .map(|f| (f.name.clone(), if f.private { 2 } else { 1 }))
+                .collect(),
+            constants: source.constants.clone(),
+            owner,
+            interfaces: implemented_interfaces,
+            serializable: false,
+            fields,
+            methods,
+            initializers,
+            locals,
+        }),
+    })
+}
+
+pub(super) fn default_value(ty: &Type) -> Value {
+    let kind = match ty {
+        Type::Long => ValueKind::Long(0),
+        Type::Float => ValueKind::Float(0),
+        Type::Boolean => ValueKind::Boolean(false),
+        Type::Char => ValueKind::Int(0),
+        Type::Int | Type::Byte => ValueKind::Int(0),
+        _ => ValueKind::Null,
+    };
+    Value {
+        ty: ty.clone(),
+        kind,
+    }
 }
 
 fn exception_owner(name: &str) -> Option<&'static str> {
@@ -453,232 +1194,38 @@ impl Checker<'_> {
         receiver: Option<Value>,
         offset: usize,
     ) -> Result<Value> {
-        let options = self.object_methods[name].clone();
-        let mut values = Vec::new();
-        for arg in args {
-            values.push(self.value(arg)?);
-        }
-        let mut matching = Vec::new();
-        for option in options {
-            let (params, result) = self.method_types(&option, offset)?;
-            if params.len() == values.len()
-                && params.iter().zip(&values).all(|(param, value)| {
-                    param == &value.ty
-                        || matches!(value.ty, Type::Platform(_)) && value.ty.base() == param
-                })
-            {
-                matching.push((option, params, result));
+        let mut options = self.object_methods[name].clone();
+        for inherited in self.members.values().filter(|method| method.name == name) {
+            if !options.iter().any(|method| {
+                declarations::member_key(&method.name, &method.descriptor)
+                    == declarations::member_key(&inherited.name, &inherited.descriptor)
+            }) {
+                options.push(inherited.clone());
             }
         }
-        if matching.len() != 1 {
-            return Err(Diagnostic::new(
-                offset,
-                "Object overload requires one exact supported argument signature",
-            ));
-        }
-        let (method, params, result) = matching.pop().unwrap();
-        let mut args = Vec::new();
-        for (index, (value, param)) in values.into_iter().zip(params).enumerate() {
-            args.push(self.coerce(value, param, offset + index)?);
-        }
-        let kind = if method.access & 8 != 0 {
-            let call = Value {
-                ty: result.clone(),
-                kind: ValueKind::StaticCall {
-                    owner: method.owner,
-                    name: method.name,
-                    descriptor: method.descriptor,
-                    args,
-                },
-            };
+        let method = self.select_method(&options, args, offset)?;
+        if method.access & 8 != 0 {
+            let call = self.library_static_call(method, args, offset)?;
             if let Some(receiver) = receiver {
-                let slot = self.allocate_slot(offset)?;
-                ValueKind::Let {
-                    slot,
-                    value: Box::new(receiver),
-                    body: Box::new(call),
-                }
+                let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
+                return Ok(Value {
+                    ty: call.ty.clone(),
+                    kind: ValueKind::Let {
+                        slot,
+                        value: Box::new(receiver),
+                        body: Box::new(call),
+                    },
+                });
+            }
+            Ok(call)
+        } else {
+            let receiver = if let Some(receiver) = receiver {
+                receiver
             } else {
-                call.kind
-            }
-        } else {
-            let receiver = receiver.unwrap_or_else(|| {
-                let kind = self
-                    .receiver
-                    .as_ref()
-                    .filter(|receiver| receiver.ty == Type::Java(method.owner.clone()))
-                    .map(|receiver| ValueKind::Local(receiver.slot))
-                    .unwrap_or_else(|| ValueKind::ObjectInstance(method.owner.clone()));
-                Value {
-                    ty: Type::Java(method.owner.clone()),
-                    kind,
-                }
-            });
-            args.insert(0, receiver);
-            ValueKind::MemberCall {
-                method,
-                interface: false,
-                args,
-            }
-        };
-        Ok(Value { ty: result, kind })
-    }
-    pub(super) fn method_types(
-        &self,
-        method: &JavaMethod,
-        offset: usize,
-    ) -> Result<(Vec<Type>, Type)> {
-        let mut cursor = 1;
-        if !method.descriptor.starts_with('(') {
-            return Err(Diagnostic::new(offset, "Invalid Java method descriptor"));
+                self.receiver_value(offset)?
+            };
+            self.member_call(method, receiver, args, offset)
         }
-        let mut params = Vec::new();
-        while method.descriptor.as_bytes().get(cursor) != Some(&b')') {
-            params.push(self.java_type(&method.descriptor, &mut cursor, offset)?);
-        }
-        cursor += 1;
-        let result = self.java_type(&method.descriptor, &mut cursor, offset)?;
-        if cursor != method.descriptor.len() || params.contains(&Type::Unit) {
-            return Err(Diagnostic::new(offset, "Invalid Java method descriptor"));
-        }
-        Ok((params, result))
-    }
-    pub(super) fn throw_exception(&mut self, expr: &Expr, offset: usize) -> Result<Statement> {
-        let ExprKind::Call(target, args) = &expr.kind else {
-            return Err(Diagnostic::new(
-                offset,
-                "Only throwing supported standard exception constructors is supported",
-            ));
-        };
-        let ExprKind::Name(name) = &target.kind else {
-            return Err(Diagnostic::new(
-                offset,
-                "Only throwing supported standard exception constructors is supported",
-            ));
-        };
-        let imported = self.imports.get(name);
-        let owner =
-            exception_owner(imported.map(String::as_str).unwrap_or(name)).ok_or_else(|| {
-                Diagnostic::new(
-                    offset,
-                    "Only throwing supported standard exception constructors is supported",
-                )
-            })?;
-        let mut shadowed = !self.unshadowed(name);
-        if imported.is_some_and(|value| value == owner) {
-            shadowed = self.local(name).is_some()
-                || self.functions.contains_key(name)
-                || self.object_methods.contains_key(name)
-                || self.object_fields.contains_key(name)
-                || self.fields.contains_key(name)
-                || self.members.contains_key(name)
-                || self
-                    .members
-                    .values()
-                    .any(|method| method.source_property.as_deref() == Some(name))
-                || self.companion_fields.contains_key(name);
-        }
-        if shadowed || args.len() > 1 {
-            return Err(Diagnostic::new(
-                offset,
-                "Only throwing unshadowed supported exception constructors is supported",
-            ));
-        }
-        let message = if let Some(arg) = args.first() {
-            let value = self.value(arg)?;
-            if value.ty == Type::Null && owner != "java/lang/IndexOutOfBoundsException" {
-                return Err(Diagnostic::new(
-                    arg.offset,
-                    "Ambiguous null exception constructor argument",
-                ));
-            }
-            Some(self.coerce(value, Type::Nullable(Box::new(Type::String)), arg.offset)?)
-        } else {
-            None
-        };
-        if owner == "java/lang/IllegalArgumentException" {
-            if let Some(message) = message {
-                return Ok(Statement::Throw(message));
-            }
-        }
-        Ok(Statement::ThrowException {
-            owner: owner.into(),
-            message,
-        })
-    }
-    pub(super) fn range_contains(
-        &mut self,
-        value: Value,
-        range: &Expr,
-        offset: usize,
-    ) -> Result<Value> {
-        let ExprKind::Binary(operator, start, end) = &range.kind else {
-            return Err(Diagnostic::new(
-                offset,
-                "Membership requires a bounded inclusive Int or Char range",
-            ));
-        };
-        if operator != ".." || !matches!(value.ty, Type::Int | Type::Char) {
-            return Err(Diagnostic::new(
-                offset,
-                "Membership requires a bounded inclusive Int or Char range",
-            ));
-        }
-        let start = self.value(start)?;
-        let end = self.value(end)?;
-        self.require(&start, value.ty.clone(), offset)?;
-        self.require(&end, value.ty.clone(), offset)?;
-        let value_slot = self.allocate_slot(offset)?;
-        let start_slot = self.allocate_slot(offset)?;
-        let end_slot = self.allocate_slot(offset)?;
-        let local = |slot| Value {
-            ty: value.ty.clone(),
-            kind: ValueKind::Local(slot),
-        };
-        let yes = Value {
-            ty: Type::Boolean,
-            kind: ValueKind::Binary(
-                ">=".into(),
-                Box::new(local(value_slot)),
-                Box::new(local(start_slot)),
-            ),
-        };
-        let no = Value {
-            ty: Type::Boolean,
-            kind: ValueKind::Binary(
-                "<=".into(),
-                Box::new(local(value_slot)),
-                Box::new(local(end_slot)),
-            ),
-        };
-        let body = Value {
-            ty: Type::Boolean,
-            kind: ValueKind::Binary("&&".into(), Box::new(yes), Box::new(no)),
-        };
-        let body = Value {
-            ty: Type::Boolean,
-            kind: ValueKind::Let {
-                slot: value_slot,
-                value: Box::new(value),
-                body: Box::new(body),
-            },
-        };
-        let body = Value {
-            ty: Type::Boolean,
-            kind: ValueKind::Let {
-                slot: end_slot,
-                value: Box::new(end),
-                body: Box::new(body),
-            },
-        };
-        Ok(Value {
-            ty: Type::Boolean,
-            kind: ValueKind::Let {
-                slot: start_slot,
-                value: Box::new(start),
-                body: Box::new(body),
-            },
-        })
     }
 }
 
@@ -687,10 +1234,16 @@ mod tests {
     use super::*;
     fn checked(source: &str) -> Result<Module> {
         let source = syntax::parse(source)?;
-        super::super::check(&source, &Classpath::new(&[])?)
+        super::super::check(
+            &source,
+            &Classpath::new(&[std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                .join("references/kotlinc/lib/kotlin-stdlib.jar")])?,
+        )
     }
     fn rejects(source: &str, message: &str) {
-        let error = checked(source).err().expect("expected rejection");
+        let error = checked(source)
+            .err()
+            .unwrap_or_else(|| panic!("expected rejection: {source}"));
         assert!(error.message.contains(message), "{}", error.message);
     }
     const SCRATCH: &str = r#"
@@ -736,11 +1289,11 @@ object Scratch {
                 "convert(input, 0, input.size)",
                 "convert(input, true, input.size)",
             ),
-            "exact supported argument signature",
+            "No applicable",
         );
         rejects(
             &SCRATCH.replace("convert(input, 0, input.size)", "convert(input, 0)"),
-            "exact supported argument signature",
+            "No applicable",
         );
     }
     #[test]
@@ -786,15 +1339,11 @@ object Scratch {
     }
     #[test]
     fn suppliers_and_builtin_annotation_shadowing_fail_closed() {
-        for source in [
-            "object Scratch { private val buffer = ThreadLocal.withInitial { ByteArray(4) }; fun ByteArray(size: Int): CharArray = CharArray(size) }",
-            "object Scratch { private val ByteArray = ThreadLocal.withInitial { ByteArray(4) } }",
-        ] {
-            rejects(source, "Shadowed array constructors");
-        }
+        assert!(checked("object Scratch { private val buffer = ThreadLocal.withInitial { ByteArray(4) }; fun ByteArray(size: Int): CharArray = CharArray(size) }").is_ok());
+        assert!(checked("object Scratch { private val ByteArray = ThreadLocal.withInitial { ByteArray(4) } }").is_err());
         rejects(
             "object Scratch { private val x = ThreadLocal.withInitial { missing } }",
-            "single array allocation",
+            "Unresolved",
         );
         rejects(
             "object Scratch { private val x = ThreadLocal.withInitial { ByteArray(missing) } }",
@@ -831,13 +1380,13 @@ object Scratch {
                 .is_ok()
         );
         assert!(checked("fun f(value: Char): Boolean = value in 'A'..'Z'").is_ok());
-        rejects(
-            "fun f(): IntArray { var result: ThreadLocal<ByteArray>; return IntArray(1) }",
-            "Explicit ThreadLocal",
+        assert!(
+            checked("fun f(): IntArray { var result: ThreadLocal<ByteArray>; return IntArray(1) }")
+                .is_ok()
         );
         rejects(
             "fun f(value: Boolean): Boolean = value in true..false",
-            "bounded inclusive",
+            "Ranges require",
         );
     }
     #[test]
@@ -856,7 +1405,29 @@ object Scratch {
             panic!("static calls must preserve explicit receivers")
         };
         assert!(matches!(receiver.kind, ValueKind::If(_, _, _)));
-        assert!(matches!(call.kind, ValueKind::StaticCall { .. }));
+        assert!(
+            matches!(&call.kind, ValueKind::StaticCall { .. })
+                || matches!(&call.kind,ValueKind::JavaCall{method,..} if method.access&8!=0&&method.name=="f")
+        );
+    }
+    #[test]
+    fn object_and_class_overloads_do_not_override_unrelated_inherited_signatures() {
+        let inherited = "open class Parent { open fun choice(value:Int):Int=value; open fun choice(value:String):Int=value.length }; class Child:Parent(){override fun choice(value:Int):Int=super.choice(value)+1; override fun choice(value:String):Int=super.choice(value)+2}";
+        assert!(crate::compile_all(inherited, "InheritedOverloads.kt").is_ok());
+        for source in [
+            "object Text { @JvmStatic fun toString(bytes:ByteArray):String=String(CharArray(bytes.size),0,bytes.size) }",
+            "object Text { override fun toString():String=\"text\"; fun toString(value:Int):String=value.toString(); fun current():String=toString() }",
+            "class Text { override fun toString():String=\"text\"; fun toString(value:Int):String=value.toString(); fun current():String=toString() }",
+        ] {
+            assert!(checked(source).is_ok(), "{source}");
+        }
+        for source in [
+            "object Text { fun toString():String=\"text\" }",
+            "object Text { override fun toString(value:Int):String=value.toString() }",
+            "class Text { override fun notify() {} }",
+        ] {
+            assert!(checked(source).is_err(), "{source}");
+        }
     }
     #[test]
     fn inferred_thread_local_buffers_support_structural_reference_equality() {
@@ -900,12 +1471,17 @@ object Scratch {
         let Statement::Return(static_call) = &object.methods[2].function.body[0] else {
             panic!()
         };
-        let ValueKind::MemberCall { args: instance, .. } = &instance.kind else {
+        let (ValueKind::MemberCall { args: instance, .. }
+        | ValueKind::JavaCall { args: instance, .. }) = &instance.kind
+        else {
             panic!()
         };
-        let ValueKind::MemberCall {
+        let (ValueKind::MemberCall {
             args: static_args, ..
-        } = &static_call.kind
+        }
+        | ValueKind::JavaCall {
+            args: static_args, ..
+        }) = &static_call.kind
         else {
             panic!()
         };
@@ -918,37 +1494,43 @@ object Scratch {
         let Statement::Return(contains) = &object.methods[3].function.body[0] else {
             panic!()
         };
-        let ValueKind::Let {
-            value: low, body, ..
-        } = &contains.kind
-        else {
-            panic!()
-        };
-        let ValueKind::Let {
-            value: high, body, ..
-        } = &body.kind
-        else {
-            panic!()
-        };
-        let ValueKind::Let { value: subject, .. } = &body.kind else {
-            panic!()
-        };
-        for (value, expected) in [(low, "low"), (high, "high"), (subject, "subject")] {
-            let ValueKind::MemberCall { method, .. } = &value.kind else {
-                panic!()
-            };
-            assert_eq!(method.name, expected);
+        fn calls(value: &Value, names: &mut Vec<String>) {
+            match &value.kind {
+                ValueKind::Let { value, body, .. } => {
+                    calls(value, names);
+                    calls(body, names);
+                }
+                ValueKind::New { args, .. } | ValueKind::StaticCall { args, .. } => {
+                    for arg in args {
+                        calls(arg, names);
+                    }
+                }
+                ValueKind::JavaCall { method, args }
+                | ValueKind::MemberCall { method, args, .. } => {
+                    for arg in args {
+                        calls(arg, names);
+                    }
+                    if matches!(method.name.as_str(), "subject" | "low" | "high") {
+                        names.push(method.name.clone());
+                    }
+                }
+                ValueKind::If(condition, yes, no) => {
+                    calls(condition, names);
+                    calls(yes, names);
+                    calls(no, names);
+                }
+                _ => {}
+            }
         }
+        let mut names = Vec::new();
+        calls(contains, &mut names);
+        assert_eq!(names, ["low", "high", "subject"]);
         let Statement::Return(selected) = &object.methods[4].function.body[0] else {
             panic!()
         };
-        let ValueKind::Let { value: subject, .. } = &selected.kind else {
-            panic!()
-        };
-        let ValueKind::MemberCall { method, .. } = &subject.kind else {
-            panic!()
-        };
-        assert_eq!(method.name, "subject");
+        let mut names = Vec::new();
+        calls(selected, &mut names);
+        assert_eq!(names, ["subject", "low", "high"]);
     }
     #[test]
     fn implicit_thread_local_get_assertions_preserve_the_expression_name() {

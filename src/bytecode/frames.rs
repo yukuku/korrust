@@ -190,6 +190,7 @@ fn transfer(
                 Some(Constant::Integer(_)) => Verification::Int,
                 Some(Constant::Float(_)) => Verification::Float,
                 Some(Constant::String(_)) => Verification::Object("java/lang/String".into()),
+                Some(Constant::Class(_)) => Verification::Object("java/lang/Class".into()),
                 _ => return Err(failure("Unsupported constant during frame generation")),
             }),
         0x15..=0x19 => frame
@@ -208,6 +209,9 @@ fn transfer(
                 0x32 => match array {
                     Verification::Object(name) if name.starts_with("[L") => {
                         Verification::Object(name[2..name.len() - 1].into())
+                    }
+                    Verification::Object(name) if name.starts_with("[[") => {
+                        Verification::Object(name[1..].into())
                     }
                     _ => Verification::Object("java/lang/Object".into()),
                 },
@@ -358,10 +362,14 @@ fn transfer(
         }
         0xbd => {
             pop(&mut frame)?;
-            frame.stack.push(Verification::Object(format!(
-                "[L{};",
-                class_name(pool, index())?
-            )));
+            let component = class_name(pool, index())?;
+            frame
+                .stack
+                .push(Verification::Object(if component.starts_with('[') {
+                    format!("[{component}")
+                } else {
+                    format!("[L{component};")
+                }));
         }
         0xbe | 0xc1 => {
             pop(&mut frame)?;
@@ -425,7 +433,27 @@ fn attach_with_constructor(
     constructor: bool,
 ) -> Result<()> {
     let length = u32::from_be_bytes(method[18..22].try_into().unwrap()) as usize;
+    let locals = locals.max(u16::from_be_bytes(method[16..18].try_into().unwrap()));
     let mut bytes = method[22..22 + length].to_vec();
+    let count_offset = 22 + length;
+    let exception_count =
+        u16::from_be_bytes(method[count_offset..count_offset + 2].try_into().unwrap()) as usize;
+    let mut handlers = Vec::new();
+    for index in 0..exception_count {
+        let offset = count_offset + 2 + index * 8;
+        let read = |at| u16::from_be_bytes([method[at], method[at + 1]]) as usize;
+        let catch = read(offset + 6);
+        handlers.push((
+            read(offset),
+            read(offset + 2),
+            read(offset + 4),
+            if catch == 0 {
+                "java/lang/Throwable".into()
+            } else {
+                class_name(pool, catch as u16)?
+            },
+        ));
+    }
     let mut initial = Frame {
         locals: vec![Verification::Top; locals as usize],
         stack: Vec::new(),
@@ -459,6 +487,14 @@ fn attach_with_constructor(
     merge(&mut states, 0, initial.clone(), &mut queue)?;
     loop {
         while let Some(offset) = queue.pop_front() {
+            let state = states[&offset].clone();
+            for (start, end, handler, catch) in &handlers {
+                if (*start..*end).contains(&offset) {
+                    let mut exceptional = state.clone();
+                    exceptional.stack = vec![Verification::Object(catch.clone())];
+                    merge(&mut states, *handler, exceptional, &mut queue)?;
+                }
+            }
             let (frame, successors) = transfer(pool, &bytes, offset, states[&offset].clone())?;
             for next in successors {
                 if next >= length || offsets.binary_search(&next).is_err() {
@@ -532,7 +568,7 @@ fn attach_with_constructor(
     u2(&mut attribute, pool.utf8("StackMapTable")?);
     u4(&mut attribute, table.len() as u32);
     attribute.extend(table);
-    let nested = 24 + length;
+    let nested = 24 + length + exception_count * 8;
     method[nested..nested + 2].copy_from_slice(&1u16.to_be_bytes());
     let old_length = u32::from_be_bytes(method[10..14].try_into().unwrap());
     method[10..14].copy_from_slice(&(old_length + attribute.len() as u32).to_be_bytes());

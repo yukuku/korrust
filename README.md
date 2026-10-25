@@ -24,7 +24,7 @@ cargo run --release --locked --offline -- benchmarks/sources/androidbible/Alkita
 
 Open the [HTML reports](target/reports-html/index.html); see [report generation and automatic watching](reports/README.md#html-viewer).
 
-Use [feature reports](reports/features/) to assess the tested subset and limitations. The command accepts one source file and an output directory. Pass dependency directories or JAR files with `-cp <classpath>`; separate entries with the platform path separator (`:` on macOS/Linux). JDK classes are read from `JAVA_HOME/jmods/java.base.jmod` after explicit dependencies. The differential harness prepares its dependencies automatically.
+Use [feature reports](reports/features/) to assess the tested subset and limitations. Run `python3 tools/check_declarations_twenty.py` after a release build for the declaration, control-flow, and operator milestone checks. The command accepts one source file and an output directory. Pass dependency directories or JAR files with `-cp <classpath>`; separate entries with the platform path separator (`:` on macOS/Linux). JDK classes are read from `JAVA_HOME/jmods/java.base.jmod` after explicit dependencies. The differential harness prepares its dependencies automatically.
 
 Use a dedicated output directory. Korrust records ownership of emitted classes and Kotlin package metadata there and refuses to overwrite unowned or externally modified outputs. Recompiling a source removes obsolete outputs previously emitted by that source.
 
@@ -120,6 +120,26 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 84. Safe casts with nullable results.
 85. Type-check smart casts for stable locals and parameters.
 86. When type-test branches with supported smart casts.
+87. Signed integer literals with hexadecimal/binary notation, separators, suffixes, and range checking.
+88. Mixed top-level functions, properties, classes, and objects in one source file.
+89. Shared executable-body support for class, object, and interface methods and accessors.
+90. Object and companion state initialized through ordinary expressions.
+91. Initialization blocks and declaration-order property initialization.
+92. Nested declarations with JVM nesting metadata.
+93. Local functions with captures and recursion.
+94. Operator-based contains calls for in, !in, and when branches.
+95. Concrete generic arrays with construction, indexing, writes, and iteration.
+96. Receiver function types and receiver lambdas with captures.
+97. Labeled returns, breaks, and continues within supported control-flow boundaries.
+98. Try/catch/finally expressions and abrupt exits.
+99. Operator-based get/set indexing through source and compiled declarations.
+100. Destructuring declarations in locals, loops, and lambdas.
+101. When subject variables with scoped bindings.
+102. Custom property accessors and backing fields.
+103. Delegated instance properties with getValue, setValue, provideDelegate, and property metadata.
+104. Late-initialized reference properties with checked reads.
+105. Open and abstract classes, inheritance, overrides, protected access, and super calls.
+106. Secondary constructors and constructor delegation.
 
 ## Project contract
 

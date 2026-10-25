@@ -8,6 +8,7 @@ fn upper_bounds(ty: &Type, depth: usize) -> Type {
         Type::Parameter { upper_bound, .. } => upper_bounds(upper_bound, depth + 1),
         Type::Nullable(inner) => Type::Nullable(Box::new(upper_bounds(inner, depth + 1))),
         Type::Platform(inner) => Type::Platform(Box::new(upper_bounds(inner, depth + 1))),
+        Type::Array(inner) => Type::Array(Box::new(upper_bounds(inner, depth + 1))),
         Type::List(inner) => Type::List(Box::new(upper_bounds(inner, depth + 1))),
         Type::MutableList(inner) => Type::MutableList(Box::new(upper_bounds(inner, depth + 1))),
         Type::ThreadLocal(inner) => Type::ThreadLocal(Box::new(upper_bounds(inner, depth + 1))),
@@ -20,6 +21,18 @@ fn upper_bounds(ty: &Type, depth: usize) -> Type {
                     ty: argument.ty.as_ref().map(|ty| upper_bounds(ty, depth + 1)),
                 })
                 .collect(),
+        },
+        Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::ReceiverFunction {
+            receiver: Box::new(upper_bounds(receiver, depth + 1)),
+            params: params
+                .iter()
+                .map(|ty| upper_bounds(ty, depth + 1))
+                .collect(),
+            result: Box::new(upper_bounds(result, depth + 1)),
         },
         Type::Function { params, result } => Type::Function {
             params: params

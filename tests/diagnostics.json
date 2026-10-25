@@ -232,12 +232,12 @@
   {
     "id": "object_const_positive_overflow",
     "source": "object O { const val V: Int = 2147483648 }",
-    "message": "Int constant literal is out of range"
+    "message": "Const literal type mismatch"
   },
   {
     "id": "object_const_negative_overflow",
     "source": "object O { const val V: Int = -2147483649 }",
-    "message": "Int constant literal is out of range"
+    "message": "Const literal type mismatch"
   },
   {
     "id": "object_missing_name",
@@ -267,7 +267,7 @@
   {
     "id": "class_missing_property_getter",
     "source": "class C(private val elements: Array<String>) { val count: Int }",
-    "message": "Expected get"
+    "message": "Properties require an initializer"
   },
   {
     "id": "class_missing_required_override",
@@ -290,7 +290,7 @@
   {
     "id": "class_unmarked_to_string",
     "source": "class C(private val elements: Array<String>) { fun toString(): String = elements[0] }",
-    "message": "Any and Object inherited members are not supported"
+    "message": "requires override"
   },
   {
     "id": "interface_duplicate_member",

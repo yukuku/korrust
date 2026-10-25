@@ -22,7 +22,38 @@ pub(super) fn expression_names(expr: &Expr, names: &mut HashSet<String>) {
         | ExprKind::TypeOperation(_, expr, _)
         | ExprKind::Property(expr, _)
         | ExprKind::SafeProperty(expr, _) => expression_names(expr, names),
-        ExprKind::LambdaWithParams { body, .. } => statement_names(body, names),
+        ExprKind::LambdaWithParams { body, .. } | ExprKind::Block(body) => {
+            statement_names(body, names)
+        }
+        ExprKind::Labeled(_, value) => expression_names(value, names),
+        ExprKind::LabeledReturn(_, Some(value)) => expression_names(value, names),
+        ExprKind::Indices(receiver, indices) => {
+            expression_names(receiver, names);
+            for index in indices {
+                expression_names(index, names);
+            }
+        }
+        ExprKind::Try {
+            body,
+            catches,
+            finally,
+        } => {
+            statement_names(body, names);
+            for catch in catches {
+                statement_names(&catch.body, names);
+            }
+            statement_names(finally, names);
+        }
+        ExprKind::WhenBinding(_, subject, branches, otherwise) => {
+            expression_names(subject, names);
+            for (conditions, body) in branches {
+                for condition in conditions {
+                    expression_names(condition, names);
+                }
+                expression_names(body, names);
+            }
+            expression_names(otherwise, names);
+        }
         ExprKind::CallableReference {
             receiver: Some(receiver),
             ..
@@ -58,6 +89,29 @@ pub(super) fn expression_names(expr: &Expr, names: &mut HashSet<String>) {
 pub(super) fn statement_names(statements: &[syntax::Statement], names: &mut HashSet<String>) {
     for statement in statements {
         match &statement.kind {
+            StatementKind::LocalFunction(function) => statement_names(&function.body, names),
+            StatementKind::Block(body) => statement_names(body, names),
+            StatementKind::Labeled(_, body) => statement_names(std::slice::from_ref(body), names),
+            StatementKind::Destructure(_, _, expr) => expression_names(expr, names),
+            StatementKind::IndicesAssign(receiver, indices, value) => {
+                expression_names(receiver, names);
+                for index in indices {
+                    expression_names(index, names);
+                }
+                expression_names(value, names);
+            }
+            StatementKind::WhenBinding(_, subject, branches, otherwise) => {
+                expression_names(subject, names);
+                for (conditions, body) in branches {
+                    for condition in conditions {
+                        expression_names(condition, names);
+                    }
+                    statement_names(body, names);
+                }
+                if let Some(body) = otherwise {
+                    statement_names(body, names);
+                }
+            }
             StatementKind::Let(_, _, _, expr)
             | StatementKind::Throw(expr)
             | StatementKind::Expression(expr) => expression_names(expr, names),
@@ -114,6 +168,19 @@ pub(super) fn statement_names(statements: &[syntax::Statement], names: &mut Hash
 pub(super) fn lambda_capture_names(statements: &[syntax::Statement]) -> HashSet<String> {
     fn expr(expr: &Expr, names: &mut HashSet<String>) {
         match &expr.kind {
+            ExprKind::Labeled(_, value) => expr_visit(value, names),
+            ExprKind::Block(body) => visit(body, names),
+            ExprKind::Try {
+                body,
+                catches,
+                finally,
+            } => {
+                visit(body, names);
+                for catch in catches {
+                    visit(&catch.body, names);
+                }
+                visit(finally, names);
+            }
             ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. } => {
                 expression_names(expr, names)
             }
@@ -167,6 +234,10 @@ pub(super) fn lambda_capture_names(statements: &[syntax::Statement]) -> HashSet<
     fn visit(statements: &[syntax::Statement], names: &mut HashSet<String>) {
         for s in statements {
             match &s.kind {
+                StatementKind::LocalFunction(function) => statement_names(&function.body, names),
+                StatementKind::Block(body) => visit(body, names),
+                StatementKind::Labeled(_, body) => visit(std::slice::from_ref(body), names),
+                StatementKind::Destructure(_, _, value) => expr(value, names),
                 StatementKind::Let(_, _, _, e)
                 | StatementKind::Assign(_, e)
                 | StatementKind::AddAssign(_, e)
@@ -232,6 +303,7 @@ impl Checker<'_> {
                     local.ty,
                 ));
             }
+            return None;
         }
         let semantic = self.captured_cells.get(name)?;
         let (owner, ty) = self.captured.get(name)?;
@@ -308,6 +380,40 @@ pub(super) fn free_names(
                     free.insert(name.clone());
                 }
             }
+            ExprKind::Block(body) => body_names(body, &mut bound.clone(), free),
+            ExprKind::Labeled(_, value) => expression(value, bound, free),
+            ExprKind::LabeledReturn(_, Some(value)) => expression(value, bound, free),
+            ExprKind::Indices(receiver, indices) => {
+                expression(receiver, bound, free);
+                for index in indices {
+                    expression(index, bound, free);
+                }
+            }
+            ExprKind::Try {
+                body,
+                catches,
+                finally,
+            } => {
+                body_names(body, &mut bound.clone(), free);
+                for catch in catches {
+                    let mut bound = bound.clone();
+                    bound.insert(catch.name.clone());
+                    body_names(&catch.body, &mut bound, free);
+                }
+                body_names(finally, &mut bound.clone(), free);
+            }
+            ExprKind::WhenBinding(name, subject, branches, otherwise) => {
+                expression(subject, bound, free);
+                let mut bound = bound.clone();
+                bound.insert(name.clone());
+                for (conditions, body) in branches {
+                    for condition in conditions {
+                        expression(condition, &bound, free);
+                    }
+                    expression(body, &bound, free);
+                }
+                expression(otherwise, &bound, free);
+            }
             ExprKind::LambdaWithParams { params, body } => {
                 let mut bound = bound.clone();
                 if let Some(params) = params {
@@ -376,6 +482,41 @@ pub(super) fn free_names(
     ) {
         for statement in statements {
             match &statement.kind {
+                StatementKind::LocalFunction(function) => {
+                    bound.insert(function.name.clone());
+                    let mut nested = bound.clone();
+                    nested.extend(function.params.iter().map(|p| p.0.clone()));
+                    body_names(&function.body, &mut nested, free);
+                }
+                StatementKind::Block(body) => body_names(body, &mut bound.clone(), free),
+                StatementKind::Labeled(_, body) => {
+                    body_names(std::slice::from_ref(body), &mut bound.clone(), free)
+                }
+                StatementKind::Destructure(names, _, value) => {
+                    expression(value, bound, free);
+                    bound.extend(names.iter().flatten().cloned());
+                }
+                StatementKind::IndicesAssign(receiver, indices, value) => {
+                    expression(receiver, bound, free);
+                    for index in indices {
+                        expression(index, bound, free);
+                    }
+                    expression(value, bound, free);
+                }
+                StatementKind::WhenBinding(name, subject, branches, otherwise) => {
+                    expression(subject, bound, free);
+                    let mut bound = bound.clone();
+                    bound.insert(name.clone());
+                    for (conditions, body) in branches {
+                        for condition in conditions {
+                            expression(condition, &bound, free);
+                        }
+                        body_names(body, &mut bound.clone(), free);
+                    }
+                    if let Some(body) = otherwise {
+                        body_names(body, &mut bound, free);
+                    }
+                }
                 StatementKind::Let(name, _, _, expr) => {
                     expression(expr, bound, free);
                     bound.insert(name.clone());
@@ -445,4 +586,15 @@ pub(super) fn free_names(
     let mut free = HashSet::new();
     body_names(statements, &mut bound, &mut free);
     free
+}
+
+impl Checker<'_> {
+    pub(super) fn cell_is_readonly(&self, name: &str) -> bool {
+        if let Some(local) = self.local(name) {
+            return !local.mutable && self.cells.contains_key(&local.slot);
+        }
+        self.scopes
+            .iter()
+            .any(|scope| scope.contains_key(&format!("<readonlyCell:{name}>")))
+    }
 }

@@ -7,35 +7,39 @@
       "androidbible_unsigned_search"
     ],
     "restrictions": [
-      "Long scalars have separate AndroidBible ten-feature evidence. Float arithmetic has separate next-twenty evidence; no unsigned types, general operator overloading, or general constant folding in this suite."
+      "Long scalars and Float arithmetic have separate AndroidBible ten-feature and next-twenty evidence. Contains/get/set operator protocols have separate declaration-suite evidence; this baseline does not establish unsigned types, unrestricted operator conventions, or general constant folding."
     ]
   },
   {
     "name": "functions_and_control_flow",
-    "scope": "Single-file top-level functions with explicit supported signatures, scoped Java extension receivers, Unit bodies/returns, local val/var, block if/else, while, returns, direct calls, Int local += and statement when with Int/Char subjects, ordered comma conditions, single-statement or braced branches, nesting, no-else and empty bodies.",
+    "scope": "Single-file top-level functions with explicit supported signatures, scoped Java extension receivers, Unit bodies/returns, local val/var, block if/else, while, returns, direct calls, Int local += and statement when with Int/Char subjects, ordered comma conditions, single-statement or braced branches, nesting, no-else and empty bodies. Former rejection fixtures now independently check scoped when subject variables and collection-membership branches.",
     "evidence_cases": [
       "androidbible_unsigned_search",
       "jvm_semantics",
       "rust_frontend",
-      "character_when_semantics"
+      "character_when_semantics",
+      "regressions/when_range",
+      "regressions/when_subject_variable"
     ],
     "restrictions": [
-      "Bounded general overload resolution and default/named arguments have separate twenty-addition evidence; function values remain unsupported. This suite tests direct calls and exact-signature object overloads.",
+      "Default/named arguments and general overloads have separate twenty-addition evidence; function values, captures, callable references and compiled inline calls have separate library-interop evidence. This baseline tests direct calls and exact-signature object overloads.",
       "if/while/when bodies accept a single statement or a block. Functions must pass the conservative return-path check; when proves a return only with an else and every branch returning.",
       "Compiler resource limits and the nesting limit intentionally reject larger constructs.",
-      "Bounded Int when expressions/ranges, for-until loops, loop control, postfix Int locals and definite assignment now have separate Io evidence. Subjectless and String/Boolean when have separate AndroidBible ten-feature evidence. Type-test conditions have separate next-twenty evidence. Subject declarations, collection/guard conditions, and trailing condition commas remain outside this suite."
+      "Io, AndroidBible ten-feature and next-twenty suites cover their tested ranges, iteration, nullable/subjectless/String/Boolean/type-test when forms. Declaration-suite fixtures separately cover labels, local functions and try/finally. Guard conditions and trailing condition commas are not established here."
     ]
   },
   {
     "name": "int_arrays",
-    "scope": "Non-null IntArray parameters/returns, IntArray(size), indexed reads, size, explicit four-argument copyInto, returned destination identity, overlaps, bounds failures and public parameter null checks.",
+    "scope": "Non-null IntArray parameters/returns, IntArray(size), indexed reads, size, explicit four-argument copyInto, returned destination identity, overlaps, bounds failures and public parameter null checks. Boxed Array<Char> construction and indexed writes have independent boundary/value regression assertions.",
     "evidence_cases": [
       "jvm_semantics",
       "androidbible_unsigned_search",
-      "java_interop_semantics"
+      "java_interop_semantics",
+      "regressions/char_array_construction",
+      "regressions/char_array_write"
     ],
     "restrictions": [
-      "Nullable scalars and list construction have separate twenty-addition evidence. This entry claims nonnull primitive-array signatures and the listed array operations; generic arrays and default/named copyInto arguments remain outside its scope."
+      "This baseline covers the listed primitive-array operations plus boxed Char-array regressions. Nullable scalars/lists, general reference-array construction/iteration and default/named library arguments have separate suite evidence; arbitrary array APIs are unassessed."
     ]
   },
   {
@@ -68,9 +72,9 @@
     ],
     "restrictions": [
       "Emits class-file versions 49 and 52; requires kotlin-stdlib for non-null reference parameter checks, selected String operations and enum entries.",
-      "Kotlin metadata and module mappings cover supported top-level functions and bounded classes; enum/object metadata, source line/local-variable tables and general class forms are absent.",
+      "Kotlin metadata and mappings are validated for the declaration shapes exercised by each consumer suite. Enum metadata, source line/local-variable tables and unrestricted Kotlin API compatibility are not established by this baseline.",
       "Kotlin consumer evidence covers selected public imports and internal/friend/private/nullability boundaries; full application builds remain unvalidated.",
-      "Declared Java statics/fields, bounded overloads and selected Kotlin metadata classes have separate twenty-addition evidence. JAR classpaths, Java construction, Java interface/inherited calls, generics, varargs and annotated methods remain unsupported.",
+      "Library-interop suites separately cover JAR classpaths, generic constraints/signatures, Kotlin properties/extensions, inherited calls, function values and tested nullability annotations. General varargs and unrestricted Java/Kotlin APIs remain outside this baseline.",
       "Test-only Android Parcel/Parcelable and NonNull stubs provide javac types only; Android parcel behavior and full Java nullability annotation semantics are unvalidated."
     ]
   },
@@ -83,7 +87,7 @@
       "jvm_signatures/yuku.alkitab.base.audio.AudioErrorCodeKt"
     ],
     "restrictions": [
-      "Braced templates and nullable reference declarations have separate AndroidBible ten-feature evidence. No backtick-name templates or raw strings; simple ASCII name interpolation is tested here. No String extension declarations, overloads, or general String API support.",
+      "Braced templates/nullable references and source/library extension resolution have separate suite evidence. This baseline tests simple ASCII name interpolation and listed String operations; escaped identifier templates, raw strings and unrestricted String APIs remain outside it.",
       "Kotlin consumer metadata evidence is limited to tested public imports and internal function visibility; String API breadth and Android runtime behavior remain outside this claim."
     ]
   },
@@ -97,14 +101,14 @@
       "jvm_signatures/yuku.alkitab.base.widget.VerseNumberPlacementKt"
     ],
     "restrictions": [
-      "Io evidence adds tested Int/Char conversions, CharArray construction/copyOf/indexed writes and String(CharArray,offset,count). General Char arithmetic, nullable declarations and other APIs remain unsupported.",
+      "Io evidence adds tested Int/Char conversions and primitive CharArray construction/copy/indexed writes. Boxed Char arrays now have baseline regression coverage. Char arithmetic and unrestricted character APIs remain unsupported or unassessed; nullable values have separate suite evidence.",
       "Non-BMP characters require surrogate code units; a Char literal must contain exactly one UTF-16 code unit.",
       "Scoped Java Char/Byte/array descriptors and bounded Character intrinsics now have separate Io evidence; general character APIs remain unsupported."
     ]
   },
   {
     "name": "bare_enum_classes",
-    "scope": "One top-level public/default/internal bare enum per file, empty forms and up to 1024 plain entries with optional trailing comma/terminating semicolon; unchanged AndroidBible RibkaEligibility. Java assertions cover names, ordinals, identity, comparison, declaring class, valueOf exceptions, defensive values arrays, stable ordered immutable kotlin-stdlib EnumEntries, generic reflection, EnumSet/EnumMap and serialization identity.",
+    "scope": "One top-level public/default/internal bare enum per file, empty forms and up to 1024 plain entries with optional trailing comma/terminating semicolon; unchanged AndroidBible RibkaEligibility. Java assertions cover names, ordinals, identity, comparison, declaring class, valueOf exceptions, defensive values arrays, stable ordered immutable kotlin-stdlib EnumEntries, generic reflection, EnumSet/EnumMap and serialization identity. Regression fixtures check nested enums, multiple enums and mixed enum/function declarations through official-compiled Java callers.",
     "evidence_cases": [
       "bare_enum_semantics",
       "rust_frontend",
@@ -116,17 +120,20 @@
       "jvm_signatures/korrust.probes.enums.EnumOrder",
       "jvm_signatures/korrust.probes.enums.InternalEnum",
       "jvm_signatures/korrust.probes.enums.LargeEnum",
-      "jvm_signatures/korrust.probes.enums.SingleEnum"
+      "jvm_signatures/korrust.probes.enums.SingleEnum",
+      "regressions/enum_mixed_declarations",
+      "regressions/enum_multiple_declarations",
+      "regressions/enum_nested"
     ],
     "restrictions": [
-      "No enum constructor parameters, supertypes, custom members, annotated entries/classes, entry arguments/bodies, nested or multiple enums, mixed top-level declarations or private enum visibility.",
+      "Enum constructor parameters, supertypes, custom members, annotated entries/classes, entry arguments/bodies and private enum visibility remain outside the tested subset.",
       "No Kotlin metadata or module metadata; Kotlin consumers, Kotlin enum expressions/imports, Android/D8 and full application builds remain unvalidated.",
-      "kotlin-stdlib is required at runtime for generated getEntries; general class declarations and Kotlin enum API use in source remain outside this milestone."
+      "kotlin-stdlib is required for generated getEntries. General class/initialization/inheritance semantics have separate declaration-suite evidence; arbitrary enum API use is not established here."
     ]
   },
   {
     "name": "objects_and_literal_constants",
-    "scope": "One top-level public/default/internal named object with nested objects, up to depth 16, 256 classes per source and 1024 constants per object. Literal const vals support inferred or matching explicit Int, Boolean, Char and String; unchanged AndroidBible RequestCodes. Java assertions cover singleton identity, private constructor, nested class reflection/flags, reflective field values, signed Int boundaries, escaped UTF-16/NUL/surrogate constants and 1024 constants.",
+    "scope": "One top-level public/default/internal named object with nested objects, up to depth 16, 256 classes per source and 1024 constants per object. Literal const vals support inferred or matching explicit Int, Boolean, Char and String; unchanged AndroidBible RequestCodes. Java assertions cover singleton identity, private constructor, nested class reflection/flags, reflective field values, signed Int boundaries, escaped UTF-16/NUL/surrogate constants and 1024 constants. Regression fixtures additionally check initialized read-only singleton properties, empty init blocks, nested ordinary classes, mixed/multiple singleton declarations, private constant flags and inferred Long constants.",
     "evidence_cases": [
       "object_constant_semantics",
       "rust_frontend",
@@ -138,11 +145,18 @@
       "jvm_signatures/korrust.probes.objects.ObjectTree$Left$Leaf",
       "jvm_signatures/korrust.probes.objects.InternalObject",
       "jvm_signatures/korrust.probes.objects.LargeObject",
-      "jvm_signatures/korrust.probes.objects.CollisionObject$CollisionObject"
+      "jvm_signatures/korrust.probes.objects.CollisionObject$CollisionObject",
+      "regressions/object_nonconst_property",
+      "regressions/object_init",
+      "regressions/object_nested_class",
+      "regressions/object_mixed_declarations",
+      "regressions/object_multiple_declarations",
+      "regressions/object_private_const",
+      "regressions/object_const_long"
     ],
     "restrictions": [
-      "Dynamic object methods and inferred private ThreadLocal array fields have separate Io evidence. No general non-const properties or init blocks, supertypes, companion/data objects, general nested classes, annotations, mixed/multiple top-level declarations or private visibility. Member name INSTANCE is explicitly unsupported for constants and nested objects.",
-      "Initializers are single literals with an optional sign for Int; no constant expressions/references, Long, other numeric types, nullable types, raw strings or string templates.",
+      "Mutable singleton/companion state and initialization ordering have separate declaration-suite evidence; Io covers dynamic methods and ThreadLocal fields. Data objects, arbitrary object annotations and private top-level object visibility remain outside this baseline. Member name INSTANCE is explicitly rejected for constants and nested objects.",
+      "Constant regressions cover scalar literals, optional signs, private constants and signed Int/Long selection. General constant expressions/references, unsigned types, raw strings and constant string templates remain unsupported or unassessed.",
       "Named object/constant metadata and consumers remain unvalidated; companion/anonymous objects inside bounded source interfaces have separate evidence. Kotlin source object/constant imports and references, Android/D8 and full application builds remain outside this evidence."
     ]
   },
@@ -160,18 +174,25 @@
   },
   {
     "name": "ordinary_final_classes_and_string_arrays",
-    "scope": "One public/default/internal final class per source, explicit primary constructor with private val fields, Array<String>, explicit getter properties and instance methods with straight-line supported expressions. Implements validated Kotlin interfaces with exact override identity and JVM descriptors, including default-interface bridges. Unchanged AndroidBible Yes2SingleChapterVerses plus differently named public TextStore with multiple fields/arithmetic are compared against official Kotlin.",
+    "scope": "One public/default/internal final class per source, explicit primary constructor with private val fields, Array<String>, explicit getter properties and instance methods with straight-line supported expressions. Implements validated Kotlin interfaces with exact override identity and JVM descriptors, including default-interface bridges. Unchanged AndroidBible Yes2SingleChapterVerses plus differently named public TextStore with multiple fields/arithmetic are compared against official Kotlin. Former rejection regressions now check an open declaration, a secondary-only constructor, a custom mutable setter, boxed Int-array fields and an Any/Object override. Constructor captures and nullable interface return strengthening with function-valued members have independent Java regression assertions.",
     "evidence_cases": [
       "androidbible_yes2_chapter",
       "generic_class_semantics",
       "rust_frontend",
       "jvm_signatures/yuku.alkitab.yes2.Yes2SingleChapterVerses",
-      "jvm_signatures/korrust.probes.classes.TextStore"
+      "jvm_signatures/korrust.probes.classes.TextStore",
+      "regressions/class_open",
+      "regressions/class_secondary_constructor",
+      "regressions/class_custom_mutable_accessor",
+      "regressions/class_generic_array_element",
+      "regressions/class_any_override",
+      "regressions/class_constructor_lambda_capture",
+      "regressions/class_interface_function_type_member"
     ],
     "restrictions": [
-      "Data classes have separate ten-addition evidence; mutable/nonproperty/default constructor parameters, omitted constructors and initialized properties have separate twenty-addition evidence. This entry claims final private-val classes only. Open/abstract/generic/nested classes, init blocks and general arrays remain outside scope.",
-      "Class member bytecode supports straight-line expressions and return bodies; control-flow/branching members, overloads, inherited Any/Object members, unsupported interface metadata and Java interface implementations fail closed.",
-      "This entry tests nonnullable interface signatures/property identity; nullable/List member signatures have separate twenty-addition evidence. Generic declarations and suspend interfaces remain unsupported."
+      "This baseline establishes the listed class forms and regression assertions. Data classes, constructor defaults/state and nullable/list members have separate earlier suites; initialization order, nested declarations and inherited dispatch have separate declaration-suite evidence. Generic source classes are outside this subset.",
+      "Uniform member control flow and tested inherited/overridden methods have separate declaration-suite evidence. The baseline additionally tests same-descriptor nullable return strengthening and function-valued members; arbitrary covariant returns requiring JVM bridges and unrestricted interface contracts remain outside this claim.",
+      "Nonnullable interface signatures/property identity are tested here; nullable/List member signatures and generic library constraints have separate suites. Suspend declarations are unsupported."
     ]
   },
   {
@@ -192,7 +213,7 @@
   },
   {
     "name": "source_interfaces_companions_and_defaults",
-    "scope": "Public/internal ordinary source interfaces with abstract supported members, straight-line/default bodies, if expressions, Int.toString, simple ASCII name String interpolation, IllegalArgumentException throw; nested inherited interfaces with abstract Float return descriptors. Bounded companion private String-literal arrays and public anonymous implementation values. Unchanged SingleChapterVerses and renamed RecordView validate helpers/default dispatch/null receivers, companion and private-array identity, initialization, exact anonymous exception messages, Float ABI and Kotlin metadata consumers.",
+    "scope": "Public/internal ordinary source interfaces with abstract supported members, straight-line/default bodies, if expressions, Int.toString, simple ASCII name String interpolation, IllegalArgumentException throw; nested inherited interfaces with abstract Float return descriptors. Bounded companion private String-literal arrays and public anonymous implementation values. Unchanged SingleChapterVerses and renamed RecordView validate helpers/default dispatch/null receivers, companion and private-array identity, initialization, exact anonymous exception messages, Float ABI and Kotlin metadata consumers. Regressions additionally validate general literal companion state and Float/reference-parameter default bodies.",
     "evidence_cases": [
       "androidbible_model_interface",
       "generic_interface_semantics",
@@ -204,13 +225,16 @@
       "model_jvm_signatures/yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
       "model_jvm_signatures/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
       "model_jvm_signatures/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
-      "model_jvm_signatures/korrust.probes.models.RecordView"
+      "model_jvm_signatures/korrust.probes.models.RecordView",
+      "regressions/interface_companion_plain_value",
+      "regressions/interface_float_default",
+      "regressions/interface_reference_default_parameter"
     ],
     "restrictions": [
-      "Interface/companion/anonymous support is bounded to tested declaration and initialization shapes; no general object construction, mutable companion state, named companions, generics or arbitrary initializers.",
+      "Interface/companion/anonymous support is bounded to exercised forms. General mutable companion initialization and uniform bodies have separate declaration-suite evidence. Named companions, generic source interfaces and arbitrary anonymous object forms remain unsupported or unassessed.",
       "This entry tests abstract Float interface descriptors. Float literals/data properties/nullable boxes have separate twenty-addition evidence; Float arithmetic has separate next-twenty evidence.",
       "This report tests simple ASCII $name templates; braced expressions have separate AndroidBible ten-feature evidence. Escaped identifier names and raw strings remain unsupported. Constant-object/enum metadata and complete Kotlin/Android compatibility remain outside this evidence.",
-      "Source interface default bodies with reference parameters are explicitly unsupported; abstract reference-parameter declarations retain separate supported-signature checks."
+      "Reference-parameter default bodies now have a baseline regression covering returned values and a null-parameter failure. Broader default-member and inheritance contracts require their separate fixture evidence."
     ]
   },
   {
@@ -230,7 +254,7 @@
   },
   {
     "name": "dynamic_objects_threadlocal_and_metadata",
-    "scope": "Public/internal ordinary object methods with exact-signature overloads, JvmStatic/Throws/Suppress/private-inline forms and inferred private ThreadLocal noncapturing array-allocation suppliers. Java/Kotlin consumers check JvmStatic annotations, IOException exceptions, generic field signatures, signed primitive descriptors, public/internal/private/non-null metadata, lazy allocation failures, thread-local identity/replacement and concurrent isolation.",
+    "scope": "Public/internal ordinary object methods with exact-signature overloads, JvmStatic/Throws/Suppress/private-inline forms and inferred private ThreadLocal noncapturing array-allocation suppliers. Java/Kotlin consumers check JvmStatic annotations, IOException exceptions, generic field signatures, signed primitive descriptors, public/internal/private/non-null metadata, lazy allocation failures, thread-local identity/replacement and concurrent isolation. An explicit ThreadLocal<ByteArray> field regression checks allocation identity and independent thread values. A generic scalar Supplier regression checks flexible inferred ThreadLocal metadata and independent per-thread values.",
     "evidence_cases": [
       "androidbible_io_semantics",
       "generic_byte_array_semantics",
@@ -239,10 +263,12 @@
       "kotlin_metadata/IoInternalConsumer",
       "kotlin_metadata/IoInternalConsumer_rejection",
       "kotlin_metadata/IoPrivateAccess_rejection",
-      "kotlin_metadata/IoNullAccess_rejection"
+      "kotlin_metadata/IoNullAccess_rejection",
+      "regressions/io_explicit_threadlocal_field",
+      "regressions/io_arbitrary_supplier"
     ],
     "restrictions": [
-      "ThreadLocal suppliers support bounded noncapturing single array allocations; arbitrary lambdas/captures, explicit generic field types, general initialized object fields and internal object method mangling remain outside this suite; reference equality has separate next-twenty evidence.",
+      "This baseline exercises array suppliers, an explicitly typed ByteArray field, and a generic scalar Supplier with flexible inferred metadata. General SAM lambdas and initialized singleton state have separate library/declaration-suite evidence; unrestricted Java APIs and internal object-method mangling remain outside this suite.",
       "Korrust uses derived synthetic Supplier classes and access bridges instead of official invokedynamic; source-defined ABI is compared after excluding only exact validated bridges. Synthetic class inventories intentionally differ and all candidate helpers undergo JVM verification/contract assertions."
     ]
   }

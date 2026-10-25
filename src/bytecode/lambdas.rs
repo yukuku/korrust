@@ -89,9 +89,17 @@ fn emit(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
         lambdas,
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
+        in_lambda: true,
         max_stack: 2,
     };
     for ((name, ty), slot) in function
@@ -117,17 +125,13 @@ fn emit(
         code.block(&function.body)?;
     }
     let stack = code.max_stack as u16;
-    let bytes = code.finish()?;
+    let completed = code.into_simple(function.locals, stack)?;
     let implementation = simple_method(
         &mut pool,
         0x0011,
         &function.name,
         &function.descriptor(),
-        SimpleCode {
-            bytes,
-            locals: function.locals,
-            max_stack: stack,
-        },
+        completed,
         generic_function(function).as_deref(),
         nonnull(&function.result),
     )?;
@@ -158,9 +162,17 @@ fn emit(
             labels: Vec::new(),
             branches: Vec::new(),
             loops: Vec::new(),
+            loop_finally_depths: Vec::new(),
+            loop_names: Vec::new(),
+            pending_loop_name: None,
+            finalizers: Vec::new(),
+            exceptions: Vec::new(),
+            temporary_count: 0,
+            temporary_patches: Vec::new(),
             lambdas,
             inline_local_maps: Vec::new(),
             inline_returns: Vec::new(),
+            in_lambda: true,
             max_stack: 3 + function
                 .params
                 .iter()
@@ -177,17 +189,13 @@ fn emit(
         code.adapt_value(&function.result, &result)?;
         code.bytes.push(return_opcode(&result));
         let stack = code.max_stack as u16;
-        let bytes = code.finish()?;
+        let completed = code.into_simple(locals as u16, stack)?;
         methods.push(simple_method(
             &mut pool,
             0x1041,
             &bridge_name,
             &bridge_descriptor,
-            SimpleCode {
-                bytes,
-                locals: locals as u16,
-                max_stack: stack,
-            },
+            completed,
             None,
             false,
         )?);

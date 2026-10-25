@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-25T14:03:35.619420+00:00",
+  "status": "interrupted",
+  "compiler": null,
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.12.1+1-LTS)",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "inputs": {
+    "io_source": "benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/Utf8Decoder.kt",
+    "io_source_sha256": "acf20f118b8599b2fb4a6265edc9528b9f19107fabf790709451256edc8738d3",
+    "io_fixtures_sha256": {
+      "tests/fixtures/io/ArrayEdges.kt": "71e72752dcd8dcd0e5adb547ad121b56fcfdf92d7c5df324730401c1edd811a8",
+      "tests/fixtures/io/ByteWorkbench.kt": "cdd1d78bb3fed4f8d61c85d23c7d02438e7156977b0f409dd4e6a50ce1615b02",
+      "tests/fixtures/io/BytesCheck.java": "ab940b2c209d7357d731d63aa29e7540bb9a42c8cb51f529ae7381bea9688d01",
+      "tests/fixtures/io/HiddenBuffers.kt": "f8fd2688c6b9a497548614c8c787b98f2dcdc7406bd1f8a9b25c6e5d5fde7281",
+      "tests/fixtures/io/IoCheck.java": "6cb717f576ba759c6bb569550b8559c2df3be4e483e237f4f167bb3c6dea1cac",
+      "tests/fixtures/io/IoTrace.java": "edf2a838e133b0e5640906d81651c52faa640e67f545d4157b069f986945d8f4",
+      "tests/fixtures/io/LazyScratch.kt": "eb17ac8d151b612593503f152b87a014cfd3256e1e1efbb9a3e7bf7e26efc0da",
+      "tests/fixtures/io/StaticReceiver.kt": "bcac6aa28fe4eaf53ffde0a2eac98d774e1cee82f5a23b8fecd7c22daa6ee700",
+      "tests/fixtures/io/SupplierCheck.java": "948605f6b1985369e8a6324469afb70d7c9033193b12fd45dcc8ca74f5f72f67"
+    },
+    "bintex_sources_sha256": {
+      "benchmarks/sources/androidbible/Bintex/src/main/java/yuku/bintex/BintexReader.java": "9fca01731b0e1da5f87e4cf8476a0da531dd7acd43d8c370d5305ccf7222a919",
+      "benchmarks/sources/androidbible/Bintex/src/main/java/yuku/bintex/BintexWriter.java": "6ea38e7391c3a9d357f34b8fb9d9b90797fb4fa59cafef93f6071d391fbbff87",
+      "benchmarks/sources/androidbible/Bintex/src/main/java/yuku/bintex/ValueMap.java": "07434ce7129d73cd2232fe71a0471575ef85a5ac9e991d1b5e425d8ed420670c"
+    },
+    "yes2_chapter_source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt",
+    "yes2_chapter_source_sha256": "0162f744a5d6a09e955a1111c68b50b3b3864ca36f7f9ba65936440de10b7290",
+    "chapter_interface_source": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+    "chapter_interface_source_sha256": "1ffdebcffa174e2c119205b2ed7698fc9d47a0dd2deaf9e816eb84faa388ab02",
+    "model_fixtures_sha256": {
+      "tests/fixtures/models/BodylessInterface.kt": "3144d9302d0b309a6026dbaf954c2296a1d6329d73ab44708a6df5a3b90f7130",
+      "tests/fixtures/models/EmptyInterface.kt": "267d638f8df1a4496cc6187dd15da14e12d4783bf643076c7a2f11afb17bc335",
+      "tests/fixtures/models/RecordView.kt": "604e16985f5e368b8bd086188e66b7e48cae3e4ce7cbaeda35e0dd6f34205b25",
+      "tests/fixtures/models/Templates.kt": "aa80d870dee2497db4ca468cf2900e499cb753991e2eb975dc400687d13ab686"
+    },
+    "class_fixtures_sha256": {
+      "tests/fixtures/classes/IndexedText.kt": "ed969970caeaccc233d6c0f5d0a290c86616634faf04134d755824b5fd9b3c59",
+      "tests/fixtures/classes/SyntheticChapter.kt": "94fd74380019b27d4787ff5e2c1d8a4a9e30b51a01e76c246d4f7059a6203278",
+      "tests/fixtures/classes/UnsupportedInterfaces.kt": "7a896c2c3f323b2859402e2f14d55369d3d4e393f4b14ff94b349483eda99d9d"
+    },
+    "consumer_fixtures_sha256": {
+      "tests/fixtures/consumers/FriendMetadataConsumer.kt": "88475a9e442b7b9e2be15ffd3d1a1214359c00a643286c2257b44d91c709f5e8",
+      "tests/fixtures/consumers/InternalClassAccess.kt": "3c55cae0f60bdfd070fed75783f8b1ddfb20c8f2b9c4dacfcd88be23c84bcadf",
+      "tests/fixtures/consumers/InternalFunctionAccess.kt": "f9c93c949956f7a865a49c86cd6e2065810f4a2bf31673b9c0151782260f74e0",
+      "tests/fixtures/consumers/IoInternalConsumer.kt": "ea9b75b8d216de7b2b25212750cae44a0fc7c0b5637b13c492e46d3e6fdc344b",
+      "tests/fixtures/consumers/IoMetadataConsumer.kt": "db1f60d87f967aa3ed80292459a8ebb7e4e57b31b37d5c28b1d97dedd9c5c05e",
+      "tests/fixtures/consumers/IoNullAccess.kt": "1f7b032981de1078556f60b2fdad29575fb53505d171d15b539673984e2f394e",
+      "tests/fixtures/consumers/IoPrivateAccess.kt": "7a672286c880c63e9da9457da71263401d845e38e95bb7ab3ea026eab60010b5",
+      "tests/fixtures/consumers/ModelConsumer.kt": "64d6f44abfc08e0630a78b05ccfe72db9dd34b974fa5b77729f49b9c2aa7053c",
+      "tests/fixtures/consumers/ModelPrivateAccess.kt": "05278b8a30ef0f7b612213dd72a2f68b043b042ac390f91be2e4b7d5675f1eda",
+      "tests/fixtures/consumers/ModuleFriendConsumer.kt": "4442f1aaeb940b5fc5be78303e1cb975474ab3856678574b3f8f5db56bd3c9d5",
+      "tests/fixtures/consumers/ModuleIoConsumer.kt": "c20d551f5fbce90389396f9e8e9712aaac975043c2bf01ae37110ec44af8a972",
+      "tests/fixtures/consumers/ModuleModelConsumer.kt": "fe4dcec4a0baee0f635ec15aa76b213a8325df37b0563746bb78fbf2abc331ff",
+      "tests/fixtures/consumers/PrivateFieldAccess.kt": "a81111e64975d4fd0649d625a6c5c0551ee1e950ec4455a756d246ee41b68d3f",
+      "tests/fixtures/consumers/PublicMetadataConsumer.kt": "13a34a36b732254130472046fcfadd5f84aa6e4b436e1f05f737df0dc9b84f9f",
+      "tests/fixtures/consumers/PublicNullAccess.kt": "9fc4b6a51742b157ab678046c9b84330f0634eb92cea8cfd1c4994bbc8c0fb53"
+    },
+    "request_codes_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/RequestCodes.kt",
+    "request_codes_source_sha256": "61f910f2db36e4bd8ff62432388caa0a4250ba9ef6d36f4f7af4e479fc8f475a",
+    "object_fixtures_sha256": {
+      "tests/fixtures/objects/BodylessObject.kt": "59619cff24be2d3e94439e398554961fe773430e8200fe125bcc714b8520ec5d",
+      "tests/fixtures/objects/CollisionObject.kt": "a6102f866ab9c70837b03fa4a54012b4367d4f3bce2bfbc187e0d558d98b8f86",
+      "tests/fixtures/objects/EmptyObject.kt": "f740a5e55255c0c433d7dbe1be1c5b224d7341b75eee80e5d3ac2c45a56578a9",
+      "tests/fixtures/objects/InternalObject.kt": "23e8edd43f6c7fa7a2d97c82bfa813b90a6724ae10b0147a2930120128122244",
+      "tests/fixtures/objects/LargeObject.kt": "07133df79880991fa97d8c24e3f279e6f0c3ce8aa4e89ba423e2bfe5c8db1537",
+      "tests/fixtures/objects/ObjectLiterals.kt": "8a225a4165d2ca52b26d8cbd1ce45a1d772f643146eb24c79c930f4dcc4a5f46",
+      "tests/fixtures/objects/ObjectTree.kt": "dc769f90a34b9a13665caf1659bfc6315979da9f9bfc8e1a694c4c9424fdaf2e"
+    },
+    "ribka_eligibility_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/RibkaEligibility.kt",
+    "ribka_eligibility_source_sha256": "20d3ad45466d50f8ac82be12efd5973c95275f74622399a17b0c5121113d5022",
+    "enum_fixtures_sha256": {
+      "tests/fixtures/enums/CollisionEnum.kt": "fd5bfb1472cf72026c3e881ab1069e349e15a7bd08b539a39d4bf1a375390bed",
+      "tests/fixtures/enums/EmptyBodylessEnum.kt": "8fdd9e231521c36ddd049906ae49507b53bc0294d4dd969cb4187fb63c51d8d6",
+      "tests/fixtures/enums/EmptyEnum.kt": "5c9fa305ead8a1f5e785c71f609181b9c92670639cc6fa74ab94ac3d66d967c3",
+      "tests/fixtures/enums/EmptySemicolonEnum.kt": "b1abbe51fb5d7dc90b240285a16e15b4b94cdb4b313c46ea39e5b7ea5059c136",
+      "tests/fixtures/enums/EnumOrder.kt": "247d0b048d26260aa0a3e9d6fa20589fd4371fbc5f63fe54a7f3cc83bbf844be",
+      "tests/fixtures/enums/InternalEnum.kt": "5674637e0f07f5e74e68dcaa93d37a152e79c9411d666d2f8725d0649db09234",
+      "tests/fixtures/enums/LargeEnum.kt": "b5d10bf1e609debee64e59521ed6581948aa8481ad529ab4545d5f59dde6e9b8",
+      "tests/fixtures/enums/SingleEnum.kt": "14ac94098c27e73ed1e44a0fd94c1a0a52521169a70597439336352075c02fb2"
+    },
+    "verse_placement_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt",
+    "verse_placement_source_sha256": "957ed0e7cae7251aeb4d44abf8418959e7757601670e81178257a4b289dfa9cd",
+    "int_list_extension_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+    "int_list_extension_source_sha256": "96ce558706cd736ba496aa95311243931f4c12494a4723fe06a80b2295bdca9c",
+    "int_list_java_source": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java",
+    "int_list_java_source_sha256": "b5cbcca6e5c785a3b96bb9d56091a13fe23fc95318506d28af0503a5b68db88c",
+    "audio_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+    "audio_source_sha256": "2a5e79d26cef180c4f40542dd94f81bada672a4c755f01f0187bedef24e50098",
+    "source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+    "source_sha256": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+    "reference_commit": "fea1ad8c18995b80d1ca0e3917056104613d23db",
+    "androidbible_commit": "624629093af37d0d7f85699bfa0caa562fc41e61"
+  },
+  "environment": {
+    "os": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "machine": "x86_64",
+    "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+    "java": "openjdk version \"21.0.12.1\" 2026-08-18 LTS\nOpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)\nOpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)"
+  },
+  "commands": [
+    {
+      "label": "Rust version",
+      "argv": [
+        "/workspace/korrust-setup/cargo/bin/rustc",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/000-stderr.txt"
+    },
+    {
+      "label": "Java version",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/001-stderr.txt"
+    },
+    {
+      "label": "Reference compiler version",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/002-stderr.txt"
+    },
+    {
+      "label": "Rust formatting",
+      "argv": [
+        "/workspace/korrust-setup/cargo/bin/cargo",
+        "fmt",
+        "--check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/003-stderr.txt"
+    },
+    {
+      "label": "Rust Clippy",
+      "argv": [
+        "/workspace/korrust-setup/cargo/bin/cargo",
+        "clippy",
+        "--all-targets",
+        "--locked",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/004-stderr.txt"
+    },
+    {
+      "label": "Report generator tests",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_reports.py"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/005-stderr.txt"
+    },
+    {
+      "label": "Rust tests",
+      "argv": [
+        "/workspace/korrust-setup/cargo/bin/cargo",
+        "test",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 900
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/000-stdout.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/000-stderr.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/001-stdout.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/001-stderr.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/002-stdout.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/002-stderr.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/003-stdout.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/003-stderr.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/004-stdout.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/004-stderr.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/005-stdout.txt",
+    "reports/correctness/2026-10-25T140335619420Z-io-byte-arrays/005-stderr.txt"
+  ],
+  "selection": "Unchanged AndroidBible Utf8Decoder plus independent exhaustive Unicode/byte/thread-local and generic control-flow/object metadata probes; candidate noncapturing Supplier helper classes differ intentionally from official indy and are explicitly validated. AndroidBible unsignedIntBinarySearch, AudioErrorCode, unchanged IntArrayListUtil using the original Java IntArrayList and unchanged VerseNumberPlacement, RibkaEligibility and RequestCodes and Yes2SingleChapterVerses; ordinary final classes with private constructor properties, String arrays and Kotlin interface implementations; candidate-built SingleChapterVerses plus generic interface companions/defaults/anonymous objects, nested Float signatures and simple templates; Java/Kotlin metadata consumers and visibility/nullability probes; bounded named/nested objects with literal constants and Java singleton/nesting/runtime-constant assertions; bounded bare enums with Java runtime, generic-signature, EnumEntries, collection and serialization assertions; JVM arithmetic/control-flow, UTF-16 String/Char/CharArray, subject when, Int += and scoped Java interop probes, invalid and unsupported syntax. Android classes are test-only type stubs; no parcel runtime, upstream Kotlin fixture adapter or whole-app tests.",
+  "cases": [
+    {
+      "id": "interrupted_before_freeze",
+      "outcome": "not_run",
+      "reason": "Stopped during Rust tests before compiler/fixture fingerprinting to incorporate object interface-default bridge correction and public/protected regression ABI comparison; a fresh final report is required."
+    }
+  ],
+  "counts": {
+    "not_run": 1
+  },
+  "finished_at": "2026-10-25T14:06:06.460036+00:00"
+}

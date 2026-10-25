@@ -2,6 +2,7 @@ use super::*;
 
 pub(super) enum ExtensionKind {
     Ordinary,
+    Operator,
     Infix,
     Property,
     MemberFallback(Diagnostic),
@@ -60,6 +61,7 @@ impl Checker<'_> {
             Type::ByteArray => Type::Byte,
             Type::CharArray | Type::String => Type::Char,
             Type::StringArray => Type::String,
+            Type::Array(element) => element.as_ref().clone(),
             _ => {
                 return Err(Diagnostic::new(
                     offset,
@@ -67,6 +69,9 @@ impl Checker<'_> {
                 ));
             }
         };
+        if matches!(element, Type::Unit | Type::Null) {
+            return Err(Diagnostic::new(offset, "Unsupported array element type"));
+        }
         if unresolved_list(&iterable.ty) {
             return Err(Diagnostic::new(
                 offset,
@@ -147,6 +152,37 @@ impl Checker<'_> {
     ) -> Result<Statement> {
         let local = self.local(name);
         let cell = self.cell_binding(name);
+        if local.is_none() && cell.is_none() {
+            let expression = Expr {
+                offset,
+                kind: ExprKind::Binary(
+                    op.trim_end_matches('=').into(),
+                    Box::new(Expr {
+                        offset,
+                        kind: ExprKind::Name(name.into()),
+                    }),
+                    Box::new(right.clone()),
+                ),
+            };
+            let (mut statements, _) = self.block(&[syntax::Statement {
+                offset,
+                kind: StatementKind::Assign(name.into(), expression),
+            }])?;
+            return if statements.len() == 1 {
+                Ok(statements.remove(0))
+            } else {
+                Ok(Statement::Expression(Value {
+                    ty: Type::Unit,
+                    kind: ValueKind::Block(
+                        statements,
+                        Box::new(Value {
+                            ty: Type::Unit,
+                            kind: ValueKind::Unit,
+                        }),
+                    ),
+                }))
+            };
+        }
         let ty = if let Some(local) = &local {
             if !local.mutable {
                 return Err(Diagnostic::new(
@@ -369,7 +405,7 @@ impl Checker<'_> {
         }
         if let ExprKind::Unary(op, range) = &condition.kind {
             if op == "in" {
-                return self.range_contains(left, range, condition.offset);
+                return self.check_contains(left, range, condition.offset);
             }
             return Err(Diagnostic::new(
                 condition.offset,
@@ -595,7 +631,12 @@ impl Checker<'_> {
         property: bool,
     ) -> Result<Vec<Vec<JavaMethod>>> {
         let matches = |method: &&JavaMethod| {
-            method.access & 9 == 9
+            method.access & 8 != 0
+                && (method.access & 1 != 0
+                    || method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| library.inline && library.kotlin_public))
                 && method
                     .library
                     .as_ref()
@@ -623,23 +664,16 @@ impl Checker<'_> {
             .lambda_owner
             .rsplit_once('/')
             .map_or("", |(package, _)| package);
-        let package_classes = self.classpath.package_classes(package)?;
-        let local = package_classes
+        let package_methods = self.classpath.package_methods(package, name)?;
+        let local = package_methods
             .iter()
-            .flat_map(|c| &c.methods)
             .filter(matches)
             .cloned()
             .collect::<Vec<_>>();
         let mut implicit = Vec::new();
-        for package in ["kotlin/ranges", "kotlin/collections", "kotlin/text"] {
-            let classes = self.classpath.package_classes(package)?;
-            implicit.extend(
-                classes
-                    .iter()
-                    .flat_map(|c| &c.methods)
-                    .filter(matches)
-                    .cloned(),
-            );
+        for package in library::DEFAULT_PACKAGES {
+            let methods = self.classpath.package_methods(package, name)?;
+            implicit.extend(methods.iter().filter(matches).cloned());
         }
         let mut groups = vec![imported, local, implicit];
         for group in &mut groups {
@@ -674,6 +708,7 @@ impl Checker<'_> {
         kind: ExtensionKind,
         offset: usize,
     ) -> Result<Value> {
+        let operator = matches!(&kind, ExtensionKind::Operator);
         let infix = matches!(&kind, ExtensionKind::Infix);
         let property = matches!(&kind, ExtensionKind::Property);
         let fallback = match kind {
@@ -704,6 +739,9 @@ impl Checker<'_> {
             for group in groups {
                 let mut applicable = Vec::new();
                 for mut method in group {
+                    if operator && !method.library.as_ref().is_some_and(|l| l.operator) {
+                        continue;
+                    }
                     let is_infix = method.library.as_ref().is_some_and(|library| library.infix);
                     let receiver = method
                         .library
@@ -997,6 +1035,14 @@ impl Checker<'_> {
                 }
             }
         }
+        let mut identities = HashSet::new();
+        methods.retain(|method| {
+            identities.insert((
+                method.owner.clone(),
+                method.name.clone(),
+                method.descriptor.clone(),
+            ))
+        });
         if !methods.is_empty() {
             match self.select_method(&methods, std::slice::from_ref(argument), offset) {
                 Ok(method) => {
@@ -1054,5 +1100,641 @@ impl Checker<'_> {
             ExtensionKind::Infix,
             offset,
         )
+    }
+}
+
+impl Checker<'_> {
+    pub(super) fn operator_call(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        if receiver.ty.is_nullable() {
+            return Err(Diagnostic::new(
+                offset,
+                "Operator receiver must be non-null",
+            ));
+        }
+        let mut member_failure = None;
+        let mut missing_operator = false;
+        if let Some(owner) = library::type_owner(&receiver.ty) {
+            if let Ok(class) = self
+                .classes
+                .get(owner)
+                .cloned()
+                .map(Ok)
+                .unwrap_or_else(|| self.classpath.load(owner))
+            {
+                let inherited = self
+                    .classpath
+                    .methods(owner)
+                    .unwrap_or_else(|_| class.methods.clone());
+                let mut eligible = Vec::new();
+                let mut ordinary = Vec::new();
+                for method in inherited
+                    .into_iter()
+                    .filter(|m| m.name == name && m.access & 9 == 1)
+                {
+                    let kotlin = self
+                        .classes
+                        .get(&method.owner)
+                        .map(|c| c.kotlin_class)
+                        .or_else(|| {
+                            self.classpath
+                                .load(&method.owner)
+                                .ok()
+                                .map(|c| c.kotlin_class)
+                        })
+                        .unwrap_or(class.kotlin_class);
+                    if kotlin && !method.library.as_ref().is_some_and(|l| l.operator) {
+                        ordinary.push(method);
+                    } else {
+                        eligible.push(method);
+                    }
+                }
+                if !ordinary.is_empty() && self.select_method(&ordinary, args, offset).is_ok() {
+                    missing_operator = true;
+                }
+                let methods = eligible
+                    .into_iter()
+                    .filter(|m| {
+                        !relations::projected_input(m, &receiver.ty, &class, self.classpath)
+                    })
+                    .map(|m| library::specialize_receiver(m, &receiver.ty, &class, self.classpath))
+                    .collect::<Vec<_>>();
+                if !methods.is_empty() {
+                    match self.select_method(&methods, args, offset) {
+                        Ok(method) => return self.member_call(method, receiver, args, offset),
+                        Err(error) if error.message.contains("Ambiguous") => return Err(error),
+                        Err(error) => member_failure = Some(error),
+                    }
+                }
+            }
+        }
+        if self
+            .function_names
+            .iter()
+            .enumerate()
+            .any(|(id, candidate)| {
+                candidate == name
+                    && self.extensions.contains(&id)
+                    && self.source_operator.contains(&id)
+            })
+        {
+            return self.source_operator_call(receiver, name, args, offset);
+        }
+        if self
+            .function_names
+            .iter()
+            .enumerate()
+            .any(|(id, candidate)| candidate == name && self.extensions.contains(&id))
+        {
+            let next = self.next;
+            let initialized = self.initialized.clone();
+            let refinements = self.refinements.clone();
+            let count = self.lambdas.borrow().len();
+            let ordinary =
+                self.source_extension_call(receiver.clone(), name, args, &[], false, offset);
+            self.next = next;
+            self.initialized = initialized;
+            self.refinements = refinements;
+            self.lambdas.borrow_mut().truncate(count);
+            missing_operator |= ordinary.is_ok();
+        }
+        let result = self.resolved_extension_call(
+            receiver,
+            name,
+            args,
+            &[],
+            ExtensionKind::Operator,
+            offset,
+        );
+        match result {
+            Err(_) if missing_operator => Err(Diagnostic::new(
+                offset,
+                format!("The operator modifier is required on {name}"),
+            )),
+            Err(_) if member_failure.is_some() => Err(member_failure.unwrap()),
+            result => result,
+        }
+    }
+
+    fn source_operator_call(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        let candidates = self
+            .function_names
+            .iter()
+            .enumerate()
+            .filter_map(|(id, n)| {
+                (n == name && self.extensions.contains(&id) && self.source_operator.contains(&id))
+                    .then_some(id)
+            })
+            .collect::<Vec<_>>();
+        let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
+        let binding = format!("<operator{slot}>");
+        self.scopes.push(HashMap::from([(
+            binding.clone(),
+            Local {
+                slot,
+                ty: receiver.ty.clone(),
+                mutable: false,
+            },
+        )]));
+        self.initialized.insert(slot);
+        let mut all = vec![Expr {
+            offset,
+            kind: ExprKind::Name(binding),
+        }];
+        all.extend_from_slice(args);
+        let result = (|| {
+            let id = self.select_function_types(&candidates, &all, &[], offset)?;
+            let (params, result) = self.specialize_source(id, &all, &[], offset)?;
+            let (values, lets, mask) =
+                self.arguments(&params, &vec![false; params.len()], &all, true, offset)?;
+            if mask != 0 {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Operator default arguments are unsupported",
+                ));
+            }
+            Ok(Self::wrap_lets(
+                Value {
+                    ty: result,
+                    kind: ValueKind::Call(id, values),
+                },
+                lets,
+            ))
+        })();
+        self.scopes.pop();
+        result.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
+    }
+
+    pub(super) fn check_contains(
+        &mut self,
+        value: Value,
+        container: &Expr,
+        offset: usize,
+    ) -> Result<Value> {
+        let receiver = self.value(container)?;
+        let slot = self.allocate_typed_slot(&value.ty, offset)?;
+        let name = format!("<contains{slot}>");
+        self.scopes.push(HashMap::from([(
+            name.clone(),
+            Local {
+                slot,
+                ty: value.ty.clone(),
+                mutable: false,
+            },
+        )]));
+        self.initialized.insert(slot);
+        let argument = Expr {
+            offset,
+            kind: ExprKind::Name(name),
+        };
+        let receiver_slot = self.allocate_typed_slot(&receiver.ty, offset)?;
+        let receiver_local = Value {
+            ty: receiver.ty.clone(),
+            kind: ValueKind::Local(receiver_slot),
+        };
+        let result = self.operator_call(receiver_local, "contains", &[argument], offset);
+        self.scopes.pop();
+        let result = result?;
+        self.require(&result, Type::Boolean, offset)?;
+        Ok(Self::wrap_lets(
+            result,
+            vec![(receiver_slot, receiver), (slot, value)],
+        ))
+    }
+
+    pub(super) fn check_indices(
+        &mut self,
+        source: &Expr,
+        indices: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        let array = self.value(source)?;
+        if array.ty.is_nullable() {
+            return Err(Diagnostic::new(
+                offset,
+                "Nullable indexing requires a not-null assertion",
+            ));
+        }
+        let element = match array.ty.base() {
+            Type::IntArray => Some(Type::Int),
+            Type::ByteArray => Some(Type::Byte),
+            Type::CharArray | Type::String => Some(Type::Char),
+            Type::StringArray => Some(Type::String),
+            Type::Array(element) => Some(element.as_ref().clone()),
+            _ => None,
+        };
+        if let Some(element) = element {
+            if matches!(element, Type::Unit | Type::Null) {
+                return Err(Diagnostic::new(offset, "Unsupported array element type"));
+            }
+            if indices.len() != 1 {
+                return Err(Diagnostic::new(offset, "Array indexing requires one index"));
+            }
+            let index = self.expected_value(&indices[0], &Type::Int)?;
+            return Ok(Value {
+                ty: element,
+                kind: ValueKind::Index(Box::new(array), Box::new(index)),
+            });
+        }
+        self.operator_call(array, "get", indices, offset)
+    }
+
+    pub(super) fn check_indices_assignment(
+        &mut self,
+        source: &Expr,
+        indices: &[Expr],
+        expression: &Expr,
+        offset: usize,
+    ) -> Result<Statement> {
+        let array = self.value(source)?;
+        if array.ty.is_nullable() {
+            return Err(Diagnostic::new(
+                offset,
+                "Nullable indexing requires a not-null assertion",
+            ));
+        }
+        let element = match array.ty.base() {
+            Type::IntArray => Some(Type::Int),
+            Type::ByteArray => Some(Type::Byte),
+            Type::CharArray => Some(Type::Char),
+            Type::StringArray => Some(Type::String),
+            Type::Array(element) => Some(element.as_ref().clone()),
+            Type::List(_) => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Read-only List does not support indexed assignment",
+                ));
+            }
+            _ => None,
+        };
+        if let Some(element) = element {
+            if matches!(element, Type::Unit | Type::Null) {
+                return Err(Diagnostic::new(offset, "Unsupported array element type"));
+            }
+            if indices.len() != 1 {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Array assignment requires one index",
+                ));
+            }
+            let index = self.expected_value(&indices[0], &Type::Int)?;
+            let value = self.expected_value(expression, &element)?;
+            return Ok(Statement::IndexStore(array, index, value));
+        }
+        let mut args = indices.to_vec();
+        args.push(expression.clone());
+        Ok(Statement::Expression(
+            self.operator_call(array, "set", &args, offset)?,
+        ))
+    }
+
+    pub(super) fn array_constructor(
+        &mut self,
+        types: &[Type],
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        if types.len() > 1 || args.len() != 2 {
+            return Err(Diagnostic::new(
+                offset,
+                "Array construction requires size and initializer",
+            ));
+        }
+        fn stable_initializer(checker: &Checker<'_>, expr: &Expr) -> bool {
+            match &expr.kind {
+                ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. } => true,
+                ExprKind::Labeled(_, inner) => stable_initializer(checker, inner),
+                ExprKind::Name(name) => checker.local(name).is_some_and(|local| {
+                    !local.mutable
+                        && matches!(
+                            local.ty.base(),
+                            Type::Function { .. } | Type::ReceiverFunction { .. }
+                        )
+                }),
+                _ => false,
+            }
+        }
+        if !stable_initializer(self, &args[1]) {
+            return Err(Diagnostic::new(
+                offset,
+                "Array initializer evaluation order has a specification/oracle discrepancy; effectful initializer expressions are unsupported",
+            ));
+        }
+        let size = self.expected_value(&args[0], &Type::Int)?;
+        let element = if let Some(ty) = types.first() {
+            self.resolve(ty, offset)?
+        } else {
+            self.infer_array_element(&args[1], offset)?
+        };
+        if matches!(element, Type::Unit | Type::Null) {
+            return Err(Diagnostic::new(
+                offset,
+                "Array element type requires an explicit supported type",
+            ));
+        }
+        fn reifiable(ty: &Type) -> bool {
+            match ty {
+                Type::Parameter { .. } => false,
+                Type::Array(inner) | Type::Nullable(inner) | Type::Platform(inner) => {
+                    reifiable(inner)
+                }
+                _ => true,
+            }
+        }
+        if !reifiable(&element) {
+            return Err(Diagnostic::new(
+                offset,
+                "Array construction requires a reified element type",
+            ));
+        }
+        let initializer = self.expected_value(
+            &args[1],
+            &Type::Function {
+                params: vec![Type::Int],
+                result: Box::new(element.clone()),
+            },
+        )?;
+        let array = Type::Array(Box::new(element));
+        Ok(Value {
+            ty: array.clone(),
+            kind: ValueKind::ArrayInitialize {
+                array,
+                size: Box::new(size),
+                initializer: Box::new(initializer),
+                array_slot: self.allocate_slot(offset)?,
+                index_slot: self.allocate_slot(offset)?,
+                initializer_slot: self.allocate_slot(offset)?,
+            },
+        })
+    }
+
+    fn infer_array_element(&mut self, initializer: &Expr, offset: usize) -> Result<Type> {
+        if let ExprKind::Labeled(_, inner) = &initializer.kind {
+            return self.infer_array_element(inner, offset);
+        }
+        let (params, body) = match &initializer.kind {
+            ExprKind::Lambda(value) => (
+                None,
+                vec![syntax::Statement {
+                    offset,
+                    kind: StatementKind::Expression(value.as_ref().clone()),
+                }],
+            ),
+            ExprKind::LambdaWithParams { params, body } => (params.clone(), body.clone()),
+            _ => {
+                let next = self.next;
+                let initialized = self.initialized.clone();
+                let refinements = self.refinements.clone();
+                let cells = self.cells.clone();
+                let cell_names = self.cell_names.clone();
+                let scopes = self.scopes.len();
+                let loop_depth = self.loop_depth;
+                let count = self.lambdas.borrow().len();
+                let inferred = self.value(initializer).and_then(|value| match value.ty {
+                    Type::Function { result, .. } | Type::ReceiverFunction { result, .. } => {
+                        Ok(*result)
+                    }
+                    _ => Err(Diagnostic::new(
+                        offset,
+                        "Array initializer must be a function",
+                    )),
+                });
+                self.next = next;
+                self.initialized = initialized;
+                self.refinements = refinements;
+                self.cells = cells;
+                self.cell_names = cell_names;
+                self.scopes.truncate(scopes);
+                self.loop_depth = loop_depth;
+                self.lambdas.borrow_mut().truncate(count);
+                return inferred;
+            }
+        };
+        let scopes = self.scopes.len();
+        let next = self.next;
+        let loop_depth = self.loop_depth;
+        let initialized = self.initialized.clone();
+        let refinements = self.refinements.clone();
+        let cells = self.cells.clone();
+        let cell_names = self.cell_names.clone();
+        let saved = self.lambdas.borrow().len();
+        let allow_return = self.allow_return;
+        let inline_result = self.inline_result.take();
+        let nonlocal_result = self.nonlocal_result.take();
+        self.allow_return = false;
+        self.scopes.push(HashMap::new());
+        let result = (|| {
+            let name = params
+                .as_ref()
+                .and_then(|p| p.first())
+                .map_or("it", |p| p.name.as_str());
+            self.declare(name, Type::Int, false, offset)?;
+            let Some((last, statements)) = body.split_last() else {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Array initializer must produce a value",
+                ));
+            };
+            self.block_scoped(statements, false)?;
+            if let StatementKind::Expression(expr) = &last.kind {
+                self.value(expr).map(|v| v.ty)
+            } else {
+                Err(Diagnostic::new(
+                    offset,
+                    "Array initializer needs a final result expression",
+                ))
+            }
+        })();
+        self.scopes.truncate(scopes);
+        self.next = next;
+        self.loop_depth = loop_depth;
+        self.initialized = initialized;
+        self.refinements = refinements;
+        self.cells = cells;
+        self.cell_names = cell_names;
+        self.lambdas.borrow_mut().truncate(saved);
+        self.allow_return = allow_return;
+        self.inline_result = inline_result;
+        self.nonlocal_result = nonlocal_result;
+        result
+    }
+}
+
+impl Checker<'_> {
+    pub(super) fn receiver_property(&mut self, name: &str, offset: usize) -> Result<Value> {
+        if self.receiver.is_none() {
+            return Err(Diagnostic::new(offset, format!("Unresolved name: {name}")));
+        }
+        self.value(&Expr {
+            offset,
+            kind: ExprKind::Property(
+                Box::new(Expr {
+                    offset,
+                    kind: ExprKind::Name("this".into()),
+                }),
+                name.into(),
+            ),
+        })
+    }
+
+    pub(super) fn implicit_receiver_call(
+        &mut self,
+        name: &str,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        let receiver = self.receiver_value(offset)?;
+        let next = self.next;
+        let initialized = self.initialized.clone();
+        let refinements = self.refinements.clone();
+        let count = self.lambdas.borrow().len();
+        let result = self.java_call(receiver, name, args, offset);
+        if result.is_err() {
+            self.next = next;
+            self.initialized = initialized;
+            self.refinements = refinements;
+            self.lambdas.borrow_mut().truncate(count);
+        }
+        result
+    }
+
+    pub(super) fn receiver_function_call(
+        &mut self,
+        source: &Expr,
+        name: &str,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        let function = self.value(&Expr {
+            offset,
+            kind: ExprKind::Name(name.into()),
+        })?;
+        let Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        } = function.ty.base()
+        else {
+            return Err(Diagnostic::new(
+                offset,
+                "Local function value has no receiver",
+            ));
+        };
+        let source = self.expected_value(source, receiver)?;
+        if args.len() != params.len() {
+            return Err(Diagnostic::new(
+                offset,
+                "Receiver function argument count mismatch",
+            ));
+        }
+        let mut values = vec![source];
+        for (arg, ty) in args.iter().zip(params) {
+            values.push(self.expected_value(arg, ty)?);
+        }
+        let result = result.as_ref().clone();
+        Ok(Value {
+            ty: result,
+            kind: ValueKind::FunctionInvoke {
+                function: Box::new(function),
+                args: values,
+            },
+        })
+    }
+}
+
+impl Checker<'_> {
+    pub(super) fn checked_throw(&mut self, expr: &Expr, offset: usize) -> Result<Statement> {
+        let value = if let ExprKind::Call(target, args) = &expr.kind {
+            if let ExprKind::Name(name) = &target.kind {
+                if self.local(name).is_none()
+                    && !self.functions.contains_key(name)
+                    && !self.captured.contains_key(name)
+                    && !self.constants.contains_key(name)
+                    && !self.fields.contains_key(name)
+                    && !self.companion_fields.contains_key(name)
+                    && !self.object_fields.contains_key(name)
+                    && !self.object_methods.contains_key(name)
+                    && !self.members.values().any(|method| {
+                        method.name == *name || method.source_property.as_deref() == Some(name)
+                    })
+                    && !self
+                        .receiver
+                        .as_ref()
+                        .and_then(|receiver| library::type_owner(&receiver.ty))
+                        .is_some_and(|owner| {
+                            self.classpath.methods(owner).is_ok_and(|methods| {
+                                methods
+                                    .iter()
+                                    .any(|method| method.name == *name && method.access & 8 == 0)
+                            })
+                        })
+                {
+                    if let Ok(ty) = self.resolve(&Type::Java(name.clone()), offset) {
+                        if let Some(owner) = library::type_owner(&ty) {
+                            let class = self
+                                .classes
+                                .get(owner)
+                                .cloned()
+                                .map(Ok)
+                                .unwrap_or_else(|| self.classpath.load(owner))?;
+                            let candidates = class
+                                .methods
+                                .iter()
+                                .filter(|method| method.name == "<init>" && method.access & 1 != 0)
+                                .cloned()
+                                .collect::<Vec<_>>();
+                            let method = self.select_method(&candidates, args, offset)?;
+                            let (params, defaults) = Self::method_parameters(&method)?;
+                            let value = self.constructor_call(
+                                owner,
+                                &params,
+                                &defaults,
+                                args,
+                                self.method_named(&method),
+                                offset,
+                            )?;
+                            return self.throw_value(value, offset);
+                        }
+                    }
+                }
+            }
+            self.value(expr)?
+        } else {
+            self.value(expr)?
+        };
+        self.throw_value(value, offset)
+    }
+
+    fn throw_value(&self, value: Value, offset: usize) -> Result<Statement> {
+        if value.ty.is_nullable()
+            || !self.subtype(&value.ty, &Type::Java("java/lang/Throwable".into()))
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Thrown value must be a non-null Throwable",
+            ));
+        }
+        Ok(Statement::ThrowValue(value))
+    }
+}
+
+#[cfg(test)]
+mod infix_tests {
+    #[test]
+    fn source_member_views_preserve_distinct_infix_overloads() {
+        crate::compile("class C(val value:Int) { infix fun choose(other:Int):Int=value+other; infix fun choose(other:Long):Long=other; fun f():Int=this choose 3 }", "Infix.kt").unwrap();
+        let error=crate::compile("class C { infix fun choose(other:String?):Int=1; infix fun choose(other:C?):Int=2; fun f():Int=this choose null }", "AmbiguousInfix.kt").err().unwrap();
+        assert!(error.message.contains("Ambiguous"), "{}", error.message);
     }
 }

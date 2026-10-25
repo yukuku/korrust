@@ -9,9 +9,17 @@ fn code<'a>(pool: &'a mut Pool, owner: &'a str) -> Code<'a> {
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
         lambdas: &[],
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
+        in_lambda: false,
         max_stack: 4,
     }
 }
@@ -20,12 +28,10 @@ fn field(code: &mut Code<'_>, owner: &str, receiver: u8, name: &str, ty: &Type) 
     code.field_reference(0xb4, owner, name, &ty.descriptor())
 }
 fn finish(code: Code<'_>, locals: u16, max_stack: usize) -> Result<SimpleCode> {
-    Ok(SimpleCode {
-        bytes: code.finish()?,
+    code.into_simple(
         locals,
-        max_stack: u16::try_from(max_stack)
-            .map_err(|_| failure("Data class stack exceeds JVM limit"))?,
-    })
+        u16::try_from(max_stack).map_err(|_| failure("Data class stack exceeds JVM limit"))?,
+    )
 }
 fn method(
     pool: &mut Pool,

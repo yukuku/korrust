@@ -27,9 +27,17 @@ pub(super) fn function(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
         lambdas,
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
+        in_lambda: false,
         max_stack: 2,
     };
     for (index, (slot, (_, ty))) in parameter_slots(&function.params, start)
@@ -72,11 +80,7 @@ pub(super) fn function(
     )?;
     body.bytes.push(return_opcode(&function.result));
     let max_stack = body.max_stack as u16;
-    let code = SimpleCode {
-        bytes: body.finish()?,
-        locals,
-        max_stack,
-    };
+    let code = body.into_simple(locals, max_stack)?;
     let mut params = Vec::new();
     if !is_static {
         params.push(("$this".into(), Type::Java(owner.into())));
@@ -127,9 +131,17 @@ pub(super) fn constructors(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
         lambdas,
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
+        in_lambda: false,
         max_stack: 2,
     };
     for (index, (slot, (_, ty))) in parameter_slots(&class.params, 1)
@@ -166,11 +178,7 @@ pub(super) fn constructors(
     body.method_reference(0xb7, owner, "<init>", &descriptor)?;
     body.bytes.push(0xb1);
     let max_stack = body.max_stack.max(slots) as u16;
-    let code = SimpleCode {
-        bytes: body.finish()?,
-        max_stack,
-        locals,
-    };
+    let code = body.into_simple(locals, max_stack)?;
     let mut params = class.params.clone();
     params.push(("$mask".into(), Type::Int));
     params.push((
@@ -198,9 +206,17 @@ pub(super) fn constructors(
             labels: Vec::new(),
             branches: Vec::new(),
             loops: Vec::new(),
+            loop_finally_depths: Vec::new(),
+            loop_names: Vec::new(),
+            pending_loop_name: None,
+            finalizers: Vec::new(),
+            exceptions: Vec::new(),
+            temporary_count: 0,
+            temporary_patches: Vec::new(),
             lambdas,
             inline_local_maps: Vec::new(),
             inline_returns: Vec::new(),
+            in_lambda: false,
             max_stack: slots + 2,
         };
         for (_, ty) in &class.params {
@@ -222,11 +238,7 @@ pub(super) fn constructors(
         body.bytes.push(0x01);
         body.method_reference(0xb7, owner, "<init>", &descriptor)?;
         body.bytes.push(0xb1);
-        let code = SimpleCode {
-            bytes: body.finish()?,
-            max_stack: (slots + 2) as u16,
-            locals: 1,
-        };
+        let code = body.into_simple(1, (slots + 2) as u16)?;
         let mut method = simple_method(pool, 0x0001, "<init>", "()V", code, None, false)?;
         frames::attach_constructor(pool, &mut method, owner, &[], 1)?;
         methods.push(method);

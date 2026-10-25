@@ -154,6 +154,14 @@ fn descriptor(ty: &Type, imports: Imports<'_>) -> Result<String> {
     match ty {
         Type::Nullable(inner) if inner.is_reference() => descriptor(inner, imports),
         Type::Nullable(_) => Ok(ty.descriptor()),
+        Type::Array(inner) => {
+            let component = if inner.is_reference() {
+                descriptor(inner, imports)?
+            } else {
+                Type::Nullable(inner.clone()).descriptor()
+            };
+            Ok(format!("[{component}"))
+        }
         Type::Java(name) => Ok(format!("L{};", imported_name(name, imports)?)),
         Type::Parameterized { name, .. } => Ok(format!("L{};", jvm_classifier(name, imports)?)),
         Type::Parameter { upper_bound, .. } => {
@@ -163,10 +171,7 @@ fn descriptor(ty: &Type, imports: Imports<'_>) -> Result<String> {
                 descriptor(&Type::Nullable(upper_bound.clone()), imports)
             }
         }
-        Type::Platform(_) => Err(Diagnostic::new(
-            0,
-            "Platform types in source metadata are unsupported",
-        )),
+        Type::Platform(inner) => descriptor(inner, imports),
         _ => Ok(ty.descriptor()),
     }
 }
@@ -217,6 +222,12 @@ fn metadata_classifier<'a>(name: &'a str, imports: Imports<'a>) -> Result<&'a st
 
 fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<Proto> {
     if let Type::Nullable(inner) = ty {
+        if inner.is_nullable() {
+            return type_proto(inner, imports, strings);
+        }
+        if let Type::Platform(inner) = inner.as_ref() {
+            return type_proto(&Type::Nullable(inner.clone()), imports, strings);
+        }
         let mut proto = type_proto(inner, imports, strings)?;
         proto.number(3, 1);
         return Ok(proto);
@@ -249,6 +260,12 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
         Type::CharArray => "kotlin/CharArray",
         Type::String => "kotlin/String",
         Type::Unit => "kotlin/Unit",
+        Type::Array(inner) => {
+            let mut argument = Proto::default();
+            argument.message(2, &type_proto(inner, imports, strings)?);
+            proto.message(2, &argument);
+            "kotlin/Array"
+        }
         Type::StringArray => {
             let mut argument = Proto::default();
             argument.message(2, &type_proto(&Type::String, imports, strings)?);
@@ -286,6 +303,28 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
             proto.number(9, strings.id(name)?);
             return Ok(proto);
         }
+        Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            let mut annotation = Proto::default();
+            annotation.number(1, strings.id("kotlin/ExtensionFunctionType")?);
+            proto.message(100, &annotation);
+            for ty in std::iter::once(receiver.as_ref())
+                .chain(params.iter())
+                .chain(std::iter::once(result.as_ref()))
+            {
+                let mut argument = Proto::default();
+                argument.message(2, &type_proto(ty, imports, strings)?);
+                proto.message(2, &argument);
+            }
+            proto.number(
+                6,
+                strings.id(&format!("kotlin/Function{}", params.len() + 1))?,
+            );
+            return Ok(proto);
+        }
         Type::Function { params, result } => {
             for ty in params.iter().chain(std::iter::once(result.as_ref())) {
                 let mut argument = Proto::default();
@@ -300,11 +339,12 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
             proto.number(6, strings.id(&name)?);
             return Ok(proto);
         }
-        Type::Platform(_) => {
-            return Err(Diagnostic::new(
-                0,
-                "Platform types in source metadata are unsupported",
-            ));
+        Type::Platform(inner) => {
+            if inner.is_nullable() {
+                return type_proto(inner, imports, strings);
+            }
+            let lower = type_proto(inner, imports, strings)?;
+            return platform_type(lower, strings);
         }
     };
     proto.number(6, strings.id(name)?);
@@ -351,7 +391,9 @@ fn function_with_flags(
     strings: &mut Strings,
 ) -> Result<Proto> {
     let mut proto = Proto::default();
-    let visibility = if function.private {
+    let visibility = if function.protected {
+        4
+    } else if function.private {
         2
     } else if function.internal {
         0
@@ -360,7 +402,11 @@ fn function_with_flags(
     };
     proto.number(
         9,
-        visibility | modality | extra_flags | if function.infix { 512 } else { 0 },
+        visibility
+            | modality
+            | extra_flags
+            | if function.infix { 512 } else { 0 }
+            | if function.operator { 256 } else { 0 },
     );
     proto.number(2, strings.id(&function.name)?);
     for (index, parameter) in function.type_params.iter().enumerate() {
@@ -417,7 +463,14 @@ fn class_metadata(
             0
         } else {
             6
-        }) | if class.data { 1024 } else { 0 },
+        }) | if class.data { 1024 } else { 0 }
+            | if class.abstract_ {
+                32
+            } else if class.open {
+                16
+            } else {
+                0
+            },
     );
     let class_id = if anonymous {
         internal_name.into()
@@ -429,7 +482,18 @@ fn class_metadata(
         strings.local_names.push(name);
     }
     proto.number(3, name);
-    if class.interfaces.is_empty() {
+    for nested in &class.nested {
+        proto.number(7, strings.id(crate::declaration_name(nested))?);
+    }
+    if let Some((name, _)) = &class.super_class {
+        let mut supertype = Proto::default();
+        supertype.number(
+            6,
+            strings.id(&imported_name(name, imports)?.replace('$', "."))?,
+        );
+        proto.message(6, &supertype);
+    }
+    if class.interfaces.is_empty() && class.super_class.is_none() {
         let mut supertype = Proto::default();
         supertype.number(6, strings.id("kotlin/Any")?);
         proto.message(6, &supertype);
@@ -446,7 +510,7 @@ fn class_metadata(
         proto.number(4, name);
         proto.number(7, name);
     }
-    if !anonymous {
+    if !anonymous && class.primary_constructor {
         let mut constructor = Proto::default();
         constructor.number(1, 6);
         let mut constructor_desc = String::from("(");
@@ -465,10 +529,37 @@ fn class_metadata(
         );
         proto.message(8, &constructor);
     }
+    for source in &class.secondary_constructors {
+        let mut constructor = Proto::default();
+        constructor.number(1, 22);
+        let mut desc = String::from("(");
+        for (index, (name, ty)) in source.params.iter().enumerate() {
+            let mut parameter = parameter(name, ty, imports, &mut strings)?;
+            if source.defaults.get(index).is_some_and(Option::is_some) {
+                parameter.number(1, 2);
+            }
+            constructor.message(2, &parameter);
+            desc.push_str(&descriptor(ty, imports)?);
+        }
+        desc.push_str(")V");
+        constructor.message(100, &method_signature("<init>", &desc, &mut strings)?);
+        proto.message(8, &constructor);
+    }
     for method in &class.methods {
         proto.message(
             9,
-            &function_proto(&method.function, method.is_override, imports, &mut strings)?,
+            &function_with_modality(
+                &method.function,
+                if !method.has_body {
+                    32
+                } else if method.open {
+                    16
+                } else {
+                    0
+                },
+                imports,
+                &mut strings,
+            )?,
         );
     }
     for (name, ty) in &class.params {
@@ -480,6 +571,11 @@ fn class_metadata(
         property.number(
             11,
             (if public { 518 } else { 514 })
+                | if class.override_params.contains(name) {
+                    16
+                } else {
+                    0
+                }
                 | if class.mutable_params.contains(name) {
                     256 | 1024
                 } else {
@@ -584,20 +680,63 @@ fn class_metadata(
                     .find(|field| field.name == property.name)
             })
             .map(|field| &field.ty)
+            .or_else(|| {
+                checked
+                    .and_then(|class| {
+                        class
+                            .methods
+                            .iter()
+                            .find(|method| method.name == crate::check::getter_name(&property.name))
+                    })
+                    .map(|method| &method.result)
+            })
             .unwrap_or(&property.ty);
-        let flags =
-            (if property.private { 2 } else { 6 }) | if property.is_override { 16 } else { 0 };
+        let flags = (if property.private {
+            2
+        } else if property.protected {
+            4
+        } else {
+            6
+        }) | if property.open { 16 } else { 0 };
         declaration.number(
             11,
-            flags | 512 | if property.mutable { 256 | 1024 } else { 0 },
+            flags
+                | 512
+                | if property.mutable { 256 | 1024 } else { 0 }
+                | if property.lateinit { 4096 } else { 0 }
+                | if property.delegate.is_some() {
+                    32768
+                } else {
+                    0
+                },
         );
         declaration.number(2, strings.id(&property.name)?);
         declaration.message(3, &type_proto(ty, imports, &mut strings)?);
-        if property.initializer.is_none() {
+        if !property.body.is_empty() || property.delegate.is_some() {
             declaration.number(7, flags | 64);
         }
+        if property.mutable && (property.setter.is_some() || property.delegate.is_some()) {
+            declaration.number(8, flags | 64);
+            let name = property
+                .setter
+                .as_ref()
+                .map_or("<set-?>", |(name, _)| name.as_str());
+            declaration.message(6, &parameter(name, ty, imports, &mut strings)?);
+        }
         let mut signature = Proto::default();
-        if property.initializer.is_some() {
+        let backing = checked.and_then(|class| {
+            class.fields.iter().find(|field| {
+                field.name == property.name
+                    || property.delegate.is_some()
+                        && field.name == format!("{}$delegate", property.name)
+            })
+        });
+        if let Some(field) = backing {
+            signature.message(
+                1,
+                &method_signature(&field.name, &descriptor(&field.ty, imports)?, &mut strings)?,
+            );
+        } else if checked.is_none() && property.initializer.is_some() {
             signature.message(
                 1,
                 &method_signature(&property.name, &descriptor(ty, imports)?, &mut strings)?,
@@ -627,6 +766,60 @@ fn class_metadata(
         proto.message(10, &declaration);
     }
     strings.finish(1, proto)
+}
+
+fn same_metadata_type(source: &Type, checked: &Type, imports: Imports<'_>) -> bool {
+    match (source, checked) {
+        (Type::Java(alias), Type::Java(owner)) => imports
+            .iter()
+            .find(|(name, _, _)| name == alias)
+            .map(|(_, imported, _)| imported == owner)
+            .unwrap_or_else(|| owner.rsplit('/').next() == Some(alias.as_str())),
+        (
+            Type::Parameterized {
+                name: source,
+                arguments: a,
+            },
+            Type::Parameterized {
+                name: checked,
+                arguments: b,
+            },
+        ) => {
+            same_metadata_type(
+                &Type::Java(source.clone()),
+                &Type::Java(checked.clone()),
+                imports,
+            ) && a.len() == b.len()
+                && a.iter().zip(b).all(|(a, b)| {
+                    a.variance == b.variance
+                        && match (&a.ty, &b.ty) {
+                            (Some(a), Some(b)) => same_metadata_type(a, b, imports),
+                            (None, None) => true,
+                            _ => false,
+                        }
+                })
+        }
+        (
+            Type::Function {
+                params: a,
+                result: ar,
+            },
+            Type::Function {
+                params: b,
+                result: br,
+            },
+        ) => {
+            a.len() == b.len()
+                && a.iter()
+                    .zip(b)
+                    .all(|(a, b)| same_metadata_type(a, b, imports))
+                && same_metadata_type(ar, br, imports)
+        }
+        (Type::Nullable(a), Type::Nullable(b))
+        | (Type::List(a), Type::List(b))
+        | (Type::MutableList(a), Type::MutableList(b)) => same_metadata_type(a, b, imports),
+        _ => source == checked,
+    }
 }
 
 pub(crate) fn for_checked_class(
@@ -686,7 +879,8 @@ pub(crate) fn for_checked_class(
             }
             (Type::Nullable(a), Type::Nullable(b))
             | (Type::List(a), Type::List(b))
-            | (Type::MutableList(a), Type::MutableList(b)) => bind(a, b, bindings),
+            | (Type::MutableList(a), Type::MutableList(b))
+            | (Type::Array(a), Type::Array(b)) => bind(a, b, bindings),
             _ => {}
         }
     }
@@ -702,67 +896,14 @@ pub(crate) fn for_checked_class(
             bind(&property.ty, &field.ty, &mut bindings);
         }
     }
-    fn same_type(source: &Type, checked: &Type, imports: Imports<'_>) -> bool {
-        match (source, checked) {
-            (Type::Java(alias), Type::Java(owner)) => imports
-                .iter()
-                .find(|(name, _, _)| name == alias)
-                .map(|(_, imported, _)| imported == owner)
-                .unwrap_or_else(|| owner.rsplit('/').next() == Some(alias.as_str())),
-            (
-                Type::Parameterized {
-                    name: source,
-                    arguments: a,
-                },
-                Type::Parameterized {
-                    name: checked,
-                    arguments: b,
-                },
-            ) => {
-                same_type(
-                    &Type::Java(source.clone()),
-                    &Type::Java(checked.clone()),
-                    imports,
-                ) && a.len() == b.len()
-                    && a.iter().zip(b).all(|(a, b)| {
-                        a.variance == b.variance
-                            && match (&a.ty, &b.ty) {
-                                (Some(a), Some(b)) => same_type(a, b, imports),
-                                (None, None) => true,
-                                _ => false,
-                            }
-                    })
-            }
-            (
-                Type::Function {
-                    params: a,
-                    result: ar,
-                },
-                Type::Function {
-                    params: b,
-                    result: br,
-                },
-            ) => {
-                a.len() == b.len()
-                    && a.iter().zip(b).all(|(a, b)| same_type(a, b, imports))
-                    && same_type(ar, br, imports)
-            }
-            (Type::Nullable(a), Type::Nullable(b))
-            | (Type::List(a), Type::List(b))
-            | (Type::MutableList(a), Type::MutableList(b)) => same_type(a, b, imports),
-            _ => source == checked,
-        }
-    }
+
     for method in &source.methods {
         if let Some(actual) = checked.methods.iter().find(|actual| {
             actual.name == method.function.name
                 && actual.params.len() == method.function.params.len()
-                && method
-                    .function
-                    .params
-                    .iter()
-                    .zip(&actual.params)
-                    .all(|((_, source), (_, checked))| same_type(source, checked, &bindings))
+                && method.function.params.iter().zip(&actual.params).all(
+                    |((_, source), (_, checked))| same_metadata_type(source, checked, &bindings),
+                )
         }) {
             bind(&method.function.result, &actual.result, &mut bindings);
             for ((_, source), (_, checked)) in method.function.params.iter().zip(&actual.params) {
@@ -774,6 +915,7 @@ pub(crate) fn for_checked_class(
 }
 
 pub(crate) fn for_class_companion(
+    source: &crate::syntax::ClassCompanion,
     companion: &crate::check::ClassCompanion,
     imports: Imports<'_>,
 ) -> Result<Metadata> {
@@ -800,30 +942,75 @@ pub(crate) fn for_class_companion(
     constructor.number(1, 2);
     constructor.message(100, &method_signature("<init>", "()V", &mut strings)?);
     proto.message(8, &constructor);
-    for property in &companion.properties {
+    for method in &source.methods {
+        proto.message(
+            9,
+            &function_proto(&method.function, false, imports, &mut strings)?,
+        );
+    }
+    for property in &source.properties {
+        let ty = companion
+            .methods
+            .iter()
+            .find(|method| method.name == crate::check::getter_name(&property.name))
+            .map(|method| &method.result)
+            .or_else(|| {
+                companion
+                    .properties
+                    .iter()
+                    .find(|field| field.name == property.name)
+                    .map(|field| &field.ty)
+            })
+            .or(property.ty.as_ref())
+            .ok_or_else(|| {
+                Diagnostic::new(
+                    property.offset,
+                    "Companion property metadata type is missing",
+                )
+            })?;
         let mut declaration = Proto::default();
         declaration.number(
             11,
             (if property.private { 514 } else { 518 })
-                | if property.mutable { 256 | 1024 } else { 0 },
+                | if property.mutable { 256 | 1024 } else { 0 }
+                | if property.lateinit { 4096 } else { 0 }
+                | if property.delegate.is_some() {
+                    32768
+                } else {
+                    0
+                },
         );
+        let accessor_flags = if property.private { 2 } else { 6 };
+        if !property.body.is_empty() || property.delegate.is_some() {
+            declaration.number(7, accessor_flags | 64);
+        }
+        if property.mutable && (property.setter.is_some() || property.delegate.is_some()) {
+            declaration.number(8, accessor_flags | 64);
+            let name = property
+                .setter
+                .as_ref()
+                .map_or("<set-?>", |(name, _)| name.as_str());
+            declaration.message(6, &parameter(name, ty, imports, &mut strings)?);
+        }
         declaration.number(2, strings.id(&property.name)?);
-        declaration.message(3, &type_proto(&property.ty, imports, &mut strings)?);
+        declaration.message(3, &type_proto(ty, imports, &mut strings)?);
         let mut signature = Proto::default();
-        signature.message(
-            1,
-            &method_signature(
-                &property.name,
-                &descriptor(&property.ty, imports)?,
-                &mut strings,
-            )?,
-        );
+        if let Some(field) = companion.properties.iter().find(|field| {
+            field.name == property.name
+                || property.delegate.is_some()
+                    && field.name == format!("{}$delegate", property.name)
+        }) {
+            signature.message(
+                1,
+                &method_signature(&field.name, &descriptor(&field.ty, imports)?, &mut strings)?,
+            );
+        }
         if !property.private {
             signature.message(
                 3,
                 &method_signature(
                     &crate::check::getter_name(&property.name),
-                    &format!("(){}", descriptor(&property.ty, imports)?),
+                    &format!("(){}", descriptor(ty, imports)?),
                     &mut strings,
                 )?,
             );
@@ -832,7 +1019,7 @@ pub(crate) fn for_class_companion(
                     4,
                     &method_signature(
                         &crate::check::setter_name(&property.name),
-                        &format!("({})V", descriptor(&property.ty, imports)?),
+                        &format!("({})V", descriptor(ty, imports)?),
                         &mut strings,
                     )?,
                 );
@@ -868,6 +1055,9 @@ fn interface_metadata(
     }
     for nested in &interface.nested {
         proto.number(7, strings.id(&nested.name)?);
+    }
+    for nested in &interface.declarations {
+        proto.number(7, strings.id(crate::declaration_name(nested))?);
     }
     if interface.companion.is_some() {
         let name = strings.id("Companion")?;
@@ -927,6 +1117,7 @@ fn companion_metadata(
     companion: &CompanionDecl,
     owner: &str,
     imports: Imports<'_>,
+    checked: Option<&crate::check::ClassCompanion>,
 ) -> Result<Metadata> {
     let mut strings = Strings::default();
     let mut proto = Proto::default();
@@ -974,6 +1165,83 @@ fn companion_metadata(
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }
+    for method in &companion.methods {
+        proto.message(
+            9,
+            &function_proto(&method.function, false, imports, &mut strings)?,
+        );
+    }
+    for property in &companion.fields {
+        let ty = property.ty.as_ref().ok_or_else(|| {
+            Diagnostic::new(property.offset, "Companion property type was not inferred")
+        })?;
+        let mut declaration = Proto::default();
+        declaration.number(
+            11,
+            (if property.private { 514 } else { 518 })
+                | if property.mutable { 256 | 1024 } else { 0 }
+                | if property.lateinit { 4096 } else { 0 }
+                | if property.delegate.is_some() {
+                    32768
+                } else {
+                    0
+                },
+        );
+        let accessor_flags = if property.private { 2 } else { 6 };
+        if !property.body.is_empty() || property.delegate.is_some() {
+            declaration.number(7, accessor_flags | 64);
+        }
+        if property.mutable && (property.setter.is_some() || property.delegate.is_some()) {
+            declaration.number(8, accessor_flags | 64);
+            let name = property
+                .setter
+                .as_ref()
+                .map_or("<set-?>", |(name, _)| name.as_str());
+            declaration.message(6, &parameter(name, ty, imports, &mut strings)?);
+        }
+        declaration.number(2, strings.id(&property.name)?);
+        declaration.message(3, &type_proto(ty, imports, &mut strings)?);
+        let mut signature = Proto::default();
+        if let Some(field) = checked.and_then(|state| {
+            state.properties.iter().find(|field| {
+                field.name == property.name
+                    || property.delegate.is_some()
+                        && field.name == format!("{}$delegate", property.name)
+            })
+        }) {
+            signature.message(
+                1,
+                &method_signature(&field.name, &descriptor(&field.ty, imports)?, &mut strings)?,
+            );
+        } else if checked.is_none() && property.initializer.is_some() {
+            signature.message(
+                1,
+                &method_signature(&property.name, &descriptor(ty, imports)?, &mut strings)?,
+            );
+        }
+        if !property.private {
+            signature.message(
+                3,
+                &method_signature(
+                    &crate::check::getter_name(&property.name),
+                    &format!("(){}", descriptor(ty, imports)?),
+                    &mut strings,
+                )?,
+            );
+            if property.mutable {
+                signature.message(
+                    4,
+                    &method_signature(
+                        &crate::check::setter_name(&property.name),
+                        &format!("({})V", descriptor(ty, imports)?),
+                        &mut strings,
+                    )?,
+                );
+            }
+        }
+        declaration.message(100, &signature);
+        proto.message(10, &declaration);
+    }
     strings.finish(1, proto)
 }
 
@@ -982,6 +1250,7 @@ fn interface_tree(
     owner: &str,
     imports: Imports<'_>,
     result: &mut BTreeMap<String, Metadata>,
+    checked: Option<&crate::check::InterfaceDecl>,
 ) -> Result<()> {
     let mut bindings: Vec<_> = interface
         .nested
@@ -1003,7 +1272,14 @@ fn interface_tree(
         let companion_owner = format!("{owner}$Companion");
         result.insert(
             companion_owner.clone(),
-            companion_metadata(companion, &companion_owner, &bindings)?,
+            companion_metadata(
+                companion,
+                &companion_owner,
+                &bindings,
+                checked
+                    .and_then(|interface| interface.companion.as_ref())
+                    .and_then(|companion| companion.state.as_ref()),
+            )?,
         );
         for property in &companion.properties {
             if let CompanionValue::Object(class) = &property.value {
@@ -1021,19 +1297,29 @@ fn interface_tree(
             &format!("{owner}${}", nested.name),
             &bindings,
             result,
+            checked.and_then(|interface| {
+                interface
+                    .nested
+                    .iter()
+                    .find(|child| child.owner == format!("{owner}${}", nested.name))
+            }),
         )?;
     }
     Ok(())
 }
 
-pub(crate) fn for_interfaces(module: &Module, owner: &str) -> Result<BTreeMap<String, Metadata>> {
+pub(crate) fn for_interfaces(
+    module: &Module,
+    owner: &str,
+    checked: Option<&crate::check::InterfaceDecl>,
+) -> Result<BTreeMap<String, Metadata>> {
     let interface = module.interface_decl.as_ref().ok_or_else(|| {
         Diagnostic::new(0, "Interface metadata requires an interface declaration")
     })?;
     let mut result = BTreeMap::new();
     let mut imports = vec![(interface.name.clone(), owner.into(), interface.offset)];
     imports.extend_from_slice(&module.imports);
-    interface_tree(interface, owner, &imports, &mut result)?;
+    interface_tree(interface, owner, &imports, &mut result, checked)?;
     Ok(result)
 }
 
@@ -1078,18 +1364,11 @@ pub(crate) fn for_object(
         .object_decl
         .as_ref()
         .ok_or_else(|| Diagnostic::new(0, "Object metadata requires an object declaration"))?;
-    if !object.constants.is_empty() || !object.objects.is_empty() {
-        return Err(Diagnostic::new(
-            object.offset,
-            "Dynamic objects mixed with constant or nested object declarations are unsupported",
-        ));
-    }
-    if fields.len() != object.fields.len() {
-        return Err(Diagnostic::new(
-            object.offset,
-            "Object metadata field types do not match declarations",
-        ));
-    }
+    let mut context = module.clone();
+    context
+        .imports
+        .insert(0, (object.name.clone(), owner.into(), object.offset));
+    let module = &context;
     let mut strings = Strings::default();
     let mut proto = Proto::default();
     proto.number(
@@ -1123,6 +1402,18 @@ pub(crate) fn for_object(
         function.message(3, &result);
         proto.message(9, &function);
     }
+    for nested in &object.nested {
+        proto.number(7, strings.id(crate::declaration_name(nested))?);
+    }
+    for nested in &object.objects {
+        proto.number(7, strings.id(&nested.name)?);
+    }
+    for constant in &object.constants {
+        proto.message(
+            10,
+            &constant_proto(constant, &module.imports, &mut strings)?,
+        );
+    }
     for method in &object.methods {
         let flags = u32::from(method.jvm_static) | if method.inline { 1024 } else { 0 };
         proto.message(
@@ -1132,34 +1423,81 @@ pub(crate) fn for_object(
     }
     let mut seen = BTreeSet::new();
     for field in &object.fields {
-        if !field.private || !seen.insert(&field.name) {
+        if !seen.insert(&field.name) {
             return Err(Diagnostic::new(
                 field.offset,
-                "Object metadata requires unique private ThreadLocal fields",
+                "Object metadata requires unique field names",
             ));
         }
-        let matches: Vec<_> = fields
+        let ty = fields
             .iter()
-            .filter(|(name, _)| name == &field.name)
-            .collect();
-        let [(_, ty)] = matches.as_slice() else {
-            return Err(Diagnostic::new(
-                field.offset,
-                "Object metadata field type is missing or repeated",
-            ));
-        };
+            .find(|(name, _)| name == &field.name)
+            .map(|(_, ty)| ty)
+            .or(field.ty.as_ref())
+            .ok_or_else(|| {
+                Diagnostic::new(field.offset, "Object metadata property type is missing")
+            })?;
         let mut declaration = Proto::default();
-        declaration.number(11, 514);
+        declaration.number(
+            11,
+            (if field.private { 514 } else { 518 })
+                | if field.mutable { 256 | 1024 } else { 0 }
+                | if field.lateinit { 4096 } else { 0 }
+                | if field.delegate.is_some() { 32768 } else { 0 },
+        );
+        let accessor_flags = if field.private { 2 } else { 6 };
+        if !field.body.is_empty() || field.delegate.is_some() {
+            declaration.number(7, accessor_flags | 64);
+        }
+        if field.mutable && (field.setter.is_some() || field.delegate.is_some()) {
+            declaration.number(8, accessor_flags | 64);
+            let name = field
+                .setter
+                .as_ref()
+                .map_or("<set-?>", |(name, _)| name.as_str());
+            declaration.message(6, &parameter(name, ty, &module.imports, &mut strings)?);
+        }
         declaration.number(2, strings.id(&field.name)?);
-        declaration.message(
-            3,
-            &inferred_thread_local(ty, &module.imports, &mut strings)?,
-        );
+        let metadata_type = if matches!(ty, Type::ThreadLocal(_)) {
+            inferred_thread_local(ty, &module.imports, &mut strings)?
+        } else {
+            type_proto(ty, &module.imports, &mut strings)?
+        };
+        declaration.message(3, &metadata_type);
         let mut signature = Proto::default();
-        signature.message(
-            1,
-            &method_signature(&field.name, &descriptor(ty, &module.imports)?, &mut strings)?,
-        );
+        if let Some((name, backing_ty)) = fields.iter().find(|(name, _)| {
+            name == &field.name
+                || field.delegate.is_some() && *name == format!("{}$delegate", field.name)
+        }) {
+            signature.message(
+                1,
+                &method_signature(
+                    name,
+                    &descriptor(backing_ty, &module.imports)?,
+                    &mut strings,
+                )?,
+            );
+        }
+        if !field.private {
+            signature.message(
+                3,
+                &method_signature(
+                    &crate::check::getter_name(&field.name),
+                    &format!("(){}", descriptor(ty, &module.imports)?),
+                    &mut strings,
+                )?,
+            );
+            if field.mutable {
+                signature.message(
+                    4,
+                    &method_signature(
+                        &crate::check::setter_name(&field.name),
+                        &format!("({})V", descriptor(ty, &module.imports)?),
+                        &mut strings,
+                    )?,
+                );
+            }
+        }
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }
@@ -1256,17 +1594,36 @@ pub(crate) fn for_checked_package(
             (Type::Nullable(a), Type::Nullable(b))
             | (Type::List(a), Type::List(b))
             | (Type::MutableList(a), Type::MutableList(b))
-            | (Type::ThreadLocal(a), Type::ThreadLocal(b)) => bind(a, b, bindings),
+            | (Type::ThreadLocal(a), Type::ThreadLocal(b))
+            | (Type::Array(a), Type::Array(b)) => bind(a, b, bindings),
             _ => {}
         }
     }
-    if module.functions.len() != checked.functions.len() {
-        return Err(Diagnostic::new(
-            0,
-            "Checked functions do not match package metadata declarations",
-        ));
-    }
-    for (source, checked) in module.functions.iter().zip(&checked.functions) {
+    for source in &module.functions {
+        let checked = checked
+            .functions
+            .iter()
+            .find(|actual| {
+                source.name == actual.name
+                    && source.params.len() + usize::from(source.receiver.is_some())
+                        == actual.params.len()
+                    && source
+                        .receiver
+                        .iter()
+                        .chain(source.params.iter().map(|(_, ty)| ty))
+                        .zip(&actual.params)
+                        .all(|(source, (_, actual))| {
+                            descriptor(source, &bindings)
+                                .is_ok_and(|source| source == actual.descriptor())
+                                || same_metadata_type(source, actual, &bindings)
+                        })
+            })
+            .ok_or_else(|| {
+                Diagnostic::new(
+                    source.offset,
+                    "Checked functions do not match package metadata declarations",
+                )
+            })?;
         let receiver_count = usize::from(source.receiver.is_some());
         if source.name != checked.name
             || source.params.len() + receiver_count != checked.params.len()
@@ -1286,6 +1643,15 @@ pub(crate) fn for_checked_package(
             bind(source, checked, &mut bindings);
         }
     }
+    for property in &module.properties {
+        if let Some(actual) = checked
+            .properties
+            .iter()
+            .find(|actual| actual.name == property.name)
+        {
+            bind(&property.ty, &actual.ty, &mut bindings);
+        }
+    }
     let mut strings = Strings::default();
     let mut proto = Proto::default();
     for function in &module.functions {
@@ -1296,6 +1662,69 @@ pub(crate) fn for_checked_package(
     }
     for constant in &module.constants {
         proto.message(4, &constant_proto(constant, &bindings, &mut strings)?);
+    }
+    for property in &module.properties {
+        let mut declaration = Proto::default();
+        declaration.number(
+            11,
+            (if property.private { 514 } else { 518 })
+                | if property.mutable { 256 | 1024 } else { 0 }
+                | if property.lateinit { 4096 } else { 0 }
+                | if property.delegate.is_some() {
+                    32768
+                } else {
+                    0
+                },
+        );
+        let accessor_flags = if property.private { 2 } else { 6 };
+        if !property.body.is_empty() || property.delegate.is_some() {
+            declaration.number(7, accessor_flags | 64);
+        }
+        if property.mutable && (property.setter.is_some() || property.delegate.is_some()) {
+            declaration.number(8, accessor_flags | 64);
+            let name = property
+                .setter
+                .as_ref()
+                .map_or("<set-?>", |(name, _)| name.as_str());
+            declaration.message(6, &parameter(name, &property.ty, &bindings, &mut strings)?);
+        }
+        declaration.number(2, strings.id(&property.name)?);
+        declaration.message(3, &type_proto(&property.ty, &bindings, &mut strings)?);
+        let mut signature = Proto::default();
+        if let Some(field) = checked.properties.iter().find(|field| {
+            field.name == property.name
+                || property.delegate.is_some()
+                    && field.name == format!("{}$delegate", property.name)
+        }) {
+            signature.message(
+                1,
+                &method_signature(
+                    &field.name,
+                    &descriptor(&field.ty, &bindings)?,
+                    &mut strings,
+                )?,
+            );
+        }
+        signature.message(
+            3,
+            &method_signature(
+                &crate::check::getter_name(&property.name),
+                &format!("(){}", descriptor(&property.ty, &bindings)?),
+                &mut strings,
+            )?,
+        );
+        if property.mutable {
+            signature.message(
+                4,
+                &method_signature(
+                    &crate::check::setter_name(&property.name),
+                    &format!("({})V", descriptor(&property.ty, &bindings)?),
+                    &mut strings,
+                )?,
+            );
+        }
+        declaration.message(100, &signature);
+        proto.message(4, &declaration);
     }
     strings.finish(2, proto)
 }
@@ -1326,6 +1755,229 @@ pub(crate) fn module_mapping(facades: &[String]) -> Vec<u8> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn metadata_fields(metadata: &Metadata) -> Vec<(u32, Option<u64>, Vec<u8>)> {
+        let bytes = metadata
+            .data1
+            .iter()
+            .flatten()
+            .skip(1)
+            .map(|value| u8::try_from(*value).unwrap())
+            .collect::<Vec<_>>();
+        let mut cursor = 0;
+        let mut length = 0;
+        for shift in (0..64).step_by(7) {
+            let byte = bytes[cursor];
+            cursor += 1;
+            length |= usize::from(byte & 127) << shift;
+            if byte < 128 {
+                break;
+            }
+        }
+        fields(&bytes[cursor + length..])
+    }
+
+    #[test]
+    fn custom_setters_preserve_named_typed_parameters_in_every_declaration_scope() {
+        let property = "var value: Int=0\nset(input) {field=input}";
+        for scope in 0..5 {
+            let source = match scope {
+                0 => format!("class Holder {{{property}}}"),
+                1 => property.into(),
+                2 => format!("object Holder {{{property}}}"),
+                3 => format!("class Holder {{companion object {{{property}}}}}"),
+                _ => format!("interface Holder {{companion object {{{property}}}}}"),
+            };
+            let module = crate::syntax::parse(&source).unwrap();
+            let classpath = crate::classpath::Classpath::new(&[]).unwrap();
+            let owner = if scope == 1 { "FileKt" } else { "Holder" };
+            classpath.source_header(&module, owner).unwrap();
+            let checked = crate::check::check_with_owner(&module, &classpath, owner).unwrap();
+            let metadata = match scope {
+                0 => for_checked_class(
+                    module.class_decl.as_ref().unwrap(),
+                    checked.class_decl.as_ref().unwrap(),
+                    owner,
+                    &module.imports,
+                )
+                .unwrap(),
+                1 => for_checked_package(&module, &checked).unwrap(),
+                2 => {
+                    for_object(&module, owner, &[("value".into(), Type::Int)], &[], false).unwrap()
+                }
+                3 => for_class_companion(
+                    module
+                        .class_decl
+                        .as_ref()
+                        .unwrap()
+                        .companion
+                        .as_ref()
+                        .unwrap(),
+                    checked
+                        .class_decl
+                        .as_ref()
+                        .unwrap()
+                        .companion
+                        .as_ref()
+                        .unwrap(),
+                    &module.imports,
+                )
+                .unwrap(),
+                _ => for_interfaces(&module, owner, checked.interface_decl.as_ref())
+                    .unwrap()
+                    .remove("Holder$Companion")
+                    .unwrap(),
+            };
+            let property = metadata_fields(&metadata)
+                .into_iter()
+                .find(|(field, _, _)| *field == if scope == 1 { 4 } else { 10 })
+                .unwrap()
+                .2;
+            let declaration = fields(&property);
+            assert!(
+                declaration
+                    .iter()
+                    .any(|(field, value, _)| *field == 8 && *value == Some(70)),
+                "scope {scope}"
+            );
+            let setter = fields(
+                &declaration
+                    .iter()
+                    .find(|(field, _, _)| *field == 6)
+                    .unwrap()
+                    .2,
+            );
+            let name = setter
+                .iter()
+                .find(|(field, _, _)| *field == 2)
+                .unwrap()
+                .1
+                .unwrap();
+            assert_eq!(metadata.data2[name as usize], "input", "scope {scope}");
+            let ty = fields(&setter.iter().find(|(field, _, _)| *field == 3).unwrap().2);
+            let classifier = ty
+                .iter()
+                .find(|(field, _, _)| *field == 6)
+                .unwrap()
+                .1
+                .unwrap();
+            assert_eq!(
+                metadata.data2[classifier as usize], "kotlin/Int",
+                "scope {scope}"
+            );
+        }
+    }
+
+    #[test]
+    fn delegated_setters_have_typed_implicit_parameters_only_for_mutable_properties() {
+        let source = crate::syntax::parse(
+            "class Holder {var score: Int by delegate;val readonly: Int by delegate}",
+        )
+        .unwrap();
+        let metadata = class_metadata(
+            source.class_decl.as_ref().unwrap(),
+            "Holder",
+            &[],
+            false,
+            None,
+        )
+        .unwrap();
+        for (_, _, bytes) in metadata_fields(&metadata)
+            .into_iter()
+            .filter(|(field, _, _)| *field == 10)
+        {
+            let property = fields(&bytes);
+            let name = property
+                .iter()
+                .find(|(field, _, _)| *field == 2)
+                .unwrap()
+                .1
+                .unwrap();
+            if metadata.data2[name as usize] == "readonly" {
+                assert!(!property.iter().any(|(field, _, _)| matches!(field, 6 | 8)));
+                continue;
+            }
+            let parameter = fields(&property.iter().find(|(field, _, _)| *field == 6).unwrap().2);
+            let name = parameter
+                .iter()
+                .find(|(field, _, _)| *field == 2)
+                .unwrap()
+                .1
+                .unwrap();
+            assert_eq!(metadata.data2[name as usize], "<set-?>");
+            let ty = fields(
+                &parameter
+                    .iter()
+                    .find(|(field, _, _)| *field == 3)
+                    .unwrap()
+                    .2,
+            );
+            let name = ty
+                .iter()
+                .find(|(field, _, _)| *field == 6)
+                .unwrap()
+                .1
+                .unwrap();
+            assert_eq!(metadata.data2[name as usize], "kotlin/Int");
+        }
+    }
+
+    #[test]
+    fn property_metadata_preserves_lateinit_and_delegated_flags() {
+        let source = crate::syntax::parse(
+            "class Holder { lateinit var text: String; var score: Int by delegate }",
+        )
+        .unwrap();
+        let metadata = class_metadata(
+            source.class_decl.as_ref().unwrap(),
+            "Holder",
+            &[],
+            false,
+            None,
+        )
+        .unwrap();
+        let bytes = metadata
+            .data1
+            .iter()
+            .flatten()
+            .skip(1)
+            .map(|value| u8::try_from(*value).unwrap())
+            .collect::<Vec<_>>();
+        let mut cursor = 0;
+        let mut length = 0;
+        for shift in (0..64).step_by(7) {
+            let byte = bytes[cursor];
+            cursor += 1;
+            length |= usize::from(byte & 127) << shift;
+            if byte < 128 {
+                break;
+            }
+        }
+        let properties = fields(&bytes[cursor + length..])
+            .into_iter()
+            .filter(|(field, _, _)| *field == 10)
+            .map(|(_, _, bytes)| {
+                let property = fields(&bytes);
+                let name = property
+                    .iter()
+                    .find(|(field, _, _)| *field == 2)
+                    .unwrap()
+                    .1
+                    .unwrap();
+                let flags = property
+                    .iter()
+                    .find(|(field, _, _)| *field == 11)
+                    .unwrap()
+                    .1
+                    .unwrap();
+                (metadata.data2[name as usize].clone(), flags)
+            })
+            .collect::<BTreeMap<_, _>>();
+        assert_ne!(properties["text"] & 4096, 0);
+        assert_eq!(properties["text"] & 32768, 0);
+        assert_ne!(properties["score"] & 32768, 0);
+        assert_eq!(properties["score"] & 4096, 0);
+    }
 
     fn fields(bytes: &[u8]) -> Vec<(u32, Option<u64>, Vec<u8>)> {
         fn varint(bytes: &mut &[u8]) -> u64 {
@@ -1461,13 +2113,31 @@ mod tests {
     }
 
     #[test]
-    fn source_platform_metadata_requires_an_explicit_supported_representation() {
+    fn inferred_platform_metadata_preserves_flexible_lower_and_nullable_upper_bounds() {
         let mut strings = Strings::default();
-        let error = match type_proto(&Type::Platform(Box::new(Type::String)), &[], &mut strings) {
-            Err(error) => error,
-            Ok(_) => panic!("platform type was accepted"),
-        };
-        assert!(error.message.contains("Platform types"));
+        let value = type_proto(&Type::Platform(Box::new(Type::String)), &[], &mut strings).unwrap();
+        let lower = fields(&value.0);
+        let capability = lower
+            .iter()
+            .find(|(field, _, _)| *field == 4)
+            .unwrap()
+            .1
+            .unwrap();
+        assert_eq!(
+            strings.values[capability as usize],
+            "kotlin.jvm.PlatformType"
+        );
+        assert!(!lower.iter().any(|(field, _, _)| *field == 3));
+        let upper = fields(&lower.iter().find(|(field, _, _)| *field == 5).unwrap().2);
+        assert!(
+            upper
+                .iter()
+                .any(|(field, value, _)| *field == 3 && *value == Some(1))
+        );
+        assert_eq!(
+            descriptor(&Type::Platform(Box::new(Type::String)), &[]).unwrap(),
+            "Ljava/lang/String;"
+        );
         let null = type_proto(&Type::Null, &[], &mut strings).unwrap();
         assert!(
             fields(&null.0)
@@ -1504,7 +2174,7 @@ mod tests {
             "interface Root {\ninterface Base\ninterface Child : Base {\ninterface Base\n}\n}",
         )
         .unwrap();
-        let metadata = for_interfaces(&source, "Root").unwrap();
+        let metadata = for_interfaces(&source, "Root", None).unwrap();
         let child = &metadata["Root$Child"];
         assert!(child.data2.iter().any(|name| name == "Root.Base"));
         assert!(!child.data2.iter().any(|name| name == "Root.Child.Base"));
@@ -1517,6 +2187,10 @@ mod tests {
                 .unwrap();
         let ty = Type::Java("resolved/External".into());
         let checked = crate::check::Module {
+            exposed_fields: std::collections::HashMap::new(),
+            properties: Vec::new(),
+            initializers: Vec::new(),
+            locals: 0,
             lambdas: Vec::new(),
             constants: Vec::new(),
             functions: vec![crate::check::Function {

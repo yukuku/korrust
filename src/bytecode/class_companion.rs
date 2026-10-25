@@ -20,6 +20,7 @@ pub(super) fn outer(
     fields: &mut Vec<u8>,
     methods: &mut Vec<Vec<u8>>,
     lambdas: &[crate::check::LambdaDecl],
+    delegated_properties: &[(String, Value)],
 ) -> Result<()> {
     fields.extend(class_field(
         pool,
@@ -32,10 +33,23 @@ pub(super) fn outer(
             pool,
             &property.name,
             &property.ty,
-            if property.mutable { 0x000a } else { 0x001a },
+            0x0008
+                | companion
+                    .exposed_fields
+                    .get(&property.name)
+                    .copied()
+                    .unwrap_or(0x0002)
+                | if property.mutable { 0 } else { 0x0010 },
         )?);
-        if property.private {
-            continue;
+        if !lambdas.is_empty() {
+            methods.extend(field_bridges(
+                pool,
+                owner,
+                &property.name,
+                &property.ty,
+                true,
+                property.mutable,
+            )?);
         }
         let mut code = SimpleCode::new(property.ty.slots() as u16, 0);
         code.reference(
@@ -79,11 +93,23 @@ pub(super) fn outer(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
         lambdas,
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
+        in_lambda: false,
         max_stack: 3,
     };
+    for (name, value) in delegated_properties {
+        code.value(value)?;
+        code.field_reference(0xb3, owner, name, &value.ty.descriptor())?;
+    }
     code.class_reference(0xbb, &companion.owner)?;
     code.bytes.extend([0x59, 0x01]);
     code.method_reference(
@@ -93,17 +119,17 @@ pub(super) fn outer(
         "(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
     )?;
     code.field_reference(0xb3, owner, "Companion", &format!("L{};", companion.owner))?;
-    for property in &companion.properties {
-        code.value(&property.value)?;
-        code.field_reference(0xb3, owner, &property.name, &property.ty.descriptor())?;
+    if companion.initializers.is_empty() {
+        for property in &companion.properties {
+            code.value(&property.value)?;
+            code.field_reference(0xb3, owner, &property.name, &property.ty.descriptor())?;
+        }
+    } else {
+        code.block(&companion.initializers)?;
     }
     code.bytes.push(0xb1);
     let max_stack = code.max_stack as u16;
-    let code = SimpleCode {
-        bytes: code.finish()?,
-        locals: companion.locals,
-        max_stack,
-    };
+    let code = code.into_simple(companion.locals, max_stack)?;
     let mut initializer = simple_method(pool, 0x0008, "<clinit>", "()V", code, None, false)?;
     frames::attach(pool, &mut initializer, owner, &[], companion.locals, true)?;
     methods.push(initializer);
@@ -115,6 +141,7 @@ pub(super) fn emit(
     owner: &str,
     file: &str,
     metadata: &crate::metadata::Metadata,
+    lambdas: &[crate::check::LambdaDecl],
 ) -> Result<crate::ClassFile> {
     let mut pool = Pool::default();
     let this = pool.class(&companion.owner)?;
@@ -131,28 +158,37 @@ pub(super) fn emit(
         if property.private {
             continue;
         }
-        let mut code = SimpleCode::new(property.ty.slots() as u16, 1);
-        code.reference(
-            0xb8,
-            pool.method(
-                owner,
-                &format!("access${}$cp", crate::check::getter_name(&property.name)),
+        let has_getter = companion.methods.iter().any(|method| {
+            method.name == crate::check::getter_name(&property.name) && method.params.is_empty()
+        });
+        if !has_getter {
+            let mut code = SimpleCode::new(property.ty.slots() as u16, 1);
+            code.reference(
+                0xb8,
+                pool.method(
+                    owner,
+                    &format!("access${}$cp", crate::check::getter_name(&property.name)),
+                    &format!("(){}", property.ty.descriptor()),
+                )?,
+            );
+            code.bytes.push(return_opcode(&property.ty));
+            let mut getter = simple_method(
+                &mut pool,
+                0x0011,
+                &crate::check::getter_name(&property.name),
                 &format!("(){}", property.ty.descriptor()),
-            )?,
-        );
-        code.bytes.push(return_opcode(&property.ty));
-        let mut getter = simple_method(
-            &mut pool,
-            0x0011,
-            &crate::check::getter_name(&property.name),
-            &format!("(){}", property.ty.descriptor()),
-            code,
-            generic_method(&[], &property.ty).as_deref(),
-            nonnull(&property.ty),
-        )?;
-        nullable_result(&mut pool, &mut getter, &property.ty)?;
-        methods.push(getter);
-        if property.mutable {
+                code,
+                generic_method(&[], &property.ty).as_deref(),
+                nonnull(&property.ty),
+            )?;
+            nullable_result(&mut pool, &mut getter, &property.ty)?;
+            methods.push(getter);
+        }
+        if property.mutable
+            && !companion.methods.iter().any(|method| {
+                method.name == crate::check::setter_name(&property.name) && method.params.len() == 1
+            })
+        {
             let mut code = SimpleCode::new(
                 property.ty.slots().max(2) as u16,
                 (property.ty.slots() + 1) as u16,
@@ -192,6 +228,78 @@ pub(super) fn emit(
             parameter_annotations(&mut pool, &mut setter, &params)?;
             methods.push(setter);
         }
+    }
+    for function in &companion.methods {
+        if !lambdas.is_empty() && function.private {
+            methods.push(private_method_bridge(
+                &mut pool,
+                &companion.owner,
+                function,
+                false,
+            )?);
+        }
+        let mut code = Code {
+            pool: &mut pool,
+            functions: &companion.methods,
+            owner: &companion.owner,
+            bytes: Vec::new(),
+            labels: Vec::new(),
+            branches: Vec::new(),
+            loops: Vec::new(),
+            loop_finally_depths: Vec::new(),
+            loop_names: Vec::new(),
+            pending_loop_name: None,
+            finalizers: Vec::new(),
+            exceptions: Vec::new(),
+            temporary_count: 0,
+            temporary_patches: Vec::new(),
+            lambdas,
+            inline_local_maps: Vec::new(),
+            inline_returns: Vec::new(),
+            in_lambda: false,
+            max_stack: 2,
+        };
+        if !function.private {
+            for (slot, (name, ty)) in parameter_slots(&function.params, 1)
+                .into_iter()
+                .zip(&function.params)
+            {
+                if nonnull(ty) {
+                    code.bytes.extend([0x19, slot as u8]);
+                    let name = code.pool.string(name)?;
+                    code.reference(0x13, name);
+                    code.method_reference(
+                        0xb8,
+                        "kotlin/jvm/internal/Intrinsics",
+                        "checkNotNullParameter",
+                        "(Ljava/lang/Object;Ljava/lang/String;)V",
+                    )?;
+                }
+            }
+        }
+        code.block(&function.body)?;
+        let stack = code.max_stack as u16;
+        let code = code.into_simple(function.locals, stack)?;
+        let mut method = simple_method(
+            &mut pool,
+            if function.private { 0x0012 } else { 0x0011 },
+            &function.name,
+            &function.descriptor(),
+            code,
+            generic_function(function).as_deref(),
+            nonnull(&function.result),
+        )?;
+        parameter_annotations(&mut pool, &mut method, &function.params)?;
+        nullable_result(&mut pool, &mut method, &function.result)?;
+        frames::attach(
+            &mut pool,
+            &mut method,
+            &companion.owner,
+            &function.params,
+            function.locals,
+            false,
+        )?;
+        methods.push(method);
     }
     let mut code = SimpleCode::new(1, 2);
     code.bytes.push(0x2a);

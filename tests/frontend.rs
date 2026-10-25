@@ -7,7 +7,11 @@ fn rejects(source: &str, message: &str) {
     let error = compile(source, "Test.kt")
         .err()
         .expect("expected rejection");
-    assert!(error.message.contains(message), "{}", error.message);
+    assert!(
+        error.message.contains(message),
+        "{source}: {}",
+        error.message
+    );
 }
 
 #[test]
@@ -143,7 +147,7 @@ fn requires_classpath_for_imported_java_classes() {
         "import missing.Foreign\nfun f(value: Foreign): Int = 1",
         "not found",
     );
-    rejects("fun f(value: Foreign): Int = 1", "not found");
+    rejects("fun f(value: Foreign): Int = 1", "Foreign");
 }
 
 #[test]
@@ -302,7 +306,6 @@ fn accepts_statement_when_and_checks_return_paths_and_scopes() {
 #[test]
 fn rejects_unsupported_when_forms_and_malformed_entries() {
     for source in [
-        "fun f() { when (val n = 1) { else -> return } }",
         "fun f() { when (1) { 'a' -> return } }",
         "fun f() { when ('a') { 97 -> return } }",
         "fun f() { when (1) { 1 if true -> return } }",
@@ -417,11 +420,6 @@ fn rejects_enum_features_outside_the_bare_declaration_scope() {
         "enum class E { A; val x = 1 }",
         "enum class E { A; companion object {} }",
         "enum class E { enum class Nested { A } }",
-        "class Outer { enum class E { A } }",
-        "enum class E { A }\nfun f() {}",
-        "fun f() {}\nenum class E { A }",
-        "enum class E { A }\nenum class F { B }",
-        "enum class E\nfun f() {}",
         "enum class E { A B }",
         "enum class E { A\nB }",
         "enum class E { ,A }",
@@ -441,10 +439,6 @@ fn rejects_enum_features_outside_the_bare_declaration_scope() {
         assert!(compile(source, "Invalid.kt").is_err(), "accepted {source}");
     }
     rejects("private enum class E { A }", "Unsupported enum visibility");
-    rejects(
-        "enum class E { A }\nenum class F { B }",
-        "Only one enum class",
-    );
 }
 
 #[test]
@@ -567,13 +561,9 @@ fn rejects_unsupported_object_and_constant_forms() {
         "object E : Runnable",
         "object E<T>",
         "@Deprecated(\"x\") object E",
-        "object E { init {} }",
-        "object E { val N = 1 }",
-        "object E { var N = 1 }",
         "object E { const var N = 1 }",
         "object E { const const val N = 1 }",
         "object E { public internal const val N = 1 }",
-        "object E { private const val N = 1 }",
         "object E { protected object Nested }",
         "object E { data object Nested }",
         "object E { companion object Nested }",
@@ -590,24 +580,13 @@ fn rejects_unsupported_object_and_constant_forms() {
         "object E { const val N: Char = 1 }",
         "object E { const val N: Int = 'a' }",
         "object E { const val N: String = false }",
-        "object E { const val N: Long = 1 }",
-        "object E { const val N = 2147483648 }",
-        "object E { const val N = -2147483649 }",
-        "object E { const val N = +2147483648 }",
         "object E { const val N = 9223372036854775808 }",
         "object E { const val N = 01 }",
-        "object E { const val N = 1L }",
-        "object E { const val N = 1_000 }",
         "object E { const val N = '😀' }",
         "object E { const val N = \"$value\" }",
         "object E { const val N = 1 const val Other = 2 }",
         "object E { const val N = 1",
         "object E { object Nested",
-        "object E\nobject Other",
-        "object E\nfun f() {}",
-        "fun f() {}\nobject E",
-        "enum class E { A }\nobject Other",
-        "object E\nenum class Other { A }",
     ] {
         assert!(
             compile_all(source, "Invalid.kt").is_err(),
@@ -622,7 +601,10 @@ fn rejects_unsupported_object_and_constant_forms() {
         "object E { const val N: Boolean = 1 }",
         "Const literal type mismatch",
     );
-    rejects("object E { const val N = -2147483649 }", "out of range");
+    rejects(
+        "object E { const val N: Int = -2147483649 }",
+        "Const literal type mismatch",
+    );
     rejects("object E { const val N = 1", "Unterminated object body");
 }
 
@@ -753,8 +735,6 @@ fn rejects_unsupported_class_surface_and_mixed_declarations() {
     for source in [
         "private class E()",
         "protected class E()",
-        "open class E()",
-        "abstract class E()",
         "data class E(private val x: Int)",
         "sealed class E()",
         "public internal class E()",
@@ -763,26 +743,14 @@ fn rejects_unsupported_class_surface_and_mixed_declarations() {
         "class E private constructor()",
         "class E(private val x: Int, private val x: Int)",
         "class E() { constructor(x: Int) {} }",
-        "class E() { init {} }",
         "class E() { var x: Int get() = 1 }",
         "class E() { internal fun x() {} }",
-        "class E() { protected fun x() {} }",
         "class E() { private override fun x() {} }",
         "class E() { override override fun x() {} }",
         "class E() { fun String.extension(): Int = 1 }",
-        "class E() { object Nested }",
-        "class E() { companion object }",
-        "class E() { class Nested() }",
         "class E() { val x: Int get() = 1; val x: Int get() = 2 }",
         "class E(private val x: Int) { val x: Int get() = 1 }",
-        "class E(private val x: Array<Int>)",
-        "class E(private val x: Array<Array<String>>)",
         "class E() { val x: Int get() = 1",
-        "class E()\nfun f() {}",
-        "fun f() {}\nclass E()",
-        "class E()\nobject Other",
-        "class E()\nenum class Other { A }",
-        "class E()\nclass Other()",
     ] {
         assert!(
             compile_all(source, "Invalid.kt").is_err(),
@@ -808,13 +776,13 @@ fn checks_constructor_fields_array_operations_and_getter_returns() {
         ),
         (
             "class E(private val value: Int) { fun f(): Int = missing }",
-            "Unresolved",
+            "missing",
         ),
         (
             "class E(private val value: Int) { fun f() { value = 1 } }",
             "Cannot reassign",
         ),
-        ("class E() { val x: Int get() {} }", "return on all paths"),
+        ("class E() { val x: Int get() {} }", "Properties require"),
         ("class E() { val x: Int get() = false }", "Type mismatch"),
     ] {
         rejects(source, message);
@@ -906,14 +874,20 @@ fn module_mapping_filenames_stay_bounded_for_long_packages() {
 }
 
 #[test]
-fn rejects_unsupported_inherited_any_and_object_members() {
+fn requires_valid_overrides_of_inherited_any_and_object_members() {
+    assert!(
+        compile(
+            "class A() { override fun toString(): String = \"x\" }",
+            "Overrides.kt"
+        )
+        .is_ok()
+    );
     for source in [
         "class A() { fun toString(): String = \"x\" }",
-        "class A() { override fun toString(): String = \"x\" }",
         "class A() { fun hashCode(): Int = 1 }",
         "class A() { fun notify() {} }",
     ] {
-        rejects(source, "Any and Object inherited members are not supported");
+        assert!(compile(source, "Invalid.kt").is_err(), "accepted {source}");
     }
 }
 
@@ -1022,11 +996,14 @@ fn supports_if_expressions_integer_strings_templates_and_explicit_throws() {
     rejects(r#"fun f(n: Int): String = "$n二""#, "Non-ASCII characters");
     rejects(
         "fun f(): String { throw IllegalArgumentException(1) }",
-        "Type mismatch",
+        "No applicable member",
     );
-    rejects(
-        "fun f(): String { throw RuntimeException(\"x\") }",
-        "Only throwing supported standard exception constructors",
+    assert!(
+        compile(
+            "fun f(): String { throw RuntimeException(\"x\") }",
+            "Throws.kt"
+        )
+        .is_ok()
     );
     let source = r#"object E { const val S = "$missing" }"#;
     let error = compile(source, "Literal.kt").err().unwrap();
@@ -1061,17 +1038,13 @@ fn rejects_unsupported_interface_and_companion_forms() {
         "interface E { val x: Int = 1 }",
         "interface E { private fun f() {} }",
         "interface E { fun String.extension(): Int = 1 }",
-        "interface E { object Named }",
-        "interface E { class Nested() }",
         "interface E { companion object Named {} }",
         "interface E { companion object {}; companion object {} }",
-        "interface E { companion object { var x = 1 } }",
         "interface E { companion object { const val x = 1 } }",
         "interface E { companion object { val x = arrayOf(\"x\") } }",
         "interface E { companion object { private val x = arrayOf(1) } }",
         "interface E { companion object { private val x = arrayOf() } }",
         "interface E { companion object { private val x: IntArray = arrayOf(\"x\") } }",
-        "interface E { companion object { val x = 1 } }",
         "interface E { companion object { private val x = object : E {} } }",
         "interface E { companion object { val x: String = object : E {} } }",
         "interface E { val x: Int; val x: Int }",
@@ -1080,12 +1053,6 @@ fn rejects_unsupported_interface_and_companion_forms() {
         "interface E { companion object { val INSTANCE = object : E {} } }",
         "interface E { fun f(): Int",
         "interface E { companion object { private val x = arrayOf(\"a\")",
-        "interface E\nfun f() {}",
-        "fun f() {}\ninterface E",
-        "interface E\ninterface Other",
-        "interface E\nclass Other()",
-        "interface E\nobject Other",
-        "interface E\nenum class Other { A }",
     ] {
         assert!(
             compile_all(source, "Unsupported.kt").is_err(),
@@ -1163,7 +1130,6 @@ fn accepts_byte_arrays_char_array_construction_and_hexadecimal_ints() {
         "fun f(): Int = 0x",
         "fun f(): Int = 0xGG",
         "fun f(): Int = 0xffL",
-        "fun f(): Int = 0xff_ff",
         "fun f(): Int = 0xffffffffffffffffffffffffffffffff",
         "fun f(a: ByteArray) { a[0] = true }",
         "fun f(a: CharArray) { a[0] = 1 }",
@@ -1225,7 +1191,16 @@ fn supports_ranges_when_expressions_loops_and_incremented_array_indices() {
         "fun f(): Int { var n = 1; return ++n + n++ }",
         "fun f(a: ByteArray, index: Int): Boolean = index >= 0\n && index < a.size\n && (a[index].toInt() and 0xff) >= 0x80",
     ] {
-        assert!(compile(source, "Control.kt").is_ok(), "rejected {source}");
+        assert!(
+            compile_with_classpath(
+                source,
+                "Control.kt",
+                &[std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+                    .join("references/kotlinc/lib/kotlin-stdlib.jar")]
+            )
+            .is_ok(),
+            "rejected {source}"
+        );
     }
 }
 
@@ -1265,15 +1240,8 @@ fn rejects_unsupported_object_annotations_initializers_and_overloads() {
         "object E { inline fun f() {} }",
         "object E { private inline inline fun f() {} }",
         "object E { internal fun f() {} }",
-        "object E { private val bytes: ThreadLocal<ByteArray> = ThreadLocal.withInitial { ByteArray(1) } }",
         "object E { private val bytes = ThreadLocal.withInitial { value -> ByteArray(value) } }",
-        "object E { private val bytes = ThreadLocal.withInitial { val count = 1; ByteArray(count) } }",
-        "object E { private val bytes = ThreadLocal.withInitial { IntArray(1) } }",
         "object E { private val bytes = ThreadLocal.withInitial { ByteArray(missing) } }",
-        "object E { const val C = 1; fun f() {} }",
-        "object E { object Nested; fun f() {} }",
-        "object E { object Nested { fun f(): Int = 1 } }",
-        "object E { object Nested { private val bytes = ThreadLocal.withInitial { ByteArray(1) } } }",
         "object E { fun f(value: Int): Int = value; fun f(value: Int): String = \"x\" }",
     ] {
         assert!(
@@ -1458,4 +1426,73 @@ fn newly_supported_operations_replace_previous_rejection_boundaries() {
             "rejected {source}"
         );
     }
+}
+
+#[test]
+fn formerly_rejected_declaration_forms_compile_through_shared_rules() {
+    let stdlib = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("references/kotlinc/lib/kotlin-stdlib.jar");
+    let mut failures = Vec::new();
+    for source in [
+        "fun f() { when (val n = 1) { else -> return } }",
+        "class Outer { enum class E { A } }",
+        "enum class E { A }\nfun f() {}",
+        "fun f() {}\nenum class E { A }",
+        "enum class E { A }\nenum class F { B }",
+        "enum class E\nfun f() {}",
+        "object E { init {} }",
+        "object E { val N = 1 }",
+        "object E { var N = 1 }",
+        "object E { private const val N = 1 }",
+        "object E { const val N: Long = 1 }",
+        "object E { const val N = 2147483648 }",
+        "object E { const val N = -2147483649 }",
+        "object E { const val N = +2147483648 }",
+        "object E { const val N = 1L }",
+        "object E { const val N = 1_000 }",
+        "object E\nobject Other",
+        "object E\nfun f() {}",
+        "fun f() {}\nobject E",
+        "enum class E { A }\nobject Other",
+        "object E\nenum class Other { A }",
+        "open class E()",
+        "abstract class E()",
+        "class E() { init {} }",
+        "class E() { protected fun x() {} }",
+        "class E() { object Nested }",
+        "class E() { companion object }",
+        "class E() { class Nested() }",
+        "class E(private val x: Array<Int>)",
+        "class E(private val x: Array<Array<String>>)",
+        "class E()\nfun f() {}",
+        "fun f() {}\nclass E()",
+        "class E()\nobject Other",
+        "class E()\nenum class Other { A }",
+        "class E()\nclass Other()",
+        "interface E { object Named }",
+        "interface E { class Nested() }",
+        "interface E { companion object { var x = 1 } }",
+        "interface E { companion object { val x = 1 } }",
+        "interface E\nfun f() {}",
+        "fun f() {}\ninterface E",
+        "interface E\ninterface Other",
+        "interface E\nclass Other()",
+        "interface E\nobject Other",
+        "interface E\nenum class Other { A }",
+        "object E { private val bytes: ThreadLocal<ByteArray> = ThreadLocal.withInitial { ByteArray(1) } }",
+        "object E { private val bytes = ThreadLocal.withInitial { val count = 1; ByteArray(count) } }",
+        "object E { private val bytes = ThreadLocal.withInitial { IntArray(1) } }",
+        "object E { const val C = 1; fun f() {} }",
+        "object E { object Nested; fun f() {} }",
+        "object E { object Nested { fun f(): Int = 1 } }",
+        "object E { object Nested { private val bytes = ThreadLocal.withInitial { ByteArray(1) } } }",
+        "fun f(): Int = 0xff_ff",
+    ] {
+        let result =
+            compile_all_with_classpath(source, "Declarations.kt", std::slice::from_ref(&stdlib));
+        if let Err(error) = result {
+            failures.push(format!("{source}: {}", error.message));
+        }
+    }
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
 }

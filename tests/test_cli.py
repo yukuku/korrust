@@ -163,10 +163,10 @@ class OutputLifecycleTests(unittest.TestCase):
 
     def test_invalid_source_preserves_previous_outputs_and_index(self):
         self.compile("object Root { object Child }")
-        self.assert_preserved("object Root { val unsupported = 1 }")
+        self.assert_preserved("object Root { val invalid: Int = true }")
 
     def test_invalid_source_does_not_create_destination(self):
-        self.compile("object Root { val unsupported = 1 }", success=False)
+        self.compile("object Root { val invalid: Int = true }", success=False)
         self.assertFalse(self.destination.exists())
 
     def test_cross_source_collision_preserves_both_sources(self):

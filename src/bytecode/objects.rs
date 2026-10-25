@@ -56,9 +56,17 @@ fn method(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
         lambdas,
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
+        in_lambda: false,
         max_stack: 2,
     };
     if !function.private {
@@ -83,13 +91,9 @@ fn method(
     code.block(&function.body)?;
     let max_stack =
         u16::try_from(code.max_stack).map_err(|_| failure("JVM operand stack limit exceeded"))?;
-    let code = SimpleCode {
-        bytes: code.finish()?,
-        max_stack,
-        locals: function.locals,
-    };
+    let code = code.into_simple(function.locals, max_stack)?;
     let flags = (if function.private { 0x0002 } else { 0x0001 })
-        | 0x0010
+        | if function.is_override { 0 } else { 0x0010 }
         | if declaration.jvm_static { 0x0008 } else { 0 };
     let mut method = simple_method(
         pool,
@@ -97,7 +101,7 @@ fn method(
         &function.name,
         &function.descriptor(),
         code,
-        None,
+        generic_function(function).as_deref(),
         !function.private && nonnull(&function.result),
     )?;
     if !function.private {
@@ -109,6 +113,15 @@ fn method(
     if !declaration.throws.is_empty() {
         add_attribute(&mut method, exceptions(pool, &declaration.throws)?)?;
     }
+    nullable_result(pool, &mut method, &function.result)?;
+    frames::attach(
+        pool,
+        &mut method,
+        owner,
+        &function.params,
+        function.locals,
+        declaration.jvm_static,
+    )?;
     Ok(method)
 }
 
@@ -125,10 +138,19 @@ fn supplier_name(owner: &str, field: &ObjectField) -> String {
 fn initializer_type(field: &ObjectField) -> &Type {
     match &field.initializer {
         ObjectInitializer::ThreadLocalArray { array_type, .. } => array_type,
+        ObjectInitializer::Value { value, .. } => &value.ty,
     }
 }
 
-fn field(pool: &mut Pool, field: &ObjectField) -> Result<Vec<u8>> {
+fn field(pool: &mut Pool, field: &ObjectField, access: u16) -> Result<Vec<u8>> {
+    if matches!(field.initializer, ObjectInitializer::Value { .. }) {
+        return class_field(
+            pool,
+            &field.name,
+            &field.ty,
+            0x0008 | access | if field.mutable { 0 } else { 0x0010 },
+        );
+    }
     let mut bytes = Vec::new();
     u2(&mut bytes, 0x001a);
     u2(&mut bytes, pool.utf8(&field.name)?);
@@ -156,7 +178,10 @@ fn factory(
         array_type,
         size,
         locals,
-    } = &field.initializer;
+    } = &field.initializer
+    else {
+        return Err(failure("Expected a ThreadLocal array initializer"));
+    };
     let mut code = Code {
         pool,
         functions: &[],
@@ -165,9 +190,17 @@ fn factory(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
         lambdas,
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
+        in_lambda: false,
         max_stack: 1,
     };
     code.value(size)?;
@@ -175,12 +208,8 @@ fn factory(
         .extend([0xbc, primitive_array_type(array_type)?, 0xb0]);
     let max_stack =
         u16::try_from(code.max_stack).map_err(|_| failure("JVM operand stack limit exceeded"))?;
-    let code = SimpleCode {
-        bytes: code.finish()?,
-        max_stack,
-        locals: *locals,
-    };
-    simple_method(
+    let code = code.into_simple(*locals, max_stack)?;
+    let mut method = simple_method(
         pool,
         0x001a,
         &factory_name(field),
@@ -188,7 +217,9 @@ fn factory(
         code,
         None,
         false,
-    )
+    )?;
+    frames::attach(pool, &mut method, owner, &[], *locals, true)?;
+    Ok(method)
 }
 
 fn accessor(pool: &mut Pool, owner: &str, field: &ObjectField) -> Result<Vec<u8>> {
@@ -277,7 +308,7 @@ pub fn emit_dynamic_object(
     if object.owner != owner {
         return Err(failure("Object class identity mismatch"));
     }
-    let mut builder = Builder::new(owner, 49, 0x0031, &object.interfaces)?;
+    let mut builder = Builder::new(owner, 52, 0x0031, &object.interfaces)?;
     if object.serializable {
         builder
             .annotations
@@ -297,8 +328,31 @@ pub fn emit_dynamic_object(
         field.extend(signature);
     }
     builder.field("INSTANCE", &format!("L{owner};"), 0x0019, true)?;
+    for constant in &object.constants {
+        builder
+            .fields
+            .push(constant_field(&mut builder.pool, constant)?);
+    }
     for property in &object.fields {
-        builder.fields.push(field(&mut builder.pool, property)?);
+        builder.fields.push(field(
+            &mut builder.pool,
+            property,
+            object
+                .exposed_fields
+                .get(&property.name)
+                .copied()
+                .unwrap_or(0x0002),
+        )?);
+        if !lambdas.is_empty() {
+            builder.methods.extend(field_bridges(
+                &mut builder.pool,
+                owner,
+                &property.name,
+                &property.ty,
+                true,
+                property.mutable,
+            )?);
+        }
     }
     let mut constructor = SimpleCode::new(1, 1);
     constructor.bytes.push(0x2a);
@@ -374,16 +428,51 @@ pub fn emit_dynamic_object(
         builder.methods.push(method);
     }
     for declaration in &object.methods {
+        if !lambdas.is_empty() && declaration.function.private {
+            builder.methods.push(private_method_bridge(
+                &mut builder.pool,
+                owner,
+                &declaration.function,
+                declaration.jvm_static,
+            )?);
+        }
         builder
             .methods
             .push(method(&mut builder.pool, owner, declaration, lambdas)?);
+        if let Some(default) = defaults::function(
+            &mut builder.pool,
+            &[],
+            &declaration.function,
+            owner,
+            declaration.jvm_static,
+            lambdas,
+        )? {
+            builder.methods.push(default);
+        }
+    }
+    for bridge in &object.bridges {
+        builder
+            .methods
+            .push(interface_bridge(&mut builder.pool, bridge)?);
     }
     for property in &object.fields {
+        if !matches!(
+            property.initializer,
+            ObjectInitializer::ThreadLocalArray { .. }
+        ) {
+            continue;
+        }
         builder
             .methods
             .push(factory(&mut builder.pool, owner, property, lambdas)?);
     }
     for property in &object.fields {
+        if !matches!(
+            property.initializer,
+            ObjectInitializer::ThreadLocalArray { .. }
+        ) {
+            continue;
+        }
         builder
             .methods
             .push(accessor(&mut builder.pool, owner, property)?);
@@ -430,6 +519,12 @@ pub fn emit_dynamic_object(
         );
     }
     for property in &object.fields {
+        if !matches!(
+            property.initializer,
+            ObjectInitializer::ThreadLocalArray { .. }
+        ) {
+            continue;
+        }
         let supplier = supplier_name(owner, property);
         initializer.reference(0xbb, builder.pool.class(&supplier)?);
         initializer.bytes.push(0x59);
@@ -449,8 +544,47 @@ pub fn emit_dynamic_object(
                 .field(owner, &property.name, &property.ty.descriptor())?,
         );
     }
-    initializer.bytes.push(0xb1);
-    builder.methods.push(simple_method(
+    let mut code = Code {
+        pool: &mut builder.pool,
+        functions: &[],
+        owner,
+        bytes: initializer.bytes,
+        labels: Vec::new(),
+        branches: Vec::new(),
+        loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
+        in_lambda: false,
+        max_stack: 2,
+    };
+    let mut locals = object.locals;
+    if object.initializers.is_empty() {
+        for property in &object.fields {
+            if let ObjectInitializer::Value {
+                value,
+                locals: field_locals,
+            } = &property.initializer
+            {
+                locals = locals.max(*field_locals);
+                code.value(value)?;
+                code.field_reference(0xb3, owner, &property.name, &property.ty.descriptor())?;
+            }
+        }
+    } else {
+        code.block(&object.initializers)?;
+    }
+    code.bytes.push(0xb1);
+    let max_stack = code.max_stack as u16;
+    let initializer = code.into_simple(locals, max_stack)?;
+    let mut initializer_method = simple_method(
         &mut builder.pool,
         0x0008,
         "<clinit>",
@@ -458,12 +592,27 @@ pub fn emit_dynamic_object(
         initializer,
         None,
         false,
-    )?);
+    )?;
+    frames::attach(
+        &mut builder.pool,
+        &mut initializer_method,
+        owner,
+        &[],
+        locals,
+        true,
+    )?;
+    builder.methods.push(initializer_method);
     let mut classes = vec![builder.finish(file, metadata, &[])?];
     if object.serializable {
         classes.push(serializer_supplier(owner, file)?);
     }
     for property in &object.fields {
+        if !matches!(
+            property.initializer,
+            ObjectInitializer::ThreadLocalArray { .. }
+        ) {
+            continue;
+        }
         classes.push(supplier(owner, property, file)?);
     }
     Ok(classes)

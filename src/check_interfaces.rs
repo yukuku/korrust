@@ -6,17 +6,46 @@ pub(super) fn check(
     classpath: &Classpath,
     mut imports: HashMap<String, String>,
     mut classes: HashMap<String, JavaClass>,
+    owner_override: Option<&str>,
 ) -> Result<Module> {
-    let owner = if package.is_empty() {
+    let owner = if let Some(owner) = owner_override {
+        owner.into()
+    } else if package.is_empty() {
         source.name.clone()
     } else {
         format!("{}/{}", package.replace('.', "/"), source.name)
     };
+    fn remove_own(
+        source: &syntax::InterfaceDecl,
+        owner: &str,
+        imports: &mut HashMap<String, String>,
+        classes: &mut HashMap<String, JavaClass>,
+        classpath: &Classpath,
+    ) {
+        if classpath.is_source(owner) {
+            classes.remove(owner);
+            imports.retain(|_, v| v != owner);
+        }
+        for nested in &source.nested {
+            remove_own(
+                nested,
+                &format!("{owner}${}", nested.name),
+                imports,
+                classes,
+                classpath,
+            );
+        }
+    }
+    remove_own(source, &owner, &mut imports, &mut classes, classpath);
     register_names(source, &owner, "", &mut imports)?;
     register_classes(source, &owner, &imports, &mut classes)?;
     let lambdas = Rc::new(RefCell::new(Vec::new()));
     let interface = check_interface(source, &owner, classpath, &imports, &classes, &lambdas)?;
     Ok(Module {
+        exposed_fields: HashMap::new(),
+        properties: Vec::new(),
+        initializers: Vec::new(),
+        locals: 0,
         lambdas: Rc::try_unwrap(lambdas).ok().unwrap().into_inner(),
         constants: Vec::new(),
         functions: Vec::new(),
@@ -230,13 +259,19 @@ fn register_classes(
             &mut methods,
             &mut names,
             JavaMethod {
-                library: function.infix.then(|| crate::classpath::LibraryMethod {
-                    source_name: function.name.clone(),
-                    type_parameters: Vec::new(),
-                    receiver: None,
-                    infix: true,
-                    inline: false,
-                    code: None,
+                library: (function.infix || function.operator).then(|| {
+                    crate::classpath::LibraryMethod {
+                        source_name: function.name.clone(),
+                        operator: function.operator,
+                        kotlin_public: !function.private
+                            && !function.protected
+                            && !function.internal,
+                        type_parameters: Vec::new(),
+                        receiver: None,
+                        infix: function.infix,
+                        inline: false,
+                        code: None,
+                    }
                 }),
                 kotlin_params: Some(
                     function
@@ -506,6 +541,7 @@ fn check_interface(
     }
     for method in &source.methods {
         let source_function = &method.function;
+        declarations::validate_operator(source_function, true)?;
         let signature = &members[&source_function.name];
         check_override(
             signature,
@@ -588,6 +624,25 @@ fn check_interface(
             });
         }
         Some(CompanionDecl {
+            state: if companion.fields.is_empty()
+                && companion.methods.is_empty()
+                && companion.initializers.is_empty()
+            {
+                None
+            } else {
+                Some(declarations::check_static_state(
+                    &format!("{owner}$Companion"),
+                    &format!("{owner}$Companion"),
+                    &companion.fields,
+                    &companion.methods,
+                    &companion.initializers,
+                    true,
+                    classpath,
+                    &imports,
+                    classes,
+                    lambdas,
+                )?)
+            },
             owner: format!("{owner}$Companion"),
             properties,
         })
@@ -611,13 +666,13 @@ fn check_interface(
         .cloned()
         .collect();
     defaults.sort_by(|a, b| a.name.cmp(&b.name));
-    for method in &defaults {
-        if class_method_types(method)?.0.iter().any(Type::is_reference) {
-            return Err(Diagnostic::new(
-                source.offset,
-                "Inherited interface defaults with reference parameters are not supported",
-            ));
-        }
+    for method in &mut defaults {
+        *method = declarations::direct_default_bridge(
+            method.clone(),
+            &class.interfaces,
+            classpath,
+            source.offset,
+        )?;
     }
     Ok(InterfaceDecl {
         owner: owner.into(),
@@ -693,6 +748,7 @@ fn check_function(
         signatures: &signatures,
         source_type_params: &[],
         source_infix: &HashSet::new(),
+        source_operator: &HashSet::new(),
         receiver: Some(Local {
             slot: 0,
             ty: Type::Java(owner.into()),
@@ -716,28 +772,13 @@ fn check_function(
     let mut params = Vec::new();
     for (param, ty) in source_params {
         let ty = resolve_type_checked(ty, imports, offset, classpath, classes)?;
-        if body.is_some() && ty.is_reference() {
-            return Err(Diagnostic::new(
-                offset,
-                "Interface default bodies with reference parameters are not supported",
-            ));
-        }
-        if ty == Type::Unit || body.is_some() && ty == Type::Float {
-            return Err(Diagnostic::new(
-                offset,
-                "Unit parameters and Float bodies are not supported",
-            ));
+        if ty == Type::Unit {
+            return Err(Diagnostic::new(offset, "Unit parameters are unsupported"));
         }
         checker.declare(param, ty.clone(), false, offset)?;
         params.push((param.clone(), ty));
     }
     let body = if let Some(body) = body {
-        if result == Type::Float {
-            return Err(Diagnostic::new(
-                offset,
-                "Float method bodies are not supported",
-            ));
-        }
         let (mut body, returns) = checker.block(body)?;
         if !returns {
             if result != Type::Unit {
@@ -797,7 +838,9 @@ interface Catalog {
         super::super::check(&source, &Classpath::new(&[])?)
     }
     fn rejects(source: &str, message: &str) {
-        let error = checked(source).err().expect("expected interface rejection");
+        let error = checked(source)
+            .err()
+            .unwrap_or_else(|| panic!("expected interface rejection: {source}"));
         assert!(error.message.contains(message), "{}", error.message);
     }
     #[test]
@@ -879,7 +922,10 @@ interface Catalog {
         };
         assert_eq!(owner, "sample/Catalog$Companion$EMPTY$1");
         assert_eq!(class_decl.bridges[0].name, "label");
-        assert!(matches!(class_decl.methods[1].body[0], Statement::Throw(_)));
+        assert!(matches!(
+            class_decl.methods[1].body[0],
+            Statement::ThrowValue(_)
+        ));
     }
     #[test]
     fn source_interface_implementations_require_exact_property_and_function_identity() {
@@ -945,10 +991,7 @@ interface Catalog {
     }
     #[test]
     fn unsupported_interface_bodies_and_companion_shapes_fail_closed() {
-        rejects(
-            "interface Root { fun f(value: Float): Float = value }",
-            "Float",
-        );
+        assert!(checked("interface Root { fun f(value: Float): Float = value }").is_ok());
         rejects("interface Root { val f: Float get() = 1 }", "Float");
         assert!(checked("interface Root { fun f(): String? }").is_ok());
         rejects(
@@ -987,7 +1030,7 @@ interface Catalog {
         );
         rejects(
             r#"interface Root { val IllegalArgumentException: Int; fun fail(): String { throw IllegalArgumentException("bad") } }"#,
-            "Only throwing",
+            "No applicable",
         );
     }
     #[test]
@@ -1055,6 +1098,7 @@ interface Catalog {
                 signatures: &signatures,
                 source_type_params: &[],
                 source_infix: &HashSet::new(),
+                source_operator: &HashSet::new(),
                 receiver: None,
                 fields: &empty_fields,
                 members: &empty_members,
@@ -1090,19 +1134,21 @@ interface Catalog {
         );
         rejects(
             r#"interface Root { fun IllegalArgumentException(message: String): String; fun f(): String { throw IllegalArgumentException("bad") } }"#,
-            "Only throwing",
+            "Throwable",
         );
         rejects(
-            r#"class IllegalArgumentException() { fun f(): String { throw IllegalArgumentException("bad") } }"#,
-            "Only throwing",
+            r#"class IllegalArgumentException() { fun f(): String { throw IllegalArgumentException() } }"#,
+            "Throwable",
         );
     }
     #[test]
-    fn source_default_reference_parameters_are_rejected_but_abstract_parameters_are_preserved() {
+    fn source_default_reference_parameters_share_regular_body_checking() {
         for parameter in ["String", "IntArray", "CharArray", "Array<String>"] {
-            rejects(
-                &format!("interface Root {{ fun size(value: {parameter}): Int = 0 }}"),
-                "Interface default bodies with reference parameters",
+            assert!(
+                checked(&format!(
+                    "interface Root {{ fun size(value: {parameter}): Int = 0 }}"
+                ))
+                .is_ok()
             );
             assert!(
                 checked(&format!(
@@ -1114,10 +1160,10 @@ interface Catalog {
         assert!(checked(r#"interface Root { fun label(index: Int): String = "text" }"#).is_ok());
     }
     #[test]
-    fn inherited_reference_defaults_are_rejected_only_for_source_interfaces() {
+    fn inherited_reference_defaults_share_the_supported_signatures() {
         for (descriptor, access, accepted) in [
-            ("(Ljava/lang/String;)I", 1, false),
-            ("([I)I", 1, false),
+            ("(Ljava/lang/String;)I", 1, true),
+            ("([I)I", 1, true),
             ("(I)I", 1, true),
             ("(Ljava/lang/String;)I", 0x0401, true),
         ] {
@@ -1156,6 +1202,7 @@ interface Catalog {
                 &classpath,
                 imports.clone(),
                 classes.clone(),
+                None,
             );
             assert_eq!(result.is_ok(), accepted);
             if !accepted {

@@ -388,20 +388,24 @@ fn helper_body(
         labels: Vec::new(),
         branches: Vec::new(),
         loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
         lambdas,
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
+        in_lambda: false,
         max_stack: 2,
     };
     code.block(&function.body)?;
     let max_stack =
         u16::try_from(code.max_stack).map_err(|_| failure("JVM operand stack limit exceeded"))?;
-    let bytes = code.finish()?;
-    let code = SimpleCode {
-        bytes,
-        max_stack,
-        locals: function.locals,
-    };
+    let completed = code.into_simple(function.locals, max_stack)?;
+    let code = completed;
     let mut method = simple_method(
         &mut builder.pool,
         0x0009,
@@ -459,6 +463,31 @@ fn helper_inherited(
 
 fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
     match &value.kind {
+        ValueKind::Block(body, result) => {
+            collect_block(body, accesses);
+            collect_value(result, accesses);
+        }
+        ValueKind::Try {
+            body,
+            result,
+            catches,
+            finally,
+            ..
+        } => {
+            collect_block(body, accesses);
+            collect_value(result, accesses);
+            collect_block(finally, accesses);
+            for catch in catches {
+                collect_block(&catch.body, accesses);
+                collect_value(&catch.result, accesses);
+            }
+        }
+        ValueKind::ArrayInitialize {
+            size, initializer, ..
+        } => {
+            collect_value(size, accesses);
+            collect_value(initializer, accesses);
+        }
         ValueKind::ListSet(receiver, index, value) => {
             collect_value(receiver, accesses);
             collect_value(index, accesses);
@@ -471,7 +500,8 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
         | ValueKind::TypeTest { value, .. }
         | ValueKind::Cast { value, .. } => collect_value(value, accesses),
         ValueKind::Abrupt(body) => collect_block(body, accesses),
-        ValueKind::New { args, .. }
+        ValueKind::SuperCall { args, .. }
+        | ValueKind::New { args, .. }
         | ValueKind::CompiledInline { args, .. }
         | ValueKind::Lambda { captures: args, .. }
         | ValueKind::DefaultCall(_, args, _)
@@ -546,7 +576,8 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
                 collect_value(value, accesses);
             }
         }
-        ValueKind::Unit
+        ValueKind::ClassLiteral(_)
+        | ValueKind::Unit
         | ValueKind::Float(_)
         | ValueKind::Int(_)
         | ValueKind::Long(_)
@@ -567,11 +598,6 @@ fn collect_block(body: &[Statement], accesses: &mut HashSet<(String, String)>) {
                 }
                 collect_value(value, accesses);
             }
-            Statement::ListSet(receiver, index, value) => {
-                collect_value(receiver, accesses);
-                collect_value(index, accesses);
-                collect_value(value, accesses);
-            }
             Statement::FieldStore {
                 receiver, value, ..
             } => {
@@ -588,7 +614,11 @@ fn collect_block(body: &[Statement], accesses: &mut HashSet<(String, String)>) {
                 collect_value(index, accesses);
                 collect_value(value, accesses);
             }
-            Statement::Continue | Statement::Break => {}
+            Statement::Continue
+            | Statement::Break
+            | Statement::ContinueLabel(_)
+            | Statement::BreakLabel(_) => {}
+            Statement::Labeled { body, .. } => collect_block(body, accesses),
             Statement::ForUntil {
                 start, end, body, ..
             } => {
@@ -604,8 +634,8 @@ fn collect_block(body: &[Statement], accesses: &mut HashSet<(String, String)>) {
             Statement::Store(_, value)
             | Statement::Expression(value)
             | Statement::Return(value)
-            | Statement::NonLocalReturn(value)
-            | Statement::Throw(value) => collect_value(value, accesses),
+            | Statement::NonLocalReturn(value) => collect_value(value, accesses),
+            Statement::ThrowValue(value) => collect_value(value, accesses),
             Statement::If(condition, yes, no) => {
                 collect_value(condition, accesses);
                 collect_block(yes, accesses);
@@ -656,6 +686,50 @@ fn companion_classes(
     builder.field("$$INSTANCE", &singleton_descriptor, 0x1018, false)?;
     for property in &companion.properties {
         builder.field(&property.name, &property.ty.descriptor(), 0x001a, true)?;
+    }
+    if let Some(state) = &companion.state {
+        for property in &state.properties {
+            builder.fields.push(class_field(
+                &mut builder.pool,
+                &property.name,
+                &property.ty,
+                0x0008
+                    | state
+                        .exposed_fields
+                        .get(&property.name)
+                        .copied()
+                        .unwrap_or(0x0002)
+                    | if property.mutable { 0 } else { 0x0010 },
+            )?);
+            if !lambdas.is_empty() {
+                builder.methods.extend(field_bridges(
+                    &mut builder.pool,
+                    &companion.owner,
+                    &property.name,
+                    &property.ty,
+                    true,
+                    property.mutable,
+                )?);
+            }
+        }
+        for function in &state.methods {
+            if !lambdas.is_empty() && function.private {
+                builder.methods.push(private_method_bridge(
+                    &mut builder.pool,
+                    &companion.owner,
+                    function,
+                    false,
+                )?);
+            }
+            builder.methods.push(checked_method(
+                &mut builder.pool,
+                &companion.owner,
+                &state.methods,
+                function,
+                lambdas,
+                if function.private { 0x0012 } else { 0x0011 },
+            )?);
+        }
     }
     let mut constructor = SimpleCode::new(1, 1);
     constructor.bytes.push(0x2a);
@@ -755,8 +829,47 @@ fn companion_classes(
                 .field(&companion.owner, &property.name, &property.ty.descriptor())?,
         );
     }
-    initializer.bytes.push(0xb1);
-    builder.methods.push(simple_method(
+    let mut code = Code {
+        pool: &mut builder.pool,
+        functions: &[],
+        owner: &companion.owner,
+        bytes: initializer.bytes,
+        labels: Vec::new(),
+        branches: Vec::new(),
+        loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
+        in_lambda: false,
+        max_stack: 4,
+    };
+    let locals = companion.state.as_ref().map_or(0, |state| state.locals);
+    if let Some(state) = &companion.state {
+        if state.initializers.is_empty() {
+            for property in &state.properties {
+                code.value(&property.value)?;
+                code.field_reference(
+                    0xb3,
+                    &companion.owner,
+                    &property.name,
+                    &property.ty.descriptor(),
+                )?;
+            }
+        } else {
+            code.block(&state.initializers)?;
+        }
+    }
+    code.bytes.push(0xb1);
+    let stack = code.max_stack as u16;
+    let initializer = code.into_simple(locals, stack)?;
+    let mut initializer_method = simple_method(
         &mut builder.pool,
         0x0008,
         "<clinit>",
@@ -764,7 +877,16 @@ fn companion_classes(
         initializer,
         None,
         false,
-    )?);
+    )?;
+    frames::attach(
+        &mut builder.pool,
+        &mut initializer_method,
+        &companion.owner,
+        &[],
+        locals,
+        true,
+    )?;
+    builder.methods.push(initializer_method);
     let mut relations = ancestors.to_vec();
     relations.push(Relation::member(&companion.owner, &interface.owner, 0x0019));
     for property in &companion.properties {

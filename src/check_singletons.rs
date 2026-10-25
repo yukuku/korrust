@@ -152,12 +152,21 @@ pub(super) fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Mo
         interfaces.push(name);
     }
     Ok(Module {
+        exposed_fields: HashMap::new(),
+        properties: Vec::new(),
+        initializers: Vec::new(),
+        locals: 0,
         lambdas: Vec::new(),
         constants: Vec::new(),
         functions: Vec::new(),
         class_decl: None,
         interface_decl: None,
         object_decl: Some(DynamicObject {
+            bridges: Vec::new(),
+            exposed_fields: HashMap::new(),
+            constants: object.constants.clone(),
+            initializers: Vec::new(),
+            locals: 0,
             owner: if source.package.is_empty() {
                 object.name.clone()
             } else {

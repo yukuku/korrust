@@ -243,6 +243,11 @@ pub(super) fn class(value: &str) -> Result<(Vec<TypeParameter>, Vec<Type>)> {
 pub(super) fn nullability(ty: Type, annotations: &[Annotation]) -> Result<Type> {
     let mut state = None;
     for annotation in annotations {
+        if annotation.name == "Ljdk/internal/vm/annotation/IntrinsicCandidate;"
+            && annotation.values.is_empty()
+        {
+            continue;
+        }
         let nullable = match annotation.name.as_str() {
             "Lorg/jetbrains/annotations/NotNull;"
             | "Lorg/jspecify/annotations/NonNull;"
@@ -335,10 +340,12 @@ pub(super) fn attach(
                     method.kotlin_params = Some(params);
                     method.kotlin_result = Some(result);
                     method.library = Some(LibraryMethod {
+                        kotlin_public: method.access & 1 != 0,
                         source_name: method.name.clone(),
                         type_parameters: parameters,
                         receiver: None,
                         infix: false,
+                        operator: false,
                         inline: false,
                         code: attributes.code.clone(),
                     });
@@ -350,6 +357,7 @@ pub(super) fn attach(
         class.unsupported = false;
     }
     class.library = Some(LibraryClass {
+        type_aliases: Vec::new(),
         type_parameters,
         supertypes,
         package: None,
@@ -408,6 +416,33 @@ mod tests {
         assert_eq!(
             nullability(Type::String, &[]).unwrap(),
             Type::Platform(Box::new(Type::String))
+        );
+    }
+
+    #[test]
+    fn implementation_annotation_preserves_platform_and_explicit_nullability() {
+        let intrinsic = || Annotation {
+            name: "Ljdk/internal/vm/annotation/IntrinsicCandidate;".into(),
+            values: Vec::new(),
+        };
+        assert_eq!(nullability(Type::Unit, &[intrinsic()]).unwrap(), Type::Unit);
+        assert_eq!(
+            nullability(Type::String, &[intrinsic()]).unwrap(),
+            Type::Platform(Box::new(Type::String))
+        );
+        assert_eq!(
+            nullability(
+                Type::String,
+                &[
+                    intrinsic(),
+                    Annotation {
+                        name: "Lorg/jetbrains/annotations/Nullable;".into(),
+                        values: Vec::new()
+                    }
+                ]
+            )
+            .unwrap(),
+            Type::Nullable(Box::new(Type::String))
         );
     }
 }

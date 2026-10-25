@@ -21,12 +21,13 @@ impl Code<'_> {
     }
 
     pub(super) fn inline_return(&mut self, value: &Value) -> Result<bool> {
-        let Some(label) = self.inline_returns.last().copied() else {
+        let Some((label, depth)) = self.inline_returns.last().copied() else {
             return Ok(false);
         };
         self.value(value)?;
         if !terminal_value(value) {
             self.adapt_value(&value.ty, &Type::Java("java/lang/Object".into()))?;
+            self.preserve_across_finalizers(&Type::Java("java/lang/Object".into()), depth)?;
             self.branch(0xa7, label);
         }
         Ok(true)
@@ -174,10 +175,16 @@ impl Code<'_> {
         ]);
         let end = self.label();
         self.inline_local_maps.push(map);
-        self.inline_returns.push(end);
+        self.inline_returns.push((end, self.finalizers.len()));
         let saved_loops = std::mem::take(&mut self.loops);
+        let saved_loop_depths = std::mem::take(&mut self.loop_finally_depths);
+        let saved_loop_names = std::mem::take(&mut self.loop_names);
+        let saved_pending_name = self.pending_loop_name.take();
         let emitted = self.block(&function.body);
         self.loops = saved_loops;
+        self.loop_finally_depths = saved_loop_depths;
+        self.loop_names = saved_loop_names;
+        self.pending_loop_name = saved_pending_name;
         self.inline_returns.pop();
         self.inline_local_maps.pop();
         emitted?;
@@ -251,6 +258,7 @@ pub(super) fn contains_nonlocal(
 fn nonlocal_block(body: &[Statement], lambdas: &[crate::check::LambdaDecl]) -> bool {
     body.iter().any(|statement| match statement {
         Statement::NonLocalReturn(_) => true,
+        Statement::ThrowValue(value) => nonlocal_value(value, lambdas),
         Statement::If(value, yes, no) => {
             nonlocal_value(value, lambdas)
                 || nonlocal_block(yes, lambdas)
@@ -270,14 +278,13 @@ fn nonlocal_block(body: &[Statement], lambdas: &[crate::check::LambdaDecl]) -> b
         | Statement::ForIterator { iterable, body, .. } => {
             nonlocal_value(iterable, lambdas) || nonlocal_block(body, lambdas)
         }
-        Statement::Store(_, value)
-        | Statement::Return(value)
-        | Statement::Expression(value)
-        | Statement::Throw(value) => nonlocal_value(value, lambdas),
+        Statement::Store(_, value) | Statement::Return(value) | Statement::Expression(value) => {
+            nonlocal_value(value, lambdas)
+        }
         Statement::ThrowException { message, .. } => message
             .as_ref()
             .is_some_and(|value| nonlocal_value(value, lambdas)),
-        Statement::IndexStore(a, b, c) | Statement::ListSet(a, b, c) => {
+        Statement::IndexStore(a, b, c) => {
             nonlocal_value(a, lambdas) || nonlocal_value(b, lambdas) || nonlocal_value(c, lambdas)
         }
         Statement::FieldStore {
@@ -291,12 +298,36 @@ fn nonlocal_block(body: &[Statement], lambdas: &[crate::check::LambdaDecl]) -> b
                 .is_some_and(|value| nonlocal_value(value, lambdas))
                 || nonlocal_value(value, lambdas)
         }
-        Statement::Continue | Statement::Break => false,
+        Statement::Continue
+        | Statement::Break
+        | Statement::ContinueLabel(_)
+        | Statement::BreakLabel(_) => false,
+        Statement::Labeled { body, .. } => nonlocal_block(body, lambdas),
     })
 }
 
 fn nonlocal_value(value: &Value, lambdas: &[crate::check::LambdaDecl]) -> bool {
     match &value.kind {
+        ValueKind::Block(body, result) => {
+            nonlocal_block(body, lambdas) || nonlocal_value(result, lambdas)
+        }
+        ValueKind::Try {
+            body,
+            result,
+            catches,
+            finally,
+            ..
+        } => {
+            nonlocal_block(body, lambdas)
+                || nonlocal_value(result, lambdas)
+                || nonlocal_block(finally, lambdas)
+                || catches.iter().any(|catch| {
+                    nonlocal_block(&catch.body, lambdas) || nonlocal_value(&catch.result, lambdas)
+                })
+        }
+        ValueKind::ArrayInitialize {
+            size, initializer, ..
+        } => nonlocal_value(size, lambdas) || nonlocal_value(initializer, lambdas),
         ValueKind::Abrupt(body) => nonlocal_block(body, lambdas),
         ValueKind::If(a, b, c) => {
             nonlocal_value(a, lambdas) || nonlocal_value(b, lambdas) || nonlocal_value(c, lambdas)
@@ -347,7 +378,8 @@ fn nonlocal_value(value: &Value, lambdas: &[crate::check::LambdaDecl]) -> bool {
             }
             nonlocal_value(value, lambdas)
         }),
-        ValueKind::New { args, .. }
+        ValueKind::SuperCall { args, .. }
+        | ValueKind::New { args, .. }
         | ValueKind::StaticCall { args, .. }
         | ValueKind::MemberCall { args, .. }
         | ValueKind::JavaCall { args, .. }
