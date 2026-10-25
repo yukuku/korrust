@@ -338,6 +338,7 @@ pub(super) fn attach(
                         source_name: method.name.clone(),
                         type_parameters: parameters,
                         receiver: None,
+                        infix: false,
                         inline: false,
                         code: attributes.code.clone(),
                     });

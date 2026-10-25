@@ -7,7 +7,7 @@
       "androidbible_unsigned_search"
     ],
     "restrictions": [
-      "Long scalars have separate AndroidBible ten-feature evidence. No general floating-point arithmetic, unsigned types, operator overloading, or general constant folding."
+      "Long scalars have separate AndroidBible ten-feature evidence. Float arithmetic has separate next-twenty evidence; no unsigned types, general operator overloading, or general constant folding in this suite."
     ]
   },
   {
@@ -23,7 +23,7 @@
       "Bounded general overload resolution and default/named arguments have separate twenty-addition evidence; function values remain unsupported. This suite tests direct calls and exact-signature object overloads.",
       "if/while/when bodies accept a single statement or a block. Functions must pass the conservative return-path check; when proves a return only with an else and every branch returning.",
       "Compiler resource limits and the nesting limit intentionally reject larger constructs.",
-      "Bounded Int when expressions/ranges, for-until loops, loop control, postfix Int locals and definite assignment now have separate Io evidence. Subjectless and String/Boolean when have separate AndroidBible ten-feature evidence. Subject declarations and is/collection/guard conditions and trailing condition commas remain unsupported."
+      "Bounded Int when expressions/ranges, for-until loops, loop control, postfix Int locals and definite assignment now have separate Io evidence. Subjectless and String/Boolean when have separate AndroidBible ten-feature evidence. Type-test conditions have separate next-twenty evidence. Subject declarations, collection/guard conditions, and trailing condition commas remain outside this suite."
     ]
   },
   {
@@ -208,7 +208,7 @@
     ],
     "restrictions": [
       "Interface/companion/anonymous support is bounded to tested declaration and initialization shapes; no general object construction, mutable companion state, named companions, generics or arbitrary initializers.",
-      "This entry tests abstract Float interface descriptors. Float literals/data properties/nullable boxes have separate twenty-addition evidence; general Float arithmetic remains unsupported.",
+      "This entry tests abstract Float interface descriptors. Float literals/data properties/nullable boxes have separate twenty-addition evidence; Float arithmetic has separate next-twenty evidence.",
       "This report tests simple ASCII $name templates; braced expressions have separate AndroidBible ten-feature evidence. Escaped identifier names and raw strings remain unsupported. Constant-object/enum metadata and complete Kotlin/Android compatibility remain outside this evidence.",
       "Source interface default bodies with reference parameters are explicitly unsupported; abstract reference-parameter declarations retain separate supported-signature checks."
     ]
@@ -224,7 +224,7 @@
       "io_jvm_signatures/korrust.probes.io.ArrayEdgesKt"
     ],
     "restrictions": [
-      "This establishes the exercised bounded primitive APIs and control flow; generic collections/arrays, reference equality and unrestricted Java/Character APIs remain unsupported.",
+      "This establishes the exercised bounded primitive APIs and control flow; general collections/arrays and unrestricted Java/Character APIs remain outside this suite; reference equality has separate next-twenty evidence.",
       "Runtime correctness is established for tested inputs; Android-device and complete application behavior and incremental speed remain unmeasured."
     ]
   },
@@ -242,7 +242,7 @@
       "kotlin_metadata/IoNullAccess_rejection"
     ],
     "restrictions": [
-      "ThreadLocal suppliers support bounded noncapturing single array allocations; arbitrary lambdas/captures, explicit generic field types, general initialized object fields, internal object method mangling and reference equality remain unsupported.",
+      "ThreadLocal suppliers support bounded noncapturing single array allocations; arbitrary lambdas/captures, explicit generic field types, general initialized object fields and internal object method mangling remain outside this suite; reference equality has separate next-twenty evidence.",
       "Korrust uses derived synthetic Supplier classes and access bridges instead of official invokedynamic; source-defined ABI is compared after excluding only exact validated bridges. Synthetic class inventories intentionally differ and all candidate helpers undergo JVM verification/contract assertions."
     ]
   }

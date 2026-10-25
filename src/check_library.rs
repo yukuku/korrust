@@ -179,53 +179,14 @@ impl Checker<'_> {
         types: &[Type],
         offset: usize,
     ) -> Result<Value> {
-        let candidates = self
-            .library_candidates(name)
-            .into_iter()
-            .filter(|m| m.library.as_ref().is_some_and(|l| l.receiver.is_some()))
-            .map(|mut m| {
-                let receiver = m
-                    .library
-                    .as_ref()
-                    .unwrap()
-                    .receiver
-                    .as_ref()
-                    .unwrap()
-                    .clone();
-                if let Some(params) = &mut m.kotlin_params {
-                    params.insert(0, ("<receiver>".into(), receiver, false));
-                }
-                m
-            })
-            .collect::<Vec<_>>();
-        if candidates.is_empty() {
-            return Err(Diagnostic::new(
-                offset,
-                format!("Unresolved member or imported extension: {name}"),
-            ));
-        }
-        let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
-        let name = format!("<extension{slot}>");
-        self.scopes.push(HashMap::from([(
-            name.clone(),
-            Local {
-                slot,
-                ty: receiver.ty.clone(),
-                mutable: false,
-            },
-        )]));
-        self.initialized.insert(slot);
-        let mut all_args = vec![Expr {
+        self.resolved_extension_call(
+            receiver,
+            name,
+            args,
+            types,
+            operations::ExtensionKind::Ordinary,
             offset,
-            kind: ExprKind::Name(name),
-        }];
-        all_args.extend_from_slice(args);
-        let result = (|| {
-            let method = self.select_method_types(&candidates, &all_args, types, offset)?;
-            self.library_static_call(method, &all_args, offset)
-        })();
-        self.scopes.pop();
-        result.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
+        )
     }
 }
 

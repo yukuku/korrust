@@ -565,6 +565,7 @@ fn attach_member(
         source_name: name.into(),
         type_parameters,
         receiver,
+        infix: flags & 512 != 0,
         inline: flags & 1024 != 0,
         code: attributes[*index].code.clone(),
     });
@@ -602,6 +603,7 @@ fn remember_callable(
                 source_name: name.into(),
                 type_parameters: Vec::new(),
                 receiver: None,
+                infix: false,
                 inline: false,
                 code: None,
             });
@@ -680,6 +682,21 @@ pub(super) fn attach(
             .chain(class.interfaces.iter())
             .filter(|n| n.as_str() != "java/lang/Object")
             .map(|n| format!("L{n};"))
+            .filter(|descriptor| {
+                declared.contains(descriptor)
+                    || !matches!(
+                        descriptor.as_str(),
+                        "Lkotlin/jvm/internal/markers/KMappedMarker;"
+                            | "Lkotlin/jvm/internal/markers/KMutableIterable;"
+                            | "Lkotlin/jvm/internal/markers/KMutableCollection;"
+                            | "Lkotlin/jvm/internal/markers/KMutableList;"
+                            | "Lkotlin/jvm/internal/markers/KMutableIterator;"
+                            | "Lkotlin/jvm/internal/markers/KMutableListIterator;"
+                            | "Lkotlin/jvm/internal/markers/KMutableMap;"
+                            | "Lkotlin/jvm/internal/markers/KMutableMap$Entry;"
+                            | "Lkotlin/jvm/internal/markers/KMutableSet;"
+                    )
+            })
             .collect::<Vec<_>>();
         if declared != actual {
             return Err(invalid());

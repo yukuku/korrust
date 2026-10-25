@@ -168,7 +168,7 @@ def main():
         run("Rust formatting", [cargo, "fmt", "--check"])
         run("Rust Clippy", [cargo, "clippy", "--all-targets", "--locked", "--offline", "--", "-D", "warnings"])
         run("Report generator tests", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_reports.py"])
-        run("Rust tests", [cargo, "test", "--locked", "--offline"])
+        run("Rust tests", [cargo, "test", "--locked", "--offline"], timeout=300)
         cases.append({"id": "rust_frontend", "outcome": "pass", "scope": "Frontend diagnostics and boundary tests; see command log"})
         run("Release build", [cargo, "build", "--release", "--locked", "--offline"])
         compiler = ROOT / "target/release/korrust"

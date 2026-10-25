@@ -466,7 +466,10 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
         }
         ValueKind::Box(value)
         | ValueKind::Unbox(value)
-        | ValueKind::CellIncrement { cell: value, .. } => collect_value(value, accesses),
+        | ValueKind::CellIncrement { cell: value, .. }
+        | ValueKind::CellDecrement { cell: value, .. }
+        | ValueKind::TypeTest { value, .. }
+        | ValueKind::Cast { value, .. } => collect_value(value, accesses),
         ValueKind::Abrupt(body) => collect_block(body, accesses),
         ValueKind::New { args, .. }
         | ValueKind::CompiledInline { args, .. }
@@ -509,7 +512,8 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
         }
         ValueKind::StaticField { .. }
         | ValueKind::ObjectInstance(_)
-        | ValueKind::Increment { .. } => {}
+        | ValueKind::Increment { .. }
+        | ValueKind::Decrement { .. } => {}
         ValueKind::CompanionArray { owner, name } => {
             accesses.insert((owner.clone(), name.clone()));
         }
@@ -592,6 +596,11 @@ fn collect_block(body: &[Statement], accesses: &mut HashSet<(String, String)>) {
                 collect_value(end, accesses);
                 collect_block(body, accesses);
             }
+            Statement::ForEach { iterable, body, .. }
+            | Statement::ForIterator { iterable, body, .. } => {
+                collect_value(iterable, accesses);
+                collect_block(body, accesses);
+            }
             Statement::Store(_, value)
             | Statement::Expression(value)
             | Statement::Return(value)
@@ -602,7 +611,7 @@ fn collect_block(body: &[Statement], accesses: &mut HashSet<(String, String)>) {
                 collect_block(yes, accesses);
                 collect_block(no, accesses);
             }
-            Statement::While(condition, body) => {
+            Statement::While(condition, body) | Statement::DoWhile(condition, body) => {
                 collect_value(condition, accesses);
                 collect_block(body, accesses);
             }

@@ -156,8 +156,10 @@ fn instruction_len(op: u8) -> Result<usize> {
         0x00..=0x0f
         | 0x1a..=0x35
         | 0x3b..=0x83
-        | 0x85
-        | 0x91..=0x94
+        | 0x85..=0x86
+        | 0x88..=0x89
+        | 0x8b..=0x8c
+        | 0x91..=0x96
         | 0xac..=0xb1
         | 0xbe
         | 0xbf => 1,
@@ -260,7 +262,19 @@ fn transfer(
             pop(&mut frame)?;
             frame.stack.push(Verification::Long);
         }
-        0x94 => {
+        0x86 | 0x89 => {
+            pop(&mut frame)?;
+            frame.stack.push(Verification::Float);
+        }
+        0x88 | 0x8b => {
+            pop(&mut frame)?;
+            frame.stack.push(Verification::Int);
+        }
+        0x8c => {
+            pop(&mut frame)?;
+            frame.stack.push(Verification::Long);
+        }
+        0x94..=0x96 => {
             pop(&mut frame)?;
             pop(&mut frame)?;
             frame.stack.push(Verification::Int);

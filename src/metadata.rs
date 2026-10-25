@@ -358,7 +358,10 @@ fn function_with_flags(
     } else {
         6
     };
-    proto.number(9, visibility | modality | extra_flags);
+    proto.number(
+        9,
+        visibility | modality | extra_flags | if function.infix { 512 } else { 0 },
+    );
     proto.number(2, strings.id(&function.name)?);
     for (index, parameter) in function.type_params.iter().enumerate() {
         let mut declaration = Proto::default();

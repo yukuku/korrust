@@ -155,11 +155,11 @@ fn extension_functions_require_receiver_syntax() {
 }
 
 #[test]
-fn rejects_declared_extensions_shadowing_builtin_operations() {
-    rejects(
+fn resolves_declared_extensions_before_implicit_library_extensions() {
+    assert!(compile(
         "fun String.removePrefix(prefix: String): String = \"custom\"\nfun use(s: String): String = s.removePrefix(\"x\")",
-        "extensions",
-    );
+        "Extensions.kt",
+    ).is_ok());
 }
 
 #[test]
@@ -224,9 +224,7 @@ fn rejects_malformed_chars_and_implicit_char_conversions() {
         "fun f(): String = \"x\".substring('a')",
         "fun f(a: CharArray): Char { var c = 'x'; c = 1; return c }",
         "fun f(a: CharArray): Char = a['a']",
-        "fun f(a: CharArray, b: CharArray): Boolean = a == b",
         "fun f(a: CharArray): CharArray = a.copyInto(a, 0, 0, 1)",
-        "fun f(s: String): Char = s[0]",
     ] {
         assert!(compile(source, "Invalid.kt").is_err(), "accepted {source}");
     }
@@ -258,7 +256,7 @@ fn compound_addition_requires_mutable_int_locals() {
     ] {
         rejects(source, message);
     }
-    for operator in ["-=", "*=", "/=", "%=", "+ =", "++", "+=="] {
+    for operator in ["+ =", "++", "+=="] {
         let source = format!("fun f() {{ var n = 1; n {operator} 2 }}");
         assert!(compile(&source, "Invalid.kt").is_err(), "accepted {source}");
     }
@@ -305,10 +303,8 @@ fn accepts_statement_when_and_checks_return_paths_and_scopes() {
 fn rejects_unsupported_when_forms_and_malformed_entries() {
     for source in [
         "fun f() { when (val n = 1) { else -> return } }",
-        "fun f(a: CharArray) { when (a) { else -> return } }",
         "fun f() { when (1) { 'a' -> return } }",
         "fun f() { when ('a') { 97 -> return } }",
-        "fun f() { when (1) { is Int -> return } }",
         "fun f() { when (1) { 1 if true -> return } }",
         "fun f() { when (1) { else -> return; 1 -> return } }",
         "fun f() { when (1) { else -> return; else -> return } }",
@@ -1296,7 +1292,6 @@ fn rejects_invalid_loop_membership_increment_and_when_boundaries() {
         "fun f(value: Int): Int = ++value",
         "fun f(): Int { var value: Char = 'a'; value++; return 0 }",
         "fun f() { for (index in 0 until 2) { index++ } }",
-        "fun f() { for (index in 0..2) {} }",
         "fun f(value: Int): Boolean = value in 0..true",
         "fun f(value: Int): Int = when (value) { in 0..2 -> 1 }",
         "fun f(value: Int): Int = when (value) { in 0..2 -> 1; else -> 2; else -> 3 }",
@@ -1433,5 +1428,34 @@ fn accepts_twenty_bounded_language_additions() {
     ] {
         let result = compile_all(source, "Twenty.kt");
         assert!(result.is_ok(), "rejected {source}: {:?}", result.err());
+    }
+}
+
+#[test]
+fn newly_supported_operations_replace_previous_rejection_boundaries() {
+    for source in [
+        "fun f(a: CharArray, b: CharArray): Boolean = a == b",
+        "fun f(s: String): Char = s[0]",
+        "fun f(a: CharArray) { when (a) { else -> return } }",
+        "fun f() { when (1) { is Int -> return } }",
+    ] {
+        assert!(compile(source, "Supported.kt").is_ok(), "rejected {source}");
+    }
+    let standard = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("references/kotlinc/lib/kotlin-stdlib.jar");
+    if standard.is_file() {
+        korrust::compile_with_classpath(
+            "fun f() { for (index in 0..2) {} }",
+            "Supported.kt",
+            &[standard],
+        )
+        .unwrap();
+    }
+    for operator in ["-=", "*=", "/=", "%="] {
+        let source = format!("fun f(): Int {{ var n = 12; n {operator} 2; return n }}");
+        assert!(
+            compile(&source, "Supported.kt").is_ok(),
+            "rejected {source}"
+        );
     }
 }

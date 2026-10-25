@@ -198,8 +198,10 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
             | 0x6c..=0x6e
             | 0x70..=0x72
             | 0x74..=0x76
-            | 0x78..=0x85
-            | 0x91..=0x94
+            | 0x78..=0x86
+            | 0x88..=0x89
+            | 0x8b..=0x8c
+            | 0x91..=0x96
             | 0xbe
             | 0xbf => InlineOp::Raw {
                 opcode,
@@ -447,11 +449,15 @@ pub(crate) fn lambda_calls(
                     let operand = pop_operand(&mut stack, false)?;
                     stack.push(operand);
                 }
-                0x85 => {
+                0x85 | 0x8c => {
                     pop_operand(&mut stack, false)?;
                     stack.push(Operand::Value(2));
                 }
-                0x94 => {
+                0x86 | 0x88 | 0x89 | 0x8b => {
+                    pop_operand(&mut stack, false)?;
+                    stack.push(Operand::Value(1));
+                }
+                0x94..=0x96 => {
                     pop_operand(&mut stack, false)?;
                     pop_operand(&mut stack, false)?;
                     stack.push(Operand::Value(1));

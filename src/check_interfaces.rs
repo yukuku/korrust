@@ -230,7 +230,14 @@ fn register_classes(
             &mut methods,
             &mut names,
             JavaMethod {
-                library: None,
+                library: function.infix.then(|| crate::classpath::LibraryMethod {
+                    source_name: function.name.clone(),
+                    type_parameters: Vec::new(),
+                    receiver: None,
+                    infix: true,
+                    inline: false,
+                    code: None,
+                }),
                 kotlin_params: Some(
                     function
                         .params
@@ -685,6 +692,7 @@ fn check_function(
         imports,
         signatures: &signatures,
         source_type_params: &[],
+        source_infix: &HashSet::new(),
         receiver: Some(Local {
             slot: 0,
             ty: Type::Java(owner.into()),
@@ -1046,6 +1054,7 @@ interface Catalog {
                 imports: &imports,
                 signatures: &signatures,
                 source_type_params: &[],
+                source_infix: &HashSet::new(),
                 receiver: None,
                 fields: &empty_fields,
                 members: &empty_members,

@@ -253,16 +253,6 @@
     "message": "Interface default bodies with reference parameters are not supported"
   },
   {
-    "id": "io_buffer_reference_equality",
-    "source": "object O { private val buffer = ThreadLocal.withInitial { ByteArray(1) }; fun same(): Boolean = buffer == buffer }",
-    "message": "Unsupported value operand type"
-  },
-  {
-    "id": "io_object_reference_equality",
-    "source": "object O { fun same(): Boolean = this == this }",
-    "message": "Unsupported value operand type"
-  },
-  {
     "id": "io_explicit_threadlocal_field",
     "source": "object O { private val buffer: ThreadLocal<ByteArray> = ThreadLocal.withInitial { ByteArray(1) } }",
     "message": "Object private field types must be inferred"

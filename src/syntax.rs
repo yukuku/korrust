@@ -298,6 +298,7 @@ pub struct Function {
     pub offset: usize,
     pub private: bool,
     pub internal: bool,
+    pub infix: bool,
     pub receiver: Option<Type>,
     pub type_params: Vec<TypeParameter>,
     pub params: Vec<(String, Type)>,
@@ -319,13 +320,16 @@ pub enum StatementKind {
     Continue,
     Break,
     ForUntil(String, Expr, Expr, Vec<Statement>),
+    ForEach(String, Expr, Vec<Statement>),
     Assign(String, Expr),
     AddAssign(String, Expr),
+    CompoundAssign(String, String, Expr),
     Return(Option<Expr>),
     Throw(Expr),
     Expression(Expr),
     If(Expr, Vec<Statement>, Vec<Statement>),
     While(Expr, Vec<Statement>),
+    DoWhile(Expr, Vec<Statement>),
     When(
         Expr,
         Vec<(Vec<Expr>, Vec<Statement>)>,
@@ -363,6 +367,11 @@ pub enum ExprKind {
         value: Box<Expr>,
         prefix: bool,
     },
+    Decrement {
+        value: Box<Expr>,
+        prefix: bool,
+    },
+    TypeOperation(String, Box<Expr>, Type),
     NonNull(Box<Expr>),
     Lambda(Box<Expr>),
     LambdaWithParams {
@@ -408,7 +417,9 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
             | ExprKind::SafeProperty(value, _)
             | ExprKind::NonNull(value)
             | ExprKind::Lambda(value)
-            | ExprKind::Increment { value, .. } => pending.push(value),
+            | ExprKind::Increment { value, .. }
+            | ExprKind::Decrement { value, .. }
+            | ExprKind::TypeOperation(_, value, _) => pending.push(value),
             ExprKind::Binary(_, left, right) | ExprKind::Index(left, right) => {
                 pending.push(left);
                 pending.push(right);
@@ -428,6 +439,7 @@ fn shift_statement_offsets(statements: &mut [Statement], offset: usize) {
             StatementKind::Let(_, _, _, value)
             | StatementKind::Assign(_, value)
             | StatementKind::AddAssign(_, value)
+            | StatementKind::CompoundAssign(_, _, value)
             | StatementKind::Return(Some(value))
             | StatementKind::Throw(value)
             | StatementKind::Expression(value) => shift_expression_offsets(value, offset),
@@ -450,7 +462,9 @@ fn shift_statement_offsets(statements: &mut [Statement], offset: usize) {
                 shift_statement_offsets(yes, offset);
                 shift_statement_offsets(no, offset);
             }
-            StatementKind::While(condition, body) => {
+            StatementKind::While(condition, body)
+            | StatementKind::DoWhile(condition, body)
+            | StatementKind::ForEach(_, condition, body) => {
                 shift_expression_offsets(condition, offset);
                 shift_statement_offsets(body, offset);
             }
@@ -922,6 +936,10 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                         | b"&&"
                         | b"||"
                         | b"+="
+                        | b"-="
+                        | b"*="
+                        | b"/="
+                        | b"%="
                         | b"->"
                         | b"++"
                         | b"--"
@@ -932,6 +950,9 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                         | b"?:"
                 )
             {
+                i += 1;
+            }
+            if matches!(&bytes[start..i], b"==" | b"!=") && bytes.get(i) == Some(&b'=') {
                 i += 1;
             }
             tokens.push(Token {
@@ -1001,45 +1022,10 @@ impl Parser {
     }
     fn name(&mut self) -> Result<String> {
         let text = self.token().text.clone();
-        let first = text.as_bytes()[0];
         if text.bytes().all(|b| b == b'_') {
             return Err(self.error("Names consisting only of underscores are reserved"));
         }
-        if !(first.is_ascii_alphabetic() || first == b'_')
-            || matches!(
-                text.as_str(),
-                "fun"
-                    | "val"
-                    | "var"
-                    | "if"
-                    | "else"
-                    | "while"
-                    | "return"
-                    | "true"
-                    | "false"
-                    | "package"
-                    | "private"
-                    | "public"
-                    | "class"
-                    | "object"
-                    | "null"
-                    | "when"
-                    | "for"
-                    | "break"
-                    | "continue"
-                    | "throw"
-                    | "try"
-                    | "is"
-                    | "in"
-                    | "as"
-                    | "this"
-                    | "super"
-                    | "interface"
-                    | "typealias"
-                    | "typeof"
-                    | "do"
-            )
-        {
+        if !identifier(&text) {
             return Err(self.error("Expected an identifier"));
         }
         self.pos += 1;
@@ -1333,6 +1319,7 @@ impl Parser {
                         | "actual"
                         | "external"
                         | "inline"
+                        | "infix"
                         | "value"
                         | "companion"
                         | "\n"
@@ -1728,6 +1715,7 @@ impl Parser {
         }
         let mut visibility = None;
         let mut inline = false;
+        let mut infix = false;
         loop {
             if matches!(
                 self.token().text.as_str(),
@@ -1740,6 +1728,11 @@ impl Parser {
                 }
                 visibility = Some(self.token().text.clone());
                 self.pos += 1;
+            } else if self.take("infix") {
+                if infix {
+                    return Err(self.error("Repeated infix modifier"));
+                }
+                infix = true;
             } else if self.take("inline") {
                 if inline {
                     return Err(self.error("Repeated inline modifier"));
@@ -1759,6 +1752,8 @@ impl Parser {
         let mut function = self.function()?;
         function.offset = offset;
         function.private = visibility.as_deref() == Some("private");
+        function.infix = infix;
+        Self::validate_infix_function(&function)?;
         if function.receiver.is_some() {
             return Err(Diagnostic::new(
                 offset,
@@ -2052,12 +2047,18 @@ impl Parser {
             let member_offset = self.token().offset;
             let mut is_override = false;
             let mut member_visibility = None;
+            let mut infix = false;
             loop {
                 if self.take("override") {
                     if is_override {
                         return Err(self.error("Repeated override modifier"));
                     }
                     is_override = true;
+                } else if self.take("infix") {
+                    if infix {
+                        return Err(self.error("Repeated infix modifier"));
+                    }
+                    infix = true;
                 } else if matches!(
                     self.token().text.as_str(),
                     "public" | "private" | "internal" | "protected"
@@ -2077,6 +2078,9 @@ impl Parser {
             if matches!(member_visibility.as_deref(), Some("internal" | "protected")) {
                 return Err(self.error("Internal and protected class members are not supported"));
             }
+            if infix && !self.at("fun") {
+                return Err(self.error("The infix modifier applies only to functions"));
+            }
             if self.at("fun") {
                 if is_override && member_visibility.as_deref() == Some("private") {
                     return Err(self.error("Overrides cannot be private"));
@@ -2084,6 +2088,8 @@ impl Parser {
                 let mut function = self.function()?;
                 function.offset = member_offset;
                 function.private = member_visibility.as_deref() == Some("private");
+                function.infix = infix;
+                Self::validate_infix_function(&function)?;
                 if function.receiver.is_some() {
                     return Err(Diagnostic::new(
                         member_offset,
@@ -2308,12 +2314,18 @@ impl Parser {
                 let offset = self.token().offset;
                 let mut is_override = false;
                 let mut public_modifier = false;
+                let mut infix = false;
                 loop {
                     if self.take("override") {
                         if is_override {
                             return Err(self.error("Repeated override modifier"));
                         }
                         is_override = true;
+                    } else if self.take("infix") {
+                        if infix {
+                            return Err(self.error("Repeated infix modifier"));
+                        }
+                        infix = true;
                     } else if self.take("public") {
                         if public_modifier {
                             return Err(self.error("Repeated public interface member modifier"));
@@ -2324,8 +2336,13 @@ impl Parser {
                     }
                     self.lines();
                 }
+                if infix && !self.at("fun") {
+                    return Err(self.error("The infix modifier applies only to functions"));
+                }
                 if self.at("fun") {
-                    let (function, has_body) = self.function_body(true)?;
+                    let (mut function, has_body) = self.function_body(true)?;
+                    function.infix = infix;
+                    Self::validate_infix_function(&function)?;
                     if function.receiver.is_some() {
                         return Err(Diagnostic::new(
                             offset,
@@ -2538,21 +2555,43 @@ impl Parser {
         self.expect("}")?;
         Ok(CompanionDecl { properties })
     }
+    fn validate_infix_function(function: &Function) -> Result<()> {
+        if function.infix
+            && (function.params.len() != 1 || function.defaults.iter().any(Option::is_some))
+        {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Infix functions require exactly one parameter without a default value",
+            ));
+        }
+        Ok(())
+    }
     fn function(&mut self) -> Result<Function> {
         self.function_body(false).map(|(function, _)| function)
     }
     fn function_body(&mut self, abstract_allowed: bool) -> Result<(Function, bool)> {
         let offset = self.token().offset;
         let mut visibility = None;
-        while matches!(
-            self.token().text.as_str(),
-            "private" | "public" | "internal"
-        ) {
-            if visibility.is_some() {
-                return Err(self.error("Conflicting or repeated visibility modifiers"));
+        let mut infix = false;
+        loop {
+            if matches!(
+                self.token().text.as_str(),
+                "private" | "public" | "internal"
+            ) {
+                if visibility.is_some() {
+                    return Err(self.error("Conflicting or repeated visibility modifiers"));
+                }
+                visibility = Some(self.token().text.clone());
+                self.pos += 1;
+            } else if self.take("infix") {
+                if infix {
+                    return Err(self.error("Repeated infix modifier"));
+                }
+                infix = true;
+            } else {
+                break;
             }
-            visibility = Some(self.token().text.clone());
-            self.pos += 1;
+            self.lines();
         }
         let private = visibility.as_deref() == Some("private");
         let internal = visibility.as_deref() == Some("internal");
@@ -2600,6 +2639,11 @@ impl Parser {
             }
         }
         self.expect(")")?;
+        if infix && (params.len() != 1 || defaults.iter().any(Option::is_some)) {
+            return Err(
+                self.error("Infix functions require exactly one parameter without a default value")
+            );
+        }
         let result = if self.take(":") {
             self.lines();
             self.ty()?
@@ -2636,6 +2680,7 @@ impl Parser {
                 offset,
                 private,
                 internal,
+                infix,
                 receiver,
                 type_params,
                 params,
@@ -2701,14 +2746,17 @@ impl Parser {
             let name = self.declaration_name()?;
             self.expect("in")?;
             self.lines();
-            let start = self.expr(0)?;
-            self.expect("until")?;
-            self.lines();
-            let end = self.expr(0)?;
+            let iterable = self.expr(0)?;
             self.lines();
             self.expect(")")?;
             self.lines();
-            StatementKind::ForUntil(name, start, end, self.statement_body()?)
+            let body = self.statement_body()?;
+            match iterable.kind {
+                ExprKind::Binary(op, start, end) if op == "until" => {
+                    StatementKind::ForUntil(name, *start, *end, body)
+                }
+                kind => StatementKind::ForEach(name, Expr { kind, ..iterable }, body),
+            }
         } else if self.take("throw") {
             self.lines();
             StatementKind::Throw(self.expr(0)?)
@@ -2748,7 +2796,7 @@ impl Parser {
                 let mut conditions = Vec::new();
                 if !is_else {
                     loop {
-                        conditions.push(self.when_condition()?);
+                        conditions.push(self.when_condition(subjectless)?);
                         if conditions.len() > 128 {
                             return Err(self.error("Condition nesting exceeds the current limit"));
                         }
@@ -2789,6 +2837,18 @@ impl Parser {
             }
             self.expect("}")?;
             StatementKind::When(subject, branches, otherwise)
+        } else if self.take("do") {
+            self.lines();
+            let body = self.statement_body()?;
+            self.lines();
+            self.expect("while")?;
+            self.lines();
+            self.expect("(")?;
+            self.lines();
+            let condition = self.expr(0)?;
+            self.lines();
+            self.expect(")")?;
+            StatementKind::DoWhile(condition, body)
         } else if self.take("while") {
             self.expect("(")?;
             self.lines();
@@ -2828,6 +2888,16 @@ impl Parser {
             self.expect("+=")?;
             self.lines();
             StatementKind::AddAssign(name, self.expr(0)?)
+        } else if self
+            .tokens
+            .get(self.pos + 1)
+            .is_some_and(|t| matches!(t.text.as_str(), "-=" | "*=" | "/=" | "%="))
+        {
+            let name = self.name()?;
+            let operator = self.token().text.clone();
+            self.pos += 1;
+            self.lines();
+            StatementKind::CompoundAssign(name, operator, self.expr(0)?)
         } else if self.tokens.get(self.pos + 1).is_some_and(|t| t.text == "=") {
             let name = self.name()?;
             self.expect("=")?;
@@ -2851,6 +2921,10 @@ impl Parser {
                         ));
                     }
                 }
+            } else if matches!(self.token().text.as_str(), "+=" | "-=" | "*=" | "/=" | "%=") {
+                return Err(
+                    self.error("Compound assignments currently require a local variable target")
+                );
             } else {
                 StatementKind::Expression(target)
             }
@@ -2878,17 +2952,17 @@ impl Parser {
                     .position(|token| token.text != "\n")
                     .unwrap()
                     + self.pos;
-                if matches!(self.tokens[next].text.as_str(), "&&" | "||") {
+                if matches!(self.tokens[next].text.as_str(), "&&" | "||" | "?:" | "as") {
                     self.pos = next;
                 }
             }
-            let negated_membership = self.at("!")
-                && self
-                    .tokens
-                    .get(self.pos + 1)
-                    .is_some_and(|token| token.text == "in");
-            let op = if negated_membership {
-                "!in".to_string()
+            let negated_operator = self.at("!")
+                && self.tokens.get(self.pos + 1).is_some_and(|token| {
+                    matches!(token.text.as_str(), "in" | "is")
+                        && token.offset == self.token().offset + 1
+                });
+            let mut op = if negated_operator {
+                format!("!{}", self.tokens[self.pos + 1].text)
             } else {
                 self.token().text.clone()
             };
@@ -2898,8 +2972,24 @@ impl Parser {
             if precedence < min {
                 break;
             }
-            self.pos += if negated_membership { 2 } else { 1 };
+            self.pos += if negated_operator { 2 } else { 1 };
+            if op == "as"
+                && self.at("?")
+                && self.token().offset == self.tokens[self.pos - 1].offset + 2
+            {
+                self.pos += 1;
+                op.push('?');
+            }
             self.lines();
+            if matches!(op.as_str(), "is" | "!is" | "as" | "as?") {
+                let ty = self.ty()?;
+                let offset = left.offset;
+                left = Self::bounded(Expr {
+                    offset,
+                    kind: ExprKind::TypeOperation(op, Box::new(left), ty),
+                })?;
+                continue;
+            }
             let right = self.expr(if op == "?:" {
                 precedence
             } else {
@@ -2917,12 +3007,24 @@ impl Parser {
     }
     fn prefix(&mut self) -> Result<Expr> {
         let offset = self.token().offset;
-        if self.take("++") {
+        if self.at("++") || self.at("--") {
+            let increment = self.take("++");
+            if !increment {
+                self.expect("--")?;
+            }
+            let value = Box::new(self.expr(12)?);
             return Self::bounded(Expr {
                 offset,
-                kind: ExprKind::Increment {
-                    value: Box::new(self.expr(9)?),
-                    prefix: true,
+                kind: if increment {
+                    ExprKind::Increment {
+                        value,
+                        prefix: true,
+                    }
+                } else {
+                    ExprKind::Decrement {
+                        value,
+                        prefix: true,
+                    }
                 },
             });
         }
@@ -2931,7 +3033,7 @@ impl Parser {
             self.pos += 1;
             return Self::bounded(Expr {
                 offset,
-                kind: ExprKind::Unary(op, Box::new(self.expr(9)?)),
+                kind: ExprKind::Unary(op, Box::new(self.expr(12)?)),
             });
         }
         let mut expr = if self.take("return") {
@@ -3071,6 +3173,14 @@ impl Parser {
                         prefix: false,
                     },
                 };
+            } else if self.take("--") {
+                expr = Expr {
+                    offset,
+                    kind: ExprKind::Decrement {
+                        value: Box::new(expr),
+                        prefix: false,
+                    },
+                };
             } else if self.at("{") {
                 let lambda = self.lambda()?;
                 expr = match expr.kind {
@@ -3151,15 +3261,48 @@ impl Parser {
         }
         Self::bounded(expr)
     }
-    fn when_condition(&mut self) -> Result<Expr> {
+    fn when_condition(&mut self, subjectless: bool) -> Result<Expr> {
         let offset = self.token().offset;
+        let type_operator = if self.take("is") {
+            Some("is")
+        } else if self.at("!")
+            && self
+                .tokens
+                .get(self.pos + 1)
+                .is_some_and(|token| token.text == "is" && token.offset == self.token().offset + 1)
+        {
+            self.pos += 2;
+            Some("!is")
+        } else {
+            None
+        };
+        if let Some(operator) = type_operator {
+            if subjectless {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Type conditions require a when subject",
+                ));
+            }
+            self.lines();
+            return Ok(Expr {
+                offset,
+                kind: ExprKind::TypeOperation(
+                    operator.into(),
+                    Box::new(Expr {
+                        offset,
+                        kind: ExprKind::Name("$whenSubject".into()),
+                    }),
+                    self.ty()?,
+                ),
+            });
+        }
         let operator = if self.take("in") {
             Some("in")
         } else if self.at("!")
             && self
                 .tokens
                 .get(self.pos + 1)
-                .is_some_and(|token| token.text == "in")
+                .is_some_and(|token| token.text == "in" && token.offset == self.token().offset + 1)
         {
             self.pos += 2;
             Some("!in")
@@ -3167,6 +3310,12 @@ impl Parser {
             None
         };
         if let Some(operator) = operator {
+            if subjectless {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Range conditions require a when subject",
+                ));
+            }
             self.lines();
             Ok(Expr {
                 offset,
@@ -3206,7 +3355,7 @@ impl Parser {
             let mut conditions = Vec::new();
             if !is_else {
                 loop {
-                    conditions.push(self.when_condition()?);
+                    conditions.push(self.when_condition(subjectless)?);
                     if conditions.len() > 128 {
                         return Err(self
                             .error("When expression condition nesting exceeds the current limit"));
@@ -3401,6 +3550,8 @@ impl Parser {
                 | ExprKind::NamedArgument(_, value)
                 | ExprKind::Generic(value, _)
                 | ExprKind::Increment { value, .. }
+                | ExprKind::Decrement { value, .. }
+                | ExprKind::TypeOperation(_, value, _)
                 | ExprKind::NonNull(value)
                 | ExprKind::Lambda(value) => pending.push((value, depth + 1)),
                 ExprKind::Unary(_, a) | ExprKind::Property(a, _) | ExprKind::SafeProperty(a, _) => {
@@ -3522,17 +3673,61 @@ fn integer_literal(text: &str, offset: usize) -> Result<i64> {
     }
 }
 
+fn identifier(text: &str) -> bool {
+    text.as_bytes()
+        .first()
+        .is_some_and(|byte| byte.is_ascii_alphabetic() || *byte == b'_')
+        && text
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || byte == b'_')
+        && !matches!(
+            text,
+            "fun"
+                | "val"
+                | "var"
+                | "if"
+                | "else"
+                | "while"
+                | "return"
+                | "true"
+                | "false"
+                | "package"
+                | "private"
+                | "public"
+                | "class"
+                | "object"
+                | "null"
+                | "when"
+                | "for"
+                | "break"
+                | "continue"
+                | "throw"
+                | "try"
+                | "is"
+                | "in"
+                | "as"
+                | "this"
+                | "super"
+                | "interface"
+                | "typealias"
+                | "typeof"
+                | "do"
+        )
+}
+
 fn precedence(op: &str) -> Option<u8> {
     match op {
         "||" => Some(1),
         "&&" => Some(2),
-        "==" | "!=" => Some(3),
-        "?:" => Some(4),
-        "<" | ">" | "<=" | ">=" | "in" | "!in" => Some(4),
-        "shl" | "shr" | "ushr" | "and" | "or" | "xor" => Some(5),
-        ".." => Some(6),
-        "+" | "-" => Some(7),
-        "*" | "/" | "%" => Some(8),
+        "==" | "!=" | "===" | "!==" => Some(3),
+        "<" | ">" | "<=" | ">=" => Some(4),
+        "in" | "!in" | "is" | "!is" => Some(5),
+        "?:" => Some(6),
+        ".." => Some(8),
+        "+" | "-" => Some(9),
+        "*" | "/" | "%" => Some(10),
+        "as" => Some(11),
+        _ if identifier(op) => Some(7),
         _ => None,
     }
 }
@@ -3915,5 +4110,176 @@ mod tests {
             ">".repeat(129)
         );
         assert!(parse(&deep).is_err());
+    }
+    #[test]
+    fn foreach_ranges_and_do_while_preserve_structure() {
+        let module = parse("fun f(a: IntArray): Unit { for (i in 0 until 4) {}; for (i in 1..4) {}; for (i in 4 downTo 1 step 2) {}; for (x in a) {}; for (i in a.indices) {}; do { continue } while (false) }").unwrap();
+        let body = &module.functions[0].body;
+        assert!(matches!(body[0].kind, StatementKind::ForUntil(_, _, _, _)));
+        assert!(
+            matches!(&body[1].kind, StatementKind::ForEach(_, Expr { kind: ExprKind::Binary(op, _, _), .. }, _) if op == "..")
+        );
+        let StatementKind::ForEach(
+            _,
+            Expr {
+                kind: ExprKind::Binary(step, progression, _),
+                ..
+            },
+            _,
+        ) = &body[2].kind
+        else {
+            panic!("missing stepped progression")
+        };
+        assert_eq!(step, "step");
+        assert!(matches!(&progression.kind, ExprKind::Binary(op, _, _) if op == "downTo"));
+        assert!(
+            matches!(&body[3].kind, StatementKind::ForEach(_, Expr { kind: ExprKind::Name(name), .. }, _) if name == "a")
+        );
+        assert!(
+            matches!(&body[4].kind, StatementKind::ForEach(_, Expr { kind: ExprKind::Property(_, name), .. }, _) if name == "indices")
+        );
+        assert!(
+            matches!(&body[5].kind, StatementKind::DoWhile(Expr { kind: ExprKind::Boolean(false), .. }, statements) if matches!(statements[0].kind, StatementKind::Continue))
+        );
+    }
+
+    #[test]
+    fn infix_calls_accept_identifiers_and_use_kotlin_precedence() {
+        let module =
+            parse("fun downTo(step: Int): Int = step\nfun f(): Int = 1 + 2 custom 3..5 step 2")
+                .unwrap();
+        assert_eq!(module.functions[0].name, "downTo");
+        let StatementKind::Return(Some(expression)) = &module.functions[1].body[0].kind else {
+            panic!("missing expression body")
+        };
+        let ExprKind::Binary(step, left, _) = &expression.kind else {
+            panic!("missing outer infix")
+        };
+        assert_eq!(step, "step");
+        let ExprKind::Binary(custom, left, right) = &left.kind else {
+            panic!("missing custom infix")
+        };
+        assert_eq!(custom, "custom");
+        assert!(matches!(&left.kind, ExprKind::Binary(op, _, _) if op == "+"));
+        assert!(matches!(&right.kind, ExprKind::Binary(op, _, _) if op == ".."));
+    }
+
+    #[test]
+    fn compound_assignments_and_decrements_keep_operators_and_positions() {
+        let module =
+            parse("fun f(): Int { var n = 4; n -= 1; n *= 2; n /= 2; n %= 3; --n; return n-- }")
+                .unwrap();
+        let body = &module.functions[0].body;
+        for (statement, expected) in body[1..5].iter().zip(["-=", "*=", "/=", "%="]) {
+            assert!(
+                matches!(&statement.kind, StatementKind::CompoundAssign(name, op, _) if name == "n" && op == expected)
+            );
+        }
+        assert!(matches!(
+            &body[5].kind,
+            StatementKind::Expression(Expr {
+                kind: ExprKind::Decrement { prefix: true, .. },
+                ..
+            })
+        ));
+        assert!(matches!(
+            &body[6].kind,
+            StatementKind::Return(Some(Expr {
+                kind: ExprKind::Decrement { prefix: false, .. },
+                ..
+            }))
+        ));
+        for target in ["a[0]", "a.value", "(a)"] {
+            let source = format!("fun f(a: IntArray): Unit {{ {target} -= 1 }}");
+            assert!(
+                parse(&source)
+                    .unwrap_err()
+                    .message
+                    .contains("local variable target")
+            );
+        }
+    }
+
+    #[test]
+    fn type_operations_identity_and_when_type_conditions_keep_types() {
+        let module = parse("fun f(a: Any?, b: Any?): Boolean = a ?: b is String && a !== null\nfun g(a: Any?): String? = a as? String\nfun h(a: Any?): Int = when (a) { is String -> 1; !is Int -> 2; else -> 3 }").unwrap();
+        let StatementKind::Return(Some(Expr {
+            kind: ExprKind::Binary(and, test, identity),
+            ..
+        })) = &module.functions[0].body[0].kind
+        else {
+            panic!("missing conjunction")
+        };
+        assert_eq!(and, "&&");
+        assert!(
+            matches!(&test.kind, ExprKind::TypeOperation(op, value, Type::String) if op == "is" && matches!(&value.kind, ExprKind::Binary(op, _, _) if op == "?:"))
+        );
+        assert!(matches!(&identity.kind, ExprKind::Binary(op, _, _) if op == "!=="));
+        assert!(
+            matches!(&module.functions[1].body[0].kind, StatementKind::Return(Some(Expr { kind: ExprKind::TypeOperation(op, _, Type::String), .. })) if op == "as?")
+        );
+        let StatementKind::Return(Some(Expr {
+            kind: ExprKind::When(_, branches, _),
+            ..
+        })) = &module.functions[2].body[0].kind
+        else {
+            panic!("missing when")
+        };
+        for ((conditions, _), expected) in branches.iter().zip(["is", "!is"]) {
+            assert!(
+                matches!(&conditions[0].kind, ExprKind::TypeOperation(op, subject, _) if op == expected && matches!(&subject.kind, ExprKind::Name(name) if name == "$whenSubject"))
+            );
+        }
+        assert!(parse("fun f(a: Any): Int = -(a as Int) * 2").is_ok());
+        assert!(parse("fun f(a: Any): Int = a\nas\nInt").is_ok());
+        for source in [
+            "fun f(a: Any): Boolean = a ! is Int",
+            "fun f(a: Any): Int? = a as ? Int",
+        ] {
+            assert!(parse(source).is_err(), "unexpected acceptance: {source}");
+        }
+    }
+    #[test]
+    fn infix_declarations_preserve_modifiers_and_reject_invalid_signatures() {
+        let module = parse("infix public fun Int.combine(value: Int): Int = this + value\nprivate infix fun Int.other(value: Int): Int = this - value\nfun ordinary(value: Int): Int = value").unwrap();
+        assert!(module.functions[0].infix);
+        assert_eq!(module.functions[0].receiver, Some(Type::Int));
+        assert!(module.functions[1].infix && module.functions[1].private);
+        assert!(!module.functions[2].infix);
+        let class = parse("class C { infix public fun combine(value: Int): Int = value }")
+            .unwrap()
+            .class_decl
+            .unwrap();
+        assert!(class.methods[0].function.infix);
+        let object = parse("object O { public infix fun combine(value: Int): Int = value }")
+            .unwrap()
+            .object_decl
+            .unwrap();
+        assert!(object.methods[0].function.infix);
+        let interface = parse("interface I { public infix fun combine(value: Int): Int }")
+            .unwrap()
+            .interface_decl
+            .unwrap();
+        assert!(interface.methods[0].function.infix);
+        let override_class =
+            parse("class C { override infix fun combine(value: Int): Int = value }")
+                .unwrap()
+                .class_decl
+                .unwrap();
+        assert!(override_class.methods[0].is_override);
+        assert!(override_class.methods[0].function.infix);
+        for source in [
+            "infix infix fun Int.combine(value: Int): Int = value",
+            "infix fun Int.combine(): Int = 1",
+            "infix fun Int.combine(a: Int, b: Int): Int = a + b",
+            "infix fun Int.combine(value: Int = 1): Int = value",
+            "class C { infix fun combine(value: Int = 1): Int = value }",
+            "object O { infix fun combine(): Int = 1 }",
+            "interface I { infix fun combine(a: Int, b: Int): Int }",
+            "class C { infix val value = 1 }",
+            "interface I { infix val value: Int }",
+        ] {
+            assert!(parse(source).is_err(), "unexpected acceptance: {source}");
+        }
     }
 }

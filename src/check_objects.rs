@@ -115,7 +115,14 @@ pub(super) fn check(
             ));
         }
         overloads.push(JavaMethod {
-            library: None,
+            library: function.infix.then(|| crate::classpath::LibraryMethod {
+                source_name: function.name.clone(),
+                type_parameters: Vec::new(),
+                receiver: None,
+                infix: true,
+                inline: false,
+                code: None,
+            }),
             kotlin_params: None,
             kotlin_result: None,
             kotlin_internal: false,
@@ -229,6 +236,7 @@ pub(super) fn check(
             imports,
             signatures: &signatures,
             source_type_params: &[],
+            source_infix: &HashSet::new(),
             receiver: None,
             fields: &empty_fields,
             members: &empty_members,
@@ -301,6 +309,7 @@ pub(super) fn check(
             imports,
             signatures: &signatures,
             source_type_params: &[],
+            source_infix: &HashSet::new(),
             receiver: if method.jvm_static {
                 None
             } else {
@@ -850,10 +859,13 @@ object Scratch {
         assert!(matches!(call.kind, ValueKind::StaticCall { .. }));
     }
     #[test]
-    fn inferred_thread_local_buffers_are_not_integer_comparison_operands() {
-        rejects(
-            "object Scratch { private val buffer = ThreadLocal.withInitial { ByteArray(1) }; @JvmStatic fun same(): Boolean = buffer == buffer }",
-            "Unsupported value operand type",
+    fn inferred_thread_local_buffers_support_structural_reference_equality() {
+        let object = checked("object Scratch { private val buffer = ThreadLocal.withInitial { ByteArray(1) }; @JvmStatic fun same(): Boolean = buffer == buffer }").unwrap().object_decl.unwrap();
+        let Statement::Return(value) = &object.methods[0].function.body[0] else {
+            panic!()
+        };
+        assert!(
+            matches!(&value.kind, ValueKind::StaticCall { owner, name, descriptor, .. } if owner == "kotlin/jvm/internal/Intrinsics" && name == "areEqual" && descriptor == "(Ljava/lang/Object;Ljava/lang/Object;)Z")
         );
     }
     #[test]
@@ -868,15 +880,19 @@ object Scratch {
         );
     }
     #[test]
-    fn object_reference_equality_is_rejected_and_instance_calls_keep_the_actual_receiver() {
-        rejects(
+    fn object_reference_equality_and_instance_calls_keep_the_actual_receiver() {
+        for source in [
             "object Scratch { @JvmStatic fun same(): Boolean = this == this }",
-            "Unsupported value operand type",
-        );
-        rejects(
             "object Scratch { fun same(): Boolean = this == this }",
-            "Unsupported value operand type",
-        );
+        ] {
+            let object = checked(source).unwrap().object_decl.unwrap();
+            let Statement::Return(value) = &object.methods[0].function.body[0] else {
+                panic!()
+            };
+            assert!(
+                matches!(&value.kind, ValueKind::StaticCall { name, descriptor, .. } if name == "areEqual" && descriptor == "(Ljava/lang/Object;Ljava/lang/Object;)Z")
+            );
+        }
         let object = checked("object Scratch { private fun value(): Int = 1; fun instance(): Int = value(); @JvmStatic fun static(): Int = value() }").unwrap().object_decl.unwrap();
         let Statement::Return(instance) = &object.methods[1].function.body[0] else {
             panic!()

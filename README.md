@@ -100,10 +100,32 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 64. Lambda conversion to Java single-method interfaces.
 65. Supported compiled inline bytecode expanded at call sites.
 66. Non-local returns from supported inline lambda arguments.
+67. Inclusive Int range loops with overflow-safe termination.
+68. Name-independent infix calls to supported source and compiled functions.
+69. Iteration over runtime progressions returned by ordinary resolved calls.
+70. Iteration over supported primitive arrays.
+71. String iteration over UTF-16 code units.
+72. Typed List iteration through JVM iterators.
+73. Compiled extension-property resolution, including indices used in loops.
+74. Do-while loops with break and continue.
+75. Float arithmetic and supported mixed numeric operands.
+76. Float ordering and equality with Kotlin NaN and signed-zero behavior.
+77. Float, Int, and Long numeric conversions.
+78. Numeric local compound assignments.
+79. Prefix and postfix Int-local decrement.
+80. Nullable reference identity comparisons.
+81. Nullable and object structural equality.
+82. Runtime type tests for supported concrete types.
+83. Checked casts with null and wrong-type failures.
+84. Safe casts with nullable results.
+85. Type-check smart casts for stable locals and parameters.
+86. When type-test branches with supported smart casts.
 
 ## Project contract
 
-- Correctness comes first, then compilation performance. Runtime optimization is secondary.
+- Correctness comes first, then compilation performance.
+- Prioritize reusable language semantics and general library-call resolution that advance unchanged AndroidBible source compilation. Library function names are examples of usage, not separate compiler features.
+- Defer runtime optimization and API-specific shortcuts until explicitly requested. Execute library functions through normal resolution and calling conventions; do not substitute implementations based on names such as `downTo` or `step`.
 - Preserve Kotlin behavior and the binary contracts required by Java and Kotlin consumers.
 - Adopt per Gradle module; use official Kotlin for unsupported modules and production builds.
 - Diagnose unsupported constructs explicitly. Never silently approximate their behavior.

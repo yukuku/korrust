@@ -256,7 +256,7 @@ fn nonlocal_block(body: &[Statement], lambdas: &[crate::check::LambdaDecl]) -> b
                 || nonlocal_block(yes, lambdas)
                 || nonlocal_block(no, lambdas)
         }
-        Statement::While(value, body) => {
+        Statement::While(value, body) | Statement::DoWhile(value, body) => {
             nonlocal_value(value, lambdas) || nonlocal_block(body, lambdas)
         }
         Statement::ForUntil {
@@ -265,6 +265,10 @@ fn nonlocal_block(body: &[Statement], lambdas: &[crate::check::LambdaDecl]) -> b
             nonlocal_value(start, lambdas)
                 || nonlocal_value(end, lambdas)
                 || nonlocal_block(body, lambdas)
+        }
+        Statement::ForEach { iterable, body, .. }
+        | Statement::ForIterator { iterable, body, .. } => {
+            nonlocal_value(iterable, lambdas) || nonlocal_block(body, lambdas)
         }
         Statement::Store(_, value)
         | Statement::Return(value)
@@ -303,6 +307,9 @@ fn nonlocal_value(value: &Value, lambdas: &[crate::check::LambdaDecl]) -> bool {
         ValueKind::Box(value)
         | ValueKind::Unbox(value)
         | ValueKind::CellIncrement { cell: value, .. }
+        | ValueKind::CellDecrement { cell: value, .. }
+        | ValueKind::TypeTest { value, .. }
+        | ValueKind::Cast { value, .. }
         | ValueKind::IsNull(value)
         | ValueKind::ListSize(value)
         | ValueKind::NewArray(_, value)

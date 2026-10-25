@@ -18,6 +18,8 @@ pub(super) fn expression_names(expr: &Expr, names: &mut HashSet<String>) {
         | ExprKind::Lambda(expr)
         | ExprKind::Throw(expr)
         | ExprKind::Increment { value: expr, .. }
+        | ExprKind::Decrement { value: expr, .. }
+        | ExprKind::TypeOperation(_, expr, _)
         | ExprKind::Property(expr, _)
         | ExprKind::SafeProperty(expr, _) => expression_names(expr, names),
         ExprKind::LambdaWithParams { body, .. } => statement_names(body, names),
@@ -59,7 +61,9 @@ pub(super) fn statement_names(statements: &[syntax::Statement], names: &mut Hash
             StatementKind::Let(_, _, _, expr)
             | StatementKind::Throw(expr)
             | StatementKind::Expression(expr) => expression_names(expr, names),
-            StatementKind::Assign(name, expr) | StatementKind::AddAssign(name, expr) => {
+            StatementKind::Assign(name, expr)
+            | StatementKind::AddAssign(name, expr)
+            | StatementKind::CompoundAssign(name, _, expr) => {
                 names.insert(name.clone());
                 expression_names(expr, names);
             }
@@ -78,7 +82,11 @@ pub(super) fn statement_names(statements: &[syntax::Statement], names: &mut Hash
                 statement_names(b, names);
                 statement_names(c, names);
             }
-            StatementKind::While(a, b) => {
+            StatementKind::While(a, b) | StatementKind::DoWhile(a, b) => {
+                expression_names(a, names);
+                statement_names(b, names);
+            }
+            StatementKind::ForEach(_, a, b) => {
                 expression_names(a, names);
                 statement_names(b, names);
             }
@@ -120,6 +128,9 @@ pub(super) fn lambda_capture_names(statements: &[syntax::Statement]) -> HashSet<
             | ExprKind::Unary(_, a)
             | ExprKind::NonNull(a)
             | ExprKind::Throw(a)
+            | ExprKind::Increment { value: a, .. }
+            | ExprKind::Decrement { value: a, .. }
+            | ExprKind::TypeOperation(_, a, _)
             | ExprKind::Property(a, _)
             | ExprKind::SafeProperty(a, _) => expr_visit(a, names),
             ExprKind::Binary(_, a, b) | ExprKind::Index(a, b) => {
@@ -159,6 +170,7 @@ pub(super) fn lambda_capture_names(statements: &[syntax::Statement]) -> HashSet<
                 StatementKind::Let(_, _, _, e)
                 | StatementKind::Assign(_, e)
                 | StatementKind::AddAssign(_, e)
+                | StatementKind::CompoundAssign(_, _, e)
                 | StatementKind::Throw(e)
                 | StatementKind::Expression(e) => expr(e, names),
                 StatementKind::Return(Some(e)) => expr(e, names),
@@ -167,7 +179,9 @@ pub(super) fn lambda_capture_names(statements: &[syntax::Statement]) -> HashSet<
                     visit(a, names);
                     visit(b, names);
                 }
-                StatementKind::While(e, b) => {
+                StatementKind::While(e, b)
+                | StatementKind::DoWhile(e, b)
+                | StatementKind::ForEach(_, e, b) => {
                     expr(e, names);
                     visit(b, names);
                 }
@@ -320,6 +334,8 @@ pub(super) fn free_names(
             | ExprKind::NonNull(a)
             | ExprKind::Throw(a)
             | ExprKind::Increment { value: a, .. }
+            | ExprKind::Decrement { value: a, .. }
+            | ExprKind::TypeOperation(_, a, _)
             | ExprKind::Property(a, _)
             | ExprKind::SafeProperty(a, _) => expression(a, bound, free),
             ExprKind::CallableReference {
@@ -367,7 +383,9 @@ pub(super) fn free_names(
                 StatementKind::Declare(name, _, _) => {
                     bound.insert(name.clone());
                 }
-                StatementKind::Assign(name, expr) | StatementKind::AddAssign(name, expr) => {
+                StatementKind::Assign(name, expr)
+                | StatementKind::AddAssign(name, expr)
+                | StatementKind::CompoundAssign(name, _, expr) => {
                     if !bound.contains(name) {
                         free.insert(name.clone());
                     }
@@ -390,9 +408,15 @@ pub(super) fn free_names(
                     body_names(b, &mut bound.clone(), free);
                     body_names(c, &mut bound.clone(), free);
                 }
-                StatementKind::While(a, b) => {
+                StatementKind::While(a, b) | StatementKind::DoWhile(a, b) => {
                     expression(a, bound, free);
                     body_names(b, &mut bound.clone(), free);
+                }
+                StatementKind::ForEach(name, a, b) => {
+                    expression(a, bound, free);
+                    let mut bound = bound.clone();
+                    bound.insert(name.clone());
+                    body_names(b, &mut bound, free);
                 }
                 StatementKind::ForUntil(name, a, b, c) => {
                     expression(a, bound, free);

@@ -358,6 +358,34 @@ fn reference_class(ty: &Type) -> Result<String> {
     }
 }
 
+fn cast_class(ty: &Type) -> Result<String> {
+    if ty.is_reference() {
+        reference_class(ty)
+    } else {
+        Ok(boxed_owner(ty).into())
+    }
+}
+
+fn cast_type_name(ty: &Type) -> String {
+    match ty.base() {
+        Type::Int => "kotlin.Int".into(),
+        Type::Long => "kotlin.Long".into(),
+        Type::Float => "kotlin.Float".into(),
+        Type::Byte => "kotlin.Byte".into(),
+        Type::Char => "kotlin.Char".into(),
+        Type::Boolean => "kotlin.Boolean".into(),
+        Type::String => "kotlin.String".into(),
+        Type::Java(name) | Type::Parameterized { name, .. } => name.replace('/', "."),
+        Type::IntArray => "kotlin.IntArray".into(),
+        Type::ByteArray => "kotlin.ByteArray".into(),
+        Type::CharArray => "kotlin.CharArray".into(),
+        Type::StringArray => "kotlin.Array<kotlin.String>".into(),
+        Type::List(_) => "kotlin.collections.List".into(),
+        Type::MutableList(_) => "kotlin.collections.MutableList".into(),
+        _ => format!("{ty:?}"),
+    }
+}
+
 fn invocation_types(descriptor: &str) -> Result<(Vec<Type>, Type)> {
     fn ty(bytes: &[u8], cursor: &mut usize) -> Result<Type> {
         let start = *cursor;
@@ -708,6 +736,9 @@ impl Code<'_> {
         }
     }
     fn boxed_value(&mut self, value: &Value) -> Result<()> {
+        if value.ty.is_reference() {
+            return self.value(value);
+        }
         match &value.kind {
             ValueKind::If(condition, yes, no) => {
                 let otherwise = self.label();
@@ -1151,12 +1182,21 @@ impl Code<'_> {
             }
             ValueKind::Convert(target, value) => {
                 self.value(value)?;
-                match target {
-                    Type::Long => self.bytes.push(0x85),
+                match (value.ty.base(), target.base()) {
+                    (Type::Long, Type::Float) => self.bytes.push(0x89),
+                    (Type::Long, Type::Int | Type::Byte | Type::Char) => self.bytes.push(0x88),
+                    (Type::Float, Type::Long) => self.bytes.push(0x8c),
+                    (Type::Float, Type::Int | Type::Byte | Type::Char) => self.bytes.push(0x8b),
+                    (Type::Int | Type::Byte | Type::Char, Type::Long) => self.bytes.push(0x85),
+                    (Type::Int | Type::Byte | Type::Char, Type::Float) => self.bytes.push(0x86),
+                    (from, to) if from == to => {}
+                    (Type::Int | Type::Byte | Type::Char, Type::Int | Type::Byte | Type::Char) => {}
+                    _ => return Err(failure("Unsupported primitive conversion")),
+                }
+                match target.base() {
                     Type::Byte => self.bytes.push(0x91),
                     Type::Char => self.bytes.push(0x92),
-                    Type::Int => {}
-                    _ => return Err(failure("Unsupported primitive conversion")),
+                    _ => {}
                 }
             }
             ValueKind::StaticField { owner, name } => {
@@ -1223,26 +1263,100 @@ impl Code<'_> {
                 self.method_reference(0xb8, owner, name, descriptor)?;
                 self.adapt_value(&result, &value.ty)?;
             }
-            ValueKind::Increment { slot, prefix } => {
+            ValueKind::Increment { slot, prefix } | ValueKind::Decrement { slot, prefix } => {
                 let slot = self.local_slot(*slot)?;
+                let amount = if matches!(&value.kind, ValueKind::Decrement { .. }) {
+                    255
+                } else {
+                    1
+                };
                 if *prefix {
-                    self.bytes.extend([0x84, slot, 1]);
+                    self.bytes.extend([0x84, slot, amount]);
                 }
                 self.bytes.extend([0x15, slot]);
                 if !*prefix {
-                    self.bytes.extend([0x84, slot, 1]);
+                    self.bytes.extend([0x84, slot, amount]);
                 }
             }
-            ValueKind::CellIncrement { cell, prefix } => {
+            ValueKind::CellIncrement { cell, prefix }
+            | ValueKind::CellDecrement { cell, prefix } => {
                 self.value(cell)?;
                 self.bytes.push(0x59);
                 self.field_reference(0xb4, "kotlin/jvm/internal/Ref$IntRef", "element", "I")?;
-                if *prefix {
-                    self.bytes.extend([0x04, 0x60, 0x5a]);
+                let operation = if matches!(&value.kind, ValueKind::CellDecrement { .. }) {
+                    0x64
                 } else {
-                    self.bytes.extend([0x5a, 0x04, 0x60]);
+                    0x60
+                };
+                if *prefix {
+                    self.bytes.extend([0x04, operation, 0x5a]);
+                } else {
+                    self.bytes.extend([0x5a, 0x04, operation]);
                 }
                 self.field_reference(0xb5, "kotlin/jvm/internal/Ref$IntRef", "element", "I")?;
+            }
+            ValueKind::TypeTest {
+                value: operand,
+                target,
+                negated,
+            } => {
+                self.boxed_value(operand)?;
+                if target.is_nullable() {
+                    let null = self.label();
+                    let done = self.label();
+                    self.bytes.push(0x59);
+                    self.branch(0xc6, null);
+                    self.class_reference(0xc1, &cast_class(target)?)?;
+                    self.branch(0xa7, done);
+                    self.mark(null);
+                    self.bytes.extend([0x57, 0x04]);
+                    self.mark(done);
+                } else {
+                    self.class_reference(0xc1, &cast_class(target)?)?;
+                }
+                if *negated {
+                    self.bytes.extend([0x04, 0x82]);
+                }
+            }
+            ValueKind::Cast {
+                value: operand,
+                target,
+                safe,
+            } => {
+                self.boxed_value(operand)?;
+                let class = cast_class(target)?;
+                if *safe {
+                    let success = self.label();
+                    let done = self.label();
+                    self.bytes.push(0x59);
+                    self.class_reference(0xc1, &class)?;
+                    self.branch(0x9a, success);
+                    self.bytes.extend([0x57, 0x01]);
+                    self.branch(0xa7, done);
+                    self.mark(success);
+                    self.class_reference(0xc0, &class)?;
+                    self.mark(done);
+                } else {
+                    if !target.is_nullable() {
+                        self.bytes.push(0x59);
+                        let message = self.pool.string(&format!(
+                            "null cannot be cast to non-null type {}",
+                            cast_type_name(target)
+                        ))?;
+                        self.reference(0x13, message);
+                        self.method_reference(
+                            0xb8,
+                            "kotlin/jvm/internal/Intrinsics",
+                            "checkNotNull",
+                            "(Ljava/lang/Object;Ljava/lang/String;)V",
+                        )?;
+                        self.max_stack = self.max_stack.max(operand.stack() + 3);
+                    }
+                    self.class_reference(0xc0, &class)?;
+                    if !target.is_reference() {
+                        self.unbox_value(target)?;
+                    }
+                }
             }
             ValueKind::RequireNotNull(inner) => {
                 self.value(inner)?;
@@ -1407,11 +1521,19 @@ impl Code<'_> {
             }
             ValueKind::Length(inner) => {
                 self.value(inner)?;
-                self.bytes.push(0xbe);
+                if inner.ty.base() == &Type::String {
+                    self.method_reference(0xb6, "java/lang/String", "length", "()I")?;
+                } else {
+                    self.bytes.push(0xbe);
+                }
             }
             ValueKind::Index(array, index) => {
                 self.value(array)?;
                 self.value(index)?;
+                if array.ty.base() == &Type::String {
+                    self.method_reference(0xb6, "java/lang/String", "charAt", "(I)C")?;
+                    return Ok(());
+                }
                 self.bytes.push(match array.ty.base() {
                     Type::IntArray => 0x2e,
                     Type::ByteArray => 0x33,
@@ -1452,6 +1574,12 @@ impl Code<'_> {
                 self.bytes.push(if op == "&&" { 0x03 } else { 0x04 });
                 self.mark(end);
             }
+            ValueKind::Binary(op, a, b) if matches!(op.as_str(), "===" | "!==") => {
+                self.boxed_value(a)?;
+                self.boxed_value(b)?;
+                self.comparison(if op == "===" { 0xa5 } else { 0xa6 });
+                self.max_stack = self.max_stack.max(a.stack().max(2 + b.stack()));
+            }
             ValueKind::Binary(op, a, b) if a.ty.base() == &Type::String => {
                 self.value(a)?;
                 self.value(b)?;
@@ -1470,6 +1598,32 @@ impl Code<'_> {
             ValueKind::Binary(op, a, b) => {
                 self.value(a)?;
                 self.value(b)?;
+                if a.ty == Type::Float {
+                    match op.as_str() {
+                        "+" => self.bytes.push(0x62),
+                        "-" => self.bytes.push(0x66),
+                        "*" => self.bytes.push(0x6a),
+                        "/" => self.bytes.push(0x6e),
+                        "%" => self.bytes.push(0x72),
+                        "==" | "!=" | "<" | ">=" | ">" | "<=" => {
+                            self.bytes.push(if matches!(op.as_str(), "<" | "<=") {
+                                0x96
+                            } else {
+                                0x95
+                            });
+                            self.comparison(match op.as_str() {
+                                "==" => 0x99,
+                                "!=" => 0x9a,
+                                "<" => 0x9b,
+                                ">=" => 0x9c,
+                                ">" => 0x9d,
+                                _ => 0x9e,
+                            });
+                        }
+                        _ => return Err(failure("Unsupported Float operation")),
+                    }
+                    return Ok(());
+                }
                 if a.ty == Type::Long {
                     match op.as_str() {
                         "+" => self.bytes.push(0x61),
@@ -1714,6 +1868,138 @@ impl Code<'_> {
                     self.branch(0xa7, head);
                     self.mark(done);
                 }
+                Statement::ForIterator {
+                    slot,
+                    iterable,
+                    iterator_slot,
+                    element,
+                    body,
+                } => {
+                    let slot = self.local_slot(*slot)?;
+                    let iterator_slot = self.local_slot(*iterator_slot)?;
+                    self.value(iterable)?;
+                    let iterator = self.pool.interface_method(
+                        "java/lang/Iterable",
+                        "iterator",
+                        "()Ljava/util/Iterator;",
+                    )?;
+                    self.reference(0xb9, iterator);
+                    self.bytes.extend([1, 0]);
+                    self.bytes.extend([0x3a, iterator_slot]);
+                    let head = self.label();
+                    let done = self.label();
+                    self.mark(head);
+                    self.bytes.extend([0x19, iterator_slot]);
+                    let has_next =
+                        self.pool
+                            .interface_method("java/util/Iterator", "hasNext", "()Z")?;
+                    self.reference(0xb9, has_next);
+                    self.bytes.extend([1, 0]);
+                    self.branch(0x99, done);
+                    self.bytes.extend([0x19, iterator_slot]);
+                    let next = self.pool.interface_method(
+                        "java/util/Iterator",
+                        "next",
+                        "()Ljava/lang/Object;",
+                    )?;
+                    self.reference(0xb9, next);
+                    self.bytes.extend([1, 0]);
+                    self.generic_result(element)?;
+                    self.bytes.extend([store_opcode(element), slot]);
+                    self.loops.push((head, done));
+                    self.block(body)?;
+                    self.loops.pop();
+                    self.branch(0xa7, head);
+                    self.mark(done);
+                    self.max_stack = self.max_stack.max(element.slots());
+                }
+                Statement::ForEach {
+                    slot,
+                    iterable,
+                    iterable_slot,
+                    index_slot,
+                    body,
+                } => {
+                    let slot = self.local_slot(*slot)?;
+                    let iterable_slot = self.local_slot(*iterable_slot)?;
+                    let index_slot = self.local_slot(*index_slot)?;
+                    let element = match iterable.ty.base() {
+                        Type::IntArray => Type::Int,
+                        Type::ByteArray => Type::Byte,
+                        Type::CharArray | Type::String => Type::Char,
+                        Type::StringArray => Type::String,
+                        Type::List(element) | Type::MutableList(element) => *element.clone(),
+                        _ => return Err(failure("Unsupported for-loop iterable type")),
+                    };
+                    let list = matches!(iterable.ty.base(), Type::List(_) | Type::MutableList(_));
+                    self.value(iterable)?;
+                    if list {
+                        let method = self.pool.interface_method(
+                            "java/util/List",
+                            "iterator",
+                            "()Ljava/util/Iterator;",
+                        )?;
+                        self.reference(0xb9, method);
+                        self.bytes.extend([1, 0]);
+                    }
+                    self.bytes.extend([0x3a, iterable_slot]);
+                    if !list {
+                        self.bytes.extend([0x03, 0x36, index_slot]);
+                    }
+                    let head = self.label();
+                    let step = self.label();
+                    let done = self.label();
+                    self.mark(head);
+                    if list {
+                        self.bytes.extend([0x19, iterable_slot]);
+                        let has_next =
+                            self.pool
+                                .interface_method("java/util/Iterator", "hasNext", "()Z")?;
+                        self.reference(0xb9, has_next);
+                        self.bytes.extend([1, 0]);
+                        self.branch(0x99, done);
+                        self.bytes.extend([0x19, iterable_slot]);
+                        let next = self.pool.interface_method(
+                            "java/util/Iterator",
+                            "next",
+                            "()Ljava/lang/Object;",
+                        )?;
+                        self.reference(0xb9, next);
+                        self.bytes.extend([1, 0]);
+                        self.generic_result(&element)?;
+                    } else {
+                        self.bytes.extend([0x15, index_slot, 0x19, iterable_slot]);
+                        if iterable.ty.base() == &Type::String {
+                            self.method_reference(0xb6, "java/lang/String", "length", "()I")?;
+                        } else {
+                            self.bytes.push(0xbe);
+                        }
+                        self.branch(0xa2, done);
+                        self.bytes.extend([0x19, iterable_slot, 0x15, index_slot]);
+                        if iterable.ty.base() == &Type::String {
+                            self.method_reference(0xb6, "java/lang/String", "charAt", "(I)C")?;
+                        } else {
+                            self.bytes.push(match iterable.ty.base() {
+                                Type::IntArray => 0x2e,
+                                Type::ByteArray => 0x33,
+                                Type::CharArray => 0x34,
+                                Type::StringArray => 0x32,
+                                _ => unreachable!(),
+                            });
+                        }
+                    }
+                    self.bytes.extend([store_opcode(&element), slot]);
+                    self.loops.push((step, done));
+                    self.block(body)?;
+                    self.loops.pop();
+                    self.mark(step);
+                    if !list {
+                        self.bytes.extend([0x84, index_slot, 1]);
+                    }
+                    self.branch(0xa7, head);
+                    self.mark(done);
+                    self.max_stack = self.max_stack.max(3);
+                }
                 Statement::Expression(value) => {
                     self.value(value)?;
                     if value.ty.base() != &Type::Unit && !terminal_value(value) {
@@ -1744,6 +2030,19 @@ impl Code<'_> {
                     self.block(body)?;
                     self.loops.pop();
                     self.branch(0xa7, start);
+                    self.mark(end);
+                }
+                Statement::DoWhile(cond, body) => {
+                    let start = self.label();
+                    let condition = self.label();
+                    let end = self.label();
+                    self.mark(start);
+                    self.loops.push((condition, end));
+                    self.block(body)?;
+                    self.loops.pop();
+                    self.mark(condition);
+                    self.value(cond)?;
+                    self.branch(0x9a, start);
                     self.mark(end);
                 }
             }

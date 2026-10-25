@@ -12,6 +12,8 @@ mod captures;
 mod function_values;
 #[path = "check_library.rs"]
 mod library;
+#[path = "check_operations.rs"]
+mod operations;
 #[path = "check_overloads.rs"]
 mod overloads;
 #[path = "check_references.rs"]
@@ -169,6 +171,21 @@ pub enum Statement {
     NonLocalReturn(Value),
     If(Value, Vec<Statement>, Vec<Statement>),
     While(Value, Vec<Statement>),
+    DoWhile(Value, Vec<Statement>),
+    ForIterator {
+        element: Type,
+        iterable: Value,
+        iterator_slot: u8,
+        slot: u8,
+        body: Vec<Statement>,
+    },
+    ForEach {
+        slot: u8,
+        iterable: Value,
+        iterable_slot: u8,
+        index_slot: u8,
+        body: Vec<Statement>,
+    },
     Throw(Value),
     ThrowException {
         owner: String,
@@ -218,6 +235,24 @@ pub enum ValueKind {
     CellIncrement {
         cell: Box<Value>,
         prefix: bool,
+    },
+    Decrement {
+        slot: u8,
+        prefix: bool,
+    },
+    CellDecrement {
+        cell: Box<Value>,
+        prefix: bool,
+    },
+    TypeTest {
+        value: Box<Value>,
+        target: Type,
+        negated: bool,
+    },
+    Cast {
+        value: Box<Value>,
+        target: Type,
+        safe: bool,
     },
     Float(u32),
     Box(Box<Value>),
@@ -308,7 +343,13 @@ pub enum ValueKind {
 impl Value {
     pub fn stack(&self) -> usize {
         match &self.kind {
-            ValueKind::CellIncrement { cell, .. } => cell.stack().max(5),
+            ValueKind::CellIncrement { cell, .. } | ValueKind::CellDecrement { cell, .. } => {
+                cell.stack().max(5)
+            }
+            ValueKind::Decrement { .. } => 2,
+            ValueKind::TypeTest { value, .. } | ValueKind::Cast { value, .. } => {
+                value.stack().max(4)
+            }
             ValueKind::CompiledInline { args, .. } => {
                 args.iter().map(Value::stack).max().unwrap_or(1).max(256)
             }
@@ -442,6 +483,7 @@ struct Checker<'a> {
     imports: &'a HashMap<String, String>,
     signatures: &'a Vec<(Vec<(String, Type)>, Type)>,
     source_type_params: &'a [Vec<syntax::TypeParameter>],
+    source_infix: &'a HashSet<usize>,
     receiver: Option<Local>,
     fields: &'a HashMap<String, Type>,
     members: &'a HashMap<String, JavaMethod>,
@@ -614,6 +656,19 @@ impl Checker<'_> {
         Ok(values)
     }
     fn refine(&mut self, condition: &Expr, truth: bool) {
+        if let ExprKind::TypeOperation(op, value, target) = &condition.kind {
+            if (op == "is" && truth) || (op == "!is" && !truth) {
+                if let ExprKind::Name(name) = &value.kind {
+                    if let Some(local) = self.local(name) {
+                        if !local.mutable {
+                            if let Ok(target) = self.resolve(target, condition.offset) {
+                                self.refinements.insert(local.slot, target);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if let ExprKind::Unary(op, inner) = &condition.kind {
             if op == "!" {
                 self.refine(inner, !truth);
@@ -635,7 +690,9 @@ impl Checker<'_> {
                 _ => None,
             };
             if let Some(name) = name {
-                if (op == "!=" && truth) || (op == "==" && !truth) {
+                if (matches!(op.as_str(), "!=" | "!==") && truth)
+                    || (matches!(op.as_str(), "==" | "===") && !truth)
+                {
                     if let Some(local) = self.local(name) {
                         if !local.mutable {
                             if let Type::Nullable(inner) = local.ty {
@@ -1701,7 +1758,15 @@ impl Checker<'_> {
             .filter(|m| m.name == name && m.access & 9 == 1)
             .collect::<Vec<_>>();
         if methods.is_empty() {
-            return self.extension_call(receiver, name, args, &[], offset);
+            return self.member_extension_fallback(
+                receiver,
+                name,
+                args,
+                Diagnostic::new(
+                    offset,
+                    format!("Unresolved member or imported extension: {name}"),
+                ),
+            );
         }
         let projected = methods
             .iter()
@@ -1725,7 +1790,8 @@ impl Checker<'_> {
                     "Cannot write through an out or star type projection",
                 ));
             }
-            Err(error) => return Err(error),
+            Err(error) if error.message.contains("Ambiguous") => return Err(error),
+            Err(error) => return self.member_extension_fallback(receiver, name, args, error),
         };
         self.member_call(method, receiver, args, offset)
     }
@@ -1977,6 +2043,15 @@ impl Checker<'_> {
                 ));
             }
             let typed = match &statement.kind {
+                StatementKind::ForEach(name, iterable, source_body) => {
+                    self.check_for_iteration(name, iterable, source_body, offset)?
+                }
+                StatementKind::DoWhile(cond, source_body) => {
+                    self.check_do_while(cond, source_body, offset)?
+                }
+                StatementKind::CompoundAssign(name, op, expr) => {
+                    self.check_compound_assignment(name, op, expr, offset)?
+                }
                 StatementKind::PropertyAssign(receiver, name, expr) => {
                     self.field_assignment(receiver, name, expr, offset)?
                 }
@@ -2229,88 +2304,13 @@ impl Checker<'_> {
                     Statement::Store(local.slot, value)
                 }
                 StatementKind::AddAssign(name, expr) => {
-                    if let Some((cell, ty)) = self.cell_binding(name) {
-                        if !matches!(ty, Type::Int | Type::Long) {
-                            return Err(Diagnostic::new(
-                                offset,
-                                "Captured += requires Int or Long",
-                            ));
-                        }
-                        let left = self.value(&Expr {
-                            offset,
-                            kind: ExprKind::Name(name.clone()),
-                        })?;
-                        let right = self.expected_value(expr, &ty)?;
-                        let value = Value {
-                            ty: ty.clone(),
-                            kind: ValueKind::Binary("+".into(), Box::new(left), Box::new(right)),
-                        };
-                        body.push(self.cell_store(cell, ty, value, offset)?);
-                        continue;
-                    }
-                    let local = self.local(name).ok_or_else(|| {
-                        if self
-                            .members
-                            .values()
-                            .any(|method| method.source_property.as_deref() == Some(name))
-                        {
-                            Diagnostic::new(
-                                offset,
-                                "Property assignments in method bodies are not supported",
-                            )
-                        } else if self.fields.contains_key(name) {
-                            Diagnostic::new(
-                                offset,
-                                format!("Cannot reassign val or parameter: {name}"),
-                            )
-                        } else {
-                            Diagnostic::new(offset, format!("Unresolved local: {name}"))
-                        }
-                    })?;
-                    if !local.mutable {
-                        return Err(Diagnostic::new(
-                            offset,
-                            format!("Cannot reassign val or parameter: {name}"),
-                        ));
-                    }
-                    if !matches!(local.ty, Type::Int | Type::Long) {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "+= supports only mutable Int and Long locals",
-                        ));
-                    }
-                    if !self.initialized.contains(&local.slot) {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Variable must be initialized before use",
-                        ));
-                    }
-                    let right = self.value(expr)?;
-                    self.require(&right, local.ty.clone(), expr.offset)?;
-                    let left = Value {
-                        ty: local.ty.clone(),
-                        kind: ValueKind::Local(local.slot),
-                    };
-                    Statement::Store(
-                        local.slot,
-                        Value {
-                            ty: local.ty.clone(),
-                            kind: ValueKind::Binary("+".into(), Box::new(left), Box::new(right)),
-                        },
-                    )
+                    self.check_compound_assignment(name, "+=", expr, offset)?
                 }
                 StatementKind::When(subject, branches, otherwise) => {
+                    let source_subject = subject;
                     let before_refinements = self.refinements.clone();
                     let subject = self.value(subject)?;
-                    if !matches!(
-                        subject.ty,
-                        Type::Int
-                            | Type::Char
-                            | Type::Byte
-                            | Type::Long
-                            | Type::String
-                            | Type::Boolean
-                    ) {
+                    if subject.ty == Type::Unit {
                         return Err(Diagnostic::new(offset, "Unsupported when subject type"));
                     }
                     let subject_type = subject.ty.clone();
@@ -2329,27 +2329,7 @@ impl Checker<'_> {
                                 ty: subject_type.clone(),
                                 kind: ValueKind::Local(slot),
                             };
-                            let equal = if let ExprKind::Unary(operator, range) = &condition.kind {
-                                if operator != "in" {
-                                    return Err(Diagnostic::new(
-                                        condition.offset,
-                                        "Unsupported when range condition",
-                                    ));
-                                }
-                                self.range_contains(left, range, condition.offset)?
-                            } else {
-                                let right = self.value(condition)?;
-                                let right =
-                                    self.coerce(right, subject_type.clone(), condition.offset)?;
-                                Value {
-                                    ty: Type::Boolean,
-                                    kind: ValueKind::Binary(
-                                        "==".into(),
-                                        Box::new(left),
-                                        Box::new(right),
-                                    ),
-                                }
-                            };
+                            let equal = self.check_when_condition(left, condition)?;
                             combined = Some(match combined {
                                 None => equal,
                                 Some(previous) => Value {
@@ -2362,6 +2342,7 @@ impl Checker<'_> {
                                 },
                             });
                         }
+                        self.refine_when_branch(source_subject, conditions);
                         let (branch, branch_returns) = self.block(branch)?;
                         if !branch_returns {
                             continuing.push(self.initialized.clone());
@@ -2465,10 +2446,12 @@ impl Checker<'_> {
                     Statement::If(cond, yes, no)
                 }
                 StatementKind::While(cond, body) => {
+                    let source_condition = cond;
                     let refinements = self.refinements.clone();
                     let cond = self.value(cond)?;
                     self.require(&cond, Type::Boolean, offset)?;
                     let before = self.initialized.clone();
+                    self.refine(source_condition, true);
                     self.loop_depth += 1;
                     let (body, _) = self.block(body)?;
                     self.loop_depth -= 1;
@@ -2487,6 +2470,12 @@ impl Checker<'_> {
     fn value(&mut self, expr: &Expr) -> Result<Value> {
         let offset = expr.offset;
         let (ty, kind) = match &expr.kind {
+            ExprKind::Decrement { value, prefix } => {
+                return self.check_decrement(value, *prefix, offset);
+            }
+            ExprKind::TypeOperation(op, value, target) => {
+                return self.check_type_operation(op, value, target, offset);
+            }
             ExprKind::Int(value) => {
                 if let Ok(value) = i32::try_from(*value) {
                     (Type::Int, ValueKind::Int(value))
@@ -2623,12 +2612,10 @@ impl Checker<'_> {
                 ));
             }
             ExprKind::When(subject, branches, otherwise) => {
+                let source_subject = subject;
                 let before_refinements = self.refinements.clone();
                 let subject = self.value(subject)?;
-                if !matches!(
-                    subject.ty,
-                    Type::Int | Type::Char | Type::Byte | Type::Long | Type::String | Type::Boolean
-                ) {
+                if subject.ty == Type::Unit {
                     return Err(Diagnostic::new(
                         offset,
                         "Unsupported when expression subject type",
@@ -2644,26 +2631,7 @@ impl Checker<'_> {
                             ty: subject.ty.clone(),
                             kind: ValueKind::Local(slot),
                         };
-                        let condition = if let ExprKind::Unary(operator, range) = &condition.kind {
-                            if operator != "in" {
-                                return Err(Diagnostic::new(
-                                    condition.offset,
-                                    "Unsupported when range condition",
-                                ));
-                            }
-                            self.range_contains(left, range, condition.offset)?
-                        } else {
-                            let right = self.value(condition)?;
-                            let right = self.coerce(right, subject.ty.clone(), condition.offset)?;
-                            Value {
-                                ty: Type::Boolean,
-                                kind: ValueKind::Binary(
-                                    "==".into(),
-                                    Box::new(left),
-                                    Box::new(right),
-                                ),
-                            }
-                        };
+                        let condition = self.check_when_condition(left, condition)?;
                         combined = Some(match combined {
                             None => condition,
                             Some(previous) => Value {
@@ -2676,6 +2644,7 @@ impl Checker<'_> {
                             },
                         });
                     }
+                    self.refine_when_branch(source_subject, conditions);
                     checked.push((
                         combined.ok_or_else(|| Diagnostic::new(offset, "Empty when condition"))?,
                         self.value(branch)?,
@@ -2827,16 +2796,13 @@ impl Checker<'_> {
                                 ty: local.ty.clone(),
                                 kind: ValueKind::Local(local.slot),
                             };
-                            return Ok(if refined.is_reference() {
-                                Value {
-                                    ty: refined.clone(),
-                                    kind: raw.kind,
-                                }
-                            } else {
-                                Value {
-                                    ty: refined.clone(),
-                                    kind: ValueKind::Unbox(Box::new(raw)),
-                                }
+                            return Ok(Value {
+                                ty: refined.clone(),
+                                kind: ValueKind::Cast {
+                                    value: Box::new(raw),
+                                    target: refined.clone(),
+                                    safe: false,
+                                },
                             });
                         }
                     }
@@ -2936,10 +2902,23 @@ impl Checker<'_> {
                     });
                 }
                 if op == ".." {
-                    return Err(Diagnostic::new(
-                        offset,
-                        "Range values are supported only by membership and when conditions",
-                    ));
+                    let start = self.value(a)?;
+                    let end = self.value(b)?;
+                    self.require(&start, Type::Int, offset)?;
+                    self.require(&end, Type::Int, offset)?;
+                    return Ok(Value {
+                        ty: Type::Java("kotlin/ranges/IntRange".into()),
+                        kind: ValueKind::New {
+                            owner: "kotlin/ranges/IntRange".into(),
+                            descriptor: "(II)V".into(),
+                            args: vec![start, end],
+                        },
+                    });
+                }
+                if op.chars().all(|c| c.is_alphanumeric() || c == '_')
+                    && !matches!(op.as_str(), "and" | "or" | "xor" | "shl" | "shr" | "ushr")
+                {
+                    return self.check_infix_call(a, op, b, offset);
                 }
                 let source_left = a;
                 let a = self.value(a)?;
@@ -2951,51 +2930,11 @@ impl Checker<'_> {
                 if op == "&&" || op == "||" {
                     self.refinements = refinements;
                 }
-                if matches!(op.as_str(), "==" | "!=") && (a.ty == Type::Null || b.ty == Type::Null)
-                {
-                    if !a.ty.is_reference() || !b.ty.is_reference() {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Null equality requires reference operands",
-                        ));
-                    }
-                    let a_slot = self.allocate_slot(offset)?;
-                    let b_slot = self.allocate_slot(offset)?;
-                    let (slot, ty) = if b.ty == Type::Null {
-                        (a_slot, a.ty.clone())
-                    } else {
-                        (b_slot, b.ty.clone())
-                    };
-                    let test = Value {
-                        ty: Type::Boolean,
-                        kind: ValueKind::IsNull(Box::new(Value {
-                            ty,
-                            kind: ValueKind::Local(slot),
-                        })),
-                    };
-                    let test = if op == "==" {
-                        test
-                    } else {
-                        Value {
-                            ty: Type::Boolean,
-                            kind: ValueKind::Not(Box::new(test)),
-                        }
-                    };
-                    return Ok(Value {
-                        ty: Type::Boolean,
-                        kind: ValueKind::Let {
-                            slot: a_slot,
-                            value: Box::new(a),
-                            body: Box::new(Value {
-                                ty: Type::Boolean,
-                                kind: ValueKind::Let {
-                                    slot: b_slot,
-                                    value: Box::new(b),
-                                    body: Box::new(test),
-                                },
-                            }),
-                        },
-                    });
+                if matches!(op.as_str(), "==" | "!=" | "===" | "!==") {
+                    return self.check_equality(op, a, b, offset);
+                }
+                if a.ty == Type::Float || b.ty == Type::Float {
+                    return self.check_float_binary(op, a, b, offset);
                 }
                 if op == "+"
                     && a.ty == Type::String
@@ -3043,18 +2982,6 @@ impl Checker<'_> {
                 let ty = if op == "&&" || op == "||" {
                     self.require(&a, Type::Boolean, offset)?;
                     self.require(&b, Type::Boolean, offset)?;
-                    Type::Boolean
-                } else if op == "==" || op == "!=" {
-                    if matches!(
-                        a.ty.base(),
-                        Type::IntArray | Type::ByteArray | Type::CharArray | Type::StringArray
-                    ) || matches!(
-                        b.ty.base(),
-                        Type::IntArray | Type::ByteArray | Type::CharArray | Type::StringArray
-                    ) {
-                        return Err(Diagnostic::new(offset, "Array equality is not supported"));
-                    }
-                    self.require(&b, a.ty.clone(), offset)?;
                     Type::Boolean
                 } else if matches!(op.as_str(), "<" | ">" | "<=" | ">=") {
                     if !matches!(a.ty, Type::Int | Type::Char | Type::Long) {
@@ -3131,16 +3058,12 @@ impl Checker<'_> {
                                 "Cannot infer list element type; empty or null-only factories require an explicit or expected element type",
                             ));
                         }
-                        if name != "size" {
-                            return Err(Diagnostic::new(
-                                offset,
-                                "Lists support only size and indexing",
-                            ));
+                        if name == "size" {
+                            return Ok(Value {
+                                ty: Type::Int,
+                                kind: ValueKind::ListSize(Box::new(receiver)),
+                            });
                         }
-                        return Ok(Value {
-                            ty: Type::Int,
-                            kind: ValueKind::ListSize(Box::new(receiver)),
-                        });
                     }
                     if self
                         .receiver
@@ -3196,25 +3119,43 @@ impl Checker<'_> {
                             kind: ValueKind::Convert(Type::Int, Box::new(receiver)),
                         });
                     }
-                    if receiver.ty == Type::String && name == "length" {
+                    if receiver.ty.base() == &Type::String && name == "length" {
                         return Ok(Value {
                             ty: Type::Int,
                             kind: ValueKind::StringCall(StringMethod::Length, vec![receiver]),
                         });
                     }
-                    if name != "size" {
+                    if name == "size"
+                        && matches!(
+                            receiver.ty.base(),
+                            Type::IntArray | Type::ByteArray | Type::CharArray | Type::StringArray
+                        )
+                    {
+                        return Ok(Value {
+                            ty: Type::Int,
+                            kind: ValueKind::Length(Box::new(receiver)),
+                        });
+                    }
+                    if !self.extension_candidates(name, true)?.is_empty() {
+                        return self.resolved_extension_call(
+                            receiver,
+                            name,
+                            &[],
+                            &[],
+                            operations::ExtensionKind::Property,
+                            offset,
+                        );
+                    }
+                    if self.callable_name_was_renamed(name) {
                         return Err(Diagnostic::new(
                             offset,
-                            format!("Unsupported property: {name}"),
+                            format!("Unresolved property: {name}"),
                         ));
                     }
-                    if !matches!(
-                        receiver.ty.base(),
-                        Type::IntArray | Type::ByteArray | Type::CharArray | Type::StringArray
-                    ) {
-                        return Err(Diagnostic::new(offset, "Expected IntArray or CharArray"));
-                    }
-                    (Type::Int, ValueKind::Length(Box::new(receiver)))
+                    return Err(Diagnostic::new(
+                        offset,
+                        format!("Unsupported property: {name}"),
+                    ));
                 }
             }
             ExprKind::Index(array, index) => {
@@ -3240,9 +3181,14 @@ impl Checker<'_> {
                 let element = match array.ty.base() {
                     Type::IntArray => Type::Int,
                     Type::ByteArray => Type::Byte,
-                    Type::CharArray => Type::Char,
+                    Type::CharArray | Type::String => Type::Char,
                     Type::StringArray => Type::String,
-                    _ => return Err(Diagnostic::new(offset, "Expected IntArray or CharArray")),
+                    _ => {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Expected supported array or String",
+                        ));
+                    }
                 };
                 let index = self.value(index)?;
                 self.require(&index, Type::Int, offset)?;
@@ -3464,16 +3410,6 @@ impl Checker<'_> {
                     return self.source_call(name, args, &[], offset);
                 }
                 ExprKind::Property(receiver, name) => {
-                    if self
-                        .functions
-                        .get(name)
-                        .is_some_and(|id| self.extensions.contains(id))
-                    {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Calling declared Kotlin extensions is not supported",
-                        ));
-                    }
                     if matches!(&receiver.kind, ExprKind::Name(name) if name == "Character")
                         && self.unshadowed("Character")
                     {
@@ -3571,14 +3507,26 @@ impl Checker<'_> {
                             }
                         }
                     }
-                    if matches!(receiver.ty, Type::Int | Type::Byte | Type::Char)
-                        && args.is_empty()
-                        && matches!(name.as_str(), "toInt" | "toByte" | "toChar" | "toLong")
+                    if matches!(
+                        receiver.ty,
+                        Type::Int | Type::Byte | Type::Char | Type::Long | Type::Float
+                    ) && args.is_empty()
+                        && matches!(
+                            name.as_str(),
+                            "toInt" | "toByte" | "toChar" | "toLong" | "toFloat"
+                        )
                     {
+                        if matches!(receiver.ty, Type::Float | Type::Long) && name == "toChar" {
+                            return Err(Diagnostic::new(
+                                offset,
+                                "Direct Long and Float conversions to Char are deprecated; convert to Int first",
+                            ));
+                        }
                         let target = match name.as_str() {
                             "toByte" => Type::Byte,
                             "toChar" => Type::Char,
                             "toLong" => Type::Long,
+                            "toFloat" => Type::Float,
                             _ => Type::Int,
                         };
                         return Ok(Value {
@@ -3612,14 +3560,21 @@ impl Checker<'_> {
                             .filter(|m| m.name == *name)
                             .cloned()
                             .collect::<Vec<_>>();
-                        let method = self.select_method(&candidates, args, offset)?;
-                        if method.source_property.is_some() {
-                            return Err(Diagnostic::new(
-                                offset,
-                                "Kotlin properties cannot be invoked as functions",
-                            ));
+                        let selected = self.select_method(&candidates, args, offset);
+                        if let Err(error) = &selected {
+                            if error.message.contains("Ambiguous") {
+                                return Err(error.clone());
+                            }
                         }
-                        return self.member_call(method, receiver, args, offset);
+                        if let Ok(method) = selected {
+                            if method.source_property.is_some() {
+                                return Err(Diagnostic::new(
+                                    offset,
+                                    "Kotlin properties cannot be invoked as functions",
+                                ));
+                            }
+                            return self.member_call(method, receiver, args, offset);
+                        }
                     }
                     if matches!(receiver.ty, Type::Int | Type::Long)
                         && name == "toString"
@@ -3630,8 +3585,28 @@ impl Checker<'_> {
                             kind: ValueKind::IntToString(Box::new(receiver)),
                         });
                     }
+                    if library::type_owner(&receiver.ty).is_some()
+                        && receiver.ty.base() != &Type::String
+                    {
+                        return self.java_call(receiver, name, args, offset);
+                    }
                     if self
-                        .library_candidates(name)
+                        .function_names
+                        .iter()
+                        .enumerate()
+                        .any(|(id, candidate)| candidate == name && self.extensions.contains(&id))
+                    {
+                        return self.source_extension_call(
+                            receiver,
+                            name,
+                            args,
+                            &[],
+                            false,
+                            offset,
+                        );
+                    }
+                    if self
+                        .extension_candidates(name, false)?
                         .iter()
                         .any(|m| m.library.as_ref().is_some_and(|l| l.receiver.is_some()))
                     {
@@ -3788,6 +3763,9 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
             offset,
             "Explicit ThreadLocal types are not supported; only inferred private array buffers are supported",
         )),
+        Type::Java(name) if name == "CharSequence" => {
+            Ok(Type::Java("java/lang/CharSequence".into()))
+        }
         Type::Java(name)
             if matches!(
                 name.as_str(),
@@ -3895,7 +3873,9 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
         | ExprKind::NonNull(a)
         | ExprKind::Lambda(a)
         | ExprKind::Throw(a)
-        | ExprKind::Increment { value: a, .. } => call_names(a, names),
+        | ExprKind::Increment { value: a, .. }
+        | ExprKind::Decrement { value: a, .. }
+        | ExprKind::TypeOperation(_, a, _) => call_names(a, names),
         ExprKind::LambdaWithParams { body, .. } => body_call_names(body, names),
         ExprKind::CallableReference { receiver, .. } => {
             if let Some(receiver) = receiver {
@@ -3939,6 +3919,7 @@ fn body_call_names(body: &[syntax::Statement], names: &mut HashSet<String>) {
             StatementKind::Let(_, _, _, e)
             | StatementKind::Assign(_, e)
             | StatementKind::AddAssign(_, e)
+            | StatementKind::CompoundAssign(_, _, e)
             | StatementKind::Throw(e)
             | StatementKind::Expression(e) => call_names(e, names),
             StatementKind::Return(e) => {
@@ -3960,7 +3941,9 @@ fn body_call_names(body: &[syntax::Statement], names: &mut HashSet<String>) {
                 body_call_names(a, names);
                 body_call_names(b, names);
             }
-            StatementKind::While(c, b) => {
+            StatementKind::While(c, b)
+            | StatementKind::DoWhile(c, b)
+            | StatementKind::ForEach(_, c, b) => {
                 call_names(c, names);
                 body_call_names(b, names);
             }
@@ -4015,6 +3998,19 @@ pub fn check_with_owner(
     {
         return singletons::check(source, classpath);
     }
+    let renamed_imports = source
+        .imports
+        .iter()
+        .filter_map(|(alias, path, _)| {
+            let original = path.rsplit('/').next()?;
+            (alias != "*"
+                && alias != original
+                && !source.imports.iter().any(|(other_alias, other_path, _)| {
+                    other_path == path && other_alias == original
+                }))
+            .then(|| path.clone())
+        })
+        .collect::<HashSet<_>>();
     let mut imports = HashMap::new();
     let mut classes = HashMap::new();
     for (alias, name, offset) in &source.imports {
@@ -4039,6 +4035,9 @@ pub fn check_with_owner(
                                 .as_deref()
                                 .or_else(|| method.library.as_ref().map(|l| l.source_name.as_str()))
                                 .unwrap_or(&method.name);
+                            if renamed_imports.contains(&format!("{package}/{source_name}")) {
+                                continue;
+                            }
                             imports
                                 .entry(source_name.into())
                                 .or_insert_with(|| format!("{}::{source_name}", class.name));
@@ -4049,6 +4048,10 @@ pub fn check_with_owner(
                         continue;
                     }
                     let simple = class.name.rsplit('/').next().unwrap().to_owned();
+                    if renamed_imports.contains(&class.name) {
+                        classes.insert(class.name.clone(), class);
+                        continue;
+                    }
                     imports.entry(simple).or_insert_with(|| class.name.clone());
                 }
                 classes.insert(class.name.clone(), class);
@@ -4226,6 +4229,12 @@ pub fn check_with_owner(
             } else {
                 format!("{}/{}", source.package.replace('.', "/"), name)
             };
+            if renamed_imports.contains(&owner) {
+                return Err(Diagnostic::new(
+                    0,
+                    format!("Unresolved aliased type: {name}"),
+                ));
+            }
             let class = classpath.load(&owner)?;
             if class.access & 1 == 0 || class.unsupported {
                 return Err(Diagnostic::new(
@@ -4292,6 +4301,9 @@ pub fn check_with_owner(
         } else {
             format!("{}/{}", source.package.replace('.', "/"), alias)
         };
+        if renamed_imports.contains(&owner) {
+            continue;
+        }
         if let Ok(class) = classpath.load(&owner) {
             if class.access & 1 == 0 || class.unsupported {
                 return Err(Diagnostic::new(
@@ -4341,6 +4353,12 @@ pub fn check_with_owner(
             for bound in &parameter.bounds {
                 resolve_type_checked(bound, &imports, function.offset, classpath, &classes)?;
             }
+        }
+        if function.infix && function.receiver.is_none() {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Infix functions require a receiver",
+            ));
         }
         if function.receiver.is_some() && function.defaults.iter().any(Option::is_some) {
             return Err(Diagnostic::new(
@@ -4429,6 +4447,12 @@ pub fn check_with_owner(
         .iter()
         .map(|f| f.name.clone())
         .collect::<Vec<_>>();
+    let source_infix = source
+        .functions
+        .iter()
+        .enumerate()
+        .filter_map(|(id, f)| f.infix.then_some(id))
+        .collect::<HashSet<_>>();
     let source_type_params = source
         .functions
         .iter()
@@ -4465,6 +4489,7 @@ pub fn check_with_owner(
             imports: &imports,
             signatures: &signatures,
             source_type_params: &source_type_params,
+            source_infix: &source_infix,
             receiver: None,
             fields: &fields,
             members: &members,
@@ -4698,6 +4723,7 @@ fn check_class(
     let mut mutable_fields: HashSet<_> = source.mutable_params.iter().cloned().collect();
     let mut initializer_checker = Checker {
         source_type_params: &[],
+        source_infix: &HashSet::new(),
         lambdas: lambdas.clone(),
         captured: HashMap::new(),
         captured_cells: HashMap::new(),
@@ -4781,6 +4807,7 @@ fn check_class(
                 imports,
                 signatures: &signatures,
                 source_type_params: &[],
+                source_infix: &HashSet::new(),
                 receiver: Some(Local {
                     slot: 0,
                     ty: Type::Java(owner.clone()),
@@ -4907,6 +4934,7 @@ fn check_class(
                 imports,
                 signatures: &signatures,
                 source_type_params: &[],
+                source_infix: &HashSet::new(),
                 receiver: None,
                 fields: &HashMap::new(),
                 members: &empty_members,
@@ -5027,7 +5055,19 @@ fn check_class(
         members.insert(
             format!("{name}({params})"),
             JavaMethod {
-                library: None,
+                library: source
+                    .methods
+                    .iter()
+                    .find(|m| m.function.name == *name && m.function.params == *source_params)
+                    .filter(|m| m.function.infix)
+                    .map(|m| crate::classpath::LibraryMethod {
+                        source_name: m.function.name.clone(),
+                        type_parameters: Vec::new(),
+                        receiver: None,
+                        infix: true,
+                        inline: false,
+                        code: None,
+                    }),
                 kotlin_params: Some(
                     source_params
                         .iter()
@@ -5110,6 +5150,7 @@ fn check_class(
             imports,
             signatures: &signatures,
             source_type_params: &[],
+            source_infix: &HashSet::new(),
             receiver: Some(Local {
                 slot: 0,
                 ty: Type::Java(owner.clone()),

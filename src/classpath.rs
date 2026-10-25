@@ -12,6 +12,7 @@ use crate::{Diagnostic, Result, syntax::Type};
 pub(crate) struct Classpath {
     paths: Vec<PathBuf>,
     cache: std::cell::RefCell<std::collections::HashMap<String, JavaClass>>,
+    package_names: std::cell::RefCell<std::collections::HashMap<String, Vec<String>>>,
 }
 
 #[derive(Clone, Debug)]
@@ -73,6 +74,7 @@ pub(crate) struct LibraryMethod {
     pub source_name: String,
     pub type_parameters: Vec<TypeParameter>,
     pub receiver: Option<Type>,
+    pub infix: bool,
     pub inline: bool,
     pub code: Option<JavaCode>,
 }
@@ -112,6 +114,7 @@ impl Classpath {
         Ok(Self {
             paths: paths.to_vec(),
             cache: Default::default(),
+            package_names: Default::default(),
         })
     }
 
@@ -179,6 +182,9 @@ impl Classpath {
         if !package.is_empty() && !valid_name(&package) {
             return Err(invalid());
         }
+        if let Some(names) = self.package_names.borrow().get(&package) {
+            return names.iter().map(|name| self.load(name)).collect();
+        }
         let mut names = std::collections::BTreeSet::new();
         for path in &self.paths {
             for name in archive::names(path, &package)? {
@@ -192,7 +198,13 @@ impl Classpath {
                 }
             }
         }
-        names.into_iter().map(|name| self.load(&name)).collect()
+        let names = names.into_iter().collect::<Vec<_>>();
+        let classes = names
+            .iter()
+            .map(|name| self.load(name))
+            .collect::<Result<_>>()?;
+        self.package_names.borrow_mut().insert(package, names);
+        Ok(classes)
     }
 
     pub fn methods(&self, internal_name: &str) -> Result<Vec<JavaMethod>> {
@@ -1724,6 +1736,29 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn kotlin_collection_markers_preserve_source_supertypes_and_infix_flags() {
+        let standard = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("references/kotlinc/lib/kotlin-stdlib.jar");
+        if !standard.is_file() {
+            return;
+        }
+        let classpath = Classpath::new(&[standard]).unwrap();
+        let progression = classpath.load("kotlin/ranges/IntProgression").unwrap();
+        assert!(!progression.unsupported);
+        assert!(progression.library.unwrap().supertypes.iter().any(|ty| {
+            matches!(ty, Type::Parameterized { name, arguments } if name == "java/lang/Iterable" && arguments.len() == 1 && arguments[0].ty == Some(Type::Int))
+        }));
+        let extensions = classpath.load("kotlin/ranges/RangesKt___RangesKt").unwrap();
+        assert!(extensions.methods.iter().any(|method| {
+            method
+                .library
+                .as_ref()
+                .is_some_and(|library| library.source_name == "downTo" && library.infix)
+                && method.descriptor == "(II)Lkotlin/ranges/IntProgression;"
+        }));
+    }
+
     fn minimal() -> Vec<u8> {
         let mut bytes = vec![
             0xca, 0xfe, 0xba, 0xbe, 0, 0, 0, 52, 0, 3, 1, 0, 1, b'A', 7, 0, 1,

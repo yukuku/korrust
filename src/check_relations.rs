@@ -202,7 +202,7 @@ fn direct_supertypes(cp: &Classpath, ty: &Type) -> Vec<Type> {
     }
 }
 
-fn as_supertype(cp: &Classpath, ty: &Type, target: &str) -> Option<Type> {
+pub(super) fn as_supertype(cp: &Classpath, ty: &Type, target: &str) -> Option<Type> {
     let mut pending = vec![(ty.clone(), 0)];
     let mut seen = Vec::new();
     while let Some((ty, depth)) = pending.pop() {
@@ -962,6 +962,7 @@ impl Checker<'_> {
                 type_parameters,
                 receiver: None,
                 inline: false,
+                infix: false,
                 code: None,
             }),
         };
@@ -1110,6 +1111,7 @@ mod tests {
             inline_result: None,
             nonlocal_result: None,
             source_type_params: &[],
+            source_infix: &HashSet::new(),
             classpath: cp,
             constants: &HashMap::new(),
             constructor: None,
