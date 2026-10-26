@@ -24,7 +24,9 @@ cargo run --release --locked --offline -- benchmarks/sources/androidbible/Alkita
 
 Open the [HTML reports](target/reports-html/index.html); see [report generation and automatic watching](reports/README.md#html-viewer).
 
-Use [feature reports](reports/features/) to assess the tested subset and limitations. Run `python3 tools/check_declarations_twenty.py` after a release build for the declaration, control-flow, and operator milestone checks. The command accepts one source file and an output directory. Pass dependency directories or JAR files with `-cp <classpath>`; separate entries with the platform path separator (`:` on macOS/Linux). JDK classes are read from `JAVA_HOME/jmods/java.base.jmod` after explicit dependencies. The differential harness prepares its dependencies automatically.
+Use [feature reports](reports/features/) to assess the tested subset and limitations. Run `python3 tools/check_declarations_twenty.py` after a release build for the declaration, control-flow, and operator milestone checks.
+
+The Korrust CLI accepts one source file and an output directory. Pass dependency directories or JAR files with `-cp <classpath>`; separate entries with the platform path separator (`:` on macOS/Linux). JDK classes are read from `JAVA_HOME/jmods/java.base.jmod` after explicit dependencies. The differential harness prepares its dependencies automatically.
 
 Use a dedicated output directory. Korrust records ownership of emitted classes and Kotlin package metadata there and refuses to overwrite unowned or externally modified outputs. Recompiling a source removes obsolete outputs previously emitted by that source.
 
