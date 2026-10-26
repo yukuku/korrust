@@ -1,0 +1,543 @@
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:3:12: error: unresolved reference 'junit'.
+import org.junit.Assert.assertEquals
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:4:12: error: unresolved reference 'junit'.
+import org.junit.Assert.assertNull
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:5:12: error: unresolved reference 'junit'.
+import org.junit.Test
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:6:32: error: unresolved reference 'model'.
+import yuku.alkitab.base.audio.model.AudioSet
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:7:27: error: unresolved reference 'Book'.
+import yuku.alkitab.model.Book
+                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:8:27: error: unresolved reference 'Version'.
+import yuku.alkitab.model.Version
+                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:18:75: error: unresolved reference 'Book'.
+    private fun book(bookId: Int, shortName: String, chapter_count: Int): Book {
+                                                                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:19:17: error: unresolved reference 'Book'.
+        val b = Book()
+                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:28:56: error: unresolved reference 'Book'.
+    private class FakeVersion(private val books: Array<Book>) : Version() {
+                                                       ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:28:65: error: unresolved reference 'Version'.
+    private class FakeVersion(private val books: Array<Book>) : Version() {
+                                                                ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:32:65: error: unresolved reference 'it'.
+        override fun getMaxBookIdPlusOne(): Int = books.maxOf { it.bookId } + 1
+                                                                ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:33:51: error: unresolved reference 'Book'.
+        override fun getConsecutiveBooks(): Array<Book> = books
+                                                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:34:44: error: unresolved reference 'Book'.
+        override fun getBook(bookId: Int): Book? = books.firstOrNull { it.bookId == bookId }
+                                           ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:34:72: error: unresolved reference 'it'.
+        override fun getBook(bookId: Int): Book? = books.firstOrNull { it.bookId == bookId }
+                                                                       ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:35:38: error: unresolved reference 'Book'.
+        override fun getFirstBook(): Book = books.first()
+                                     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:37:42: error: unresolved reference 'Book'.
+        override fun loadVerseText(book: Book?, chapter_1: Int, verse_1: Int): String? = null
+                                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:47:60: error: unresolved reference 'PericopeBlock'.
+            pericopeBlocks: MutableList<yuku.alkitab.model.PericopeBlock>?,
+                                                           ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:50:19: error: unresolved reference 'Book'.
+            book: Book?,
+                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:53:66: error: unresolved reference 'Book'.
+        override fun loadChapterTextLowercasedWithoutSplit(book: Book?, chapter_1: Int): String? = null
+                                                                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:54:66: error: unresolved reference 'XrefEntry'.
+        override fun getXrefEntry(arif: Int): yuku.alkitab.model.XrefEntry? = null
+                                                                 ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:55:70: error: unresolved reference 'FootnoteEntry'.
+        override fun getFootnoteEntry(arif: Int): yuku.alkitab.model.FootnoteEntry? = null
+                                                                     ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:61:39: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+    private val version = FakeVersion(arrayOf(genesis, obadiah, matthew))
+                                      ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:61:39: error: argument type mismatch: actual type is 'Array<uninferred T (of fun <T> arrayOf)>', but 'Array<??? (Unresolved qualified name: Book)>' was expected.
+    private val version = FakeVersion(arrayOf(genesis, obadiah, matthew))
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:63:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:65:31: error: unresolved reference 'BibleNeighborResolver'.
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = 1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:65:31: error: operator call 'component1()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = 1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:65:31: error: operator call 'component2()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = 1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:66:9: error: unresolved reference 'assertEquals'.
+        assertEquals(0, book.bookId)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:66:30: error: unresolved reference 'bookId'.
+        assertEquals(0, book.bookId)
+                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:67:9: error: unresolved reference 'assertEquals'.
+        assertEquals(4, chapter)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:70:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:72:31: error: unresolved reference 'BibleNeighborResolver'.
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = -1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:72:31: error: operator call 'component1()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = -1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:72:31: error: operator call 'component2()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = -1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:73:9: error: unresolved reference 'assertEquals'.
+        assertEquals(0, book.bookId)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:73:30: error: unresolved reference 'bookId'.
+        assertEquals(0, book.bookId)
+                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:74:9: error: unresolved reference 'assertEquals'.
+        assertEquals(2, chapter)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:77:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:79:31: error: unresolved reference 'BibleNeighborResolver'.
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 10, direction = 1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:79:31: error: operator call 'component1()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 10, direction = 1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:79:31: error: operator call 'component2()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 10, direction = 1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:80:9: error: unresolved reference 'assertEquals'.
+        assertEquals(30, book.bookId)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:80:31: error: unresolved reference 'bookId'.
+        assertEquals(30, book.bookId)
+                              ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:81:9: error: unresolved reference 'assertEquals'.
+        assertEquals(1, chapter)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:84:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:86:31: error: unresolved reference 'BibleNeighborResolver'.
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 30, chapter_1 = 1, direction = -1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:86:31: error: operator call 'component1()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 30, chapter_1 = 1, direction = -1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:86:31: error: operator call 'component2()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+        val (book, chapter) = BibleNeighborResolver.neighbor(version, bookId = 30, chapter_1 = 1, direction = -1)!!
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:87:9: error: unresolved reference 'assertEquals'.
+        assertEquals(0, book.bookId)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:87:30: error: unresolved reference 'bookId'.
+        assertEquals(0, book.bookId)
+                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:88:9: error: unresolved reference 'assertEquals'.
+        assertEquals(10, chapter)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:91:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:93:22: error: unresolved reference 'BibleNeighborResolver'.
+        val result = BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 1, direction = -1)
+                     ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:94:9: error: unresolved reference 'assertNull'.
+        assertNull(result)
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:97:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:99:22: error: unresolved reference 'BibleNeighborResolver'.
+        val result = BibleNeighborResolver.neighbor(version, bookId = 39, chapter_1 = 5, direction = 1)
+                     ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:100:9: error: unresolved reference 'assertNull'.
+        assertNull(result)
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:103:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:105:9: error: unresolved reference 'assertNull'.
+        assertNull(BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = 0))
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:105:20: error: unresolved reference 'BibleNeighborResolver'.
+        assertNull(BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = 0))
+                   ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:106:9: error: unresolved reference 'assertNull'.
+        assertNull(BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = 2))
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:106:20: error: unresolved reference 'BibleNeighborResolver'.
+        assertNull(BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = 2))
+                   ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:107:9: error: unresolved reference 'assertNull'.
+        assertNull(BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = -2))
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:107:20: error: unresolved reference 'BibleNeighborResolver'.
+        assertNull(BibleNeighborResolver.neighbor(version, bookId = 0, chapter_1 = 3, direction = -2))
+                   ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:110:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:112:9: error: unresolved reference 'assertNull'.
+        assertNull(BibleNeighborResolver.neighbor(version, bookId = 99, chapter_1 = 1, direction = 1))
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:112:20: error: unresolved reference 'BibleNeighborResolver'.
+        assertNull(BibleNeighborResolver.neighbor(version, bookId = 99, chapter_1 = 1, direction = 1))
+                   ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:115:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:117:23: error: unresolved reference 'BibleNeighborResolver'.
+        val nextOut = BibleNeighborResolver.neighbor(version, bookId = 30, chapter_1 = 1, direction = 1)!!
+                      ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:118:9: error: unresolved reference 'assertEquals'.
+        assertEquals(39, nextOut.first.bookId)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:118:34: error: function invocation 'first()' expected.
+        assertEquals(39, nextOut.first.bookId)
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:118:40: error: unresolved reference 'bookId'.
+        assertEquals(39, nextOut.first.bookId)
+                                       ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:119:9: error: unresolved reference 'assertEquals'.
+        assertEquals(1, nextOut.second)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:119:33: error: unresolved reference 'second'.
+        assertEquals(1, nextOut.second)
+                                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:121:23: error: unresolved reference 'BibleNeighborResolver'.
+        val prevOut = BibleNeighborResolver.neighbor(version, bookId = 30, chapter_1 = 1, direction = -1)!!
+                      ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:122:9: error: unresolved reference 'assertEquals'.
+        assertEquals(0, prevOut.first.bookId)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:122:33: error: function invocation 'first()' expected.
+        assertEquals(0, prevOut.first.bookId)
+                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:122:39: error: unresolved reference 'bookId'.
+        assertEquals(0, prevOut.first.bookId)
+                                      ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:123:9: error: unresolved reference 'assertEquals'.
+        assertEquals(10, prevOut.second)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:123:34: error: unresolved reference 'second'.
+        assertEquals(10, prevOut.second)
+                                 ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:128:51: error: unresolved reference 'AudioSet'.
+    private fun setCovering(vararg bookIds: Int): AudioSet = AudioSet(
+                                                  ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:128:62: error: unresolved reference 'AudioSet'.
+    private fun setCovering(vararg bookIds: Int): AudioSet = AudioSet(
+                                                             ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:137:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:141:9: error: unresolved reference 'assertNull'.
+        assertNull(
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:143:13: error: unresolved reference 'BibleNeighborResolver'.
+            BibleNeighborResolver.coverageAwareNeighbor(version, bookId = 0, chapter_1 = 10, direction = 1, set = genesisOnly),
+            ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:145:9: error: unresolved reference 'assertNull'.
+        assertNull(
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:146:13: error: unresolved reference 'BibleNeighborResolver'.
+            BibleNeighborResolver.coverageAwareNeighbor(version, bookId = 30, chapter_1 = 1, direction = -1, set = setCovering(30, 39)),
+            ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:150:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:152:31: error: unresolved reference 'BibleNeighborResolver'.
+        val (book, chapter) = BibleNeighborResolver.coverageAwareNeighbor(
+                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:152:31: error: operator call 'component1()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+        val (book, chapter) = BibleNeighborResolver.coverageAwareNeighbor(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:152:31: error: operator call 'component2()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+        val (book, chapter) = BibleNeighborResolver.coverageAwareNeighbor(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:155:9: error: unresolved reference 'assertEquals'.
+        assertEquals(30, book.bookId)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:155:31: error: unresolved reference 'bookId'.
+        assertEquals(30, book.bookId)
+                              ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:156:9: error: unresolved reference 'assertEquals'.
+        assertEquals(1, chapter)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:159:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:163:31: error: unresolved reference 'BibleNeighborResolver'.
+        val (book, chapter) = BibleNeighborResolver.coverageAwareNeighbor(
+                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:163:31: error: operator call 'component1()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+        val (book, chapter) = BibleNeighborResolver.coverageAwareNeighbor(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:163:31: error: operator call 'component2()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+        val (book, chapter) = BibleNeighborResolver.coverageAwareNeighbor(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:166:9: error: unresolved reference 'assertEquals'.
+        assertEquals(0, book.bookId)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:166:30: error: unresolved reference 'bookId'.
+        assertEquals(0, book.bookId)
+                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:167:9: error: unresolved reference 'assertEquals'.
+        assertEquals(4, chapter)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:170:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:172:31: error: unresolved reference 'BibleNeighborResolver'.
+        val (book, chapter) = BibleNeighborResolver.coverageAwareNeighbor(
+                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:172:31: error: operator call 'component1()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+        val (book, chapter) = BibleNeighborResolver.coverageAwareNeighbor(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:172:31: error: operator call 'component2()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+        val (book, chapter) = BibleNeighborResolver.coverageAwareNeighbor(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:175:9: error: unresolved reference 'assertEquals'.
+        assertEquals(30, book.bookId)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:175:31: error: unresolved reference 'bookId'.
+        assertEquals(30, book.bookId)
+                              ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:176:9: error: unresolved reference 'assertEquals'.
+        assertEquals(1, chapter)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:179:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:181:9: error: unresolved reference 'assertNull'.
+        assertNull(
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleNeighborResolverTest.kt:182:13: error: unresolved reference 'BibleNeighborResolver'.
+            BibleNeighborResolver.coverageAwareNeighbor(version, bookId = 39, chapter_1 = 5, direction = 1, set = setCovering(0, 30, 39)),
+            ^^^^^^^^^^^^^^^^^^^^^

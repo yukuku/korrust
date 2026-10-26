@@ -1,0 +1,88 @@
+Compiled from "ArrayFactoryOrder.kt"
+public final class declarations.boundary.ArrayFactoryOrderKt {
+  public static final kotlin.jvm.functions.Function1<java.lang.Integer, java.lang.String> initializer();
+    Code:
+       0: bipush        9
+       2: invokestatic  #14                 // Method declarations/support/Trace.mark:(I)I
+       5: pop
+       6: invokedynamic #33,  0             // InvokeDynamic #0:invoke:()Lkotlin/jvm/functions/Function1;
+      11: areturn
+
+  public static final int negativeArray();
+    Code:
+       0: nop
+       1: iconst_0
+       2: istore_0
+       3: iconst_m1
+       4: anewarray     #39                 // class java/lang/String
+       7: astore_1
+       8: invokestatic  #41                 // Method initializer:()Lkotlin/jvm/functions/Function1;
+      11: astore_2
+      12: iload_0
+      13: iconst_m1
+      14: if_icmpge     38
+      17: iload_0
+      18: istore_3
+      19: aload_1
+      20: iload_3
+      21: aload_2
+      22: iload_3
+      23: invokestatic  #47                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      26: invokeinterface #51,  2           // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+      31: aastore
+      32: iinc          0, 1
+      35: goto          12
+      38: iconst_0
+      39: istore_0
+      40: goto          46
+      43: astore_1
+      44: iconst_1
+      45: istore_0
+      46: iload_0
+      47: ireturn
+    Exception table:
+       from    to  target type
+           0    40    43   Class java/lang/NegativeArraySizeException
+
+  public static final int zeroArray();
+    Code:
+       0: iconst_0
+       1: istore_0
+       2: iconst_0
+       3: anewarray     #39                 // class java/lang/String
+       6: astore_1
+       7: invokestatic  #41                 // Method initializer:()Lkotlin/jvm/functions/Function1;
+      10: astore_2
+      11: iload_0
+      12: ifge          36
+      15: iload_0
+      16: istore_3
+      17: aload_1
+      18: iload_3
+      19: aload_2
+      20: iload_3
+      21: invokestatic  #47                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      24: invokeinterface #51,  2           // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+      29: aastore
+      30: iinc          0, 1
+      33: goto          11
+      36: iconst_2
+      37: ireturn
+
+  private static final java.lang.String initializer$lambda$0(int);
+    Code:
+       0: iload_0
+       1: iconst_1
+       2: iadd
+       3: invokestatic  #14                 // Method declarations/support/Trace.mark:(I)I
+       6: pop
+       7: new           #58                 // class java/lang/StringBuilder
+      10: dup
+      11: invokespecial #62                 // Method java/lang/StringBuilder."<init>":()V
+      14: bipush        118
+      16: invokevirtual #66                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      19: iload_0
+      20: invokevirtual #69                 // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      23: invokevirtual #73                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      26: areturn
+}

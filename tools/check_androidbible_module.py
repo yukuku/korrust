@@ -37,6 +37,38 @@ def classpath(*paths):
     return os.pathsep.join(str(path) for path in paths)
 
 
+def trace_source_records(trace):
+    if trace.get("schema_version", 1) >= 2:
+        return [{"source": item["path"], "source_sha256": item["sha256"]} for item in trace["sources"]]
+    return trace["invocations"]
+
+
+def checked_compile_invocations(trace, request, compiler, expected_sources, work):
+    records = trace_source_records(trace)
+    paths = [item["source"] for item in records]
+    if sorted(paths) != sorted(request["sources"]) or len(paths) != len(set(paths)):
+        raise AssertionError("Candidate trace/request source inventory mismatch")
+    for item in records:
+        name = str(Path(item["source"]).relative_to(work))
+        if item["source_sha256"] != expected_sources[name]:
+            raise AssertionError("Candidate source hash differs from preserved input")
+    invocations = trace["invocations"]
+    if trace.get("schema_version", 1) >= 2:
+        command = [compiler, *sorted(paths), "-d", request["stage"], "--module-name", request["module_name"]]
+        if request["classpath"]:
+            command += ["-cp", os.pathsep.join(request["classpath"])]
+        if len(invocations) != 1 or invocations[0]["command"] != command or invocations[0]["sources"] != request["sources"]:
+            raise AssertionError("Candidate compilation must use one complete module batch")
+    else:
+        for invocation in invocations:
+            command = invocation["command"]
+            if command[0] != compiler or command[1] != invocation["source"] or command[command.index("-d") + 1] != request["stage"]:
+                raise AssertionError("Candidate per-source command differs from provenance")
+    if any(item["returncode"] != 0 for item in invocations):
+        raise AssertionError("Candidate compile invocation failed")
+    return invocations
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--official-json", type=Path, default=ROOT / "target/androidbible-module-artifacts/official/build.json")
@@ -189,19 +221,15 @@ def main():
             request = json.loads((trace_root / (task + "-request.json")).read_text())
             if trace["fallback"] or trace["compiler_sha256"] != candidate["compiler_sha256"] or trace["task"] != ":AlkitabYes2:" + task:
                 raise AssertionError("Candidate compile trace compiler/task/fallback mismatch")
-            invocations = trace["invocations"]
-            invoked_sources = [str(Path(item["source"]).relative_to(candidate["work_dir"])) for item in invocations]
-            if sorted(invoked_sources) != kotlin_sources or len(invocations) != 2:
+            invocations = checked_compile_invocations(trace, request, candidate["compiler"], source_hashes, candidate["work_dir"])
+            invoked_sources = [str(Path(item["source"]).relative_to(candidate["work_dir"])) for item in trace_source_records(trace)]
+            if sorted(invoked_sources) != kotlin_sources:
                 raise AssertionError("Candidate compile trace does not cover exactly both original Kotlin sources")
             stage = trace_root / "module-build/tmp/korrust" / task
             recorded_stage = Path(request["stage"])
             emitted = set()
             with zipfile.ZipFile(jars["candidate"]) as archive:
                 for invocation in invocations:
-                    source_name = str(Path(invocation["source"]).relative_to(candidate["work_dir"]))
-                    command = invocation["command"]
-                    if invocation["returncode"] != 0 or invocation["source_sha256"] != source_hashes[source_name] or command[0] != candidate["compiler"] or command[1] != invocation["source"] or Path(command[command.index("-d") + 1]) != recorded_stage:
-                        raise AssertionError("Candidate per-source invocation differs from compiler/source provenance")
                     class_outputs = [Path(line.strip()).relative_to(recorded_stage) for line in invocation["stdout"].splitlines() if line.strip().endswith(".class")]
                     if not class_outputs:
                         raise AssertionError("Candidate invocation records no emitted class")

@@ -1,0 +1,53 @@
+{
+  "status": "completed",
+  "scope": "Target-name lexical audit plus manual review of structural bodyless builtin declaration selection and shared vararg lowering; this lexical check alone does not prove all semantics.",
+  "target_name_occurrences": [
+    {
+      "path": "src/syntax.rs",
+      "line": 5957,
+      "match": "androidbible",
+      "scope": "cfg(test)"
+    },
+    {
+      "path": "src/syntax.rs",
+      "line": 5957,
+      "match": "Alkitab",
+      "scope": "cfg(test)"
+    },
+    {
+      "path": "src/syntax.rs",
+      "line": 5957,
+      "match": "alkitab",
+      "scope": "cfg(test)"
+    },
+    {
+      "path": "src/syntax.rs",
+      "line": 5999,
+      "match": "androidbible",
+      "scope": "cfg(test)"
+    },
+    {
+      "path": "src/syntax.rs",
+      "line": 5999,
+      "match": "Alkitab",
+      "scope": "cfg(test)"
+    },
+    {
+      "path": "src/syntax.rs",
+      "line": 5999,
+      "match": "alkitab",
+      "scope": "cfg(test)"
+    }
+  ],
+  "production_target_name_occurrences": 0,
+  "reviewed_sources": {
+    "src/classpath.rs": "37e570cfe9f857c0c4be0249a361d76b54472f6959536130de7865a4fe9509a2",
+    "src/classpath/metadata.rs": "6edb3a37fa571562a69f6382027642d06a365dd94bf5742d90372ce452e8b48e",
+    "src/check_library.rs": "4a9ec5872ba4ecc6952526542eaf4fc5fea417bb059482b1e6e4e0b7540d4e3a"
+  },
+  "array_factory_review": "Pinned builtins package metadata supplies names. Candidate declaration selection checks vararg element/array/result types, flags, receiver absence and supported array representations; lowering returns the shared constructed vararg array. Renamed declaration fixture tests prevent name-based dispatch. Existing list/conversion fallback paths are retained and disclosed.",
+  "upstream_reference_verification": "target/final-preparation/reference-verification-final.log",
+  "limitations": [
+    "Lexical absence of target names is evidence against application-specific branching, not a proof of all reusable semantic behavior. Runtime/ABI/Kotlin-consumer/module suites supply behavior evidence."
+  ]
+}

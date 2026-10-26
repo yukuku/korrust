@@ -1,0 +1,1 @@
+fun bad(value: Float): Boolean = value == 1.0

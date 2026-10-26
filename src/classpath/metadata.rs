@@ -85,6 +85,7 @@ fn decode(values: &[String]) -> Result<Vec<u8>> {
 #[derive(Clone)]
 struct Context<'a> {
     strings: &'a [String],
+    qualified_names: Option<&'a [String]>,
     table: Vec<&'a [u8]>,
     first_nullable: Option<usize>,
     parameters: BTreeMap<u64, Type>,
@@ -93,6 +94,7 @@ impl<'a> Context<'a> {
     fn new(strings: &'a [String], proto: &Proto<'a>) -> Result<Self> {
         let mut result = Self {
             strings,
+            qualified_names: None,
             table: Vec::new(),
             first_nullable: None,
             parameters: BTreeMap::new(),
@@ -150,7 +152,7 @@ impl<'a> Context<'a> {
                 .cloned()
                 .ok_or_else(invalid)?
         } else {
-            let name = metadata_name(self.strings, p.integer(6)?)?;
+            let name = metadata_name(self.qualified_names.unwrap_or(self.strings), p.integer(6)?)?;
             let mut arguments = Vec::new();
             for bytes in p.messages(2)? {
                 let a = Proto::parse(bytes)?;
@@ -183,6 +185,7 @@ impl<'a> Context<'a> {
                         | "kotlin/Char"
                         | "kotlin/Boolean"
                         | "kotlin/Float"
+                        | "kotlin/Double"
                         | "kotlin/String"
                         | "kotlin/Unit"
                         | "kotlin/IntArray"
@@ -199,6 +202,7 @@ impl<'a> Context<'a> {
                 "kotlin/Char" => Type::Char,
                 "kotlin/Boolean" => Type::Boolean,
                 "kotlin/Float" => Type::Float,
+                "kotlin/Double" => Type::Double,
                 "kotlin/String" => Type::String,
                 "kotlin/Unit" => Type::Unit,
                 "kotlin/IntArray" => Type::IntArray,
@@ -307,6 +311,14 @@ impl<'a> Context<'a> {
         Ok(ty)
     }
     fn type_parameters(&mut self, proto: &Proto<'a>, field: u32) -> Result<Vec<TypeParameter>> {
+        self.type_parameters_with_reified(proto, field, false)
+    }
+    fn type_parameters_with_reified(
+        &mut self,
+        proto: &Proto<'a>,
+        field: u32,
+        allow_reified: bool,
+    ) -> Result<Vec<TypeParameter>> {
         let values = proto.messages(field)?;
         let mut result = Vec::new();
         for bytes in &values {
@@ -323,7 +335,8 @@ impl<'a> Context<'a> {
         for bytes in values {
             let p = Proto::parse(bytes)?;
             p.allowed(&[1, 2, 3, 4, 5, 6])?;
-            if p.integer(3)?.unwrap_or(0) != 0 {
+            let reified = p.integer(3)?.unwrap_or(0);
+            if reified > 1 || (reified != 0 && !allow_reified) {
                 return Err(invalid());
             }
             let name = metadata_name(self.strings, p.integer(2)?)?.to_owned();
@@ -363,7 +376,7 @@ impl<'a> Context<'a> {
     }
     fn parameter(&self, bytes: &'a [u8]) -> Result<(String, Type, bool)> {
         let p = Proto::parse(bytes)?;
-        p.allowed(&[1, 2, 3, 5])?;
+        p.allowed(&[1, 2, 3, 4, 5, 6])?;
         let flags = p.integer(1)?.unwrap_or(0);
         if flags & !3 != 0 {
             return Err(invalid());
@@ -393,6 +406,170 @@ pub(super) fn numbers(proto: &Proto<'_>, field: u32) -> Result<Vec<u64>> {
         }
     }
     Ok(values)
+}
+
+fn builtin_qualified_names(strings: &[String], bytes: &[u8]) -> Result<Vec<String>> {
+    let table = Proto::parse(bytes)?;
+    table.allowed(&[1])?;
+    let entries = table.messages(1)?;
+    fn resolve(
+        index: usize,
+        entries: &[&[u8]],
+        strings: &[String],
+        depth: usize,
+    ) -> Result<(String, u64)> {
+        if depth > 64 {
+            return Err(invalid());
+        }
+        let entry = Proto::parse(entries.get(index).ok_or_else(invalid)?)?;
+        entry.allowed(&[1, 2, 3])?;
+        let short = metadata_name(strings, entry.integer(2)?)?;
+        if short.is_empty() || short.contains(['/', '.', '\0']) {
+            return Err(invalid());
+        }
+        let kind = entry.integer(3)?.unwrap_or(1);
+        if kind > 1 {
+            return Err(invalid());
+        }
+        let name = match entry.integer(1)? {
+            None | Some(u64::MAX) | Some(0xffff_ffff) => short.into(),
+            Some(parent) => {
+                let parent = usize::try_from(parent).map_err(|_| invalid())?;
+                let (parent, parent_kind) = resolve(parent, entries, strings, depth + 1)?;
+                if kind == 1 && parent_kind == 0 {
+                    return Err(invalid());
+                }
+                format!(
+                    "{parent}{}{short}",
+                    if parent_kind == 0 { "." } else { "/" }
+                )
+            }
+        };
+        Ok((name, kind))
+    }
+    (0..entries.len())
+        .map(|index| resolve(index, &entries, strings, 0).map(|(name, _)| name))
+        .collect()
+}
+
+pub(super) fn builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
+    parse_builtin_array_factories(bytes).map_err(|error| {
+        if error.message.contains("Kotlin builtins") {
+            error
+        } else {
+            Diagnostic::new(
+                error.offset,
+                "Malformed or unsupported Kotlin builtins metadata resource",
+            )
+        }
+    })
+}
+
+fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
+    let mut reader = Reader { bytes, offset: 0 };
+    let count = reader.u4()?;
+    if count != 3 {
+        return Err(Diagnostic::new(
+            0,
+            "Malformed or unsupported Kotlin builtins version header",
+        ));
+    }
+    let version = [reader.u4()?, reader.u4()?, reader.u4()?];
+    if version != [1, 0, 7] {
+        return Err(Diagnostic::new(
+            0,
+            "Unsupported Kotlin builtins metadata version",
+        ));
+    }
+    let fragment = Proto::parse(reader.take(bytes.len() - reader.offset)?)?;
+    fragment.allowed(&[1, 2, 3, 4])?;
+    let string_table = Proto::parse(fragment.bytes(1)?.ok_or_else(invalid)?)?;
+    string_table.allowed(&[1])?;
+    let strings = string_table
+        .messages(1)?
+        .into_iter()
+        .map(|bytes| {
+            std::str::from_utf8(bytes)
+                .map(str::to_owned)
+                .map_err(|_| invalid())
+        })
+        .collect::<Result<Vec<_>>>()?;
+    let qualified_names =
+        builtin_qualified_names(&strings, fragment.bytes(2)?.ok_or_else(invalid)?)?;
+    let package = Proto::parse(fragment.bytes(3)?.ok_or_else(invalid)?)?;
+    let mut context = Context::new(&strings, &package)?;
+    context.qualified_names = Some(&qualified_names);
+    let mut result = Vec::new();
+    for bytes in package.messages(3)? {
+        let function = Proto::parse(bytes)?;
+        if function.bytes(5)?.is_some()
+            || function.integer(8)?.is_some()
+            || !function.messages(10)?.is_empty()
+            || !numbers(&function, 11)?.is_empty()
+            || !function.messages(13)?.is_empty()
+        {
+            continue;
+        }
+        let parameters = function.messages(6)?;
+        let [parameter] = parameters.as_slice() else {
+            continue;
+        };
+        let parameter = Proto::parse(parameter)?;
+        if parameter.bytes(4)?.is_none() && parameter.integer(6)?.is_none() {
+            continue;
+        }
+        let flags = function.integer(9)?.unwrap_or(6);
+        if flags & 14 != 6
+            || flags & !(65536 | 1024 | 6) != 0
+            || parameter.integer(1)?.unwrap_or(0) != 0
+        {
+            continue;
+        }
+        let mut context = context.clone();
+        context.set_table(&function)?;
+        let type_parameters = context.type_parameters_with_reified(&function, 4, true)?;
+        let array = context.field(&parameter, 3, 5)?;
+        let element = context.field(&parameter, 4, 6)?;
+        let returned = context.field(&function, 3, 7)?;
+        let component = match &array {
+            Type::IntArray => Type::Int,
+            Type::ByteArray => Type::Byte,
+            Type::CharArray => Type::Char,
+            Type::StringArray => Type::String,
+            Type::Array(element) => element.as_ref().clone(),
+            _ => continue,
+        };
+        if component != element || returned != array {
+            continue;
+        }
+        let name = metadata_name(&strings, function.integer(2)?)?.to_owned();
+        let parameter_name = metadata_name(&strings, parameter.integer(2)?)?.to_owned();
+        let descriptor = format!("({}){}", array.descriptor(), array.descriptor());
+        result.push(JavaMethod {
+            owner: "kotlin/<builtins>".into(),
+            name: name.clone(),
+            descriptor,
+            access: 0x89,
+            unsupported: false,
+            source_property: None,
+            kotlin_params: Some(vec![(parameter_name, array.clone(), false)]),
+            kotlin_result: Some(array),
+            kotlin_internal: false,
+            library: Some(LibraryMethod {
+                builtin_array: true,
+                abstract_: false,
+                kotlin_public: true,
+                source_name: name,
+                type_parameters,
+                receiver: None,
+                infix: false,
+                operator: false,
+                inline: flags & 1024 != 0,
+                code: None,
+            }),
+        });
+    }
+    Ok(result)
 }
 
 pub(super) fn module_parts(bytes: &[u8], package: &str) -> Result<Vec<String>> {
@@ -523,8 +700,8 @@ fn attach_member(
             .library
             .as_ref()
             .map_or(&[][..], |c| c.type_parameters.as_slice());
-        let (_, signature_params, signature_result) =
-            signature::method(signature, class_parameters)?;
+        let parsed_signature = signature::method(signature, class_parameters);
+        let (_, signature_params, signature_result) = parsed_signature?;
         let erased = format!(
             "({}){}",
             signature_params
@@ -538,7 +715,7 @@ fn attach_member(
         }
     }
     if params.iter().any(|(_, _, default)| *default) {
-        if params.len() > 32 {
+        if params.len() > 64 {
             return Err(invalid());
         }
         let original = &class.methods[*index];
@@ -547,7 +724,10 @@ fn attach_member(
         let (bridge_name, bridge_descriptor) = if name == "<init>" {
             (
                 "<init>".into(),
-                format!("({parameters}ILkotlin/jvm/internal/DefaultConstructorMarker;)V"),
+                format!(
+                    "({parameters}{}Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+                    "I".repeat(params.len().div_ceil(32))
+                ),
             )
         } else {
             let dispatch = if original.access & 8 == 0 {
@@ -558,7 +738,8 @@ fn attach_member(
             (
                 format!("{jvm_name}$default"),
                 format!(
-                    "({dispatch}{parameters}ILjava/lang/Object;){}",
+                    "({dispatch}{parameters}{}Ljava/lang/Object;){}",
+                    "I".repeat((params.len() - usize::from(receiver.is_some())).div_ceil(32)),
                     &descriptor[closing + 1..]
                 ),
             )
@@ -582,6 +763,8 @@ fn attach_member(
     method.source_property = property;
     method.unsupported = false;
     method.library = Some(LibraryMethod {
+        builtin_array: false,
+        abstract_: flags & 0x30 == 32,
         kotlin_public: flags & 14 == 6,
         source_name: name.into(),
         type_parameters,
@@ -622,6 +805,12 @@ fn remember_callable(
             && method.library.is_none()
         {
             method.library = Some(LibraryMethod {
+                builtin_array: false,
+                abstract_: member
+                    .integer(if name == "<init>" { 1 } else { 9 })?
+                    .unwrap_or(6)
+                    & 0x30
+                    == 32,
                 kotlin_public: member
                     .integer(if name == "<init>" { 1 } else { 9 })?
                     .unwrap_or(6)
@@ -779,6 +968,7 @@ pub(super) fn attach(
     class.kotlin_class = true;
     class.kotlin_interface = class.access & 0x200 != 0;
     let class_flags = proto.integer(1)?.unwrap_or(6);
+    class.kotlin_fun_interface = kind == 1 && class.kotlin_interface && class_flags & 16384 != 0;
     class.unsupported = kind == 1
         && (class_flags & 14 == 0
             || class_flags & (512 | 2048 | 4096 | 8192) != 0
@@ -951,6 +1141,281 @@ mod tests {
         ]
         .concat()
     }
+    fn builtin_fixture(name: &str, vararg: bool, matching_result: bool, receiver: bool) -> Vec<u8> {
+        let strings = ["kotlin", "Int", "IntArray", name, "elements"]
+            .into_iter()
+            .flat_map(|text| blob(1, text.as_bytes()))
+            .collect::<Vec<_>>();
+        let package_name = int(2, 0);
+        let int_name = [int(1, 0), int(2, 1), int(3, 0)].concat();
+        let array_name = [int(1, 0), int(2, 2), int(3, 0)].concat();
+        let names = [
+            blob(1, &package_name),
+            blob(1, &int_name),
+            blob(1, &array_name),
+        ]
+        .concat();
+        let element = int(6, 1);
+        let array = int(6, 2);
+        let mut parameter = [int(2, 4), blob(3, &array)].concat();
+        if vararg {
+            parameter.extend(blob(4, &element));
+        }
+        let mut function = [
+            int(2, 3),
+            blob(3, if matching_result { &array } else { &element }),
+            blob(6, &parameter),
+        ]
+        .concat();
+        if receiver {
+            function.extend(blob(5, &element));
+        }
+        let fragment = [
+            blob(1, &strings),
+            blob(2, &names),
+            blob(3, &blob(3, &function)),
+        ]
+        .concat();
+        [
+            [3u32, 1, 0, 7]
+                .into_iter()
+                .flat_map(u32::to_be_bytes)
+                .collect::<Vec<_>>(),
+            fragment,
+        ]
+        .concat()
+    }
+
+    #[test]
+    fn pinned_builtin_resource_exposes_supported_array_declarations() {
+        let standard = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("references/kotlinc/lib/kotlin-stdlib.jar");
+        let bytes = archive::read(&standard, "kotlin/kotlin.kotlin_builtins")
+            .unwrap()
+            .unwrap();
+        let methods = builtin_array_factories(&bytes).unwrap();
+        assert_eq!(
+            methods
+                .iter()
+                .map(|method| method.name.as_str())
+                .collect::<Vec<_>>(),
+            ["arrayOf", "byteArrayOf", "charArrayOf", "intArrayOf"]
+        );
+        for method in &methods {
+            assert_eq!(method.owner, "kotlin/<builtins>");
+            assert_eq!(method.access, 0x89);
+            assert!(method.library.as_ref().unwrap().builtin_array);
+            assert_eq!(method.kotlin_params.as_ref().unwrap()[0].0, "elements");
+            assert_eq!(
+                method.kotlin_params.as_ref().unwrap()[0].1,
+                *method.kotlin_result.as_ref().unwrap()
+            );
+        }
+        assert_eq!(
+            methods[0].library.as_ref().unwrap().type_parameters[0].name,
+            "T"
+        );
+        assert!(
+            matches!(methods[0].kotlin_result.as_ref().unwrap(), Type::Array(element)
+            if matches!(element.as_ref(), Type::Parameter { name, .. } if name == "T"))
+        );
+        assert_eq!(methods[3].descriptor, "([I)[I");
+    }
+
+    #[test]
+    fn builtin_array_declarations_are_selected_by_shape_and_not_name() {
+        let methods =
+            builtin_array_factories(&builtin_fixture("renamedCollector", true, true, false))
+                .unwrap();
+        assert_eq!(methods.len(), 1);
+        assert_eq!(methods[0].name, "renamedCollector");
+        assert_eq!(methods[0].descriptor, "([I)[I");
+        for (vararg, matching_result, receiver) in [
+            (false, true, false),
+            (true, false, false),
+            (true, true, true),
+        ] {
+            assert!(
+                builtin_array_factories(&builtin_fixture(
+                    "arrayOf",
+                    vararg,
+                    matching_result,
+                    receiver
+                ))
+                .unwrap()
+                .is_empty()
+            );
+        }
+    }
+
+    #[test]
+    fn builtin_metadata_headers_and_resources_are_checked() {
+        let valid = builtin_fixture("renamed", true, true, false);
+        for end in 0..valid.len() {
+            if let Err(error) = builtin_array_factories(&valid[..end]) {
+                assert!(error.message.contains("Kotlin builtins"));
+            }
+        }
+        let mut wrong_version = valid.clone();
+        wrong_version[15] = 8;
+        assert!(builtin_array_factories(&wrong_version).is_err());
+        let mut wrong_count = valid.clone();
+        wrong_count[3] = 17;
+        assert!(builtin_array_factories(&wrong_count).is_err());
+        let mut wrong_wire = valid;
+        wrong_wire[16] = 15;
+        assert!(builtin_array_factories(&wrong_wire).is_err());
+    }
+
+    #[test]
+    fn qualified_builtin_names_distinguish_packages_classes_and_cycles() {
+        let strings = vec!["kotlin".into(), "Outer".into(), "Inner".into()];
+        let table = [
+            blob(1, &int(2, 0)),
+            blob(1, &[int(1, 0), int(2, 1), int(3, 0)].concat()),
+            blob(1, &[int(1, 1), int(2, 2), int(3, 0)].concat()),
+        ]
+        .concat();
+        assert_eq!(
+            builtin_qualified_names(&strings, &table).unwrap(),
+            ["kotlin", "kotlin/Outer", "kotlin/Outer.Inner"]
+        );
+        let cycle = blob(1, &[int(1, 0), int(2, 0)].concat());
+        assert!(builtin_qualified_names(&strings, &cycle).is_err());
+        let missing = blob(1, &[int(1, 10), int(2, 0)].concat());
+        assert!(builtin_qualified_names(&strings, &missing).is_err());
+    }
+
+    #[test]
+    fn ordinary_metadata_still_rejects_reified_type_parameters() {
+        let strings = vec!["T".into()];
+        let bytes = blob(4, &[int(1, 0), int(2, 0), int(3, 1)].concat());
+        let proto = Proto::parse(&bytes).unwrap();
+        let mut context = Context::new(&strings, &proto).unwrap();
+        assert!(context.type_parameters(&proto, 4).is_err());
+    }
+
+    fn metadata_annotation(kind: u32, strings: &[&str], proto: &[u8]) -> Annotation {
+        let table = blob(1, &int(1, strings.len() as u64));
+        let bytes = [var(table.len() as u64), table, proto.to_vec()].concat();
+        let encoded = std::iter::once('\0')
+            .chain(bytes.into_iter().map(char::from))
+            .collect::<String>();
+        Annotation {
+            name: "Lkotlin/Metadata;".into(),
+            values: vec![
+                ("k".into(), AnnotationValue::Integer(kind)),
+                (
+                    "mv".into(),
+                    AnnotationValue::Array(vec![
+                        AnnotationValue::Integer(2),
+                        AnnotationValue::Integer(3),
+                        AnnotationValue::Integer(0),
+                    ]),
+                ),
+                (
+                    "d1".into(),
+                    AnnotationValue::Array(vec![AnnotationValue::String(encoded)]),
+                ),
+                (
+                    "d2".into(),
+                    AnnotationValue::Array(
+                        strings
+                            .iter()
+                            .map(|text| AnnotationValue::String((*text).into()))
+                            .collect(),
+                    ),
+                ),
+            ],
+        }
+    }
+
+    fn bare_metadata_class(name: &str, access: u16) -> JavaClass {
+        JavaClass {
+            annotation_definition: None,
+            library: None,
+            name: name.into(),
+            access,
+            super_name: Some("java/lang/Object".into()),
+            interfaces: Vec::new(),
+            methods: Vec::new(),
+            fields: Vec::new(),
+            kotlin_class: false,
+            unsupported: false,
+            kotlin_interface: false,
+            kotlin_fun_interface: false,
+        }
+    }
+
+    #[test]
+    fn metadata_decodes_functional_interface_identity_and_abstract_member_modality() {
+        for (fun, abstract_) in [(false, true), (true, true), (true, false)] {
+            let function = [
+                int(2, 2),
+                blob(3, &int(6, 3)),
+                int(9, 6 | if abstract_ { 32 } else { 16 }),
+            ]
+            .concat();
+            let proto = [
+                int(1, 102 | if fun { 16384 } else { 0 }),
+                int(3, 0),
+                blob(6, &int(6, 1)),
+                blob(9, &function),
+            ]
+            .concat();
+            let annotation = metadata_annotation(
+                1,
+                &["sample/Action", "kotlin/Any", "run", "kotlin/Unit"],
+                &proto,
+            );
+            let mut class = bare_metadata_class("sample/Action", 0x601);
+            class.methods.push(JavaMethod {
+                library: None,
+                owner: class.name.clone(),
+                name: "run".into(),
+                descriptor: "()V".into(),
+                access: 0x401,
+                unsupported: false,
+                source_property: None,
+                kotlin_params: None,
+                kotlin_result: None,
+                kotlin_internal: false,
+            });
+            attach(&annotation, &mut class, &[Attributes::default()]).unwrap();
+            assert_eq!(class.kotlin_fun_interface, fun);
+            assert_eq!(
+                class.methods[0].library.as_ref().unwrap().abstract_,
+                abstract_
+            );
+        }
+    }
+
+    #[test]
+    fn metadata_exposes_public_aliases_and_keeps_private_aliases_out_of_library_index() {
+        let visible = [
+            int(1, 6),
+            int(2, 0),
+            blob(4, &int(6, 2)),
+            blob(6, &int(6, 2)),
+        ]
+        .concat();
+        let hidden = [
+            int(1, 2),
+            int(2, 1),
+            blob(4, &int(6, 2)),
+            blob(6, &int(6, 2)),
+        ]
+        .concat();
+        let proto = [blob(5, &visible), blob(5, &hidden)].concat();
+        let annotation = metadata_annotation(2, &["Visible", "Hidden", "kotlin/String"], &proto);
+        let mut class = bare_metadata_class("sample/AliasesKt", 0x31);
+        attach(&annotation, &mut class, &[]).unwrap();
+        let aliases = &class.library.as_ref().unwrap().type_aliases;
+        assert_eq!(aliases.len(), 1);
+        assert_eq!(aliases[0].name, "Visible");
+        assert_eq!(aliases[0].expanded, Type::String);
+    }
+
     #[test]
     fn module_package_remapping_preserves_source_and_jvm_packages() {
         let parts = [
@@ -981,6 +1446,7 @@ mod tests {
         let recursive = [int(6, 0), parameter].concat();
         let context = Context {
             strings: &strings,
+            qualified_names: None,
             table: vec![&recursive],
             first_nullable: None,
             parameters: BTreeMap::new(),

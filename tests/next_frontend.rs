@@ -296,3 +296,65 @@ fn renamed_imports_hide_original_names_and_keep_explicit_original_imports() {
             .contains("Unresolved renamed declaration")
     );
 }
+
+#[test]
+fn imported_generic_results_use_constructor_and_function_expected_types() {
+    let directory = std::env::temp_dir().join(format!(
+        "korrust-expected-result-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    for output in korrust::compile_outputs_with_classpath(
+        "package inference.library\nfun <T> fabricate(): List<T> = emptyList<T>()\nfun <T> identity(value: T): T = value\nfun <T> nullable(): T? = null\nfun <T> nullableList(): List<T>? = null",
+        "GenericLibrary.kt",
+        &[],
+    ).unwrap() {
+        let path = directory.join(output.relative_path);
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        std::fs::write(path, output.bytes).unwrap();
+    }
+    let imports = "import inference.library.fabricate\nimport inference.library.identity\nimport inference.library.nullable as inferenceNullable\nimport inference.library.nullableList as inferenceNullableList\n";
+    for source in [
+        "data class Snapshot(val logs: List<String>) { companion object { val EMPTY = Snapshot(logs = fabricate()) } }",
+        "fun use(): List<Int?> = fabricate()",
+        "fun use(): List<String>? = fabricate()",
+        "fun use(): List<Int?>? = fabricate()",
+        "fun use(): List<String>? = inferenceNullableList()",
+        "fun use(): String? = inferenceNullable()",
+        "fun take(value: List<Long>): Int = value.size\nfun use(): Int = take(fabricate())",
+        "fun use(): Any = identity(\"text\")",
+        "fun use(fabricate: () -> Int): Int = fabricate()",
+        "fun use(): Int { val fabricate: () -> Int = { 9 }; return fabricate() }",
+        "fun use(): Int { fun fabricate(): Int = 9; return fabricate() }",
+    ] {
+        let result = korrust::compile_all_with_classpath(
+            &format!("{imports}{source}"),
+            "Expected.kt",
+            std::slice::from_ref(&directory),
+        );
+        assert!(result.is_ok(), "{source}: {:?}", result.err());
+    }
+    for source in [
+        "fun use(): List<String> = fabricate<Int>()",
+        "data class Snapshot(val logs: List<String>) { companion object { val EMPTY = Snapshot(logs = fabricate<Int>()) } }",
+        "fun use(): Int = identity(\"text\")",
+        "fun fabricate(): Int = 7\nfun use(): Int = fabricate()",
+        "fun use(): String = inferenceNullable()",
+        "fun use(): List<String> = inferenceNullableList()",
+        "val first = second\nval second = first",
+    ] {
+        assert!(
+            korrust::compile_all_with_classpath(
+                &format!("{imports}{source}"),
+                "Rejected.kt",
+                std::slice::from_ref(&directory)
+            )
+            .is_err(),
+            "{source}"
+        );
+    }
+    std::fs::remove_dir_all(directory).unwrap();
+}

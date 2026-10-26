@@ -1,0 +1,1 @@
+fun main() { check(compatibility.calls.ordinaryVarargs() == "0:4:5:13:9:104:2:AB:java.lang.Integer:java.lang.String");  }

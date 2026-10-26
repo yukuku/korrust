@@ -14,6 +14,9 @@ impl Checker<'_> {
         result
     }
     pub(super) fn expected_value(&mut self, expr: &Expr, expected: &Type) -> Result<Value> {
+        if let ExprKind::VarargArray { elements, .. } = &expr.kind {
+            return self.vararg_array(expected, elements, expr.offset);
+        }
         if let ExprKind::Labeled(label, value) = &expr.kind {
             if matches!(
                 value.kind,
@@ -29,12 +32,93 @@ impl Checker<'_> {
             return self.lambda(expr, expected, None);
         }
         if matches!(expr.kind, ExprKind::CallableReference { .. }) {
+            if !matches!(expected.base(), Type::Function { .. })
+                && self.sam_function(expected, expr.offset)?.is_some()
+            {
+                return Err(Diagnostic::new(
+                    expr.offset,
+                    "Callable-reference SAM conversion is not supported; use a literal lambda",
+                ));
+            }
             return self.callable_reference(expr, expected);
+        }
+        if let ExprKind::If(condition, yes, no) = &expr.kind {
+            let refinements = self.refinements.clone();
+            let checked_condition = self.value(condition)?;
+            self.require(&checked_condition, Type::Boolean, condition.offset)?;
+            self.refine(condition, true);
+            let checked_yes = self.expected_value(yes, expected);
+            self.refinements = refinements.clone();
+            let checked_yes = checked_yes?;
+            self.refine(condition, false);
+            let checked_no = self.expected_value(no, expected);
+            self.refinements = refinements;
+            return Ok(Value {
+                ty: expected.clone(),
+                kind: ValueKind::If(
+                    Box::new(checked_condition),
+                    Box::new(checked_yes),
+                    Box::new(checked_no?),
+                ),
+            });
+        }
+        if let ExprKind::Call(target, args) = &expr.kind {
+            let (target, explicit) = match &target.kind {
+                ExprKind::Generic(target, types) => (target.as_ref(), types.as_slice()),
+                _ => (target.as_ref(), &[][..]),
+            };
+            if let ExprKind::Name(name) = &target.kind {
+                if let Some(value) =
+                    self.lexical_call(name, args, explicit, Some(expected), expr.offset)?
+                {
+                    return self.coerce(value, expected.clone(), expr.offset);
+                }
+                let methods = self
+                    .library_call_candidates(name)
+                    .into_iter()
+                    .filter(|method| {
+                        method.source_property.is_none()
+                            && method
+                                .library
+                                .as_ref()
+                                .is_none_or(|library| library.receiver.is_none())
+                    })
+                    .collect::<Vec<_>>();
+                if methods.iter().any(|method| {
+                    method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| !library.type_parameters.is_empty())
+                }) {
+                    let method = self.select_method_expected(
+                        &methods,
+                        args,
+                        explicit,
+                        Some(expected),
+                        expr.offset,
+                    )?;
+                    let value = self.library_static_call(method, args, expr.offset)?;
+                    return self.coerce(value, expected.clone(), expr.offset);
+                }
+            }
         }
         let mut value = self.value(expr)?;
         if control::expression_terminates(expr) {
             value.ty = expected.clone();
             return Ok(value);
+        }
+        if matches!(
+            value.ty.base(),
+            Type::Function { .. } | Type::ReceiverFunction { .. }
+        ) && !matches!(
+            expected.base(),
+            Type::Function { .. } | Type::ReceiverFunction { .. }
+        ) && self.sam_function(expected, expr.offset)?.is_some()
+        {
+            return Err(Diagnostic::new(
+                expr.offset,
+                "Function-value SAM conversion is not supported; use a literal lambda",
+            ));
         }
         self.coerce(value, expected.clone(), expr.offset)
     }
@@ -105,7 +189,7 @@ impl Checker<'_> {
                             ));
                         }
                     }
-                    names.push(if param.name == "_" {
+                    names.push(if param.discard {
                         format!("<unused{index}>")
                     } else {
                         param.name
@@ -130,6 +214,7 @@ impl Checker<'_> {
         );
         let mut capture_names = captures::free_names(&statements, &names);
         let implicit_receiver = receiver_type.is_none()
+            && self.receiver.is_some()
             && capture_names.iter().any(|name| {
                 self.local(name).is_none()
                     && !self.captured.contains_key(name)
@@ -139,10 +224,11 @@ impl Checker<'_> {
                             && !self.constants.contains_key(name)
                             && !self.imports.contains_key(name)
                         || self.fields.contains_key(name)
-                        || self
-                            .members
-                            .values()
-                            .any(|m| m.name == *name || m.source_property.as_deref() == Some(name)))
+                        || self.members.values().any(|m| {
+                            m.access & 8 == 0
+                                && (m.source_name() == name
+                                    || m.source_property.as_deref() == Some(name))
+                        }))
             });
         if implicit_receiver {
             capture_names.insert("this".into());
@@ -353,10 +439,29 @@ impl Checker<'_> {
         }
         receiver_setup.append(&mut body);
         let body = receiver_setup;
+        let defaults = if let Some(method) = &interface {
+            self.classpath
+                .methods(&method.owner)?
+                .into_iter()
+                .filter(|candidate| {
+                    candidate.access & 0x0408 == 0x0400
+                        && candidate
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| !library.abstract_)
+                })
+                .collect()
+        } else {
+            Vec::new()
+        };
         self.lambdas.borrow_mut().push(LambdaDecl {
+            defaults,
             owner: owner.clone(),
             captures: fields,
             function: Function {
+                jvm_name: None,
+                annotations: Vec::new(),
+                vararg: false,
                 type_params: Vec::new(),
                 defaults: (0..function_params.len()).map(|_| None).collect(),
                 name: "invoke".into(),
@@ -429,7 +534,7 @@ impl Checker<'_> {
             Ok(class) => class,
             Err(_) => return Ok(None),
         };
-        if class.access & 0x0200 == 0 || class.kotlin_class {
+        if class.access & 0x0200 == 0 || class.kotlin_class && !class.kotlin_fun_interface {
             return Ok(None);
         }
         let methods = self
@@ -438,6 +543,7 @@ impl Checker<'_> {
             .into_iter()
             .filter(|m| {
                 m.access & 0x0408 == 0x0400
+                    && m.library.as_ref().is_none_or(|library| library.abstract_)
                     && !matches!(
                         (m.name.as_str(), m.descriptor.as_str()),
                         ("equals", "(Ljava/lang/Object;)Z")
@@ -452,8 +558,25 @@ impl Checker<'_> {
                 "SAM conversion requires one abstract method",
             ));
         }
-        let method =
+        if methods[0].source_property.is_some() {
+            return Err(Diagnostic::new(
+                offset,
+                "Functional interfaces cannot contain abstract properties",
+            ));
+        }
+        if methods[0]
+            .library
+            .as_ref()
+            .is_some_and(|library| !library.type_parameters.is_empty())
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Functional interface abstract methods cannot declare type parameters",
+            ));
+        }
+        let mut method =
             library::specialize_receiver(methods[0].clone(), expected, &class, self.classpath);
+        method.owner = owner.into();
         let (params, result) = class_method_types(&method)?;
         Ok(Some((
             method,
@@ -615,6 +738,8 @@ mod shadowing_tests {
         let classes = HashMap::from([(
             "foreign/Library".into(),
             JavaClass {
+                annotation_definition: None,
+                kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
                     type_parameters: Vec::new(),
                     type_aliases: Vec::new(),
@@ -632,6 +757,8 @@ mod shadowing_tests {
                 kotlin_interface: false,
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
+                        abstract_: false,
+                        builtin_array: false,
                         source_name: "getLibraryNumber".into(),
                         type_parameters: Vec::new(),
                         receiver: None,
@@ -804,6 +931,7 @@ impl Checker<'_> {
                         .params
                         .iter()
                         .map(|(name, ty)| syntax::LambdaParameter {
+                            discard: false,
                             name: name.clone(),
                             ty: Some(ty.clone()),
                         })

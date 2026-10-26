@@ -1,0 +1,195 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:3:16: error: unresolved reference 'content'.
+import android.content.Context
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:4:17: error: unresolved reference 'work'.
+import androidx.work.CoroutineWorker
+                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:5:17: error: unresolved reference 'work'.
+import androidx.work.Data
+                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:6:17: error: unresolved reference 'work'.
+import androidx.work.WorkerParameters
+                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:7:17: error: unresolved reference 'work'.
+import androidx.work.workDataOf
+                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:11:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.CancellationException
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:12:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.Dispatchers
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:13:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.ensureActive
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:14:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.withContext
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:15:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Request
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:16:26: error: unresolved reference 'connection'.
+import yuku.alkitab.base.connection.Connections
+                         ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:41:17: error: unresolved reference 'Context'.
+    appContext: Context,
+                ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:42:13: error: unresolved reference 'WorkerParameters'.
+    params: WorkerParameters,
+            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:43:5: error: unresolved reference 'CoroutineWorker'.
+) : CoroutineWorker(appContext, params) {
+    ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:45:36: error: one type argument expected for 'class Result<out T> : Serializable'.
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+                                   ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:45:45: error: unresolved reference 'withContext'.
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+                                            ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:45:57: error: unresolved reference 'Dispatchers'.
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+                                                        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:46:19: error: unresolved reference 'inputData'.
+        val url = inputData.getString(KEY_URL)
+                  ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:47:42: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            ?: return@withContext Result.failure(failureData(ERROR_UNKNOWN, "missing url"))
+                                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:48:24: error: unresolved reference 'inputData'.
+        val destPath = inputData.getString(KEY_DEST_PATH)
+                       ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:49:42: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            ?: return@withContext Result.failure(failureData(ERROR_UNKNOWN, "missing destPath"))
+                                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:54:13: error: unresolved reference 'coroutineContext'.
+            coroutineContext.ensureActive()
+            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:55:22: error: unresolved reference 'parentFile'.
+            destFile.parentFile?.mkdirs()
+                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:56:26: error: unresolved reference 'exists'.
+            if (destFile.exists()) {
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:57:26: error: unresolved reference 'delete'.
+                destFile.delete()
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:61:17: error: unresolved reference 'Connections'.
+                Connections.okHttp.newCall(
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:62:21: error: unresolved reference 'Request'.
+                    Request.Builder()
+                    ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:68:43: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                return@withContext Result.failure(failureData(ERROR_CONNECTION, e.message ?: e.javaClass.simpleName))
+                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:69:25: error: unresolved reference 'CancellationException'.
+            } catch (e: CancellationException) {
+                        ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:70:23: error: type mismatch: inferred type is '??? (Unresolved qualified name: CancellationException)', but 'Throwable' was expected.
+                throw e
+                      ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:72:43: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                return@withContext Result.failure(failureData(ERROR_UNKNOWN, e.message ?: e.javaClass.simpleName))
+                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:75:22: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            response.use {
+                     ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:76:31: error: unresolved reference 'isSuccessful'.
+                if (!response.isSuccessful) {
+                              ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:78:47: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                    return@withContext Result.failure(failureData(errorType, "HTTP ${response.code}"))
+                                              ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:80:37: error: unresolved reference 'body'.
+                val body = response.body
+                                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:81:50: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                    ?: return@withContext Result.failure(failureData(ERROR_CONNECTION, "response body is null"))
+                                                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:88:47: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                    return@withContext Result.failure(failureData(ERROR_STORAGE, e.message ?: e.javaClass.simpleName))
+                                              ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:91:21: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+                raf.use {
+                    ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:92:39: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                    body.byteStream().use { input ->
+                                      ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:92:39: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+                    body.byteStream().use { input ->
+                                      ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:92:45: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                    body.byteStream().use { input ->
+                                            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:97:25: error: unresolved reference 'setProgress'.
+                        setProgress(workDataOf(
+                        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:97:37: error: unresolved reference 'workDataOf'.
+                        setProgress(workDataOf(
+                                    ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:99:45: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+                            KEY_TOTAL_BYTES to totalBytes,
+                                            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:103:29: error: unresolved reference 'coroutineContext'.
+                            coroutineContext.ensureActive()
+                            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:104:33: error: unresolved reference 'isStopped'.
+                            if (isStopped) {
+                                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:105:59: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                                return@withContext Result.failure(failureData(ERROR_CANCELLED, "cancelled"))
+                                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:108:39: error: unresolved reference 'read'.
+                                input.read(buf)
+                                      ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:110:59: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                                return@withContext Result.failure(failureData(ERROR_CONNECTION, e.message ?: e.javaClass.simpleName))
+                                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:112:38: error: 'operator' modifier is required on 'fun <T> Comparable<T>.compareTo(other: T): Int'.
+                            if (read < 0) break
+                                     ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:114:37: error: unresolved reference 'write'.
+                                raf.write(buf, 0, read)
+                                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:116:59: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                                return@withContext Result.failure(failureData(ERROR_STORAGE, e.message ?: e.javaClass.simpleName))
+                                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:118:42: error: overload resolution ambiguity between candidates:
+fun plus(other: Byte): Long
+fun plus(other: Short): Long
+fun plus(other: Int): Long
+fun plus(other: Long): Long
+fun plus(other: Float): Float
+fun plus(other: Double): Double
+                            currentBytes += read
+                                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:123:33: error: unresolved reference 'setProgress'.
+                                setProgress(workDataOf(
+                                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:123:45: error: unresolved reference 'workDataOf'.
+                                setProgress(workDataOf(
+                                            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:125:53: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+                                    KEY_TOTAL_BYTES to totalBytes,
+                                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:133:13: error: unresolved reference 'coroutineContext'.
+            coroutineContext.ensureActive()
+            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:135:20: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            Result.success(workDataOf(KEY_DEST_PATH to destPath))
+                   ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:135:28: error: unresolved reference 'workDataOf'.
+            Result.success(workDataOf(KEY_DEST_PATH to destPath))
+                           ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:135:53: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+            Result.success(workDataOf(KEY_DEST_PATH to destPath))
+                                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:137:41: error: unresolved reference 'delete'.
+            if (!isSuccessful) destFile.delete()
+                                        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:141:66: error: unresolved reference 'Data'.
+    private fun failureData(errorType: String, message: String): Data = workDataOf(
+                                                                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/VersionDownloadWorker.kt:141:73: error: unresolved reference 'workDataOf'.
+    private fun failureData(errorType: String, message: String): Data = workDataOf(
+                                                                        ^^^^^^^^^^

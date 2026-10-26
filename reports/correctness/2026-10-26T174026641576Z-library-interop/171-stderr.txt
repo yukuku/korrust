@@ -1,0 +1,5 @@
+target/checks/2026-10-26T174026641576Z-library-interop/Boundary_ambiguous_overload_specificity.kt:3:18: error: overload resolution ambiguity between candidates:
+fun ambiguous(a: String, b: Any, c: Any): Int
+fun ambiguous(a: Any, b: String, c: String): Int
+fun bad(): Int = ambiguous("a", "b", "c")
+                 ^^^^^^^^^

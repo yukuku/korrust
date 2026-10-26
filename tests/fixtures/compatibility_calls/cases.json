@@ -1,0 +1,69 @@
+[
+  {
+    "id": "genericConstraints",
+    "fixture": "GenericConstraints.kt",
+    "owner": "compatibility.calls.GenericConstraintsKt",
+    "expected": "null:9:ab:null:3:ok"
+  },
+  {
+    "id": "compiledDefaults",
+    "fixture": "CompiledDefaults.kt",
+    "owner": "compatibility.calls.CompiledDefaultsKt",
+    "expected": "129:LAB|823:FBC|829:LFB|123:ABC:none:ok"
+  },
+  {
+    "id": "constructorDefaults",
+    "fixture": "ConstructorDefaults.kt",
+    "owner": "compatibility.calls.ConstructorDefaultsKt",
+    "expected": "1:9:LA|1347:RZD"
+  },
+  {
+    "id": "maskBoundary",
+    "fixture": "MaskBoundary.kt",
+    "owner": "compatibility.calls.MaskBoundaryKt",
+    "expected": "96:333:372"
+  },
+  {
+    "id": "ordinaryVarargs",
+    "fixture": "OrdinaryVarargs.kt",
+    "owner": "compatibility.calls.OrdinaryVarargsKt",
+    "expected": "0:4:5:13:9:104:2:AB:java.lang.Integer:java.lang.String"
+  },
+  {
+    "id": "sourceVarargs",
+    "fixture": "SourceVarargs.kt",
+    "owner": "compatibility.calls.SourceVarargsKt",
+    "expected": "0:4:6"
+  },
+  {
+    "id": "spreadArguments",
+    "fixture": "SpreadArguments.kt",
+    "owner": "compatibility.calls.SpreadArgumentsKt",
+    "expected": "2:2:10:a:a:SABCT"
+  },
+  {
+    "id": "spreadExceptions",
+    "fixture": "SpreadExceptions.kt",
+    "owner": "compatibility.calls.SpreadExceptionsKt",
+    "expected": "ABX"
+  },
+  {
+    "id": "builtinShadow",
+    "fixture": "BuiltinShadow.kt",
+    "owner": "compatibility.calls.BuiltinShadowKt",
+    "expected": "103"
+  },
+  {
+    "id": "arrayReturnBody",
+    "fixture": "ArrayReturnBody.kt",
+    "owner": "compatibility.calls.ArrayReturnBodyKt",
+    "expected": "12:2:SQ"
+  },
+  {
+    "id": "platformJoins",
+    "fixture": "PlatformJoins.kt",
+    "owner": "compatibility.calls.PlatformJoinsKt",
+    "expected": "known",
+    "consumer": "fun main() {\n    val first: String? = compatibility.calls.platformFirstNullable(true, true)\n    val last: String? = compatibility.calls.platformLastNullable(false, true)\n    val nullableFirst: String? = compatibility.calls.nullablePlatformFirst(true, false, true)\n    val nullableLast: String? = compatibility.calls.platformNullableFirst(false, false, true)\n    check(first == null && last == null && nullableFirst == null && nullableLast == null)\n    val requiredFirst: String = compatibility.calls.platformFirstRequired(false, true)\n    val requiredLast: String = compatibility.calls.platformLastRequired(true, true)\n    check(requiredFirst == \"known9\" && requiredLast == \"known9\")\n}\n"
+  }
+]

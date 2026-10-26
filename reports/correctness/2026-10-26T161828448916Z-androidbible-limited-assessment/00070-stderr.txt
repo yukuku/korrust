@@ -1,0 +1,85 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:3:8: error: unresolved reference 'kotlinx'.
+import kotlinx.serialization.SerializationException
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:4:8: error: unresolved reference 'kotlinx'.
+import kotlinx.serialization.builtins.MapSerializer
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:5:8: error: unresolved reference 'kotlinx'.
+import kotlinx.serialization.builtins.serializer
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:6:8: error: unresolved reference 'kotlinx'.
+import kotlinx.serialization.json.Json
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:7:13: error: unresolved reference 'afw'.
+import yuku.afw.storage.Preferences
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:8:32: error: unresolved reference 'model'.
+import yuku.alkitab.base.audio.model.AudioSet
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:9:26: error: unresolved reference 'storage'.
+import yuku.alkitab.base.storage.Prefkey
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:10:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.AppLog
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:36:24: error: unresolved reference 'Json'.
+    private val json = Json
+                       ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:37:33: error: unresolved reference 'MapSerializer'.
+    private val mapSerializer = MapSerializer(String.serializer(), String.serializer())
+                                ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:37:54: error: unresolved reference 'serializer'.
+    private val mapSerializer = MapSerializer(String.serializer(), String.serializer())
+                                                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:37:75: error: unresolved reference 'serializer'.
+    private val mapSerializer = MapSerializer(String.serializer(), String.serializer())
+                                                                          ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:43:54: error: unresolved reference 'Preferences'.
+    internal var storedJsonReader: () -> String? = { Preferences.getString(Prefkey.audioSelectedSets) }
+                                                     ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:43:76: error: unresolved reference 'Prefkey'.
+    internal var storedJsonReader: () -> String? = { Preferences.getString(Prefkey.audioSelectedSets) }
+                                                                           ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:44:57: error: unresolved reference 'Preferences'.
+    internal var storedJsonWriter: (String) -> Unit = { Preferences.setString(Prefkey.audioSelectedSets, it) }
+                                                        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:44:79: error: unresolved reference 'Prefkey'.
+    internal var storedJsonWriter: (String) -> Unit = { Preferences.setString(Prefkey.audioSelectedSets, it) }
+                                                                              ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:50:47: error: unresolved reference 'AudioSet'.
+    fun resolve(versionId: String, sets: List<AudioSet>): AudioSet? {
+                                              ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:50:59: error: unresolved reference 'AudioSet'.
+    fun resolve(versionId: String, sets: List<AudioSet>): AudioSet? {
+                                                          ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:53:42: error: unresolved reference 'audioId'.
+        if (remembered != null && chosen.audioId != remembered) {
+                                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:54:37: error: unresolved reference 'audioId'.
+            store(versionId, chosen.audioId)
+                                    ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:66:36: error: unresolved reference 'AudioSet'.
+    internal fun choose(sets: List<AudioSet>, remembered: String?): AudioSet? =
+                                   ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:66:69: error: unresolved reference 'AudioSet'.
+    internal fun choose(sets: List<AudioSet>, remembered: String?): AudioSet? =
+                                                                    ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:67:28: error: unresolved reference 'it'.
+        sets.firstOrNull { it.audioId == remembered } ?: sets.firstOrNull()
+                           ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:67:63: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        sets.firstOrNull { it.audioId == remembered } ?: sets.firstOrNull()
+                                                              ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:67:63: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T> List<T>.firstOrNull(): T?
+        sets.firstOrNull { it.audioId == remembered } ?: sets.firstOrNull()
+                                                              ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:73:21: error: unresolved reference 'SerializationException'.
+        } catch (e: SerializationException) {
+                    ^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:74:13: error: unresolved reference 'AppLog'.
+            AppLog.w(TAG, "stored selection map did not parse: ${e.message}")
+            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt:74:68: error: unresolved reference 'message'.
+            AppLog.w(TAG, "stored selection map did not parse: ${e.message}")
+                                                                   ^^^^^^^

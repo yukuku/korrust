@@ -1,0 +1,6 @@
+target/checks/2026-10-26T161815996033Z-library-interop/Boundary_wrong_generic_bound.kt:2:26: error: inapplicable candidate(s): static fun <T : CharSequence!> bounded(p0: T!): Int
+fun bad(): Int = JavaApi.bounded<Int>(1)
+                         ^^^^^^^
+target/checks/2026-10-26T161815996033Z-library-interop/Boundary_wrong_generic_bound.kt:2:34: error: type argument is not within its bounds: must be subtype of 'CharSequence!'.
+fun bad(): Int = JavaApi.bounded<Int>(1)
+                                 ^^^

@@ -1,0 +1,107 @@
+   Compiling crc32fast v1.5.3
+   Compiling adler2 v2.0.1
+   Compiling simd-adler32 v0.3.10
+   Compiling cfg-if v1.0.5
+   Compiling byteorder v1.5.0
+   Compiling miniz_oxide v0.9.1
+   Compiling flate2 v1.1.10
+   Compiling zip v0.6.6
+   Compiling korrust v0.1.0 (/workspace/korrust/target/checkpoint-d-snapshot)
+warning: function `attributes` is never used
+  --> src/bytecode/annotations.rs:65:15
+   |
+65 | pub(super) fn attributes(
+   |               ^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: function `parameter_lists` is never used
+   --> src/bytecode/annotations.rs:188:4
+    |
+188 | fn parameter_lists(payload: &[u8]) -> Result<Vec<(u16, &[u8])>> {
+    |    ^^^^^^^^^^^^^^^
+
+warning: function `merge_parameters` is never used
+   --> src/bytecode/annotations.rs:199:4
+    |
+199 | fn merge_parameters(existing: Option<&[u8]>, added: &[u8]) -> Result<Vec<u8>> {
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `append_parameter_annotations` is never used
+   --> src/bytecode/annotations.rs:292:15
+    |
+292 | pub(super) fn append_parameter_annotations(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `annotations` is never read
+   --> src/syntax.rs:221:9
+    |
+220 | pub struct InterfaceDecl {
+    |            ------------- field in this struct
+221 |     pub annotations: Vec<AnnotationUse>,
+    |         ^^^^^^^^^^^
+    |
+    = note: `InterfaceDecl` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: field `annotations` is never read
+   --> src/syntax.rs:235:9
+    |
+234 | pub struct InterfaceProperty {
+    |            ----------------- field in this struct
+235 |     pub annotations: Vec<AnnotationUse>,
+    |         ^^^^^^^^^^^
+    |
+    = note: `InterfaceProperty` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: field `annotations` is never read
+   --> src/syntax.rs:258:9
+    |
+257 | pub struct CompanionProperty {
+    |            ----------------- field in this struct
+258 |     pub annotations: Vec<AnnotationUse>,
+    |         ^^^^^^^^^^^
+    |
+    = note: `CompanionProperty` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: field `annotations` is never read
+   --> src/syntax.rs:271:9
+    |
+270 | pub struct EnumDecl {
+    |            -------- field in this struct
+271 |     pub annotations: Vec<AnnotationUse>,
+    |         ^^^^^^^^^^^
+    |
+    = note: `EnumDecl` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: field `annotation_uses` is never read
+   --> src/syntax.rs:278:9
+    |
+277 | pub struct ObjectDecl {
+    |            ---------- field in this struct
+278 |     pub annotation_uses: Vec<AnnotationUse>,
+    |         ^^^^^^^^^^^^^^^
+    |
+    = note: `ObjectDecl` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: fields `param_annotations` and `annotations` are never read
+   --> src/syntax.rs:335:9
+    |
+334 | pub struct ClassDecl {
+    |            --------- fields in this struct
+335 |     pub param_annotations: Vec<Vec<AnnotationUse>>,
+    |         ^^^^^^^^^^^^^^^^^
+336 |     pub annotations: Vec<AnnotationUse>,
+    |         ^^^^^^^^^^^
+    |
+    = note: `ClassDecl` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: `korrust` (lib) generated 10 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.76s
+     Running tests/d_sam_frontend.rs (target/debug/deps/d_sam_frontend-7b308e5c4ac75087)
+
+running 2 tests
+test function_value_and_callable_reference_sam_adapters_reject_explicitly ... ok
+test inherited_sam_defaults_preserve_captures_for_java_and_kotlin_consumers ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.77s
+

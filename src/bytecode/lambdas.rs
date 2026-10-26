@@ -8,7 +8,7 @@ pub fn emit_lambdas(module: &Module, facade: &str, file: &str) -> Result<Vec<cra
         .collect()
 }
 
-fn emit(
+pub(super) fn emit(
     lambda: &crate::check::LambdaDecl,
     functions: &[crate::check::Function],
     facade: &str,
@@ -129,7 +129,7 @@ fn emit(
     let implementation = simple_method(
         &mut pool,
         0x0011,
-        &function.name,
+        function.jvm_name(),
         &function.descriptor(),
         completed,
         generic_function(function).as_deref(),
@@ -148,7 +148,7 @@ fn emit(
         },
         |method| (method.name.clone(), method.descriptor.clone()),
     );
-    if bridge_name != function.name || bridge_descriptor != function.descriptor() {
+    if bridge_name != function.jvm_name() || bridge_descriptor != function.descriptor() {
         let (params, result) = invocation_types(&bridge_descriptor)?;
         if params.len() != function.params.len() {
             return Err(failure("SAM bridge parameter count mismatch"));
@@ -185,7 +185,7 @@ fn emit(
             code.adapt_value(erased, actual)?;
             slot += erased.slots();
         }
-        code.method_reference(0xb6, owner, &function.name, &function.descriptor())?;
+        code.method_reference(0xb6, owner, function.jvm_name(), &function.descriptor())?;
         code.adapt_value(&function.result, &result)?;
         code.bytes.push(return_opcode(&result));
         let stack = code.max_stack as u16;
@@ -196,6 +196,36 @@ fn emit(
             &bridge_name,
             &bridge_descriptor,
             completed,
+            None,
+            false,
+        )?);
+    }
+    for default in &lambda.defaults {
+        let (params, result) = invocation_types(&default.descriptor)?;
+        let slots = 1 + params.iter().map(Type::slots).sum::<usize>();
+        let mut code = SimpleCode::new(slots.max(2) as u16, slots as u16);
+        code.bytes.push(0x2a);
+        let mut slot = 1;
+        for parameter in &params {
+            code.bytes.extend([load_opcode(parameter), slot as u8]);
+            slot += parameter.slots();
+        }
+        let descriptor = format!("(L{};{}", default.owner, &default.descriptor[1..]);
+        code.reference(
+            0xb8,
+            pool.method(
+                &format!("{}$DefaultImpls", default.owner),
+                &default.name,
+                &descriptor,
+            )?,
+        );
+        code.bytes.push(return_opcode(&result));
+        methods.push(simple_method(
+            &mut pool,
+            0x0011,
+            &default.name,
+            &default.descriptor,
+            code,
             None,
             false,
         )?);
@@ -246,6 +276,9 @@ mod tests {
         locals: u16,
     ) -> crate::check::Function {
         crate::check::Function {
+            jvm_name: None,
+            annotations: Vec::new(),
+            vararg: false,
             type_params: Vec::new(),
             defaults: Vec::new(),
             name: "invoke".into(),
@@ -460,6 +493,7 @@ mod tests {
     #[test]
     fn generated_bridges_execute_with_jvm_verification() {
         let long = crate::check::LambdaDecl {
+            defaults: Vec::new(),
             owner: "CaptureLong".into(),
             captures: vec![("base".into(), Type::Long)],
             function: function(
@@ -488,6 +522,7 @@ mod tests {
             interface: None,
         };
         let unit = crate::check::LambdaDecl {
+            defaults: Vec::new(),
             owner: "ReturnUnit".into(),
             captures: Vec::new(),
             function: function(
@@ -502,6 +537,7 @@ mod tests {
             interface: None,
         };
         let sam = crate::check::LambdaDecl {
+            defaults: Vec::new(),
             owner: "StringSam".into(),
             captures: Vec::new(),
             function: function(

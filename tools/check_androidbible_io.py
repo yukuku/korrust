@@ -15,7 +15,7 @@ import sys
 import xml.etree.ElementTree as ET
 import zipfile
 
-from check_androidbible_module import ROOT, SNAPSHOT, classpath, relative, sha
+from check_androidbible_module import ROOT, SNAPSHOT, classpath, relative, sha, trace_source_records, checked_compile_invocations
 
 
 MODULES = ["AlkitabIo", "AlkitabModel", "AlkitabYes2"]
@@ -45,11 +45,18 @@ def source_abi(text, fields=None):
     return prefix, sorted(members)
 
 
+def compiler_diagnostics(text):
+    return "\n".join(line for line in text.splitlines()
+                     if not line.startswith(("Picked up JAVA_TOOL_OPTIONS:", "Picked up _JAVA_OPTIONS:", "NOTE: Picked up JDK_JAVA_OPTIONS:")))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--official-json", type=Path, default=ROOT / "target/androidbible-model-io-yes2-artifacts/official/build.json")
     parser.add_argument("--candidate-json", type=Path, default=ROOT / "target/androidbible-model-io-yes2-artifacts/korrust/build.json")
     parser.add_argument("--d8-jar", type=Path, default=Path("/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/com.android.tools.build/builder/9.2.1/e8ef7f9072cd990708591c54128fd6c6dc42ae7d/builder-9.2.1.jar"))
+    parser.add_argument("--compiler-root", type=Path, default=ROOT)
+    parser.add_argument("--build-tool", type=Path, default=ROOT / "tools/build_androidbible.py")
     parser.add_argument("--sdk", type=Path, default=Path("/workspace/korrust-setup/android-sdk"))
     args = parser.parse_args()
     args.official_json, args.candidate_json = args.official_json.resolve(), args.candidate_json.resolve()
@@ -61,7 +68,7 @@ def main():
     evidence.mkdir(parents=True)
     report_path = evidence.with_suffix(".json")
     cases, commands = [], []
-    report = {"schema_version": 1, "kind": "correctness", "created_at": now.isoformat(), "status": "running", "compiler": {}, "reference_compiler": {}, "inputs": {}, "environment": {"os": platform.platform(), "machine": platform.machine()}, "commands": commands, "evidence": [], "cases": cases, "selection": "Complete unchanged AlkitabModel, AlkitabIo and AlkitabYes2 production modules: 4 Kotlin and 39 Java sources through real Gradle/AGP Java/resource/dependency/AAR tasks, all selected modules production Kotlin compiled exclusively by Korrust. Dependencies and original test Kotlin use normal compilers. All three AAR class inventories/signatures, exact candidate source traces/staged bytes, independent Java/Kotlin consumers, 27 original Io/Yes2 JUnit tests and actual AGP9.2.1 D8 with strict warning-free diagnostics are checked. No Android-device/full-app runtime or incremental speed claim."}
+    report = {"schema_version": 1, "kind": "correctness", "created_at": now.isoformat(), "status": "running", "compiler": {}, "reference_compiler": {}, "inputs": {}, "environment": {"os": platform.platform(), "machine": platform.machine()}, "commands": commands, "evidence": [], "cases": cases, "selection": "Batch-integration revalidation of previously demonstrated module coverage, not new module coverage. Complete unchanged AlkitabModel, AlkitabIo and AlkitabYes2 production modules: 4 Kotlin and 39 Java sources through real Gradle/AGP Java/resource/dependency/AAR tasks, all selected modules production Kotlin compiled exclusively by Korrust. Dependencies and original test Kotlin use normal compilers. All three AAR class inventories/signatures, exact candidate source traces/staged bytes, independent Java/Kotlin consumers, 27 original Io/Yes2 JUnit tests and standalone invocation of actual AGP9.2.1 embedded D8 with strict warning-free diagnostics are checked. The Gradle library AAR task graph and standalone D8 check are separate evidence. No Android-device/full-app runtime or incremental speed claim."}
 
     def archive(path, name):
         destination = evidence / name
@@ -95,7 +102,7 @@ def main():
             raise TimeoutError(label + " timed out")
         if result.returncode not in allowed:
             raise RuntimeError(f"{label} exited {result.returncode}: {stderr[-3000:]}")
-        if empty and (stdout.strip() or stderr.strip()):
+        if empty and (compiler_diagnostics(stdout).strip() or compiler_diagnostics(stderr).strip()):
             raise AssertionError(label + " emitted unexpected diagnostics")
         return result
 
@@ -116,7 +123,7 @@ def main():
             builds[provider] = build
             archive(path, provider + "-build.json")
             archive(build["log"], provider + "-gradle.log")
-            if build["tool_sha256"] != sha(ROOT / "tools/build_androidbible.py"):
+            if build["tool_sha256"] != sha(args.build_tool.resolve()):
                 raise AssertionError("Build adapter tool changed after build")
             adapter = path.parent / "adapter.init.gradle"
             if sha(adapter) != build["adapter_sha256"]:
@@ -133,10 +140,14 @@ def main():
                 raise AssertionError("Reference compiler dependency changed")
         if sha(candidate["compiler"]) != candidate["compiler_sha256"]:
             raise AssertionError("Candidate compiler changed after build")
-        sources = [ROOT / "Cargo.toml", ROOT / "Cargo.lock"]
+        compiler_root = args.compiler_root.resolve()
+        sources = [compiler_root / "Cargo.toml", compiler_root / "Cargo.lock"]
         for folder in ["src", "tests", "tools"]:
-            sources.extend(path for path in (ROOT / folder).rglob("*") if path.is_file() and "__pycache__" not in path.parts)
-        report["compiler"] = {"version": run("Korrust version", [candidate["compiler"], "--version"]).stdout.strip(), "binary_sha256": candidate["compiler_sha256"], "source_files_sha256": {relative(path): sha(path) for path in sorted(sources)}, "kotlin_metadata": True, "incremental_compilation": False, "jvm_target_scope": "Configured Gradle target21; Korrust emits classfile49/52 and javac emits65. No configurable Korrust target option; Io may emit synthetic Supplier helper classes instead of official invokedynamic."}
+            sources.extend(path for path in (compiler_root / folder).rglob("*") if path.is_file() and "__pycache__" not in path.parts)
+        frozen_files = {relative(path): sha(path) for path in sorted(sources)}
+        report["inputs"]["verification_tool_sha256"] = sha(Path(__file__))
+        report["reproduction_commands"] = [[sys.executable, *sys.argv]]
+        report["compiler"] = {"version": run("Korrust version", [candidate["compiler"], "--version"]).stdout.strip(), "binary_sha256": candidate["compiler_sha256"], "source_files_sha256": frozen_files, "kotlin_metadata": True, "incremental_compilation": False, "jvm_target_scope": "Configured Gradle target21; Korrust emits classfile49/52 and javac emits65. No configurable Korrust target option; Io may emit synthetic Supplier helper classes instead of official invokedynamic."}
         report["reference_compiler"] = {"version": pin["version"], "compiler_jar_sha256": sha(ROOT / pin["path"] / "lib/kotlin-compiler.jar"), "resolved_gradle_compiler_files_sha256": official["resolved_kotlin_compiler_files_sha256"]}
         report["environment"]["java"] = run("Java version", [java, "-version"]).stderr.strip()
         inventory = json.loads((ROOT / "benchmarks/source-files.sha256.json").read_text())["androidbible"]
@@ -205,17 +216,14 @@ def main():
                 trace, request = json.loads(trace_path.read_text()), json.loads(request_path.read_text())
                 if trace["fallback"] or trace["compiler_sha256"] != candidate["compiler_sha256"] or trace["task"] != ":" + module + ":" + task:
                     raise AssertionError("Candidate trace task/compiler/fallback mismatch")
-                invoked = [str(Path(item["source"]).relative_to(candidate["work_dir"])) for item in trace["invocations"]]
+                invocations = checked_compile_invocations(trace, request, candidate["compiler"], expected_sources, candidate["work_dir"])
+                invoked = [str(Path(item["source"]).relative_to(candidate["work_dir"])) for item in trace_source_records(trace)]
                 if sorted(invoked) != expected_kotlin[module]:
                     raise AssertionError("Trace source inventory mismatch")
                 emitted = set()
                 stage = trace_root / "module-build/tmp/korrust" / task
                 with zipfile.ZipFile(jars["candidate"][module]) as package:
-                    for invocation in trace["invocations"]:
-                        name = str(Path(invocation["source"]).relative_to(candidate["work_dir"]))
-                        command = invocation["command"]
-                        if invocation["returncode"] != 0 or invocation["source_sha256"] != expected_sources[name] or command[0] != candidate["compiler"] or command[1] != invocation["source"] or Path(command[command.index("-d") + 1]) != Path(request["stage"]):
-                            raise AssertionError("Candidate invocation provenance mismatch")
+                    for invocation in invocations:
                         outputs = [Path(line.strip()).relative_to(request["stage"]) for line in invocation["stdout"].splitlines() if line.strip().endswith(".class")]
                         if not outputs:
                             raise AssertionError("No class outputs recorded")
@@ -274,7 +282,8 @@ def main():
                 cases.append({"id": "all_class_verification/" + module + "/" + provider, "outcome": "pass", "classes": len(class_hashes[provider][module])})
             for name in names:
                 outputs = [run("Inspect " + provider + " combined ABI " + name, [javap, "-p", "-s", "-classpath", jars[provider][module], name]).stdout for provider in builds]
-                if (source_abi(outputs[0]) != source_abi(outputs[1])) if name == "yuku.alkitab.io.Utf8Decoder" else (outputs[0] != outputs[1]):
+                fields = None if name == "yuku.alkitab.io.Utf8Decoder" else {}
+                if source_abi(outputs[0], fields) != source_abi(outputs[1], fields):
                     raise AssertionError("Combined class ABI differs: " + name)
                 cases.append({"id": "combined_jvm_signatures/" + name, "outcome": "pass", "scope": "All source-defined production classes, javap -p -s; Io object comparison excludes only derived synthetic Supplier access bridges and ignores member order. Candidate Supplier classes validated separately."})
         run("Verify explicit candidate Supplier lowering", [java, "-Xverify:all", "-cp", classpath(drivers, *jars["candidate"].values(), *shared), "SupplierCheck", "yuku.alkitab.io.Utf8Decoder"])
@@ -315,7 +324,7 @@ def main():
                 raise AssertionError("Fixed original JUnit count mismatch")
         cases.append({"id": "fixed_original_test_bytecode", "outcome": "pass", "original_tests": 27, "scope": "Same 27 original Io/Yes2 test bytecodes compiled against official module set run against both module sets under -Xverify:all."})
         d8_version = run("Actual AGP embedded D8 version", [java, "-cp", args.d8_jar, "com.android.tools.r8.D8", "--version"])
-        if "D8 9.2.14 " not in d8_version.stdout or d8_version.stderr.strip():
+        if "D8 9.2.14 " not in d8_version.stdout or compiler_diagnostics(d8_version.stderr).strip():
             raise AssertionError("Unexpected actual AGP D8 version/diagnostics")
         report["inputs"]["agp_d8"] = {"jar": str(args.d8_jar), "sha256": sha(args.d8_jar), "version": d8_version.stdout.strip(), "agp_version": "9.2.1"}
         android = args.sdk / "platforms/android-36/android.jar"
@@ -341,7 +350,10 @@ def main():
             for dex in dex_files:
                 copied = archive(dex, provider + "-" + dex.name)
                 dex_hashes[relative(copied)] = sha(copied)
-            cases.append({"id": "combined_agp_d8/" + provider, "outcome": "pass", "min_api": 26, "dex_sha256": dex_hashes, "stdout_empty": True, "stderr_empty": True, "scope": "All three complete selected module AAR class jars accepted together by actual AGP9.2.1 D8 9.2.14 without warnings/errors; no Android-device execution."})
+            cases.append({"id": "combined_agp_d8/" + provider, "outcome": "pass", "min_api": 26, "dex_sha256": dex_hashes, "d8_diagnostics_empty": True, "jvm_startup_banners": "Preserved in raw command logs; excluded from D8 diagnostics.", "scope": "All three complete selected module AAR class jars accepted together by a standalone invocation of actual AGP9.2.1 embedded D8 9.2.14 without warnings/errors. Gradle AAR builds are recorded separately; no Gradle dexing task or Android-device execution is claimed."})
+        if sha(candidate["compiler"]) != candidate["compiler_sha256"] or any(sha(ROOT / path) != checksum for path, checksum in frozen_files.items()):
+            raise AssertionError("Frozen candidate/compiler source inputs changed during verification")
+        cases.append({"id": "frozen_inputs", "outcome": "pass", "compiler_root": str(compiler_root)})
         report["status"] = "completed"
     except Exception as error:
         report["status"] = "failed"
@@ -354,7 +366,7 @@ def main():
         print("Report: " + relative(report_path), flush=True)
     if report["status"] == "completed":
         feature = {key: report[key] for key in ["schema_version", "created_at", "compiler", "reference_compiler", "inputs"]}
-        feature.update({"kind": "features", "status": "assessed", "commands": [["python3", "tools/check_androidbible_io.py"]], "evidence": [relative(report_path)], "features": [{"name": "androidbible_model_io_yes2_modules", "status": "supported", "scope": "Complete pinned AlkitabModel, AlkitabIo and AlkitabYes2 production modules, all 4 unchanged Kotlin and 39 Java sources. Korrust selected production Kotlin without fallback; real release AARs, all class ABI/JVM verification, independent Java/Kotlin consumers, 27 original Io/Yes2 tests and strict warning-free actual AGP D8 generation.", "evidence_cases": [case["id"] for case in cases], "restrictions": ["Only these pinned modules/sources are established; nonselected dependencies and original test Kotlin use normal compilers.", "D8/JVM evidence does not establish Android-device or full-application runtime compatibility; no incremental performance/dependency graph/cache claim."]}]})
+        feature.update({"kind": "features", "status": "assessed", "commands": [["python3", "tools/check_androidbible_io.py"]], "evidence": [relative(report_path)], "features": [{"name": "androidbible_model_io_yes2_modules", "status": "supported", "scope": "Complete pinned AlkitabModel, AlkitabIo and AlkitabYes2 production modules, all 4 unchanged Kotlin and 39 Java sources. Korrust selected production Kotlin without fallback; real release AARs, all class ABI/JVM verification, independent Java/Kotlin consumers, 27 original Io/Yes2 tests and strict warning-free standalone AGP embedded D8 generation. This revalidates historical module coverage with the batch driver.", "evidence_cases": [case["id"] for case in cases], "restrictions": ["Only these pinned modules/sources are established; nonselected dependencies and original test Kotlin use normal compilers.", "D8/JVM evidence does not establish Android-device or full-application runtime compatibility; no incremental performance/dependency graph/cache claim."]}]})
         (ROOT / "reports/features" / (run_id + ".json")).write_text(json.dumps(feature, indent=2) + "\n")
     return 0 if report["status"] == "completed" else 1
 

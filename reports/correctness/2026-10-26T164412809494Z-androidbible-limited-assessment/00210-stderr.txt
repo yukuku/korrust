@@ -1,0 +1,402 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:3:16: error: unresolved reference 'content'.
+import android.content.ContentValues
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:4:16: error: unresolved reference 'database'.
+import android.database.Cursor
+               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:5:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.Sqlitil
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:6:27: error: unresolved reference 'Marker'.
+import yuku.alkitab.model.Marker
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:23:37: error: unresolved reference 'InternalDbHelper'.
+class MarkerDao(private val helper: InternalDbHelper) {
+                                    ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:25:29: error: unresolved reference 'Marker'.
+    fun getById(_id: Long): Marker? {
+                            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:26:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:27:13: error: unresolved reference 'Db'.
+            Db.TABLE_Marker, null, "_id=?", arrayOf(_id.toString()),
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:29:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:29:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:29:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:30:31: error: unresolved reference 'moveToNext'.
+            return if (cursor.moveToNext()) markerFromCursor(cursor) else null
+                              ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:34:32: error: unresolved reference 'Marker'.
+    fun getByGid(gid: String): Marker? {
+                               ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:35:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:36:13: error: unresolved reference 'Db'.
+            Db.TABLE_Marker, null, Db.Marker.gid + "=?", arrayOf(gid),
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:36:36: error: unresolved reference 'Db'.
+            Db.TABLE_Marker, null, Db.Marker.gid + "=?", arrayOf(gid),
+                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:38:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:38:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:38:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:39:31: error: unresolved reference 'moveToNext'.
+            return if (cursor.moveToNext()) markerFromCursor(cursor) else null
+                              ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:43:40: error: unresolved reference 'Marker'.
+    fun listForAriKind(ari: Int, kind: Marker.Kind): List<Marker> {
+                                       ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:43:59: error: unresolved reference 'Marker'.
+    fun listForAriKind(ari: Int, kind: Marker.Kind): List<Marker> {
+                                                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:44:29: error: unresolved reference 'Marker'.
+        val res = ArrayList<Marker>()
+                            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:45:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:46:13: error: unresolved reference 'Db'.
+            Db.TABLE_Marker, null,
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:47:13: error: unresolved reference 'Db'.
+            Db.Marker.ari + "=? and " + Db.Marker.kind + "=?",
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:47:41: error: unresolved reference 'Db'.
+            Db.Marker.ari + "=? and " + Db.Marker.kind + "=?",
+                                        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:49:25: error: unresolved reference 'Db'.
+            null, null, Db.Marker.modifyTime + " desc", null,
+                        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:50:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:50:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:50:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:51:22: error: unresolved reference 'moveToNext'.
+            while (c.moveToNext()) res += markerFromCursor(c)
+                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:56:25: error: unresolved reference 'Marker'.
+    fun listAll(): List<Marker> {
+                        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:57:29: error: unresolved reference 'Marker'.
+        val res = ArrayList<Marker>()
+                            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:58:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:59:13: error: unresolved reference 'Db'.
+            Db.TABLE_Marker, null, null, null, null, null, null,
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:60:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:60:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:60:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:61:22: error: unresolved reference 'moveToNext'.
+            while (c.moveToNext()) res += markerFromCursor(c)
+                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:67:24: error: unresolved reference 'Marker'.
+    fun upsert(marker: Marker) {
+                       ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:68:25: error: unresolved reference 'writableDatabase'.
+        val db = helper.writableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:69:20: error: unresolved reference '_id'.
+        if (marker._id != 0L) {
+                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:70:23: error: unresolved reference 'Db'.
+            db.update(Db.TABLE_Marker, markerToContentValues(marker), "_id=?", arrayOf(marker._id.toString()))
+                      ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:70:95: error: unresolved reference '_id'.
+            db.update(Db.TABLE_Marker, markerToContentValues(marker), "_id=?", arrayOf(marker._id.toString()))
+                                                                                              ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:72:20: error: unresolved reference '_id'.
+            marker._id = db.insert(Db.TABLE_Marker, null, markerToContentValues(marker))
+                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:72:36: error: unresolved reference 'Db'.
+            marker._id = db.insert(Db.TABLE_Marker, null, markerToContentValues(marker))
+                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:80:25: error: unresolved reference 'Marker'.
+        ari: Int, kind: Marker.Kind, caption: String, verseCount: Int,
+                        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:82:8: error: unresolved reference 'Marker'.
+    ): Marker {
+       ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:83:22: error: unresolved reference 'Marker'.
+        val marker = Marker.createNewMarker(ari, kind, caption, verseCount, createTime, modifyTime)
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:84:29: error: unresolved reference 'writableDatabase'.
+        marker._id = helper.writableDatabase.insert(Db.TABLE_Marker, null, markerToContentValues(marker))
+                            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:84:53: error: unresolved reference 'Db'.
+        marker._id = helper.writableDatabase.insert(Db.TABLE_Marker, null, markerToContentValues(marker))
+                                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:88:45: error: unresolved reference 'writableDatabase'.
+    fun deleteById(_id: Long): Int = helper.writableDatabase.delete(
+                                            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:89:9: error: unresolved reference 'Db'.
+        Db.TABLE_Marker, "_id=?", arrayOf(_id.toString()),
+        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:92:48: error: unresolved reference 'writableDatabase'.
+    fun deleteByGid(gid: String): Int = helper.writableDatabase.delete(
+                                               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:93:9: error: unresolved reference 'Db'.
+        Db.TABLE_Marker, Db.Marker.gid + "=?", arrayOf(gid),
+        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:93:26: error: unresolved reference 'Db'.
+        Db.TABLE_Marker, Db.Marker.gid + "=?", arrayOf(gid),
+                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:98:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.compileStatement(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:99:37: error: unresolved reference 'Db'.
+            "select count(*) from ${Db.TABLE_Marker}" +
+                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:100:27: error: unresolved reference 'Db'.
+                " where ${Db.Marker.ari}>=? and ${Db.Marker.ari}<=?",
+                          ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:100:51: error: unresolved reference 'Db'.
+                " where ${Db.Marker.ari}>=? and ${Db.Marker.ari}<=?",
+                                                  ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:101:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { stmt ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:101:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { stmt ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:101:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { stmt ->
+                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:102:18: error: unresolved reference 'bindLong'.
+            stmt.bindLong(1, ariMin.toLong())
+                 ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:103:18: error: unresolved reference 'bindLong'.
+            stmt.bindLong(2, ariMax.toLong())
+                 ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:104:18: error: unresolved reference 'simpleQueryForLong'.
+            stmt.simpleQueryForLong().toInt()
+                 ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:109:38: error: unresolved reference 'Cursor'.
+        fun markerFromCursor(cursor: Cursor): Marker = Marker.createEmptyMarker().apply {
+                                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:109:47: error: unresolved reference 'Marker'.
+        fun markerFromCursor(cursor: Cursor): Marker = Marker.createEmptyMarker().apply {
+                                              ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:109:56: error: unresolved reference 'Marker'.
+        fun markerFromCursor(cursor: Cursor): Marker = Marker.createEmptyMarker().apply {
+                                                       ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:109:83: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun markerFromCursor(cursor: Cursor): Marker = Marker.createEmptyMarker().apply {
+                                                                                  ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:109:89: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun markerFromCursor(cursor: Cursor): Marker = Marker.createEmptyMarker().apply {
+                                                                                        ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:110:13: error: unresolved reference '_id'.
+            _id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:110:26: error: unresolved reference 'getLong'.
+            _id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"))
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:110:41: error: unresolved reference 'getColumnIndexOrThrow'.
+            _id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"))
+                                        ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:111:13: error: unresolved reference 'gid'.
+            gid = cursor.getString(cursor.getColumnIndexOrThrow(Db.Marker.gid))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:111:26: error: unresolved reference 'getString'.
+            gid = cursor.getString(cursor.getColumnIndexOrThrow(Db.Marker.gid))
+                         ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:111:43: error: unresolved reference 'getColumnIndexOrThrow'.
+            gid = cursor.getString(cursor.getColumnIndexOrThrow(Db.Marker.gid))
+                                          ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:111:65: error: unresolved reference 'Db'.
+            gid = cursor.getString(cursor.getColumnIndexOrThrow(Db.Marker.gid))
+                                                                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:112:13: error: unresolved reference 'ari'.
+            ari = cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.ari))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:112:26: error: unresolved reference 'getInt'.
+            ari = cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.ari))
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:112:40: error: unresolved reference 'getColumnIndexOrThrow'.
+            ari = cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.ari))
+                                       ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:112:62: error: unresolved reference 'Db'.
+            ari = cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.ari))
+                                                             ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:113:13: error: unresolved reference 'kind'.
+            kind = Marker.Kind.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.kind)))
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:113:20: error: unresolved reference 'Marker'.
+            kind = Marker.Kind.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.kind)))
+                   ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:113:48: error: unresolved reference 'getInt'.
+            kind = Marker.Kind.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.kind)))
+                                               ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:113:62: error: unresolved reference 'getColumnIndexOrThrow'.
+            kind = Marker.Kind.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.kind)))
+                                                             ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:113:84: error: unresolved reference 'Db'.
+            kind = Marker.Kind.fromCode(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.kind)))
+                                                                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:114:13: error: unresolved reference 'caption'.
+            caption = cursor.getString(cursor.getColumnIndexOrThrow(Db.Marker.caption))
+            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:114:30: error: unresolved reference 'getString'.
+            caption = cursor.getString(cursor.getColumnIndexOrThrow(Db.Marker.caption))
+                             ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:114:47: error: unresolved reference 'getColumnIndexOrThrow'.
+            caption = cursor.getString(cursor.getColumnIndexOrThrow(Db.Marker.caption))
+                                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:114:69: error: unresolved reference 'Db'.
+            caption = cursor.getString(cursor.getColumnIndexOrThrow(Db.Marker.caption))
+                                                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:115:13: error: unresolved reference 'verseCount'.
+            verseCount = cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.verseCount))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:115:33: error: unresolved reference 'getInt'.
+            verseCount = cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.verseCount))
+                                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:115:47: error: unresolved reference 'getColumnIndexOrThrow'.
+            verseCount = cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.verseCount))
+                                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:115:69: error: unresolved reference 'Db'.
+            verseCount = cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.verseCount))
+                                                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:116:13: error: unresolved reference 'createTime'.
+            createTime = Sqlitil.toDate(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.createTime)))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:116:26: error: unresolved reference 'Sqlitil'.
+            createTime = Sqlitil.toDate(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.createTime)))
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:116:48: error: unresolved reference 'getInt'.
+            createTime = Sqlitil.toDate(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.createTime)))
+                                               ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:116:62: error: unresolved reference 'getColumnIndexOrThrow'.
+            createTime = Sqlitil.toDate(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.createTime)))
+                                                             ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:116:84: error: unresolved reference 'Db'.
+            createTime = Sqlitil.toDate(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.createTime)))
+                                                                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:117:13: error: unresolved reference 'modifyTime'.
+            modifyTime = Sqlitil.toDate(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.modifyTime)))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:117:26: error: unresolved reference 'Sqlitil'.
+            modifyTime = Sqlitil.toDate(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.modifyTime)))
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:117:48: error: unresolved reference 'getInt'.
+            modifyTime = Sqlitil.toDate(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.modifyTime)))
+                                               ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:117:62: error: unresolved reference 'getColumnIndexOrThrow'.
+            modifyTime = Sqlitil.toDate(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.modifyTime)))
+                                                             ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:117:84: error: unresolved reference 'Db'.
+            modifyTime = Sqlitil.toDate(cursor.getInt(cursor.getColumnIndexOrThrow(Db.Marker.modifyTime)))
+                                                                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:122:43: error: unresolved reference 'Marker'.
+        fun markerToContentValues(marker: Marker): ContentValues = ContentValues().apply {
+                                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:122:52: error: unresolved reference 'ContentValues'.
+        fun markerToContentValues(marker: Marker): ContentValues = ContentValues().apply {
+                                                   ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:122:68: error: unresolved reference 'ContentValues'.
+        fun markerToContentValues(marker: Marker): ContentValues = ContentValues().apply {
+                                                                   ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:122:84: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun markerToContentValues(marker: Marker): ContentValues = ContentValues().apply {
+                                                                                   ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:122:90: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun markerToContentValues(marker: Marker): ContentValues = ContentValues().apply {
+                                                                                         ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:123:13: error: unresolved reference 'put'.
+            put(Db.Marker.ari, marker.ari)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:123:17: error: unresolved reference 'Db'.
+            put(Db.Marker.ari, marker.ari)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:123:39: error: unresolved reference 'ari'.
+            put(Db.Marker.ari, marker.ari)
+                                      ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:124:13: error: unresolved reference 'put'.
+            put(Db.Marker.gid, marker.gid)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:124:17: error: unresolved reference 'Db'.
+            put(Db.Marker.gid, marker.gid)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:124:39: error: unresolved reference 'gid'.
+            put(Db.Marker.gid, marker.gid)
+                                      ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:125:13: error: unresolved reference 'put'.
+            put(Db.Marker.kind, marker.kind.code)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:125:17: error: unresolved reference 'Db'.
+            put(Db.Marker.kind, marker.kind.code)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:125:40: error: unresolved reference 'kind'.
+            put(Db.Marker.kind, marker.kind.code)
+                                       ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:126:13: error: unresolved reference 'put'.
+            put(Db.Marker.caption, marker.caption)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:126:17: error: unresolved reference 'Db'.
+            put(Db.Marker.caption, marker.caption)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:126:43: error: unresolved reference 'caption'.
+            put(Db.Marker.caption, marker.caption)
+                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:127:13: error: unresolved reference 'put'.
+            put(Db.Marker.verseCount, marker.verseCount)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:127:17: error: unresolved reference 'Db'.
+            put(Db.Marker.verseCount, marker.verseCount)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:127:46: error: unresolved reference 'verseCount'.
+            put(Db.Marker.verseCount, marker.verseCount)
+                                             ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:128:13: error: unresolved reference 'put'.
+            put(Db.Marker.createTime, Sqlitil.toInt(marker.createTime))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:128:17: error: unresolved reference 'Db'.
+            put(Db.Marker.createTime, Sqlitil.toInt(marker.createTime))
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:128:39: error: unresolved reference 'Sqlitil'.
+            put(Db.Marker.createTime, Sqlitil.toInt(marker.createTime))
+                                      ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:128:60: error: unresolved reference 'createTime'.
+            put(Db.Marker.createTime, Sqlitil.toInt(marker.createTime))
+                                                           ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:129:13: error: unresolved reference 'put'.
+            put(Db.Marker.modifyTime, Sqlitil.toInt(marker.modifyTime))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:129:17: error: unresolved reference 'Db'.
+            put(Db.Marker.modifyTime, Sqlitil.toInt(marker.modifyTime))
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:129:39: error: unresolved reference 'Sqlitil'.
+            put(Db.Marker.modifyTime, Sqlitil.toInt(marker.modifyTime))
+                                      ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/MarkerDao.kt:129:60: error: unresolved reference 'modifyTime'.
+            put(Db.Marker.modifyTime, Sqlitil.toInt(marker.modifyTime))
+                                                           ^^^^^^^^^^

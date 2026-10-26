@@ -1,0 +1,75 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:3:19: error: unresolved reference 'Handler'.
+import android.os.Handler
+                  ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:4:19: error: unresolved reference 'Message'.
+import android.os.Message
+                  ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:7:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.CoroutineExceptionHandler
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:8:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.CoroutineScope
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:9:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.Dispatchers
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:10:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.SupervisorJob
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:11:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.delay as coroutineDelay
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:12:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.launch
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:25:30: error: unresolved reference 'Dispatchers'.
+    private val dispatcher = Dispatchers.IO.limitedParallelism(1)
+                             ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:30:109: error: unresolved reference 'Handler'.
+    private class DebounceHandler<RequestType, ResultType>(debouncer: Debouncer<RequestType, ResultType>) : Handler() {
+                                                                                                            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:33:41: error: unresolved reference 'Message'.
+        override fun handleMessage(msg: Message) {
+                                        ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:37:35: error: unresolved reference 'arg1'.
+            if (isOutdated(3, msg.arg1, debouncer.serial.get())) return
+                                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:40:36: error: unresolved reference 'obj'.
+            debouncer.onResult(msg.obj as ResultType)
+                                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:60:13: error: unresolved reference 'coroutineDelay'.
+            coroutineDelay(delay)
+            ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:70:23: error: unresolved reference 'Message'.
+            val msg = Message.obtain()
+                      ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:75:21: error: unresolved reference 'sendMessage'.
+            handler.sendMessage(msg)
+                    ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:93:29: error: unresolved reference 'CoroutineScope'.
+        private val scope = CoroutineScope(SupervisorJob() + CoroutineExceptionHandler { _, error ->
+                            ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:93:44: error: unresolved reference 'SupervisorJob'.
+        private val scope = CoroutineScope(SupervisorJob() + CoroutineExceptionHandler { _, error ->
+                                           ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:93:62: error: unresolved reference 'CoroutineExceptionHandler'.
+        private val scope = CoroutineScope(SupervisorJob() + CoroutineExceptionHandler { _, error ->
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:93:90: error: cannot infer type for implicit value parameter 'it'. Specify it explicitly.
+        private val scope = CoroutineScope(SupervisorJob() + CoroutineExceptionHandler { _, error ->
+                                                                                         ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:93:93: error: cannot infer type for value parameter 'error'. Specify it explicitly.
+        private val scope = CoroutineScope(SupervisorJob() + CoroutineExceptionHandler { _, error ->
+                                                                                            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:94:13: error: unresolved reference 'AppLog'.
+            AppLog.e(TAG, "Debouncer processing failed", error)
+            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:103:22: error: unresolved reference 'AppLog'.
+                1 -> AppLog.d(TAG, "outdated task ($thisId < $currentId) found before process")
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:104:22: error: unresolved reference 'AppLog'.
+                2 -> AppLog.d(TAG, "outdated task ($thisId < $currentId) found after process")
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Debouncer.kt:105:22: error: unresolved reference 'AppLog'.
+                3 -> AppLog.d(TAG, "outdated task ($thisId < $currentId) found before onResult")
+                     ^^^^^^

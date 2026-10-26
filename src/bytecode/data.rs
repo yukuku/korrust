@@ -258,6 +258,7 @@ pub(super) fn methods(
         match ty {
             Type::Long => body.method_reference(0xb8, "java/lang/Long", "hashCode", "(J)I")?,
             Type::Float => body.method_reference(0xb8, "java/lang/Float", "hashCode", "(F)I")?,
+            Type::Double => body.method_reference(0xb8, "java/lang/Double", "hashCode", "(D)I")?,
             Type::Boolean => {
                 body.method_reference(0xb8, "java/lang/Boolean", "hashCode", "(Z)I")?
             }
@@ -313,8 +314,13 @@ pub(super) fn methods(
                 body.bytes.push(0x94);
                 body.branch(0x9a, different);
             }
-            Type::Float => {
-                body.method_reference(0xb8, "java/lang/Float", "compare", "(FF)I")?;
+            Type::Float | Type::Double => {
+                let (owner, descriptor) = if ty == &Type::Double {
+                    ("java/lang/Double", "(DD)I")
+                } else {
+                    ("java/lang/Float", "(FF)I")
+                };
+                body.method_reference(0xb8, owner, "compare", descriptor)?;
                 body.branch(0x9a, different);
             }
             ty if ty.is_reference() => {

@@ -1,0 +1,111 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:3:16: error: unresolved reference 'content'.
+import android.content.ContentResolver
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:4:16: error: unresolved reference 'net'.
+import android.net.Uri
+               ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:5:26: error: unresolved reference 'App'.
+import yuku.alkitab.base.App
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:6:26: error: unresolved reference 'storage'.
+import yuku.alkitab.base.storage.InternalDb
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:7:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.AppLog
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:8:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.Highlights
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:9:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.safeQuery
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:10:26: error: unresolved reference 'widget'.
+import yuku.alkitab.base.widget.AttributeView
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:12:26: error: unresolved reference 'Ari'.
+import yuku.alkitab.util.Ari
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:18:18: error: unresolved reference 'InternalDb'.
+    fun load(db: InternalDb, contentResolver: ContentResolver, ari_bc: Int, verses: SingleChapterVerses): VersesAttributes {
+                 ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:18:47: error: unresolved reference 'ContentResolver'.
+    fun load(db: InternalDb, contentResolver: ContentResolver, ari_bc: Int, verses: SingleChapterVerses): VersesAttributes {
+                                              ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:18:107: error: unresolved reference 'VersesAttributes'.
+    fun load(db: InternalDb, contentResolver: ContentResolver, ari_bc: Int, verses: SingleChapterVerses): VersesAttributes {
+                                                                                                          ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:20:33: error: unresolved reference 'VersesAttributes'.
+        if (ari_bc == 0) return VersesAttributes.createEmpty(verses.verseCount)
+                                ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:26:38: error: unresolved reference 'Highlights'.
+        val highlightColorMap: Array<Highlights.Info?> = arrayOfNulls(verseCount)
+                                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:26:58: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val highlightColorMap: Array<Highlights.Info?> = arrayOfNulls(verseCount)
+                                                         ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:28:16: error: unresolved reference 'countMarkersForBookChapter'.
+        if (db.countMarkersForBookChapter(ari_bc) > 0) {
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:29:16: error: unresolved reference 'putAttributes'.
+            db.putAttributes(ari_bc, bookmarkCountMap, noteCountMap, highlightColorMap)
+               ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:37:33: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+        for (progressMark in db.listAllProgressMarks()) {
+                                ^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:37:33: error: unresolved reference 'listAllProgressMarks'.
+        for (progressMark in db.listAllProgressMarks()) {
+                                ^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:43:29: error: unresolved reference 'Ari'.
+            val mapOffset = Ari.toVerse(ari) - 1
+                            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:45:17: error: unresolved reference 'AppLog'.
+                AppLog.e(TAG, "(for progressMarkBitsMap:) mapOffset out of bounds: " + mapOffset + " happened on ari 0x" + Integer.toHexString(ari))
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:47:116: error: unresolved reference 'AttributeView'.
+                progressMarkBitsMap[mapOffset] = progressMarkBitsMap[mapOffset] or (1 shl progressMark.preset_id + AttributeView.PROGRESS_MARK_BITS_START)
+                                                                                                                   ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:55:25: error: unresolved reference 'safeQuery'.
+        contentResolver.safeQuery(Uri.parse("content://palki.maps/exists?ari=$ari_bc"), null, null, null, null)?.use { c ->
+                        ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:55:35: error: unresolved reference 'Uri'.
+        contentResolver.safeQuery(Uri.parse("content://palki.maps/exists?ari=$ari_bc"), null, null, null, null)?.use { c ->
+                                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:55:114: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        contentResolver.safeQuery(Uri.parse("content://palki.maps/exists?ari=$ari_bc"), null, null, null, null)?.use { c ->
+                                                                                                                 ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:55:114: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        contentResolver.safeQuery(Uri.parse("content://palki.maps/exists?ari=$ari_bc"), null, null, null, null)?.use { c ->
+                                                                                                                 ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:55:120: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        contentResolver.safeQuery(Uri.parse("content://palki.maps/exists?ari=$ari_bc"), null, null, null, null)?.use { c ->
+                                                                                                                       ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:56:19: error: unresolved reference 'moveToNext'.
+            if (c.moveToNext()) {
+                  ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:57:34: error: unresolved reference 'getColumnIndexOrThrow'.
+                val col_aris = c.getColumnIndexOrThrow("aris")
+                                 ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:58:35: error: unresolved reference 'getString'.
+                val aris_json = c.getString(col_aris)
+                                  ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:59:28: error: unresolved reference 'App'.
+                val aris = App.getDefaultGson().fromJson(aris_json, IntArray::class.java)
+                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:62:33: error: for-loop range must have an 'iterator()' method.
+                    for (ari in aris) {
+                                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:63:41: error: unresolved reference 'Ari'.
+                        val mapOffset = Ari.toVerse(ari) - 1
+                                        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:65:29: error: unresolved reference 'AppLog'.
+                            AppLog.e(TAG, "(for hasMapsMap:) mapOffset out of bounds: " + mapOffset + " happened on ari 0x" + Integer.toHexString(ari))
+                            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VerseAttributeLoader.kt:75:16: error: unresolved reference 'VersesAttributes'.
+        return VersesAttributes(
+               ^^^^^^^^^^^^^^^^

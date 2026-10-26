@@ -1,0 +1,690 @@
+{
+  "status": "completed",
+  "commands": [
+    {
+      "label": "Pinned reference identity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/000-stdout.txt",
+      "stderr": "logs/000-stderr.txt"
+    },
+    {
+      "label": "Compile unchanged Java interop fixtures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "/workspace/korrust/tests/fixtures/interop/AnnotatedForeign.java",
+        "/workspace/korrust/tests/fixtures/interop/ChildMethods.java",
+        "/workspace/korrust/tests/fixtures/interop/ForeignInterface.java",
+        "/workspace/korrust/tests/fixtures/interop/ForeignMethods.java",
+        "/workspace/korrust/tests/fixtures/interop/ParentMethods.java",
+        "/workspace/korrust/tests/fixtures/interop/WhenTracker.java",
+        "/workspace/korrust/tests/fixtures/interop/android/os/Parcel.java",
+        "/workspace/korrust/tests/fixtures/interop/android/os/Parcelable.java",
+        "/workspace/korrust/tests/fixtures/interop/androidx/annotation/NonNull.java",
+        "/workspace/korrust/tests/fixtures/interop/annotated/PackageForeign.java",
+        "/workspace/korrust/tests/fixtures/interop/annotated/package-info.java"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/001-stdout.txt",
+      "stderr": "logs/001-stderr.txt"
+    },
+    {
+      "label": "Compile supported regression java_generic_method with official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_generic_method.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/official"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/002-stdout.txt",
+      "stderr": "logs/002-stderr.txt"
+    },
+    {
+      "label": "Compile supported regression java_generic_method with candidate",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_generic_method.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/candidate"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/003-stdout.txt",
+      "stderr": "logs/003-stderr.txt"
+    },
+    {
+      "label": "Compile Java regression caller java_generic_method against official Kotlin",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/official:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/drivers",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/RegressionCheck.java"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/004-stdout.txt",
+      "stderr": "logs/004-stderr.txt"
+    },
+    {
+      "label": "Run supported regression java_generic_method against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/drivers:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/official:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "RegressionCheck"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/005-stdout.txt",
+      "stderr": "logs/005-stderr.txt"
+    },
+    {
+      "label": "Run supported regression java_generic_method against candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/drivers:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/candidate:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "RegressionCheck"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/006-stdout.txt",
+      "stderr": "logs/006-stderr.txt"
+    },
+    {
+      "label": "Inspect supported regression ABI java_generic_method from official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/official",
+        "Java_generic_methodKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/007-stdout.txt",
+      "stderr": "logs/007-stderr.txt"
+    },
+    {
+      "label": "Inspect supported regression ABI java_generic_method from candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_generic_method/candidate",
+        "Java_generic_methodKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/008-stdout.txt",
+      "stderr": "logs/008-stderr.txt"
+    },
+    {
+      "label": "Compile supported regression java_annotated_method with official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_annotated_method.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/official"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/009-stdout.txt",
+      "stderr": "logs/009-stderr.txt"
+    },
+    {
+      "label": "Compile supported regression java_annotated_method with candidate",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_annotated_method.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/candidate"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/010-stdout.txt",
+      "stderr": "logs/010-stderr.txt"
+    },
+    {
+      "label": "Compile Java regression caller java_annotated_method against official Kotlin",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/official:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/drivers",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/RegressionCheck.java"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/011-stdout.txt",
+      "stderr": "logs/011-stderr.txt"
+    },
+    {
+      "label": "Run supported regression java_annotated_method against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/drivers:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/official:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "RegressionCheck"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/012-stdout.txt",
+      "stderr": "logs/012-stderr.txt"
+    },
+    {
+      "label": "Run supported regression java_annotated_method against candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/drivers:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/candidate:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "RegressionCheck"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/013-stdout.txt",
+      "stderr": "logs/013-stderr.txt"
+    },
+    {
+      "label": "Inspect supported regression ABI java_annotated_method from official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/official",
+        "Java_annotated_methodKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/014-stdout.txt",
+      "stderr": "logs/014-stderr.txt"
+    },
+    {
+      "label": "Inspect supported regression ABI java_annotated_method from candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_annotated_method/candidate",
+        "Java_annotated_methodKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/015-stdout.txt",
+      "stderr": "logs/015-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_inherited_member",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_inherited_member.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/unsupported-reference"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/016-stdout.txt",
+      "stderr": "logs/016-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_inherited_member",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_inherited_member.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/unsupported-java_inherited_member"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 1,
+      "stdout": "logs/017-stdout.txt",
+      "stderr": "logs/017-stderr.txt"
+    },
+    {
+      "label": "Compile supported regression java_hierarchy_overload with official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_hierarchy_overload.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/official"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/018-stdout.txt",
+      "stderr": "logs/018-stderr.txt"
+    },
+    {
+      "label": "Compile supported regression java_hierarchy_overload with candidate",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_hierarchy_overload.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/candidate"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/019-stdout.txt",
+      "stderr": "logs/019-stderr.txt"
+    },
+    {
+      "label": "Compile Java regression caller java_hierarchy_overload against official Kotlin",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/official:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/drivers",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/RegressionCheck.java"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/020-stdout.txt",
+      "stderr": "logs/020-stderr.txt"
+    },
+    {
+      "label": "Run supported regression java_hierarchy_overload against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/drivers:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/official:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "RegressionCheck"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/021-stdout.txt",
+      "stderr": "logs/021-stderr.txt"
+    },
+    {
+      "label": "Run supported regression java_hierarchy_overload against candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/drivers:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/candidate:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "RegressionCheck"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/022-stdout.txt",
+      "stderr": "logs/022-stderr.txt"
+    },
+    {
+      "label": "Inspect supported regression ABI java_hierarchy_overload from official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/official",
+        "Java_hierarchy_overloadKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/023-stdout.txt",
+      "stderr": "logs/023-stderr.txt"
+    },
+    {
+      "label": "Inspect supported regression ABI java_hierarchy_overload from candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_hierarchy_overload/candidate",
+        "Java_hierarchy_overloadKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/024-stdout.txt",
+      "stderr": "logs/024-stderr.txt"
+    },
+    {
+      "label": "Compile supported regression java_interface with official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_interface.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/official"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/025-stdout.txt",
+      "stderr": "logs/025-stderr.txt"
+    },
+    {
+      "label": "Compile supported regression java_interface with candidate",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_interface.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/candidate"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/026-stdout.txt",
+      "stderr": "logs/026-stderr.txt"
+    },
+    {
+      "label": "Compile Java regression caller java_interface against official Kotlin",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/official:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/drivers",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/RegressionCheck.java"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/027-stdout.txt",
+      "stderr": "logs/027-stderr.txt"
+    },
+    {
+      "label": "Run supported regression java_interface against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/drivers:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/official:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "RegressionCheck"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/028-stdout.txt",
+      "stderr": "logs/028-stderr.txt"
+    },
+    {
+      "label": "Run supported regression java_interface against candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/drivers:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/candidate:/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "RegressionCheck"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/029-stdout.txt",
+      "stderr": "logs/029-stderr.txt"
+    },
+    {
+      "label": "Inspect supported regression ABI java_interface from official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/official",
+        "Java_interfaceKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/030-stdout.txt",
+      "stderr": "logs/030-stderr.txt"
+    },
+    {
+      "label": "Inspect supported regression ABI java_interface from candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/supported-regressions/java_interface/candidate",
+        "Java_interfaceKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/031-stdout.txt",
+      "stderr": "logs/031-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_annotated_class",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_annotated_class.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/unsupported-reference"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/032-stdout.txt",
+      "stderr": "logs/032-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_annotated_class",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_annotated_class.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/unsupported-java_annotated_class"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 1,
+      "stdout": "logs/033-stdout.txt",
+      "stderr": "logs/033-stderr.txt"
+    },
+    {
+      "label": "Reference Java interop acceptance: java_annotated_package",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_annotated_package.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/unsupported-reference"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "stdout": "logs/034-stdout.txt",
+      "stderr": "logs/034-stderr.txt"
+    },
+    {
+      "label": "Explicit Java interop unsupported rejection: java_annotated_package",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_annotated_package.kt",
+        "-cp",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign",
+        "-d",
+        "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/unsupported-java_annotated_package"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 1,
+      "stdout": "logs/035-stdout.txt",
+      "stderr": "logs/035-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "regressions/java_generic_method",
+      "outcome": "pass",
+      "scope": "Former unsupported fixture compiles with both providers. One Java caller compiled against official output runs independent assertions against both providers with JVM verification all; its classfile hashes remain identical. Public/protected javap declarations and descriptors match after member-order normalization and any explicitly verified Supplier filtering.",
+      "source_sha256": "d24cccb16ba2616408c0577dead07f582568e216a95563741dda6e44b0e8821f",
+      "driver_sha256": "a43e808288d60cf8968a3e24e0f971c43093bb92ab51a146854b874d2889020b",
+      "driver_classfiles_sha256": {
+        "RegressionCheck.class": "21e40da977078ef3007e50539a8ee26e1a0dc79b3f5c607f00b61114eb6fa350"
+      }
+    },
+    {
+      "id": "regressions/java_annotated_method",
+      "outcome": "pass",
+      "scope": "Former unsupported fixture compiles with both providers. One Java caller compiled against official output runs independent assertions against both providers with JVM verification all; its classfile hashes remain identical. Public/protected javap declarations and descriptors match after member-order normalization and any explicitly verified Supplier filtering.",
+      "source_sha256": "bb01c2e962f5c24aa233daf2652eb5d453d414aa4e3ffc4a6085d6c0288aff61",
+      "driver_sha256": "1d5f26a8f59b453add88a58a796916454caf8e9cf3f6955fe8b4849496904e4f",
+      "driver_classfiles_sha256": {
+        "RegressionCheck$1.class": "95d9efc8b4d4be91d2073d726133bac0b899963043853dc6d3ab5df85397c332",
+        "RegressionCheck$2.class": "a0d1e2d5f73f0df8619e6c2ee107bbaf1cd05ac976e673e337559bf5e578af38",
+        "RegressionCheck.class": "dcf16187ce26350c09a20eb0c5e7cb5652b11f568ebe865f887d27d6939729a7"
+      },
+      "runtime_checks": 6
+    },
+    {
+      "id": "unsupported/java_inherited_member",
+      "outcome": "unsupported_language",
+      "source_sha256": "321fa5c28b8785e2c983cfd54b6445dc279d22f111d6b67c14d233401f8293d1",
+      "diagnostic": "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_inherited_member.kt:2:37: error: Unresolved member or imported extension: hashCode",
+      "scope": "Pinned official accepts; candidate rejects with exit1 and no output directory."
+    },
+    {
+      "id": "regressions/java_hierarchy_overload",
+      "outcome": "pass",
+      "scope": "Former unsupported fixture compiles with both providers. One Java caller compiled against official output runs independent assertions against both providers with JVM verification all; its classfile hashes remain identical. Public/protected javap declarations and descriptors match after member-order normalization and any explicitly verified Supplier filtering.",
+      "source_sha256": "95e28ce93024e4a6cecff61bd4cac56b4a5e444d41e5a0884816f080569c6c5e",
+      "driver_sha256": "c979b019602890b65d99df10b1fdbb27c041e0f7baad7b956f9ee4ad8d945a28",
+      "driver_classfiles_sha256": {
+        "RegressionCheck.class": "8276e4b64f4a9ab8827ae0abd8fc0e57bacd436f368cfe5a2bb3d534a5cb0043"
+      }
+    },
+    {
+      "id": "regressions/java_interface",
+      "outcome": "pass",
+      "scope": "Former unsupported fixture compiles with both providers. One Java caller compiled against official output runs independent assertions against both providers with JVM verification all; its classfile hashes remain identical. Public/protected javap declarations and descriptors match after member-order normalization and any explicitly verified Supplier filtering.",
+      "source_sha256": "535f2ffa30c10426e055703cac1095b743f8981688fc399bdc15c32905ae3877",
+      "driver_sha256": "45e5a5d061c0d80105c090d43796cb19166b0a8162033ed64e1bf229cfcc9eb4",
+      "driver_classfiles_sha256": {
+        "RegressionCheck$1.class": "935857459221ea5e5f5ba960bc5fc8884377e57d7fa36974a7138ec611623b03",
+        "RegressionCheck$2.class": "744fe2e1a42076699bcb65c3367476fb38369dea9019856cf4ed48a9ab1a1cca",
+        "RegressionCheck.class": "dc223f7bc7405aeed323d338671d237a1b0d7a0d7bbaa0c4b651b994b9330bc7"
+      }
+    },
+    {
+      "id": "unsupported/java_annotated_class",
+      "outcome": "unsupported_language",
+      "source_sha256": "39985c2b3baa9d81379633a95fd18b239e35ed7b84c07c4bb04c796c194cf970",
+      "diagnostic": "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_annotated_class.kt:1:8: error: Imported class is inaccessible or unsupported",
+      "scope": "Pinned official accepts; candidate rejects with exit1 and no output directory."
+    },
+    {
+      "id": "unsupported/java_annotated_package",
+      "outcome": "unsupported_language",
+      "source_sha256": "c3eb5ca04a3d3b5b93d549746be56382c6f281f31a3b46d11a46579c021cc284",
+      "diagnostic": "/workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/java_annotated_package.kt:1:1: error: Java package metadata /workspace/korrust/target/final-preparation/2026-10-26-interop-boundary-promotions-v3/foreign is unsupported because it may define nullability defaults",
+      "scope": "Pinned official accepts; candidate rejects with exit1 and no output directory."
+    }
+  ],
+  "compiler": {
+    "path": "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+    "sha256": "caa699dac6951e676fdd28375d0ab8488e978a4c5484e6a581caaef334dd42f5"
+  },
+  "reference": {
+    "version": "2.3.21",
+    "compiler_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "dependencies": {
+    "jmod_sha256": "f8d258a856a691c81ad9dd16964635bbc8a8fdd7f40edec37dcf3d904feb7ae1",
+    "jdk_classes_sha256": {
+      "java/io/IOException": "ba58ca8fd72e2e7c8e67b168997b34287156048957381e39e8f2b5c74ae66c73",
+      "java/io/Closeable": "60029d56e95aa8ba854db3385f8ab145f0108f61c054cce424585da83ccf5e42",
+      "java/lang/AutoCloseable": "24a4f58007958b6b736a118f0246e8b94d2ef72e630bc015e48ada53bccac0c5",
+      "java/lang/Exception": "402055b2940a9bd899905efbce93d086eeead51d6c16276735add88dad651348",
+      "java/lang/Throwable": "0f7e3970a4957698dd14c774ee8200407669a91346747c98cfa6c41150e76e51",
+      "java/lang/Object": "10cc90d16479279e1d6ee258fdaea4c5640ac6125acb5a7100a7b0a20237a9f2",
+      "java/lang/Deprecated": "1ee2c364d63516e7fcd5515669469373d1841a69b3a83e2fa024c0755102e84f"
+    },
+    "java_sources_sha256": {
+      "tests/fixtures/interop/AnnotatedForeign.java": "a3874882c01772c9f51de0bd7735f829f56fb8290d8a24118529680ca0a50b4e",
+      "tests/fixtures/interop/ChildMethods.java": "ce64b6fa2a07429a6ff1261b94a16cd434fe17eef7d72deab87814d4455f133d",
+      "tests/fixtures/interop/ForeignInterface.java": "4db1cc4ae2b081ea1e840b50c82b9ff8fbd260235e6687e56d0e355ec8579c65",
+      "tests/fixtures/interop/ForeignMethods.java": "da172b22fc5abd194562a9c050e5c9f360f583a8631fe28535e0b62720f5e243",
+      "tests/fixtures/interop/ParentMethods.java": "4ad132dfd047e2a1e87f02039222779b3c9d0090b7afa8a6703a51cfe823436c",
+      "tests/fixtures/interop/WhenTracker.java": "65fc96f0667f3d4dd6c7d45e16284da48432b75138d871c4effdaa0e944f34fa",
+      "tests/fixtures/interop/android/os/Parcel.java": "d120badab7f8813973d6b148df41e085a859205f8f06d98fea1dd01463482f06",
+      "tests/fixtures/interop/android/os/Parcelable.java": "5057df7e618630b6719d80138603a6915f6060b79640dd52de62df50077e992c",
+      "tests/fixtures/interop/androidx/annotation/NonNull.java": "feb1e800204acdaa66e9792e34cbd43c834fa7d730feb40c2812fdb4d673ea59",
+      "tests/fixtures/interop/annotated/PackageForeign.java": "2d01c814c9251718e616ae420b89af49a598f154d96dcda0125db606dd9c72ce",
+      "tests/fixtures/interop/annotated/package-info.java": "6be1633993f2c8f0a04b192fc6da0740b7504c1928166e5da22ad8bff90e0492"
+    }
+  },
+  "unchanged_sources_and_ids": 7,
+  "previously_supported_rows": 3,
+  "newly_supported_rows": [
+    "java_annotated_method"
+  ]
+}

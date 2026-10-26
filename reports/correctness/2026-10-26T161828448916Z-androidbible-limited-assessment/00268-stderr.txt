@@ -1,0 +1,79 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:3:27: error: unresolved reference 'Book'.
+import yuku.alkitab.model.Book
+                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:63:27: error: unresolved reference 'Book'.
+    fun getBookAbbr(book: Book): String {
+                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:64:14: error: unresolved reference 'abbreviation'.
+        book.abbreviation?.let { return it }
+             ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:64:28: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        book.abbreviation?.let { return it }
+                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:64:28: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        book.abbreviation?.let { return it }
+                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:64:32: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        book.abbreviation?.let { return it }
+                               ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:65:29: error: unresolved reference 'shortName'.
+        hardcodedAbbrs[book.shortName]?.let { return it }
+                            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:67:33: error: unresolved reference 'shortName'.
+        var name: String = book.shortName
+                                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:69:62: error: unresolved reference 'bookId'.
+        val numberedBookCategory = numberedBookCategory(book.bookId)
+                                                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:81:39: error: unresolved reference 'Book'.
+    private class Collation(val book: Book, val base: String, val number: Int)
+                                      ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:83:35: error: unresolved reference 'Book'.
+    private fun collationOf(book: Book): Collation {
+                                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:84:33: error: unresolved reference 'shortName'.
+        var base: String = book.shortName // default
+                                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:87:62: error: unresolved reference 'bookId'.
+        val numberedBookCategory = numberedBookCategory(book.bookId)
+                                                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:92:22: error: unresolved reference 'shortName'.
+            if (book.shortName.startsWith(startsWith)) {
+                     ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:93:29: error: unresolved reference 'shortName'.
+                base = book.shortName.substring(startsWith.length).trim { it <= ' ' }
+                            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:95:29: error: unresolved reference 'shortName'.
+            } else if (book.shortName.startsWith(startsWithNumber)) {
+                            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:96:29: error: unresolved reference 'shortName'.
+                base = book.shortName.substring(startsWithNumber.length).trimStart('.').trim { it <= ' ' }
+                            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:109:41: error: unresolved reference 'Book'.
+    fun sortAlphabetically(books: Array<Book>): Array<Book> =
+                                        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:109:55: error: unresolved reference 'Book'.
+    fun sortAlphabetically(books: Array<Book>): Array<Book> =
+                                                      ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:111:14: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .map(::collationOf)
+             ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:111:14: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            .map(::collationOf)
+             ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:111:14: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T, R> Array<out T>.map(transform: (T) -> R): List<R>
+            .map(::collationOf)
+             ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:111:20: error: inapplicable candidate(s): fun collationOf(book: ??? (Unresolved qualified name: Book)): BookNameSorter.Collation
+            .map(::collationOf)
+                   ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:113:14: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            .map(Collation::book)
+             ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:113:29: error: inapplicable candidate(s): val book: ??? (Unresolved qualified name: Book)
+            .map(Collation::book)
+                            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookNameSorter.kt:114:14: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .toTypedArray()
+             ^^^^^^^^^^^^

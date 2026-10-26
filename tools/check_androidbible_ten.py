@@ -264,10 +264,38 @@ class Harness(SimpleHarness):
         for item in observations[0]:
             self.case("kotlin/" + item["id"], scope="Pinned official Kotlin compiles named constructors, property/list/nullability, data destructuring and generated default/named copy against each provider, runs with -Xverify:all and independent assertions.")
 
+    def supported_regression(self, case, source):
+        regression = case["supported_regression"]
+        java_source = FIXTURES / regression["java_fixture"]
+        outputs = {}
+        for provider in self.outputs:
+            destination = self.work / (provider + "-regression-" + case["id"])
+            self.compile(provider, source, destination, [self.outputs[provider]["java"]])
+            outputs[provider] = destination
+        callers = self.work / ("regression-callers-" + case["id"])
+        self.run("Compile fixed regression caller against official " + case["id"], [self.javac, "-cp", classpath(outputs["official"], self.stdlib), "-d", callers, java_source])
+        fixed_callers = tree_hashes(callers, ".class")
+        observations = []
+        for provider, output in outputs.items():
+            result = self.run("Run fixed regression assertions " + provider + "/" + case["id"], [self.java, "-Xverify:all", "-cp", classpath(callers, output, self.stdlib), regression["main_class"]])
+            observation = json.loads(result.stdout)
+            if observation.get("id") != case["id"] or not isinstance(observation.get("checks"), int) or observation["checks"] <= 0:
+                raise AssertionError("Missing independent regression assertions: " + case["id"])
+            observations.append(observation)
+        if observations[0] != observations[1] or tree_hashes(callers, ".class") != fixed_callers:
+            raise AssertionError("Fixed regression caller or observations differ: " + case["id"])
+        abis = [self.run("Inspect supported regression ABI " + provider + "/" + case["id"], [self.javap, "-protected", "-s", "-classpath", output, regression["facade"]]).stdout for provider, output in outputs.items()]
+        if source_abi(abis[0]) != source_abi(abis[1]):
+            raise AssertionError("Supported regression JVM ABI differs: " + case["id"])
+        self.case("regressions/" + case["id"], source_sha256=sha(source), java_fixture_sha256=sha(java_source), fixed_java_callers_sha256=fixed_callers, runtime_checks=observations[0]["checks"], providers=list(outputs), jvm_verification="all", scope=case["scope"])
+
     def boundaries(self):
         for case in json.loads((FIXTURES / "rejections.json").read_text()):
             source = self.work / ("Boundary_" + case["id"] + ".kt")
             source.write_text(case["source"] + "\n")
+            if case.get("supported_regression"):
+                self.supported_regression(case, source)
+                continue
             for provider in self.outputs:
                 destination = self.work / (provider + "-boundary-" + case["id"])
                 result = self.compile(provider, source, destination, [self.outputs[provider]["java"]], allowed=(1,) if provider == "candidate" or case.get("invalid") else (0,))

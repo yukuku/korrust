@@ -1,0 +1,6 @@
+tests/fixtures/compatibility_annotations_visibility/negative/PrivateAccess.kt:2:29: error: cannot access 'fun privateOffset(value: Int): Int': it is private in file.
+fun illegalPrivate(): Int = privateOffset(fileSecret)
+                            ^^^^^^^^^^^^^
+tests/fixtures/compatibility_annotations_visibility/negative/PrivateAccess.kt:2:43: error: cannot access 'val fileSecret: Int': it is private in file.
+fun illegalPrivate(): Int = privateOffset(fileSecret)
+                                          ^^^^^^^^^^

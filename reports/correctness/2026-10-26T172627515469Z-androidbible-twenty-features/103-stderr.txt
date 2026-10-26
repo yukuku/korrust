@@ -1,0 +1,18 @@
+tests/fixtures/twenty_features/MetadataRejections.kt:3:48: error: null cannot be a value of a non-null type 'List<AudioLogEntry>'.
+fun nonnull(value: Signatures) { value.entries(null) }
+                                               ^^^^
+tests/fixtures/twenty_features/MetadataRejections.kt:4:58: error: argument type mismatch: actual type is 'List<Int?>', but 'List<Int>' was expected.
+fun elementNullability(value: List<Int?>): Int = intList(value)
+                                                         ^^^^^
+tests/fixtures/twenty_features/MetadataRejections.kt:5:41: error: 'val' cannot be reassigned.
+fun readOnly(value: RichRecord) { value.score = 2.0f }
+                                        ^^^^^
+tests/fixtures/twenty_features/MetadataRejections.kt:6:47: error: unresolved reference 'seed'.
+fun nonproperty(value: Captured): Int = value.seed
+                                              ^^^^
+tests/fixtures/twenty_features/MetadataRejections.kt:7:52: error: cannot access 'var hidden: Long': it is private in 'twenty.MutableCtor'.
+fun privateField(value: MutableCtor): Long = value.hidden
+                                                   ^^^^^^
+tests/fixtures/twenty_features/MetadataRejections.kt:8:36: error: return type mismatch: expected 'Int', actual 'Int?'.
+fun wrongBoxed(value: Int?): Int = value
+                                   ^^^^^

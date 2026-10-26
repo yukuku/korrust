@@ -1,0 +1,408 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:3:16: error: unresolved reference 'content'.
+import android.content.ContentValues
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:4:16: error: unresolved reference 'database'.
+import android.database.Cursor
+               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:5:16: error: unresolved reference 'database'.
+import android.database.DatabaseUtils
+               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:6:16: error: unresolved reference 'provider'.
+import android.provider.BaseColumns
+               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:7:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.Sqlitil
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:8:27: error: unresolved reference 'ProgressMark'.
+import yuku.alkitab.model.ProgressMark
+                          ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:9:27: error: unresolved reference 'ProgressMarkHistory'.
+import yuku.alkitab.model.ProgressMarkHistory
+                          ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:22:43: error: unresolved reference 'InternalDbHelper'.
+class ProgressMarkDao(private val helper: InternalDbHelper) {
+                                          ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:25:25: error: unresolved reference 'ProgressMark'.
+    fun listAll(): List<ProgressMark> {
+                        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:26:29: error: unresolved reference 'ProgressMark'.
+        val res = ArrayList<ProgressMark>()
+                            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:27:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:28:13: error: unresolved reference 'Db'.
+            Db.TABLE_ProgressMark, null, Db.ProgressMark.ari + " != 0",
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:28:42: error: unresolved reference 'Db'.
+            Db.TABLE_ProgressMark, null, Db.ProgressMark.ari + " != 0",
+                                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:30:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:30:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:30:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:31:27: error: unresolved reference 'moveToNext'.
+            while (cursor.moveToNext()) res += progressMarkFromCursor(cursor)
+                          ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:37:27: error: unresolved reference 'DatabaseUtils'.
+    fun countAll(): Int = DatabaseUtils.queryNumEntries(
+                          ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:38:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase, Db.TABLE_ProgressMark, Db.ProgressMark.ari + " != 0",
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:38:34: error: unresolved reference 'Db'.
+        helper.readableDatabase, Db.TABLE_ProgressMark, Db.ProgressMark.ari + " != 0",
+                                 ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:38:57: error: unresolved reference 'Db'.
+        helper.readableDatabase, Db.TABLE_ProgressMark, Db.ProgressMark.ari + " != 0",
+                                                        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:41:39: error: unresolved reference 'ProgressMark'.
+    fun getByPresetId(presetId: Int): ProgressMark? {
+                                      ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:42:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:43:13: error: unresolved reference 'Db'.
+            Db.TABLE_ProgressMark, null,
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:44:13: error: unresolved reference 'Db'.
+            Db.ProgressMark.preset_id + "=?", arrayOf(presetId.toString()),
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:46:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:46:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:46:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:47:31: error: unresolved reference 'moveToNext'.
+            return if (cursor.moveToNext()) progressMarkFromCursor(cursor) else null
+                              ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:52:38: error: unresolved reference 'ProgressMark'.
+    fun insertOrUpdate(progressMark: ProgressMark) {
+                                     ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:53:25: error: unresolved reference 'writableDatabase'.
+        val db = helper.writableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:54:25: error: unresolved reference 'ContentValues'.
+        val historyCv = ContentValues().apply {
+                        ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:54:41: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val historyCv = ContentValues().apply {
+                                        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:54:47: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val historyCv = ContentValues().apply {
+                                              ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:55:13: error: unresolved reference 'put'.
+            put(Db.ProgressMarkHistory.progress_mark_preset_id, progressMark.preset_id)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:55:17: error: unresolved reference 'Db'.
+            put(Db.ProgressMarkHistory.progress_mark_preset_id, progressMark.preset_id)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:55:78: error: unresolved reference 'preset_id'.
+            put(Db.ProgressMarkHistory.progress_mark_preset_id, progressMark.preset_id)
+                                                                             ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:56:13: error: unresolved reference 'put'.
+            put(Db.ProgressMarkHistory.progress_mark_caption, progressMark.caption)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:56:17: error: unresolved reference 'Db'.
+            put(Db.ProgressMarkHistory.progress_mark_caption, progressMark.caption)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:56:76: error: unresolved reference 'caption'.
+            put(Db.ProgressMarkHistory.progress_mark_caption, progressMark.caption)
+                                                                           ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:57:13: error: unresolved reference 'put'.
+            put(Db.ProgressMarkHistory.ari, progressMark.ari)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:57:17: error: unresolved reference 'Db'.
+            put(Db.ProgressMarkHistory.ari, progressMark.ari)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:57:58: error: unresolved reference 'ari'.
+            put(Db.ProgressMarkHistory.ari, progressMark.ari)
+                                                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:58:13: error: unresolved reference 'put'.
+            put(Db.ProgressMarkHistory.createTime, Sqlitil.toInt(progressMark.modifyTime))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:58:17: error: unresolved reference 'Db'.
+            put(Db.ProgressMarkHistory.createTime, Sqlitil.toInt(progressMark.modifyTime))
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:58:52: error: unresolved reference 'Sqlitil'.
+            put(Db.ProgressMarkHistory.createTime, Sqlitil.toInt(progressMark.modifyTime))
+                                                   ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:58:79: error: unresolved reference 'modifyTime'.
+            put(Db.ProgressMarkHistory.createTime, Sqlitil.toInt(progressMark.modifyTime))
+                                                                              ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:63:23: error: unresolved reference 'Db'.
+            db.insert(Db.TABLE_ProgressMarkHistory, null, historyCv)
+                      ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:65:28: error: unresolved reference 'DatabaseUtils'.
+            val existing = DatabaseUtils.queryNumEntries(
+                           ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:66:21: error: unresolved reference 'Db'.
+                db, Db.TABLE_ProgressMark,
+                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:67:17: error: unresolved reference 'Db'.
+                Db.ProgressMark.preset_id + "=?", arrayOf(progressMark.preset_id.toString()),
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:67:72: error: unresolved reference 'preset_id'.
+                Db.ProgressMark.preset_id + "=?", arrayOf(progressMark.preset_id.toString()),
+                                                                       ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:71:21: error: unresolved reference 'Db'.
+                    Db.TABLE_ProgressMark, progressMarkToContentValues(progressMark),
+                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:72:21: error: unresolved reference 'Db'.
+                    Db.ProgressMark.preset_id + "=?", arrayOf(progressMark.preset_id.toString()),
+                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:72:76: error: unresolved reference 'preset_id'.
+                    Db.ProgressMark.preset_id + "=?", arrayOf(progressMark.preset_id.toString()),
+                                                                           ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:75:27: error: unresolved reference 'Db'.
+                db.insert(Db.TABLE_ProgressMark, null, progressMarkToContentValues(progressMark))
+                          ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:83:52: error: unresolved reference 'ProgressMarkHistory'.
+    fun listHistoryByPresetId(presetId: Int): List<ProgressMarkHistory> {
+                                                   ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:84:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.rawQuery(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:85:30: error: unresolved reference 'Db'.
+            "select * from ${Db.TABLE_ProgressMarkHistory}" +
+                             ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:86:27: error: unresolved reference 'Db'.
+                " where ${Db.ProgressMarkHistory.progress_mark_preset_id}=?" +
+                          ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:87:30: error: unresolved reference 'Db'.
+                " order by ${Db.ProgressMarkHistory.createTime} asc",
+                             ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:89:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:89:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:89:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:90:33: error: unresolved reference 'ProgressMarkHistory'.
+            val res = ArrayList<ProgressMarkHistory>()
+                                ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:91:22: error: unresolved reference 'moveToNext'.
+            while (c.moveToNext()) res += progressMarkHistoryFromCursor(c)
+                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:97:39: error: unresolved reference 'Cursor'.
+        fun progressMarkFromCursor(c: Cursor): ProgressMark = ProgressMark().apply {
+                                      ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:97:48: error: unresolved reference 'ProgressMark'.
+        fun progressMarkFromCursor(c: Cursor): ProgressMark = ProgressMark().apply {
+                                               ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:97:63: error: unresolved reference 'ProgressMark'.
+        fun progressMarkFromCursor(c: Cursor): ProgressMark = ProgressMark().apply {
+                                                              ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:97:78: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun progressMarkFromCursor(c: Cursor): ProgressMark = ProgressMark().apply {
+                                                                             ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:97:84: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun progressMarkFromCursor(c: Cursor): ProgressMark = ProgressMark().apply {
+                                                                                   ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:98:13: error: unresolved reference '_id'.
+            _id = c.getLong(c.getColumnIndexOrThrow(BaseColumns._ID))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:98:21: error: unresolved reference 'getLong'.
+            _id = c.getLong(c.getColumnIndexOrThrow(BaseColumns._ID))
+                    ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:98:31: error: unresolved reference 'getColumnIndexOrThrow'.
+            _id = c.getLong(c.getColumnIndexOrThrow(BaseColumns._ID))
+                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:98:53: error: unresolved reference 'BaseColumns'.
+            _id = c.getLong(c.getColumnIndexOrThrow(BaseColumns._ID))
+                                                    ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:99:13: error: unresolved reference 'preset_id'.
+            preset_id = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.preset_id))
+            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:99:27: error: unresolved reference 'getInt'.
+            preset_id = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.preset_id))
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:99:36: error: unresolved reference 'getColumnIndexOrThrow'.
+            preset_id = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.preset_id))
+                                   ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:99:58: error: unresolved reference 'Db'.
+            preset_id = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.preset_id))
+                                                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:100:13: error: unresolved reference 'caption'.
+            caption = c.getString(c.getColumnIndexOrThrow(Db.ProgressMark.caption))
+            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:100:25: error: unresolved reference 'getString'.
+            caption = c.getString(c.getColumnIndexOrThrow(Db.ProgressMark.caption))
+                        ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:100:37: error: unresolved reference 'getColumnIndexOrThrow'.
+            caption = c.getString(c.getColumnIndexOrThrow(Db.ProgressMark.caption))
+                                    ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:100:59: error: unresolved reference 'Db'.
+            caption = c.getString(c.getColumnIndexOrThrow(Db.ProgressMark.caption))
+                                                          ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:101:13: error: unresolved reference 'ari'.
+            ari = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.ari))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:101:21: error: unresolved reference 'getInt'.
+            ari = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.ari))
+                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:101:30: error: unresolved reference 'getColumnIndexOrThrow'.
+            ari = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.ari))
+                             ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:101:52: error: unresolved reference 'Db'.
+            ari = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.ari))
+                                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:102:13: error: unresolved reference 'modifyTime'.
+            modifyTime = Sqlitil.toDate(c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.modifyTime)))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:102:26: error: unresolved reference 'Sqlitil'.
+            modifyTime = Sqlitil.toDate(c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.modifyTime)))
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:102:43: error: unresolved reference 'getInt'.
+            modifyTime = Sqlitil.toDate(c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.modifyTime)))
+                                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:102:52: error: unresolved reference 'getColumnIndexOrThrow'.
+            modifyTime = Sqlitil.toDate(c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.modifyTime)))
+                                                   ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:102:74: error: unresolved reference 'Db'.
+            modifyTime = Sqlitil.toDate(c.getInt(c.getColumnIndexOrThrow(Db.ProgressMark.modifyTime)))
+                                                                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:105:55: error: unresolved reference 'ProgressMark'.
+        fun progressMarkToContentValues(progressMark: ProgressMark): ContentValues =
+                                                      ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:105:70: error: unresolved reference 'ContentValues'.
+        fun progressMarkToContentValues(progressMark: ProgressMark): ContentValues =
+                                                                     ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:106:13: error: unresolved reference 'ContentValues'.
+            ContentValues().apply {
+            ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:106:29: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            ContentValues().apply {
+                            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:106:35: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            ContentValues().apply {
+                                  ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:107:17: error: unresolved reference 'put'.
+                put(Db.ProgressMark.preset_id, progressMark.preset_id)
+                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:107:21: error: unresolved reference 'Db'.
+                put(Db.ProgressMark.preset_id, progressMark.preset_id)
+                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:107:61: error: unresolved reference 'preset_id'.
+                put(Db.ProgressMark.preset_id, progressMark.preset_id)
+                                                            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:108:17: error: unresolved reference 'put'.
+                put(Db.ProgressMark.caption, progressMark.caption)
+                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:108:21: error: unresolved reference 'Db'.
+                put(Db.ProgressMark.caption, progressMark.caption)
+                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:108:59: error: unresolved reference 'caption'.
+                put(Db.ProgressMark.caption, progressMark.caption)
+                                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:109:17: error: unresolved reference 'put'.
+                put(Db.ProgressMark.ari, progressMark.ari)
+                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:109:21: error: unresolved reference 'Db'.
+                put(Db.ProgressMark.ari, progressMark.ari)
+                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:109:55: error: unresolved reference 'ari'.
+                put(Db.ProgressMark.ari, progressMark.ari)
+                                                      ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:110:17: error: unresolved reference 'put'.
+                put(Db.ProgressMark.modifyTime, Sqlitil.toInt(progressMark.modifyTime))
+                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:110:21: error: unresolved reference 'Db'.
+                put(Db.ProgressMark.modifyTime, Sqlitil.toInt(progressMark.modifyTime))
+                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:110:49: error: unresolved reference 'Sqlitil'.
+                put(Db.ProgressMark.modifyTime, Sqlitil.toInt(progressMark.modifyTime))
+                                                ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:110:76: error: unresolved reference 'modifyTime'.
+                put(Db.ProgressMark.modifyTime, Sqlitil.toInt(progressMark.modifyTime))
+                                                                           ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:113:46: error: unresolved reference 'Cursor'.
+        fun progressMarkHistoryFromCursor(c: Cursor): ProgressMarkHistory =
+                                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:113:55: error: unresolved reference 'ProgressMarkHistory'.
+        fun progressMarkHistoryFromCursor(c: Cursor): ProgressMarkHistory =
+                                                      ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:114:13: error: unresolved reference 'ProgressMarkHistory'.
+            ProgressMarkHistory().apply {
+            ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:114:35: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            ProgressMarkHistory().apply {
+                                  ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:114:41: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            ProgressMarkHistory().apply {
+                                        ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:115:17: error: unresolved reference '_id'.
+                _id = c.getLong(c.getColumnIndexOrThrow(BaseColumns._ID))
+                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:115:25: error: unresolved reference 'getLong'.
+                _id = c.getLong(c.getColumnIndexOrThrow(BaseColumns._ID))
+                        ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:115:35: error: unresolved reference 'getColumnIndexOrThrow'.
+                _id = c.getLong(c.getColumnIndexOrThrow(BaseColumns._ID))
+                                  ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:115:57: error: unresolved reference 'BaseColumns'.
+                _id = c.getLong(c.getColumnIndexOrThrow(BaseColumns._ID))
+                                                        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:116:17: error: unresolved reference 'progress_mark_preset_id'.
+                progress_mark_preset_id = c.getInt(
+                ^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:116:45: error: unresolved reference 'getInt'.
+                progress_mark_preset_id = c.getInt(
+                                            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:117:23: error: unresolved reference 'getColumnIndexOrThrow'.
+                    c.getColumnIndexOrThrow(Db.ProgressMarkHistory.progress_mark_preset_id),
+                      ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:117:45: error: unresolved reference 'Db'.
+                    c.getColumnIndexOrThrow(Db.ProgressMarkHistory.progress_mark_preset_id),
+                                            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:119:17: error: unresolved reference 'progress_mark_caption'.
+                progress_mark_caption = c.getString(
+                ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:119:43: error: unresolved reference 'getString'.
+                progress_mark_caption = c.getString(
+                                          ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:120:23: error: unresolved reference 'getColumnIndexOrThrow'.
+                    c.getColumnIndexOrThrow(Db.ProgressMarkHistory.progress_mark_caption),
+                      ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:120:45: error: unresolved reference 'Db'.
+                    c.getColumnIndexOrThrow(Db.ProgressMarkHistory.progress_mark_caption),
+                                            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:122:17: error: unresolved reference 'ari'.
+                ari = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMarkHistory.ari))
+                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:122:25: error: unresolved reference 'getInt'.
+                ari = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMarkHistory.ari))
+                        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:122:34: error: unresolved reference 'getColumnIndexOrThrow'.
+                ari = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMarkHistory.ari))
+                                 ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:122:56: error: unresolved reference 'Db'.
+                ari = c.getInt(c.getColumnIndexOrThrow(Db.ProgressMarkHistory.ari))
+                                                       ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:123:17: error: unresolved reference 'createTime'.
+                createTime = Sqlitil.toDate(
+                ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:123:30: error: unresolved reference 'Sqlitil'.
+                createTime = Sqlitil.toDate(
+                             ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:124:23: error: unresolved reference 'getInt'.
+                    c.getInt(c.getColumnIndexOrThrow(Db.ProgressMarkHistory.createTime)),
+                      ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:124:32: error: unresolved reference 'getColumnIndexOrThrow'.
+                    c.getInt(c.getColumnIndexOrThrow(Db.ProgressMarkHistory.createTime)),
+                               ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/ProgressMarkDao.kt:124:54: error: unresolved reference 'Db'.
+                    c.getInt(c.getColumnIndexOrThrow(Db.ProgressMarkHistory.createTime)),
+                                                     ^^

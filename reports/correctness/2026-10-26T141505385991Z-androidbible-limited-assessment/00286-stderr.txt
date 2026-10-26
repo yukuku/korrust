@@ -1,0 +1,232 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:4:13: error: unresolved reference 'afw'.
+import yuku.afw.storage.Preferences
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:5:26: error: unresolved reference 'App'.
+import yuku.alkitab.base.App
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:6:26: error: unresolved reference 'model'.
+import yuku.alkitab.base.model.SyncShadow
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:7:26: error: unresolved reference 'storage'.
+import yuku.alkitab.base.storage.Prefkey
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:8:26: error: unresolved reference 'sync'.
+import yuku.alkitab.base.sync.Sync
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:9:26: error: unresolved reference 'sync'.
+import yuku.alkitab.base.sync.Sync_History
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:10:21: error: unresolved reference 'debug'.
+import yuku.alkitab.debug.BuildConfig
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:23:18: error: unresolved reference 'History'.
+        history: History,
+                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:25:23: error: unresolved reference 'Sync'.
+        append_delta: Sync.Delta<Sync_History.Content>,
+                      ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:25:34: error: unresolved reference 'Sync_History'.
+        append_delta: Sync.Delta<Sync_History.Content>,
+                                 ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:26:34: error: unresolved reference 'Sync'.
+        entitiesBeforeSync: List<Sync.Entity<Sync_History.Content>>,
+                                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:26:46: error: unresolved reference 'Sync_History'.
+        entitiesBeforeSync: List<Sync.Entity<Sync_History.Content>>,
+                                             ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:28:8: error: unresolved reference 'Sync'.
+    ): Sync.ApplyAppendDeltaResult {
+       ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:29:35: error: unresolved reference 'listAllEntries'.
+        val entriesCopy = history.listAllEntries().toMutableList()
+                                  ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:30:9: error: unresolved reference 'Sync'.
+        Sync.notifySyncUpdatesOngoing(SyncShadow.SYNC_SET_HISTORY, true)
+        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:30:39: error: unresolved reference 'SyncShadow'.
+        Sync.notifySyncUpdatesOngoing(SyncShadow.SYNC_SET_HISTORY, true)
+                                      ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:33:18: error: unresolved reference 'Sync'.
+            if (!Sync.entitiesEqual(Sync_History.getEntitiesFromCurrent(), entitiesBeforeSync)) {
+                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:33:37: error: unresolved reference 'Sync_History'.
+            if (!Sync.entitiesEqual(Sync_History.getEntitiesFromCurrent(), entitiesBeforeSync)) {
+                                    ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:34:24: error: unresolved reference 'Sync'.
+                return Sync.ApplyAppendDeltaResult.dirty_entities
+                       ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:38:42: error: unresolved reference 'Preferences'.
+            if (simpleTokenBeforeSync != Preferences.getString(Prefkey.sync_simpleToken)) {
+                                         ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:38:64: error: unresolved reference 'Prefkey'.
+            if (simpleTokenBeforeSync != Preferences.getString(Prefkey.sync_simpleToken)) {
+                                                               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:39:24: error: unresolved reference 'Sync'.
+                return Sync.ApplyAppendDeltaResult.dirty_sync_account
+                       ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:42:36: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+            for (o in append_delta.operations) {
+                                   ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:42:36: error: unresolved reference 'operations'.
+            for (o in append_delta.operations) {
+                                   ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:44:21: error: unresolved reference 'Sync'.
+                    Sync.Opkind.del -> deleteByGid(entriesCopy, o.gid)
+                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:45:21: error: unresolved reference 'Sync'.
+                    Sync.Opkind.add, Sync.Opkind.mod -> addOrModByGid(entriesCopy, o.gid, o.content, o.creator_id)
+                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:45:38: error: unresolved reference 'Sync'.
+                    Sync.Opkind.add, Sync.Opkind.mod -> addOrModByGid(entriesCopy, o.gid, o.content, o.creator_id)
+                                     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:53:44: error: unresolved reference 'it'.
+            entriesCopy.sortByDescending { it.timestamp }
+                                           ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:56:21: error: unresolved reference 'replaceAllEntries'.
+            history.replaceAllEntries(entriesCopy)
+                    ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:59:22: error: unresolved reference 'Sync_History'.
+            val ss = Sync_History.shadowFromEntities(Sync_History.getEntitiesFromCurrent(), final_revno)
+                     ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:59:54: error: unresolved reference 'Sync_History'.
+            val ss = Sync_History.shadowFromEntities(Sync_History.getEntitiesFromCurrent(), final_revno)
+                                                     ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:60:13: error: unresolved reference 'App'.
+            App.services.storage.db.insertOrUpdateSyncShadowBySyncSetName(ss)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:61:21: error: unresolved reference 'save'.
+            history.save()
+                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:64:17: error: unresolved reference 'BuildConfig'.
+            if (BuildConfig.DEBUG) {
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:65:17: error: unresolved reference 'AppLog'.
+                AppLog.d(TAG, "After sync, the history entries are:")
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:66:17: error: unresolved reference 'AppLog'.
+                AppLog.d(TAG, String.format(Locale.US, "  ari ====   timestamp ===============   %-40s   %-40s", "gid", "creator_id"))
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:67:59: error: operator call 'component1()' is ambiguous for destructuring of type '??? (Unresolved name: next)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+                for ((gid, ari, timestamp, creator_id) in history.listAllEntries()) {
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:67:59: error: operator call 'component2()' is ambiguous for destructuring of type '??? (Unresolved name: next)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+                for ((gid, ari, timestamp, creator_id) in history.listAllEntries()) {
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:67:59: error: operator call 'component3()' is ambiguous for destructuring of type '??? (Unresolved name: next)'. Applicable candidates:
+fun <T> Array<out T>.component3(): T
+fun ByteArray.component3(): Byte
+fun ShortArray.component3(): Short
+fun IntArray.component3(): Int
+fun LongArray.component3(): Long
+fun FloatArray.component3(): Float
+fun DoubleArray.component3(): Double
+fun BooleanArray.component3(): Boolean
+fun CharArray.component3(): Char
+fun <T> List<T>.component3(): T
+fun UIntArray.component3(): UInt
+fun ULongArray.component3(): ULong
+fun UByteArray.component3(): UByte
+fun UShortArray.component3(): UShort
+                for ((gid, ari, timestamp, creator_id) in history.listAllEntries()) {
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:67:59: error: operator call 'component4()' is ambiguous for destructuring of type '??? (Unresolved name: next)'. Applicable candidates:
+fun <T> Array<out T>.component4(): T
+fun ByteArray.component4(): Byte
+fun ShortArray.component4(): Short
+fun IntArray.component4(): Int
+fun LongArray.component4(): Long
+fun FloatArray.component4(): Float
+fun DoubleArray.component4(): Double
+fun BooleanArray.component4(): Boolean
+fun CharArray.component4(): Char
+fun <T> List<T>.component4(): T
+fun UIntArray.component4(): UInt
+fun ULongArray.component4(): ULong
+fun UByteArray.component4(): UByte
+fun UShortArray.component4(): UShort
+                for ((gid, ari, timestamp, creator_id) in history.listAllEntries()) {
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:67:67: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+                for ((gid, ari, timestamp, creator_id) in history.listAllEntries()) {
+                                                                  ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:67:67: error: unresolved reference 'listAllEntries'.
+                for ((gid, ari, timestamp, creator_id) in history.listAllEntries()) {
+                                                                  ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:68:21: error: unresolved reference 'AppLog'.
+                    AppLog.d(TAG, String.format(Locale.US, "- 0x%06x   %tF %<tT %<tz   %-40s   %-40s", ari, timestamp, gid, creator_id))
+                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:72:13: error: unresolved reference 'Sync'.
+            Sync.ApplyAppendDeltaResult.ok
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:74:13: error: unresolved reference 'Sync'.
+            Sync.notifySyncUpdatesOngoing(SyncShadow.SYNC_SET_HISTORY, false)
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:74:43: error: unresolved reference 'SyncShadow'.
+            Sync.notifySyncUpdatesOngoing(SyncShadow.SYNC_SET_HISTORY, false)
+                                          ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:79:30: error: unresolved reference 'History'.
+        entries: MutableList<History.Entry>,
+                             ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:83:28: error: unresolved reference 'gid'.
+            if (entries[i].gid == gid) {
+                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:92:30: error: unresolved reference 'History'.
+        entries: MutableList<History.Entry>,
+                             ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:94:18: error: unresolved reference 'Sync_History'.
+        content: Sync_History.Content,
+                 ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:97:24: error: unresolved reference 'History'.
+        val newEntry = History.Entry(
+                       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:99:27: error: unresolved reference 'ari'.
+            ari = content.ari ?: 0,
+                          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:100:33: error: unresolved reference 'timestamp'.
+            timestamp = content.timestamp ?: 0L,
+                                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/HistorySyncUtil.kt:104:28: error: unresolved reference 'gid'.
+            if (entries[i].gid == gid) {
+                           ^^^

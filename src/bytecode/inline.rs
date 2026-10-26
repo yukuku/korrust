@@ -200,6 +200,11 @@ impl Code<'_> {
                 self.reference(0x13, index);
                 Ok(())
             }
+            InlineConstant::Double(value) => {
+                let index = self.pool.add(Constant::Double(*value))?;
+                self.reference(0x14, index);
+                Ok(())
+            }
             InlineConstant::Long(value) => {
                 let index = self.pool.add(Constant::Long(*value))?;
                 self.reference(0x14, index);

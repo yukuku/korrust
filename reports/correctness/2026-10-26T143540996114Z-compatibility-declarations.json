@@ -1,0 +1,2908 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-26T14:35:40.996114+00:00",
+  "status": "completed",
+  "compiler": {
+    "source_files_sha256": {
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "47c8c3d65975fcbc1bcbe61698b65d2ceb2aa1308cfae43fd8952406a0538e71",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "ecd761a39bc2f11aa032d46a2eeb91e11cf50ccd254edfcd0d4c7c4881c3c66e",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "62a78136794537d26021aaa661c5e17e80174d026836c69bf1f62d2ce6fd9636",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "38824735f822ba30c40e6128f81b409950f18f990cdf1c369d7a9e2a0c9b2d90",
+      "src/bytecode/lambdas.rs": "60487f7bbfef94df047c43914794d6edc9a8957bf7b8c8a44447988e7d3028ae",
+      "src/bytecode/objects.rs": "7b192b8d94a8b599bdb3f1278d667580348f640b407d7430f2221be2e177eb18",
+      "src/bytecode.rs": "7b4c26f987e70819ff7c5246179d7f37112cf629795b73eb72963385d9940300",
+      "src/check.rs": "40e8742e7e572fa12119f0b1dc631cb7b123931898c2f12c741d8d3741eee53f",
+      "src/check_annotation_placements.rs": "0c02924bef2ecd295c73d69675d33033f44099667bf7932d8bb6beb043d51fd9",
+      "src/check_annotations.rs": "62865631f5171bb05928c2e662eb55b76b4522aa8edf9d47df593913aca9465f",
+      "src/check_captures.rs": "4415213c7aec5542f2a03c5a217da9d7976d062b1b3762578dde32b1d133ae10",
+      "src/check_control.rs": "7e6ed766e78b7d706f52d2bc19e0f05af765cd866a56cac03d2f7cbed18df816",
+      "src/check_declarations.rs": "c5c17a8c507080db51fc82d248267aeb938c5380344e7c42a680041fbd4e39c1",
+      "src/check_delegates.rs": "fc6e3f43a18b6b5b600c5515938d70b0712a616bca82d2c53eab6dd28dbf083e",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "0a97b74e03e2c9ae0539f578f4de25e7cc98d129a7ada14ff83960b4a8c6a34e",
+      "src/check_interfaces.rs": "6dde39484aacd8786bbabc9f73ecfca625f4253642e08a3fb3a4f175fe5866e1",
+      "src/check_ir_walk.rs": "4d1376ec4d903c5e2d230d055ac56c78b5a823ac2284b271bb3aa27a57d0f76d",
+      "src/check_library.rs": "4a9ec5872ba4ecc6952526542eaf4fc5fea417bb059482b1e6e4e0b7540d4e3a",
+      "src/check_objects.rs": "8b31a4822dcf67a6af1ca4021318be10e3f211dbefa2e080ca4ec12c099d2485",
+      "src/check_operations.rs": "724c6983005b1db7d640b2a255feb546e60c55c1ca4a6930c93e995187c3ffdf",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "fa0e93bc19f643084e61a58d8996294b057730fff07ab5848981762d9e95f616",
+      "src/classpath/aliases.rs": "c1759fd27e4969bd9767124a9fc71ab76797a75580953a0f4b6aff4f1b6563be",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "6edb3a37fa571562a69f6382027642d06a365dd94bf5742d90372ce452e8b48e",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "6e2bc0bb767d10c9beb32a37312fac62f5a4be611d99399f9cebf46e814ff24b",
+      "src/classpath/source.rs": "adf43154c8d9e21f9df8684ec0b5e0051ad5e9993b0ede9ffed9868a650a265d",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "37e570cfe9f857c0c4be0249a361d76b54472f6959536130de7865a4fe9509a2",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "2d92f41f420a12b464ff5c35fc32fec040316e1fe93aa4529df17a3bb17c471f",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "8b5b2cf07b9212e4cb5ddd73265af191750093df379fa8dbfa0d45bf65ae6774",
+      "src/metadata.rs": "0774202e07604a3f71dff257c75a256b00d766baf8d64f7de6d43ad12d49dce0",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "5d7cd44103249061fe532d7cda057dd1a81c1bdcb7bdff66d379aab02ccc9285",
+      "src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa"
+    },
+    "version": "korrust 0.1.0",
+    "binary_sha256": "0f6b30d7db79082d5869dded4973cfccde80af451ae521d2cb0bcc218472e8bc",
+    "jvm_target_scope": "Official JVM1.8; candidate output target is not configurable; runtime/ABI/metadata evidence only."
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-jvm-default=enable"
+    ],
+    "distribution_libs_sha256": {
+      "references/kotlinc/lib/allopen-compiler-plugin.jar": "4d10b6efd97edcdfff90ad064eb4410c60177653810844b104155b4a9086dfc6",
+      "references/kotlinc/lib/annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+      "references/kotlinc/lib/assignment-compiler-plugin.jar": "ca3c5b11501c5ed848b491d5a69bf13cb4197c79903a7cee2b2ad024bae5f601",
+      "references/kotlinc/lib/compose-compiler-plugin.jar": "e8b44d65a4ba5fb14f3e51d10fb605d7da2a0c35a9ee275c94ffd74cb3f2b11e",
+      "references/kotlinc/lib/jvm-abi-gen.jar": "88a5e104dde4ef2f3cd211b077bb93f0a5e2e54b61e53c373f146af061be4504",
+      "references/kotlinc/lib/kotlin-annotation-processing-cli.jar": "c44c21f9bedeca54e0062b825dcb394a75a3efc289d4354e153225213f498e5f",
+      "references/kotlinc/lib/kotlin-annotation-processing-runtime.jar": "d9bcc297a3263366e216956c9425f3ba7b04f4a72f8b0dffb06fdd88e48606b9",
+      "references/kotlinc/lib/kotlin-annotation-processing.jar": "51308691a3cbd4c3964c5669d6ffb771b4879a214ab95c1df6aab18f137b4fa6",
+      "references/kotlinc/lib/kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+      "references/kotlinc/lib/kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+      "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+      "references/kotlinc/lib/kotlin-daemon-client.jar": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be",
+      "references/kotlinc/lib/kotlin-daemon.jar": "b7c67e908442f64f7d2acf99ac6b68b625d5317541d7130efac72507de0c36cf",
+      "references/kotlinc/lib/kotlin-main-kts.jar": "d786b3ace9625918014c1da51d7c6ba29ef06e3291f6cc4264d39e6992acc4ee",
+      "references/kotlinc/lib/kotlin-metadata-jvm-sources.jar": "2ededf948f1afd503217a772c95718a41494e757762206216f4c1b42ada64585",
+      "references/kotlinc/lib/kotlin-metadata-jvm.jar": "00590f26a5a768777f04252c6cf93c016a3361a6bc93636df67375ad4d19557d",
+      "references/kotlinc/lib/kotlin-preloader.jar": "4fb08cc92cf83ace6af60953e968a7f79eb57c5304175a9c0a9a9ad14a9e6348",
+      "references/kotlinc/lib/kotlin-reflect-sources.jar": "8cbdca65092aa6888901e23c08c7d69d141544107a9bcc9aa47b5453d4dbcf7e",
+      "references/kotlinc/lib/kotlin-reflect.jar": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb",
+      "references/kotlinc/lib/kotlin-runner.jar": "b217c59d320058007fed21927f71d5fbb7899fb6acab817a6d63aec5544a548c",
+      "references/kotlinc/lib/kotlin-script-runtime-sources.jar": "275d90c0c92e9680aff9c013394f3f395bc46dc23762107c4fdccd9887a58561",
+      "references/kotlinc/lib/kotlin-script-runtime.jar": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e",
+      "references/kotlinc/lib/kotlin-scripting-common.jar": "69885751bdce7d4e1d1b9758baf4bc0fe03b24827abd7b7687e5a7c0b4d029ed",
+      "references/kotlinc/lib/kotlin-scripting-compiler-impl.jar": "fe93b36234d6ff2ae5d1c8f965c5ae7c61b5211c5945d1fe8f3b2136ef313520",
+      "references/kotlinc/lib/kotlin-scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5",
+      "references/kotlinc/lib/kotlin-scripting-jvm.jar": "8cb637132fc7fa511c700ee7f2b63b282630167f5ebd699a263a0b67b5d486ab",
+      "references/kotlinc/lib/kotlin-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+      "references/kotlinc/lib/kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+      "references/kotlinc/lib/kotlin-stdlib-jdk7.jar": "e2243abac2bed6e0b47be18b2b7fe1c1b4cf6a431480353dcd49d1ed35f31199",
+      "references/kotlinc/lib/kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+      "references/kotlinc/lib/kotlin-stdlib-jdk8.jar": "63091929246beba86b5fb2b020a6f5d06e01693a960b58a59959c8713667991c",
+      "references/kotlinc/lib/kotlin-stdlib-js-sources.jar": "f57cda653d86e12f005c68a684ed32cdf44416f55db140a4182d8dbb53697ef2",
+      "references/kotlinc/lib/kotlin-stdlib-sources.jar": "8693386ae174f7e4a91eb82c5c632d169d236704da24f78b9c8c84d87af2fd64",
+      "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "references/kotlinc/lib/kotlin-test-js-sources.jar": "b45aee3561d48173468db1eb05743925b3f91c7a99a30c8a3457e3a554819e78",
+      "references/kotlinc/lib/kotlin-test-junit-sources.jar": "3fd39bbf3f8283cf7b7759e02abdd752ddde9964352f645467b779257bccef20",
+      "references/kotlinc/lib/kotlin-test-junit.jar": "554739f282eaca114882ad7effcd8523de2651eb6d65189624425110992ca4ce",
+      "references/kotlinc/lib/kotlin-test-junit5-sources.jar": "5e0d4688277a3f859be086b874601b45f54b30b5b045800138b54e9418bdc95b",
+      "references/kotlinc/lib/kotlin-test-junit5.jar": "24350f53fe1be3b7fe0e8fcd7e1b777eb0b8fa16af720617fe7e87d0a77c2797",
+      "references/kotlinc/lib/kotlin-test-sources.jar": "bce4ebcf90507cc14ea3857f65088d10fd1a305616da62a6e5b6be0735ccb456",
+      "references/kotlinc/lib/kotlin-test-testng-sources.jar": "b88a8f12928480d14e29c6c879958c156afc946b9b8d333d1c2f4a428cdb1041",
+      "references/kotlinc/lib/kotlin-test-testng.jar": "da9c1164af8de599d8e31ae768f78c48caceb1a401790454139ec03cfe8ddf08",
+      "references/kotlinc/lib/kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+      "references/kotlinc/lib/kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "references/kotlinc/lib/kotlinx-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+      "references/kotlinc/lib/lombok-compiler-plugin.jar": "ab61ddad3977c19396223dbac64b82c5d33796b712e4cfac6d79a0fe2166cf24",
+      "references/kotlinc/lib/mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+      "references/kotlinc/lib/noarg-compiler-plugin.jar": "2f978ae34fec60a2e92ed3c1f6862f015b98922b07508a2648a019d898bf3761",
+      "references/kotlinc/lib/parcelize-compiler.jar": "edacd6e066bef87f00448e95ba4aff89b4e10f6ce27d99ba125c7e96f2d73ada",
+      "references/kotlinc/lib/parcelize-runtime.jar": "a21d5f85475efb27f17dd97d1a289d64874f2ddfdb508ea484477a4cf1afe969",
+      "references/kotlinc/lib/power-assert-compiler-plugin.jar": "29164fe3dd405d78204655bb533cf1abc409288be825039c3443fd894096745e",
+      "references/kotlinc/lib/sam-with-receiver-compiler-plugin.jar": "8e9eb418d5ddae8c24ee79da1d5394636dc256defc62a3ea347bd59aca8592fd",
+      "references/kotlinc/lib/scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5"
+    },
+    "jvm_default_scope": "enable: interface default bodies plus DefaultImpls compatibility helpers, matching the established candidate interface ABI. Abstract versus concrete default methods remain part of exact public ABI and independent reflection assertions."
+  },
+  "inputs": {
+    "fixtures_sha256": {
+      "tests/fixtures/compatibility_declarations/Effects.java": "8ff31d5a4e902914b57e6b9e6dc9f5b8f15106f6437d2199f0f4d2dae4b73810",
+      "tests/fixtures/compatibility_declarations/Discards.kt": "95823ec15dbf7ef4ca9bee9221d014b1523d05cb2537610a43efa45980e3bf6e",
+      "tests/fixtures/compatibility_declarations/Consumer_log_interface.kt": "5864428d536bd9e6bed3c57767419a9068cd9057e799b40120665d9488e4a986",
+      "tests/fixtures/compatibility_declarations/rejections.json": "3640c2b67100c0084063752fdae84380e20416108b85d6295c1bdcb0263c5770",
+      "tests/fixtures/compatibility_declarations/DeclarationsCheck.java": "073648e515844bc168222d4b36ce7d87db6fcfe4610f2adbccd3afaf984424ff",
+      "tests/fixtures/compatibility_declarations/Consumer_type_aliases.kt": "e9011dcfd09de8307efcfd7215a3dd4e67633bd25b05f7f04930fbfb0f9b3117",
+      "tests/fixtures/compatibility_declarations/Consumer_discards.kt": "fce9e2aca34350669fde862a829cdf24ff6730a7ad69063184121bf8339043cc",
+      "tests/fixtures/compatibility_declarations/Backticks.kt": "4f4fa96712112ba324664b4d51bb7f50f5f95b7632643c3c515356d96f46ebc1",
+      "tests/fixtures/compatibility_declarations/Consumer_functional_interfaces.kt": "da85599a1322793fc5b3e56d2253256f9a9a3674afc8728ddf12092ceae9fede",
+      "tests/fixtures/compatibility_declarations/LogCalls.kt": "99487bc4e7f93fcbf68bdb0f8a75bba1e28792b161806eebfde5b4ed28fdec3c",
+      "tests/fixtures/compatibility_declarations/Consumer_backticks.kt": "3b3052654bd592e212f8a2f09ec59f9ba48cd388aeacb2c8a78d17a0b5a6121b",
+      "tests/fixtures/compatibility_declarations/FunctionalInterfaces.kt": "0ac761a8c31714ad3960388552b502072d2ae38345a93baf36485c1b1196d56e",
+      "tests/fixtures/compatibility_declarations/AliasUses.kt": "16d8caaca949150dacbd586caed947c759da401da81e4f4dfaea213cc793ae34",
+      "tests/fixtures/compatibility_declarations/Aliases.kt": "f0c4bc49f66018b9dc967539b439ec6f696958573fded97fb4674f4a3584af07"
+    },
+    "unchanged_app_sources_sha256": {
+      "Alkitab/src/main/java/yuku/alkitab/datatransfer/process/LogInterface.kt": "75c396bc84cab536f47925e2f2f4b99744e7eed08e4df6b3800b2ba4fbd8f6bb"
+    },
+    "junit_jar": "/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar",
+    "junit_jar_sha256": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "scope_boundary": "Alias OnGotoFinished preserves the original four-argument function type with a concrete fixture GotoTab class; enum integration is task23, not claimed here.",
+    "reference_policy": [
+      "references/kotlin-spec/docs/src/md/kotlin.core/syntax.md#escaped-identifiers",
+      "references/kotlin-spec/docs/src/md/kotlin.core/operators.md#destructuring-declarations",
+      "references/kotlin-spec/docs/src/md/kotlin.core/declarations.md#functional-interface-declaration",
+      "references/kotlin-spec/docs/src/md/kotlin.core/declarations.md#type-alias"
+    ],
+    "candidate_owns": "Every positive Kotlin fixture including original LogInterface; only Java Effects/JUnit and pinned stdlib are external."
+  },
+  "commands": [
+    {
+      "label": "Pinned official identity",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/000-stderr.txt"
+    },
+    {
+      "label": "Candidate identity",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/001-stderr.txt"
+    },
+    {
+      "label": "Compile independent Java effect recorder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Effects.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/002-stderr.txt"
+    },
+    {
+      "label": "Compile official backticks",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Backticks.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "compatibility_declarations_backticks",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/backticks"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/003-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official backticks",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/backticks",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/DeclarationsCheck_backticks.java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/ModuleClassVerification.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/004-stderr.txt"
+    },
+    {
+      "label": "Independent official assertions backticks",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DeclarationsCheck_backticks",
+        "backticks"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/005-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer official/backticks",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_backticks.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_backticks",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-consumer/backticks"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/006-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer official/backticks",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-consumer/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_backticksKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/007-stderr.txt"
+    },
+    {
+      "label": "Compile official discards",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Discards.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "compatibility_declarations_discards",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/discards"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/008-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official discards",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/discards",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/DeclarationsCheck_discards.java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/ModuleClassVerification.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/009-stderr.txt"
+    },
+    {
+      "label": "Independent official assertions discards",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DeclarationsCheck_discards",
+        "discards"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/010-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer official/discards",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_discards.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_discards",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-consumer/discards"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/011-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer official/discards",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-consumer/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_discardsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/012-stderr.txt"
+    },
+    {
+      "label": "Compile official functional_interfaces",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/FunctionalInterfaces.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "compatibility_declarations_functional_interfaces",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/functional_interfaces"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/013-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official functional_interfaces",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/functional_interfaces",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/DeclarationsCheck_functional_interfaces.java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/ModuleClassVerification.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/014-stderr.txt"
+    },
+    {
+      "label": "Independent official assertions functional_interfaces",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DeclarationsCheck_functional_interfaces",
+        "functional_interfaces"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/015-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer official/functional_interfaces",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_functional_interfaces.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_functional_interfaces",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-consumer/functional_interfaces"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/016-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer official/functional_interfaces",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-consumer/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_functional_interfacesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/017-stderr.txt"
+    },
+    {
+      "label": "Compile official log_interface",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/LogInterface.kt",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/LogCalls.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "compatibility_declarations_log_interface",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/log_interface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/018-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official log_interface",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/log_interface",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/DeclarationsCheck_log_interface.java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/ModuleClassVerification.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/019-stderr.txt"
+    },
+    {
+      "label": "Independent official assertions log_interface",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DeclarationsCheck_log_interface",
+        "log_interface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/020-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer official/log_interface",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_log_interface.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_log_interface",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-consumer/log_interface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/021-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer official/log_interface",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-consumer/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_log_interfaceKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/022-stderr.txt"
+    },
+    {
+      "label": "Compile official type_aliases",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Aliases.kt",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/AliasUses.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "compatibility_declarations_type_aliases",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/type_aliases"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/023-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official type_aliases",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/type_aliases",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/DeclarationsCheck_type_aliases.java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/ModuleClassVerification.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/024-stderr.txt"
+    },
+    {
+      "label": "Independent official assertions type_aliases",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DeclarationsCheck_type_aliases",
+        "type_aliases"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/025-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer official/type_aliases",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_type_aliases.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_type_aliases",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-consumer/type_aliases"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/026-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer official/type_aliases",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-consumer/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_type_aliasesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/027-stderr.txt"
+    },
+    {
+      "label": "Compile candidate backticks",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Backticks.kt",
+        "--module-name",
+        "compatibility_declarations_backticks",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/backticks"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/028-stderr.txt"
+    },
+    {
+      "label": "Fixed official Java bytecodes against candidate backticks",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DeclarationsCheck_backticks",
+        "backticks"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/029-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.DescriptiveTest",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/backticks",
+        "compatibility.declarations.DescriptiveTest"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/030-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.DescriptiveTest",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/backticks",
+        "compatibility.declarations.DescriptiveTest"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/031-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.BackticksKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/backticks",
+        "compatibility.declarations.BackticksKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/032-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.BackticksKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/backticks",
+        "compatibility.declarations.BackticksKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/033-stderr.txt"
+    },
+    {
+      "label": "Verify all candidate class bodies backticks",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ModuleClassVerification",
+        "compatibility.declarations.BackticksKt",
+        "compatibility.declarations.DescriptiveTest"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/034-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer candidate/backticks",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_backticks.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_backticks",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-consumer/backticks"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/035-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer candidate/backticks",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-consumer/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/backticks:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_backticksKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/036-stderr.txt"
+    },
+    {
+      "label": "Compile candidate discards",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Discards.kt",
+        "--module-name",
+        "compatibility_declarations_discards",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/discards"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/037-stderr.txt"
+    },
+    {
+      "label": "Fixed official Java bytecodes against candidate discards",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DeclarationsCheck_discards",
+        "discards"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/038-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.Components",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/discards",
+        "compatibility.declarations.Components"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/039-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.Components",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/discards",
+        "compatibility.declarations.Components"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/040-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.DiscardsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/discards",
+        "compatibility.declarations.DiscardsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/041-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.DiscardsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/discards",
+        "compatibility.declarations.DiscardsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/042-stderr.txt"
+    },
+    {
+      "label": "Verify all candidate class bodies discards",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ModuleClassVerification",
+        "compatibility.declarations.Components",
+        "compatibility.declarations.DiscardsKt$lambda$1077$2",
+        "compatibility.declarations.DiscardsKt$lambda$739$0",
+        "compatibility.declarations.DiscardsKt$lambda$960$1",
+        "compatibility.declarations.DiscardsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/043-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer candidate/discards",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_discards.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_discards",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-consumer/discards"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/044-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer candidate/discards",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-consumer/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/discards:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_discardsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/045-stderr.txt"
+    },
+    {
+      "label": "Compile candidate functional_interfaces",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/FunctionalInterfaces.kt",
+        "--module-name",
+        "compatibility_declarations_functional_interfaces",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/functional_interfaces"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/046-stderr.txt"
+    },
+    {
+      "label": "Fixed official Java bytecodes against candidate functional_interfaces",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DeclarationsCheck_functional_interfaces",
+        "functional_interfaces"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/047-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.MapperParent",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/functional_interfaces",
+        "compatibility.declarations.MapperParent"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/048-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.MapperParent",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/functional_interfaces",
+        "compatibility.declarations.MapperParent"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/049-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.Mapper",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/functional_interfaces",
+        "compatibility.declarations.Mapper"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/050-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.Mapper",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/functional_interfaces",
+        "compatibility.declarations.Mapper"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/051-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.Mapper$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/functional_interfaces",
+        "compatibility.declarations.Mapper$DefaultImpls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/052-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.Mapper$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/functional_interfaces",
+        "compatibility.declarations.Mapper$DefaultImpls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/053-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.Sink",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/functional_interfaces",
+        "compatibility.declarations.Sink"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/054-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.Sink",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/functional_interfaces",
+        "compatibility.declarations.Sink"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/055-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.FunctionalInterfacesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/functional_interfaces",
+        "compatibility.declarations.FunctionalInterfacesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/056-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.FunctionalInterfacesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/functional_interfaces",
+        "compatibility.declarations.FunctionalInterfacesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/057-stderr.txt"
+    },
+    {
+      "label": "Verify all candidate class bodies functional_interfaces",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ModuleClassVerification",
+        "compatibility.declarations.FunctionalInterfacesKt$lambda$1181$5",
+        "compatibility.declarations.FunctionalInterfacesKt$lambda$1265$6",
+        "compatibility.declarations.FunctionalInterfacesKt$lambda$1353$7",
+        "compatibility.declarations.FunctionalInterfacesKt$lambda$295$0",
+        "compatibility.declarations.FunctionalInterfacesKt$lambda$403$1",
+        "compatibility.declarations.FunctionalInterfacesKt$lambda$583$2",
+        "compatibility.declarations.FunctionalInterfacesKt$lambda$795$3",
+        "compatibility.declarations.FunctionalInterfacesKt$lambda$851$4",
+        "compatibility.declarations.FunctionalInterfacesKt",
+        "compatibility.declarations.Mapper$DefaultImpls",
+        "compatibility.declarations.Mapper",
+        "compatibility.declarations.MapperParent",
+        "compatibility.declarations.Sink"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/058-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer candidate/functional_interfaces",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_functional_interfaces.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_functional_interfaces",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-consumer/functional_interfaces"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/059-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer candidate/functional_interfaces",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-consumer/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/functional_interfaces:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_functional_interfacesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/060-stderr.txt"
+    },
+    {
+      "label": "Compile candidate log_interface",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/LogInterface.kt",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/LogCalls.kt",
+        "--module-name",
+        "compatibility_declarations_log_interface",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/log_interface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/061-stderr.txt"
+    },
+    {
+      "label": "Fixed official Java bytecodes against candidate log_interface",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DeclarationsCheck_log_interface",
+        "log_interface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/062-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.LogCallsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/log_interface",
+        "compatibility.declarations.LogCallsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/063-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.LogCallsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/log_interface",
+        "compatibility.declarations.LogCallsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/064-stderr.txt"
+    },
+    {
+      "label": "Official public ABI yuku.alkitab.datatransfer.process.LogInterface",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/log_interface",
+        "yuku.alkitab.datatransfer.process.LogInterface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/065-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI yuku.alkitab.datatransfer.process.LogInterface",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/log_interface",
+        "yuku.alkitab.datatransfer.process.LogInterface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/066-stderr.txt"
+    },
+    {
+      "label": "Official public ABI yuku.alkitab.datatransfer.process.LogInterface$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/log_interface",
+        "yuku.alkitab.datatransfer.process.LogInterface$DefaultImpls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/067-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI yuku.alkitab.datatransfer.process.LogInterface$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/log_interface",
+        "yuku.alkitab.datatransfer.process.LogInterface$DefaultImpls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/068-stderr.txt"
+    },
+    {
+      "label": "Verify all candidate class bodies log_interface",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ModuleClassVerification",
+        "compatibility.declarations.LogCallsKt$lambda$171$0",
+        "compatibility.declarations.LogCallsKt$lambda$337$1",
+        "compatibility.declarations.LogCallsKt",
+        "yuku.alkitab.datatransfer.process.LogInterface$DefaultImpls",
+        "yuku.alkitab.datatransfer.process.LogInterface$lambda$166$0",
+        "yuku.alkitab.datatransfer.process.LogInterface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/069-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/069-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer candidate/log_interface",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_log_interface.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_log_interface",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-consumer/log_interface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/070-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/070-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer candidate/log_interface",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-consumer/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/log_interface:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_log_interfaceKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/071-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/071-stderr.txt"
+    },
+    {
+      "label": "Compile candidate type_aliases",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Aliases.kt",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/AliasUses.kt",
+        "--module-name",
+        "compatibility_declarations_type_aliases",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/type_aliases"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/072-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/072-stderr.txt"
+    },
+    {
+      "label": "Fixed official Java bytecodes against candidate type_aliases",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DeclarationsCheck_type_aliases",
+        "type_aliases"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/073-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/073-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.GotoTab",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/type_aliases",
+        "compatibility.declarations.GotoTab"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/074-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/074-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.GotoTab",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/type_aliases",
+        "compatibility.declarations.GotoTab"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/075-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/075-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.AliasesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/type_aliases",
+        "compatibility.declarations.AliasesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/076-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/076-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.AliasesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/type_aliases",
+        "compatibility.declarations.AliasesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/077-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/077-stderr.txt"
+    },
+    {
+      "label": "Official public ABI compatibility.declarations.AliasUsesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/type_aliases",
+        "compatibility.declarations.AliasUsesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/078-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/078-stderr.txt"
+    },
+    {
+      "label": "Candidate public ABI compatibility.declarations.AliasUsesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/type_aliases",
+        "compatibility.declarations.AliasUsesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/079-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/079-stderr.txt"
+    },
+    {
+      "label": "Verify all candidate class bodies type_aliases",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/java-callers/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ModuleClassVerification",
+        "compatibility.declarations.AliasUsesKt$lambda$146$0",
+        "compatibility.declarations.AliasUsesKt",
+        "compatibility.declarations.AliasesKt",
+        "compatibility.declarations.GotoTab"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/080-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/080-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer candidate/type_aliases",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_type_aliases.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_type_aliases",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-consumer/type_aliases"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/081-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/081-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer candidate/type_aliases",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-consumer/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_type_aliasesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/082-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/082-stderr.txt"
+    },
+    {
+      "label": "Compile alias batch in reversed order",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/AliasUses.kt",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Aliases.kt",
+        "--module-name",
+        "compatibility_declarations_type_aliases",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-reversed-aliases"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/083-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/083-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer candidate_reversed/type_aliases",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/tests/fixtures/compatibility_declarations/Consumer_type_aliases.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-module-name",
+        "external_type_aliases",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-reversed-aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate_reversed-consumer/type_aliases"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/084-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/084-stderr.txt"
+    },
+    {
+      "label": "Run official Kotlin consumer candidate_reversed/type_aliases",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate_reversed-consumer/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-reversed-aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.declarations.consumer.Consumer_type_aliasesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/085-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/085-stderr.txt"
+    },
+    {
+      "label": "Official boundary invalid_jvm_name",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_invalid_jvm_name_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-invalid_jvm_name"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/086-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/086-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary invalid_jvm_name",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_invalid_jvm_name_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-invalid_jvm_name"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/087-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/087-stderr.txt"
+    },
+    {
+      "label": "Official boundary underscore_declaration",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_underscore_declaration_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-underscore_declaration"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/088-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/088-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary underscore_declaration",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_underscore_declaration_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-underscore_declaration"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/089-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/089-stderr.txt"
+    },
+    {
+      "label": "Official boundary underscore_expression",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_underscore_expression_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-underscore_expression"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/090-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/090-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary underscore_expression",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_underscore_expression_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-underscore_expression"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/091-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/091-stderr.txt"
+    },
+    {
+      "label": "Official boundary typed_discard_mismatch",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_typed_discard_mismatch_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-typed_discard_mismatch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/092-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/092-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary typed_discard_mismatch",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_typed_discard_mismatch_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-typed_discard_mismatch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/093-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/093-stderr.txt"
+    },
+    {
+      "label": "Official boundary sam_zero",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_zero_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-sam_zero"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/094-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/094-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary sam_zero",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_zero_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-sam_zero"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/095-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/095-stderr.txt"
+    },
+    {
+      "label": "Official boundary sam_many",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_many_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-sam_many"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/096-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/096-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary sam_many",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_many_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-sam_many"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/097-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/097-stderr.txt"
+    },
+    {
+      "label": "Official boundary sam_abstract_property",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_abstract_property_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-sam_abstract_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/098-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/098-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary sam_abstract_property",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_abstract_property_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-sam_abstract_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/099-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/099-stderr.txt"
+    },
+    {
+      "label": "Official boundary sam_generic_method",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_generic_method_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-sam_generic_method"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/100-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/100-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary sam_generic_method",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_generic_method_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-sam_generic_method"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/101-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/101-stderr.txt"
+    },
+    {
+      "label": "Official boundary ordinary_interface_sam",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_ordinary_interface_sam_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-ordinary_interface_sam"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/102-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/102-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary ordinary_interface_sam",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_ordinary_interface_sam_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-ordinary_interface_sam"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/103-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/103-stderr.txt"
+    },
+    {
+      "label": "Official boundary alias_cycle",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_cycle_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-alias_cycle"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/104-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/104-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary alias_cycle",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_cycle_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-alias_cycle"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/105-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/105-stderr.txt"
+    },
+    {
+      "label": "Official boundary alias_private_cross_file",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_private_cross_file_0.kt",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_private_cross_file_1.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-alias_private_cross_file"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/106-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/106-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary alias_private_cross_file",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_private_cross_file_0.kt",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_private_cross_file_1.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-alias_private_cross_file"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/107-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/107-stderr.txt"
+    },
+    {
+      "label": "Reject official consumer official/alias_private_library",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/ConsumerBoundary_alias_private_library.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/rejected-official-alias_private_library"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/108-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/108-stderr.txt"
+    },
+    {
+      "label": "Reject official consumer candidate/alias_private_library",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/ConsumerBoundary_alias_private_library.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/rejected-candidate-alias_private_library"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/109-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/109-stderr.txt"
+    },
+    {
+      "label": "Reject official consumer official/alias_nullability",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/ConsumerBoundary_alias_nullability.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/rejected-official-alias_nullability"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/110-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/110-stderr.txt"
+    },
+    {
+      "label": "Reject official consumer candidate/alias_nullability",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/ConsumerBoundary_alias_nullability.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate/type_aliases:/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/rejected-candidate-alias_nullability"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/111-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/111-stderr.txt"
+    },
+    {
+      "label": "Official boundary generic_alias",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_generic_alias_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-jvm-default=enable",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/official-boundary-generic_alias"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/112-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/112-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary generic_alias",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_generic_alias_0.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/dependencies:/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar:/workspace/korrust/target/final-compatibility-snapshot-v2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/candidate-boundary-generic_alias"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/113-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/113-stderr.txt"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/000-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/000-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/001-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/001-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/002-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/002-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/003-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/003-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/DeclarationsCheck_backticks.java",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/004-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/004-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/005-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/005-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/006-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/006-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/007-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/007-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/008-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/008-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/DeclarationsCheck_discards.java",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/009-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/009-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/010-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/010-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/011-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/011-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/012-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/012-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/013-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/013-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/DeclarationsCheck_functional_interfaces.java",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/014-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/014-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/015-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/015-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/016-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/016-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/017-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/017-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/018-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/018-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/DeclarationsCheck_log_interface.java",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/019-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/019-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/020-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/020-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/021-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/021-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/022-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/022-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/023-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/023-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/DeclarationsCheck_type_aliases.java",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/024-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/024-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/025-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/025-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/026-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/026-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/027-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/027-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/028-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/028-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/029-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/029-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/030-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/030-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/031-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/031-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/032-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/032-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/033-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/033-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/034-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/034-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/035-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/035-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/036-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/036-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/037-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/037-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/038-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/038-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/039-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/039-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/040-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/040-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/041-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/041-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/042-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/042-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/043-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/043-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/044-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/044-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/045-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/045-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/046-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/046-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/047-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/047-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/048-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/048-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/049-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/049-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/050-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/050-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/051-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/051-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/052-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/052-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/053-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/053-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/054-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/054-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/055-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/055-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/056-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/056-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/057-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/057-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/058-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/058-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/059-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/059-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/060-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/060-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/061-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/061-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/062-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/062-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/063-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/063-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/064-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/064-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/065-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/065-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/066-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/066-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/067-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/067-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/068-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/068-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/069-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/069-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/070-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/070-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/071-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/071-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/072-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/072-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/073-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/073-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/074-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/074-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/075-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/075-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/076-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/076-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/077-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/077-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/078-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/078-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/079-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/079-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/080-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/080-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/081-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/081-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/082-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/082-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/083-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/083-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/084-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/084-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/085-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/085-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/086-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/086-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/087-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/087-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/088-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/088-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/089-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/089-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/090-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/090-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/091-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/091-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/092-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/092-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/093-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/093-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/094-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/094-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/095-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/095-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/096-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/096-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/097-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/097-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/098-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/098-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/099-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/099-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/100-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/100-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/101-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/101-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/102-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/102-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/103-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/103-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/104-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/104-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/105-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/105-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/106-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/106-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/107-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/107-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/108-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/108-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/109-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/109-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/110-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/110-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/111-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/111-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/112-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/112-stderr.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/113-stdout.txt",
+    "reports/correctness/2026-10-26T143540996114Z-compatibility-declarations/113-stderr.txt"
+  ],
+  "cases": [
+    {
+      "id": "oracle/backticks",
+      "outcome": "pass",
+      "runtime_checks": 5,
+      "result": "{\"id\":\"backticks\",\"checks\":5}\n"
+    },
+    {
+      "id": "kotlin_consumer/official/backticks",
+      "outcome": "pass"
+    },
+    {
+      "id": "oracle/discards",
+      "outcome": "pass",
+      "runtime_checks": 6,
+      "result": "{\"id\":\"discards\",\"checks\":6}\n"
+    },
+    {
+      "id": "kotlin_consumer/official/discards",
+      "outcome": "pass"
+    },
+    {
+      "id": "oracle/functional_interfaces",
+      "outcome": "pass",
+      "runtime_checks": 15,
+      "result": "{\"id\":\"functional_interfaces\",\"checks\":15}\n"
+    },
+    {
+      "id": "kotlin_consumer/official/functional_interfaces",
+      "outcome": "pass"
+    },
+    {
+      "id": "oracle/log_interface",
+      "outcome": "pass",
+      "runtime_checks": 5,
+      "result": "{\"id\":\"log_interface\",\"checks\":5}\n"
+    },
+    {
+      "id": "kotlin_consumer/official/log_interface",
+      "outcome": "pass"
+    },
+    {
+      "id": "oracle/type_aliases",
+      "outcome": "pass",
+      "runtime_checks": 5,
+      "result": "{\"id\":\"type_aliases\",\"checks\":5}\n"
+    },
+    {
+      "id": "kotlin_consumer/official/type_aliases",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/backticks",
+      "outcome": "pass",
+      "emitted_classes_sha256": {
+        "compatibility/declarations/BackticksKt.class": "adb82b5c92727d1ef1585cfef362861f3994267868a9c815217f55cc11ef222a",
+        "compatibility/declarations/DescriptiveTest.class": "7a0d5dbfcee29f4fda8c2d79121181ce3b712098b47fdabe6734201895ddc360"
+      },
+      "diagnostics": ""
+    },
+    {
+      "id": "java/backticks",
+      "outcome": "pass",
+      "scope": "Same Java caller bytecodes compiled once against official output; independent expected values and effect traces."
+    },
+    {
+      "id": "source_abi/backticks",
+      "outcome": "pass",
+      "owners": [
+        "compatibility.declarations.DescriptiveTest",
+        "compatibility.declarations.BackticksKt"
+      ],
+      "scope": "Explicit source/default-helper public and protected descriptors and modifiers, including abstract versus concrete Java default methods; generated lambda class names are not ABI claims."
+    },
+    {
+      "id": "class_verification/backticks",
+      "outcome": "pass",
+      "classes": 2
+    },
+    {
+      "id": "kotlin_consumer/candidate/backticks",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/discards",
+      "outcome": "pass",
+      "emitted_classes_sha256": {
+        "compatibility/declarations/Components.class": "07a017b721523f101e8de13d55302462c16e8da75cd2248c97529700de020f73",
+        "compatibility/declarations/DiscardsKt$lambda$1077$2.class": "851d72f2c7997f58ae1011e93ed943c1211b1f9b6b0440884bb6c5b37f67150b",
+        "compatibility/declarations/DiscardsKt$lambda$739$0.class": "2404db29dfdc4dfce5d4cc71f15a0fe18e4615c86bf165bafcc751f714876786",
+        "compatibility/declarations/DiscardsKt$lambda$960$1.class": "9c9b76df70f08fa6381c6fa661c4eb2e89dfeb3263c3c00ce1353302c1a384ee",
+        "compatibility/declarations/DiscardsKt.class": "8e5df37c6e93db7cebd417732182565638a3c4f4dc4ee43958cbc59ce14032c1"
+      },
+      "diagnostics": ""
+    },
+    {
+      "id": "java/discards",
+      "outcome": "pass",
+      "scope": "Same Java caller bytecodes compiled once against official output; independent expected values and effect traces."
+    },
+    {
+      "id": "source_abi/discards",
+      "outcome": "pass",
+      "owners": [
+        "compatibility.declarations.Components",
+        "compatibility.declarations.DiscardsKt"
+      ],
+      "scope": "Explicit source/default-helper public and protected descriptors and modifiers, including abstract versus concrete Java default methods; generated lambda class names are not ABI claims."
+    },
+    {
+      "id": "class_verification/discards",
+      "outcome": "pass",
+      "classes": 5
+    },
+    {
+      "id": "kotlin_consumer/candidate/discards",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/functional_interfaces",
+      "outcome": "pass",
+      "emitted_classes_sha256": {
+        "compatibility/declarations/FunctionalInterfacesKt$lambda$1181$5.class": "bdfbe932233342f6c69cb97a8d1a684ab5f20ab95db3641f8b12ccb4d080ed63",
+        "compatibility/declarations/FunctionalInterfacesKt$lambda$1265$6.class": "fcc6ce587667bf5bd4f96f75927e0c36a36f0c820231f02c8c2d8204bfc64578",
+        "compatibility/declarations/FunctionalInterfacesKt$lambda$1353$7.class": "d6146b83e54cbe023df54c62ecf60a462546b51fdce60dc8b95ca15d1c68decc",
+        "compatibility/declarations/FunctionalInterfacesKt$lambda$295$0.class": "c181f3caf1e389669792dcbb49bda7daca35006d07cf8250767e76001dae86d3",
+        "compatibility/declarations/FunctionalInterfacesKt$lambda$403$1.class": "273b0a333cb94b2f9c42d7f3b61f86e792834cac54a32476307cffcaf1061433",
+        "compatibility/declarations/FunctionalInterfacesKt$lambda$583$2.class": "2184d9995a194a4bdf9a34d748cebb163a73c38a9b95cc5ed904e19bb315ea38",
+        "compatibility/declarations/FunctionalInterfacesKt$lambda$795$3.class": "611c754a62de56bd16822ee47952098c3c52b6ef200b9f7960ece1ead1cd7c09",
+        "compatibility/declarations/FunctionalInterfacesKt$lambda$851$4.class": "efdf38a4aee9790342c1e170836b507ce5fdcc0943543ad4fc6d711e02ce6cdf",
+        "compatibility/declarations/FunctionalInterfacesKt.class": "c9bc90c002850efcec1252a8a521da89d3f86a1dcfd1a189d6ff85cb7a9ce439",
+        "compatibility/declarations/Mapper$DefaultImpls.class": "67bfc228a18d8467b25c6e289d112d6405caa2b7272082b4e3971228c3920006",
+        "compatibility/declarations/Mapper.class": "5757715039d8749bf1e628f5bc74f27ad4d6c3246ab64426b53f1fc2765b0b02",
+        "compatibility/declarations/MapperParent.class": "832c013e46f5fe0df06e80103563861659c1923fd725b38534671e80158fe4bf",
+        "compatibility/declarations/Sink.class": "683fe4a4475ecb6142a9034dc258dc7cd44b2891890416149cd8d9405b68dc4a"
+      },
+      "diagnostics": ""
+    },
+    {
+      "id": "java/functional_interfaces",
+      "outcome": "pass",
+      "scope": "Same Java caller bytecodes compiled once against official output; independent expected values and effect traces."
+    },
+    {
+      "id": "source_abi/functional_interfaces",
+      "outcome": "pass",
+      "owners": [
+        "compatibility.declarations.MapperParent",
+        "compatibility.declarations.Mapper",
+        "compatibility.declarations.Mapper$DefaultImpls",
+        "compatibility.declarations.Sink",
+        "compatibility.declarations.FunctionalInterfacesKt"
+      ],
+      "scope": "Explicit source/default-helper public and protected descriptors and modifiers, including abstract versus concrete Java default methods; generated lambda class names are not ABI claims."
+    },
+    {
+      "id": "class_verification/functional_interfaces",
+      "outcome": "pass",
+      "classes": 13
+    },
+    {
+      "id": "kotlin_consumer/candidate/functional_interfaces",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/log_interface",
+      "outcome": "pass",
+      "emitted_classes_sha256": {
+        "compatibility/declarations/LogCallsKt$lambda$171$0.class": "4fd04b8b6d7c1b0245e0ed941d1541229ee69aca708ca27c6af2173b59338ef0",
+        "compatibility/declarations/LogCallsKt$lambda$337$1.class": "6f7d38676221d8e894dc05c7470790bce5a3bf541e290394e3edb44e4946b915",
+        "compatibility/declarations/LogCallsKt.class": "769a66522773dc555a949d9d9221203e4cd01233bcab0858d74debb174c001a6",
+        "yuku/alkitab/datatransfer/process/LogInterface$DefaultImpls.class": "e56b38b89c29e8cafc772546788e89ffa75fc5ddfbfe7f6212db98383170a5f3",
+        "yuku/alkitab/datatransfer/process/LogInterface$lambda$166$0.class": "9a9d2dab45d0c20bfda47ce45b0c59b92b59e3716abab58e39f2abfc9c447a59",
+        "yuku/alkitab/datatransfer/process/LogInterface.class": "cfb891a4bce325f51c92fc3e9a817f6d5c6c6775abb56b5592fa6604dad0ec07"
+      },
+      "diagnostics": ""
+    },
+    {
+      "id": "java/log_interface",
+      "outcome": "pass",
+      "scope": "Same Java caller bytecodes compiled once against official output; independent expected values and effect traces."
+    },
+    {
+      "id": "source_abi/log_interface",
+      "outcome": "pass",
+      "owners": [
+        "compatibility.declarations.LogCallsKt",
+        "yuku.alkitab.datatransfer.process.LogInterface",
+        "yuku.alkitab.datatransfer.process.LogInterface$DefaultImpls"
+      ],
+      "scope": "Explicit source/default-helper public and protected descriptors and modifiers, including abstract versus concrete Java default methods; generated lambda class names are not ABI claims."
+    },
+    {
+      "id": "class_verification/log_interface",
+      "outcome": "pass",
+      "classes": 6
+    },
+    {
+      "id": "kotlin_consumer/candidate/log_interface",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/type_aliases",
+      "outcome": "pass",
+      "emitted_classes_sha256": {
+        "compatibility/declarations/AliasUsesKt$lambda$146$0.class": "a1ad32d69f7a86dfe5adcd605e06538c0bd474cf8b04bcf79e728e1389a9505f",
+        "compatibility/declarations/AliasUsesKt.class": "13111ea60d22fe506dcc7d210ceb4fccf7769a46ee9af229c4cae5f51bfc6ef6",
+        "compatibility/declarations/AliasesKt.class": "117ef2d691a9c292facca530753d88ddf9aef6db9f1b3d60ac2ac682414463e6",
+        "compatibility/declarations/GotoTab.class": "c9f7760f30adfb9ef7dd50b41e0dd115d7832ba52e5c9932510b85e3f5bd2ac4"
+      },
+      "diagnostics": ""
+    },
+    {
+      "id": "java/type_aliases",
+      "outcome": "pass",
+      "scope": "Same Java caller bytecodes compiled once against official output; independent expected values and effect traces."
+    },
+    {
+      "id": "source_abi/type_aliases",
+      "outcome": "pass",
+      "owners": [
+        "compatibility.declarations.GotoTab",
+        "compatibility.declarations.AliasesKt",
+        "compatibility.declarations.AliasUsesKt"
+      ],
+      "scope": "Explicit source/default-helper public and protected descriptors and modifiers, including abstract versus concrete Java default methods; generated lambda class names are not ABI claims."
+    },
+    {
+      "id": "class_verification/type_aliases",
+      "outcome": "pass",
+      "classes": 4
+    },
+    {
+      "id": "kotlin_consumer/candidate/type_aliases",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_consumer/candidate_reversed/type_aliases",
+      "outcome": "pass"
+    },
+    {
+      "id": "oracle_boundary/invalid_jvm_name",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_invalid_jvm_name_0.kt:1:5: error: name contains illegal characters: /.\nfun `bad/name`(): Int = 1\n    ^^^^^^^^^^\n"
+    },
+    {
+      "id": "boundary/invalid_jvm_name",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_invalid_jvm_name_0.kt:1:5: error: Identifier contains a character forbidden in JVM names\n"
+    },
+    {
+      "id": "oracle_boundary/underscore_declaration",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_underscore_declaration_0.kt:1:5: error: names _, __, ___, ... are reserved in Kotlin.\nval _ = 1\n    ^\n"
+    },
+    {
+      "id": "boundary/underscore_declaration",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_underscore_declaration_0.kt:1:5: error: Names consisting only of underscores are reserved\n"
+    },
+    {
+      "id": "oracle_boundary/underscore_expression",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_underscore_expression_0.kt:1:18: error: unresolved reference '_'.\nfun bad(): Int = _\n                 ^\n"
+    },
+    {
+      "id": "boundary/underscore_expression",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_underscore_expression_0.kt:1:18: error: Names consisting only of underscores are reserved\n"
+    },
+    {
+      "id": "oracle_boundary/typed_discard_mismatch",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_typed_discard_mismatch_0.kt:2:43: error: operator call 'component1()' returns 'Int', but 'String' is expected.\nfun bad(): Int { val (_: String, value) = Parts(); return value }\n                                          ^^^^^^^\n"
+    },
+    {
+      "id": "boundary/typed_discard_mismatch",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_typed_discard_mismatch_0.kt:2:18: error: Type mismatch: expected String, found Int\n"
+    },
+    {
+      "id": "oracle_boundary/sam_zero",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_zero_0.kt:1:1: error: functional interface must have exactly one abstract function.\nfun interface Empty { fun helper(): Int = 1 }\n^^^\n"
+    },
+    {
+      "id": "boundary/sam_zero",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_zero_0.kt:1:1: error: Functional interfaces require exactly one abstract function\n"
+    },
+    {
+      "id": "oracle_boundary/sam_many",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_many_0.kt:1:1: error: functional interface must have exactly one abstract function.\nfun interface Many { fun first(): Int; fun second(): Int }\n^^^\n"
+    },
+    {
+      "id": "boundary/sam_many",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_many_0.kt:1:1: error: Functional interfaces require exactly one abstract function\n"
+    },
+    {
+      "id": "oracle_boundary/sam_abstract_property",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_abstract_property_0.kt:1:26: error: functional interface cannot have abstract properties.\nfun interface Property { val value: Int; fun run(): Int }\n                         ^^^\n"
+    },
+    {
+      "id": "boundary/sam_abstract_property",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_abstract_property_0.kt:1:1: error: Functional interfaces cannot contain abstract properties\n"
+    },
+    {
+      "id": "oracle_boundary/sam_generic_method",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_generic_method_0.kt:1:29: error: functional interface cannot have an abstract method with type parameters.\nfun interface Generic { fun <T> apply(value: T): T }\n                            ^^^\n"
+    },
+    {
+      "id": "boundary/sam_generic_method",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_sam_generic_method_0.kt:1:1: error: Functional interface abstract methods cannot declare type parameters\n"
+    },
+    {
+      "id": "oracle_boundary/ordinary_interface_sam",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_ordinary_interface_sam_0.kt:3:23: error: argument type mismatch: actual type is '(??? (Unknown lambda parameter type)) -> ??? (Unknown lambda return type)', but 'Ordinary' was expected.\nfun bad(): Int = take { value -> value + 1 }\n                      ^^^^^^^^^^^^^^^^^^^^^^\ntarget/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_ordinary_interface_sam_0.kt:3:25: error: cannot infer type for value parameter 'value'. Specify it explicitly.\nfun bad(): Int = take { value -> value + 1 }\n                        ^^^^^\n"
+    },
+    {
+      "id": "boundary/ordinary_interface_sam",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_ordinary_interface_sam_0.kt:3:23: error: Lambda requires a function or SAM expected type\n"
+    },
+    {
+      "id": "oracle_boundary/alias_cycle",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_cycle_0.kt:1:19: error: recursive type alias in expansion.\ntypealias First = Second\n                  ^^^^^^\ntarget/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_cycle_0.kt:2:20: error: recursive type alias in expansion.\ntypealias Second = First\n                   ^^^^^\n"
+    },
+    {
+      "id": "boundary/alias_cycle",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_cycle_0.kt:1:1: error: Cyclic library type alias: /Second\n"
+    },
+    {
+      "id": "oracle_boundary/alias_private_cross_file",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_private_cross_file_1.kt:2:16: error: cannot access 'typealias Hidden = String': it is private in file.\nfun bad(value: Hidden): String = value\n               ^^^^^^\n"
+    },
+    {
+      "id": "boundary/alias_private_cross_file",
+      "outcome": "pass",
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_alias_private_cross_file_1.kt:2:16: error: Type requires an explicit class import: Hidden\n"
+    },
+    {
+      "id": "boundary/official/alias_private_library",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/ConsumerBoundary_alias_private_library.kt:2:16: error: cannot access 'typealias HiddenLabel = String': it is private in file.\nfun bad(value: HiddenLabel): String = value\n               ^^^^^^^^^^^\n"
+    },
+    {
+      "id": "boundary/candidate/alias_private_library",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/ConsumerBoundary_alias_private_library.kt:2:16: error: cannot access 'typealias HiddenLabel = String': it is private in file.\nfun bad(value: HiddenLabel): String = value\n               ^^^^^^^^^^^\n"
+    },
+    {
+      "id": "boundary/official/alias_nullability",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/ConsumerBoundary_alias_nullability.kt:2:33: error: return type mismatch: expected 'String', actual 'String?'.\nfun bad(value: Label?): Label = value\n                                ^^^^^\n"
+    },
+    {
+      "id": "boundary/candidate/alias_nullability",
+      "outcome": "pass",
+      "diagnostics": "target/checks/2026-10-26T143540996114Z-compatibility-declarations/ConsumerBoundary_alias_nullability.kt:2:33: error: return type mismatch: expected 'String', actual 'String?'.\nfun bad(value: Label?): Label = value\n                                ^^^^^\n"
+    },
+    {
+      "id": "oracle_boundary/generic_alias",
+      "outcome": "pass",
+      "diagnostics": ""
+    },
+    {
+      "id": "boundary/generic_alias",
+      "outcome": "unsupported_language",
+      "rejection_verified": true,
+      "diagnostics": "/workspace/korrust/target/final-compatibility-snapshot-v2/target/checks/2026-10-26T143540996114Z-compatibility-declarations/Boundary_generic_alias_0.kt:1:23: error: Generic type aliases are unsupported\n"
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "files": 17
+    }
+  ],
+  "selection": "Checkpoint D tasks16\u201320: escaped JVM identifiers and actual JUnit test annotation; skipped underscore component effects; Kotlin functional-interface identity/inherited SAM/default helpers/captures; unchanged full LogInterface runtime; concrete/function alias chains, cross-file and compiled-metadata consumers. No complete app, Android runtime or performance claim.",
+  "reproduction_commands": [
+    [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "tools/check_compatibility_declarations.py",
+      "--junit-jar",
+      "/workspace/korrust/target/compatibility-dependencies/junit-4.13.2.jar"
+    ]
+  ],
+  "counts": {
+    "pass": 64,
+    "unsupported_language": 1
+  },
+  "finished_at": "2026-10-26T14:41:54.756926+00:00"
+}

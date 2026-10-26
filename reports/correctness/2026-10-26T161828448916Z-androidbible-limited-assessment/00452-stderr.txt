@@ -1,0 +1,136 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:5:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.QueryTokenizer
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:6:27: error: unresolved reference 'newdoc'.
+import yuku.alkitab.songs.newdoc.SongDocument
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:7:27: error: unresolved reference 'newdoc'.
+import yuku.alkitab.songs.newdoc.SongDocumentSearch
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:8:13: error: unresolved reference 'kpri'.
+import yuku.kpri.model.Song
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:19:18: error: unresolved reference 'QueryTokenizer'.
+        val ps = QueryTokenizer.tokenize(filterString).map { token ->
+                 ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:19:62: error: cannot infer type for value parameter 'token'. Specify it explicitly.
+        val ps = QueryTokenizer.tokenize(filterString).map { token ->
+                                                             ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:20:17: error: unresolved reference 'QueryTokenizer'.
+            if (QueryTokenizer.isPlussedToken(token)) {
+                ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:21:55: error: unresolved reference 'QueryTokenizer'.
+                Pattern.compile("\\b" + Pattern.quote(QueryTokenizer.tokenWithoutPlus(token)) + "\\b", Pattern.CASE_INSENSITIVE)
+                                                      ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:30:49: error: unresolved reference 'SongInfo'.
+    fun filterSongInfosByString(songInfos: List<SongInfo>, filterString: String?): List<SongInfo> {
+                                                ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:30:89: error: unresolved reference 'SongInfo'.
+    fun filterSongInfosByString(songInfos: List<SongInfo>, filterString: String?): List<SongInfo> {
+                                                                                        ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:34:26: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        return songInfos.filter { match(it, cf) }
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:34:26: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T> Iterable<T>.filter(predicate: (T) -> Boolean): List<T>
+        return songInfos.filter { match(it, cf) }
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:34:33: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        return songInfos.filter { match(it, cf) }
+                                ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:43:21: error: unresolved reference 'SongInfo'.
+    fun match(song: SongInfo, cf: CompiledFilter): Boolean = matchesAll(cf) { match(song, it) }
+                    ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:46:21: error: unresolved reference 'Song'.
+    fun match(song: Song, cf: CompiledFilter): Boolean = matchesAll(cf) { match(song, it) }
+                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:48:29: error: unresolved reference 'SongInfo'.
+    private fun match(song: SongInfo, p: Pattern): Boolean {
+                            ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:51:18: error: argument type mismatch: actual type is 'Int', but 'CharSequence' was expected.
+        if (find(song.code, m)) return true
+                 ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:52:23: error: unresolved reference 'title'.
+        if (find(song.title, m)) return true
+                      ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:53:21: error: unresolved reference 'title_original'.
+        return song.title_original != null && find(song.title_original, m)
+                    ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:53:57: error: unresolved reference 'title_original'.
+        return song.title_original != null && find(song.title_original, m)
+                                                        ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:56:29: error: unresolved reference 'Song'.
+    private fun match(song: Song, p: Pattern): Boolean {
+                            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:59:18: error: argument type mismatch: actual type is 'Int', but 'CharSequence' was expected.
+        if (find(song.code, m)) return true
+                 ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:60:23: error: unresolved reference 'title'.
+        if (find(song.title, m)) return true
+                      ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:61:18: error: unresolved reference 'title_original'.
+        if (song.title_original != null && find(song.title_original, m)) return true
+                 ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:61:54: error: unresolved reference 'title_original'.
+        if (song.title_original != null && find(song.title_original, m)) return true
+                                                     ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:62:18: error: unresolved reference 'authors_lyric'.
+        if (song.authors_lyric?.any { find(it, m) } == true) return true
+                 ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:62:44: error: unresolved reference 'it'.
+        if (song.authors_lyric?.any { find(it, m) } == true) return true
+                                           ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:63:18: error: unresolved reference 'authors_music'.
+        if (song.authors_music?.any { find(it, m) } == true) return true
+                 ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:63:44: error: unresolved reference 'it'.
+        if (song.authors_music?.any { find(it, m) } == true) return true
+                                           ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:64:18: error: unresolved reference 'tune'.
+        if (song.tune != null && find(song.tune, m)) return true
+                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:64:44: error: unresolved reference 'tune'.
+        if (song.tune != null && find(song.tune, m)) return true
+                                           ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:66:21: error: unresolved reference 'lyrics'.
+        return song.lyrics.filterNotNull().any { lyric ->
+                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:66:50: error: cannot infer type for value parameter 'lyric'. Specify it explicitly.
+        return song.lyrics.filterNotNull().any { lyric ->
+                                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:67:19: error: unresolved reference 'verses'.
+            lyric.verses.any { verse -> verse.lines.any { line -> find(line, m) } }
+                  ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:67:32: error: cannot infer type for value parameter 'verse'. Specify it explicitly.
+            lyric.verses.any { verse -> verse.lines.any { line -> find(line, m) } }
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:67:47: error: function invocation 'lines()' expected.
+            lyric.verses.any { verse -> verse.lines.any { line -> find(line, m) } }
+                                              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:77:20: error: unresolved reference 'SongDocument'.
+    fun match(doc: SongDocument, cf: CompiledFilter): Boolean = matchesAll(cf) { match(doc, it) }
+                   ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:79:28: error: unresolved reference 'SongDocument'.
+    private fun match(doc: SongDocument, p: Pattern): Boolean {
+                           ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:81:16: error: unresolved reference 'SongDocumentSearch'.
+        return SongDocumentSearch.searchableTexts(doc).any { find(it, m) }
+               ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:81:67: error: unresolved reference 'it'.
+        return SongDocumentSearch.searchableTexts(doc).any { find(it, m) }
+                                                                  ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:116:31: error: unresolved reference 'SongDocument'.
+    fun findLyricSnippet(doc: SongDocument, cf: CompiledFilter, maxLines: Int): String? {
+                              ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:120:22: error: unresolved reference 'SongDocumentSearch'.
+        for (line in SongDocumentSearch.lyricLines(doc)) {
+                     ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt:120:41: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+        for (line in SongDocumentSearch.lyricLines(doc)) {
+                                        ^^^^^^^^^^

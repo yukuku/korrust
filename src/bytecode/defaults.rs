@@ -75,7 +75,7 @@ pub(super) fn function(
             0xb6
         },
         owner,
-        &function.name,
+        function.jvm_name(),
         &function.descriptor(),
     )?;
     body.bytes.push(return_opcode(&function.result));
@@ -102,7 +102,7 @@ pub(super) fn function(
     let mut method = simple_method(
         pool,
         if function.private { 0x1008 } else { 0x1009 },
-        &format!("{}$default", function.name),
+        &format!("{}$default", function.jvm_name()),
         &descriptor,
         code,
         None,
@@ -224,6 +224,8 @@ pub(super) fn constructors(
                 0x01
             } else if ty == &Type::Long {
                 0x09
+            } else if ty == &Type::Double {
+                0x0e
             } else if ty == &Type::Float {
                 0x0b
             } else {

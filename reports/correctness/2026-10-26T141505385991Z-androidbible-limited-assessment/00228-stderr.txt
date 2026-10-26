@@ -1,0 +1,390 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:3:16: error: unresolved reference 'content'.
+import android.content.ContentValues
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:4:16: error: unresolved reference 'database'.
+import android.database.DatabaseUtils
+               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:5:26: error: unresolved reference 'model'.
+import yuku.alkitab.base.model.MVersionDb
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:16:38: error: unresolved reference 'InternalDbHelper'.
+class VersionDao(private val helper: InternalDbHelper) {
+                                     ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:18:25: error: unresolved reference 'MVersionDb'.
+    fun listAll(): List<MVersionDb> {
+                        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:19:29: error: unresolved reference 'MVersionDb'.
+        val res = ArrayList<MVersionDb>()
+                            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:20:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:21:13: error: unresolved reference 'Db'.
+            Db.TABLE_Version, null, null, null, null, null,
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:22:13: error: unresolved reference 'Db'.
+            Db.Version.ordering + " asc",
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:23:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:23:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:23:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:24:36: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colLocale = cursor.getColumnIndexOrThrow(Db.Version.locale)
+                                   ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:24:58: error: unresolved reference 'Db'.
+            val colLocale = cursor.getColumnIndexOrThrow(Db.Version.locale)
+                                                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:25:39: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colShortName = cursor.getColumnIndexOrThrow(Db.Version.shortName)
+                                      ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:25:61: error: unresolved reference 'Db'.
+            val colShortName = cursor.getColumnIndexOrThrow(Db.Version.shortName)
+                                                            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:26:38: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colLongName = cursor.getColumnIndexOrThrow(Db.Version.longName)
+                                     ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:26:60: error: unresolved reference 'Db'.
+            val colLongName = cursor.getColumnIndexOrThrow(Db.Version.longName)
+                                                           ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:27:41: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colDescription = cursor.getColumnIndexOrThrow(Db.Version.description)
+                                        ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:27:63: error: unresolved reference 'Db'.
+            val colDescription = cursor.getColumnIndexOrThrow(Db.Version.description)
+                                                              ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:28:38: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colFilename = cursor.getColumnIndexOrThrow(Db.Version.filename)
+                                     ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:28:60: error: unresolved reference 'Db'.
+            val colFilename = cursor.getColumnIndexOrThrow(Db.Version.filename)
+                                                           ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:29:40: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colPresetName = cursor.getColumnIndexOrThrow(Db.Version.preset_name)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:29:62: error: unresolved reference 'Db'.
+            val colPresetName = cursor.getColumnIndexOrThrow(Db.Version.preset_name)
+                                                             ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:30:40: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colModifyTime = cursor.getColumnIndexOrThrow(Db.Version.modifyTime)
+                                       ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:30:62: error: unresolved reference 'Db'.
+            val colModifyTime = cursor.getColumnIndexOrThrow(Db.Version.modifyTime)
+                                                             ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:31:36: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colActive = cursor.getColumnIndexOrThrow(Db.Version.active)
+                                   ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:31:58: error: unresolved reference 'Db'.
+            val colActive = cursor.getColumnIndexOrThrow(Db.Version.active)
+                                                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:32:38: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colOrdering = cursor.getColumnIndexOrThrow(Db.Version.ordering)
+                                     ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:32:60: error: unresolved reference 'Db'.
+            val colOrdering = cursor.getColumnIndexOrThrow(Db.Version.ordering)
+                                                           ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:34:27: error: unresolved reference 'moveToNext'.
+            while (cursor.moveToNext()) {
+                          ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:35:24: error: unresolved reference 'MVersionDb'.
+                res += MVersionDb().apply {
+                       ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:35:37: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                res += MVersionDb().apply {
+                                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:35:43: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                res += MVersionDb().apply {
+                                          ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:36:21: error: unresolved reference 'locale'.
+                    locale = cursor.getString(colLocale)
+                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:36:37: error: unresolved reference 'getString'.
+                    locale = cursor.getString(colLocale)
+                                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:37:21: error: unresolved reference 'shortName'.
+                    shortName = cursor.getString(colShortName)
+                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:37:40: error: unresolved reference 'getString'.
+                    shortName = cursor.getString(colShortName)
+                                       ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:38:21: error: unresolved reference 'longName'.
+                    longName = cursor.getString(colLongName)
+                    ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:38:39: error: unresolved reference 'getString'.
+                    longName = cursor.getString(colLongName)
+                                      ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:39:21: error: unresolved reference 'description'.
+                    description = cursor.getString(colDescription)
+                    ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:39:42: error: unresolved reference 'getString'.
+                    description = cursor.getString(colDescription)
+                                         ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:40:21: error: unresolved reference 'filename'.
+                    filename = cursor.getString(colFilename)
+                    ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:40:39: error: unresolved reference 'getString'.
+                    filename = cursor.getString(colFilename)
+                                      ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:41:21: error: unresolved reference 'preset_name'.
+                    preset_name = cursor.getString(colPresetName)
+                    ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:41:42: error: unresolved reference 'getString'.
+                    preset_name = cursor.getString(colPresetName)
+                                         ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:42:21: error: unresolved reference 'modifyTime'.
+                    modifyTime = cursor.getInt(colModifyTime)
+                    ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:42:41: error: unresolved reference 'getInt'.
+                    modifyTime = cursor.getInt(colModifyTime)
+                                        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:43:21: error: unresolved reference 'cache_active'.
+                    cache_active = cursor.getInt(colActive) != 0
+                    ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:43:43: error: unresolved reference 'getInt'.
+                    cache_active = cursor.getInt(colActive) != 0
+                                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:44:21: error: unresolved reference 'ordering'.
+                    ordering = cursor.getInt(colOrdering)
+                    ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:44:39: error: unresolved reference 'getInt'.
+                    ordering = cursor.getInt(colOrdering)
+                                      ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:54:23: error: unresolved reference 'MVersionDb'.
+    fun setActive(mv: MVersionDb, active: Boolean) {
+                      ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:55:25: error: unresolved reference 'writableDatabase'.
+        val db = helper.writableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:56:18: error: unresolved reference 'ContentValues'.
+        val cv = ContentValues().apply { put(Db.Version.active, if (active) 1 else 0) }
+                 ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:56:34: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cv = ContentValues().apply { put(Db.Version.active, if (active) 1 else 0) }
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:56:40: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cv = ContentValues().apply { put(Db.Version.active, if (active) 1 else 0) }
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:56:42: error: unresolved reference 'put'.
+        val cv = ContentValues().apply { put(Db.Version.active, if (active) 1 else 0) }
+                                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:56:46: error: unresolved reference 'Db'.
+        val cv = ContentValues().apply { put(Db.Version.active, if (active) 1 else 0) }
+                                             ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:57:16: error: unresolved reference 'preset_name'.
+        if (mv.preset_name != null) {
+               ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:58:23: error: unresolved reference 'Db'.
+            db.update(Db.TABLE_Version, cv, Db.Version.preset_name + "=?", arrayOf(mv.preset_name))
+                      ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:58:45: error: unresolved reference 'Db'.
+            db.update(Db.TABLE_Version, cv, Db.Version.preset_name + "=?", arrayOf(mv.preset_name))
+                                            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:58:76: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            db.update(Db.TABLE_Version, cv, Db.Version.preset_name + "=?", arrayOf(mv.preset_name))
+                                                                           ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:58:87: error: unresolved reference 'preset_name'.
+            db.update(Db.TABLE_Version, cv, Db.Version.preset_name + "=?", arrayOf(mv.preset_name))
+                                                                                      ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:60:23: error: unresolved reference 'Db'.
+            db.update(Db.TABLE_Version, cv, Db.Version.filename + "=?", arrayOf(mv.filename))
+                      ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:60:45: error: unresolved reference 'Db'.
+            db.update(Db.TABLE_Version, cv, Db.Version.filename + "=?", arrayOf(mv.filename))
+                                            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:60:73: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            db.update(Db.TABLE_Version, cv, Db.Version.filename + "=?", arrayOf(mv.filename))
+                                                                        ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:60:84: error: unresolved reference 'filename'.
+            db.update(Db.TABLE_Version, cv, Db.Version.filename + "=?", arrayOf(mv.filename))
+                                                                                   ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:65:25: error: unresolved reference 'readableDatabase'.
+        val db = helper.readableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:66:16: error: unresolved reference 'DatabaseUtils'.
+        return DatabaseUtils.longForQuery(
+               ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:67:31: error: unresolved reference 'Db'.
+            db, "select max(${Db.Version.ordering}) from ${Db.TABLE_Version}", null,
+                              ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:67:60: error: unresolved reference 'Db'.
+            db, "select max(${Db.Version.ordering}) from ${Db.TABLE_Version}", null,
+                                                           ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:77:38: error: unresolved reference 'MVersionDb'.
+    fun insertOrUpdateWithActive(mv: MVersionDb, active: Boolean) {
+                                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:78:25: error: unresolved reference 'writableDatabase'.
+        val db = helper.writableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:79:18: error: unresolved reference 'ContentValues'.
+        val cv = ContentValues().apply {
+                 ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:79:34: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cv = ContentValues().apply {
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:79:40: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cv = ContentValues().apply {
+                                       ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:80:13: error: unresolved reference 'put'.
+            put(Db.Version.locale, mv.locale)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:80:17: error: unresolved reference 'Db'.
+            put(Db.Version.locale, mv.locale)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:80:39: error: unresolved reference 'locale'.
+            put(Db.Version.locale, mv.locale)
+                                      ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:81:13: error: unresolved reference 'put'.
+            put(Db.Version.shortName, mv.shortName)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:81:17: error: unresolved reference 'Db'.
+            put(Db.Version.shortName, mv.shortName)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:81:42: error: unresolved reference 'shortName'.
+            put(Db.Version.shortName, mv.shortName)
+                                         ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:82:13: error: unresolved reference 'put'.
+            put(Db.Version.longName, mv.longName)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:82:17: error: unresolved reference 'Db'.
+            put(Db.Version.longName, mv.longName)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:82:41: error: unresolved reference 'longName'.
+            put(Db.Version.longName, mv.longName)
+                                        ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:83:13: error: unresolved reference 'put'.
+            put(Db.Version.description, mv.description)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:83:17: error: unresolved reference 'Db'.
+            put(Db.Version.description, mv.description)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:83:44: error: unresolved reference 'description'.
+            put(Db.Version.description, mv.description)
+                                           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:84:13: error: unresolved reference 'put'.
+            put(Db.Version.filename, mv.filename)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:84:17: error: unresolved reference 'Db'.
+            put(Db.Version.filename, mv.filename)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:84:41: error: unresolved reference 'filename'.
+            put(Db.Version.filename, mv.filename)
+                                        ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:85:13: error: unresolved reference 'put'.
+            put(Db.Version.preset_name, mv.preset_name)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:85:17: error: unresolved reference 'Db'.
+            put(Db.Version.preset_name, mv.preset_name)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:85:44: error: unresolved reference 'preset_name'.
+            put(Db.Version.preset_name, mv.preset_name)
+                                           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:86:13: error: unresolved reference 'put'.
+            put(Db.Version.modifyTime, mv.modifyTime)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:86:17: error: unresolved reference 'Db'.
+            put(Db.Version.modifyTime, mv.modifyTime)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:86:43: error: unresolved reference 'modifyTime'.
+            put(Db.Version.modifyTime, mv.modifyTime)
+                                          ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:87:13: error: unresolved reference 'put'.
+            put(Db.Version.active, active)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:87:17: error: unresolved reference 'Db'.
+            put(Db.Version.active, active)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:88:13: error: unresolved reference 'put'.
+            put(Db.Version.ordering, mv.ordering)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:88:17: error: unresolved reference 'Db'.
+            put(Db.Version.ordering, mv.ordering)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:88:41: error: unresolved reference 'ordering'.
+            put(Db.Version.ordering, mv.ordering)
+                                        ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:94:17: error: unresolved reference 'Db'.
+                Db.TABLE_Version, arrayOf("_id", Db.Version.ordering),
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:94:50: error: unresolved reference 'Db'.
+                Db.TABLE_Version, arrayOf("_id", Db.Version.ordering),
+                                                 ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:95:17: error: unresolved reference 'Db'.
+                Db.Version.filename + "=?", arrayOf(mv.filename),
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:95:45: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                Db.Version.filename + "=?", arrayOf(mv.filename),
+                                            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:95:56: error: unresolved reference 'filename'.
+                Db.Version.filename + "=?", arrayOf(mv.filename),
+                                                       ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:97:15: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            ).use { c ->
+              ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:97:15: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            ).use { c ->
+              ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:97:21: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            ).use { c ->
+                    ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:98:23: error: unresolved reference 'moveToNext'.
+                if (c.moveToNext()) {
+                      ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:99:32: error: unresolved reference 'getLong'.
+                    val id = c.getLong(0)
+                               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:100:46: error: unresolved reference 'getInt'.
+                    val existingOrdering = c.getInt(1)
+                                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:101:24: error: unresolved reference 'ordering'.
+                    mv.ordering = existingOrdering
+                       ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:102:24: error: unresolved reference 'put'.
+                    cv.put(Db.Version.ordering, existingOrdering)
+                       ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:102:28: error: unresolved reference 'Db'.
+                    cv.put(Db.Version.ordering, existingOrdering)
+                           ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:103:31: error: unresolved reference 'Db'.
+                    db.update(Db.TABLE_Version, cv, "_id=?", arrayOf(id.toString()))
+                              ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:105:31: error: unresolved reference 'Db'.
+                    db.insert(Db.TABLE_Version, null, cv)
+                              ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:114:20: error: unresolved reference 'MVersionDb'.
+    fun delete(mv: MVersionDb) {
+                   ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:115:25: error: unresolved reference 'writableDatabase'.
+        val db = helper.writableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:117:16: error: unresolved reference 'preset_name'.
+        if (mv.preset_name != null) {
+               ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:119:17: error: unresolved reference 'Db'.
+                Db.TABLE_Version, Db.Version.preset_name + "=?", arrayOf(mv.preset_name),
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:119:35: error: unresolved reference 'Db'.
+                Db.TABLE_Version, Db.Version.preset_name + "=?", arrayOf(mv.preset_name),
+                                  ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:119:66: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                Db.TABLE_Version, Db.Version.preset_name + "=?", arrayOf(mv.preset_name),
+                                                                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:119:77: error: unresolved reference 'preset_name'.
+                Db.TABLE_Version, Db.Version.preset_name + "=?", arrayOf(mv.preset_name),
+                                                                            ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:124:19: error: unresolved reference 'Db'.
+        db.delete(Db.TABLE_Version, Db.Version.filename + "=?", arrayOf(mv.filename))
+                  ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:124:37: error: unresolved reference 'Db'.
+        db.delete(Db.TABLE_Version, Db.Version.filename + "=?", arrayOf(mv.filename))
+                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:124:65: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        db.delete(Db.TABLE_Version, Db.Version.filename + "=?", arrayOf(mv.filename))
+                                                                ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VersionDao.kt:124:76: error: unresolved reference 'filename'.
+        db.delete(Db.TABLE_Version, Db.Version.filename + "=?", arrayOf(mv.filename))
+                                                                           ^^^^^^^^

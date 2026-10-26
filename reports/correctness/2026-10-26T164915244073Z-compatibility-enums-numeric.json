@@ -1,0 +1,2179 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-26T16:49:15.244073+00:00",
+  "status": "pass",
+  "commands": [
+    {
+      "label": "Official Kotlin identity",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/001-stderr.txt"
+    },
+    {
+      "label": "Candidate identity",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/002-stderr.txt"
+    },
+    {
+      "label": "official compile EnumModel.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/EnumModel.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/003-stderr.txt"
+    },
+    {
+      "label": "official compile DoubleModel.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/DoubleModel.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/004-stderr.txt"
+    },
+    {
+      "label": "official compile DoubleExtras.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/DoubleExtras.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/005-stderr.txt"
+    },
+    {
+      "label": "official compile GotoTab.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/006-stderr.txt"
+    },
+    {
+      "label": "official compile TextColorUtil.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/TextColorUtil.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/007-stderr.txt"
+    },
+    {
+      "label": "candidate compile EnumModel.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/EnumModel.kt",
+        "--module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/008-stderr.txt"
+    },
+    {
+      "label": "candidate compile DoubleModel.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/DoubleModel.kt",
+        "--module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/009-stderr.txt"
+    },
+    {
+      "label": "candidate compile DoubleExtras.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/DoubleExtras.kt",
+        "--module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/010-stderr.txt"
+    },
+    {
+      "label": "candidate compile GotoTab.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt",
+        "--module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/011-stderr.txt"
+    },
+    {
+      "label": "candidate compile TextColorUtil.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/TextColorUtil.kt",
+        "--module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/012-stderr.txt"
+    },
+    {
+      "label": "Compile Java enum/Double caller against official output",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-enum-caller",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/EnumNumericCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/013-stderr.txt"
+    },
+    {
+      "label": "official verified Java enum/Double/GotoTab calls",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-enum-caller:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "EnumNumericCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/014-stderr.txt"
+    },
+    {
+      "label": "official ABI compatibility.enumsnumeric.Signal",
+      "argv": [
+        "javap",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color",
+        "-public",
+        "-s",
+        "compatibility.enumsnumeric.Signal"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/015-stderr.txt"
+    },
+    {
+      "label": "official ABI compatibility.enumsnumeric.DoubleModel",
+      "argv": [
+        "javap",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color",
+        "-public",
+        "-s",
+        "compatibility.enumsnumeric.DoubleModel"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/016-stderr.txt"
+    },
+    {
+      "label": "official ABI compatibility.enumsnumeric.DoubleBox",
+      "argv": [
+        "javap",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color",
+        "-public",
+        "-s",
+        "compatibility.enumsnumeric.DoubleBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/017-stderr.txt"
+    },
+    {
+      "label": "official ABI compatibility.enumsnumeric.DoubleRecord",
+      "argv": [
+        "javap",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color",
+        "-public",
+        "-s",
+        "compatibility.enumsnumeric.DoubleRecord"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/018-stderr.txt"
+    },
+    {
+      "label": "official ABI yuku.alkitab.base.compose.goto.GotoTab",
+      "argv": [
+        "javap",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color",
+        "-public",
+        "-s",
+        "yuku.alkitab.base.compose.goto.GotoTab"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/019-stderr.txt"
+    },
+    {
+      "label": "official compile GotoConsumer.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/GotoConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-kotlin-enum-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/020-stderr.txt"
+    },
+    {
+      "label": "official verified Kotlin enum/alias/Double consumer",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-kotlin-enum-consumer:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.enumsnumeric.GotoConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/021-stderr.txt"
+    },
+    {
+      "label": "Compile Java Double defaults/capture caller against official output",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-double-extras-caller",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/DoubleExtrasCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/022-stderr.txt"
+    },
+    {
+      "label": "official verified Double defaults/captures/constants",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-double-extras-caller:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DoubleExtrasCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/023-stderr.txt"
+    },
+    {
+      "label": "Compile Java color caller against official output",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-color-caller",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/TextColorCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/024-stderr.txt"
+    },
+    {
+      "label": "official verified real-library TextColorUtil",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-color-caller:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/android-all-14-robolectric-10818077.jar:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "TextColorCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/025-stderr.txt"
+    },
+    {
+      "label": "official compile TextColorConsumer.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/TextColorConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-kotlin-color-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/026-stderr.txt"
+    },
+    {
+      "label": "official verified Kotlin TextColorUtil consumer",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-kotlin-color-consumer:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/android-all-14-robolectric-10818077.jar:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.enumsnumeric.TextColorConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/027-stderr.txt"
+    },
+    {
+      "label": "candidate verified Java enum/Double/GotoTab calls",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-enum-caller:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "EnumNumericCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/028-stderr.txt"
+    },
+    {
+      "label": "candidate ABI compatibility.enumsnumeric.Signal",
+      "argv": [
+        "javap",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color",
+        "-public",
+        "-s",
+        "compatibility.enumsnumeric.Signal"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/029-stderr.txt"
+    },
+    {
+      "label": "candidate ABI compatibility.enumsnumeric.DoubleModel",
+      "argv": [
+        "javap",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color",
+        "-public",
+        "-s",
+        "compatibility.enumsnumeric.DoubleModel"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/030-stderr.txt"
+    },
+    {
+      "label": "candidate ABI compatibility.enumsnumeric.DoubleBox",
+      "argv": [
+        "javap",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color",
+        "-public",
+        "-s",
+        "compatibility.enumsnumeric.DoubleBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/031-stderr.txt"
+    },
+    {
+      "label": "candidate ABI compatibility.enumsnumeric.DoubleRecord",
+      "argv": [
+        "javap",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color",
+        "-public",
+        "-s",
+        "compatibility.enumsnumeric.DoubleRecord"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/032-stderr.txt"
+    },
+    {
+      "label": "candidate ABI yuku.alkitab.base.compose.goto.GotoTab",
+      "argv": [
+        "javap",
+        "-classpath",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color",
+        "-public",
+        "-s",
+        "yuku.alkitab.base.compose.goto.GotoTab"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/033-stderr.txt"
+    },
+    {
+      "label": "official compile GotoConsumer.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/GotoConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-kotlin-enum-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/034-stderr.txt"
+    },
+    {
+      "label": "candidate verified Kotlin enum/alias/Double consumer",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-kotlin-enum-consumer:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.enumsnumeric.GotoConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/035-stderr.txt"
+    },
+    {
+      "label": "candidate verified Double defaults/captures/constants",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-double-extras-caller:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "DoubleExtrasCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/036-stderr.txt"
+    },
+    {
+      "label": "candidate verified real-library TextColorUtil",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-color-caller:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/android-all-14-robolectric-10818077.jar:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "TextColorCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/037-stderr.txt"
+    },
+    {
+      "label": "official compile TextColorConsumer.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/TextColorConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-kotlin-color-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/038-stderr.txt"
+    },
+    {
+      "label": "candidate verified Kotlin TextColorUtil consumer",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-kotlin-color-consumer:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/android-all-14-robolectric-10818077.jar:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.enumsnumeric.TextColorConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/039-stderr.txt"
+    },
+    {
+      "label": "official boundary InvalidEnumDuplicate",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumDuplicate.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-InvalidEnumDuplicate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/040-stderr.txt"
+    },
+    {
+      "label": "candidate boundary InvalidEnumDuplicate",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumDuplicate.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-InvalidEnumDuplicate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/041-stderr.txt"
+    },
+    {
+      "label": "official boundary InvalidEnumType",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumType.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-InvalidEnumType"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/042-stderr.txt"
+    },
+    {
+      "label": "candidate boundary InvalidEnumType",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumType.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-InvalidEnumType"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/043-stderr.txt"
+    },
+    {
+      "label": "official boundary InvalidEnumForward",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumForward.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-InvalidEnumForward"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/044-stderr.txt"
+    },
+    {
+      "label": "candidate boundary InvalidEnumForward",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumForward.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-InvalidEnumForward"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/045-stderr.txt"
+    },
+    {
+      "label": "official boundary InvalidEnumCompanion",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumCompanion.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-InvalidEnumCompanion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/046-stderr.txt"
+    },
+    {
+      "label": "candidate boundary InvalidEnumCompanion",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumCompanion.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-InvalidEnumCompanion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/047-stderr.txt"
+    },
+    {
+      "label": "official boundary UnsupportedEnumBody",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/UnsupportedEnumBody.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-UnsupportedEnumBody"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/048-stderr.txt"
+    },
+    {
+      "label": "candidate boundary UnsupportedEnumBody",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/UnsupportedEnumBody.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-UnsupportedEnumBody"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/049-stderr.txt"
+    },
+    {
+      "label": "official boundary UnsupportedDoubleArray",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/UnsupportedDoubleArray.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-UnsupportedDoubleArray"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/050-stderr.txt"
+    },
+    {
+      "label": "candidate boundary UnsupportedDoubleArray",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/UnsupportedDoubleArray.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-UnsupportedDoubleArray"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/051-stderr.txt"
+    },
+    {
+      "label": "official boundary InvalidDoubleLiteralArg",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleLiteralArg.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-InvalidDoubleLiteralArg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/052-stderr.txt"
+    },
+    {
+      "label": "candidate boundary InvalidDoubleLiteralArg",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleLiteralArg.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-InvalidDoubleLiteralArg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/053-stderr.txt"
+    },
+    {
+      "label": "official boundary InvalidDoubleVariableArg",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleVariableArg.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-InvalidDoubleVariableArg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/054-stderr.txt"
+    },
+    {
+      "label": "candidate boundary InvalidDoubleVariableArg",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleVariableArg.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-InvalidDoubleVariableArg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/055-stderr.txt"
+    },
+    {
+      "label": "official boundary InvalidDoubleJavaArg",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleJavaArg.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-InvalidDoubleJavaArg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/056-stderr.txt"
+    },
+    {
+      "label": "candidate boundary InvalidDoubleJavaArg",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleJavaArg.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-InvalidDoubleJavaArg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/057-stderr.txt"
+    },
+    {
+      "label": "official boundary InvalidDoubleFloatArg",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleFloatArg.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-InvalidDoubleFloatArg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/058-stderr.txt"
+    },
+    {
+      "label": "candidate boundary InvalidDoubleFloatArg",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleFloatArg.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-InvalidDoubleFloatArg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/059-stderr.txt"
+    },
+    {
+      "label": "official boundary InvalidDoubleNullableArg",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleNullableArg.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-InvalidDoubleNullableArg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/060-stderr.txt"
+    },
+    {
+      "label": "candidate boundary InvalidDoubleNullableArg",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleNullableArg.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-InvalidDoubleNullableArg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/061-stderr.txt"
+    },
+    {
+      "label": "official boundary InvalidDoubleMixedEquality",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleMixedEquality.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-negative-InvalidDoubleMixedEquality"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/062-stderr.txt"
+    },
+    {
+      "label": "candidate boundary InvalidDoubleMixedEquality",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleMixedEquality.kt",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-negative-InvalidDoubleMixedEquality"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/063-stderr.txt"
+    },
+    {
+      "label": "Compile original selected ReadingGuide resources",
+      "argv": [
+        "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/aapt2",
+        "compile",
+        "--dir",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/res",
+        "-o",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/compiled.zip"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/064-stderr.txt"
+    },
+    {
+      "label": "Generate real ReadingGuide R with aapt2",
+      "argv": [
+        "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/aapt2",
+        "link",
+        "--manifest",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/AndroidManifest.xml",
+        "-I",
+        "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "--java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/generated",
+        "-o",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/selected-resources.apk",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/compiled.zip"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/065-stderr.txt"
+    },
+    {
+      "label": "Compile real original ReadingGuide Java dependencies",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/Book.java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/Ari.java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/afw/App.java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/afw/storage/Preferences.java",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/generated/yuku/alkitab/debug/R.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/066-stderr.txt"
+    },
+    {
+      "label": "official compile DesktopVerseParser.kt, ReadingPassage.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitabconverter/util/DesktopVerseParser.kt",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/java:/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/kotlin"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/067-stderr.txt"
+    },
+    {
+      "label": "official unchanged ReadingGuide assessment",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/java:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/kotlin:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-reading-guide"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/068-stderr.txt"
+    },
+    {
+      "label": "official compile ReadingGuideCheck.kt",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/ReadingGuideCheck.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-reading-guide:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/java:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/kotlin:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-reading-guide-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/069-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/069-stderr.txt"
+    },
+    {
+      "label": "official selected ReadingGuide verified JVM behavior",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-reading-guide-consumer:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-reading-guide:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/java:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/kotlin:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/android-all-14-robolectric-10818077.jar:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.enumsnumeric.ReadingGuideCheckKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/070-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/070-stderr.txt"
+    },
+    {
+      "label": "Compile Java caller for original internal ReadingGuide color function",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-reading-guide",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-reading-color-caller",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/ReadingGuideColorCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/071-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/071-stderr.txt"
+    },
+    {
+      "label": "official verified ReadingGuide color behavior",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/java-reading-color-caller:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-reading-guide:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/android-all-14-robolectric-10818077.jar:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ReadingGuideColorCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/072-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/072-stderr.txt"
+    },
+    {
+      "label": "candidate unchanged ReadingGuide assessment",
+      "argv": [
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt",
+        "--module-name",
+        "compatibility_enums_numeric",
+        "-cp",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/java:/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/reading-guide-dependencies/kotlin:/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar:/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "-d",
+        "/workspace/korrust/target/final-compatibility-snapshot-v4/target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-reading-guide"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/073-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/073-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "matched_inputs",
+      "outcome": "pass",
+      "original_sources": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/TextColorUtil.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt"
+      ]
+    },
+    {
+      "id": "official/emission/enums",
+      "outcome": "pass",
+      "classes_sha256": {
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums/compatibility/enumsnumeric/Empty.class": "1a771bbaeb270ded0fe025a131784a0c36d3e956fd42cb1e36ced59076d93ecd",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums/compatibility/enumsnumeric/EnumTrace.class": "fa69d91f114b67767456dd2682a24f963a183071791e993d834560c30b682ea9",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums/compatibility/enumsnumeric/Signal$Companion.class": "d03dce2f9ec2250da4201304ee714543010e7e18e4249bbfdf4c137184949b79",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-enums/compatibility/enumsnumeric/Signal.class": "86da115a72cb29bf04ef7fa728895df3541e16280a1a4eab766ac71ad4e56818"
+      }
+    },
+    {
+      "id": "official/emission/double",
+      "outcome": "pass",
+      "classes_sha256": {
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double/compatibility/enumsnumeric/DoubleBox.class": "d847d793a40f137fb125dd8765424ddfbbca8cf383d377e49124f012f0bef63f",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double/compatibility/enumsnumeric/DoubleModel.class": "fc28f29cd8e140de81a508062d684850b50d104e79864de5a38a73c4c25520ae",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double/compatibility/enumsnumeric/DoubleModelKt.class": "be020724c89bcb4865f2249648aab49fcfe964b1166476330c7014bcdebc50cc",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double/compatibility/enumsnumeric/DoubleRecord.class": "d76f71352703fed6e6562786f522c73235e45d2e75686130c8d0249c16c74dfa"
+      }
+    },
+    {
+      "id": "official/emission/double_extras",
+      "outcome": "pass",
+      "classes_sha256": {
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras/compatibility/enumsnumeric/DefaultBox.class": "e7a812cddd388413cd2c8f00d64a939142a0dcd8cd621af76e3f0eda3172d390",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-double_extras/compatibility/enumsnumeric/DoubleExtrasKt.class": "12042ce37e6a874ee06d1e37a28a0e2d8e51eb3a0b7135d9bece562a0ab17d5f"
+      }
+    },
+    {
+      "id": "official/emission/goto",
+      "outcome": "pass",
+      "classes_sha256": {
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto/yuku/alkitab/base/compose/goto/GotoTab.class": "475052069737ec99d535001f76d88a20758beed97b20f7be4c3b2a2dfee4778b",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-goto/yuku/alkitab/base/compose/goto/GotoTabKt.class": "3f49f7917d43bb503e0128ca4ac83b269b78873cf79bdb89c9a90fa5a50fa61e"
+      }
+    },
+    {
+      "id": "official/emission/text_color",
+      "outcome": "pass",
+      "classes_sha256": {
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/official-text_color/yuku/alkitab/base/util/TextColorUtil.class": "aa5c77cf70f924d182162099f83756f62a51b0f8ccdd8d32caa7d94ef133863d"
+      }
+    },
+    {
+      "id": "candidate/emission/enums",
+      "outcome": "pass",
+      "classes_sha256": {
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums/compatibility/enumsnumeric/Empty.class": "3212fdaf88b60a20f38aab02cf60f231ba57451dcda87da350105d0d47fc1e60",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums/compatibility/enumsnumeric/EnumTrace.class": "d3f22b3ca3e407be83fb2c57f7b7c053e0659172799d22f3d6b5d7597e71aa9f",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums/compatibility/enumsnumeric/Signal$Companion.class": "a804fb1e716988887cf478e5186a645994f1b7db988fd5ab0216215649f73bb4",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-enums/compatibility/enumsnumeric/Signal.class": "1f8a7dc1cf71b04d6313adbb8a04c1061d11b8104ebd460141a6712a082f8ba8"
+      }
+    },
+    {
+      "id": "candidate/emission/double",
+      "outcome": "pass",
+      "classes_sha256": {
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double/compatibility/enumsnumeric/DoubleBox.class": "770181d87d0b4eb64199a55b0b393ef0ff42db2602859c47b37b610e227119a5",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double/compatibility/enumsnumeric/DoubleModel.class": "c7ad6e0d0d6f8608e095dcd7eeb71e39e0fef12febced1a297243e9beec49f3e",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double/compatibility/enumsnumeric/DoubleModelKt.class": "e82a7fda412a6c766b4312524420aa5f8bb5dee2c94a04812076f7523e82a5ef",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double/compatibility/enumsnumeric/DoubleRecord.class": "a64f911975f4e7cc380f121df47ab95ca5b63295c3ee3cd60b7b4f1c9a998d5f"
+      }
+    },
+    {
+      "id": "candidate/emission/double_extras",
+      "outcome": "pass",
+      "classes_sha256": {
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras/compatibility/enumsnumeric/DefaultBox.class": "d6239f79e45447c5cef82ff4333e3e78ca3e6ec0ccf836ea25582f8c539125cf",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras/compatibility/enumsnumeric/DoubleExtrasKt$lambda$440$0.class": "3298608d14d51ed2952e6bf36c3e1b11a84da10bef1fd2ed32814f8c2f917ffd",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras/compatibility/enumsnumeric/DoubleExtrasKt$lambda$523$1.class": "34a65f1acda75d44250f5d0ce79736e321b4c17a03e54ad1e6743f922eb6b52e",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-double_extras/compatibility/enumsnumeric/DoubleExtrasKt.class": "3a9d41cbdab296f6e8229c3840a51b97865178b56c29f47fb1ddb53e3c30918e"
+      }
+    },
+    {
+      "id": "candidate/emission/goto",
+      "outcome": "pass",
+      "classes_sha256": {
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto/yuku/alkitab/base/compose/goto/GotoTab.class": "14883490169cdc98e5ea6166a963fcb5551903eec1bf1ea29100b80bb9cd422c",
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-goto/yuku/alkitab/base/compose/goto/GotoTabKt.class": "a00991bde92c049401056de95cab2e8f53ff50e235b30fafe41b3aee08dd8d94"
+      }
+    },
+    {
+      "id": "candidate/emission/text_color",
+      "outcome": "pass",
+      "classes_sha256": {
+        "target/checks/2026-10-26T164915244073Z-compatibility-enums-numeric/candidate-text_color/yuku/alkitab/base/util/TextColorUtil.class": "ed7db03477a67b5c6d8558ad82ee37399b2e73320478d89496d93db8536824a4"
+      }
+    },
+    {
+      "id": "official/runtime/enums_double_goto",
+      "outcome": "pass",
+      "output": "java-enums-numeric-ok",
+      "assertions": "Enum arguments/init trace, names/ordinals/user properties/methods/companion, defensive values, entries identity/order, empty enum, all GotoTab values; Double literal/conversion/arithmetic/NaN/zero/null/mixed/two-slot/data-class/generic/real Math call checks; Java caller compiled once against official output"
+    },
+    {
+      "id": "official/kotlin_consumer/enums_double_goto",
+      "outcome": "pass",
+      "output": "kotlin-enums-numeric-ok"
+    },
+    {
+      "id": "official/runtime/double_extras",
+      "outcome": "pass",
+      "output": "double-extras-ok",
+      "scope": "Double constants/leading-dot literals/actual primitive companion and Java fields/defaults/immutable and mutable capture/string conversion"
+    },
+    {
+      "id": "official/runtime/text_color",
+      "outcome": "pass",
+      "output": "text-color-ok:2725:11326038544219726970",
+      "independent_color_cases": 2725,
+      "brightness_cases": 9,
+      "runtime": "Plain JVM with real AndroidX and Android14 framework Color primitive methods; no Android device or shadow replacement"
+    },
+    {
+      "id": "official/kotlin_consumer/text_color",
+      "outcome": "pass",
+      "output": "kotlin-text-color-ok"
+    },
+    {
+      "id": "candidate/runtime/enums_double_goto",
+      "outcome": "pass",
+      "output": "java-enums-numeric-ok",
+      "assertions": "Enum arguments/init trace, names/ordinals/user properties/methods/companion, defensive values, entries identity/order, empty enum, all GotoTab values; Double literal/conversion/arithmetic/NaN/zero/null/mixed/two-slot/data-class/generic/real Math call checks; Java caller compiled once against official output"
+    },
+    {
+      "id": "candidate/kotlin_consumer/enums_double_goto",
+      "outcome": "pass",
+      "output": "kotlin-enums-numeric-ok"
+    },
+    {
+      "id": "candidate/runtime/double_extras",
+      "outcome": "pass",
+      "output": "double-extras-ok",
+      "scope": "Double constants/leading-dot literals/actual primitive companion and Java fields/defaults/immutable and mutable capture/string conversion"
+    },
+    {
+      "id": "candidate/runtime/text_color",
+      "outcome": "pass",
+      "output": "text-color-ok:2725:11326038544219726970",
+      "independent_color_cases": 2725,
+      "brightness_cases": 9,
+      "runtime": "Plain JVM with real AndroidX and Android14 framework Color primitive methods; no Android device or shadow replacement"
+    },
+    {
+      "id": "candidate/kotlin_consumer/text_color",
+      "outcome": "pass",
+      "output": "kotlin-text-color-ok"
+    },
+    {
+      "id": "official/boundary/InvalidEnumDuplicate",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "tests/fixtures/compatibility_enums_numeric/InvalidEnumDuplicate.kt:2:24: error: conflicting declarations:\nstatic enum entry A: Duplicate\nenum class Duplicate { A, A }\n                       ^\ntests/fixtures/compatibility_enums_numeric/InvalidEnumDuplicate.kt:2:27: error: conflicting declarations:\nstatic enum entry A: Duplicate\nenum class Duplicate { A, A }\n                          ^",
+      "scope": "Duplicate enum entry names",
+      "expected_rejection": true
+    },
+    {
+      "id": "candidate/boundary/InvalidEnumDuplicate",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumDuplicate.kt:2:27: error: Duplicate enum entry",
+      "scope": "Duplicate enum entry names",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/InvalidEnumType",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "tests/fixtures/compatibility_enums_numeric/InvalidEnumType.kt:2:39: error: argument type mismatch: actual type is 'String', but 'Int' was expected.\nenum class Wrong(val number: Int) { A(\"wrong\") }\n                                      ^^^^^^^",
+      "scope": "Enum entry constructor argument type mismatch",
+      "expected_rejection": true
+    },
+    {
+      "id": "candidate/boundary/InvalidEnumType",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumType.kt:2:39: error: Type mismatch: expected Int, found String",
+      "scope": "Enum entry constructor argument type mismatch",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/InvalidEnumForward",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "tests/fixtures/compatibility_enums_numeric/InvalidEnumForward.kt:2:41: error: enum entry 'B' is uninitialized here.\nenum class Forward(val number: Int) { A(B.number), B(2) }\n                                        ^",
+      "scope": "Enum constructor argument reads a forward entry before initialization",
+      "expected_rejection": true
+    },
+    {
+      "id": "candidate/boundary/InvalidEnumForward",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumForward.kt:2:41: error: Enum declaration B is uninitialized in this entry argument",
+      "scope": "Enum constructor argument reads a forward entry before initialization",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/InvalidEnumCompanion",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "tests/fixtures/compatibility_enums_numeric/InvalidEnumCompanion.kt:3:7: error: companion object of enum class 'CompanionForward' is uninitialized here.\n    A(next());\n      ^^^^",
+      "scope": "Enum constructor argument calls its companion before initialization",
+      "expected_rejection": true
+    },
+    {
+      "id": "candidate/boundary/InvalidEnumCompanion",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidEnumCompanion.kt:3:7: error: No applicable function overload or wrong argument count",
+      "scope": "Enum constructor argument calls its companion before initialization",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/UnsupportedEnumBody",
+      "outcome": "pass",
+      "category": "unsupported_language",
+      "expected": "accept",
+      "diagnostic": "",
+      "scope": "Entry-specific enum class bodies remain outside the selected scope",
+      "expected_rejection": false
+    },
+    {
+      "id": "candidate/boundary/UnsupportedEnumBody",
+      "outcome": "unsupported",
+      "category": "unsupported_language",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/UnsupportedEnumBody.kt:3:7: error: Enum entry-specific class bodies are unsupported",
+      "scope": "Entry-specific enum class bodies remain outside the selected scope",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/UnsupportedDoubleArray",
+      "outcome": "pass",
+      "category": "unsupported_language",
+      "expected": "accept",
+      "diagnostic": "",
+      "scope": "DoubleArray remains outside bounded scalar Double support",
+      "expected_rejection": false
+    },
+    {
+      "id": "candidate/boundary/UnsupportedDoubleArray",
+      "outcome": "unsupported",
+      "category": "unsupported_language",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/UnsupportedDoubleArray.kt:2:27: error: DoubleArray semantics are unsupported; use supported scalar Double values",
+      "scope": "DoubleArray remains outside bounded scalar Double support",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/InvalidDoubleLiteralArg",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "tests/fixtures/compatibility_enums_numeric/InvalidDoubleLiteralArg.kt:2:26: error: argument type mismatch: actual type is 'Int', but 'Double' was expected.\nfun bad(): Double = take(1)\n                         ^",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "candidate/boundary/InvalidDoubleLiteralArg",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleLiteralArg.kt:2:26: error: Type mismatch: expected Double, found Int",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/InvalidDoubleVariableArg",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "tests/fixtures/compatibility_enums_numeric/InvalidDoubleVariableArg.kt:2:36: error: argument type mismatch: actual type is 'Int', but 'Double' was expected.\nfun bad(value: Int): Double = take(value)\n                                   ^^^^^",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "candidate/boundary/InvalidDoubleVariableArg",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleVariableArg.kt:2:36: error: Type mismatch: expected Double, found Int",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/InvalidDoubleJavaArg",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "tests/fixtures/compatibility_enums_numeric/InvalidDoubleJavaArg.kt:1:41: error: argument type mismatch: actual type is 'Int', but 'Double' was expected.\nfun bad(): Double = java.lang.Math.sqrt(1)\n                                        ^",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "candidate/boundary/InvalidDoubleJavaArg",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleJavaArg.kt:1:41: error: Type mismatch: expected Double, found Int",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/InvalidDoubleFloatArg",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "tests/fixtures/compatibility_enums_numeric/InvalidDoubleFloatArg.kt:2:25: error: argument type mismatch: actual type is 'Double', but 'Float' was expected.\nfun bad(): Float = take(1.0)\n                        ^^^",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "candidate/boundary/InvalidDoubleFloatArg",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleFloatArg.kt:2:25: error: Type mismatch: expected Float, found Double",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/InvalidDoubleNullableArg",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "tests/fixtures/compatibility_enums_numeric/InvalidDoubleNullableArg.kt:2:40: error: argument type mismatch: actual type is 'Double?', but 'Double' was expected.\nfun bad(value: Double?): Double = take(value)\n                                       ^^^^^",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "candidate/boundary/InvalidDoubleNullableArg",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleNullableArg.kt:2:40: error: Type mismatch: expected Double, found Nullable(Double)",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "official/boundary/InvalidDoubleMixedEquality",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "tests/fixtures/compatibility_enums_numeric/InvalidDoubleMixedEquality.kt:1:34: error: operator '==' cannot be applied to 'Float' and 'Double'.\nfun bad(value: Float): Boolean = value == 1.0\n                                 ^^^^^^^^^^^^",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "candidate/boundary/InvalidDoubleMixedEquality",
+      "outcome": "expected_rejection",
+      "category": "invalid_kotlin",
+      "expected": "reject",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/tests/fixtures/compatibility_enums_numeric/InvalidDoubleMixedEquality.kt:1:34: error: Type mismatch: expected Float, found Double",
+      "scope": "Preserve Kotlin scalar argument/equality types; numeric operator promotion does not imply argument widening",
+      "expected_rejection": true
+    },
+    {
+      "id": "reading_guide/dependency_setup",
+      "outcome": "pass",
+      "dependency_sources": [
+        "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/Book.java",
+        "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/Ari.java",
+        "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/afw/App.java",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/afw/storage/Preferences.java",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitabconverter/util/DesktopVerseParser.kt",
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt"
+      ],
+      "resources": "aapt2 output from unchanged original current_reading.xml with a minimal selected-resource manifest; generated IDs are not a full app build",
+      "dependency_compiler": "Official Kotlin for ReadingPassage/DesktopVerseParser, javac for original Java dependencies"
+    },
+    {
+      "id": "official/reading_guide/assessment",
+      "outcome": "pass",
+      "output": "reading-guide-selected-jvm-ok",
+      "color_output": "reading-guide-color-ok",
+      "untested": "Preferences.selected() and Android lifecycle/device integration"
+    },
+    {
+      "id": "candidate/reading_guide/assessment",
+      "outcome": "unsupported",
+      "diagnostic": "/workspace/korrust/target/final-compatibility-snapshot-v4/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:13:46: error: Elvis operands require the same supported reference type",
+      "scope": "Assessed stretch target with real dependencies; unchanged source remains unsupported"
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "scope": "Own fixtures/harness, original targets, reference/dependency artifacts; candidate runs additionally freeze compiler source and binary. Official-only runs intentionally do not freeze concurrently edited candidate source."
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/000-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/000-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/001-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/001-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/002-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/002-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/003-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/003-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/004-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/004-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/005-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/005-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/006-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/006-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/007-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/007-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/008-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/008-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/009-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/009-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/010-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/010-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/011-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/011-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/012-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/012-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/013-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/013-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/014-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/014-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/015-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/015-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/016-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/016-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/017-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/017-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/018-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/018-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/019-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/019-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/020-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/020-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/021-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/021-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/022-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/022-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/023-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/023-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/024-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/024-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/025-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/025-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/026-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/026-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/027-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/027-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/028-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/028-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/029-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/029-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/030-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/030-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/031-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/031-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/032-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/032-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/033-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/033-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/034-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/034-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/035-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/035-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/036-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/036-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/037-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/037-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/038-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/038-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/039-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/039-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/040-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/040-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/041-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/041-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/042-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/042-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/043-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/043-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/044-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/044-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/045-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/045-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/046-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/046-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/047-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/047-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/048-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/048-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/049-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/049-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/050-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/050-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/051-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/051-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/052-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/052-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/053-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/053-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/054-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/054-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/055-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/055-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/056-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/056-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/057-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/057-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/058-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/058-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/059-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/059-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/060-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/060-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/061-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/061-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/062-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/062-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/063-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/063-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/064-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/064-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/065-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/065-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/066-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/066-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/067-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/067-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/068-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/068-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/069-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/069-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/070-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/070-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/071-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/071-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/072-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/072-stderr.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/073-stdout.txt",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric/073-stderr.txt"
+  ],
+  "supersedes": "reports/correctness/2026-10-26T085509533347Z-compatibility-enums-numeric.json",
+  "compiler": {
+    "binary": "target/release/korrust",
+    "binary_sha256": "caa699dac6951e676fdd28375d0ab8488e978a4c5484e6a581caaef334dd42f5"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "21",
+      "-module-name",
+      "compatibility_enums_numeric"
+    ]
+  },
+  "inputs": {
+    "androidbible_revision": "624629093af37d0d7f85699bfa0caa562fc41e61",
+    "compiler_revision": "6244955d3504db548a673987cd00780c4d2d95f7",
+    "candidate_workspace": "Uncommitted implementation identified by exact source hashes",
+    "files_sha256": {
+      "tools/check_compatibility_enums_numeric.py": "42211657623f46061996bbf6d177e38a03b63e2e338877540afe72519862cfb8",
+      "tools/classpath_policy.py": "8855b069814b8d6c8af5ce7261f2a62dff2ac2e7f671423c7de0871ec7d3a4e6",
+      "references/kotlinc/bin/kotlinc": "90750c977cc043dd2b05c69dd4e052c10377554925dd5a155e74ef732be28c7d",
+      "tests/fixtures/compatibility_enums_numeric/InvalidDoubleVariableArg.kt": "05158e6da820b6bea07ae644b372a473485ffa39732bebe78ce3c1813f22dcc8",
+      "tests/fixtures/compatibility_enums_numeric/InvalidEnumCompanion.kt": "78824298ee116283d3d53b85b13ae984c758bc8c91fc99619e07fdaea43751cf",
+      "tests/fixtures/compatibility_enums_numeric/rejections.json": "e3720702c4cbcfde584c12e637813ed56ccd768c94b4db29dc3fb2ad884157f3",
+      "tests/fixtures/compatibility_enums_numeric/InvalidDoubleJavaArg.kt": "36eee9f18bac8704bae0d7e03eacedfca6fd2596a72b2d4551260dbc12168ecd",
+      "tests/fixtures/compatibility_enums_numeric/InvalidDoubleFloatArg.kt": "84d40db4a4404cab43604e172a4e51f606b07c9560f0a9098ec8ba494d54fa10",
+      "tests/fixtures/compatibility_enums_numeric/GotoConsumer.kt": "46b2d9ed4984debe59f5c46ce83ec8ab76e8ecf09e4040e66da39bca3c884849",
+      "tests/fixtures/compatibility_enums_numeric/EnumModel.kt": "2c23a0747fbbde4df79a09e60c6c47adafac5129b6e1bd1a2109daabaaff23e9",
+      "tests/fixtures/compatibility_enums_numeric/UnsupportedEnumBody.kt": "124fc3e864d56ff1ff6c7022a821dac33fbfd18a9a3dd1fb5876ac84fe539239",
+      "tests/fixtures/compatibility_enums_numeric/ReadingGuideColorCheck.java": "d62a745873e854e286d307c522895ddd60df6f610070d85d63066d23fd30429a",
+      "tests/fixtures/compatibility_enums_numeric/InvalidDoubleLiteralArg.kt": "5152cd79029ebca10e9c4c1f3466611b35ea25f907b93efd82e1d16346b4e65b",
+      "tests/fixtures/compatibility_enums_numeric/TextColorCheck.java": "774c52d29791bfd0346b083ae22c2a5e8df0bd2c47bbc87484f6b0ebc52591a8",
+      "tests/fixtures/compatibility_enums_numeric/InvalidDoubleNullableArg.kt": "17ac58c68b0707a9196310e99affbe53ca77e761e668ce7fc28861d26db6ff8e",
+      "tests/fixtures/compatibility_enums_numeric/ReadingGuideCheck.kt": "cf4c49cf58bb66f7c70e01d57c9a47d3da6843f29627436d92f47b54bcb21d65",
+      "tests/fixtures/compatibility_enums_numeric/DoubleModel.kt": "8a7cc6f7545f01be734cadbb8b8fe39d229d2804ef6359e5a30a219c144d6b23",
+      "tests/fixtures/compatibility_enums_numeric/EnumNumericCheck.java": "c76d7267d91f5909bd4261779a46f458003f9b7e24cc300e4fd01b75d3306909",
+      "tests/fixtures/compatibility_enums_numeric/DoubleExtras.kt": "00fb195c20320cc9c8b49599d64681a588f61880122d4b7c1ff64ceade7398c4",
+      "tests/fixtures/compatibility_enums_numeric/DoubleExtrasCheck.java": "3f0ed3bc3e6e53f10e7ee66f4bce4f8735bc2263bdfc2787cd7b6a8cbbd8929b",
+      "tests/fixtures/compatibility_enums_numeric/UnsupportedDoubleArray.kt": "b5671f3d689bf51c579f4fe7785fce732d7d67c0322224c9c290868d7c66e92c",
+      "tests/fixtures/compatibility_enums_numeric/InvalidEnumDuplicate.kt": "07a364e56d628ef0244e92659e2b734315bf11e0e9149bb14bc4af3ecab5ad94",
+      "tests/fixtures/compatibility_enums_numeric/InvalidEnumForward.kt": "c6eb6f64fa76460cde528d598fe4b618b7d00ecbd9510a78b34871d032355f79",
+      "tests/fixtures/compatibility_enums_numeric/TextColorConsumer.kt": "5a164607b413324c314e091fb1a2270c67b1996f736afb912ded40067248a4f3",
+      "tests/fixtures/compatibility_enums_numeric/InvalidDoubleMixedEquality.kt": "952079287216de4f2adaf7e98304308d9d916a2d1bfd632adf5c4a719e1b150d",
+      "tests/fixtures/compatibility_enums_numeric/InvalidEnumType.kt": "6e931e5eda2e6966baecf70302b833776c5b7b62f3d664eaf0a6385ec5f3f452",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt": "8c684c8b766e51cfe8b033bfdde4e394ec4d9b8aa2a6490ea87b1787b89f502d",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/TextColorUtil.kt": "c9d0f57c74a31d6c522eae5c80cd597cd209d9716827f31012e825c1324a3c7d",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt": "570fb7e85ef1a0604076d52efb60340570485ce7949cf0d2c1e282e8d3b89c76",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "benchmarks/sources.json": "d88269921818e783935300c3aa8873595466293da3e8fe5b02f26522f39abfd4",
+      "references/kotlinc/lib/allopen-compiler-plugin.jar": "4d10b6efd97edcdfff90ad064eb4410c60177653810844b104155b4a9086dfc6",
+      "references/kotlinc/lib/annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+      "references/kotlinc/lib/assignment-compiler-plugin.jar": "ca3c5b11501c5ed848b491d5a69bf13cb4197c79903a7cee2b2ad024bae5f601",
+      "references/kotlinc/lib/compose-compiler-plugin.jar": "e8b44d65a4ba5fb14f3e51d10fb605d7da2a0c35a9ee275c94ffd74cb3f2b11e",
+      "references/kotlinc/lib/jvm-abi-gen.jar": "88a5e104dde4ef2f3cd211b077bb93f0a5e2e54b61e53c373f146af061be4504",
+      "references/kotlinc/lib/kotlin-annotation-processing-cli.jar": "c44c21f9bedeca54e0062b825dcb394a75a3efc289d4354e153225213f498e5f",
+      "references/kotlinc/lib/kotlin-annotation-processing-runtime.jar": "d9bcc297a3263366e216956c9425f3ba7b04f4a72f8b0dffb06fdd88e48606b9",
+      "references/kotlinc/lib/kotlin-annotation-processing.jar": "51308691a3cbd4c3964c5669d6ffb771b4879a214ab95c1df6aab18f137b4fa6",
+      "references/kotlinc/lib/kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+      "references/kotlinc/lib/kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+      "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+      "references/kotlinc/lib/kotlin-daemon-client.jar": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be",
+      "references/kotlinc/lib/kotlin-daemon.jar": "b7c67e908442f64f7d2acf99ac6b68b625d5317541d7130efac72507de0c36cf",
+      "references/kotlinc/lib/kotlin-main-kts.jar": "d786b3ace9625918014c1da51d7c6ba29ef06e3291f6cc4264d39e6992acc4ee",
+      "references/kotlinc/lib/kotlin-metadata-jvm-sources.jar": "2ededf948f1afd503217a772c95718a41494e757762206216f4c1b42ada64585",
+      "references/kotlinc/lib/kotlin-metadata-jvm.jar": "00590f26a5a768777f04252c6cf93c016a3361a6bc93636df67375ad4d19557d",
+      "references/kotlinc/lib/kotlin-preloader.jar": "4fb08cc92cf83ace6af60953e968a7f79eb57c5304175a9c0a9a9ad14a9e6348",
+      "references/kotlinc/lib/kotlin-reflect-sources.jar": "8cbdca65092aa6888901e23c08c7d69d141544107a9bcc9aa47b5453d4dbcf7e",
+      "references/kotlinc/lib/kotlin-reflect.jar": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb",
+      "references/kotlinc/lib/kotlin-runner.jar": "b217c59d320058007fed21927f71d5fbb7899fb6acab817a6d63aec5544a548c",
+      "references/kotlinc/lib/kotlin-script-runtime-sources.jar": "275d90c0c92e9680aff9c013394f3f395bc46dc23762107c4fdccd9887a58561",
+      "references/kotlinc/lib/kotlin-script-runtime.jar": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e",
+      "references/kotlinc/lib/kotlin-scripting-common.jar": "69885751bdce7d4e1d1b9758baf4bc0fe03b24827abd7b7687e5a7c0b4d029ed",
+      "references/kotlinc/lib/kotlin-scripting-compiler-impl.jar": "fe93b36234d6ff2ae5d1c8f965c5ae7c61b5211c5945d1fe8f3b2136ef313520",
+      "references/kotlinc/lib/kotlin-scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5",
+      "references/kotlinc/lib/kotlin-scripting-jvm.jar": "8cb637132fc7fa511c700ee7f2b63b282630167f5ebd699a263a0b67b5d486ab",
+      "references/kotlinc/lib/kotlin-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+      "references/kotlinc/lib/kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+      "references/kotlinc/lib/kotlin-stdlib-jdk7.jar": "e2243abac2bed6e0b47be18b2b7fe1c1b4cf6a431480353dcd49d1ed35f31199",
+      "references/kotlinc/lib/kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+      "references/kotlinc/lib/kotlin-stdlib-jdk8.jar": "63091929246beba86b5fb2b020a6f5d06e01693a960b58a59959c8713667991c",
+      "references/kotlinc/lib/kotlin-stdlib-js-sources.jar": "f57cda653d86e12f005c68a684ed32cdf44416f55db140a4182d8dbb53697ef2",
+      "references/kotlinc/lib/kotlin-stdlib-sources.jar": "8693386ae174f7e4a91eb82c5c632d169d236704da24f78b9c8c84d87af2fd64",
+      "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "references/kotlinc/lib/kotlin-test-js-sources.jar": "b45aee3561d48173468db1eb05743925b3f91c7a99a30c8a3457e3a554819e78",
+      "references/kotlinc/lib/kotlin-test-junit-sources.jar": "3fd39bbf3f8283cf7b7759e02abdd752ddde9964352f645467b779257bccef20",
+      "references/kotlinc/lib/kotlin-test-junit.jar": "554739f282eaca114882ad7effcd8523de2651eb6d65189624425110992ca4ce",
+      "references/kotlinc/lib/kotlin-test-junit5-sources.jar": "5e0d4688277a3f859be086b874601b45f54b30b5b045800138b54e9418bdc95b",
+      "references/kotlinc/lib/kotlin-test-junit5.jar": "24350f53fe1be3b7fe0e8fcd7e1b777eb0b8fa16af720617fe7e87d0a77c2797",
+      "references/kotlinc/lib/kotlin-test-sources.jar": "bce4ebcf90507cc14ea3857f65088d10fd1a305616da62a6e5b6be0735ccb456",
+      "references/kotlinc/lib/kotlin-test-testng-sources.jar": "b88a8f12928480d14e29c6c879958c156afc946b9b8d333d1c2f4a428cdb1041",
+      "references/kotlinc/lib/kotlin-test-testng.jar": "da9c1164af8de599d8e31ae768f78c48caceb1a401790454139ec03cfe8ddf08",
+      "references/kotlinc/lib/kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+      "references/kotlinc/lib/kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "references/kotlinc/lib/kotlinx-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+      "references/kotlinc/lib/lombok-compiler-plugin.jar": "ab61ddad3977c19396223dbac64b82c5d33796b712e4cfac6d79a0fe2166cf24",
+      "references/kotlinc/lib/mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+      "references/kotlinc/lib/noarg-compiler-plugin.jar": "2f978ae34fec60a2e92ed3c1f6862f015b98922b07508a2648a019d898bf3761",
+      "references/kotlinc/lib/parcelize-compiler.jar": "edacd6e066bef87f00448e95ba4aff89b4e10f6ce27d99ba125c7e96f2d73ada",
+      "references/kotlinc/lib/parcelize-runtime.jar": "a21d5f85475efb27f17dd97d1a289d64874f2ddfdb508ea484477a4cf1afe969",
+      "references/kotlinc/lib/power-assert-compiler-plugin.jar": "29164fe3dd405d78204655bb533cf1abc409288be825039c3443fd894096745e",
+      "references/kotlinc/lib/sam-with-receiver-compiler-plugin.jar": "8e9eb418d5ddae8c24ee79da1d5394636dc256defc62a3ea347bd59aca8592fd",
+      "references/kotlinc/lib/scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5",
+      "/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar": "168ce07232dad99dc06183c19373ab7023768b3db8cf5d4a211348264a23de40",
+      "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a",
+      "/workspace/korrust/target/setup/compatibility-enums-numeric/android-all-14-robolectric-10818077.jar": "6be2218c6a53fe3c57bc22ebdc723edcb7270a8a6f187545708aa5c0ed813977",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar": "60b10b5ef5769b79570172e015b8159405c92f034ba88b9391a977589c9deb4e",
+      "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/aapt2": "1a6a396b9cd071f7040071fdd108718cb98c3c9f4960044f373b288993d19eb7",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/afw/App.java": "3acf33faf3a45845704e159b5fe1394c0d48b8abec3e260c7c76522130107e4e",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/afw/storage/Preferences.java": "77b10bc4de55f172039f0eb9bcb58579bc207ea06ad4802167cd322531bb8c91",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitabconverter/util/DesktopVerseParser.kt": "1295bf354ba6fbfee7b49cb565fe5f0edb494788c858c5e2738ae4a20bc76f4c",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt": "2ba30de66648c7f35923fd3757b0af63289b6a1f9ece5184fd44c4df054042b3",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/Book.java": "b2252ed24845fc39467c38d1371c62c8da3b933688565dcc5cfdbb119ce8436a",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/Ari.java": "9a10ecc9388ccd4194e81f5b42200ed3fd72efa03a0a3aaf3649158ab6b04515",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java": "b5cbcca6e5c785a3b96bb9d56091a13fe23fc95318506d28af0503a5b68db88c",
+      "benchmarks/sources/androidbible/Alkitab/src/main/res/values/current_reading.xml": "ab378a06ad770c78ee3cb2f2f05d81ef3504d2ce0776ab36bfa422e8aa9672ad",
+      "target/release/korrust": "caa699dac6951e676fdd28375d0ab8488e978a4c5484e6a581caaef334dd42f5",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "47c8c3d65975fcbc1bcbe61698b65d2ceb2aa1308cfae43fd8952406a0538e71",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "ecd761a39bc2f11aa032d46a2eeb91e11cf50ccd254edfcd0d4c7c4881c3c66e",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "62a78136794537d26021aaa661c5e17e80174d026836c69bf1f62d2ce6fd9636",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "38824735f822ba30c40e6128f81b409950f18f990cdf1c369d7a9e2a0c9b2d90",
+      "src/bytecode/lambdas.rs": "60487f7bbfef94df047c43914794d6edc9a8957bf7b8c8a44447988e7d3028ae",
+      "src/bytecode/objects.rs": "7b192b8d94a8b599bdb3f1278d667580348f640b407d7430f2221be2e177eb18",
+      "src/bytecode.rs": "dd4b87d2a9343101319a6845ed7c55c41cec9be2e4d6da77e14f6d1b1aa5cc92",
+      "src/check.rs": "40e8742e7e572fa12119f0b1dc631cb7b123931898c2f12c741d8d3741eee53f",
+      "src/check_annotation_placements.rs": "0c02924bef2ecd295c73d69675d33033f44099667bf7932d8bb6beb043d51fd9",
+      "src/check_annotations.rs": "62865631f5171bb05928c2e662eb55b76b4522aa8edf9d47df593913aca9465f",
+      "src/check_captures.rs": "4415213c7aec5542f2a03c5a217da9d7976d062b1b3762578dde32b1d133ae10",
+      "src/check_control.rs": "7e6ed766e78b7d706f52d2bc19e0f05af765cd866a56cac03d2f7cbed18df816",
+      "src/check_declarations.rs": "c5c17a8c507080db51fc82d248267aeb938c5380344e7c42a680041fbd4e39c1",
+      "src/check_delegates.rs": "fc6e3f43a18b6b5b600c5515938d70b0712a616bca82d2c53eab6dd28dbf083e",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "0a97b74e03e2c9ae0539f578f4de25e7cc98d129a7ada14ff83960b4a8c6a34e",
+      "src/check_interfaces.rs": "6dde39484aacd8786bbabc9f73ecfca625f4253642e08a3fb3a4f175fe5866e1",
+      "src/check_ir_walk.rs": "4d1376ec4d903c5e2d230d055ac56c78b5a823ac2284b271bb3aa27a57d0f76d",
+      "src/check_library.rs": "4a9ec5872ba4ecc6952526542eaf4fc5fea417bb059482b1e6e4e0b7540d4e3a",
+      "src/check_objects.rs": "8b31a4822dcf67a6af1ca4021318be10e3f211dbefa2e080ca4ec12c099d2485",
+      "src/check_operations.rs": "724c6983005b1db7d640b2a255feb546e60c55c1ca4a6930c93e995187c3ffdf",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "fa0e93bc19f643084e61a58d8996294b057730fff07ab5848981762d9e95f616",
+      "src/classpath/aliases.rs": "c1759fd27e4969bd9767124a9fc71ab76797a75580953a0f4b6aff4f1b6563be",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "6edb3a37fa571562a69f6382027642d06a365dd94bf5742d90372ce452e8b48e",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "6e2bc0bb767d10c9beb32a37312fac62f5a4be611d99399f9cebf46e814ff24b",
+      "src/classpath/source.rs": "adf43154c8d9e21f9df8684ec0b5e0051ad5e9993b0ede9ffed9868a650a265d",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "37e570cfe9f857c0c4be0249a361d76b54472f6959536130de7865a4fe9509a2",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "d1f4f9bf92f483684533cc83c0ed142495c0222ca8fe753117ac57ea31ed9173",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "8b5b2cf07b9212e4cb5ddd73265af191750093df379fa8dbfa0d45bf65ae6774",
+      "src/metadata.rs": "0774202e07604a3f71dff257c75a256b00d766baf8d64f7de6d43ad12d49dce0",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "c47bc0a9492df8404d34c4971ebf19f4902b9ca996c28616c96863cbd3d45e66",
+      "src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa"
+    },
+    "classpath": [
+      {
+        "path": "/workspace/korrust/target/final-compatibility-snapshot-v4/references/kotlinc/lib/kotlin-stdlib.jar",
+        "kind": "jar",
+        "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+      },
+      {
+        "path": "/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar",
+        "kind": "jar",
+        "sha256": "168ce07232dad99dc06183c19373ab7023768b3db8cf5d4a211348264a23de40"
+      },
+      {
+        "path": "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "kind": "jar",
+        "sha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+      }
+    ],
+    "runtime": {
+      "path": "/workspace/korrust/target/setup/compatibility-enums-numeric/android-all-14-robolectric-10818077.jar",
+      "sha256": "6be2218c6a53fe3c57bc22ebdc723edcb7270a8a6f187545708aa5c0ed813977",
+      "artifact": "org.robolectric:android-all:14-robolectric-10818077",
+      "origin": "https://repo.maven.apache.org/maven2/org/robolectric/android-all/14-robolectric-10818077/android-all-14-robolectric-10818077.jar",
+      "runtime_mode": "Plain JVM, actual framework Color primitive methods; no fake APIs or shadows"
+    },
+    "androidx_core_aar": {
+      "path": "/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.aar",
+      "sha256": "e1bd22bbcf5cee3a992dedb7d2d3c3b31c9f761c01e56d00ea443c8aaa981182",
+      "origin": "https://dl.google.com/dl/android/maven2/androidx/core/core/1.17.0/core-1.17.0.aar",
+      "classes_jar": "/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar"
+    },
+    "reading_guide_dependency_sources_sha256": {
+      "benchmarks/sources/androidbible/Alkitab/src/main/res/values/current_reading.xml": "ab378a06ad770c78ee3cb2f2f05d81ef3504d2ce0776ab36bfa422e8aa9672ad",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/Book.java": "b2252ed24845fc39467c38d1371c62c8da3b933688565dcc5cfdbb119ce8436a",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/Ari.java": "9a10ecc9388ccd4194e81f5b42200ed3fd72efa03a0a3aaf3649158ab6b04515",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java": "b5cbcca6e5c785a3b96bb9d56091a13fe23fc95318506d28af0503a5b68db88c",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/afw/App.java": "3acf33faf3a45845704e159b5fe1394c0d48b8abec3e260c7c76522130107e4e",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/afw/storage/Preferences.java": "77b10bc4de55f172039f0eb9bcb58579bc207ea06ad4802167cd322531bb8c91",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitabconverter/util/DesktopVerseParser.kt": "1295bf354ba6fbfee7b49cb565fe5f0edb494788c858c5e2738ae4a20bc76f4c",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt": "2ba30de66648c7f35923fd3757b0af63289b6a1f9ece5184fd44c4df054042b3"
+    }
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_compatibility_enums_numeric.py",
+      "--compiler",
+      "/workspace/korrust/target/final-compatibility-snapshot-v4/target/release/korrust",
+      "--android-jar",
+      "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+      "--colorutils-jar",
+      "/workspace/korrust/target/setup/compatibility-enums-numeric/core-1.17.0.jar",
+      "--android-runtime",
+      "/workspace/korrust/target/setup/compatibility-enums-numeric/android-all-14-robolectric-10818077.jar",
+      "--androidx-annotations",
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar",
+      "--aapt2",
+      "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/aapt2"
+    ]
+  ],
+  "scope": "Bounded enum and scalar Double semantics, original GotoTab and TextColorUtil. TextColorUtil runs real AndroidX core1.17.0 and Android14 android-all primitive graphics implementations on a plain JDK with verification; no Android device, Robolectric runner/shadows, full application, or performance claim. Java reflects GotoTab because its package segment goto is a Java keyword. ReadingGuide is a separately assessed stretch target with real original dependency sources and selected original resources generated by aapt2; Preferences.selected() and Android application lifecycle are not exercised.",
+  "counts": {
+    "pass": 26,
+    "expected_rejection": 20,
+    "unsupported": 3
+  },
+  "completed_at": "2026-10-26T16:59:51.353822+00:00"
+}

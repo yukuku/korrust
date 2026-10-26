@@ -1,0 +1,150 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:3:26: error: unresolved reference 'App'.
+import yuku.alkitab.base.App
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:4:26: error: unresolved reference 'model'.
+import yuku.alkitab.base.model.ReadingPlan
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:5:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.History
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:6:34: error: unresolved reference 'model'.
+import yuku.alkitab.datatransfer.model.Gid
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:7:34: error: unresolved reference 'model'.
+import yuku.alkitab.datatransfer.model.Rpp
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:8:27: error: unresolved reference 'Label'.
+import yuku.alkitab.model.Label
+                          ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:9:27: error: unresolved reference 'Marker'.
+import yuku.alkitab.model.Marker
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:10:27: error: unresolved reference 'Marker_Label'.
+import yuku.alkitab.model.Marker_Label
+                          ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:11:27: error: unresolved reference 'ProgressMark'.
+import yuku.alkitab.model.ProgressMark
+                          ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:13:34: error: unresolved reference 'ReadonlyStorageInterface'.
+open class ReadonlyStorageImpl : ReadonlyStorageInterface {
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:14:34: error: unresolved reference 'History'.
+    override fun history(): List<History.Entry> {
+                                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:15:16: error: unresolved reference 'History'.
+        return History.listAllEntries()
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:18:34: error: unresolved reference 'Marker'.
+    override fun markers(): List<Marker> {
+                                 ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:19:16: error: unresolved reference 'App'.
+        return App.services.storage.db.listAllMarkers()
+               ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:22:33: error: unresolved reference 'Label'.
+    override fun labels(): List<Label> {
+                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:23:16: error: unresolved reference 'App'.
+        return App.services.storage.db.listAllLabels()
+               ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:26:39: error: unresolved reference 'Marker_Label'.
+    override fun markerLabels(): List<Marker_Label> {
+                                      ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:27:16: error: unresolved reference 'App'.
+        return App.services.storage.db.listAllMarker_Labels()
+               ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:30:31: error: unresolved reference 'ProgressMark'.
+    override fun pins(): List<ProgressMark> {
+                              ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:31:16: error: unresolved reference 'App'.
+        return App.services.storage.db.listAllProgressMarks()
+               ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:34:31: error: unresolved reference 'Rpp'.
+    override fun rpps(): List<Rpp> {
+                              ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:35:33: error: unresolved reference 'Rpp'.
+        val res = mutableListOf<Rpp>()
+                                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:38:26: error: unresolved reference 'App'.
+        val startTimes = App.services.storage.db.listAllReadingPlanInfo().associate { info ->
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:38:87: error: cannot infer type for value parameter 'info'. Specify it explicitly.
+        val startTimes = App.services.storage.db.listAllReadingPlanInfo().associate { info ->
+                                                                                      ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:39:13: error: unresolved reference 'ReadingPlan'.
+            ReadingPlan.gidFromName(info.name) to info.startTime
+            ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:39:42: error: unresolved reference 'name'.
+            ReadingPlan.gidFromName(info.name) to info.startTime
+                                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:39:48: error: cannot infer type for type parameter 'A'. Specify it explicitly.
+            ReadingPlan.gidFromName(info.name) to info.startTime
+                                               ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:39:48: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+            ReadingPlan.gidFromName(info.name) to info.startTime
+                                               ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:39:56: error: unresolved reference 'startTime'.
+            ReadingPlan.gidFromName(info.name) to info.startTime
+                                                       ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:45:42: error: unresolved reference 'App'.
+        val map: Map<String, Set<Int>> = App.services.storage.db.readingPlanProgressSummaryForSync
+                                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:49:20: error: unresolved reference 'Rpp'.
+            res += Rpp(
+                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:50:23: error: unresolved reference 'Gid'.
+                gid = Gid(gid),
+                      ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:57:34: error: operator call 'component1()' is ambiguous for destructuring of type '??? (Unresolved name: next)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+        for ((gid, startTime) in startTimes) {
+                                 ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:57:34: error: operator call 'component2()' is ambiguous for destructuring of type '??? (Unresolved name: next)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+        for ((gid, startTime) in startTimes) {
+                                 ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:57:34: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+        for ((gid, startTime) in startTimes) {
+                                 ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:60:20: error: unresolved reference 'Rpp'.
+            res += Rpp(
+                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:61:23: error: unresolved reference 'Gid'.
+                gid = Gid(gid),
+                      ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadonlyStorageImpl.kt:63:24: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                done = emptyList(),
+                       ^^^^^^^^^

@@ -1,0 +1,1510 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-26T17:52:43.339825+00:00",
+  "status": "completed",
+  "selection": "Final frozen acceptance for all 30 AndroidBible compatibility execution tasks. Counts describe bounded evidence, not whole-language or whole-app coverage.",
+  "compiler": {
+    "binary_sha256": "caa699dac6951e676fdd28375d0ab8488e978a4c5484e6a581caaef334dd42f5",
+    "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v6",
+    "frozen_manifest_sha256": "8a019b3326c93b8f98689018ea8c5227085a278e2d4101683a596c7936574d30"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "cases": [
+    {
+      "id": "required",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "report_sha256": "16268bd7634e008931cdac0fa5c12a72218b2f1fd3f0adb55bbe8a52df0f5299",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v6",
+      "observed_outcomes": {
+        "pass": 21
+      },
+      "scope": "Recorded bounded acceptance; unsupported outcomes are separate from positive cases."
+    },
+    {
+      "id": "baseline",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T173229467527Z-io-byte-arrays.json",
+      "report_sha256": "3875f778e8fc164e5ead801129287c1ac2c2b8af708a6802ec4b8665207961d1",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v6",
+      "observed_outcomes": {
+        "pass": 200,
+        "unsupported_language": 26
+      },
+      "scope": "Recorded bounded acceptance; unsupported outcomes are separate from positive cases."
+    },
+    {
+      "id": "batch",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T161828809544Z-batch-compilation.json",
+      "report_sha256": "1b44aadd7a7d07a3fd70973ac6722e46868a744ab725dbce30251dc20579ffca",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v4",
+      "observed_outcomes": {
+        "pass": 38
+      },
+      "scope": "Recorded bounded acceptance; unsupported outcomes are separate from positive cases."
+    },
+    {
+      "id": "calls",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T162520115271Z-compatibility-calls.json",
+      "report_sha256": "4d945455cb6f7bc53e369a9d81bdca32cd6f369f1f4950fe340ce940447635f6",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v4",
+      "observed_outcomes": {
+        "pass": 136
+      },
+      "scope": "Recorded bounded acceptance; unsupported outcomes are separate from positive cases."
+    },
+    {
+      "id": "declarations",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T163942044589Z-compatibility-declarations.json",
+      "report_sha256": "f156ee8f930178de4f133b57fefe844971f1d463d65a4dfedb3505a9ebc3169d",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v4",
+      "observed_outcomes": {
+        "pass": 64,
+        "unsupported_language": 1
+      },
+      "scope": "Recorded bounded acceptance; unsupported outcomes are separate from positive cases."
+    },
+    {
+      "id": "enums",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric.json",
+      "report_sha256": "b9620b72f8197c92be4ea0ff124fdb9c00e684be309f7e516b9268886a12dda7",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v4",
+      "observed_outcomes": {
+        "pass": 26,
+        "expected_rejection": 20,
+        "unsupported": 3
+      },
+      "scope": "Recorded bounded acceptance; unsupported outcomes are separate from positive cases."
+    },
+    {
+      "id": "annotations",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T170157393700Z-compatibility-annotations-visibility.json",
+      "report_sha256": "dc3bb370097c2d1e1c8be66ef3823d3d550b384e70493c30e3d242f57e061da6",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v4",
+      "observed_outcomes": {
+        "pass": 26,
+        "invalid_kotlin": 16,
+        "oracle_accepted": 12,
+        "unsupported_language": 10,
+        "plugin_required": 2,
+        "dependency_setup_failure": 2
+      },
+      "scope": "Recorded bounded acceptance; unsupported outcomes are separate from positive cases."
+    },
+    {
+      "id": "next",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T171131560610Z-next-twenty.json",
+      "report_sha256": "c3d286c427e229a2bcf9d665f4f453a3a0f28de620335490737a3e918cfd90c5",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v4",
+      "observed_outcomes": {
+        "pass": 121,
+        "unsupported_language": 1,
+        "not_assessed": 2
+      },
+      "scope": "Recorded bounded acceptance; unsupported outcomes are separate from positive cases."
+    },
+    {
+      "id": "modules",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T164412837221Z-androidbible-module-delivery.json",
+      "report_sha256": "e77c8da41b7bd3ce15c92af2f01447f4c9236520cdd16b1415bd2ebc995fd8f8",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v5",
+      "observed_outcomes": {
+        "pass": 146
+      },
+      "scope": "Recorded bounded acceptance; unsupported outcomes are separate from positive cases."
+    },
+    {
+      "id": "limited",
+      "outcome": "assessed",
+      "report": "reports/correctness/2026-10-26T164412809494Z-androidbible-limited-assessment.json",
+      "report_sha256": "4813a102e26fcdfc73ab48e30fce89c118d47f1107b54d268e7399d55646acdf",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v5",
+      "observed_outcomes": {
+        "dependency_failure": 367,
+        "emitted": 26,
+        "unsupported_language": 7
+      },
+      "scope": "First-blocker source probes; emission is not verified behavior."
+    },
+    {
+      "id": "resolved",
+      "outcome": "assessed",
+      "report": "reports/correctness/2026-10-26T171122238892Z-androidbible-resolved-assessment.json",
+      "report_sha256": "686b98a60c516d99569f353502ce7ff4d9de2d70df17836ce99a608c378afcab",
+      "frozen_root": "/workspace/korrust/target/final-compatibility-snapshot-v5",
+      "observed_outcomes": {
+        "setup_failure": 393,
+        "emitted": 4,
+        "unsupported_language": 3
+      },
+      "scope": "First-blocker source probes; emission is not verified behavior."
+    },
+    {
+      "id": "playback_reproduction",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T083849375925Z-playback-regression.json",
+      "report_sha256": "f22ed2a20a602c6e479044d97c204012e547565a659f835225302b371a63e4ae",
+      "observed_outcomes": {
+        "pass": 25
+      },
+      "scope": "Historical matched-input reproduction; final compiler behavior is separately revalidated by the current required/module suites."
+    },
+    {
+      "id": "resolved_input_reproduction",
+      "outcome": "pass",
+      "report": "reports/correctness/2026-10-26T084244960567Z-androidbible-resolved-inputs.json",
+      "report_sha256": "fb9422f1de5bd8242d22d63f545f70bfe47dbdb5d9eb060dd5ebaee80b27f69e",
+      "observed_outcomes": {
+        "pass": 3
+      },
+      "scope": "Historical matched-input reproduction; final compiler behavior is separately revalidated by the current required/module suites."
+    },
+    {
+      "id": "final_interop_boundary_audit",
+      "outcome": "pass",
+      "classified_cases": 7,
+      "observed_outcomes": {
+        "pass": 4,
+        "unsupported_language": 3
+      },
+      "report": "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/interop-boundary-final.json",
+      "archive": "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/interop-boundary-audits.zip",
+      "archive_directory": "2026-10-26-interop-boundary-promotions-v3",
+      "scope": "Seven original IDs/sources preserved; only annotated-method row gains paired positive proof. Six complete row objects remain unchanged. Three retained negatives accept officially and reject without candidate output. Earlier focused failures are preserved in the archive."
+    },
+    {
+      "id": "rust_tests",
+      "outcome": "pass",
+      "passed": 349,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "id": "python_tests",
+      "outcome": "pass",
+      "passed": 166
+    },
+    {
+      "id": "frozen_sources",
+      "outcome": "pass",
+      "files": 495,
+      "manifest_sha256": "8a019b3326c93b8f98689018ea8c5227085a278e2d4101683a596c7936574d30"
+    },
+    {
+      "id": "source_and_semantic_review",
+      "outcome": "pass",
+      "evidence": "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/source-review.json",
+      "scope": "Application/specification and compiler source snapshots preserved. No new application/API-name substitutions; ordinary referenced-class inline allocation and bodyless platform array builtins retain their recorded bounded lowering. Existing list/conversion fallback paths remain."
+    },
+    {
+      "id": "html_links",
+      "outcome": "pass",
+      "pages": 744,
+      "local_links": 246683
+    }
+  ],
+  "counts": {
+    "pass": 17,
+    "assessed": 2
+  },
+  "corpus_known_behavior_checks": {
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/RibkaEligibility.kt": {
+      "source_sha256": "20d3ad45466d50f8ac82be12efd5973c95275f74622399a17b0c5121113d5022",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "bare_enum_semantics",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "jvm_signatures/yuku.alkitab.base.actionmode.RibkaEligibility",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "not_run",
+          "evidence_cases": [],
+          "reason": "Existing harness has no target-specific kotlin_consumer assertion; not run."
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/RibkaEligibility.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt": {
+      "source_sha256": "2a5e79d26cef180c4f40542dd94f81bada672a4c755f01f0187bedef24e50098",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "string_semantics",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "jvm_signatures/yuku.alkitab.base.audio.AudioErrorCodeKt",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "not_run",
+          "evidence_cases": [],
+          "reason": "Existing harness has no target-specific kotlin_consumer assertion; not run."
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt": {
+      "source_sha256": "ad8a96509404079595da548ba9ea602b7d17ccc6459c527f73f34f6864bc51db",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "case": "java/data_classes",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "case": "source_abi/yuku.alkitab.base.audio.AudioLogEntry",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "case": "kotlin/data_metadata_copy_destructure",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt": {
+      "source_sha256": "02c130ca13174deadca40c9054bc0e612bb50579ec3285178bca832b8bda99e3",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "twenty",
+              "case": "java/rich_data_properties",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            },
+            {
+              "suite": "twenty",
+              "case": "java/data_body_members",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "twenty",
+              "case": "source_abi/yuku.alkitab.base.audio.PlaybackState",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "twenty",
+              "case": "kotlin/rich_data_properties",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            },
+            {
+              "suite": "twenty",
+              "case": "kotlin/data_body_members",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "twenty",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/VersesDialogNormalVerses.kt": {
+      "source_sha256": "33b15ec80d6b342107301e6c9b5a689a0a81115bad2cbee555de11f345eeaf3a",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "case": "java/string_lists",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "case": "source_abi/yuku.alkitab.base.dialog.VersesDialogNormalVerses",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "case": "kotlin/list_metadata_and_internal_friends",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/VersesDialogNormalVerses.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/XrefDialogVerses.kt": {
+      "source_sha256": "02688f632a054149272d372e7e8a93bcd2051c7c3f46a094dc7b34fdc133ec19",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "case": "java/string_lists",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "case": "source_abi/yuku.alkitab.base.dialog.XrefDialogVerses",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "case": "kotlin/list_metadata_and_internal_friends",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "ten",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/XrefDialogVerses.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt": {
+      "source_sha256": "95549b2852efb326426c8d051fa7b2e656d1f4520d01833ff75c6583d29d3a94",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "java/SimpleAndroidBibleCheck",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "source_abi/yuku.alkitab.base.storage.InternalSingleChapterVerses",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "kotlin/chapter_classes_and_internal_friend_metadata",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalSingleChapterVerses.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt": {
+      "source_sha256": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "java/SimpleAndroidBibleCheck",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "source_abi/yuku.alkitab.base.storage.VerseTextDecoder",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "kotlin/decoder_byte_array_string_array_contract",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookColorUtil.kt": {
+      "source_sha256": "9251854fdc0168549fd0afb3e007589a22145d817cc49f6a264fdf8148355c76",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "declarations",
+              "case": "androidbible/book_color_java",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "declarations",
+              "case": "source_abi/androidbible_book_color",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "not_run",
+          "evidence_cases": [],
+          "reason": "Existing harness has no target-specific kotlin_consumer assertion; not run."
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "declarations",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookColorUtil.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt": {
+      "source_sha256": "96ce558706cd736ba496aa95311243931f4c12494a4723fe06a80b2295bdca9c",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "interop",
+              "case": "androidbible/java",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "interop",
+              "case": "androidbible/source_abi",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "interop",
+              "case": "androidbible/kotlin_consumer",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "interop",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/IntArrayListUtil.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Levenshtein.kt": {
+      "source_sha256": "60ab1eee8d1efce538932c839371259b22eec6db1dcf6faf2ca46b2ce5071e51",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "declarations",
+              "case": "androidbible/levenshtein_java",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "declarations",
+              "case": "source_abi/androidbible_levenshtein",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "not_run",
+          "evidence_cases": [],
+          "reason": "Existing harness has no target-specific kotlin_consumer assertion; not run."
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "declarations",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Levenshtein.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/RequestCodes.kt": {
+      "source_sha256": "61f910f2db36e4bd8ff62432388caa0a4250ba9ef6d36f4f7af4e479fc8f475a",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "object_constant_semantics",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "jvm_signatures/yuku.alkitab.base.util.RequestCodes",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "not_run",
+          "evidence_cases": [],
+          "reason": "Existing harness has no target-specific kotlin_consumer assertion; not run."
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/RequestCodes.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt": {
+      "source_sha256": "de818317815f6f3c8602ff5c5aac7b50ea5c663a756e719104c2f97fca9b94b2",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "java/SimpleAndroidBibleCheck",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "source_abi/yuku.alkitab.base.widget.ReaderGestureActions",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "kotlin/reader_action_interface_dispatch",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt": {
+      "source_sha256": "957ed0e7cae7251aeb4d44abf8418959e7757601670e81178257a4b289dfa9cd",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "character_when_semantics",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "jvm_signatures/yuku.alkitab.base.widget.VerseNumberPlacementKt",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "not_run",
+          "evidence_cases": [],
+          "reason": "Existing harness has no target-specific kotlin_consumer assertion; not run."
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongPlaybackState.kt": {
+      "source_sha256": "1e66ca9032335bb8b418b286f2045cf8d1efa66108b9407786bdaef87167c0bb",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "twenty",
+              "case": "java/rich_data_properties",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            },
+            {
+              "suite": "twenty",
+              "case": "java/data_body_members",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "twenty",
+              "case": "source_abi/yuku.alkitab.songs.SongPlaybackState",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "twenty",
+              "case": "kotlin/rich_data_properties",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            },
+            {
+              "suite": "twenty",
+              "case": "kotlin/data_body_members",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "twenty",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongPlaybackState.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt": {
+      "source_sha256": "e97b1f80db7c221c201af3ff01aae4947facdcffb20f0645ad3a07a79cee9211",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "java/SimpleAndroidBibleCheck",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "source_abi/yuku.alkitab.songs.SongTextZoomable",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "kotlin/song_mutable_int_override",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt": {
+      "source_sha256": "5df3b8b8fd5c81ceff0cf622bbea49906d047976634e7ad9d0450d1dd952fade",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "java/SimpleAndroidBibleCheck",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "source_abi/yuku.alkitab.yes1.Yes1SingleChapterVerses",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "kotlin/chapter_classes_and_internal_friend_metadata",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "compile_source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/yes1/Yes1SingleChapterVerses.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/Utf8Decoder.kt": {
+      "source_sha256": "acf20f118b8599b2fb4a6265edc9528b9f19107fabf790709451256edc8738d3",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "androidbible_io_semantics",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "io_jvm_signatures/yuku.alkitab.io.Utf8Decoder",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "kotlin_metadata/IoMetadataConsumer",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "compile_source": "benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/Utf8Decoder.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt": {
+      "source_sha256": "1ffdebcffa174e2c119205b2ed7698fc9d47a0dd2deaf9e816eb84faa388ab02",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "java/ModelCheck",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "source_abi/yuku.alkitab.model.SingleChapterVerses",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "case": "kotlin/chapter_classes_and_internal_friend_metadata",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "simple",
+              "compile_source": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt": {
+      "source_sha256": "0162f744a5d6a09e955a1111c68b50b3b3864ca36f7f9ba65936440de10b7290",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "androidbible_yes2_candidate_model",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "jvm_signatures/yuku.alkitab.yes2.Yes2SingleChapterVerses",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "kotlin_metadata/FriendMetadataConsumer",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "compile_source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    },
+    "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt": {
+      "source_sha256": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+      "checks": {
+        "behavior": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "androidbible_unsigned_search",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "abi": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "jvm_signatures/yuku.alkitab.yes2.util.UnsignedBinarySearchKt",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "kotlin_consumer": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "case": "kotlin_metadata/PublicMetadataConsumer",
+              "outcome": "pass",
+              "observed": [
+                "pass"
+              ]
+            }
+          ]
+        },
+        "emission": {
+          "outcome": "pass",
+          "evidence_cases": [
+            {
+              "suite": "baseline",
+              "compile_source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+              "outcome": "pass"
+            }
+          ]
+        }
+      },
+      "report": "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+      "scope": "Separate required-regression dependency closure; not inferred from corpus emission."
+    }
+  },
+  "limitations": [
+    "Selected modules and bounded fixtures only; no complete app build, Android-device execution or performance claim.",
+    "Resolved app inputs remain partial when generated/KSP/R outputs are missing; these setup failures remain explicit.",
+    "Corpus reports are single-file first-blocker probes. Missing dependencies do not establish intrinsic invalidity; emission does not establish runtime/ABI/metadata compatibility.",
+    "ReadingGuide remains a separately reported unsupported stretch target; value classes, coroutines, Compose/general serialization transforms and KSP generation remain deferred. The preexisting bounded empty Serializable singleton path is preserved.",
+    "Escaped classifier names with literal dollar characters, generic aliases, enum-entry bodies and DoubleArray retain explicit recorded boundaries; function-type alias parameter labels are not byte-exact metadata claims.",
+    "Ordinary class/member adjacent double-semicolon grammar remains a preexisting non-target limitation. Automatic Kotlin main(String[]) launcher lowering is unassessed.",
+    "Five preexisting Kotlin documentation image Git LFS pointers remain setup exceptions; application, specification and compiler source hashes were verified.",
+    "The allocating-inline historical row uses matching explicitly recorded controlled HotSpot hash options; generated inline-owner class regeneration remains unsupported."
+  ],
+  "next_milestone": "Plan value-class JVM representation using unchanged Gid/Rpp as targets, including boxed/nullable/generic and Java/Kotlin consumer contracts; do not implement it in this delivery.",
+  "reproduction_commands": [
+    [
+      "python3",
+      "target/final-preparation/run_lane_v6.py",
+      "required"
+    ],
+    [
+      "python3",
+      "target/final-preparation/run_lane_v4.py",
+      "features"
+    ],
+    [
+      "python3",
+      "target/final-preparation/run_lane_v5.py",
+      "modules"
+    ],
+    [
+      "python3",
+      "target/final-preparation/run_lane_v5.py",
+      "limited"
+    ],
+    [
+      "python3",
+      "target/final-preparation/run_lane_v6.py",
+      "python"
+    ],
+    [
+      "python3",
+      "target/final-preparation/run_lane_v5.py",
+      "resolved"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-26T175224398764Z-androidbible-regression.json",
+    "reports/correctness/2026-10-26T173229467527Z-io-byte-arrays.json",
+    "reports/correctness/2026-10-26T161828809544Z-batch-compilation.json",
+    "reports/correctness/2026-10-26T162520115271Z-compatibility-calls.json",
+    "reports/correctness/2026-10-26T163942044589Z-compatibility-declarations.json",
+    "reports/correctness/2026-10-26T164915244073Z-compatibility-enums-numeric.json",
+    "reports/correctness/2026-10-26T170157393700Z-compatibility-annotations-visibility.json",
+    "reports/correctness/2026-10-26T171131560610Z-next-twenty.json",
+    "reports/correctness/2026-10-26T164412837221Z-androidbible-module-delivery.json",
+    "reports/correctness/2026-10-26T164412809494Z-androidbible-limited-assessment.json",
+    "reports/correctness/2026-10-26T171122238892Z-androidbible-resolved-assessment.json",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression.json",
+    "reports/correctness/2026-10-26T084244960567Z-androidbible-resolved-inputs.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-limited-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/reference-verification.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-python-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-features.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-python.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/model-limited-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/baseline-python-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/interop-boundary-final.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-modules.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/interop-boundary-audits.zip",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/model-resolved.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-features-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-features-5.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-required-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/model-python.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/frozen-inputs.zip",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-features-4.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/compiler-provenance.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-features-3.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-features-2.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/model-modules-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-limited.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/baseline-required-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/model-limited.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/model-resolved-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-required.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/baseline-required-1.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/source-review.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-modules-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/language-features-1.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/baseline-required.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/release-build.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/model-modules.json",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/model-python-0.log",
+    "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/baseline-python.json"
+  ],
+  "reference_snapshot_verification": {
+    "exit_code": 1,
+    "known_documentation_media_setup_exceptions": [
+      "docs/klibs/uklibs/imgs/fragment-resolution-input.jpg: SHA-256 mismatch: expected 11a07afc4601ac755344a7bf5b9d64e112a17a799aa5cb5670ed99ccac451e56, got 713e91bcbfd1377fd3d2d21f517af7aab4d3b19d3e8aba442ebc36ae8b73d7d3 (Git LFS pointer; run git lfs pull in /workspace/korrust/references/kotlin)",
+      "docs/klibs/uklibs/imgs/fragment-resolution-output.jpg: SHA-256 mismatch: expected 08f107f7599ac169fc9145ba34a40d7340186898b737632cd1dc22eff9cd47f2, got 464ab25ed2e122e4d4deee846908d1cb678100d51622b28548bf283548b19f17 (Git LFS pointer; run git lfs pull in /workspace/korrust/references/kotlin)",
+      "docs/klibs/uklibs/imgs/intransitive-dependencies-1.jpg: SHA-256 mismatch: expected 74890721f168655e39ea0362da6078c685972a6fabac7d457d7af170edb99557, got 2c8975c4558d5667e04c3ec048bf9424a929d0aa165fd79636470f7f45b7bc4d (Git LFS pointer; run git lfs pull in /workspace/korrust/references/kotlin)",
+      "docs/klibs/uklibs/imgs/intransitive-dependencies-2.jpg: SHA-256 mismatch: expected c682e216b62d6b858626e9b4ed04af570a5d5b2fe38bfccba9fa247360ffa6b3, got e9a14345b48711d8f6bd25182fc7bbda8c9ad07f7c0a919f50b45a96a8114526 (Git LFS pointer; run git lfs pull in /workspace/korrust/references/kotlin)",
+      "docs/klibs/uklibs/imgs/module-resolution-example.jpg: SHA-256 mismatch: expected 216e15de4e3ccc736ba1913d60734b8bfa9b320119db575623fb00d9ee06f5d4, got ec55729c2258251ad5948b6ebabf14699546a224ccae329f5814eb875232e4cd (Git LFS pointer; run git lfs pull in /workspace/korrust/references/kotlin)"
+    ],
+    "source_mutation_detected": false,
+    "log": "reports/correctness/2026-10-26T175243339825Z-androidbible-compatibility-delivery/reference-verification.log"
+  },
+  "validation_freezes": {
+    "compiler_and_language_harness": "/workspace/korrust/target/final-compatibility-snapshot-v4",
+    "model_and_assessment_harness": "/workspace/korrust/target/final-compatibility-snapshot-v5",
+    "refreshed_baseline_harness": "/workspace/korrust/target/final-compatibility-snapshot-v6",
+    "identical_compiler_binary_sha256": "caa699dac6951e676fdd28375d0ab8488e978a4c5484e6a581caaef334dd42f5",
+    "changed_files": [
+      "tests/interop_unsupported.json",
+      "tests/test_androidbible_assessment.py",
+      "tests/test_androidbible_build.py",
+      "tests/test_interop_boundary_promotions.py",
+      "tools/assess_androidbible.py",
+      "tools/build_androidbible.py",
+      "tools/check.py"
+    ],
+    "scope": "After the language freeze, only friend-input model capture/replay and their Python tests changed in v5; v6 additionally refreshes the baseline regression runner and audits all seven preserved original interop rows, adding focused positive proofs only where supported and retaining strict unsupported rejection elsewhere. All Rust/Cargo sources and existing source fixtures are identical. The shared classpath-unpacking function is AST-identical. Feature checks retain v4; model/module/corpus checks retain v5; affected baseline and Python checks use v6. The required source aggregate transparently combines the new baseline with the five unchanged v4 suites, recording each original run origin. All use the same final compiler binary."
+  },
+  "finished_at": "2026-10-26T17:54:01.401197+00:00"
+}

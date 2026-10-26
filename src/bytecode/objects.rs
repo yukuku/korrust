@@ -98,7 +98,7 @@ fn method(
     let mut method = simple_method(
         pool,
         flags,
-        &function.name,
+        function.jvm_name(),
         &function.descriptor(),
         code,
         generic_function(function).as_deref(),

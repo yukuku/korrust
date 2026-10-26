@@ -1,0 +1,111 @@
+[
+  {
+    "id": "invalid_jvm_name",
+    "invalid": true,
+    "sources": [
+      "fun `bad/name`(): Int = 1"
+    ],
+    "candidate_diagnostic": "name|identifier|JVM|character"
+  },
+  {
+    "id": "underscore_declaration",
+    "invalid": true,
+    "sources": [
+      "val _ = 1"
+    ],
+    "candidate_diagnostic": "underscore|reserved|identifier|discard"
+  },
+  {
+    "id": "underscore_expression",
+    "invalid": true,
+    "sources": [
+      "fun bad(): Int = _"
+    ],
+    "candidate_diagnostic": "underscore|reserved|identifier|discard|expression"
+  },
+  {
+    "id": "typed_discard_mismatch",
+    "invalid": true,
+    "sources": [
+      "class Parts { operator fun component1(): Int = 1; operator fun component2(): Int = 2 }\nfun bad(): Int { val (_: String, value) = Parts(); return value }"
+    ],
+    "candidate_diagnostic": "type|String|Int|mismatch|discard|component"
+  },
+  {
+    "id": "sam_zero",
+    "invalid": true,
+    "sources": [
+      "fun interface Empty { fun helper(): Int = 1 }"
+    ],
+    "candidate_diagnostic": "abstract|SAM|functional|single"
+  },
+  {
+    "id": "sam_many",
+    "invalid": true,
+    "sources": [
+      "fun interface Many { fun first(): Int; fun second(): Int }"
+    ],
+    "candidate_diagnostic": "abstract|SAM|functional|single"
+  },
+  {
+    "id": "sam_abstract_property",
+    "invalid": true,
+    "sources": [
+      "fun interface Property { val value: Int; fun run(): Int }"
+    ],
+    "candidate_diagnostic": "abstract|SAM|functional|property|properties"
+  },
+  {
+    "id": "sam_generic_method",
+    "invalid": true,
+    "sources": [
+      "fun interface Generic { fun <T> apply(value: T): T }"
+    ],
+    "candidate_diagnostic": "generic|type parameter|functional|SAM|abstract"
+  },
+  {
+    "id": "ordinary_interface_sam",
+    "invalid": true,
+    "sources": [
+      "interface Ordinary { fun apply(value: Int): Int }\nfun take(value: Ordinary): Int = value.apply(1)\nfun bad(): Int = take { value -> value + 1 }"
+    ],
+    "candidate_diagnostic": "type|function|interface|Ordinary|lambda|SAM|overload"
+  },
+  {
+    "id": "alias_cycle",
+    "invalid": true,
+    "sources": [
+      "typealias First = Second\ntypealias Second = First\nfun bad(value: First): First = value"
+    ],
+    "candidate_diagnostic": "cyclic|cycle|recursive|alias|infer"
+  },
+  {
+    "id": "alias_private_cross_file",
+    "invalid": true,
+    "sources": [
+      "package boundary.alias\nprivate typealias Hidden = String",
+      "package boundary.alias\nfun bad(value: Hidden): String = value"
+    ],
+    "candidate_diagnostic": "private|visibility|Hidden|alias|unresolved"
+  },
+  {
+    "id": "alias_private_library",
+    "invalid": true,
+    "consumer": "import compatibility.declarations.HiddenLabel\nfun bad(value: HiddenLabel): String = value",
+    "candidate_diagnostic": "private|visibility|HiddenLabel|alias|unresolved"
+  },
+  {
+    "id": "alias_nullability",
+    "invalid": true,
+    "consumer": "import compatibility.declarations.Label\nfun bad(value: Label?): Label = value",
+    "candidate_diagnostic": "null|type|Label|String"
+  },
+  {
+    "id": "generic_alias",
+    "invalid": false,
+    "sources": [
+      "typealias GenericLabel<T> = List<T>\nfun size(value: GenericLabel<String>): Int = value.size"
+    ],
+    "candidate_diagnostic": "generic|alias|type parameter|unsupported"
+  }
+]

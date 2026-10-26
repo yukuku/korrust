@@ -1,0 +1,135 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:15:30: error: unresolved reference 'SongDocument'.
+    fun searchableTexts(doc: SongDocument): List<String> {
+                             ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:17:19: error: argument type mismatch: actual type is 'Int', but 'String' was expected.
+        texts.add(doc.code)
+                  ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:18:13: error: unresolved reference 'meta'.
+        doc.meta.title?.let { texts.add(it) }
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:18:25: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        doc.meta.title?.let { texts.add(it) }
+                        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:18:25: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        doc.meta.title?.let { texts.add(it) }
+                        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:18:29: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        doc.meta.title?.let { texts.add(it) }
+                            ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:19:13: error: unresolved reference 'meta'.
+        doc.meta.title_original?.let { texts.add(it) }
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:19:34: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        doc.meta.title_original?.let { texts.add(it) }
+                                 ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:19:34: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        doc.meta.title_original?.let { texts.add(it) }
+                                 ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:19:38: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        doc.meta.title_original?.let { texts.add(it) }
+                                     ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:20:27: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+        for (block in doc.blocks) collect(block, texts)
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:20:27: error: unresolved reference 'blocks'.
+        for (block in doc.blocks) collect(block, texts)
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:31:25: error: unresolved reference 'SongDocument'.
+    fun lyricLines(doc: SongDocument): List<String> {
+                        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:33:27: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+        for (block in doc.blocks) {
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:33:27: error: unresolved reference 'blocks'.
+        for (block in doc.blocks) {
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:34:26: error: unresolved reference 'LyricBlock'.
+            if (block is LyricBlock) {
+                         ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:35:37: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+                for (verse in block.verses) {
+                                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:35:37: error: unresolved reference 'verses'.
+                for (verse in block.verses) {
+                                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:36:62: error: unresolved reference 'plainText'.
+                    for (line in verse.lines) lines.add(line.plainText())
+                                                             ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:43:32: error: unresolved reference 'Block'.
+    private fun collect(block: Block, out: MutableList<String>) {
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:45:16: error: unresolved reference 'PBlock'.
+            is PBlock -> if (block.role == "tune") out.add(block.content.plainText())
+               ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:45:36: error: unresolved reference 'role'.
+            is PBlock -> if (block.role == "tune") out.add(block.content.plainText())
+                                   ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:45:66: error: unresolved reference 'content'.
+            is PBlock -> if (block.role == "tune") out.add(block.content.plainText())
+                                                                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:46:16: error: unresolved reference 'RowBlock'.
+            is RowBlock -> for (item in block.items.filterIsInstance<PBlock>()) {
+               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:46:47: error: unresolved reference 'items'.
+            is RowBlock -> for (item in block.items.filterIsInstance<PBlock>()) {
+                                              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:46:53: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+            is RowBlock -> for (item in block.items.filterIsInstance<PBlock>()) {
+                                                    ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:46:70: error: unresolved reference 'PBlock'.
+            is RowBlock -> for (item in block.items.filterIsInstance<PBlock>()) {
+                                                                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:49:16: error: unresolved reference 'LyricBlock'.
+            is LyricBlock -> for (verse in block.verses) {
+               ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:49:50: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+            is LyricBlock -> for (verse in block.verses) {
+                                                 ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:49:50: error: unresolved reference 'verses'.
+            is LyricBlock -> for (verse in block.verses) {
+                                                 ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:50:56: error: unresolved reference 'plainText'.
+                for (line in verse.lines) out.add(line.plainText())
+                                                       ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:52:16: error: unresolved reference 'ScriptureBlock'.
+            is ScriptureBlock, is YoutubeBlock, is GapBlock, is UnknownBlock -> {}
+               ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:52:35: error: unresolved reference 'YoutubeBlock'.
+            is ScriptureBlock, is YoutubeBlock, is GapBlock, is UnknownBlock -> {}
+                                  ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:52:52: error: unresolved reference 'GapBlock'.
+            is ScriptureBlock, is YoutubeBlock, is GapBlock, is UnknownBlock -> {}
+                                                   ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt:52:65: error: unresolved reference 'UnknownBlock'.
+            is ScriptureBlock, is YoutubeBlock, is GapBlock, is UnknownBlock -> {}
+                                                                ^^^^^^^^^^^^

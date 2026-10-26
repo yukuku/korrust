@@ -1,0 +1,435 @@
+Compiled from "Book.java"
+class yuku.alkitab.model.Book$1 implements android.os.Parcelable$Creator<yuku.alkitab.model.Book> {
+  public yuku.alkitab.model.Book createFromParcel(android.os.Parcel);
+    descriptor: (Landroid/os/Parcel;)Lyuku/alkitab/model/Book;
+
+  public yuku.alkitab.model.Book[] newArray(int);
+    descriptor: (I)[Lyuku/alkitab/model/Book;
+
+  public java.lang.Object[] newArray(int);
+    descriptor: (I)[Ljava/lang/Object;
+
+  public java.lang.Object createFromParcel(android.os.Parcel);
+    descriptor: (Landroid/os/Parcel;)Ljava/lang/Object;
+}
+Compiled from "Book.java"
+public class yuku.alkitab.model.Book implements android.os.Parcelable {
+  public int bookId;
+    descriptor: I
+  public java.lang.String shortName;
+    descriptor: Ljava/lang/String;
+  public int chapter_count;
+    descriptor: I
+  public int[] verse_counts;
+    descriptor: [I
+  public java.lang.String abbreviation;
+    descriptor: Ljava/lang/String;
+  public static final android.os.Parcelable$Creator<yuku.alkitab.model.Book> CREATOR;
+    descriptor: Landroid/os/Parcelable$Creator;
+  public int describeContents();
+    descriptor: ()I
+
+  public void writeToParcel(android.os.Parcel, int);
+    descriptor: (Landroid/os/Parcel;I)V
+
+  public yuku.alkitab.model.Book();
+    descriptor: ()V
+
+  public java.lang.String reference(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public java.lang.String reference(int, int);
+    descriptor: (II)Ljava/lang/String;
+
+  public static java.lang.String reference(java.lang.CharSequence, int);
+    descriptor: (Ljava/lang/CharSequence;I)Ljava/lang/String;
+
+  public static java.lang.String reference(java.lang.CharSequence, int, int);
+    descriptor: (Ljava/lang/CharSequence;II)Ljava/lang/String;
+
+  public java.lang.String reference(int, yuku.alkitab.util.IntArrayList);
+    descriptor: (ILyuku/alkitab/util/IntArrayList;)Ljava/lang/String;
+
+  public static void writeVerseRange(yuku.alkitab.util.IntArrayList, java.lang.StringBuilder);
+    descriptor: (Lyuku/alkitab/util/IntArrayList;Ljava/lang/StringBuilder;)V
+
+  public java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+}
+Compiled from "FootnoteEntry.java"
+public class yuku.alkitab.model.FootnoteEntry {
+  public java.lang.String content;
+    descriptor: Ljava/lang/String;
+  public yuku.alkitab.model.FootnoteEntry();
+    descriptor: ()V
+}
+Compiled from "InternalBook.java"
+public class yuku.alkitab.model.InternalBook extends yuku.alkitab.model.Book {
+  public java.lang.String resName;
+    descriptor: Ljava/lang/String;
+  public int[] chapter_offsets;
+    descriptor: [I
+  public yuku.alkitab.model.InternalBook();
+    descriptor: ()V
+}
+Compiled from "Label.java"
+public class yuku.alkitab.model.Label implements java.lang.Comparable<yuku.alkitab.model.Label> {
+  public long _id;
+    descriptor: J
+  public java.lang.String gid;
+    descriptor: Ljava/lang/String;
+  public java.lang.String title;
+    descriptor: Ljava/lang/String;
+  public int ordering;
+    descriptor: I
+  public java.lang.String backgroundColor;
+    descriptor: Ljava/lang/String;
+  public int compareTo(yuku.alkitab.model.Label);
+    descriptor: (Lyuku/alkitab/model/Label;)I
+
+  public static yuku.alkitab.model.Label createNewLabel(java.lang.String, int, java.lang.String);
+    descriptor: (Ljava/lang/String;ILjava/lang/String;)Lyuku/alkitab/model/Label;
+
+  public static yuku.alkitab.model.Label createEmptyLabel();
+    descriptor: ()Lyuku/alkitab/model/Label;
+
+  public int compareTo(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)I
+}
+Compiled from "Marker.java"
+public final class yuku.alkitab.model.Marker$Kind extends java.lang.Enum<yuku.alkitab.model.Marker$Kind> {
+  public static final yuku.alkitab.model.Marker$Kind bookmark;
+    descriptor: Lyuku/alkitab/model/Marker$Kind;
+  public static final yuku.alkitab.model.Marker$Kind note;
+    descriptor: Lyuku/alkitab/model/Marker$Kind;
+  public static final yuku.alkitab.model.Marker$Kind highlight;
+    descriptor: Lyuku/alkitab/model/Marker$Kind;
+  public final int code;
+    descriptor: I
+  public static yuku.alkitab.model.Marker$Kind[] values();
+    descriptor: ()[Lyuku/alkitab/model/Marker$Kind;
+
+  public static yuku.alkitab.model.Marker$Kind valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lyuku/alkitab/model/Marker$Kind;
+
+  public static yuku.alkitab.model.Marker$Kind fromCode(int);
+    descriptor: (I)Lyuku/alkitab/model/Marker$Kind;
+}
+Compiled from "Marker.java"
+public class yuku.alkitab.model.Marker {
+  public long _id;
+    descriptor: J
+  public java.lang.String gid;
+    descriptor: Ljava/lang/String;
+  public int ari;
+    descriptor: I
+  public yuku.alkitab.model.Marker$Kind kind;
+    descriptor: Lyuku/alkitab/model/Marker$Kind;
+  public java.lang.String caption;
+    descriptor: Ljava/lang/String;
+  public int verseCount;
+    descriptor: I
+  public java.util.Date createTime;
+    descriptor: Ljava/util/Date;
+  public java.util.Date modifyTime;
+    descriptor: Ljava/util/Date;
+  public static yuku.alkitab.model.Marker createNewMarker(int, yuku.alkitab.model.Marker$Kind, java.lang.String, int, java.util.Date, java.util.Date);
+    descriptor: (ILyuku/alkitab/model/Marker$Kind;Ljava/lang/String;ILjava/util/Date;Ljava/util/Date;)Lyuku/alkitab/model/Marker;
+
+  public static yuku.alkitab.model.Marker createEmptyMarker();
+    descriptor: ()Lyuku/alkitab/model/Marker;
+}
+Compiled from "Marker_Label.java"
+public class yuku.alkitab.model.Marker_Label {
+  public long _id;
+    descriptor: J
+  public java.lang.String gid;
+    descriptor: Ljava/lang/String;
+  public java.lang.String marker_gid;
+    descriptor: Ljava/lang/String;
+  public java.lang.String label_gid;
+    descriptor: Ljava/lang/String;
+  public static yuku.alkitab.model.Marker_Label createEmptyMarker_Label();
+    descriptor: ()Lyuku/alkitab/model/Marker_Label;
+
+  public static yuku.alkitab.model.Marker_Label createNewMarker_Label(java.lang.String, java.lang.String);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;)Lyuku/alkitab/model/Marker_Label;
+}
+Compiled from "PericopeBlock.java"
+public class yuku.alkitab.model.PericopeBlock {
+  public java.lang.String title;
+    descriptor: Ljava/lang/String;
+  public java.lang.String[] parallels;
+    descriptor: [Ljava/lang/String;
+  public yuku.alkitab.model.PericopeBlock();
+    descriptor: ()V
+
+  public java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+}
+Compiled from "PericopeIndex.java"
+public class yuku.alkitab.model.PericopeIndex {
+  public int[] aris;
+    descriptor: [I
+  public int[] offsets;
+    descriptor: [I
+  public yuku.alkitab.model.PericopeIndex();
+    descriptor: ()V
+
+  public int findFirst(int);
+    descriptor: (I)I
+
+  public int getAri(int);
+    descriptor: (I)I
+}
+Compiled from "ProgressMark.java"
+public class yuku.alkitab.model.ProgressMark {
+  public long _id;
+    descriptor: J
+  public int preset_id;
+    descriptor: I
+  public java.lang.String caption;
+    descriptor: Ljava/lang/String;
+  public int ari;
+    descriptor: I
+  public java.util.Date modifyTime;
+    descriptor: Ljava/util/Date;
+  public yuku.alkitab.model.ProgressMark();
+    descriptor: ()V
+}
+Compiled from "ProgressMarkHistory.java"
+public class yuku.alkitab.model.ProgressMarkHistory {
+  public long _id;
+    descriptor: J
+  public int progress_mark_preset_id;
+    descriptor: I
+  public java.lang.String progress_mark_caption;
+    descriptor: Ljava/lang/String;
+  public int ari;
+    descriptor: I
+  public java.util.Date createTime;
+    descriptor: Ljava/util/Date;
+  public yuku.alkitab.model.ProgressMarkHistory();
+    descriptor: ()V
+}
+Compiled from "SingleChapterVerses.kt"
+public final class yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1 implements yuku.alkitab.model.SingleChapterVerses {
+  public int getVerseCount();
+    descriptor: ()I
+
+  public java.lang.String getVerse(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public java.lang.String getVerseNumberText(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public int revisionMarker();
+    descriptor: ()I
+}
+Compiled from "SingleChapterVerses.kt"
+public final class yuku.alkitab.model.SingleChapterVerses$Companion {
+  public final yuku.alkitab.model.SingleChapterVerses getEMPTY();
+    descriptor: ()Lyuku/alkitab/model/SingleChapterVerses;
+
+  public static final java.lang.String[] access$getVERSE_NUMBER_STRINGS$p();
+    descriptor: ()[Ljava/lang/String;
+}
+Compiled from "SingleChapterVerses.kt"
+public final class yuku.alkitab.model.SingleChapterVerses$DefaultImpls {
+  public static int revisionMarker(yuku.alkitab.model.SingleChapterVerses);
+    descriptor: (Lyuku/alkitab/model/SingleChapterVerses;)I
+
+  public static java.lang.String getVerseNumberText(yuku.alkitab.model.SingleChapterVerses, int);
+    descriptor: (Lyuku/alkitab/model/SingleChapterVerses;I)Ljava/lang/String;
+}
+Compiled from "SingleChapterVerses.kt"
+public interface yuku.alkitab.model.SingleChapterVerses {
+  public static final yuku.alkitab.model.SingleChapterVerses$Companion Companion;
+    descriptor: Lyuku/alkitab/model/SingleChapterVerses$Companion;
+  public abstract int getVerseCount();
+    descriptor: ()I
+
+  public default int revisionMarker();
+    descriptor: ()I
+
+  public abstract java.lang.String getVerse(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public default java.lang.String getVerseNumberText(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public static int access$revisionMarker$jd(yuku.alkitab.model.SingleChapterVerses);
+    descriptor: (Lyuku/alkitab/model/SingleChapterVerses;)I
+
+  public static java.lang.String access$getVerseNumberText$jd(yuku.alkitab.model.SingleChapterVerses, int);
+    descriptor: (Lyuku/alkitab/model/SingleChapterVerses;I)Ljava/lang/String;
+}
+Compiled from "Version.java"
+class yuku.alkitab.model.Version$UnavailableBookNames {
+}
+Compiled from "Version.java"
+public abstract class yuku.alkitab.model.Version {
+  public yuku.alkitab.model.Version();
+    descriptor: ()V
+
+  public abstract java.lang.String getShortName();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract java.lang.String getLongName();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract java.lang.String getLocale();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract int getMaxBookIdPlusOne();
+    descriptor: ()I
+
+  public abstract yuku.alkitab.model.Book[] getConsecutiveBooks();
+    descriptor: ()[Lyuku/alkitab/model/Book;
+
+  public abstract yuku.alkitab.model.Book getBook(int);
+    descriptor: (I)Lyuku/alkitab/model/Book;
+
+  public abstract yuku.alkitab.model.Book getFirstBook();
+    descriptor: ()Lyuku/alkitab/model/Book;
+
+  public abstract java.lang.String loadVerseText(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public abstract java.lang.String loadVerseText(yuku.alkitab.model.Book, int, int);
+    descriptor: (Lyuku/alkitab/model/Book;II)Ljava/lang/String;
+
+  public abstract int loadVersesByAriRanges(yuku.alkitab.util.IntArrayList, yuku.alkitab.util.IntArrayList, java.util.List<java.lang.String>);
+    descriptor: (Lyuku/alkitab/util/IntArrayList;Lyuku/alkitab/util/IntArrayList;Ljava/util/List;)I
+
+  public abstract int loadPericope(int, int, yuku.alkitab.util.IntArrayList, java.util.List<yuku.alkitab.model.PericopeBlock>);
+    descriptor: (IILyuku/alkitab/util/IntArrayList;Ljava/util/List;)I
+
+  public abstract yuku.alkitab.model.SingleChapterVerses loadChapterText(yuku.alkitab.model.Book, int);
+    descriptor: (Lyuku/alkitab/model/Book;I)Lyuku/alkitab/model/SingleChapterVerses;
+
+  public abstract java.lang.String loadChapterTextLowercasedWithoutSplit(yuku.alkitab.model.Book, int);
+    descriptor: (Lyuku/alkitab/model/Book;I)Ljava/lang/String;
+
+  public abstract yuku.alkitab.model.XrefEntry getXrefEntry(int);
+    descriptor: (I)Lyuku/alkitab/model/XrefEntry;
+
+  public abstract yuku.alkitab.model.FootnoteEntry getFootnoteEntry(int);
+    descriptor: (I)Lyuku/alkitab/model/FootnoteEntry;
+
+  public java.lang.String reference(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public java.lang.String referenceWithVerseCount(int, int);
+    descriptor: (II)Ljava/lang/String;
+
+  public java.lang.String reference(int, int, int);
+    descriptor: (III)Ljava/lang/String;
+
+  public java.lang.String referenceRange(int, int);
+    descriptor: (II)Ljava/lang/String;
+
+  public java.lang.String getInitials();
+    descriptor: ()Ljava/lang/String;
+}
+Compiled from "XrefEntry.java"
+public class yuku.alkitab.model.XrefEntry {
+  public java.lang.String content;
+    descriptor: Ljava/lang/String;
+  public yuku.alkitab.model.XrefEntry();
+    descriptor: ()V
+}
+Compiled from "Gid.java"
+public class yuku.alkitab.model.util.Gid {
+  public yuku.alkitab.model.util.Gid();
+    descriptor: ()V
+
+  public static java.lang.String newGid();
+    descriptor: ()Ljava/lang/String;
+}
+Compiled from "Ari.java"
+public class yuku.alkitab.util.Ari {
+  public yuku.alkitab.util.Ari();
+    descriptor: ()V
+
+  public static int encode(int, int, int);
+    descriptor: (III)I
+
+  public static int encode(int, int);
+    descriptor: (II)I
+
+  public static int encodeWithBc(int, int);
+    descriptor: (II)I
+
+  public static int toBook(int);
+    descriptor: (I)I
+
+  public static int toChapter(int);
+    descriptor: (I)I
+
+  public static int toVerse(int);
+    descriptor: (I)I
+
+  public static int toBookChapter(int);
+    descriptor: (I)I
+
+  public static int parseInt(java.lang.String, int);
+    descriptor: (Ljava/lang/String;I)I
+}
+Compiled from "IntArrayList.java"
+class yuku.alkitab.util.IntArrayList$1 implements android.os.Parcelable$Creator<yuku.alkitab.util.IntArrayList> {
+  public yuku.alkitab.util.IntArrayList createFromParcel(android.os.Parcel);
+    descriptor: (Landroid/os/Parcel;)Lyuku/alkitab/util/IntArrayList;
+
+  public yuku.alkitab.util.IntArrayList[] newArray(int);
+    descriptor: (I)[Lyuku/alkitab/util/IntArrayList;
+
+  public java.lang.Object[] newArray(int);
+    descriptor: (I)[Ljava/lang/Object;
+
+  public java.lang.Object createFromParcel(android.os.Parcel);
+    descriptor: (Landroid/os/Parcel;)Ljava/lang/Object;
+}
+Compiled from "IntArrayList.java"
+public class yuku.alkitab.util.IntArrayList implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator<yuku.alkitab.util.IntArrayList> CREATOR;
+    descriptor: Landroid/os/Parcelable$Creator;
+  public yuku.alkitab.util.IntArrayList();
+    descriptor: ()V
+
+  public yuku.alkitab.util.IntArrayList(int);
+    descriptor: (I)V
+
+  public int size();
+    descriptor: ()I
+
+  public void add(int);
+    descriptor: (I)V
+
+  public int get(int);
+    descriptor: (I)I
+
+  public void set(int, int);
+    descriptor: (II)V
+
+  public int[] buffer();
+    descriptor: ()[I
+
+  public void clear();
+    descriptor: ()V
+
+  public int describeContents();
+    descriptor: ()I
+
+  public void writeToParcel(android.os.Parcel, int);
+    descriptor: (Landroid/os/Parcel;I)V
+
+  public java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public int hashCode();
+    descriptor: ()I
+}

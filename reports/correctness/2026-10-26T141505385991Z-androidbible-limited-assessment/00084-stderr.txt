@@ -1,0 +1,119 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:3:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.flow.MutableStateFlow
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:4:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.flow.StateFlow
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:5:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.flow.asStateFlow
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:6:32: error: unresolved reference 'model'.
+import yuku.alkitab.base.audio.model.VerseTiming
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:21:27: error: unresolved reference 'MutableStateFlow'.
+    private val _verse1 = MutableStateFlow(0)
+                          ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:22:17: error: unresolved reference 'StateFlow'.
+    val verse1: StateFlow<Int> = _verse1.asStateFlow()
+                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:24:30: error: unresolved reference 'VerseTiming'.
+    private var verses: List<VerseTiming> = emptyList()
+                             ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:24:45: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+    private var verses: List<VerseTiming> = emptyList()
+                                            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:30:32: error: unresolved reference 'VerseTiming'.
+    fun setTiming(verses: List<VerseTiming>) {
+                               ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:63:38: error: unresolved reference 'startMs'.
+            if (positionMs >= cached.startMs && positionMs < cached.endMs) {
+                                     ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:63:69: error: unresolved reference 'endMs'.
+            if (positionMs >= cached.startMs && positionMs < cached.endMs) {
+                                                                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:64:31: error: unresolved reference 'verse_1'.
+                return cached.verse_1
+                              ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:67:38: error: unresolved reference 'endMs'.
+            if (positionMs >= cached.endMs) {
+                                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:71:40: error: unresolved reference 'startMs'.
+                    if (positionMs < v.startMs) {
+                                       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:76:40: error: unresolved reference 'endMs'.
+                    if (positionMs < v.endMs) {
+                                       ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:78:34: error: unresolved reference 'verse_1'.
+                        return v.verse_1
+                                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:99:32: error: unresolved reference 'startMs'.
+                positionMs < v.startMs -> hi = mid - 1
+                               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:100:33: error: unresolved reference 'endMs'.
+                positionMs >= v.endMs -> lo = mid + 1
+                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:103:30: error: unresolved reference 'verse_1'.
+                    return v.verse_1
+                             ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:124:32: error: unresolved reference 'startMs'.
+                positionMs < v.startMs -> hi = mid - 1
+                               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:125:33: error: unresolved reference 'endMs'.
+                positionMs >= v.endMs -> lo = mid + 1
+                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:126:34: error: unresolved reference 'verse_1'.
+                else -> return v.verse_1
+                                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:133:69: error: unresolved reference 'it'.
+    fun getVerseStartMs(verse_1: Int): Long? = verses.firstOrNull { it.verse_1 == verse_1 }?.startMs
+                                                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:133:94: error: unresolved reference 'startMs'.
+    fun getVerseStartMs(verse_1: Int): Long? = verses.firstOrNull { it.verse_1 == verse_1 }?.startMs
+                                                                                             ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:141:37: error: unresolved reference 'it'.
+        return verses.firstOrNull { it.startMs > positionMs }?.startMs
+                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:141:64: error: unresolved reference 'startMs'.
+        return verses.firstOrNull { it.startMs > positionMs }?.startMs
+                                                               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:153:33: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val currentIdx = verses.indexOfFirst { positionMs >= it.startMs && positionMs < it.endMs }
+                                ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:153:33: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T> List<T>.indexOfFirst(predicate: (T) -> Boolean): Int
+        val currentIdx = verses.indexOfFirst { positionMs >= it.startMs && positionMs < it.endMs }
+                                ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:153:46: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val currentIdx = verses.indexOfFirst { positionMs >= it.startMs && positionMs < it.endMs }
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:153:65: error: unresolved reference 'startMs'.
+        val currentIdx = verses.indexOfFirst { positionMs >= it.startMs && positionMs < it.endMs }
+                                                                ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:153:92: error: unresolved reference 'endMs'.
+        val currentIdx = verses.indexOfFirst { positionMs >= it.startMs && positionMs < it.endMs }
+                                                                                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:156:38: error: unresolved reference 'startMs'.
+            if (positionMs - current.startMs > PREV_VERSE_RESTART_THRESHOLD_MS) {
+                                     ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:156:46: error: 'operator' modifier is required on 'fun <T> Comparable<T>.compareTo(other: T): Int'.
+            if (positionMs - current.startMs > PREV_VERSE_RESTART_THRESHOLD_MS) {
+                                             ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:157:32: error: unresolved reference 'startMs'.
+                return current.startMs
+                               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:159:27: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            return verses.getOrNull(currentIdx - 1)?.startMs
+                          ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:159:27: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T> List<T>.getOrNull(index: Int): T?
+            return verses.getOrNull(currentIdx - 1)?.startMs
+                          ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:159:54: error: unresolved reference 'startMs'.
+            return verses.getOrNull(currentIdx - 1)?.startMs
+                                                     ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:163:36: error: unresolved reference 'it'.
+        return verses.lastOrNull { it.endMs <= positionMs }?.startMs
+                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/HighlightTracker.kt:163:62: error: unresolved reference 'startMs'.
+        return verses.lastOrNull { it.endMs <= positionMs }?.startMs
+                                                             ^^^^^^^

@@ -252,7 +252,7 @@ fn parameter_checks(
 fn abstract_method(pool: &mut Pool, function: &crate::check::Function) -> Result<Vec<u8>> {
     let mut method = Vec::new();
     u2(&mut method, 0x0401);
-    u2(&mut method, pool.utf8(&function.name)?);
+    u2(&mut method, pool.utf8(function.jvm_name())?);
     u2(&mut method, pool.utf8(&function.descriptor())?);
     let signature = generic_function(function);
     u2(
@@ -298,7 +298,7 @@ fn default_forward(
         0xb8,
         pool.method(
             &format!("{}$DefaultImpls", interface.owner),
-            &function.name,
+            function.jvm_name(),
             &static_descriptor(&interface.owner, &function.descriptor()),
         )?,
     );
@@ -306,7 +306,7 @@ fn default_forward(
     let mut method = simple_method(
         pool,
         0x0001,
-        &function.name,
+        function.jvm_name(),
         &function.descriptor(),
         code,
         generic_function(function).as_deref(),
@@ -409,10 +409,12 @@ fn helper_body(
     let mut method = simple_method(
         &mut builder.pool,
         0x0009,
-        &function.name,
+        function.jvm_name(),
         &static_descriptor(&interface.owner, &function.descriptor()),
         code,
-        None,
+        generic_function(function)
+            .map(|signature| signature.replacen('(', &format!("(L{};", interface.owner), 1))
+            .as_deref(),
         function.result.is_reference(),
     )?;
     let mut params = vec![("$this".into(), Type::Java(interface.owner.clone()))];
@@ -579,6 +581,7 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
         ValueKind::ClassLiteral(_)
         | ValueKind::Unit
         | ValueKind::Float(_)
+        | ValueKind::Double(_)
         | ValueKind::Int(_)
         | ValueKind::Long(_)
         | ValueKind::Null
@@ -907,6 +910,7 @@ fn companion_classes(
                 metadata(all, owner)?,
                 0,
                 lambdas,
+                None,
                 |pool| {
                     let mut attributes = Vec::new();
                     if let Some(inner) = inner_attribute(pool, &relations)? {
@@ -944,8 +948,8 @@ fn interface_classes(
     }
     for method in &interface.methods {
         if method.source_property.as_ref().is_some_and(|property| {
-            crate::check::getter_name(property) != method.function.name
-                && crate::check::setter_name(property) != method.function.name
+            crate::check::getter_name(property) != method.function.jvm_name()
+                && crate::check::setter_name(property) != method.function.jvm_name()
         }) {
             return Err(failure(
                 "Interface accessor lowering does not match its source property",
@@ -965,7 +969,7 @@ fn interface_classes(
         builder.methods.push(default_access(
             &mut builder.pool,
             &interface.owner,
-            &function.name,
+            function.jvm_name(),
             &function.descriptor(),
             &function.params,
             &function.result,

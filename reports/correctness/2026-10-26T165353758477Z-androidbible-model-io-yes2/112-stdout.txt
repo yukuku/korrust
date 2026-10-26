@@ -1,0 +1,26 @@
+Compiled from "SectionIndex.java"
+public class yuku.alkitab.yes2.model.SectionIndex {
+  static final java.lang.String TAG;
+    descriptor: Ljava/lang/String;
+  private java.util.LinkedHashMap<java.lang.String, yuku.alkitab.yes2.model.SectionIndex$Entry> entries;
+    descriptor: Ljava/util/LinkedHashMap;
+  private int sectionDataStartOffset;
+    descriptor: I
+  public yuku.alkitab.yes2.model.SectionIndex();
+    descriptor: ()V
+
+  public static yuku.alkitab.yes2.model.SectionIndex read(yuku.alkitab.yes2.io.RandomInputStream) throws java.io.IOException;
+    descriptor: (Lyuku/alkitab/yes2/io/RandomInputStream;)Lyuku/alkitab/yes2/model/SectionIndex;
+
+  public yuku.bintex.ValueMap getSectionAttributes(java.lang.String, yuku.alkitab.yes2.io.RandomInputStream) throws java.io.IOException;
+    descriptor: (Ljava/lang/String;Lyuku/alkitab/yes2/io/RandomInputStream;)Lyuku/bintex/ValueMap;
+
+  public boolean seekToSectionContent(java.lang.String, yuku.alkitab.yes2.io.RandomInputStream) throws java.io.IOException;
+    descriptor: (Ljava/lang/String;Lyuku/alkitab/yes2/io/RandomInputStream;)Z
+
+  public long getAbsoluteOffsetForSectionContent(java.lang.String);
+    descriptor: (Ljava/lang/String;)J
+
+  static {};
+    descriptor: ()V
+}

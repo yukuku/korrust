@@ -39,12 +39,6 @@ pub(super) fn check_class_with_constants(
     validate_constructor_assignments(source)?;
     for method in &source.methods {
         validate_operator(&method.function, true)?;
-        if method.function.internal {
-            return Err(Diagnostic::new(
-                method.function.offset,
-                "Internal class methods require unsupported JVM name mangling",
-            ));
-        }
     }
     if source.data
         && (source.params.is_empty()
@@ -85,6 +79,7 @@ pub(super) fn check_class_with_constants(
             | Type::Char
             | Type::Boolean
             | Type::Float
+            | Type::Double
             | Type::String
             | Type::Java(_) => true,
             Type::Nullable(inner) | Type::List(inner) | Type::MutableList(inner) => {
@@ -131,6 +126,20 @@ pub(super) fn check_class_with_constants(
         .as_ref()
         .map(|(name, _)| imports.get(name).cloned().unwrap_or_else(|| name.clone()))
         .unwrap_or_else(|| "java/lang/Object".into());
+    if super_class == "java/lang/Enum"
+        && !classpath
+            .load(&owner)
+            .is_ok_and(|class| class.access & 0x4000 != 0)
+    {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Only enum declarations may inherit java.lang.Enum",
+        )
+        .with_kind(
+            crate::DiagnosticKind::InvalidKotlin,
+            "ENUM_DIRECT_INHERITANCE",
+        ));
+    }
     let mut interfaces = Vec::new();
     let mut required = HashMap::new();
     if let Ok(object) = classpath.load("java/lang/Object") {
@@ -618,6 +627,8 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .find(|m| m.function.name == *name && m.function.params == *source_params)
                     .map(|m| crate::classpath::LibraryMethod {
+                        abstract_: false,
+                        builtin_array: false,
                         source_name: m.function.name.clone(),
                         operator: m.function.operator,
                         kotlin_public: !m.function.private
@@ -734,7 +745,7 @@ pub(super) fn check_class_with_constants(
             ),
         ] {
             if active {
-                if let Some(method) = members.values().find(|m| m.name == name).cloned() {
+                if let Some(method) = members.values().find(|m| m.source_name() == name).cloned() {
                     members.insert(format!("{prefix}{}", property.name), method);
                 }
             }
@@ -891,7 +902,20 @@ pub(super) fn check_class_with_constants(
                 kind: ValueKind::Unit,
             }));
         }
+        let source_method = source
+            .methods
+            .iter()
+            .find(|method| method.function.offset == offset);
         let method = Function {
+            jvm_name: None,
+            annotations: annotations::declaration_annotations(
+                source_method.map_or(&[], |method| method.function.annotations.as_slice()),
+                classpath,
+                imports,
+                "METHOD",
+                None,
+            )?,
+            vararg: source_method.is_some_and(|method| method.function.vararg),
             type_params: resolve_parameters(
                 &source
                     .methods
@@ -1002,6 +1026,9 @@ pub(super) fn check_class_with_constants(
                 .any(|m| m.name == getter && m.params.is_empty())
             {
                 methods.push(Function {
+                    jvm_name: None,
+                    annotations: Vec::new(),
+                    vararg: false,
                     type_params: Vec::new(),
                     defaults: Vec::new(),
                     name: getter,
@@ -1033,6 +1060,9 @@ pub(super) fn check_class_with_constants(
                     .any(|m| m.name == setter_name(&field.name) && m.params.len() == 1)
             {
                 methods.push(Function {
+                    jvm_name: None,
+                    annotations: Vec::new(),
+                    vararg: false,
                     type_params: Vec::new(),
                     defaults: Vec::new(),
                     name: setter_name(&field.name),
@@ -1280,6 +1310,9 @@ pub(super) fn check_class_with_constants(
             },
             initializer_local_base,
             function: Function {
+                jvm_name: None,
+                annotations: Vec::new(),
+                vararg: false,
                 type_params: Vec::new(),
                 defaults,
                 name: "<init>".into(),
@@ -1522,12 +1555,7 @@ impl<'a> DeclarationContext<'a> {
         is_override: bool,
     ) -> Result<Function> {
         validate_operator(source, true)?;
-        if receiver && source.internal {
-            return Err(Diagnostic::new(
-                source.offset,
-                "Internal members require unsupported JVM name mangling",
-            ));
-        }
+
         let result = resolve_type_checked(
             &source.result,
             self.imports,
@@ -1579,6 +1607,15 @@ impl<'a> DeclarationContext<'a> {
             }));
         }
         Ok(Function {
+            jvm_name: None,
+            annotations: annotations::declaration_annotations(
+                &source.annotations,
+                self.classpath,
+                self.imports,
+                "METHOD",
+                None,
+            )?,
+            vararg: source.vararg,
             type_params: resolve_parameters(
                 &source.type_params,
                 self.imports,
@@ -1622,6 +1659,42 @@ pub(super) fn lateinit_getter(read: Value, name: &str) -> Vec<Statement> {
     ]
 }
 
+pub fn unresolved_source_dependencies(
+    source: &syntax::Module,
+) -> Vec<(String, usize, HashSet<String>)> {
+    let mut declarations = Vec::new();
+    for function in &source.functions {
+        if function.result_inferred {
+            let parameters = function
+                .params
+                .iter()
+                .map(|(name, _)| name.clone())
+                .collect::<Vec<_>>();
+            declarations.push((
+                function.name.clone(),
+                function.offset,
+                captures::free_names(&function.body, &parameters),
+            ));
+        }
+    }
+    for property in &source.properties {
+        if property.inferred {
+            if let Some(initializer) = &property.initializer {
+                let body = vec![syntax::Statement {
+                    offset: initializer.offset,
+                    kind: StatementKind::Expression(initializer.clone()),
+                }];
+                declarations.push((
+                    property.name.clone(),
+                    property.offset,
+                    captures::free_names(&body, &[]),
+                ));
+            }
+        }
+    }
+    declarations
+}
+
 pub fn infer_source_results(
     source: &mut syntax::Module,
     classpath: &Classpath,
@@ -1644,6 +1717,14 @@ fn infer_source_results_impl(
     owner: &str,
     errors: &mut Vec<Diagnostic>,
 ) -> Result<usize> {
+    if let Some(mut enumeration) = source.enum_decl.take() {
+        let mut context = source.clone();
+        context.class_decl = Some(enumeration.body.clone());
+        let progress = infer_source_results_impl(&mut context, classpath, owner, errors);
+        enumeration.body = context.class_decl.unwrap();
+        source.enum_decl = Some(enumeration);
+        return progress;
+    }
     let mut unresolved_names = source
         .functions
         .iter()
@@ -1681,6 +1762,12 @@ fn infer_source_results_impl(
     let mut imports = HashMap::new();
     let mut classes = HashMap::new();
     for (alias, path, _) in &source.imports {
+        if let Some((package, member)) = path.rsplit_once('/') {
+            if classpath.type_alias(package, member)?.is_some() {
+                imports.insert(alias.clone(), path.clone());
+                continue;
+            }
+        }
         if alias == "*" {
             for class in classpath.package_classes(path.trim_end_matches("/*"))? {
                 imports.insert(
@@ -1695,11 +1782,35 @@ fn infer_source_results_impl(
             imports.insert(alias.clone(), path.clone());
             classes.insert(path.clone(), class);
         } else if let Some((package, member)) = path.rsplit_once('/') {
+            if let Ok(class) = classpath.load(package) {
+                if class
+                    .fields
+                    .iter()
+                    .any(|field| field.name == member && field.access & 8 != 0)
+                    || class.methods.iter().any(|method| {
+                        method.access & 8 != 0
+                            && (method.name == member
+                                || method.source_property.as_deref() == Some(member)
+                                || method
+                                    .library
+                                    .as_ref()
+                                    .is_some_and(|library| library.source_name == member))
+                    })
+                {
+                    imports.insert(alias.clone(), format!("{package}::{member}"));
+                    classes.insert(package.into(), class);
+                    continue;
+                }
+            }
             for class in classpath.package_classes(package)? {
                 if class.methods.iter().any(|m| {
                     m.library.as_ref().is_some_and(|l| l.source_name == member)
                         || m.source_property.as_deref() == Some(member)
-                }) {
+                }) || class
+                    .fields
+                    .iter()
+                    .any(|field| field.name == member && field.constant.is_some())
+                {
                     imports.insert(alias.clone(), format!("{}::{member}", class.name));
                     classes.insert(class.name.clone(), class);
                 }
@@ -1857,7 +1968,11 @@ fn infer_source_results_impl(
     for property in &mut source.properties {
         if property.inferred {
             if let Some(expr) = &property.initializer {
-                if let Ok(value) = context.checker(false, 0, Type::Unit).value(expr) {
+                let inferred = context.checker(false, 0, Type::Unit).value(expr);
+                if let Err(error) = &inferred {
+                    errors.push(error.clone());
+                }
+                if let Ok(value) = inferred {
                     if value.ty != Type::Null && value.ty != Type::Unit {
                         property.ty = value.ty.clone();
                         property.inferred = false;
@@ -1919,7 +2034,11 @@ fn infer_source_results_impl(
                             let _ = checker.declare(name, ty, false, class.offset);
                         }
                     }
-                    if let Ok(value) = checker.value(expr) {
+                    let inferred = checker.value(expr);
+                    if let Err(error) = &inferred {
+                        errors.push(error.clone());
+                    }
+                    if let Ok(value) = inferred {
                         if value.ty != Type::Null && value.ty != Type::Unit {
                             property.ty = value.ty.clone();
                             property.inferred = false;
@@ -1975,8 +2094,13 @@ fn infer_source_results_impl(
             let mut comp_context =
                 DeclarationContext::new(&companion_owner, classpath, &imports, &classes, &lambdas);
             load_context_members(&mut comp_context);
-            progress +=
-                infer_static_properties(&mut companion.properties, &mut comp_context, owner, true)?;
+            progress += infer_static_properties(
+                &mut companion.properties,
+                &mut comp_context,
+                owner,
+                true,
+                errors,
+            )?;
             for method in &mut companion.methods {
                 if infer_function_record(
                     &comp_context,
@@ -2025,6 +2149,7 @@ fn infer_source_results_impl(
                         })
                 } else if field.delegate.is_some() {
                     let property = syntax::PropertyDecl {
+                        annotations: field.annotations.clone(),
                         name: field.name.clone(),
                         private: field.private,
                         protected: false,
@@ -2093,6 +2218,7 @@ fn infer_source_results_impl(
                 &mut comp_context,
                 &companion_owner,
                 true,
+                errors,
             )?;
             for method in &mut companion.methods {
                 if infer_function_record(
@@ -2199,6 +2325,9 @@ pub(super) fn accessor_source(
     body: Vec<syntax::Statement>,
 ) -> syntax::Function {
     syntax::Function {
+        param_annotations: vec![Vec::new(); params.len()],
+        annotations: Vec::new(),
+        vararg: false,
         name,
         offset: property.offset,
         private: property.private,
@@ -2287,6 +2416,7 @@ pub(super) fn check_static_state(
         }
         if property.delegate.is_some() {
             let source = syntax::PropertyDecl {
+                annotations: property.annotations.clone(),
                 name: property.name.clone(),
                 private: property.private,
                 protected: false,
@@ -2512,6 +2642,9 @@ pub(super) fn check_static_state(
         };
         let mut getter = if property.body.is_empty() {
             Function {
+                jvm_name: None,
+                annotations: Vec::new(),
+                vararg: false,
                 type_params: Vec::new(),
                 defaults: Vec::new(),
                 name: getter_name(&property.name),
@@ -2579,6 +2712,9 @@ pub(super) fn check_static_state(
                     }
                 };
                 Function {
+                    jvm_name: None,
+                    annotations: Vec::new(),
+                    vararg: false,
                     type_params: Vec::new(),
                     defaults: Vec::new(),
                     name: setter_name(&property.name),
@@ -2640,6 +2776,18 @@ pub(super) fn function_method(
 }
 
 pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Result<()> {
+    if function.vararg
+        && function
+            .params
+            .last()
+            .is_some_and(|(_, ty)| matches!(ty, Type::Array(_) | Type::StringArray))
+    {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Source reference vararg declarations require unsupported Array<out T> projections",
+        ));
+    }
+
     if !function.operator {
         return Ok(());
     }
@@ -2671,10 +2819,12 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         }
     };
     if !valid {
-        return Err(Diagnostic::new(
-            function.offset,
-            "Invalid operator function signature",
-        ));
+        return Err(
+            Diagnostic::new(function.offset, "Invalid operator function signature").with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "INVALID_OPERATOR_SIGNATURE",
+            ),
+        );
     }
     if function.defaults.iter().any(Option::is_some)
         && matches!(
@@ -2729,6 +2879,7 @@ fn infer_static_properties(
     context: &mut DeclarationContext<'_>,
     storage_owner: &str,
     receiver: bool,
+    errors: &mut Vec<Diagnostic>,
 ) -> Result<usize> {
     let mut progress = 0;
     for property in properties.iter() {
@@ -2755,6 +2906,7 @@ fn infer_static_properties(
                     .map(|v| v.ty)
             } else if property.delegate.is_some() {
                 let source = syntax::PropertyDecl {
+                    annotations: property.annotations.clone(),
                     name: property.name.clone(),
                     private: property.private,
                     protected: false,
@@ -2787,6 +2939,9 @@ fn infer_static_properties(
                     "Cannot infer a property type",
                 ))
             };
+            if let Err(error) = &inferred {
+                errors.push(error.clone());
+            }
             if let Ok(ty) = inferred {
                 if ty != Type::Null && ty != Type::Unit {
                     property.ty = Some(ty.clone());
@@ -2985,7 +3140,7 @@ fn constructor_assignment_block(
                 locals.insert(name.clone());
             }
             StatementKind::Destructure(names, _, _) => {
-                locals.extend(names.iter().flatten().cloned());
+                locals.extend(names.iter().filter_map(|entry| entry.name.clone()));
             }
             StatementKind::Block(body) => {
                 constructor_assignment_block(body, fields, &locals, state, in_loop)?

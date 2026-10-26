@@ -1,3 +1,5 @@
+#[path = "source_enums.rs"]
+mod enums;
 use super::*;
 use crate::syntax::{ConstValue, Function, Module, TypeArgument};
 
@@ -105,6 +107,8 @@ fn method(
     );
     JavaMethod {
         library: Some(LibraryMethod {
+            abstract_: access & 0x400 != 0,
+            builtin_array: false,
             kotlin_public: !function.private && !function.protected && !function.internal,
             source_name: function.name.clone(),
             type_parameters: function
@@ -129,13 +133,13 @@ fn method(
         owner: owner.into(),
         name: function.name.clone(),
         descriptor,
-        access: if function.private {
+        access: (if function.private {
             (access & !1) | 2
         } else if function.protected {
             (access & !1) | 4
         } else {
             access
-        },
+        }) | if function.vararg { 0x80 } else { 0 },
         unsupported: false,
         source_property: None,
         kotlin_params: Some(params),
@@ -178,6 +182,8 @@ fn accessor(owner: &str, name: &str, ty: Type, mutable: bool, private: bool) -> 
 
 fn empty(owner: &str) -> JavaClass {
     JavaClass {
+        annotation_definition: None,
+        kotlin_fun_interface: false,
         library: None,
         name: owner.into(),
         access: 0x11,
@@ -192,6 +198,9 @@ fn empty(owner: &str) -> JavaClass {
 }
 
 pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<JavaClass> {
+    if module.enum_decl.is_some() {
+        return enums::header(module, owner, cp);
+    }
     let mut context = module.clone();
     let name = context
         .class_decl
@@ -363,6 +372,8 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 let name = format!("component{}", index + 1);
                 class.methods.push(JavaMethod {
                     library: Some(LibraryMethod {
+                        abstract_: false,
+                        builtin_array: false,
                         kotlin_public: true,
                         source_name: name.clone(),
                         type_parameters: Vec::new(),
@@ -441,6 +452,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             });
         }
     } else if let Some(source) = &module.interface_decl {
+        class.kotlin_fun_interface = source.fun_interface;
         class.access = 0x601;
         class.kotlin_interface = true;
         class.interfaces = source
@@ -564,21 +576,21 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             }
         }
         constants(&mut class, &source.constants);
-    } else if let Some(source) = &module.enum_decl {
-        class.super_name = Some("java/lang/Enum".into());
-        for (name, _) in &source.entries {
-            class.fields.push(JavaField {
-                constant: None,
-                owner: owner.into(),
-                name: name.clone(),
-                descriptor: format!("L{owner};"),
-                access: 0x4019,
-                unsupported: false,
-            });
-        }
     } else {
         class.library = Some(LibraryClass {
-            type_aliases: Vec::new(),
+            type_aliases: module
+                .type_aliases
+                .iter()
+                .map(|alias| LibraryTypeAlias {
+                    name: if alias.private {
+                        format!("{}#{}", owner.rsplit('/').next().unwrap(), alias.name)
+                    } else {
+                        alias.name.clone()
+                    },
+                    type_parameters: Vec::new(),
+                    expanded: resolve(&alias.expanded, module, cp),
+                })
+                .collect(),
             type_parameters: Vec::new(),
             supertypes: Vec::new(),
             package: Some(module.package.clone()),
@@ -617,6 +629,7 @@ fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) {
             ConstValue::Int(n) => (Type::Int, JavaConstant::Int(*n)),
             ConstValue::Long(n) => (Type::Long, JavaConstant::Long(*n)),
             ConstValue::Float(n) => (Type::Float, JavaConstant::Float(*n)),
+            ConstValue::Double(n) => (Type::Double, JavaConstant::Double(*n)),
             ConstValue::Boolean(n) => (Type::Boolean, JavaConstant::Int(i32::from(*n))),
             ConstValue::Char(n) => (Type::Char, JavaConstant::Int(i32::from(*n))),
             ConstValue::String(s) => (Type::String, JavaConstant::String(s.clone())),
@@ -633,6 +646,15 @@ fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) {
 }
 
 pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
+    if let Some(mut enumeration) = module.enum_decl.take() {
+        let mut context = module.clone();
+        context.class_decl = Some(enumeration.body.clone());
+        defaults(&mut context, cp);
+        module.imports = context.imports;
+        enumeration.body = context.class_decl.unwrap();
+        module.enum_decl = Some(enumeration);
+        return;
+    }
     fn ty(value: &Type, names: &mut std::collections::BTreeSet<String>) {
         match value {
             Type::Java(name) => {
@@ -673,7 +695,18 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
             _ => {}
         }
     }
+    fn annotations(
+        values: &[crate::syntax::AnnotationUse],
+        names: &mut std::collections::BTreeSet<String>,
+    ) {
+        names.extend(values.iter().map(|value| value.name.clone()));
+    }
     fn function(value: &Function, names: &mut std::collections::BTreeSet<String>) {
+        annotations(&value.annotations, names);
+        for parameter in &value.param_annotations {
+            annotations(parameter, names);
+        }
+
         if let Some(receiver) = &value.receiver {
             ty(receiver, names);
         }
@@ -691,6 +724,7 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
         value: &crate::syntax::ClassCompanionProperty,
         names: &mut std::collections::BTreeSet<String>,
     ) {
+        annotations(&value.annotations, names);
         if let Some(value) = &value.ty {
             ty(value, names);
         }
@@ -701,6 +735,10 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
     ) {
         match value {
             crate::syntax::Declaration::Class(value) => {
+                annotations(&value.annotations, names);
+                for parameter in &value.param_annotations {
+                    annotations(parameter, names);
+                }
                 if let Some((name, _)) = &value.super_class {
                     ty(&Type::Java(name.clone()), names);
                 }
@@ -711,6 +749,7 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
                     ty(value, names);
                 }
                 for value in &value.properties {
+                    annotations(&value.annotations, names);
                     ty(&value.ty, names);
                 }
                 for value in &value.methods {
@@ -734,10 +773,12 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
                 }
             }
             crate::syntax::Declaration::Object(value) => {
+                annotations(&value.annotation_uses, names);
                 for name in &value.interfaces {
                     ty(&Type::Java(name.clone()), names);
                 }
                 for value in &value.fields {
+                    annotations(&value.annotations, names);
                     if let Some(value) = &value.ty {
                         ty(value, names);
                     }
@@ -753,10 +794,12 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
                 }
             }
             crate::syntax::Declaration::Interface(value) => {
+                annotations(&value.annotations, names);
                 for name in &value.interfaces {
                     ty(&Type::Java(name.clone()), names);
                 }
                 for value in &value.properties {
+                    annotations(&value.annotations, names);
                     ty(&value.ty, names);
                 }
                 for value in &value.methods {
@@ -785,7 +828,11 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
         function(value, &mut names);
     }
     for value in &module.properties {
+        annotations(&value.annotations, &mut names);
         ty(&value.ty, &mut names);
+    }
+    for value in &module.constants {
+        annotations(&value.annotations, &mut names);
     }
     if let Some(value) = &module.class_decl {
         declaration(
@@ -828,14 +875,35 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
         if own {
             continue;
         }
-        let path = format!("java/lang/{name}");
-        if cp.load(&path).is_ok_and(|class| class.access & 1 != 0) {
-            module.imports.push((name, path, 0));
+        let source_package = module.package.replace('.', "/");
+        for package in std::iter::once(source_package.as_str())
+            .chain(std::iter::once("java/lang"))
+            .chain(DEFAULT_KOTLIN_PACKAGES.iter().copied())
+        {
+            let path = if package.is_empty() {
+                name.clone()
+            } else {
+                format!("{package}/{name}")
+            };
+            if cp.load(&path).is_ok_and(|class| class.access & 1 != 0) {
+                module.imports.push((name.clone(), path, 0));
+                break;
+            }
         }
     }
 }
 
 pub(super) fn expand_aliases(module: &mut Module, cp: &Classpath) -> Result<()> {
+    if let Some(mut enumeration) = module.enum_decl.take() {
+        let mut context = module.clone();
+        context.class_decl = Some(enumeration.body.clone());
+        let result = expand_aliases(&mut context, cp);
+        module.imports = context.imports;
+        module.type_aliases = context.type_aliases;
+        enumeration.body = context.class_decl.unwrap();
+        module.enum_decl = Some(enumeration);
+        return result;
+    }
     let imports = module
         .imports
         .iter()
@@ -938,6 +1006,12 @@ pub(super) fn expand_aliases(module: &mut Module, cp: &Classpath) -> Result<()> 
             crate::syntax::Declaration::Enum(_) => {}
         }
         Ok(())
+    }
+    for alias in &mut module.type_aliases {
+        expand(&mut alias.expanded).map_err(|mut error| {
+            error.offset = alias.offset;
+            error
+        })?;
     }
     for function_value in &mut module.functions {
         function(function_value, &expand)?;

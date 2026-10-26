@@ -1,0 +1,60 @@
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:4:12: error: unresolved reference 'junit'.
+import org.junit.Assert.assertEquals
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:5:12: error: unresolved reference 'junit'.
+import org.junit.Assert.assertTrue
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:6:12: error: unresolved reference 'junit'.
+import org.junit.Test
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:9:26: error: unresolved reference 'diff_match_patch'.
+    private val engine = diff_match_patch()
+                         ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:13:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:15:32: error: unresolved reference 'diff_match_patch'.
+        val diffs = LinkedList<diff_match_patch.Diff>().apply {
+                               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:16:17: error: unresolved reference 'diff_match_patch'.
+            add(diff_match_patch.Diff(diff_match_patch.Operation.INSERT, text))
+                ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:16:39: error: unresolved reference 'diff_match_patch'.
+            add(diff_match_patch.Diff(diff_match_patch.Operation.INSERT, text))
+                                      ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:19:9: error: unresolved reference 'assertEquals'.
+        assertEquals("+$encodedText", engine.diff_toDelta(diffs))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:20:9: error: unresolved reference 'assertEquals'.
+        assertEquals(diffs, engine.diff_fromDelta("", "+$encodedText"))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:23:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:28:9: error: unresolved reference 'assertEquals'.
+        assertEquals(serialized, engine.patch_toText(patches))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:29:23: error: cannot infer type for type parameter 'E'. Specify it explicitly.
+        val decoded = LinkedList(engine.patch_fromText(serialized))
+                      ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:30:9: error: unresolved reference 'assertEquals'.
+        assertEquals(serialized, engine.patch_toText(decoded))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:32:9: error: unresolved reference 'assertEquals'.
+        assertEquals(text, applied[0])
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:32:28: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        assertEquals(text, applied[0])
+                           ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:33:9: error: unresolved reference 'assertTrue'.
+        assertTrue((applied[1] as BooleanArray).all { it })
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:33:21: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        assertTrue((applied[1] as BooleanArray).all { it })
+                    ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:36:6: error: unresolved reference 'Test'.
+    @Test(expected = IllegalArgumentException::class)
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/name/fraser/neil/plaintext/DiffMatchPatchEncodingTest.kt:41:6: error: unresolved reference 'Test'.
+    @Test(expected = IllegalArgumentException::class)
+     ^^^^

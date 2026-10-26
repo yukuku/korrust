@@ -264,11 +264,11 @@ impl Checker<'_> {
                 let value = self.value(expression)?;
                 let slot = self.allocate_typed_slot(&value.ty, offset)?;
                 let mut body = vec![Statement::Store(slot, value.clone())];
-                for (index, name) in names.iter().enumerate() {
-                    let Some(name) = name else {
+                for (index, entry) in names.iter().enumerate() {
+                    if entry.name.is_none() && entry.ty.is_none() {
                         continue;
-                    };
-                    let component = self.operator_call(
+                    }
+                    let mut component = self.operator_call(
                         Value {
                             ty: value.ty.clone(),
                             kind: ValueKind::Local(slot),
@@ -277,6 +277,13 @@ impl Checker<'_> {
                         &[],
                         offset,
                     )?;
+                    if let Some(annotation) = &entry.ty {
+                        let expected = self.resolve(annotation, offset)?;
+                        component = self.coerce(component, expected, offset)?;
+                    }
+                    let Some(name) = &entry.name else {
+                        continue;
+                    };
                     if component.ty == Type::Unit {
                         return Err(Diagnostic::new(
                             offset,

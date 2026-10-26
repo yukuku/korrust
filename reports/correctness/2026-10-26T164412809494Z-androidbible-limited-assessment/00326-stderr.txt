@@ -1,0 +1,27 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt:3:27: error: unresolved reference 'Book'.
+import yuku.alkitab.model.Book
+                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt:4:26: error: unresolved reference 'Ari'.
+import yuku.alkitab.util.Ari
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt:6:61: error: unresolved reference 'Book'.
+internal fun searchReferenceAri(query: String, books: Array<Book>): Int? {
+                                                            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt:7:18: error: unresolved reference 'Jumper'.
+    val jumper = Jumper(query)
+                 ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt:10:36: error: unresolved reference 'it'.
+    val book = books.firstOrNull { it.bookId == bookId } ?: return null
+                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt:11:31: error: unresolved reference 'chapter_count'.
+    if (jumper.chapter > book.chapter_count) return null
+                              ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt:12:29: error: argument type mismatch: actual type is 'MatchGroup?', but 'Int' was expected.
+    if (jumper.verse !in 0..book.verse_counts[jumper.chapter - 1]) return null
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt:12:34: error: unresolved reference 'verse_counts'.
+    if (jumper.verse !in 0..book.verse_counts[jumper.chapter - 1]) return null
+                                 ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/searchReferenceAri.kt:13:12: error: unresolved reference 'Ari'.
+    return Ari.encode(bookId, jumper.chapter, jumper.verse)
+           ^^^

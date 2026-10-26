@@ -1,0 +1,41 @@
+Compiled from "MemoryRandomOutputStream.java"
+public class yuku.alkitab.yes2.io.MemoryRandomOutputStream extends yuku.alkitab.yes2.io.RandomOutputStream {
+  private int length;
+    descriptor: I
+  private int pos;
+    descriptor: I
+  private byte[] buf;
+    descriptor: [B
+  public yuku.alkitab.yes2.io.MemoryRandomOutputStream();
+    descriptor: ()V
+
+  void expandBufTo(int);
+    descriptor: (I)V
+
+  public void write(int) throws java.io.IOException;
+    descriptor: (I)V
+
+  public void write(byte[], int, int) throws java.io.IOException;
+    descriptor: ([BII)V
+
+  public void write(byte[]) throws java.io.IOException;
+    descriptor: ([B)V
+
+  public long getFilePointer() throws java.io.IOException;
+    descriptor: ()J
+
+  public void seek(long) throws java.io.IOException;
+    descriptor: (J)V
+
+  public void close() throws java.io.IOException;
+    descriptor: ()V
+
+  public byte[] getBuffer();
+    descriptor: ()[B
+
+  public int getBufferOffset();
+    descriptor: ()I
+
+  public int getBufferLength();
+    descriptor: ()I
+}

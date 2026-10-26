@@ -18,6 +18,7 @@ fn relation_owner(ty: &Type) -> Option<&str> {
         Type::Char => Some("java/lang/Character"),
         Type::Boolean => Some("java/lang/Boolean"),
         Type::Float => Some("java/lang/Float"),
+        Type::Double => Some("java/lang/Double"),
         _ => None,
     })
 }
@@ -389,7 +390,17 @@ pub(super) fn specialize_receiver(
         }
     }
     if let Some(result) = &mut method.kotlin_result {
-        *result = substitute(result, &readable);
+        let precise_mapped_parameter = matches!(
+            receiver.base(),
+            Type::List(_) | Type::MutableList(_)
+        ) && matches!(result, Type::Platform(inner) if matches!(inner.as_ref(), Type::Parameter { .. }));
+        if precise_mapped_parameter {
+            if let Type::Platform(inner) = result {
+                *result = substitute(inner, &readable);
+            }
+        } else {
+            *result = substitute(result, &readable);
+        }
     }
     method
 }
@@ -607,7 +618,8 @@ pub(super) fn validate_type_arguments_with_classes(
                     .get(name)
                     .cloned()
                     .map(Ok)
-                    .unwrap_or_else(|| cp.load(name))?;
+                    .unwrap_or_else(|| cp.load(name))
+                    .map_err(|error| error.for_type(name))?;
                 if class
                     .library
                     .as_ref()
@@ -624,7 +636,8 @@ pub(super) fn validate_type_arguments_with_classes(
                     .get(name)
                     .cloned()
                     .map(Ok)
-                    .unwrap_or_else(|| cp.load(name))?;
+                    .unwrap_or_else(|| cp.load(name))
+                    .map_err(|error| error.for_type(name))?;
                 let parameters = class
                     .library
                     .as_ref()
@@ -886,6 +899,12 @@ impl Checker<'_> {
         if let ExprKind::Labeled(_, inner) = &expr.kind {
             return self.infer_lambda_result(pattern, inner, substitutions, fixed, parameters);
         }
+        if !matches!(
+            expr.kind,
+            ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
+        ) {
+            return Ok(());
+        }
         if let Type::ReceiverFunction {
             receiver,
             params,
@@ -953,7 +972,7 @@ impl Checker<'_> {
                     .into_iter()
                     .enumerate()
                     .map(|(index, parameter)| {
-                        if parameter.name == "_" {
+                        if parameter.discard {
                             format!("<unused{index}>")
                         } else {
                             parameter.name
@@ -1034,15 +1053,22 @@ impl Checker<'_> {
         Ok(())
     }
 
-    pub(super) fn specialize_method(
+    pub(super) fn specialize_method_expected(
         &mut self,
         method: &JavaMethod,
         args: &[Expr],
         explicit: &[Type],
+        expected: Option<&Type>,
         offset: usize,
     ) -> Result<JavaMethod> {
-        let named = self.method_named(method);
-        self.specialize_method_named(method, args, explicit, offset, named)
+        self.specialize_method_named(
+            method,
+            args,
+            explicit,
+            offset,
+            self.method_named(method),
+            expected,
+        )
     }
 
     pub(super) fn specialize_source(
@@ -1104,6 +1130,8 @@ impl Checker<'_> {
             ),
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
+                abstract_: false,
+                builtin_array: false,
                 source_name: String::new(),
                 type_parameters,
                 receiver: None,
@@ -1114,7 +1142,7 @@ impl Checker<'_> {
                 code: None,
             }),
         };
-        let method = self.specialize_method_named(&method, args, explicit, offset, true)?;
+        let method = self.specialize_method_named(&method, args, explicit, offset, true, None)?;
         Ok((
             method
                 .kotlin_params
@@ -1133,6 +1161,7 @@ impl Checker<'_> {
         explicit: &[Type],
         offset: usize,
         named: bool,
+        expected: Option<&Type>,
     ) -> Result<JavaMethod> {
         let Some(library) = &method.library else {
             return if explicit.is_empty() {
@@ -1191,7 +1220,42 @@ impl Checker<'_> {
             ) {
                 continue;
             }
-            let value = self.value(arg)?;
+            if matches!(&arg.kind, ExprKind::VarargArray { elements, .. } if elements.is_empty()) {
+                continue;
+            }
+            let specialized_array;
+            let arg = if let ExprKind::VarargArray { array, elements } = &arg.kind {
+                let fixed_types = substitutions
+                    .iter()
+                    .filter(|(name, _)| fixed.contains(*name))
+                    .map(|(name, ty)| (name.clone(), ty.clone()))
+                    .collect::<HashMap<_, _>>();
+                specialized_array = Expr {
+                    offset: arg.offset,
+                    kind: ExprKind::VarargArray {
+                        array: substitute(array, &fixed_types),
+                        elements: elements.clone(),
+                    },
+                };
+                &specialized_array
+            } else {
+                arg
+            };
+            let fixed_types = substitutions
+                .iter()
+                .filter(|(name, _)| fixed.contains(*name))
+                .map(|(name, ty)| (name.clone(), ty.clone()))
+                .collect::<HashMap<_, _>>();
+            let expected_argument = substitute(&params[*index].1, &fixed_types);
+            let value = if !fixed.is_empty()
+                && !library.type_parameters.iter().any(|parameter| {
+                    !fixed.contains(&parameter.name)
+                        && mentions(&expected_argument, &parameter.name)
+                }) {
+                self.argument_value(arg, &expected_argument)?
+            } else {
+                self.value(arg)?
+            };
             if !self.infer_constraints(&params[*index].1, &value.ty, &mut substitutions, &fixed, 0)
             {
                 return Err(Diagnostic::new(
@@ -1218,6 +1282,29 @@ impl Checker<'_> {
                 &fixed,
                 &parameter_names,
             )?;
+        }
+        if let (Some(expected), Some(result)) = (expected, &method.kotlin_result) {
+            let expected = match (result.base(), expected.base()) {
+                (Type::Parameter { .. } | Type::Nullable(_), _) => expected,
+                (_, Type::Nullable(inner)) => inner.as_ref(),
+                _ => expected,
+            };
+            let mut result_constraints = HashMap::new();
+            if !self.infer_constraints(
+                result,
+                expected,
+                &mut result_constraints,
+                &HashSet::new(),
+                0,
+            ) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Conflicting expected generic result type",
+                ));
+            }
+            for (name, ty) in result_constraints {
+                substitutions.entry(name).or_insert(ty);
+            }
         }
         for parameter in &library.type_parameters {
             let inferred = substitutions.get(&parameter.name).ok_or_else(|| {

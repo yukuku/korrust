@@ -9,7 +9,12 @@
   },
   {
     "id": "java_annotated_method",
-    "source": "import fixtures.ForeignMethods\nfun f(value: ForeignMethods): Int = value.annotated()"
+    "source": "import fixtures.ForeignMethods\nfun f(value: ForeignMethods): Int = value.annotated()",
+    "supported_regression": {
+      "facade": "Java_annotated_methodKt",
+      "java_assertions": "if (!fixtures.ForeignMethods.class.getMethod(\"annotated\").isAnnotationPresent(Deprecated.class)) throw new AssertionError(\"method annotation absent\");\nif (Java_annotated_methodKt.f(new fixtures.ForeignMethods()) != 1) throw new AssertionError(\"annotated method result\");\nfinal int[] calls = {0};\nfixtures.ForeignMethods observed = new fixtures.ForeignMethods() { @Override public int annotated() { return ++calls[0] * 17 - 23; } };\nif (Java_annotated_methodKt.f(observed) != -6 || calls[0] != 1) throw new AssertionError(\"first virtual call/effect\");\nif (Java_annotated_methodKt.f(observed) != 11 || calls[0] != 2) throw new AssertionError(\"second virtual call/effect\");\nfinal IllegalStateException expected = new IllegalStateException(\"callee marker\");\ntry { Java_annotated_methodKt.f(new fixtures.ForeignMethods() { @Override public int annotated() { calls[0]++; throw expected; } }); throw new AssertionError(\"callee exception missing\"); } catch (IllegalStateException actual) { if (actual != expected || calls[0] != 3) throw new AssertionError(\"callee exception/effect\"); }\ntry { Java_annotated_methodKt.f(null); throw new AssertionError(\"null receiver accepted\"); } catch (NullPointerException actual) { if (calls[0] != 3) throw new AssertionError(\"null call executed callee\"); }",
+      "runtime_checks": 6
+    }
   },
   {
     "id": "java_inherited_member",

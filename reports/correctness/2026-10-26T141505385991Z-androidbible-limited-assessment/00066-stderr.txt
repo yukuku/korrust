@@ -1,0 +1,21 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogMessage.kt:3:16: error: unresolved reference 'content'.
+import android.content.Context
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogMessage.kt:4:28: error: unresolved reference 'StringRes'.
+import androidx.annotation.StringRes
+                           ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogMessage.kt:18:6: error: unresolved reference 'StringRes'.
+    @StringRes val resId: Int,
+     ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogMessage.kt:21:26: error: unresolved reference 'Context'.
+    fun resolve(context: Context): String {
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogMessage.kt:22:77: error: unresolved reference 'getString'.
+        val resolvedArgs = args.map { if (it is AudioLogStateLabel) context.getString(it.resId) else it }
+                                                                            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogMessage.kt:23:24: error: unresolved reference 'getString'.
+        return context.getString(resId, *resolvedArgs.toTypedArray())
+                       ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogMessage.kt:32:32: error: unresolved reference 'StringRes'.
+data class AudioLogStateLabel(@StringRes val resId: Int)
+                               ^^^^^^^^^

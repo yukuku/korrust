@@ -1,0 +1,342 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:3:16: error: unresolved reference 'content'.
+import android.content.ContentValues
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:4:16: error: unresolved reference 'database'.
+import android.database.Cursor
+               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:5:27: error: unresolved reference 'Label'.
+import yuku.alkitab.model.Label
+                          ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:6:27: error: unresolved reference 'Marker'.
+import yuku.alkitab.model.Marker
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:19:36: error: unresolved reference 'InternalDbHelper'.
+class LabelDao(private val helper: InternalDbHelper) {
+                                   ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:21:25: error: unresolved reference 'Label'.
+    fun listAll(): List<Label> {
+                        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:22:29: error: unresolved reference 'Label'.
+        val res = ArrayList<Label>()
+                            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:23:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:24:13: error: unresolved reference 'Db'.
+            Db.TABLE_Label, null, null, null, null, null,
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:25:13: error: unresolved reference 'Db'.
+            Db.Label.ordering + " asc",
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:26:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:26:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:26:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:27:27: error: unresolved reference 'moveToNext'.
+            while (cursor.moveToNext()) res += labelFromCursor(cursor)
+                          ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:33:25: error: unresolved reference 'readableDatabase'.
+        val db = helper.readableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:34:43: error: unresolved reference 'Db'.
+        db.compileStatement("select max(${Db.Label.ordering}) from ${Db.TABLE_Label}").use { stmt ->
+                                          ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:34:70: error: unresolved reference 'Db'.
+        db.compileStatement("select max(${Db.Label.ordering}) from ${Db.TABLE_Label}").use { stmt ->
+                                                                     ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:34:88: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        db.compileStatement("select max(${Db.Label.ordering}) from ${Db.TABLE_Label}").use { stmt ->
+                                                                                       ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:34:88: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        db.compileStatement("select max(${Db.Label.ordering}) from ${Db.TABLE_Label}").use { stmt ->
+                                                                                       ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:34:94: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        db.compileStatement("select max(${Db.Label.ordering}) from ${Db.TABLE_Label}").use { stmt ->
+                                                                                             ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:35:25: error: unresolved reference 'simpleQueryForLong'.
+            return stmt.simpleQueryForLong().toInt()
+                        ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:44:53: error: unresolved reference 'Label'.
+    fun insertNew(title: String, bgColor: String?): Label {
+                                                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:45:19: error: unresolved reference 'Label'.
+        val res = Label.createNewLabel(title, getMaxOrdering() + 1, bgColor)
+                  ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:46:26: error: unresolved reference 'writableDatabase'.
+        res._id = helper.writableDatabase.insert(Db.TABLE_Label, null, labelToContentValues(res))
+                         ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:46:50: error: unresolved reference 'Db'.
+        res._id = helper.writableDatabase.insert(Db.TABLE_Label, null, labelToContentValues(res))
+                                                 ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:50:29: error: unresolved reference 'Label'.
+    fun getById(_id: Long): Label? {
+                            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:51:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:52:13: error: unresolved reference 'Db'.
+            Db.TABLE_Label, null, "_id=?", arrayOf(_id.toString()),
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:54:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:54:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:54:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:55:31: error: unresolved reference 'moveToNext'.
+            return if (cursor.moveToNext()) labelFromCursor(cursor) else null
+                              ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:59:32: error: unresolved reference 'Label'.
+    fun getByGid(gid: String): Label? {
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:60:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:61:13: error: unresolved reference 'Db'.
+            Db.TABLE_Label, null, Db.Label.gid + "=?", arrayOf(gid),
+            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:61:35: error: unresolved reference 'Db'.
+            Db.TABLE_Label, null, Db.Label.gid + "=?", arrayOf(gid),
+                                  ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:63:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:63:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:63:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:64:31: error: unresolved reference 'moveToNext'.
+            return if (cursor.moveToNext()) labelFromCursor(cursor) else null
+                              ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:69:23: error: unresolved reference 'Label'.
+    fun upsert(label: Label) {
+                      ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:70:25: error: unresolved reference 'writableDatabase'.
+        val db = helper.writableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:71:19: error: unresolved reference '_id'.
+        if (label._id != 0L) {
+                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:72:23: error: unresolved reference 'Db'.
+            db.update(Db.TABLE_Label, labelToContentValues(label), "_id=?", arrayOf(label._id.toString()))
+                      ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:72:91: error: unresolved reference '_id'.
+            db.update(Db.TABLE_Label, labelToContentValues(label), "_id=?", arrayOf(label._id.toString()))
+                                                                                          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:74:19: error: unresolved reference '_id'.
+            label._id = db.insert(Db.TABLE_Label, null, labelToContentValues(label))
+                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:74:35: error: unresolved reference 'Db'.
+            label._id = db.insert(Db.TABLE_Label, null, labelToContentValues(label))
+                                  ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:78:48: error: unresolved reference 'writableDatabase'.
+    fun deleteByGid(gid: String): Int = helper.writableDatabase.delete(
+                                               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:79:9: error: unresolved reference 'Db'.
+        Db.TABLE_Label, Db.Label.gid + "=?", arrayOf(gid),
+        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:79:25: error: unresolved reference 'Db'.
+        Db.TABLE_Label, Db.Label.gid + "=?", arrayOf(gid),
+                        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:82:45: error: unresolved reference 'writableDatabase'.
+    fun deleteById(_id: Long): Int = helper.writableDatabase.delete(
+                                            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:83:9: error: unresolved reference 'Db'.
+        Db.TABLE_Label, "_id=?", arrayOf(_id.toString()),
+        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:90:30: error: unresolved reference 'Marker'.
+    fun listByMarker(marker: Marker): List<Label> {
+                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:90:44: error: unresolved reference 'Label'.
+    fun listByMarker(marker: Marker): List<Label> {
+                                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:91:29: error: unresolved reference 'Label'.
+        val res = ArrayList<Label>()
+                            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:92:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.rawQuery(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:93:23: error: unresolved reference 'Db'.
+            "select ${Db.TABLE_Label}.* from ${Db.TABLE_Label}, ${Db.TABLE_Marker_Label}" +
+                      ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:93:48: error: unresolved reference 'Db'.
+            "select ${Db.TABLE_Label}.* from ${Db.TABLE_Label}, ${Db.TABLE_Marker_Label}" +
+                                               ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:93:67: error: unresolved reference 'Db'.
+            "select ${Db.TABLE_Label}.* from ${Db.TABLE_Label}, ${Db.TABLE_Marker_Label}" +
+                                                                  ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:94:27: error: unresolved reference 'Db'.
+                " where ${Db.TABLE_Marker_Label}.${Db.Marker_Label.label_gid}" +
+                          ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:94:52: error: unresolved reference 'Db'.
+                " where ${Db.TABLE_Marker_Label}.${Db.Marker_Label.label_gid}" +
+                                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:95:23: error: unresolved reference 'Db'.
+                " = ${Db.TABLE_Label}.${Db.Label.gid}" +
+                      ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:95:41: error: unresolved reference 'Db'.
+                " = ${Db.TABLE_Label}.${Db.Label.gid}" +
+                                        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:96:25: error: unresolved reference 'Db'.
+                " and ${Db.TABLE_Marker_Label}.${Db.Marker_Label.marker_gid}=?" +
+                        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:96:50: error: unresolved reference 'Db'.
+                " and ${Db.TABLE_Marker_Label}.${Db.Marker_Label.marker_gid}=?" +
+                                                 ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:97:30: error: unresolved reference 'Db'.
+                " order by ${Db.TABLE_Label}.${Db.Label.ordering} asc",
+                             ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:97:48: error: unresolved reference 'Db'.
+                " order by ${Db.TABLE_Label}.${Db.Label.ordering} asc",
+                                               ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:98:13: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            arrayOf(marker.gid),
+            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:98:28: error: unresolved reference 'gid'.
+            arrayOf(marker.gid),
+                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:99:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:99:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { cursor ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:99:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { cursor ->
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:100:27: error: unresolved reference 'moveToNext'.
+            while (cursor.moveToNext()) res += labelFromCursor(cursor)
+                          ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:106:32: error: unresolved reference 'Cursor'.
+        fun labelFromCursor(c: Cursor): Label = Label.createEmptyLabel().apply {
+                               ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:106:41: error: unresolved reference 'Label'.
+        fun labelFromCursor(c: Cursor): Label = Label.createEmptyLabel().apply {
+                                        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:106:49: error: unresolved reference 'Label'.
+        fun labelFromCursor(c: Cursor): Label = Label.createEmptyLabel().apply {
+                                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:106:74: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun labelFromCursor(c: Cursor): Label = Label.createEmptyLabel().apply {
+                                                                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:106:80: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun labelFromCursor(c: Cursor): Label = Label.createEmptyLabel().apply {
+                                                                               ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:107:13: error: unresolved reference '_id'.
+            _id = c.getLong(c.getColumnIndexOrThrow("_id"))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:107:21: error: unresolved reference 'getLong'.
+            _id = c.getLong(c.getColumnIndexOrThrow("_id"))
+                    ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:107:31: error: unresolved reference 'getColumnIndexOrThrow'.
+            _id = c.getLong(c.getColumnIndexOrThrow("_id"))
+                              ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:108:13: error: unresolved reference 'gid'.
+            gid = c.getString(c.getColumnIndexOrThrow(Db.Label.gid))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:108:21: error: unresolved reference 'getString'.
+            gid = c.getString(c.getColumnIndexOrThrow(Db.Label.gid))
+                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:108:33: error: unresolved reference 'getColumnIndexOrThrow'.
+            gid = c.getString(c.getColumnIndexOrThrow(Db.Label.gid))
+                                ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:108:55: error: unresolved reference 'Db'.
+            gid = c.getString(c.getColumnIndexOrThrow(Db.Label.gid))
+                                                      ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:109:13: error: unresolved reference 'title'.
+            title = c.getString(c.getColumnIndexOrThrow(Db.Label.title))
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:109:23: error: unresolved reference 'getString'.
+            title = c.getString(c.getColumnIndexOrThrow(Db.Label.title))
+                      ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:109:35: error: unresolved reference 'getColumnIndexOrThrow'.
+            title = c.getString(c.getColumnIndexOrThrow(Db.Label.title))
+                                  ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:109:57: error: unresolved reference 'Db'.
+            title = c.getString(c.getColumnIndexOrThrow(Db.Label.title))
+                                                        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:110:13: error: unresolved reference 'ordering'.
+            ordering = c.getInt(c.getColumnIndexOrThrow(Db.Label.ordering))
+            ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:110:26: error: unresolved reference 'getInt'.
+            ordering = c.getInt(c.getColumnIndexOrThrow(Db.Label.ordering))
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:110:35: error: unresolved reference 'getColumnIndexOrThrow'.
+            ordering = c.getInt(c.getColumnIndexOrThrow(Db.Label.ordering))
+                                  ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:110:57: error: unresolved reference 'Db'.
+            ordering = c.getInt(c.getColumnIndexOrThrow(Db.Label.ordering))
+                                                        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:111:13: error: unresolved reference 'backgroundColor'.
+            backgroundColor = c.getString(c.getColumnIndexOrThrow(Db.Label.backgroundColor))
+            ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:111:33: error: unresolved reference 'getString'.
+            backgroundColor = c.getString(c.getColumnIndexOrThrow(Db.Label.backgroundColor))
+                                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:111:45: error: unresolved reference 'getColumnIndexOrThrow'.
+            backgroundColor = c.getString(c.getColumnIndexOrThrow(Db.Label.backgroundColor))
+                                            ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:111:67: error: unresolved reference 'Db'.
+            backgroundColor = c.getString(c.getColumnIndexOrThrow(Db.Label.backgroundColor))
+                                                                  ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:115:41: error: unresolved reference 'Label'.
+        fun labelToContentValues(label: Label): ContentValues = ContentValues().apply {
+                                        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:115:49: error: unresolved reference 'ContentValues'.
+        fun labelToContentValues(label: Label): ContentValues = ContentValues().apply {
+                                                ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:115:65: error: unresolved reference 'ContentValues'.
+        fun labelToContentValues(label: Label): ContentValues = ContentValues().apply {
+                                                                ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:115:81: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun labelToContentValues(label: Label): ContentValues = ContentValues().apply {
+                                                                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:115:87: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun labelToContentValues(label: Label): ContentValues = ContentValues().apply {
+                                                                                      ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:116:13: error: unresolved reference 'put'.
+            put(Db.Label.gid, label.gid)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:116:17: error: unresolved reference 'Db'.
+            put(Db.Label.gid, label.gid)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:116:37: error: unresolved reference 'gid'.
+            put(Db.Label.gid, label.gid)
+                                    ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:117:13: error: unresolved reference 'put'.
+            put(Db.Label.title, label.title)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:117:17: error: unresolved reference 'Db'.
+            put(Db.Label.title, label.title)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:117:39: error: unresolved reference 'title'.
+            put(Db.Label.title, label.title)
+                                      ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:118:13: error: unresolved reference 'put'.
+            put(Db.Label.ordering, label.ordering)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:118:17: error: unresolved reference 'Db'.
+            put(Db.Label.ordering, label.ordering)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:118:42: error: unresolved reference 'ordering'.
+            put(Db.Label.ordering, label.ordering)
+                                         ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:119:13: error: unresolved reference 'put'.
+            put(Db.Label.backgroundColor, label.backgroundColor)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:119:17: error: unresolved reference 'Db'.
+            put(Db.Label.backgroundColor, label.backgroundColor)
+                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/LabelDao.kt:119:49: error: unresolved reference 'backgroundColor'.
+            put(Db.Label.backgroundColor, label.backgroundColor)
+                                                ^^^^^^^^^^^^^^^

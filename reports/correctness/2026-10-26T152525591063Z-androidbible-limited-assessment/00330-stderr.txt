@@ -1,0 +1,69 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:3:16: error: unresolved reference 'graphics'.
+import android.graphics.Color
+               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:4:17: error: unresolved reference 'core'.
+import androidx.core.graphics.ColorUtils
+                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:5:13: error: unresolved reference 'afw'.
+import yuku.afw.storage.Preferences
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:6:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.ReadingRange
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:7:21: error: unresolved reference 'debug'.
+import yuku.alkitab.debug.R
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:14:41: error: unresolved reference 'Preferences'.
+        fun selected() = fromPreference(Preferences.getString(R.string.pref_currentReadingDisplay_key, R.string.pref_currentReadingDisplay_default))
+                                        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:14:63: error: unresolved reference 'R'.
+        fun selected() = fromPreference(Preferences.getString(R.string.pref_currentReadingDisplay_key, R.string.pref_currentReadingDisplay_default))
+                                                              ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:14:104: error: unresolved reference 'R'.
+        fun selected() = fromPreference(Preferences.getString(R.string.pref_currentReadingDisplay_key, R.string.pref_currentReadingDisplay_default))
+                                                                                                       ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:18:70: error: unresolved reference 'ReadingRange'.
+data class ReadingGuide(val mode: ReadingGuideMode, val ranges: List<ReadingRange>) {
+                                                                     ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:19:50: error: unresolved reference 'it'.
+    fun includes(ari: Int) = ranges.any { ari in it }
+                                                 ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:20:43: error: unresolved reference 'it'.
+    fun startsAt(ari: Int) = ranges.any { it.start == ari }
+                                          ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:21:41: error: unresolved reference 'it'.
+    fun endsAt(ari: Int) = ranges.any { it.end == ari }
+                                        ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:24:55: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val NONE = ReadingGuide(ReadingGuideMode.OFF, emptyList())
+                                                      ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:24:55: error: argument type mismatch: actual type is 'List<uninferred T (of fun <T> emptyList)>', but 'List<??? (Unresolved qualified name: ReadingRange)>' was expected.
+        val NONE = ReadingGuide(ReadingGuideMode.OFF, emptyList())
+                                                      ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:29:22: error: unresolved reference 'ColorUtils'.
+    val foreground = ColorUtils.setAlphaComponent(fontColor, 255)
+                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:30:22: error: unresolved reference 'ColorUtils'.
+    val background = ColorUtils.setAlphaComponent(backgroundColor, 255)
+                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:31:9: error: unresolved reference 'ColorUtils'.
+    if (ColorUtils.calculateContrast(foreground, background) >= 3.0) return foreground
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:32:16: error: unresolved reference 'ColorUtils'.
+    return if (ColorUtils.calculateContrast(Color.BLACK, background) >= ColorUtils.calculateContrast(Color.WHITE, background)) Color.BLACK else Color.WHITE
+               ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:32:45: error: unresolved reference 'Color'.
+    return if (ColorUtils.calculateContrast(Color.BLACK, background) >= ColorUtils.calculateContrast(Color.WHITE, background)) Color.BLACK else Color.WHITE
+                                            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:32:73: error: unresolved reference 'ColorUtils'.
+    return if (ColorUtils.calculateContrast(Color.BLACK, background) >= ColorUtils.calculateContrast(Color.WHITE, background)) Color.BLACK else Color.WHITE
+                                                                        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:32:102: error: unresolved reference 'Color'.
+    return if (ColorUtils.calculateContrast(Color.BLACK, background) >= ColorUtils.calculateContrast(Color.WHITE, background)) Color.BLACK else Color.WHITE
+                                                                                                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:32:128: error: unresolved reference 'Color'.
+    return if (ColorUtils.calculateContrast(Color.BLACK, background) >= ColorUtils.calculateContrast(Color.WHITE, background)) Color.BLACK else Color.WHITE
+                                                                                                                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/ReadingGuide.kt:32:145: error: unresolved reference 'Color'.
+    return if (ColorUtils.calculateContrast(Color.BLACK, background) >= ColorUtils.calculateContrast(Color.WHITE, background)) Color.BLACK else Color.WHITE
+                                                                                                                                                ^^^^^

@@ -310,5 +310,192 @@ class OutputLifecycleTests(unittest.TestCase):
         self.assertEqual(set(self.classes()), {"Renamed.class"})
 
 
+class BatchOutputLifecycleTests(unittest.TestCase):
+    setUp = OutputLifecycleTests.setUp
+    compile = OutputLifecycleTests.compile
+    classes = OutputLifecycleTests.classes
+    snapshot = OutputLifecycleTests.snapshot
+    def batch(self, sources, *, module="sample", destination=None, success=True):
+        paths = []
+        for name, text in sources:
+            path = self.root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            if text is not None:
+                path.write_text(text)
+            paths.append(str(path))
+        args = [str(COMPILER), *paths, "-d", str(destination or self.destination)]
+        if module is not None:
+            args.extend(["--module-name", module])
+        result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+        if success:
+            self.assertEqual(result.returncode, 0, result.stderr)
+        else:
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+        return result
+
+    def test_batch_reordering_is_byte_deterministic(self):
+        sources = [("First.kt", "package sample; fun first(): Int = 1"),
+                   ("Second.kt", "package sample; object Second { object Nested }")]
+        first = self.batch(sources)
+        before = self.snapshot()
+        second = self.batch(list(reversed(sources)))
+        self.assertEqual(first.stdout, second.stdout)
+        self.assertEqual(before, self.snapshot())
+        clean = self.root / "clean"
+        self.batch(list(reversed(sources)), destination=clean)
+        self.assertEqual(before, self.snapshot(clean))
+
+    def test_removed_sources_facades_nested_outputs_and_empty_module_match_clean(self):
+        self.batch([("First.kt", "package sample; fun first(): Int = 1"),
+                    ("Second.kt", "object Second { object Nested }")])
+        (self.root / "First.kt").unlink()
+        self.batch([("Second.kt", "package moved; object Renamed")])
+        clean = self.root / "clean"
+        self.batch([("Second.kt", None)], destination=clean)
+        self.assertEqual(self.snapshot(), self.snapshot(clean))
+        self.assertEqual(set(self.classes()), {"moved/Renamed.class"})
+        self.assertFalse(list(self.destination.rglob("*.kotlin_module")))
+        (self.root / "Second.kt").unlink()
+        self.batch([])
+        empty = self.root / "empty"
+        self.batch([], destination=empty)
+        self.assertEqual(self.snapshot(), self.snapshot(empty))
+        self.assertEqual(self.classes(), {})
+
+    def test_batch_duplicate_jvm_owner_preserves_existing_outputs(self):
+        self.batch([("First.kt", "object First"), ("Second.kt", "object Second")])
+        before = self.snapshot()
+        self.batch([("First.kt", "object Duplicate"),
+                    ("Second.kt", "object Duplicate")], success=False)
+        self.assertEqual(before, self.snapshot())
+
+    def test_batch_compile_failure_uses_original_source_and_preserves_outputs(self):
+        self.batch([("First.kt", "object First"), ("Second.kt", "object Second")])
+        before = self.snapshot()
+        sources = [("First.kt", "object First"),
+                   ("Second.kt", "object Second { val bad: Int = true }")]
+        result = self.batch(sources, success=False)
+        self.assertIn(str(self.root / "Second.kt") + ":", result.stderr)
+        self.assertEqual(before, self.snapshot())
+        reversed_result = self.batch(list(reversed(sources)), success=False)
+        self.assertEqual(result.stderr, reversed_result.stderr)
+        self.assertEqual(before, self.snapshot())
+
+    def test_batch_preflight_unowned_output_preserves_all_bytes(self):
+        self.batch([("First.kt", "object First { object Nested }")])
+        (self.destination / "Second.class").write_bytes(b"unowned")
+        before = self.snapshot()
+        result = self.batch([("First.kt", "object Changed"),
+                             ("Second.kt", "object Second")], success=False)
+        self.assertIn("no owner", result.stderr)
+        self.assertEqual(before, self.snapshot())
+
+    def test_batch_changed_removed_source_output_blocks_cleanup(self):
+        self.batch([("First.kt", "object First"), ("Second.kt", "object Second")])
+        (self.destination / "Second.class").write_bytes(b"modified")
+        (self.root / "Second.kt").unlink()
+        before = self.snapshot()
+        self.batch([("First.kt", "object Changed")], success=False)
+        self.assertEqual(before, self.snapshot())
+
+    def test_batch_changed_mapping_blocks_empty_publication(self):
+        self.batch([("First.kt", "fun first(): Int = 1")])
+        mapping, = self.destination.rglob("*.kotlin_module")
+        mapping.write_bytes(b"modified")
+        before = self.snapshot()
+        self.batch([], success=False)
+        self.assertEqual(before, self.snapshot())
+
+    def test_batch_missing_output_blocks_cleanup(self):
+        self.batch([("First.kt", "object First { object Nested }")])
+        (self.destination / "First$Nested.class").unlink()
+        before = self.snapshot()
+        self.batch([], success=False)
+        self.assertEqual(before, self.snapshot())
+
+    def test_batch_unrelated_module_and_legacy_outputs_survive_cleanup(self):
+        self.compile("object Legacy")
+        self.batch([("First.kt", "object First")], module="first-module")
+        self.batch([("Second.kt", "object Second")], module="second-module")
+        self.batch([], module="first-module")
+        self.assertEqual(set(self.classes()), {"Legacy.class", "Second.class"})
+
+    def test_batch_legacy_and_other_module_ownership_collisions_preserve_bytes(self):
+        self.compile("object Legacy")
+        self.batch([("First.kt", "object First")])
+        for sources, module in [([("Other.kt", "object First")], "other"),
+                                ([("Other.kt", "object Legacy")], "sample")]:
+            before = self.snapshot()
+            self.batch(sources, module=module, success=False)
+            self.assertEqual(before, self.snapshot())
+        before = self.snapshot()
+        self.compile("object First", source=self.root / "LegacyCaller.kt", success=False)
+        self.assertEqual(before, self.snapshot())
+
+    def test_batch_corrupt_module_manifest_preserves_all_bytes(self):
+        self.batch([("First.kt", "object First")])
+        manifest, = (self.destination / ".korrust").glob("module-*.index")
+        manifest.write_text("corrupt\n")
+        before = self.snapshot()
+        self.batch([("First.kt", "object Changed")], success=False)
+        self.assertEqual(before, self.snapshot())
+
+    def test_batch_staging_failure_preserves_prior_outputs_and_metadata(self):
+        self.batch([("First.kt", "object First { object Nested }")])
+        (self.destination / ".korrust/index.next").write_bytes(b"left by external writer")
+        before = self.snapshot()
+        self.batch([("First.kt", "object Changed")], success=False)
+        self.assertEqual(before, self.snapshot())
+
+    def test_batch_source_ownership_can_transfer_within_same_complete_module(self):
+        self.batch([("First.kt", "object Shared"), ("Second.kt", "object Other")])
+        self.batch([("First.kt", "object New"), ("Second.kt", "object Shared")])
+        clean = self.root / "clean"
+        self.batch([("First.kt", None), ("Second.kt", None)], destination=clean)
+        self.assertEqual(self.snapshot(), self.snapshot(clean))
+        self.assertEqual(set(self.classes()), {"New.class", "Shared.class"})
+
+    def test_batch_source_paths_support_non_ascii_and_whitespace(self):
+        sources = [("日本語/First.kt", "object First"),
+                   ("é space/Second.kt", "object Second { object Nested }")]
+        self.batch(sources)
+        self.batch([("日本語/First.kt", "object Changed")])
+        self.assertEqual(set(self.classes()), {"Changed.class"})
+
+    def test_batch_default_module_and_explicit_main_are_same_owner(self):
+        self.batch([("First.kt", "object First"), ("Second.kt", "object Second")], module=None)
+        self.batch([("First.kt", "object Changed")], module="main")
+        self.assertEqual(set(self.classes()), {"Changed.class"})
+
+    def test_batch_module_names_and_missing_sources_reject_before_publication(self):
+        for module in ["", "../escape", "name/path", "name\\path", "a" * 121]:
+            result = self.batch([("First.kt", "object First")], module=module, success=False)
+            self.assertIn("module name", result.stderr)
+            self.assertFalse(self.destination.exists())
+        result = self.batch([], module=None, success=False)
+        self.assertIn("Usage:", result.stderr)
+        self.assertFalse(self.destination.exists())
+
+    @unittest.skipUnless(hasattr(os, "symlink"), "symlinks unavailable")
+    def test_batch_duplicate_source_alias_rejects_before_publication(self):
+        self.source.write_text("object Root")
+        alias = self.root / "Alias.kt"
+        alias.symlink_to(self.source)
+        result = self.batch([("Example.kt", None), ("Alias.kt", None)], success=False)
+        self.assertIn("Duplicate source identity", result.stderr)
+        self.assertFalse(self.destination.exists())
+
+    @unittest.skipUnless(hasattr(os, "symlink"), "symlinks unavailable")
+    def test_batch_symlink_preflight_preserves_existing_outputs(self):
+        self.batch([("First.kt", "object First")])
+        outside = self.root / "outside"
+        outside.mkdir()
+        (self.destination / "escape").symlink_to(outside, target_is_directory=True)
+        before = self.snapshot()
+        self.batch([("First.kt", "package escape; object Changed")], success=False)
+        self.assertEqual(before, self.snapshot())
+        self.assertEqual(list(outside.iterdir()), [])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -48,11 +48,11 @@ impl Checker<'_> {
                 }
                 let has_static = methods
                     .iter()
-                    .any(|method| method.name == *name && method.access & 0x0008 != 0);
+                    .any(|method| method.source_name() == name && method.access & 0x0008 != 0);
                 if has_static
                     && methods
                         .iter()
-                        .any(|method| method.name == *name && method.access & 0x0008 == 0)
+                        .any(|method| method.source_name() == name && method.access & 0x0008 == 0)
                 {
                     return Err(Diagnostic::new(
                         offset,
@@ -166,7 +166,11 @@ impl Checker<'_> {
                 params: Some(
                     names
                         .into_iter()
-                        .map(|name| syntax::LambdaParameter { name, ty: None })
+                        .map(|name| syntax::LambdaParameter {
+                            name,
+                            ty: None,
+                            discard: false,
+                        })
                         .collect(),
                 ),
                 body: vec![syntax::Statement {

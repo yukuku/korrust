@@ -1,0 +1,78 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:3:28: error: unresolved reference 'Keep'.
+import androidx.annotation.Keep
+                           ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:4:13: error: unresolved reference 'afw'.
+import yuku.afw.storage.Preferences
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:5:26: error: unresolved reference 'App'.
+import yuku.alkitab.base.App
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:6:26: error: unresolved reference 'model'.
+import yuku.alkitab.base.model.SyncShadow
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:7:26: error: unresolved reference 'storage'.
+import yuku.alkitab.base.storage.Prefkey
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:8:26: error: unresolved reference 'sync'.
+import yuku.alkitab.base.sync.Sync
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:9:31: error: unresolved reference 'InstallationUtil'.
+import yuku.alkitab.base.util.InstallationUtil.getInstallationId
+                              ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:10:27: error: unresolved reference 'util'.
+import yuku.alkitab.model.util.Gid
+                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:16:6: error: unresolved reference 'Keep'.
+    @Keep
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:34:6: error: unresolved reference 'Keep'.
+    @Keep
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:40:9: error: unresolved reference 'Preferences'.
+        Preferences.getString(Prefkey.history)?.let { s ->
+        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:40:31: error: unresolved reference 'Prefkey'.
+        Preferences.getString(Prefkey.history)?.let { s ->
+                              ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:40:49: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        Preferences.getString(Prefkey.history)?.let { s ->
+                                                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:40:49: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        Preferences.getString(Prefkey.history)?.let { s ->
+                                                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:40:55: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        Preferences.getString(Prefkey.history)?.let { s ->
+                                                      ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:41:25: error: unresolved reference 'App'.
+            this.addAll(App.getDefaultGson().fromJson(s, HistoryJson::class.java).entries)
+                        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:48:24: error: unresolved reference 'App'.
+        val new_json = App.getDefaultGson().toJson(obj)
+                       ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:49:24: error: unresolved reference 'Preferences'.
+        val old_json = Preferences.getString(Prefkey.history)
+                       ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:49:46: error: unresolved reference 'Prefkey'.
+        val old_json = Preferences.getString(Prefkey.history)
+                                             ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:51:13: error: unresolved reference 'Preferences'.
+            Preferences.setString(Prefkey.history, new_json)
+            ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:51:35: error: unresolved reference 'Prefkey'.
+            Preferences.setString(Prefkey.history, new_json)
+                                  ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:52:13: error: unresolved reference 'Sync'.
+            Sync.notifySyncNeeded(SyncShadow.SYNC_SET_HISTORY)
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:52:35: error: unresolved reference 'SyncShadow'.
+            Sync.notifySyncNeeded(SyncShadow.SYNC_SET_HISTORY)
+                                  ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:54:13: error: unresolved reference 'AppLog'.
+            AppLog.d(TAG, "History not changed.")
+            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:70:30: error: unresolved reference 'Gid'.
+        entries.add(0, Entry(Gid.newGid(), ari, System.currentTimeMillis(), getInstallationId()))
+                             ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/History.kt:70:77: error: unresolved reference 'getInstallationId'.
+        entries.add(0, Entry(Gid.newGid(), ari, System.currentTimeMillis(), getInstallationId()))
+                                                                            ^^^^^^^^^^^^^^^^^

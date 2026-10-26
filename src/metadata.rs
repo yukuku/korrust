@@ -1,10 +1,12 @@
+mod enums;
+pub(crate) use enums::for_enum;
 use std::collections::{BTreeMap, BTreeSet};
 
 use crate::{
     Diagnostic, Result,
     syntax::{
         ClassDecl, CompanionDecl, CompanionValue, ConstDecl, ConstValue, Function, InterfaceDecl,
-        Module, Type, Variance,
+        Module, Type, TypeAliasDecl, Variance,
     },
 };
 
@@ -12,6 +14,250 @@ pub(crate) struct Metadata {
     pub kind: i32,
     pub data1: Vec<Vec<u16>>,
     pub data2: Vec<String>,
+}
+
+impl Metadata {
+    pub(crate) fn in_module(mut self, module_name: &str) -> Result<Self> {
+        if module_name == "main" {
+            return Ok(self);
+        }
+        let bytes = self
+            .data1
+            .iter()
+            .flatten()
+            .skip(1)
+            .map(|unit| {
+                u8::try_from(*unit)
+                    .map_err(|_| Diagnostic::new(0, "Invalid generated Kotlin metadata encoding"))
+            })
+            .collect::<Result<Vec<_>>>()?;
+        let mut offset = 0;
+        let mut table_length = 0usize;
+        let mut shift = 0;
+        loop {
+            let byte = *bytes
+                .get(offset)
+                .ok_or_else(|| Diagnostic::new(0, "Missing generated Kotlin string table"))?;
+            offset += 1;
+            table_length |= usize::from(byte & 127) << shift;
+            if byte & 128 == 0 {
+                break;
+            }
+            shift += 7;
+            if shift >= usize::BITS {
+                return Err(Diagnostic::new(
+                    0,
+                    "Invalid generated Kotlin string table length",
+                ));
+            }
+        }
+        let table_end = offset
+            .checked_add(table_length)
+            .filter(|end| *end <= bytes.len())
+            .ok_or_else(|| Diagnostic::new(0, "Invalid generated Kotlin string table length"))?;
+        let mut table = Proto(bytes[offset..table_end].to_vec());
+        let mut record = Proto::default();
+        record.number(1, 1);
+        table.message(1, &record);
+        let mut payload = Proto(bytes[table_end..].to_vec());
+        payload.number(101, self.data2.len() as u32);
+        self.data2.push(module_name.into());
+        let mut encoded = Proto::default();
+        encoded.varint(table.0.len() as u64);
+        encoded.0.extend(table.0);
+        encoded.0.extend(payload.0);
+        self.data1 = encode_bytes(&encoded.0);
+        Ok(self)
+    }
+}
+
+pub(crate) fn annotation_source(
+    module: &Module,
+    classpath: &crate::classpath::Classpath,
+) -> Result<Module> {
+    use crate::syntax::{AnnotationUse, Declaration, ObjectDecl};
+
+    struct Filter<'a> {
+        classpath: &'a crate::classpath::Classpath,
+        imports: Imports<'a>,
+        package: String,
+    }
+    impl Filter<'_> {
+        fn definition(
+            &self,
+            annotation: &AnnotationUse,
+        ) -> Result<crate::classpath::AnnotationDefinition> {
+            let imported = self
+                .imports
+                .iter()
+                .find(|(alias, _, _)| alias == &annotation.name);
+            let owner = imported.map_or(annotation.name.as_str(), |(_, owner, _)| owner.as_str());
+            let class = self.classpath.load(owner).or_else(|error| {
+                for prefix in [
+                    self.package.as_str(),
+                    "kotlin",
+                    "kotlin/annotation",
+                    "kotlin/jvm",
+                ] {
+                    if let Ok(class) = self.classpath.load(&format!("{prefix}/{owner}")) {
+                        return Ok(class);
+                    }
+                }
+                Err(error)
+            })?;
+            class.annotation_definition.ok_or_else(|| {
+                Diagnostic::new(annotation.offset, "Unsupported annotation definition")
+            })
+        }
+        fn uses(&self, annotations: &mut Vec<AnnotationUse>, constructor: bool) -> Result<()> {
+            let mut retained = Vec::new();
+            for mut annotation in std::mem::take(annotations) {
+                let Ok(definition) = self.definition(&annotation) else {
+                    retained.push(annotation);
+                    continue;
+                };
+                if definition.retention == crate::classpath::AnnotationRetention::Source {
+                    continue;
+                }
+                if constructor && annotation.use_site.is_none() {
+                    annotation.use_site = Some(
+                        if definition
+                            .targets
+                            .iter()
+                            .any(|target| target == "PARAMETER")
+                        {
+                            "param"
+                        } else {
+                            "field"
+                        }
+                        .into(),
+                    );
+                }
+                retained.push(annotation);
+            }
+            *annotations = retained;
+            Ok(())
+        }
+        fn function(&self, function: &mut Function) -> Result<()> {
+            self.uses(&mut function.annotations, false)?;
+            for annotations in &mut function.param_annotations {
+                self.uses(annotations, false)?;
+            }
+            Ok(())
+        }
+        fn class_companion(&self, companion: &mut crate::syntax::ClassCompanion) -> Result<()> {
+            for property in &mut companion.properties {
+                self.uses(&mut property.annotations, false)?;
+            }
+            for method in &mut companion.methods {
+                self.function(&mut method.function)?;
+            }
+            Ok(())
+        }
+        fn class(&self, class: &mut ClassDecl) -> Result<()> {
+            self.uses(&mut class.annotations, false)?;
+            for annotations in &mut class.param_annotations {
+                self.uses(annotations, true)?;
+            }
+            for property in &mut class.properties {
+                self.uses(&mut property.annotations, false)?;
+            }
+            for method in &mut class.methods {
+                self.function(&mut method.function)?;
+            }
+            if let Some(companion) = &mut class.companion {
+                self.class_companion(companion)?;
+            }
+            self.declarations(&mut class.nested)
+        }
+        fn object(&self, object: &mut ObjectDecl) -> Result<()> {
+            self.uses(&mut object.annotation_uses, false)?;
+            for constant in &mut object.constants {
+                self.uses(&mut constant.annotations, false)?;
+            }
+            for property in &mut object.fields {
+                self.uses(&mut property.annotations, false)?;
+            }
+            for method in &mut object.methods {
+                self.function(&mut method.function)?;
+            }
+            for nested in &mut object.objects {
+                self.object(nested)?;
+            }
+            self.declarations(&mut object.nested)
+        }
+        fn interface(&self, interface: &mut InterfaceDecl) -> Result<()> {
+            self.uses(&mut interface.annotations, false)?;
+            for property in &mut interface.properties {
+                self.uses(&mut property.annotations, false)?;
+            }
+            for method in &mut interface.methods {
+                self.function(&mut method.function)?;
+            }
+            for nested in &mut interface.nested {
+                self.interface(nested)?;
+            }
+            if let Some(companion) = &mut interface.companion {
+                for property in &mut companion.properties {
+                    self.uses(&mut property.annotations, false)?;
+                    if let CompanionValue::Object(class) = &mut property.value {
+                        self.class(class)?;
+                    }
+                }
+                for field in &mut companion.fields {
+                    self.uses(&mut field.annotations, false)?;
+                }
+                for method in &mut companion.methods {
+                    self.function(&mut method.function)?;
+                }
+            }
+            self.declarations(&mut interface.declarations)
+        }
+        fn enumeration(&self, enumeration: &mut crate::syntax::EnumDecl) -> Result<()> {
+            self.uses(&mut enumeration.annotations, false)?;
+            self.class(&mut enumeration.body)
+        }
+        fn declarations(&self, declarations: &mut [Declaration]) -> Result<()> {
+            for declaration in declarations {
+                match declaration {
+                    Declaration::Class(class) => self.class(class)?,
+                    Declaration::Object(object) => self.object(object)?,
+                    Declaration::Interface(interface) => self.interface(interface)?,
+                    Declaration::Enum(enumeration) => self.enumeration(enumeration)?,
+                }
+            }
+            Ok(())
+        }
+    }
+    let mut source = module.clone();
+    let filter = Filter {
+        classpath,
+        imports: &module.imports,
+        package: module.package.replace('.', "/"),
+    };
+    for function in &mut source.functions {
+        filter.function(function)?;
+    }
+    for constant in &mut source.constants {
+        filter.uses(&mut constant.annotations, false)?;
+    }
+    for property in &mut source.properties {
+        filter.uses(&mut property.annotations, false)?;
+    }
+    if let Some(class) = &mut source.class_decl {
+        filter.class(class)?;
+    }
+    if let Some(object) = &mut source.object_decl {
+        filter.object(object)?;
+    }
+    if let Some(interface) = &mut source.interface_decl {
+        filter.interface(interface)?;
+    }
+    if let Some(enumeration) = &mut source.enum_decl {
+        filter.enumeration(enumeration)?;
+    }
+    filter.declarations(&mut source.declarations)?;
+    Ok(source)
 }
 
 #[derive(Clone, Default)]
@@ -255,6 +501,7 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
         Type::Char => "kotlin/Char",
         Type::Boolean => "kotlin/Boolean",
         Type::Float => "kotlin/Float",
+        Type::Double => "kotlin/Double",
         Type::IntArray => "kotlin/IntArray",
         Type::ByteArray => "kotlin/ByteArray",
         Type::CharArray => "kotlin/CharArray",
@@ -390,6 +637,24 @@ fn function_with_flags(
     imports: Imports<'_>,
     strings: &mut Strings,
 ) -> Result<Proto> {
+    function_with_jvm_name(
+        function,
+        modality,
+        extra_flags,
+        &function.name,
+        imports,
+        strings,
+    )
+}
+
+fn function_with_jvm_name(
+    function: &Function,
+    modality: u32,
+    extra_flags: u32,
+    jvm_name: &str,
+    imports: Imports<'_>,
+    strings: &mut Strings,
+) -> Result<Proto> {
     let mut proto = Proto::default();
     let visibility = if function.protected {
         4
@@ -405,6 +670,11 @@ fn function_with_flags(
         visibility
             | modality
             | extra_flags
+            | if function.annotations.is_empty() {
+                0
+            } else {
+                1
+            }
             | if function.infix { 512 } else { 0 }
             | if function.operator { 256 } else { 0 },
     );
@@ -434,15 +704,38 @@ fn function_with_flags(
     }
     for (index, (name, ty)) in function.params.iter().enumerate() {
         let mut param = parameter(name, ty, imports, strings)?;
-        if function.defaults.get(index).is_some_and(Option::is_some) {
-            param.number(1, 2);
+        if function.vararg && index + 1 == function.params.len() {
+            let element = match ty {
+                Type::IntArray => Type::Int,
+                Type::ByteArray => Type::Byte,
+                Type::CharArray => Type::Char,
+                Type::StringArray => Type::String,
+                Type::Array(element) => element.as_ref().clone(),
+                _ => {
+                    return Err(Diagnostic::new(
+                        function.offset,
+                        "Invalid source vararg array type",
+                    ));
+                }
+            };
+            param.message(4, &type_proto(&element, imports, strings)?);
+        }
+        let flags = (u32::from(function.defaults.get(index).is_some_and(Option::is_some)) * 2)
+            | u32::from(
+                function
+                    .param_annotations
+                    .get(index)
+                    .is_some_and(|annotations| !annotations.is_empty()),
+            );
+        if flags != 0 {
+            param.number(1, flags);
         }
         proto.message(6, &param);
         desc.push_str(&descriptor(ty, imports)?);
     }
     desc.push(')');
     desc.push_str(&descriptor(&function.result, imports)?);
-    proto.message(100, &method_signature(&function.name, &desc, strings)?);
+    proto.message(100, &method_signature(jvm_name, &desc, strings)?);
     Ok(proto)
 }
 
@@ -463,7 +756,8 @@ fn class_metadata(
             0
         } else {
             6
-        }) | if class.data { 1024 } else { 0 }
+        }) | u32::from(!class.annotations.is_empty())
+            | if class.data { 1024 } else { 0 }
             | if class.abstract_ {
                 32
             } else if class.open {
@@ -516,8 +810,22 @@ fn class_metadata(
         let mut constructor_desc = String::from("(");
         for (index, (name, ty)) in class.params.iter().enumerate() {
             let mut param = parameter(name, ty, imports, &mut strings)?;
-            if class.defaults.get(index).is_some_and(Option::is_some) {
-                param.number(1, 2);
+            let flags = (u32::from(class.defaults.get(index).is_some_and(Option::is_some)) * 2)
+                | u32::from(
+                    class
+                        .param_annotations
+                        .get(index)
+                        .is_some_and(|annotations| {
+                            annotations.iter().any(|annotation| {
+                                annotation
+                                    .use_site
+                                    .as_deref()
+                                    .is_none_or(|site| site == "param")
+                            })
+                        }),
+                );
+            if flags != 0 {
+                param.number(1, flags);
             }
             constructor.message(2, &param);
             constructor_desc.push_str(&descriptor(ty, imports)?);
@@ -548,7 +856,7 @@ fn class_metadata(
     for method in &class.methods {
         proto.message(
             9,
-            &function_with_modality(
+            &function_with_jvm_name(
                 &method.function,
                 if !method.has_body {
                     32
@@ -557,12 +865,18 @@ fn class_metadata(
                 } else {
                     0
                 },
+                0,
+                checked_method_name(
+                    &method.function,
+                    checked.into_iter().flat_map(|class| class.methods.iter()),
+                    imports,
+                ),
                 imports,
                 &mut strings,
             )?,
         );
     }
-    for (name, ty) in &class.params {
+    for (index, (name, ty)) in class.params.iter().enumerate() {
         if !class.param_properties.contains(name) {
             continue;
         }
@@ -571,6 +885,12 @@ fn class_metadata(
         property.number(
             11,
             (if public { 518 } else { 514 })
+                | u32::from(property_has_annotations(
+                    class
+                        .param_annotations
+                        .get(index)
+                        .map_or(&[], Vec::as_slice),
+                ))
                 | if class.override_params.contains(name) {
                     16
                 } else {
@@ -609,6 +929,21 @@ fn class_metadata(
                 )?,
             );
         }
+        accessor_annotation_flags(
+            &mut property,
+            class
+                .param_annotations
+                .get(index)
+                .map_or(&[], Vec::as_slice),
+            ty,
+            if public { 6 } else { 2 },
+            false,
+            false,
+            class.mutable_params.contains(name),
+            "<set-?>",
+            imports,
+            &mut strings,
+        )?;
         property.message(100, &signature);
         proto.message(10, &property);
     }
@@ -702,6 +1037,7 @@ fn class_metadata(
             11,
             flags
                 | 512
+                | u32::from(property_has_annotations(&property.annotations))
                 | if property.mutable { 256 | 1024 } else { 0 }
                 | if property.lateinit { 4096 } else { 0 }
                 | if property.delegate.is_some() {
@@ -762,10 +1098,79 @@ fn class_metadata(
                 )?,
             );
         }
+        accessor_annotation_flags(
+            &mut declaration,
+            &property.annotations,
+            ty,
+            flags,
+            !property.body.is_empty() || property.delegate.is_some(),
+            property.setter.is_some() || property.delegate.is_some(),
+            property.mutable,
+            property.setter.as_ref().map_or("<set-?>", |(name, _)| name),
+            imports,
+            &mut strings,
+        )?;
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }
     strings.finish(1, proto)
+}
+
+fn property_has_annotations(annotations: &[crate::syntax::AnnotationUse]) -> bool {
+    annotations.iter().any(|annotation| {
+        annotation
+            .use_site
+            .as_deref()
+            .is_none_or(|site| matches!(site, "property" | "field"))
+    })
+}
+
+#[allow(clippy::too_many_arguments)]
+fn accessor_annotation_flags(
+    property: &mut Proto,
+    annotations: &[crate::syntax::AnnotationUse],
+    ty: &Type,
+    visibility: u32,
+    custom_getter: bool,
+    custom_setter: bool,
+    mutable: bool,
+    setter_name: &str,
+    imports: Imports<'_>,
+    strings: &mut Strings,
+) -> Result<()> {
+    let has_site = |site| {
+        annotations
+            .iter()
+            .any(|annotation| annotation.use_site.as_deref() == Some(site))
+    };
+    let property_annotations = property_has_annotations(annotations);
+    let getter_annotations = has_site("get");
+    let setter_annotations = has_site("set");
+    let setter_parameter_annotations = has_site("setparam");
+    if getter_annotations != property_annotations || custom_getter && getter_annotations {
+        property.number(
+            7,
+            visibility | (u32::from(custom_getter) * 64) | u32::from(getter_annotations),
+        );
+    }
+    if mutable
+        && (setter_annotations != property_annotations
+            || custom_setter && setter_annotations
+            || setter_parameter_annotations)
+    {
+        property.number(
+            8,
+            visibility
+                | (u32::from(custom_setter || setter_parameter_annotations) * 64)
+                | u32::from(setter_annotations),
+        );
+    }
+    if mutable && setter_parameter_annotations {
+        let mut value = parameter(setter_name, ty, imports, strings)?;
+        value.number(1, 1);
+        property.message(6, &value);
+    }
+    Ok(())
 }
 
 fn same_metadata_type(source: &Type, checked: &Type, imports: Imports<'_>) -> bool {
@@ -820,6 +1225,29 @@ fn same_metadata_type(source: &Type, checked: &Type, imports: Imports<'_>) -> bo
         | (Type::MutableList(a), Type::MutableList(b)) => same_metadata_type(a, b, imports),
         _ => source == checked,
     }
+}
+
+fn checked_method_name<'a>(
+    source: &'a Function,
+    checked: impl Iterator<Item = &'a crate::check::Function>,
+    imports: Imports<'_>,
+) -> &'a str {
+    checked
+        .filter(|actual| actual.name == source.name)
+        .find(|actual| {
+            source.params.len() + usize::from(source.receiver.is_some()) == actual.params.len()
+                && source
+                    .receiver
+                    .iter()
+                    .chain(source.params.iter().map(|(_, ty)| ty))
+                    .zip(&actual.params)
+                    .all(|(source, (_, actual))| {
+                        same_metadata_type(source, actual, imports)
+                            || descriptor(source, imports)
+                                .is_ok_and(|source| source == actual.descriptor())
+                    })
+        })
+        .map_or(source.name.as_str(), crate::check::Function::jvm_name)
 }
 
 pub(crate) fn for_checked_class(
@@ -945,7 +1373,14 @@ pub(crate) fn for_class_companion(
     for method in &source.methods {
         proto.message(
             9,
-            &function_proto(&method.function, false, imports, &mut strings)?,
+            &function_with_jvm_name(
+                &method.function,
+                0,
+                0,
+                checked_method_name(&method.function, companion.methods.iter(), imports),
+                imports,
+                &mut strings,
+            )?,
         );
     }
     for property in &source.properties {
@@ -972,6 +1407,7 @@ pub(crate) fn for_class_companion(
         declaration.number(
             11,
             (if property.private { 514 } else { 518 })
+                | u32::from(property_has_annotations(&property.annotations))
                 | if property.mutable { 256 | 1024 } else { 0 }
                 | if property.lateinit { 4096 } else { 0 }
                 | if property.delegate.is_some() {
@@ -1025,6 +1461,18 @@ pub(crate) fn for_class_companion(
                 );
             }
         }
+        accessor_annotation_flags(
+            &mut declaration,
+            &property.annotations,
+            ty,
+            if property.private { 2 } else { 6 },
+            !property.body.is_empty() || property.delegate.is_some(),
+            property.setter.is_some() || property.delegate.is_some(),
+            property.mutable,
+            property.setter.as_ref().map_or("<set-?>", |(name, _)| name),
+            imports,
+            &mut strings,
+        )?;
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }
@@ -1036,10 +1484,16 @@ fn interface_metadata(
     owner: &str,
     header_imports: Imports<'_>,
     imports: Imports<'_>,
+    checked: Option<&crate::check::InterfaceDecl>,
 ) -> Result<Metadata> {
     let mut strings = Strings::default();
     let mut proto = Proto::default();
-    proto.number(1, if interface.internal { 96 } else { 102 });
+    proto.number(
+        1,
+        (if interface.internal { 96 } else { 102 })
+            | u32::from(!interface.annotations.is_empty())
+            | if interface.fun_interface { 16384 } else { 0 },
+    );
     proto.number(3, strings.id(&owner.replace('$', "."))?);
     if interface.interfaces.is_empty() {
         let mut supertype = Proto::default();
@@ -1067,9 +1521,17 @@ fn interface_metadata(
     for method in &interface.methods {
         proto.message(
             9,
-            &function_with_modality(
+            &function_with_jvm_name(
                 &method.function,
                 if method.has_body { 16 } else { 32 },
+                0,
+                checked_method_name(
+                    &method.function,
+                    checked.into_iter().flat_map(|interface| {
+                        interface.methods.iter().map(|method| &method.function)
+                    }),
+                    imports,
+                ),
                 imports,
                 &mut strings,
             )?,
@@ -1168,7 +1630,20 @@ fn companion_metadata(
     for method in &companion.methods {
         proto.message(
             9,
-            &function_proto(&method.function, false, imports, &mut strings)?,
+            &function_with_jvm_name(
+                &method.function,
+                0,
+                0,
+                checked_method_name(
+                    &method.function,
+                    checked
+                        .into_iter()
+                        .flat_map(|companion| companion.methods.iter()),
+                    imports,
+                ),
+                imports,
+                &mut strings,
+            )?,
         );
     }
     for property in &companion.fields {
@@ -1179,6 +1654,7 @@ fn companion_metadata(
         declaration.number(
             11,
             (if property.private { 514 } else { 518 })
+                | u32::from(property_has_annotations(&property.annotations))
                 | if property.mutable { 256 | 1024 } else { 0 }
                 | if property.lateinit { 4096 } else { 0 }
                 | if property.delegate.is_some() {
@@ -1239,6 +1715,18 @@ fn companion_metadata(
                 );
             }
         }
+        accessor_annotation_flags(
+            &mut declaration,
+            &property.annotations,
+            ty,
+            if property.private { 2 } else { 6 },
+            !property.body.is_empty() || property.delegate.is_some(),
+            property.setter.is_some() || property.delegate.is_some(),
+            property.mutable,
+            property.setter.as_ref().map_or("<set-?>", |(name, _)| name),
+            imports,
+            &mut strings,
+        )?;
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }
@@ -1266,7 +1754,7 @@ fn interface_tree(
     bindings.extend_from_slice(imports);
     result.insert(
         owner.into(),
-        interface_metadata(interface, owner, imports, &bindings)?,
+        interface_metadata(interface, owner, imports, &bindings, checked)?,
     );
     if let Some(companion) = &interface.companion {
         let companion_owner = format!("{owner}$Companion");
@@ -1353,12 +1841,42 @@ fn inferred_thread_local(ty: &Type, imports: Imports<'_>, strings: &mut Strings)
     platform_type(thread_local, strings)
 }
 
+#[cfg(test)]
 pub(crate) fn for_object(
     module: &Module,
     owner: &str,
     fields: &[(String, Type)],
     interfaces: &[String],
     serializable: bool,
+) -> Result<Metadata> {
+    object_metadata(module, owner, fields, interfaces, serializable, None)
+}
+
+pub(crate) fn for_checked_object(
+    module: &Module,
+    owner: &str,
+    fields: &[(String, Type)],
+    interfaces: &[String],
+    serializable: bool,
+    checked: &crate::check::DynamicObject,
+) -> Result<Metadata> {
+    object_metadata(
+        module,
+        owner,
+        fields,
+        interfaces,
+        serializable,
+        Some(checked),
+    )
+}
+
+fn object_metadata(
+    module: &Module,
+    owner: &str,
+    fields: &[(String, Type)],
+    interfaces: &[String],
+    serializable: bool,
+    checked: Option<&crate::check::DynamicObject>,
 ) -> Result<Metadata> {
     let object = module
         .object_decl
@@ -1373,7 +1891,8 @@ pub(crate) fn for_object(
     let mut proto = Proto::default();
     proto.number(
         1,
-        (if object.internal { 320 } else { 326 }) | u32::from(serializable),
+        (if object.internal { 320 } else { 326 })
+            | u32::from(serializable || !object.annotation_uses.is_empty()),
     );
     proto.number(3, strings.id(&owner.replace('$', "."))?);
     for name in if interfaces.is_empty() {
@@ -1418,7 +1937,20 @@ pub(crate) fn for_object(
         let flags = u32::from(method.jvm_static) | if method.inline { 1024 } else { 0 };
         proto.message(
             9,
-            &function_with_flags(&method.function, 0, flags, &module.imports, &mut strings)?,
+            &function_with_jvm_name(
+                &method.function,
+                0,
+                flags,
+                checked_method_name(
+                    &method.function,
+                    checked
+                        .into_iter()
+                        .flat_map(|object| object.methods.iter().map(|method| &method.function)),
+                    &module.imports,
+                ),
+                &module.imports,
+                &mut strings,
+            )?,
         );
     }
     let mut seen = BTreeSet::new();
@@ -1441,6 +1973,7 @@ pub(crate) fn for_object(
         declaration.number(
             11,
             (if field.private { 514 } else { 518 })
+                | u32::from(property_has_annotations(&field.annotations))
                 | if field.mutable { 256 | 1024 } else { 0 }
                 | if field.lateinit { 4096 } else { 0 }
                 | if field.delegate.is_some() { 32768 } else { 0 },
@@ -1498,6 +2031,18 @@ pub(crate) fn for_object(
                 );
             }
         }
+        accessor_annotation_flags(
+            &mut declaration,
+            &field.annotations,
+            ty,
+            if field.private { 2 } else { 6 },
+            !field.body.is_empty() || field.delegate.is_some(),
+            field.setter.is_some() || field.delegate.is_some(),
+            field.mutable,
+            field.setter.as_ref().map_or("<set-?>", |(name, _)| name),
+            &module.imports,
+            &mut strings,
+        )?;
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }
@@ -1513,6 +2058,7 @@ fn constant_proto(
         ConstValue::Int(_) => Type::Int,
         ConstValue::Long(_) => Type::Long,
         ConstValue::Float(_) => Type::Float,
+        ConstValue::Double(_) => Type::Double,
         ConstValue::Char(_) => Type::Char,
         ConstValue::Boolean(_) => Type::Boolean,
         ConstValue::String(_) => Type::String,
@@ -1526,7 +2072,8 @@ fn constant_proto(
             0
         } else {
             6
-        }) | 0x2a00,
+        }) | 0x2a00
+            | u32::from(property_has_annotations(&constant.annotations)),
     );
     proto.number(2, strings.id(&constant.name)?);
     proto.message(3, &type_proto(&ty, imports, strings)?);
@@ -1536,6 +2083,20 @@ fn constant_proto(
         &method_signature(&constant.name, &descriptor(&ty, imports)?, strings)?,
     );
     proto.message(100, &signature);
+    Ok(proto)
+}
+
+fn type_alias_proto(
+    alias: &TypeAliasDecl,
+    imports: Imports<'_>,
+    strings: &mut Strings,
+) -> Result<Proto> {
+    let mut proto = Proto::default();
+    proto.number(1, if alias.private { 2 } else { 6 });
+    proto.number(2, strings.id(&alias.name)?);
+    let expanded = type_proto(&alias.expanded, imports, strings)?;
+    proto.message(4, &expanded);
+    proto.message(6, &expanded);
     Ok(proto)
 }
 
@@ -1654,6 +2215,9 @@ pub(crate) fn for_checked_package(
     }
     let mut strings = Strings::default();
     let mut proto = Proto::default();
+    for alias in &module.type_aliases {
+        proto.message(5, &type_alias_proto(alias, &bindings, &mut strings)?);
+    }
     for function in &module.functions {
         proto.message(
             3,
@@ -1668,6 +2232,7 @@ pub(crate) fn for_checked_package(
         declaration.number(
             11,
             (if property.private { 514 } else { 518 })
+                | u32::from(property_has_annotations(&property.annotations))
                 | if property.mutable { 256 | 1024 } else { 0 }
                 | if property.lateinit { 4096 } else { 0 }
                 | if property.delegate.is_some() {
@@ -1705,15 +2270,28 @@ pub(crate) fn for_checked_package(
                 )?,
             );
         }
-        signature.message(
-            3,
-            &method_signature(
-                &crate::check::getter_name(&property.name),
-                &format!("(){}", descriptor(&property.ty, &bindings)?),
-                &mut strings,
-            )?,
-        );
-        if property.mutable {
+        if !property.private
+            || checked
+                .functions
+                .iter()
+                .any(|function| function.name == crate::check::getter_name(&property.name))
+        {
+            signature.message(
+                3,
+                &method_signature(
+                    &crate::check::getter_name(&property.name),
+                    &format!("(){}", descriptor(&property.ty, &bindings)?),
+                    &mut strings,
+                )?,
+            );
+        }
+        if property.mutable
+            && (!property.private
+                || checked
+                    .functions
+                    .iter()
+                    .any(|function| function.name == crate::check::setter_name(&property.name)))
+        {
             signature.message(
                 4,
                 &method_signature(
@@ -1723,6 +2301,18 @@ pub(crate) fn for_checked_package(
                 )?,
             );
         }
+        accessor_annotation_flags(
+            &mut declaration,
+            &property.annotations,
+            &property.ty,
+            accessor_flags,
+            !property.body.is_empty() || property.delegate.is_some(),
+            property.setter.is_some() || property.delegate.is_some(),
+            property.mutable,
+            property.setter.as_ref().map_or("<set-?>", |(name, _)| name),
+            &bindings,
+            &mut strings,
+        )?;
         declaration.message(100, &signature);
         proto.message(4, &declaration);
     }
@@ -1775,6 +2365,77 @@ mod tests {
             }
         }
         fields(&bytes[cursor + length..])
+    }
+
+    #[test]
+    fn functional_interface_metadata_uses_the_pinned_fun_flag() {
+        for (source, expected) in [
+            ("fun interface Action { fun run() }", 102 | 16384),
+            ("interface Action { fun run() }", 102),
+        ] {
+            let module = crate::syntax::parse(source).unwrap();
+            let metadata = for_interfaces(&module, "Action", None)
+                .unwrap()
+                .remove("Action")
+                .unwrap();
+            let flags = metadata_fields(&metadata)
+                .into_iter()
+                .find(|(field, _, _)| *field == 1)
+                .unwrap()
+                .1
+                .unwrap();
+            assert_eq!(flags, expected);
+        }
+    }
+
+    #[test]
+    fn type_alias_metadata_preserves_name_visibility_and_expanded_function_types() {
+        let module = crate::syntax::parse(
+            "typealias Label = String\nprivate typealias Callback = (Int) -> Unit",
+        )
+        .unwrap();
+        let mut strings = Strings::default();
+        let mut package = Proto::default();
+        for alias in &module.type_aliases {
+            package.message(5, &type_alias_proto(alias, &[], &mut strings).unwrap());
+        }
+        let metadata = strings.finish(2, package).unwrap();
+        let aliases = metadata_fields(&metadata)
+            .into_iter()
+            .filter(|(field, _, _)| *field == 5)
+            .map(|(_, _, bytes)| fields(&bytes))
+            .collect::<Vec<_>>();
+        assert_eq!(aliases.len(), 2);
+        for (index, expected_flags) in [6, 2].into_iter().enumerate() {
+            let alias = &aliases[index];
+            assert_eq!(
+                alias.iter().find(|(field, _, _)| *field == 1).unwrap().1,
+                Some(expected_flags)
+            );
+            let name = alias
+                .iter()
+                .find(|(field, _, _)| *field == 2)
+                .unwrap()
+                .1
+                .unwrap();
+            assert_eq!(
+                metadata.data2[name as usize],
+                module.type_aliases[index].name
+            );
+            let underlying = &alias.iter().find(|(field, _, _)| *field == 4).unwrap().2;
+            let expanded = &alias.iter().find(|(field, _, _)| *field == 6).unwrap().2;
+            assert_eq!(underlying, expanded);
+            let class_name = fields(expanded)
+                .into_iter()
+                .find(|(field, _, _)| *field == 6)
+                .unwrap()
+                .1
+                .unwrap();
+            assert_eq!(
+                metadata.data2[class_name as usize],
+                ["kotlin/String", "kotlin/Function1"][index]
+            );
+        }
     }
 
     #[test]
@@ -2194,9 +2855,12 @@ mod tests {
             lambdas: Vec::new(),
             constants: Vec::new(),
             functions: vec![crate::check::Function {
+                annotations: Vec::new(),
+                vararg: false,
                 type_params: Vec::new(),
                 defaults: Vec::new(),
                 name: "echo".into(),
+                jvm_name: None,
                 private: false,
                 is_override: false,
                 params: vec![("value".into(), ty.clone())],
@@ -2245,5 +2909,163 @@ mod tests {
             b"\x0a\x08\x0a\x01a\x12\x03AKt\x0a\x0d\x0a\x01z\x12\x03AKt\x12\x03BKt",
         );
         assert_eq!(module_mapping(&facades), bytes);
+    }
+    #[test]
+    fn annotated_internal_function_metadata_keeps_source_and_physical_names() {
+        let module =
+            crate::syntax::parse("@Mark internal fun sourceName(value: Int): Int = value").unwrap();
+        let function = &module.functions[0];
+        let mut strings = Strings::default();
+        let proto = function_with_jvm_name(
+            function,
+            0,
+            0,
+            "sourceName$feature_module",
+            &[],
+            &mut strings,
+        )
+        .unwrap();
+        let declaration = fields(&proto.0);
+        let flags = declaration
+            .iter()
+            .find(|(field, _, _)| *field == 9)
+            .unwrap()
+            .1
+            .unwrap();
+        let source_name = declaration
+            .iter()
+            .find(|(field, _, _)| *field == 2)
+            .unwrap()
+            .1
+            .unwrap();
+        assert_eq!(flags, 1);
+        assert_eq!(strings.values[source_name as usize], "sourceName");
+        let signature = fields(
+            &declaration
+                .iter()
+                .find(|(field, _, _)| *field == 100)
+                .unwrap()
+                .2,
+        );
+        let physical_name = signature
+            .iter()
+            .find(|(field, _, _)| *field == 1)
+            .unwrap()
+            .1
+            .unwrap();
+        assert_eq!(
+            strings.values[physical_name as usize],
+            "sourceName$feature_module"
+        );
+    }
+
+    #[test]
+    fn property_annotation_sites_match_oracle_accessor_overrides() {
+        for (site, mutability, property_flags, getter, setter, setter_parameter) in [
+            ("field", "var", 1799, Some(6), Some(6), false),
+            ("get", "var", 1798, Some(7), None, false),
+            ("set", "var", 1798, None, Some(7), false),
+            ("setparam", "var", 1798, None, Some(70), true),
+            ("field", "val", 519, Some(6), None, false),
+        ] {
+            let module = crate::syntax::parse(&format!(
+                "class Sample(@{site}:Mark {mutability} value: Int)"
+            ))
+            .unwrap();
+            let metadata = class_metadata(
+                module.class_decl.as_ref().unwrap(),
+                "Sample",
+                &[],
+                false,
+                None,
+            )
+            .unwrap();
+            let declarations = metadata_fields(&metadata);
+            let property = fields(
+                &declarations
+                    .iter()
+                    .find(|(field, _, _)| *field == 10)
+                    .unwrap()
+                    .2,
+            );
+            let number = |id| {
+                property
+                    .iter()
+                    .rev()
+                    .find(|(field, _, _)| *field == id)
+                    .and_then(|(_, number, _)| *number)
+            };
+            assert_eq!(number(11), Some(property_flags), "{site}");
+            assert_eq!(number(7), getter, "{site}");
+            assert_eq!(number(8), setter, "{site}");
+            assert_eq!(
+                property.iter().any(|(field, _, _)| *field == 6),
+                setter_parameter,
+                "{site}"
+            );
+        }
+    }
+
+    #[test]
+    fn ordinary_annotation_flags_preserve_class_parameter_and_accessor_discovery() {
+        let module = crate::syntax::parse(include_str!(
+            "../tests/fixtures/compatibility_annotations_visibility/positive/Annotated.kt"
+        ))
+        .unwrap();
+        let class = module.class_decl.as_ref().unwrap();
+        let metadata = class_metadata(
+            class,
+            "compatibility/annotations/Annotated",
+            &[],
+            false,
+            None,
+        )
+        .unwrap();
+        let declarations = metadata_fields(&metadata);
+        let number = |fields: &[(u32, Option<u64>, Vec<u8>)], id| {
+            fields
+                .iter()
+                .rev()
+                .find(|(field, _, _)| *field == id)
+                .and_then(|(_, number, _)| *number)
+                .unwrap_or(0)
+        };
+        assert_eq!(number(&declarations, 1) & 1, 1);
+        let constructor = fields(
+            &declarations
+                .iter()
+                .find(|(field, _, _)| *field == 8)
+                .unwrap()
+                .2,
+        );
+        let parameter = fields(
+            &constructor
+                .iter()
+                .find(|(field, _, _)| *field == 2)
+                .unwrap()
+                .2,
+        );
+        assert_eq!(number(&parameter, 1) & 1, 1);
+        let property = fields(
+            &declarations
+                .iter()
+                .find(|(field, _, _)| *field == 10)
+                .unwrap()
+                .2,
+        );
+        assert_eq!(number(&property, 11), 1799);
+        assert!(!property.iter().any(|(field, _, _)| *field == 7));
+        assert_eq!(number(&property, 8), 71);
+        let setter_parameter =
+            fields(&property.iter().find(|(field, _, _)| *field == 6).unwrap().2);
+        assert_eq!(number(&setter_parameter, 1) & 1, 1);
+        let method = fields(
+            &declarations
+                .iter()
+                .find(|(field, _, _)| *field == 9)
+                .unwrap()
+                .2,
+        );
+        assert_eq!(number(&method, 9) & 1, 1);
     }
 }

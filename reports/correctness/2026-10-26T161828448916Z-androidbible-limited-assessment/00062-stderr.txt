@@ -1,0 +1,228 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:7:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Call
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:8:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Connection
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:9:8: error: unresolved reference 'okhttp3'.
+import okhttp3.EventListener
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:10:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Handshake
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:11:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Protocol
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:12:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Request
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:13:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Response
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:14:21: error: unresolved reference 'debug'.
+import yuku.alkitab.debug.R
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:24:59: error: unresolved reference 'AudioLogMessage'.
+internal class AudioHttpEventLogger(private val onEvent: (AudioLogMessage) -> Unit) : EventListener() {
+                                                          ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:24:87: error: unresolved reference 'EventListener'.
+internal class AudioHttpEventLogger(private val onEvent: (AudioLogMessage) -> Unit) : EventListener() {
+                                                                                      ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:34:61: error: unresolved reference 'AudioLogMessage'.
+    private fun log(resId: Int, vararg args: Any) = onEvent(AudioLogMessage(resId, args.toList()))
+                                                            ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:36:34: error: unresolved reference 'Call'.
+    override fun callStart(call: Call) {
+                                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:37:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_http_started, call.request().url.toString())
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:37:51: error: unresolved reference 'request'.
+        log(R.string.audio_log_http_started, call.request().url.toString())
+                                                  ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:40:33: error: unresolved reference 'Call'.
+    override fun dnsStart(call: Call, domainName: String) {
+                                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:41:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_dns_start, domainName)
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:44:31: error: unresolved reference 'Call'.
+    override fun dnsEnd(call: Call, domainName: String, inetAddressList: List<InetAddress>) {
+                              ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:45:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_dns_end, inetAddressList.joinToString { it.hostAddress ?: it.toString() })
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:48:37: error: unresolved reference 'Call'.
+    override fun connectStart(call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy) {
+                                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:49:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_connecting, inetSocketAddress.hostString, inetSocketAddress.port)
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:52:43: error: unresolved reference 'Call'.
+    override fun secureConnectStart(call: Call) {
+                                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:53:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_tls_start)
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:56:41: error: unresolved reference 'Call'.
+    override fun secureConnectEnd(call: Call, handshake: Handshake?) {
+                                        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:56:58: error: unresolved reference 'Handshake'.
+    override fun secureConnectEnd(call: Call, handshake: Handshake?) {
+                                                         ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:57:37: error: unresolved reference 'tlsVersion'.
+        val tlsVersion = handshake?.tlsVersion
+                                    ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:59:17: error: unresolved reference 'R'.
+            log(R.string.audio_log_tls_end_version, tlsVersion.javaName)
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:59:64: error: unresolved reference 'javaName'.
+            log(R.string.audio_log_tls_end_version, tlsVersion.javaName)
+                                                               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:61:17: error: unresolved reference 'R'.
+            log(R.string.audio_log_tls_end)
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:65:35: error: unresolved reference 'Call'.
+    override fun connectEnd(call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy, protocol: Protocol?) {
+                                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:65:103: error: unresolved reference 'Protocol'.
+    override fun connectEnd(call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy, protocol: Protocol?) {
+                                                                                                      ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:68:17: error: unresolved reference 'R'.
+            log(R.string.audio_log_connected_protocol, protocol.toString())
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:70:17: error: unresolved reference 'R'.
+            log(R.string.audio_log_connected)
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:74:38: error: unresolved reference 'Call'.
+    override fun connectFailed(call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy, protocol: Protocol?, ioe: IOException) {
+                                     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:74:106: error: unresolved reference 'Protocol'.
+    override fun connectFailed(call: Call, inetSocketAddress: InetSocketAddress, proxy: Proxy, protocol: Protocol?, ioe: IOException) {
+                                                                                                         ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:75:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_connect_failed, ioe.describe())
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:78:43: error: unresolved reference 'Call'.
+    override fun connectionAcquired(call: Call, connection: Connection) {
+                                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:78:61: error: unresolved reference 'Connection'.
+    override fun connectionAcquired(call: Call, connection: Connection) {
+                                                            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:81:17: error: unresolved reference 'R'.
+                R.string.audio_log_connection_acquired_new
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:83:17: error: unresolved reference 'R'.
+                R.string.audio_log_connection_acquired_reused
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:88:43: error: unresolved reference 'Call'.
+    override fun connectionReleased(call: Call, connection: Connection) {
+                                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:88:61: error: unresolved reference 'Connection'.
+    override fun connectionReleased(call: Call, connection: Connection) {
+                                                            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:89:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_connection_released)
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:92:44: error: unresolved reference 'Call'.
+    override fun requestHeadersStart(call: Call) {
+                                           ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:93:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_request_headers_start)
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:96:42: error: unresolved reference 'Call'.
+    override fun requestHeadersEnd(call: Call, request: Request) {
+                                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:96:57: error: unresolved reference 'Request'.
+    override fun requestHeadersEnd(call: Call, request: Request) {
+                                                        ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:97:29: error: unresolved reference 'header'.
+        val range = request.header("Range")
+                            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:99:17: error: unresolved reference 'R'.
+            log(R.string.audio_log_request_headers_sent_range, range)
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:101:17: error: unresolved reference 'R'.
+            log(R.string.audio_log_request_headers_sent)
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:105:38: error: unresolved reference 'Call'.
+    override fun requestFailed(call: Call, ioe: IOException) {
+                                     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:106:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_request_failed, ioe.describe())
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:109:45: error: unresolved reference 'Call'.
+    override fun responseHeadersStart(call: Call) {
+                                            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:110:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_response_headers_start)
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:113:43: error: unresolved reference 'Call'.
+    override fun responseHeadersEnd(call: Call, response: Response) {
+                                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:113:59: error: unresolved reference 'Response'.
+    override fun responseHeadersEnd(call: Call, response: Response) {
+                                                          ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:114:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_response_headers_end, response.code)
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:115:23: error: unresolved reference 'isSuccessful'.
+        if (!response.isSuccessful) logErrorBody(response)
+                      ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:125:40: error: unresolved reference 'Response'.
+    private fun logErrorBody(response: Response) {
+                                       ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:127:22: error: unresolved reference 'peekBody'.
+            response.peekBody(MAX_ERROR_BODY_BYTES.toLong()).bytes()
+                     ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:127:31: error: unresolved reference 'MAX_ERROR_BODY_BYTES'.
+            response.peekBody(MAX_ERROR_BODY_BYTES.toLong()).bytes()
+                              ^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:129:17: error: unresolved reference 'R'.
+            log(R.string.audio_log_error_body_unreadable, e.describe())
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:132:9: error: unresolved reference 'formatErrorBody'.
+        formatErrorBody(body)?.let { log(R.string.audio_log_response_body_text, it) }
+        ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:132:32: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        formatErrorBody(body)?.let { log(R.string.audio_log_response_body_text, it) }
+                               ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:132:32: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        formatErrorBody(body)?.let { log(R.string.audio_log_response_body_text, it) }
+                               ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:132:36: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        formatErrorBody(body)?.let { log(R.string.audio_log_response_body_text, it) }
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:132:42: error: unresolved reference 'R'.
+        formatErrorBody(body)?.let { log(R.string.audio_log_response_body_text, it) }
+                                         ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:135:39: error: unresolved reference 'Call'.
+    override fun responseFailed(call: Call, ioe: IOException) {
+                                      ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:136:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_response_failed, ioe.describe())
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:139:42: error: unresolved reference 'Call'.
+    override fun responseBodyStart(call: Call) {
+                                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:140:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_response_body_start)
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:143:40: error: unresolved reference 'Call'.
+    override fun responseBodyEnd(call: Call, byteCount: Long) {
+                                       ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:144:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_response_body_end, byteCount)
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:147:32: error: unresolved reference 'Call'.
+    override fun callEnd(call: Call) {
+                               ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:148:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_call_end)
+            ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:151:35: error: unresolved reference 'Call'.
+    override fun callFailed(call: Call, ioe: IOException) {
+                                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpEventLogger.kt:152:13: error: unresolved reference 'R'.
+        log(R.string.audio_log_call_failed, ioe.describe())
+            ^

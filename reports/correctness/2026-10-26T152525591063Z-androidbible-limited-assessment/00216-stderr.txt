@@ -1,0 +1,94 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:3:16: error: unresolved reference 'content'.
+import android.content.ContentValues
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:4:26: error: unresolved reference 'App'.
+import yuku.alkitab.base.App
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:5:26: error: unresolved reference 'model'.
+import yuku.alkitab.base.model.PerVersionSettings
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:11:41: error: unresolved reference 'InternalDbHelper'.
+class PerVersionDao(private val helper: InternalDbHelper) {
+                                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:14:41: error: unresolved reference 'PerVersionSettings'.
+    fun getSettings(versionId: String): PerVersionSettings {
+                                        ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:15:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:16:13: error: unresolved reference 'Table'.
+            Table.PerVersion.tableName(),
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:17:13: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            arrayOf(Table.PerVersion.settings.name),
+            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:17:21: error: unresolved reference 'Table'.
+            arrayOf(Table.PerVersion.settings.name),
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:18:13: error: unresolved reference 'Table'.
+            Table.PerVersion.versionId.name + "=?",
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:21:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:21:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:21:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:22:26: error: unresolved reference 'moveToNext'.
+            return if (c.moveToNext()) {
+                         ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:23:17: error: unresolved reference 'App'.
+                App.getDefaultGson().fromJson(c.getString(0), PerVersionSettings::class.java)
+                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:23:49: error: unresolved reference 'getString'.
+                App.getDefaultGson().fromJson(c.getString(0), PerVersionSettings::class.java)
+                                                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:23:63: error: unresolved reference 'PerVersionSettings'.
+                App.getDefaultGson().fromJson(c.getString(0), PerVersionSettings::class.java)
+                                                              ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:23:89: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                App.getDefaultGson().fromJson(c.getString(0), PerVersionSettings::class.java)
+                                                                                        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:23:89: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+val <T> KClass<T>.java: Class<T>
+                App.getDefaultGson().fromJson(c.getString(0), PerVersionSettings::class.java)
+                                                                                        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:25:17: error: unresolved reference 'PerVersionSettings'.
+                PerVersionSettings.createDefault()
+                ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:30:52: error: unresolved reference 'PerVersionSettings'.
+    fun storeSettings(versionId: String, settings: PerVersionSettings) {
+                                                   ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:31:18: error: unresolved reference 'ContentValues'.
+        val cv = ContentValues().apply {
+                 ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:31:34: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cv = ContentValues().apply {
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:31:40: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cv = ContentValues().apply {
+                                       ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:32:13: error: unresolved reference 'put'.
+            put(Table.PerVersion.versionId.name, versionId)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:32:17: error: unresolved reference 'Table'.
+            put(Table.PerVersion.versionId.name, versionId)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:33:13: error: unresolved reference 'put'.
+            put(Table.PerVersion.settings.name, App.getDefaultGson().toJson(settings))
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:33:17: error: unresolved reference 'Table'.
+            put(Table.PerVersion.settings.name, App.getDefaultGson().toJson(settings))
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:33:49: error: unresolved reference 'App'.
+            put(Table.PerVersion.settings.name, App.getDefaultGson().toJson(settings))
+                                                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:35:16: error: unresolved reference 'writableDatabase'.
+        helper.writableDatabase.replace(Table.PerVersion.tableName(), null, cv)
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/PerVersionDao.kt:35:41: error: unresolved reference 'Table'.
+        helper.writableDatabase.replace(Table.PerVersion.tableName(), null, cv)
+                                        ^^^^^

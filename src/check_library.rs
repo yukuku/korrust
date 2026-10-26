@@ -4,7 +4,130 @@ use super::*;
 pub(super) use crate::classpath::DEFAULT_KOTLIN_PACKAGES as DEFAULT_PACKAGES;
 
 impl Checker<'_> {
+    fn lexical_method_visible(&self, method: &JavaMethod) -> bool {
+        (!method.kotlin_internal || self.classpath.internal_visible(&method.owner))
+            && (method.access & 1 != 0
+                || method.access & 2 != 0
+                    && (self.lambda_owner == method.owner
+                        || self.lambda_owner.starts_with(&format!("{}$", method.owner)))
+                || method.access & 4 != 0
+                    && self.receiver.as_ref().is_some_and(|receiver| {
+                        self.subtype(&receiver.ty, &Type::Java(method.owner.clone()))
+                    }))
+    }
+
+    pub(super) fn lexical_call(
+        &mut self,
+        name: &str,
+        args: &[Expr],
+        explicit: &[Type],
+        expected: Option<&Type>,
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        if self.local(name).is_some() || self.captured.contains_key(name) {
+            return Ok(None);
+        }
+        let mut methods = self.object_methods.get(name).cloned().unwrap_or_default();
+        methods.extend(
+            self.members
+                .values()
+                .filter(|method| method.source_name() == name)
+                .cloned(),
+        );
+        if let Some(owner) = self
+            .receiver
+            .as_ref()
+            .and_then(|receiver| type_owner(&receiver.ty))
+        {
+            if let Ok(inherited) = self.classpath.methods(owner) {
+                methods.extend(
+                    inherited
+                        .into_iter()
+                        .filter(|method| method.source_name() == name && method.access & 8 == 0),
+                );
+            }
+        }
+        methods.retain(|method| {
+            method.source_property.is_none() && self.lexical_method_visible(method)
+        });
+        let mut signatures = HashSet::new();
+        methods
+            .retain(|method| signatures.insert((method.name.clone(), method.descriptor.clone())));
+        methods.sort_by(|a, b| {
+            (&a.owner, &a.name, &a.descriptor).cmp(&(&b.owner, &b.name, &b.descriptor))
+        });
+        let mut applicable = Vec::new();
+        for method in methods {
+            let normalized = self.vararg_arguments(&method, args, offset)?;
+            let (params, defaults) = Self::method_parameters(&method)?;
+            if let Err(error) = Self::argument_mapping(
+                &params,
+                &defaults,
+                &normalized,
+                self.method_named(&method),
+                offset,
+            ) {
+                if error.code == "ARGUMENT_MAPPING_MISMATCH" {
+                    continue;
+                }
+                return Err(error);
+            }
+            match self.select_method_types(std::slice::from_ref(&method), args, explicit, offset) {
+                Ok(_) => applicable.push(method),
+                Err(error)
+                    if error.code == "TYPE_MISMATCH"
+                        && args.iter().any(|arg| {
+                            let argument = if let ExprKind::NamedArgument(_, value) = &arg.kind {
+                                value.as_ref()
+                            } else {
+                                arg
+                            };
+                            error.offset == argument.offset
+                        }) => {}
+                Err(error) => return Err(error),
+            }
+        }
+        if applicable.is_empty() {
+            return Ok(None);
+        }
+        let method = self.select_method_types(&applicable, args, explicit, offset)?;
+        let method = if expected.is_some() {
+            let original = applicable
+                .iter()
+                .find(|original| {
+                    original.owner == method.owner
+                        && original.name == method.name
+                        && original.descriptor == method.descriptor
+                })
+                .unwrap();
+            self.select_method_expected(
+                std::slice::from_ref(original),
+                args,
+                explicit,
+                expected,
+                offset,
+            )?
+        } else {
+            method
+        };
+        let value = if method.access & 8 != 0 {
+            self.library_static_call(method, args, offset)?
+        } else {
+            let receiver = self.receiver_value(offset)?;
+            self.member_call(method, receiver, args, offset)?
+        };
+        Ok(Some(value))
+    }
+
     pub(super) fn library_candidates(&self, name: &str) -> Vec<JavaMethod> {
+        self.library_candidates_with_members(name, true)
+    }
+
+    pub(super) fn library_call_candidates(&self, name: &str) -> Vec<JavaMethod> {
+        self.library_candidates_with_members(name, false)
+    }
+
+    fn library_candidates_with_members(&self, name: &str, shadow_members: bool) -> Vec<JavaMethod> {
         if name == "this" && self.receiver.is_some()
             || self.local(name).is_some()
             || self.captured.contains_key(name)
@@ -12,30 +135,67 @@ impl Checker<'_> {
             || self.object_fields.contains_key(name)
             || self.companion_fields.contains_key(name)
             || self.constants.contains_key(name)
+            || shadow_members
+                && self.object_methods.get(name).is_some_and(|methods| {
+                    methods
+                        .iter()
+                        .any(|method| self.lexical_method_visible(method))
+                })
+            || shadow_members
+                && self.members.values().any(|method| {
+                    method.source_name() == name
+                        && method.access & 8 == 0
+                        && self.lexical_method_visible(method)
+                })
+            || shadow_members
+                && self
+                    .receiver
+                    .as_ref()
+                    .and_then(|receiver| type_owner(&receiver.ty))
+                    .is_some_and(|owner| {
+                        self.classpath.methods(owner).is_ok_and(|methods| {
+                            methods.iter().any(|method| {
+                                method.source_name() == name
+                                    && method.access & 8 == 0
+                                    && self.lexical_method_visible(method)
+                            })
+                        })
+                    })
         {
             return Vec::new();
         }
         let Some(binding) = self.imports.get(name) else {
-            if self
-                .receiver
-                .as_ref()
-                .and_then(|receiver| library::type_owner(&receiver.ty))
-                .is_some_and(|owner| {
-                    self.classpath.methods(owner).is_ok_and(|methods| {
-                        methods
-                            .iter()
-                            .any(|method| method.name == name && method.access & 8 == 0)
+            if shadow_members
+                && self
+                    .receiver
+                    .as_ref()
+                    .and_then(|receiver| library::type_owner(&receiver.ty))
+                    .is_some_and(|owner| {
+                        self.classpath.methods(owner).is_ok_and(|methods| {
+                            methods.iter().any(|method| {
+                                method.source_name() == name
+                                    && method.access & 8 == 0
+                                    && self.lexical_method_visible(method)
+                            })
+                        })
                     })
-                })
             {
                 return Vec::new();
             }
             if self.callable_name_was_renamed(name)
                 || self.functions.contains_key(name)
-                || self.object_methods.contains_key(name)
-                || self.members.values().any(|method| {
-                    method.name == name || method.source_property.as_deref() == Some(name)
-                })
+                || shadow_members
+                    && self.object_methods.get(name).is_some_and(|methods| {
+                        methods
+                            .iter()
+                            .any(|method| self.lexical_method_visible(method))
+                    })
+                || shadow_members
+                    && self.members.values().any(|method| {
+                        (method.source_name() == name
+                            || method.source_property.as_deref() == Some(name))
+                            && self.lexical_method_visible(method)
+                    })
             {
                 return Vec::new();
             }
@@ -45,11 +205,15 @@ impl Checker<'_> {
                     methods.extend(package_methods.into_iter().filter(|method| {
                         method.access & 8 != 0
                             && (method.access & 1 != 0
+                                || self
+                                    .classpath
+                                    .file_private_visible(&self.lambda_owner, method)
                                 || method
                                     .library
                                     .as_ref()
                                     .is_some_and(|library| library.inline && library.kotlin_public))
-                            && !method.kotlin_internal
+                            && (!method.kotlin_internal
+                                || self.classpath.internal_visible(&method.owner))
                             && method.library.as_ref().is_some_and(|library| {
                                 library.receiver.is_none() && library.source_name == name
                             })
@@ -75,13 +239,15 @@ impl Checker<'_> {
         self.classes
             .values()
             .filter(|c| {
-                c.library.as_ref().and_then(|l| l.package.as_deref()) == package
-                    && package.is_some()
+                c.name == owner
+                    || (c.library.as_ref().and_then(|l| l.package.as_deref()) == package
+                        && package.is_some())
             })
             .flat_map(|c| &c.methods)
             .filter(|m| {
                 m.access & 8 != 0
                     && (m.access & 1 != 0
+                        || self.classpath.file_private_visible(&self.lambda_owner, m)
                         || m.library
                             .as_ref()
                             .is_some_and(|library| library.inline && library.kotlin_public))
@@ -100,6 +266,8 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        let normalized = self.vararg_arguments(&method, args, offset)?;
+        let args = normalized.as_slice();
         if self
             .classpath
             .load(&method.owner)
@@ -128,7 +296,10 @@ impl Checker<'_> {
             .map(|p| p.iter().map(|p| p.2).collect())
             .unwrap_or_else(|| vec![false; params.len()]);
         let named = self.method_named(&method);
-        let inline = method.library.as_ref().is_some_and(|m| m.inline);
+        let inline = method
+            .library
+            .as_ref()
+            .is_some_and(|m| m.inline && !m.builtin_array);
         if inline {
             crate::compiled_inline::validate(&method)?;
         }
@@ -145,7 +316,25 @@ impl Checker<'_> {
         let checked = self.arguments(&params, &defaults, args, named, offset);
         self.inline_result = old_inline;
         let (mut values, lets, mut mask) = checked?;
+        if method
+            .library
+            .as_ref()
+            .is_some_and(|library| library.builtin_array)
+        {
+            if mask != 0 || values.len() != 1 {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Unsupported builtin array declaration shape",
+                ));
+            }
+            let value = values.remove(0);
+            return Ok(Self::wrap_lets(self.coerce(value, result, offset)?, lets));
+        }
         if method.access & 1 == 0
+            && !self
+                .classpath
+                .file_private_visible(&self.lambda_owner, &method)
+            && method.owner != self.lambda_owner
             && (!inline
                 || mask != 0
                 || !method
@@ -224,14 +413,34 @@ impl Checker<'_> {
             }
             let split = method.descriptor.find(')').unwrap();
             let descriptor = format!(
-                "({}ILjava/lang/Object;){}",
+                "({}{}Ljava/lang/Object;){}",
                 &method.descriptor[1..split],
+                "I".repeat(
+                    (params.len()
+                        - usize::from(
+                            method
+                                .library
+                                .as_ref()
+                                .is_some_and(|library| library.receiver.is_some())
+                        ))
+                    .div_ceil(32)
+                ),
                 &method.descriptor[split + 1..]
             );
-            values.push(Value {
-                ty: Type::Int,
-                kind: ValueKind::Int(mask as i32),
-            });
+            for index in 0..(params.len()
+                - usize::from(
+                    method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| library.receiver.is_some()),
+                ))
+            .div_ceil(32)
+            {
+                values.push(Value {
+                    ty: Type::Int,
+                    kind: ValueKind::Int((mask >> (index * 32)) as i32),
+                });
+            }
             values.push(Value {
                 ty: Type::Java("java/lang/Object".into()),
                 kind: ValueKind::Null,
@@ -273,6 +482,17 @@ impl Checker<'_> {
         explicit: &[Type],
         offset: usize,
     ) -> Result<Value> {
+        if let Ok(class) = self.classpath.load(&self.lambda_owner) {
+            let methods = class
+                .methods
+                .into_iter()
+                .filter(|method| method.source_name() == name)
+                .collect::<Vec<_>>();
+            if methods.iter().any(|method| method.access & 0x80 != 0) {
+                let method = self.select_method_types(&methods, args, explicit, offset)?;
+                return self.library_static_call(method, args, offset);
+            }
+        }
         let mut candidates = self
             .function_names
             .iter()
@@ -309,7 +529,7 @@ impl Checker<'_> {
                 kind: if mask == 0 {
                     ValueKind::Call(id, values)
                 } else {
-                    ValueKind::DefaultCall(id, values, mask)
+                    ValueKind::DefaultCall(id, values, mask as u32)
                 },
             },
             lets,
@@ -321,10 +541,14 @@ pub(super) fn default_class(classpath: &Classpath, name: &str) -> Option<JavaCla
     if name.contains('/') || name.contains('.') || name.contains('$') {
         return None;
     }
-    classpath
-        .load(&format!("java/lang/{name}"))
-        .ok()
-        .filter(|class| class.access & 1 != 0)
+    std::iter::once("java/lang")
+        .chain(DEFAULT_PACKAGES.iter().copied())
+        .find_map(|package| {
+            classpath
+                .load(&format!("{package}/{name}"))
+                .ok()
+                .filter(|class| class.access & 1 != 0)
+        })
 }
 
 pub(super) fn default_type_imports(
@@ -398,12 +622,27 @@ impl Checker<'_> {
             || self.companion_fields.contains_key(name)
             || self.constants.contains_key(name)
             || self.members.values().any(|method| {
-                method.name == name || method.source_property.as_deref() == Some(name)
+                method.source_name() == name || method.source_property.as_deref() == Some(name)
             })
         {
             return Ok(None);
         }
-        let Some(class) = default_class(self.classpath, name) else {
+        let source_package = self
+            .lambda_owner
+            .rsplit_once('/')
+            .map_or("", |(package, _)| package);
+        let source_name = if source_package.is_empty() {
+            name.into()
+        } else {
+            format!("{source_package}/{name}")
+        };
+        let Some(class) = self
+            .classpath
+            .load(&source_name)
+            .ok()
+            .filter(|class| class.access & 1 != 0)
+            .or_else(|| default_class(self.classpath, name))
+        else {
             return Ok(None);
         };
         let constructors = class
@@ -415,9 +654,17 @@ impl Checker<'_> {
             .cloned()
             .collect::<Vec<_>>();
         let method = self.select_method(&constructors, args, offset)?;
+        let normalized = self.vararg_arguments(&method, args, offset)?;
         let (params, defaults) = Self::method_parameters(&method)?;
-        self.constructor_call(&class.name, &params, &defaults, args, false, offset)
-            .map(Some)
+        self.constructor_call(
+            &class.name,
+            &params,
+            &defaults,
+            &normalized,
+            self.method_named(&method),
+            offset,
+        )
+        .map(Some)
     }
 }
 
@@ -508,6 +755,8 @@ impl Checker<'_> {
             .map(|method| library::specialize_receiver(method, &ty, &class, self.classpath))
             .collect::<Vec<_>>();
         let method = self.select_method(&constructors, args, offset)?;
+        let normalized = self.vararg_arguments(&method, args, offset)?;
+        let args = normalized.as_slice();
         let (params, defaults) = Self::method_parameters(&method)?;
         let (values, lets, mask) =
             self.arguments(&params, &defaults, args, self.method_named(&method), offset)?;
@@ -523,17 +772,20 @@ impl Checker<'_> {
         let descriptor = if mask == 0 {
             method.descriptor.clone()
         } else {
-            values.push(Value {
-                ty: Type::Int,
-                kind: ValueKind::Int(mask as i32),
-            });
+            for index in 0..params.len().div_ceil(32) {
+                values.push(Value {
+                    ty: Type::Int,
+                    kind: ValueKind::Int((mask >> (index * 32)) as i32),
+                });
+            }
             values.push(Value {
                 ty: Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
                 kind: ValueKind::Null,
             });
             format!(
-                "{}ILkotlin/jvm/internal/DefaultConstructorMarker;)V",
-                method.descriptor.trim_end_matches(")V")
+                "{}{}Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+                method.descriptor.trim_end_matches(")V"),
+                "I".repeat(params.len().div_ceil(32))
             )
         };
         Ok(Some(Self::wrap_lets(

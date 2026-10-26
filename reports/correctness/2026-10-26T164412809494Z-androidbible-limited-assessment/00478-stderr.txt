@@ -1,0 +1,342 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:24:29: error: unresolved reference 'SongDocument'.
+    fun renderDocument(doc: SongDocument, renderScripture: (String) -> String, forPatchText: Boolean): String {
+                            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:26:31: error: unresolved reference 'blocks'.
+        val lyricBlocks = doc.blocks.filterIsInstance<LyricBlock>()
+                              ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:26:55: error: unresolved reference 'LyricBlock'.
+        val lyricBlocks = doc.blocks.filterIsInstance<LyricBlock>()
+                                                      ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:29:27: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+        for (block in doc.blocks) {
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:29:27: error: unresolved reference 'blocks'.
+        for (block in doc.blocks) {
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:31:20: error: unresolved reference 'PBlock'.
+                is PBlock -> {
+                   ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:36:20: error: unresolved reference 'RowBlock'.
+                is RowBlock -> {
+                   ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:41:20: error: unresolved reference 'LyricBlock'.
+                is LyricBlock -> {
+                   ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:42:74: error: unresolved reference 'size'.
+                    renderLyricBlock(block, lyricBlockIndex, lyricBlocks.size, sb, forPatchText)
+                                                                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:46:20: error: unresolved reference 'ScriptureBlock'.
+                is ScriptureBlock -> sb.append("<div class='scriptureReferences'>").append(renderScripture(block.osis)).append("</div>")
+                   ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:46:114: error: unresolved reference 'osis'.
+                is ScriptureBlock -> sb.append("<div class='scriptureReferences'>").append(renderScripture(block.osis)).append("</div>")
+                                                                                                                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:47:20: error: unresolved reference 'YoutubeBlock'.
+                is YoutubeBlock -> renderYoutubeBlock(block, sb)
+                   ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:48:20: error: unresolved reference 'GapBlock'.
+                is GapBlock -> sb.append("<div style='height:").append(block.size ?: 1f).append("em'></div>")
+                   ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:48:78: error: unresolved reference 'size'.
+                is GapBlock -> sb.append("<div style='height:").append(block.size ?: 1f).append("em'></div>")
+                                                                             ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:49:20: error: unresolved reference 'UnknownBlock'.
+                is UnknownBlock -> {} // forward-compat sink: unrecognized block types are silently skipped
+                   ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:56:39: error: unresolved reference 'RowBlock'.
+    private fun renderRowBlock(block: RowBlock, sb: StringBuilder, renderScripture: (String) -> String) {
+                                      ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:59:19: error: unresolved reference 'size'.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:59:25: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:59:32: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                               ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:59:51: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                                                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:59:55: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:65:28: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+        for (item in block.items) {
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:65:28: error: unresolved reference 'items'.
+        for (item in block.items) {
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:67:20: error: unresolved reference 'PBlock'.
+                is PBlock -> renderPBlock(item, sb, inRow = true)
+                   ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:68:20: error: unresolved reference 'YoutubeBlock'.
+                is YoutubeBlock -> renderYoutubeBlock(item, sb)
+                   ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:69:20: error: unresolved reference 'ScriptureBlock'.
+                is ScriptureBlock -> sb.append("<div class='scriptureReferences'>").append(renderScripture(item.osis)).append("</div>")
+                   ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:69:113: error: unresolved reference 'osis'.
+                is ScriptureBlock -> sb.append("<div class='scriptureReferences'>").append(renderScripture(item.osis)).append("</div>")
+                                                                                                                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:70:20: error: unresolved reference 'GapBlock'.
+                is GapBlock -> sb.append("<div style='height:").append(item.size ?: 1f).append("em'></div>")
+                   ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:70:77: error: unresolved reference 'size'.
+                is GapBlock -> sb.append("<div style='height:").append(item.size ?: 1f).append("em'></div>")
+                                                                            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:79:27: error: unresolved reference 'SongDocument'.
+    fun renderLyrics(doc: SongDocument, forPatchText: Boolean): String {
+                          ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:80:31: error: unresolved reference 'blocks'.
+        val lyricBlocks = doc.blocks.filterIsInstance<LyricBlock>()
+                              ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:80:55: error: unresolved reference 'LyricBlock'.
+        val lyricBlocks = doc.blocks.filterIsInstance<LyricBlock>()
+                                                      ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:82:33: error: operator call 'component1()' is ambiguous for destructuring of type '??? (Unresolved name: next)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+        for ((i, lyricBlock) in lyricBlocks.withIndex()) {
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:82:33: error: operator call 'component2()' is ambiguous for destructuring of type '??? (Unresolved name: next)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+        for ((i, lyricBlock) in lyricBlocks.withIndex()) {
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:82:45: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+        for ((i, lyricBlock) in lyricBlocks.withIndex()) {
+                                            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:83:57: error: unresolved reference 'size'.
+            renderLyricBlock(lyricBlock, i, lyricBlocks.size, sb, forPatchText)
+                                                        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:88:37: error: unresolved reference 'PBlock'.
+    private fun renderPBlock(block: PBlock, sb: StringBuilder, inRow: Boolean = false) {
+                                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:89:25: error: unresolved reference 'role'.
+        val cls = block.role?.takeIf { it in KNOWN_ROLES } ?: "body"
+                        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:89:31: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cls = block.role?.takeIf { it in KNOWN_ROLES } ?: "body"
+                              ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:89:38: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cls = block.role?.takeIf { it in KNOWN_ROLES } ?: "body"
+                                     ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:91:19: error: unresolved reference 'size'.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:91:25: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:91:32: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                               ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:91:51: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                                                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:91:51: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                                                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:91:55: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:92:19: error: unresolved reference 'align'.
+            block.align?.takeIf { it in ALLOWED_ALIGNS }?.let { align ->
+                  ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:92:26: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.align?.takeIf { it in ALLOWED_ALIGNS }?.let { align ->
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:92:33: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.align?.takeIf { it in ALLOWED_ALIGNS }?.let { align ->
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:92:59: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.align?.takeIf { it in ALLOWED_ALIGNS }?.let { align ->
+                                                          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:92:65: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            block.align?.takeIf { it in ALLOWED_ALIGNS }?.let { align ->
+                                                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:108:52: error: unresolved reference 'content'.
+        sb.append(">").append(renderLineHtml(block.content)).append("</div>")
+                                                   ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:111:43: error: unresolved reference 'YoutubeBlock'.
+    private fun renderYoutubeBlock(block: YoutubeBlock, sb: StringBuilder) {
+                                          ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:112:29: error: unresolved reference 'videoId'.
+        val videoId = block.videoId
+                            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:120:46: error: unresolved reference 'LyricBlock'.
+    private fun renderLyricBlock(lyricBlock: LyricBlock, index: Int, totalCount: Int, sb: StringBuilder, forPatchText: Boolean) {
+                                             ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:122:42: error: unresolved reference 'caption'.
+        if (totalCount > 1 || lyricBlock.caption != null) {
+                                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:123:28: error: unresolved reference 'caption'.
+            if (lyricBlock.caption != null) {
+                           ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:124:91: error: unresolved reference 'caption'.
+                sb.append("<div class='lyric_caption'>").append(renderLineHtml(lyricBlock.caption)).append("</div>")
+                                                                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:132:34: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+        for (verse in lyricBlock.verses) {
+                                 ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:132:34: error: unresolved reference 'verses'.
+        for (verse in lyricBlock.verses) {
+                                 ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:133:69: error: unresolved reference 'VerseKind'.
+            sb.append("<div class='verse").append(if (verse.kind == VerseKind.REFRAIN) " refrain" else "").append("'>")
+                                                                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:136:17: error: unresolved reference 'VerseKind'.
+                VerseKind.REFRAIN -> verseNumberReff++
+                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:137:17: error: unresolved reference 'VerseKind'.
+                VerseKind.NORMAL -> verseNumberNormal++
+                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:138:17: error: unresolved reference 'VerseKind'.
+                VerseKind.TEXT -> {}
+                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:143:21: error: unresolved reference 'VerseKind'.
+                    VerseKind.REFRAIN -> sb.append("reff ").append(verseNumberReff)
+                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:144:21: error: unresolved reference 'VerseKind'.
+                    VerseKind.NORMAL -> sb.append(verseNumberNormal)
+                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:145:21: error: unresolved reference 'VerseKind'.
+                    VerseKind.TEXT -> {}
+                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:149:21: error: unresolved reference 'VerseKind'.
+                    VerseKind.REFRAIN -> sb.append("<div class='verse_ordering'>").append(verseNumberReff).append("</div>")
+                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:150:21: error: unresolved reference 'VerseKind'.
+                    VerseKind.NORMAL -> sb.append("<div class='verse_ordering'>").append(verseNumberNormal).append("</div>")
+                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:151:21: error: unresolved reference 'VerseKind'.
+                    VerseKind.TEXT -> {}
+                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:174:41: error: unresolved reference 'VerseLine'.
+    private fun renderVerseLineHtml(vl: VerseLine): String = when (vl) {
+                                        ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:174:62: error: 'when' expression must be exhaustive. Add an 'else' branch.
+    private fun renderVerseLineHtml(vl: VerseLine): String = when (vl) {
+                                                             ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:175:12: error: unresolved reference 'VerseLine'.
+        is VerseLine.Simple -> renderLineHtml(vl.line)
+           ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:175:50: error: unresolved reference 'line'.
+        is VerseLine.Simple -> renderLineHtml(vl.line)
+                                                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:176:12: error: unresolved reference 'VerseLine'.
+        is VerseLine.Wrapped -> {
+           ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:178:20: error: unresolved reference 'size'.
+                vl.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                   ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:178:26: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                vl.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:178:33: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                vl.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                                ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:178:52: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                vl.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                                                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:178:52: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+                vl.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                                                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:178:56: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                vl.size?.takeIf { it.isFinite() }?.let { append("font-size:").append(it).append("em;") }
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:179:20: error: unresolved reference 'align'.
+                vl.align?.takeIf { it in ALLOWED_ALIGNS }?.let { append("text-align:").append(it).append(";") }
+                   ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:179:27: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                vl.align?.takeIf { it in ALLOWED_ALIGNS }?.let { append("text-align:").append(it).append(";") }
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:179:34: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                vl.align?.takeIf { it in ALLOWED_ALIGNS }?.let { append("text-align:").append(it).append(";") }
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:179:60: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                vl.align?.takeIf { it in ALLOWED_ALIGNS }?.let { append("text-align:").append(it).append(";") }
+                                                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:179:64: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                vl.align?.takeIf { it in ALLOWED_ALIGNS }?.let { append("text-align:").append(it).append(";") }
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:181:43: error: unresolved reference 'content'.
+            val inner = renderLineHtml(vl.content)
+                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:187:30: error: unresolved reference 'Line'.
+    fun renderLineHtml(line: Line): String = when (line) {
+                             ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:187:46: error: 'when' expression must be exhaustive. Add an 'else' branch.
+    fun renderLineHtml(line: Line): String = when (line) {
+                                             ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:188:12: error: unresolved reference 'Line'.
+        is Line.Plain -> escapeHtml(line.text)
+           ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:188:42: error: unresolved reference 'text'.
+        is Line.Plain -> escapeHtml(line.text)
+                                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:189:12: error: unresolved reference 'Line'.
+        is Line.Styled -> line.spans.joinToString("") { span -> wrapStyle(escapeHtml(span.text), span.style) }
+           ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:189:32: error: unresolved reference 'spans'.
+        is Line.Styled -> line.spans.joinToString("") { span -> wrapStyle(escapeHtml(span.text), span.style) }
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:189:57: error: cannot infer type for value parameter 'span'. Specify it explicitly.
+        is Line.Styled -> line.spans.joinToString("") { span -> wrapStyle(escapeHtml(span.text), span.style) }
+                                                        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:189:91: error: unresolved reference 'text'.
+        is Line.Styled -> line.spans.joinToString("") { span -> wrapStyle(escapeHtml(span.text), span.style) }
+                                                                                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentRenderer.kt:189:103: error: unresolved reference 'style'.
+        is Line.Styled -> line.spans.joinToString("") { span -> wrapStyle(escapeHtml(span.text), span.style) }
+                                                                                                      ^^^^^

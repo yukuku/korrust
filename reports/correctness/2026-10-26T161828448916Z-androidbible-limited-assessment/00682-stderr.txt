@@ -1,0 +1,246 @@
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:3:12: error: unresolved reference 'junit'.
+import org.junit.Assert.assertArrayEquals
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:4:12: error: unresolved reference 'junit'.
+import org.junit.Assert.assertEquals
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:5:12: error: unresolved reference 'junit'.
+import org.junit.Assert.assertFalse
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:6:12: error: unresolved reference 'junit'.
+import org.junit.Assert.assertNull
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:7:12: error: unresolved reference 'junit'.
+import org.junit.Test
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:8:26: error: unresolved reference 'verses'.
+import yuku.alkitab.base.verses.ReadingGuide
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:9:26: error: unresolved reference 'verses'.
+import yuku.alkitab.base.verses.ReadingGuideMode
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:10:27: error: unresolved reference 'Book'.
+import yuku.alkitab.model.Book
+                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:11:26: error: unresolved reference 'Ari'.
+import yuku.alkitab.util.Ari
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:14:32: error: unresolved reference 'Book'.
+    private fun book(id: Int): Book? = if (id in 0..65) Book().apply {
+                               ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:14:57: error: unresolved reference 'Book'.
+    private fun book(id: Int): Book? = if (id in 0..65) Book().apply {
+                                                        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:14:64: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+    private fun book(id: Int): Book? = if (id in 0..65) Book().apply {
+                                                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:14:70: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+    private fun book(id: Int): Book? = if (id in 0..65) Book().apply {
+                                                                     ^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:15:9: error: unresolved reference 'bookId'.
+        bookId = id
+        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:16:9: error: unresolved reference 'chapter_count'.
+        chapter_count = when (id) { 36 -> 2; 40 -> 16; 53 -> 6; else -> 150 }
+        ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:17:9: error: unresolved reference 'verse_counts'.
+        verse_counts = IntArray(chapter_count) { 50 }
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:17:33: error: unresolved reference 'chapter_count'.
+        verse_counts = IntArray(chapter_count) { 50 }
+                                ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:18:12: error: null cannot be a value of a non-null type 'uninferred K (of fun <K> WHEN_CALL)'.
+    } else null
+           ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:20:60: error: unresolved reference 'Ari'.
+    private fun ari(book: Int, chapter: Int, verse: Int) = Ari.encode(book, chapter, verse)
+                                                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:21:39: error: unresolved reference 'ReadingPassage'.
+    private fun parse(text: String) = ReadingPassage.parse(text, ::book)
+                                      ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:23:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:25:9: error: unresolved reference 'assertArrayEquals'.
+        assertArrayEquals(intArrayOf(ari(53, 6, 6), ari(53, 6, 10)), parse("1 Timotius 6:6–10"))
+        ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:28:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:30:22: error: unresolved reference 'ReadingPassage'.
+        val ranges = ReadingPassage.resolve(parse("Markus 9:5-6, 14-23")!!, ::book)!!
+                     ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:31:21: error: unresolved reference 'ReadingGuide'.
+        val guide = ReadingGuide(ReadingGuideMode.LINE, ranges)
+                    ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:31:34: error: unresolved reference 'ReadingGuideMode'.
+        val guide = ReadingGuide(ReadingGuideMode.LINE, ranges)
+                                 ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:32:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(ReadingRange(ari(40, 9, 5), ari(40, 9, 6)), ReadingRange(ari(40, 9, 14), ari(40, 9, 23))), ranges)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:32:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(ReadingRange(ari(40, 9, 5), ari(40, 9, 6)), ReadingRange(ari(40, 9, 14), ari(40, 9, 23))), ranges)
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:32:29: error: unresolved reference 'ReadingRange'.
+        assertEquals(listOf(ReadingRange(ari(40, 9, 5), ari(40, 9, 6)), ReadingRange(ari(40, 9, 14), ari(40, 9, 23))), ranges)
+                            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:32:73: error: unresolved reference 'ReadingRange'.
+        assertEquals(listOf(ReadingRange(ari(40, 9, 5), ari(40, 9, 6)), ReadingRange(ari(40, 9, 14), ari(40, 9, 23))), ranges)
+                                                                        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:33:9: error: unresolved reference 'assertFalse'.
+        assertFalse(guide.includes(ari(40, 9, 7)))
+        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:34:9: error: unresolved reference 'assertFalse'.
+        assertFalse(guide.includes(ari(40, 9, 13)))
+        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:37:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:39:9: error: unresolved reference 'assertArrayEquals'.
+        assertArrayEquals(intArrayOf(ari(42, 13, 13), ari(42, 13, 13), ari(42, 13, 16), ari(42, 13, 16)), parse("Yohanes 13:13, 16"))
+        ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:42:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:44:9: error: unresolved reference 'assertArrayEquals'.
+        assertArrayEquals(intArrayOf(ari(57, 8, 5), ari(57, 8, 5), ari(57, 10, 1), ari(57, 10, 1)), parse("Ibr  8:5;10:1"))
+        ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:47:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:49:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(ReadingRange(ari(39, 1, 1), ari(39, 4, 50))), ReadingPassage.resolve(parse("Matius 1-4")!!, ::book))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:49:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(ReadingRange(ari(39, 1, 1), ari(39, 4, 50))), ReadingPassage.resolve(parse("Matius 1-4")!!, ::book))
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:49:29: error: unresolved reference 'ReadingRange'.
+        assertEquals(listOf(ReadingRange(ari(39, 1, 1), ari(39, 4, 50))), ReadingPassage.resolve(parse("Matius 1-4")!!, ::book))
+                            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:49:75: error: unresolved reference 'ReadingPassage'.
+        assertEquals(listOf(ReadingRange(ari(39, 1, 1), ari(39, 4, 50))), ReadingPassage.resolve(parse("Matius 1-4")!!, ::book))
+                                                                          ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:50:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(ReadingRange(ari(19, 21, 1), ari(19, 21, 50))), ReadingPassage.resolve(parse("AMSAL 21")!!, ::book))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:50:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(ReadingRange(ari(19, 21, 1), ari(19, 21, 50))), ReadingPassage.resolve(parse("AMSAL 21")!!, ::book))
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:50:29: error: unresolved reference 'ReadingRange'.
+        assertEquals(listOf(ReadingRange(ari(19, 21, 1), ari(19, 21, 50))), ReadingPassage.resolve(parse("AMSAL 21")!!, ::book))
+                            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:50:77: error: unresolved reference 'ReadingPassage'.
+        assertEquals(listOf(ReadingRange(ari(19, 21, 1), ari(19, 21, 50))), ReadingPassage.resolve(parse("AMSAL 21")!!, ::book))
+                                                                            ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:53:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:55:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(ReadingRange(ari(39, 5, 40), ari(39, 6, 10))), ReadingPassage.resolve(parse("Matius 5:40-6:10")!!, ::book))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:55:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(ReadingRange(ari(39, 5, 40), ari(39, 6, 10))), ReadingPassage.resolve(parse("Matius 5:40-6:10")!!, ::book))
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:55:29: error: unresolved reference 'ReadingRange'.
+        assertEquals(listOf(ReadingRange(ari(39, 5, 40), ari(39, 6, 10))), ReadingPassage.resolve(parse("Matius 5:40-6:10")!!, ::book))
+                            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:55:76: error: unresolved reference 'ReadingPassage'.
+        assertEquals(listOf(ReadingRange(ari(39, 5, 40), ari(39, 6, 10))), ReadingPassage.resolve(parse("Matius 5:40-6:10")!!, ::book))
+                                                                           ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:58:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:60:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(ReadingRange(ari(30, 1, 1), ari(30, 1, 50))), ReadingPassage.resolve(parse("Obaja 1")!!, ::book))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:60:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(ReadingRange(ari(30, 1, 1), ari(30, 1, 50))), ReadingPassage.resolve(parse("Obaja 1")!!, ::book))
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:60:29: error: unresolved reference 'ReadingRange'.
+        assertEquals(listOf(ReadingRange(ari(30, 1, 1), ari(30, 1, 50))), ReadingPassage.resolve(parse("Obaja 1")!!, ::book))
+                            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:60:75: error: unresolved reference 'ReadingPassage'.
+        assertEquals(listOf(ReadingRange(ari(30, 1, 1), ari(30, 1, 50))), ReadingPassage.resolve(parse("Obaja 1")!!, ::book))
+                                                                          ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:63:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:66:9: error: unresolved reference 'assertArrayEquals'.
+        assertArrayEquals(intArrayOf(encoded, encoded), parse("ari:$encoded"))
+        ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:67:9: error: unresolved reference 'assertArrayEquals'.
+        assertArrayEquals(intArrayOf(ari(39, 28, 20), ari(39, 28, 20)), parse("Mat.  28:20"))
+        ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:70:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:73:13: error: unresolved reference 'assertNull'.
+            assertNull(text, parse(text))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:75:9: error: unresolved reference 'assertNull'.
+        assertNull(ReadingPassage.parse("Matius 1:1") { null })
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:75:20: error: unresolved reference 'ReadingPassage'.
+        assertNull(ReadingPassage.parse("Matius 1:1") { null })
+                   ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:78:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:80:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(ReadingRange(ari(36, 1, 1), ari(36, 2, 50))), ReadingPassage.resolve(parse("Hagai")!!, ::book))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:80:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(ReadingRange(ari(36, 1, 1), ari(36, 2, 50))), ReadingPassage.resolve(parse("Hagai")!!, ::book))
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:80:29: error: unresolved reference 'ReadingRange'.
+        assertEquals(listOf(ReadingRange(ari(36, 1, 1), ari(36, 2, 50))), ReadingPassage.resolve(parse("Hagai")!!, ::book))
+                            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:80:75: error: unresolved reference 'ReadingPassage'.
+        assertEquals(listOf(ReadingRange(ari(36, 1, 1), ari(36, 2, 50))), ReadingPassage.resolve(parse("Hagai")!!, ::book))
+                                                                          ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:83:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:85:9: error: unresolved reference 'assertArrayEquals'.
+        assertArrayEquals(intArrayOf(ari(39, 1, 0), ari(39, 1, 0), ari(39, 3, 0), ari(39, 3, 0)), parse("Matius 1, 3"))
+        ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:88:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:90:9: error: unresolved reference 'assertEquals'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference(null))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:90:22: error: unresolved reference 'ReadingGuideMode'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference(null))
+                     ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:90:44: error: unresolved reference 'ReadingGuideMode'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference(null))
+                                           ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:91:9: error: unresolved reference 'assertEquals'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference("unexpected"))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:91:22: error: unresolved reference 'ReadingGuideMode'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference("unexpected"))
+                     ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:91:44: error: unresolved reference 'ReadingGuideMode'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference("unexpected"))
+                                           ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:92:9: error: unresolved reference 'assertEquals'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference("labels"))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:92:22: error: unresolved reference 'ReadingGuideMode'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference("labels"))
+                     ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:92:44: error: unresolved reference 'ReadingGuideMode'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference("labels"))
+                                           ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:93:9: error: unresolved reference 'assertEquals'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference("caption"))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:93:22: error: unresolved reference 'ReadingGuideMode'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference("caption"))
+                     ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/ReadingPassageTest.kt:93:44: error: unresolved reference 'ReadingGuideMode'.
+        assertEquals(ReadingGuideMode.OFF, ReadingGuideMode.fromPreference("caption"))
+                                           ^^^^^^^^^^^^^^^^

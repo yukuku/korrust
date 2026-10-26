@@ -26,9 +26,11 @@ Open the [HTML reports](target/reports-html/index.html); see [report generation 
 
 Use [feature reports](reports/features/) to assess the tested subset and limitations. Run `python3 tools/check_declarations_twenty.py` after a release build for the declaration, control-flow, and operator milestone checks.
 
-The Korrust CLI accepts one source file and an output directory. Pass dependency directories or JAR files with `-cp <classpath>`; separate entries with the platform path separator (`:` on macOS/Linux). JDK classes are read from `JAVA_HOME/jmods/java.base.jmod` after explicit dependencies. The differential harness prepares its dependencies automatically.
+The Korrust CLI accepts one or more source files and an output directory. Pass all sources for a module together, followed by `-d <output-directory>` and `--module-name <name>`. Pass dependency directories or JAR files with `-cp <classpath>`; separate entries with the platform path separator (`:` on macOS/Linux). JDK classes are read from `JAVA_HOME/jmods/java.base.jmod` after explicit dependencies. The differential harness prepares its dependencies automatically.
 
-Use a dedicated output directory. Korrust records ownership of emitted classes and Kotlin package metadata there and refuses to overwrite unowned or externally modified outputs. Recompiling a source removes obsolete outputs previously emitted by that source.
+Use `--friend-paths <classpath>` to allow access to internal declarations in the listed dependency outputs. Diagnostics use readable text by default; pass `--diagnostic-format json` for structured diagnostics on standard error. Source offsets count UTF-8 bytes from zero. Lines and Unicode character columns count from one.
+
+Use a dedicated output directory. Korrust records ownership of emitted classes and Kotlin package metadata there and refuses to overwrite unowned or externally modified outputs. A single-source command without `--module-name` removes obsolete outputs from that source. A module command removes obsolete outputs from its complete source set, including removed sources. To remove the last source, run an empty module command with the same output directory and module name.
 
 Agent workflow and review guidance lives in [AGENTS.md](AGENTS.md).
 

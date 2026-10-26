@@ -2,8 +2,12 @@
   {
     "id": "nullable_double",
     "source": "fun f(value: Double?): Double? = value",
-    "scope": "Nullable Double scalars remain unsupported.",
-    "candidate_diagnostic": "Double was not found"
+    "scope": "Former unsupported nullable Double identity source now compiles; fixed official-compiled Java bytecode checks null, NaN, payload bits, boxed identity, signed zeros, infinities and finite boundaries.",
+    "supported_regression": {
+      "facade": "Boundary_nullable_doubleKt",
+      "java_fixture": "NullableDoubleBoundaryCheck.java",
+      "main_class": "NullableDoubleBoundaryCheck"
+    }
   },
   {
     "id": "safe_unit_result",
@@ -14,14 +18,22 @@
   {
     "id": "unsupported_list_scalar",
     "source": "fun f(values: List<Double>): Int = values.size",
-    "scope": "Double list elements remain outside the supported scalar types.",
-    "candidate_diagnostic": "Double was not found"
+    "scope": "Former unsupported List<Double> source now uses ordinary virtual size dispatch with generic JVM ABI; checks empty/finite/NaN lists, one size call without element reads, and nonnull argument checks.",
+    "supported_regression": {
+      "facade": "Boundary_unsupported_list_scalarKt",
+      "java_fixture": "DoubleListBoundaryCheck.java",
+      "main_class": "DoubleListBoundaryCheck"
+    }
   },
   {
     "id": "list_factory_spread",
     "source": "fun f(values: Array<String>): List<String> = listOf(*values)",
-    "scope": "Spread arguments to list factories remain unsupported.",
-    "candidate_diagnostic": "Expected an identifier"
+    "scope": "Former unsupported list factory spread now preserves contents/order, copies array storage, and checks empty/single/null cases using fixed official-compiled callers.",
+    "supported_regression": {
+      "facade": "Boundary_list_factory_spreadKt",
+      "java_fixture": "ListSpreadBoundaryCheck.java",
+      "main_class": "ListSpreadBoundaryCheck"
+    }
   },
   {
     "id": "list_mutation",
@@ -46,8 +58,8 @@
   {
     "id": "data_inheritance",
     "source": "data class E(val value: Int) : java.io.Serializable",
-    "scope": "General data-class inheritance remains unsupported.",
-    "candidate_diagnostic": "Only imported interface supertypes"
+    "scope": "Data classes currently reject interface supertypes, including this unchanged Serializable marker implementation; official Kotlin accepts it.",
+    "candidate_diagnostic": "Data classes require 1 to 32 public val constructor properties without interfaces"
   },
   {
     "id": "data_constructor_limit",
@@ -58,8 +70,12 @@
   {
     "id": "custom_mutable_accessor",
     "source": "class E { var value: Int = 1; set(value) { field = value } }",
-    "scope": "Custom mutable accessors remain unsupported.",
-    "candidate_diagnostic": "Only instance functions, properties"
+    "scope": "Former unsupported custom setter source now preserves initialized backing state, instance isolation and Int boundaries.",
+    "supported_regression": {
+      "facade": "E",
+      "java_fixture": "MutableAccessorBoundaryCheck.java",
+      "main_class": "MutableAccessorBoundaryCheck"
+    }
   },
   {
     "id": "unstable_mutable_smartcast",
@@ -70,8 +86,12 @@
   {
     "id": "when_subject_declaration",
     "source": "fun f(value: String): Int = when (val text = value) { \"a\" -> 1; else -> 2 }",
-    "scope": "When subject declarations remain unsupported.",
-    "candidate_diagnostic": "Expected an identifier"
+    "scope": "Former unsupported when-subject variable now preserves structural String matching, else behavior, UTF-16 contents and nonnull argument checks.",
+    "supported_regression": {
+      "facade": "Boundary_when_subject_declarationKt",
+      "java_fixture": "WhenSubjectBoundaryCheck.java",
+      "main_class": "WhenSubjectBoundaryCheck"
+    }
   },
   {
     "id": "when_missing_else",
@@ -108,7 +128,11 @@
   {
     "id": "nullable_structural_equality",
     "source": "fun f(a: String?, b: String?): Boolean = a == b",
-    "scope": "Nullable references support comparison with null; general nullable structural equality remains unsupported.",
-    "candidate_diagnostic": "Nullable operands support only equality with null and Elvis"
+    "scope": "Former unsupported nullable String equality now preserves both-null, one-null, distinct-identity structural equality and UTF-16 behavior.",
+    "supported_regression": {
+      "facade": "Boundary_nullable_structural_equalityKt",
+      "java_fixture": "NullableEqualityBoundaryCheck.java",
+      "main_class": "NullableEqualityBoundaryCheck"
+    }
   }
 ]

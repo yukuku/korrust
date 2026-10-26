@@ -43,7 +43,7 @@
     "id": "nonproperty_capture",
     "source": "class E(value: Int) { fun f(): Int = value }",
     "invalid": true,
-    "candidate_diagnostic": "Unresolved local",
+    "candidate_diagnostic": "Constructor parameter value is not a property",
     "official_diagnostic": "unresolved reference",
     "scope": "A nonproperty constructor parameter is invisible in instance methods."
   },
@@ -59,15 +59,19 @@
     "id": "init_block",
     "source": "class E { init { } }",
     "invalid": false,
-    "candidate_diagnostic": "Only instance functions, properties, and companion properties",
     "official_diagnostic": null,
-    "scope": "Initializer blocks are outside initialized-property support."
+    "scope": "Former bounded rejection now verifies empty initializer construction and fresh instances.",
+    "supported_regression": {
+      "facade": "E",
+      "java_fixture": "InitBlockBoundaryCheck.java",
+      "main_class": "InitBlockBoundaryCheck"
+    }
   },
   {
     "id": "generic_declaration",
     "source": "class E<T>(val value: T)",
     "invalid": false,
-    "candidate_diagnostic": "Only imported interface supertypes",
+    "candidate_diagnostic": "Expected a class body or declaration separator",
     "official_diagnostic": null,
     "scope": "Generic declarations are outside concrete typed List support."
   },
@@ -99,9 +103,13 @@
     "id": "general_inheritance",
     "source": "open class E(val value: Int)",
     "invalid": false,
-    "candidate_diagnostic": "Only ordinary final classes",
     "official_diagnostic": null,
-    "scope": "General class inheritance is outside this final-class milestone."
+    "scope": "Former bounded rejection now verifies open constructor properties and Java subclass linkage.",
+    "supported_regression": {
+      "facade": "E",
+      "java_fixture": "OpenClassBoundaryCheck.java",
+      "main_class": "OpenClassBoundaryCheck"
+    }
   },
   {
     "id": "smartcast_conditional_elvis",
@@ -131,7 +139,7 @@
     "id": "uninferred_empty_local",
     "source": "fun f(): Int { val x = emptyList(); return x.size }",
     "invalid": true,
-    "candidate_diagnostic": "Cannot infer list element type",
+    "candidate_diagnostic": "Cannot infer type parameter T",
     "official_diagnostic": "cannot infer type",
     "scope": "An untyped emptyList without an expected element type cannot invent a concrete List type."
   },
@@ -139,7 +147,7 @@
     "id": "uninferred_empty_receiver",
     "source": "fun f(): Int = emptyList().size",
     "invalid": true,
-    "candidate_diagnostic": "Cannot infer list element type",
+    "candidate_diagnostic": "Cannot infer type parameter T",
     "official_diagnostic": "cannot infer type",
     "scope": "An untyped emptyList without an expected element type cannot invent a concrete List type."
   },

@@ -68,6 +68,7 @@ fn register_names(
             | "List"
             | "Char"
             | "Float"
+            | "Double"
             | "Boolean"
             | "String"
             | "IntArray"
@@ -211,6 +212,12 @@ fn register_classes(
     }
     for method in &source.methods {
         let function = &method.function;
+        if !function.annotations.is_empty() {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Annotations on source interface methods are not supported",
+            ));
+        }
         if function.defaults.iter().any(Option::is_some) {
             return Err(Diagnostic::new(
                 function.offset,
@@ -261,6 +268,8 @@ fn register_classes(
             JavaMethod {
                 library: (function.infix || function.operator).then(|| {
                     crate::classpath::LibraryMethod {
+                        abstract_: false,
+                        builtin_array: false,
                         source_name: function.name.clone(),
                         operator: function.operator,
                         kotlin_public: !function.private
@@ -302,6 +311,8 @@ fn register_classes(
         .insert(
             owner.into(),
             JavaClass {
+                annotation_definition: None,
+                kotlin_fun_interface: false,
                 library: None,
                 fields: Vec::new(),
                 kotlin_class: false,
@@ -797,6 +808,9 @@ fn check_function(
         Vec::new()
     };
     Ok(Function {
+        jvm_name: None,
+        annotations: Vec::new(),
+        vararg: false,
         type_params: Vec::new(),
         defaults: Vec::new(),
         name: name.into(),
@@ -1034,10 +1048,12 @@ interface Catalog {
         );
     }
     #[test]
-    fn if_expressions_reject_mixed_platform_branches_in_either_order() {
+    fn if_expressions_join_mixed_platform_branches_in_either_order() {
         let classes = HashMap::from([(
             "Foreign".into(),
             JavaClass {
+                annotation_definition: None,
+                kotlin_fun_interface: false,
                 library: None,
                 fields: Vec::new(),
                 kotlin_class: false,
@@ -1118,11 +1134,18 @@ interface Catalog {
             checker
                 .declare("foreign", Type::Java("Foreign".into()), false, 0)
                 .unwrap();
-            let error = checker
-                .value(expr)
-                .err()
-                .expect("mixed platform branches must reject");
-            assert!(error.message.contains("common type inference"));
+            let value = checker.value(expr).unwrap();
+            assert_eq!(value.ty, Type::Platform(Box::new(Type::String)));
+            let nullable = checker
+                .coerce(
+                    value.clone(),
+                    Type::Nullable(Box::new(Type::String)),
+                    expr.offset,
+                )
+                .unwrap();
+            assert!(!matches!(nullable.kind, ValueKind::NotNull(..)));
+            let required = checker.coerce(value, Type::String, expr.offset).unwrap();
+            assert!(matches!(required.kind, ValueKind::NotNull(..)));
         }
     }
     #[test]
@@ -1171,6 +1194,8 @@ interface Catalog {
             let classes = HashMap::from([(
                 "foreign/Parent".into(),
                 JavaClass {
+                    annotation_definition: None,
+                    kotlin_fun_interface: false,
                     library: None,
                     fields: Vec::new(),
                     kotlin_class: false,

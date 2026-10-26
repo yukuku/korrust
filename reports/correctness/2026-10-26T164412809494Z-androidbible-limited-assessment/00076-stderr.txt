@@ -1,0 +1,104 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:3:8: error: unresolved reference 'kotlinx'.
+import kotlinx.serialization.SerializationException
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:4:8: error: unresolved reference 'kotlinx'.
+import kotlinx.serialization.json.Json
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:5:8: error: unresolved reference 'okhttp3'.
+import okhttp3.HttpUrl.Companion.toHttpUrl
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:6:32: error: unresolved reference 'model'.
+import yuku.alkitab.base.audio.model.AudioSet
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:7:32: error: unresolved reference 'model'.
+import yuku.alkitab.base.audio.model.ChapterTiming
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:8:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.AppLog
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:9:21: error: unresolved reference 'debug'.
+import yuku.alkitab.debug.BuildConfig
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:25:24: error: unresolved reference 'Json'.
+    private val json = Json { ignoreUnknownKeys = true }
+                       ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:25:31: error: unresolved reference 'ignoreUnknownKeys'.
+    private val json = Json { ignoreUnknownKeys = true }
+                              ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:27:24: error: unresolved reference 'AudioHttp'.
+    internal var http: AudioHttp = OkHttpAudioHttp
+                       ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:27:36: error: unresolved reference 'OkHttpAudioHttp'.
+    internal var http: AudioHttp = OkHttpAudioHttp
+                                   ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:36:35: error: unresolved reference 'mp3UrlTemplate'.
+        return expandTemplate(set.mp3UrlTemplate, bookId, chapter_1)
+                                  ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:45:95: error: unresolved reference 'ChapterTiming'.
+    suspend fun fetchTiming(versionId: String, audioId: String, bookId: Int, chapter_1: Int): ChapterTiming? {
+                                                                                              ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:47:28: error: unresolved reference 'timingUrlTemplate'.
+        val template = set.timingUrlTemplate ?: return null
+                           ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:49:25: error: unresolved reference 'getBody'.
+        val body = http.getBody(url) ?: return null
+                        ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:50:33: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        parseTiming(body, url)?.let { return it }
+                                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:50:33: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        parseTiming(body, url)?.let { return it }
+                                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:50:33: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T, R> T.let(block: (T) -> R): R
+        parseTiming(body, url)?.let { return it }
+                                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:50:37: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        parseTiming(body, url)?.let { return it }
+                                    ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:54:9: error: unresolved reference 'AppLog'.
+        AppLog.w(TAG, "timing did not parse for $url; refetching past the HTTP cache")
+        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:55:26: error: unresolved reference 'getBodyRevalidating'.
+        val fresh = http.getBodyRevalidating(url) ?: return null
+                         ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:59:57: error: unresolved reference 'ChapterTiming'.
+    private fun parseTiming(body: String, url: String): ChapterTiming? {
+                                                        ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:61:35: error: unresolved reference 'ChapterTiming'.
+            json.decodeFromString(ChapterTiming.serializer(), body)
+                                  ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:62:21: error: unresolved reference 'SerializationException'.
+        } catch (e: SerializationException) {
+                    ^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:63:13: error: unresolved reference 'AppLog'.
+            AppLog.w(TAG, "timing JSON did not parse for $url: ${e.message}")
+            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:63:68: error: unresolved reference 'message'.
+            AppLog.w(TAG, "timing JSON did not parse for $url: ${e.message}")
+                                                                   ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:68:73: error: unresolved reference 'AudioSet'.
+    private suspend fun resolveSet(versionId: String, audioId: String): AudioSet? =
+                                                                        ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:69:9: error: unresolved reference 'AudioSetsRepository'.
+        AudioSetsRepository.setsFor(versionId).sets.firstOrNull { it.audioId == audioId }
+        ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:69:67: error: unresolved reference 'it'.
+        AudioSetsRepository.setsFor(versionId).sets.firstOrNull { it.audioId == audioId }
+                                                                  ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:71:28: error: property delegate must have a 'getValue(BibleAudioRepository, KProperty1<BibleAudioRepository, ??? (Unknown type for type parameter T)>)' method. None of the following functions is applicable:
+fun <T> Lazy<T>.getValue(thisRef: Any?, property: KProperty<*>): T
+    private val serverBase by lazy { BuildConfig.SERVER_HOST.toHttpUrl() }
+                           ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:71:31: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+    private val serverBase by lazy { BuildConfig.SERVER_HOST.toHttpUrl() }
+                              ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:71:31: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+    private val serverBase by lazy { BuildConfig.SERVER_HOST.toHttpUrl() }
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:71:38: error: unresolved reference 'BuildConfig'.
+    private val serverBase by lazy { BuildConfig.SERVER_HOST.toHttpUrl() }
+                                     ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleAudioRepository.kt:85:13: error: unresolved reference 'AppLog'.
+            AppLog.w(TAG, "audio URL template did not resolve: $expanded")
+            ^^^^^^

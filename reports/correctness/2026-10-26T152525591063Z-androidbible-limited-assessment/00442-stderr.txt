@@ -1,0 +1,417 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:3:16: error: unresolved reference 'content'.
+import android.content.ComponentName
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:4:16: error: unresolved reference 'content'.
+import android.content.Context
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:5:16: error: unresolved reference 'content'.
+import android.content.Intent
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:6:16: error: unresolved reference 'content'.
+import android.content.ServiceConnection
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:7:19: error: unresolved reference 'IBinder'.
+import android.os.IBinder
+                  ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:8:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.CoroutineScope
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:9:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.Dispatchers
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:10:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.Job
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:11:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.cancel
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:12:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.launch
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:13:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.AppLog
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:28:51: error: unresolved reference 'Context'.
+class SongAudioController(private val appContext: Context) : MediaController() {
+                                                  ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:28:62: error: unresolved reference 'MediaController'.
+class SongAudioController(private val appContext: Context) : MediaController() {
+                                                             ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:30:25: error: unresolved reference 'CoroutineScope'.
+    private val scope = CoroutineScope(Dispatchers.Main.immediate)
+                        ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:30:40: error: unresolved reference 'Dispatchers'.
+    private val scope = CoroutineScope(Dispatchers.Main.immediate)
+                                       ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:31:29: error: unresolved reference 'Job'.
+    private var collectJob: Job? = null
+                            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:32:26: error: unresolved reference 'SongAudioService'.
+    private var service: SongAudioService? = null
+                         ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:37:33: error: unresolved reference 'SongAudioService'.
+    private var pendingRequest: SongAudioService.SongRequest? = null
+                                ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:39:39: error: unresolved reference 'ServiceConnection'.
+    private val connection = object : ServiceConnection {
+                                      ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:40:47: error: unresolved reference 'ComponentName'.
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+                                              ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:40:71: error: unresolved reference 'IBinder'.
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+                                                                      ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:41:35: error: unresolved reference 'SongAudioService'.
+            val svc = (binder as? SongAudioService.LocalBinder)?.service ?: return
+                                  ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:41:66: error: unresolved reference 'service'.
+            val svc = (binder as? SongAudioService.LocalBinder)?.service ?: return
+                                                                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:43:25: error: unresolved reference 'cancel'.
+            collectJob?.cancel()
+                        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:45:54: error: unresolved reference 'it'.
+                svc.playbackState.collect { mapState(it) }
+                                                     ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:47:29: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            pendingRequest?.let { req ->
+                            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:47:29: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            pendingRequest?.let { req ->
+                            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:47:29: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T, R> T.let(block: (T) -> R): R
+            pendingRequest?.let { req ->
+                            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:47:35: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            pendingRequest?.let { req ->
+                                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:53:50: error: unresolved reference 'ComponentName'.
+        override fun onServiceDisconnected(name: ComponentName?) {
+                                                 ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:55:25: error: unresolved reference 'cancel'.
+            collectJob?.cancel()
+                        ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:67:9: error: unresolved reference 'MediaController'.
+        super.reset()
+        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:67:15: error: unresolved reference 'reset'.
+        super.reset()
+              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:68:18: error: unresolved reference 'stop'.
+        service?.stop()
+                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:73:15: error: unresolved reference 'state'.
+        when (state) {
+              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:74:13: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.reset -> Unit
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:74:19: error: unresolved reference 'reset'.
+            State.reset -> Unit
+                  ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:76:13: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.reset_media_known_to_exist, State.complete, State.error -> {
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:76:19: error: unresolved reference 'reset_media_known_to_exist'.
+            State.reset_media_known_to_exist, State.complete, State.error -> {
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:76:47: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.reset_media_known_to_exist, State.complete, State.error -> {
+                                              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:76:53: error: unresolved reference 'complete'.
+            State.reset_media_known_to_exist, State.complete, State.error -> {
+                                                    ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:76:63: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.reset_media_known_to_exist, State.complete, State.error -> {
+                                                              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:76:69: error: unresolved reference 'error'.
+            State.reset_media_known_to_exist, State.complete, State.error -> {
+                                                                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:77:27: error: unresolved reference 'url'.
+                val url = url ?: return
+                          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:78:17: error: unresolved reference 'state'.
+                state = State.preparing
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:78:25: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+                state = State.preparing
+                        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:78:31: error: unresolved reference 'preparing'.
+                state = State.preparing
+                              ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:80:31: error: unresolved reference 'SongAudioService'.
+                val request = SongAudioService.SongRequest(
+                              ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:86:26: error: unresolved reference 'load'.
+                service?.load(request) ?: run { pendingRequest = request }
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:89:13: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.preparing -> Unit
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:89:19: error: unresolved reference 'preparing'.
+            State.preparing -> Unit
+                  ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:91:13: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.playing -> {
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:91:19: error: unresolved reference 'playing'.
+            State.playing -> {
+                  ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:93:30: error: unresolved reference 'setLoop'.
+                    service?.setLoop(true)
+                             ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:95:30: error: unresolved reference 'pause'.
+                    service?.pause()
+                             ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:99:13: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.paused -> {
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:99:19: error: unresolved reference 'paused'.
+            State.paused -> {
+                  ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:100:26: error: unresolved reference 'setLoop'.
+                service?.setLoop(playInLoop)
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:101:26: error: unresolved reference 'play'.
+                service?.play()
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:108:22: error: unresolved reference 'state'.
+        return when (state) {
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:109:13: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.playing, State.paused, State.complete -> longArrayOf(svc.currentPositionMs, svc.durationMs)
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:109:19: error: unresolved reference 'playing'.
+            State.playing, State.paused, State.complete -> longArrayOf(svc.currentPositionMs, svc.durationMs)
+                  ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:109:28: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.playing, State.paused, State.complete -> longArrayOf(svc.currentPositionMs, svc.durationMs)
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:109:34: error: unresolved reference 'paused'.
+            State.playing, State.paused, State.complete -> longArrayOf(svc.currentPositionMs, svc.durationMs)
+                                 ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:109:42: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.playing, State.paused, State.complete -> longArrayOf(svc.currentPositionMs, svc.durationMs)
+                                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:109:48: error: unresolved reference 'complete'.
+            State.playing, State.paused, State.complete -> longArrayOf(svc.currentPositionMs, svc.durationMs)
+                                               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:109:76: error: unresolved reference 'currentPositionMs'.
+            State.playing, State.paused, State.complete -> longArrayOf(svc.currentPositionMs, svc.durationMs)
+                                                                           ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:109:99: error: unresolved reference 'durationMs'.
+            State.playing, State.paused, State.complete -> longArrayOf(svc.currentPositionMs, svc.durationMs)
+                                                                                                  ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:114:29: error: unresolved reference 'SongPlaybackState'.
+    private fun mapState(s: SongPlaybackState) {
+                            ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:115:9: error: unresolved reference 'state'.
+        state = when {
+        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:116:15: error: unresolved reference 'error'.
+            s.error != null -> State.error
+              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:116:32: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            s.error != null -> State.error
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:116:38: error: unresolved reference 'error'.
+            s.error != null -> State.error
+                                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:117:15: error: unresolved reference 'preparing'.
+            s.preparing -> State.preparing
+              ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:117:28: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            s.preparing -> State.preparing
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:117:34: error: unresolved reference 'preparing'.
+            s.preparing -> State.preparing
+                                 ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:118:15: error: unresolved reference 'isPlaying'.
+            s.isPlaying -> State.playing
+              ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:118:28: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            s.isPlaying -> State.playing
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:118:34: error: unresolved reference 'playing'.
+            s.isPlaying -> State.playing
+                                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:119:15: error: unresolved reference 'ended'.
+            s.ended -> State.complete
+              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:119:24: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            s.ended -> State.complete
+                       ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:119:30: error: unresolved reference 'complete'.
+            s.ended -> State.complete
+                             ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:120:15: error: unresolved reference 'hasMedia'.
+            s.hasMedia -> State.paused
+              ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:120:27: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            s.hasMedia -> State.paused
+                          ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:120:33: error: unresolved reference 'paused'.
+            s.hasMedia -> State.paused
+                                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:121:21: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            else -> State.reset_media_known_to_exist
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:121:27: error: unresolved reference 'reset_media_known_to_exist'.
+            else -> State.reset_media_known_to_exist
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:127:27: error: unresolved reference 'Intent'.
+        val startIntent = Intent(appContext, SongAudioService::class.java)
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:127:46: error: unresolved reference 'SongAudioService'.
+        val startIntent = Intent(appContext, SongAudioService::class.java)
+                                             ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:127:70: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val startIntent = Intent(appContext, SongAudioService::class.java)
+                                                                     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:127:70: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+val <T> KClass<T>.java: Class<T>
+        val startIntent = Intent(appContext, SongAudioService::class.java)
+                                                                     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:128:20: error: unresolved reference 'startService'.
+        appContext.startService(startIntent)
+                   ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:129:26: error: unresolved reference 'Intent'.
+        val bindIntent = Intent(appContext, SongAudioService::class.java)
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:129:45: error: unresolved reference 'SongAudioService'.
+        val bindIntent = Intent(appContext, SongAudioService::class.java)
+                                            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:129:69: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val bindIntent = Intent(appContext, SongAudioService::class.java)
+                                                                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:129:69: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+val <T> KClass<T>.java: Class<T>
+        val bindIntent = Intent(appContext, SongAudioService::class.java)
+                                                                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:130:24: error: unresolved reference 'SongAudioService'.
+            .setAction(SongAudioService.ACTION_LOCAL_BIND)
+                       ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:132:28: error: unresolved reference 'bindService'.
+            if (appContext.bindService(bindIntent, connection, Context.BIND_AUTO_CREATE)) {
+                           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:132:64: error: unresolved reference 'Context'.
+            if (appContext.bindService(bindIntent, connection, Context.BIND_AUTO_CREATE)) {
+                                                               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:135:17: error: unresolved reference 'AppLog'.
+                AppLog.w(TAG, "bindService returned false — service not bound")
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:138:13: error: unresolved reference 'AppLog'.
+            AppLog.e(TAG, "bindService denied: ${e.message}")
+            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:145:28: error: unresolved reference 'unbindService'.
+                appContext.unbindService(connection)
+                           ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:147:17: error: unresolved reference 'AppLog'.
+                AppLog.w(TAG, "unbindService: ${e.message}")
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongAudioController.kt:153:21: error: unresolved reference 'cancel'.
+        collectJob?.cancel()
+                    ^^^^^^

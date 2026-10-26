@@ -212,10 +212,29 @@ impl Checker<'_> {
             }
             return Err(Diagnostic::new(offset, format!("Unresolved local: {name}")));
         };
-        if !matches!(ty, Type::Int | Type::Long | Type::Float) {
+        if ty == Type::String && op == "+=" {
+            let expression = Expr {
+                offset,
+                kind: ExprKind::Binary(
+                    "+".into(),
+                    Box::new(Expr {
+                        offset,
+                        kind: ExprKind::Name(name.into()),
+                    }),
+                    Box::new(right.clone()),
+                ),
+            };
+            let value = self.expected_value(&expression, &Type::String)?;
+            return if let Some((cell, _)) = cell {
+                self.cell_store(cell, Type::String, value, offset)
+            } else {
+                Ok(Statement::Store(local.unwrap().slot, value))
+            };
+        }
+        if !matches!(ty, Type::Int | Type::Long | Type::Float | Type::Double) {
             return Err(Diagnostic::new(
                 offset,
-                "Numeric compound assignment supports only mutable Int, Long, and Float locals",
+                "Numeric compound assignment supports only mutable Int, Long, Float, and Double locals",
             ));
         }
         let binary = Expr {
@@ -304,6 +323,7 @@ impl Checker<'_> {
                 | Type::Char
                 | Type::Boolean
                 | Type::Float
+                | Type::Double
                 | Type::IntArray
                 | Type::ByteArray
                 | Type::CharArray
@@ -452,19 +472,24 @@ impl Checker<'_> {
         if !matches!(op, "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=") {
             return Err(Diagnostic::new(offset, "Unsupported Float operation"));
         }
+        let numeric = if left.ty == Type::Double || right.ty == Type::Double {
+            Type::Double
+        } else {
+            Type::Float
+        };
         let promote = |value: Value| -> Result<Value> {
-            if value.ty == Type::Float {
+            if value.ty == numeric {
                 return Ok(value);
             }
-            if !matches!(value.ty, Type::Int | Type::Long | Type::Byte) {
+            if !matches!(value.ty, Type::Int | Type::Long | Type::Byte | Type::Float) {
                 return Err(Diagnostic::new(
                     offset,
                     "Float operations require numeric operands",
                 ));
             }
             Ok(Value {
-                ty: Type::Float,
-                kind: ValueKind::Convert(Type::Float, Box::new(value)),
+                ty: numeric.clone(),
+                kind: ValueKind::Convert(numeric.clone(), Box::new(value)),
             })
         };
         let left = promote(left)?;
@@ -473,7 +498,7 @@ impl Checker<'_> {
             ty: if matches!(op, "<" | ">" | "<=" | ">=") {
                 Type::Boolean
             } else {
-                Type::Float
+                numeric
             },
             kind: ValueKind::Binary(op.into(), Box::new(left), Box::new(right)),
         })
@@ -535,7 +560,14 @@ impl Checker<'_> {
             Type::Nullable(t) => t.as_ref() == &Type::Float,
             _ => false,
         };
-        let descriptor = if float(&left.ty) && float(&right.ty) {
+        let double = |ty: &Type| match ty.base() {
+            Type::Double => true,
+            Type::Nullable(inner) => inner.as_ref() == &Type::Double,
+            _ => false,
+        };
+        let descriptor = if double(&left.ty) && double(&right.ty) {
+            "(Ljava/lang/Double;Ljava/lang/Double;)Z"
+        } else if float(&left.ty) && float(&right.ty) {
             "(Ljava/lang/Float;Ljava/lang/Float;)Z"
         } else {
             "(Ljava/lang/Object;Ljava/lang/Object;)Z"
@@ -976,7 +1008,7 @@ impl Checker<'_> {
             .members
             .values()
             .filter(|m| {
-                m.name == name
+                m.source_name() == name
                     && self
                         .receiver
                         .as_ref()
@@ -1013,7 +1045,7 @@ impl Checker<'_> {
                         inherited
                             .into_iter()
                             .filter(|m| {
-                                m.name == name
+                                m.source_name() == name
                                     && m.access & 8 == 0
                                     && m.library.as_ref().is_some_and(|l| l.infix)
                                     && !relations::projected_input(
@@ -1135,7 +1167,7 @@ impl Checker<'_> {
                 let mut ordinary = Vec::new();
                 for method in inherited
                     .into_iter()
-                    .filter(|m| m.name == name && m.access & 9 == 1)
+                    .filter(|m| m.source_name() == name && m.access & 9 == 1)
                 {
                     let kotlin = self
                         .classes
@@ -1405,6 +1437,36 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        self.array_constructor_kind(types, args, offset, None)
+    }
+
+    pub(super) fn primitive_array_constructor(
+        &mut self,
+        array: Type,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        let element = match array {
+            Type::IntArray => Type::Int,
+            Type::ByteArray => Type::Byte,
+            Type::CharArray => Type::Char,
+            _ => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Unsupported primitive array constructor",
+                ));
+            }
+        };
+        self.array_constructor_kind(&[element], args, offset, Some(array))
+    }
+
+    fn array_constructor_kind(
+        &mut self,
+        types: &[Type],
+        args: &[Expr],
+        offset: usize,
+        physical: Option<Type>,
+    ) -> Result<Value> {
         if types.len() > 1 || args.len() != 2 {
             return Err(Diagnostic::new(
                 offset,
@@ -1465,7 +1527,7 @@ impl Checker<'_> {
                 result: Box::new(element.clone()),
             },
         )?;
-        let array = Type::Array(Box::new(element));
+        let array = physical.unwrap_or_else(|| Type::Array(Box::new(element)));
         Ok(Value {
             ty: array.clone(),
             kind: ValueKind::ArrayInitialize {
@@ -1666,7 +1728,8 @@ impl Checker<'_> {
                     && !self.object_fields.contains_key(name)
                     && !self.object_methods.contains_key(name)
                     && !self.members.values().any(|method| {
-                        method.name == *name || method.source_property.as_deref() == Some(name)
+                        method.source_name() == name
+                            || method.source_property.as_deref() == Some(name)
                     })
                     && !self
                         .receiver
@@ -1674,9 +1737,9 @@ impl Checker<'_> {
                         .and_then(|receiver| library::type_owner(&receiver.ty))
                         .is_some_and(|owner| {
                             self.classpath.methods(owner).is_ok_and(|methods| {
-                                methods
-                                    .iter()
-                                    .any(|method| method.name == *name && method.access & 8 == 0)
+                                methods.iter().any(|method| {
+                                    method.source_name() == name && method.access & 8 == 0
+                                })
                             })
                         })
                 {

@@ -1,0 +1,72 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:4:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.Dispatchers
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:5:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.withContext
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:6:8: error: unresolved reference 'okhttp3'.
+import okhttp3.CacheControl
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:7:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Request
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:8:26: error: unresolved reference 'connection'.
+import yuku.alkitab.base.connection.Connections
+                         ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:9:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.AppLog
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:52:37: error: unresolved reference 'CacheControl'.
+        execute(url, cacheControl = CacheControl.FORCE_NETWORK)
+                                    ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:54:60: error: unresolved reference 'CacheControl'.
+    private suspend fun execute(url: String, cacheControl: CacheControl?): String? = withContext(Dispatchers.IO) {
+                                                           ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:54:86: error: unresolved reference 'withContext'.
+    private suspend fun execute(url: String, cacheControl: CacheControl?): String? = withContext(Dispatchers.IO) {
+                                                                                     ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:54:98: error: unresolved reference 'Dispatchers'.
+    private suspend fun execute(url: String, cacheControl: CacheControl?): String? = withContext(Dispatchers.IO) {
+                                                                                                 ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:55:23: error: unresolved reference 'Request'.
+        val request = Request.Builder()
+                      ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:57:14: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .apply { if (cacheControl != null) cacheControl(cacheControl) }
+             ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:57:20: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            .apply { if (cacheControl != null) cacheControl(cacheControl) }
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:57:48: error: unresolved reference 'cacheControl'.
+            .apply { if (cacheControl != null) cacheControl(cacheControl) }
+                                               ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:58:14: error: unresolved reference 'build'.
+            .build()
+             ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:60:13: error: unresolved reference 'Connections'.
+            Connections.okHttp.newCall(request).execute().use { response ->
+            ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:60:59: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            Connections.okHttp.newCall(request).execute().use { response ->
+                                                          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:60:59: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            Connections.okHttp.newCall(request).execute().use { response ->
+                                                          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:60:65: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            Connections.okHttp.newCall(request).execute().use { response ->
+                                                                ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:61:31: error: unresolved reference 'isSuccessful'.
+                if (!response.isSuccessful) {
+                              ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:62:21: error: unresolved reference 'AppLog'.
+                    AppLog.w(TAG, "GET $url failed: HTTP ${response.code}")
+                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:65:26: error: unresolved reference 'body'.
+                response.body?.string()
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:68:13: error: unresolved reference 'AppLog'.
+            AppLog.w(TAG, "GET $url failed: ${e.message}")
+            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt:69:13: error: null cannot be a value of a non-null type 'uninferred K (of fun <K> TRY_CALL)'.
+            null
+            ^^^^

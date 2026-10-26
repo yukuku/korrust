@@ -6,6 +6,7 @@ enum Verification {
     Top,
     Int,
     Float,
+    Double,
     Long,
     Null,
     Object(String),
@@ -57,6 +58,7 @@ fn descriptor_type(bytes: &[u8], cursor: &mut usize) -> Result<Option<Verificati
         b'V' => return Ok(None),
         b'J' => Verification::Long,
         b'F' => Verification::Float,
+        b'D' => Verification::Double,
         b'B' | b'C' | b'I' | b'S' | b'Z' => Verification::Int,
         b'L' => {
             let end = bytes[*cursor..]
@@ -153,16 +155,7 @@ fn instruction_len(op: u8) -> Result<usize> {
         | 0xc6
         | 0xc7 => 3,
         0xb9 => 5,
-        0x00..=0x0f
-        | 0x1a..=0x35
-        | 0x3b..=0x83
-        | 0x85..=0x86
-        | 0x88..=0x89
-        | 0x8b..=0x8c
-        | 0x91..=0x96
-        | 0xac..=0xb1
-        | 0xbe
-        | 0xbf => 1,
+        0x00..=0x0f | 0x1a..=0x35 | 0x3b..=0x83 | 0x85..=0x98 | 0xac..=0xb1 | 0xbe | 0xbf => 1,
         _ => return Err(failure("Unsupported instruction during frame generation")),
     })
 }
@@ -183,12 +176,14 @@ fn transfer(
         0x02..=0x08 | 0x10 | 0x11 => frame.stack.push(Verification::Int),
         0x09..=0x0a => frame.stack.push(Verification::Long),
         0x0b..=0x0d => frame.stack.push(Verification::Float),
+        0x0e..=0x0f => frame.stack.push(Verification::Double),
         0x13 | 0x14 => frame
             .stack
             .push(match pool.entries.get(index() as usize - 1) {
                 Some(Constant::Long(_)) => Verification::Long,
                 Some(Constant::Integer(_)) => Verification::Int,
                 Some(Constant::Float(_)) => Verification::Float,
+                Some(Constant::Double(_)) => Verification::Double,
                 Some(Constant::String(_)) => Verification::Object("java/lang/String".into()),
                 Some(Constant::Class(_)) => Verification::Object("java/lang/Class".into()),
                 _ => return Err(failure("Unsupported constant during frame generation")),
@@ -206,6 +201,7 @@ fn transfer(
             frame.stack.push(match op {
                 0x2f => Verification::Long,
                 0x30 => Verification::Float,
+                0x31 => Verification::Double,
                 0x32 => match array {
                     Verification::Object(name) if name.starts_with("[L") => {
                         Verification::Object(name[2..name.len() - 1].into())
@@ -225,7 +221,7 @@ fn transfer(
                 ((op - 0x3b) % 4) as usize
             };
             let value = pop(&mut frame)?;
-            let wide = value == Verification::Long;
+            let wide = matches!(value, Verification::Long | Verification::Double);
             frame.locals[slot] = value;
             if wide {
                 frame.locals[slot + 1] = Verification::Top;
@@ -240,7 +236,7 @@ fn transfer(
             pop(&mut frame)?;
         }
         0x58 => {
-            if pop(&mut frame)? != Verification::Long {
+            if !matches!(pop(&mut frame)?, Verification::Long | Verification::Double) {
                 pop(&mut frame)?;
             }
         }
@@ -251,7 +247,9 @@ fn transfer(
         0x5a => {
             let top = pop(&mut frame)?;
             let below = pop(&mut frame)?;
-            if top == Verification::Long || below == Verification::Long {
+            if matches!(top, Verification::Long | Verification::Double)
+                || matches!(below, Verification::Long | Verification::Double)
+            {
                 return Err(failure("Invalid category-2 operand for dup_x1"));
             }
             frame.stack.extend([top.clone(), below, top]);
@@ -266,19 +264,23 @@ fn transfer(
             pop(&mut frame)?;
             frame.stack.push(Verification::Long);
         }
-        0x86 | 0x89 => {
+        0x86 | 0x89 | 0x90 => {
             pop(&mut frame)?;
             frame.stack.push(Verification::Float);
         }
-        0x88 | 0x8b => {
+        0x88 | 0x8b | 0x8e => {
             pop(&mut frame)?;
             frame.stack.push(Verification::Int);
         }
-        0x8c => {
+        0x8c | 0x8f => {
             pop(&mut frame)?;
             frame.stack.push(Verification::Long);
         }
-        0x94..=0x96 => {
+        0x87 | 0x8a | 0x8d => {
+            pop(&mut frame)?;
+            frame.stack.push(Verification::Double);
+        }
+        0x94..=0x98 => {
             pop(&mut frame)?;
             pop(&mut frame)?;
             frame.stack.push(Verification::Int);
@@ -390,6 +392,7 @@ fn write_type(pool: &mut Pool, bytes: &mut Vec<u8>, ty: &Verification) -> Result
         Verification::Top => bytes.push(0),
         Verification::Int => bytes.push(1),
         Verification::Float => bytes.push(2),
+        Verification::Double => bytes.push(3),
         Verification::Long => bytes.push(4),
         Verification::Null => bytes.push(5),
         Verification::UninitializedThis(_) => bytes.push(6),
@@ -549,7 +552,7 @@ fn attach_with_constructor(
         let mut slot = 0;
         while slot < locals.len() {
             values.push(locals[slot].clone());
-            slot += if locals[slot] == Verification::Long {
+            slot += if matches!(locals[slot], Verification::Long | Verification::Double) {
                 2
             } else {
                 1

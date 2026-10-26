@@ -1,0 +1,87 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:3:16: error: unresolved reference 'content'.
+import android.content.Intent
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:4:16: error: unresolved reference 'widget'.
+import android.widget.FrameLayout
+               ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:5:17: error: unresolved reference 'activity'.
+import androidx.activity.OnBackPressedCallback
+                ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:6:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.RequestCodes
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:7:26: error: unresolved reference 'widget'.
+import yuku.alkitab.base.widget.TextAppearancePanel
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:9:45: error: unresolved reference 'BaseActivity'.
+abstract class BaseTextAppearanceActivity : BaseActivity() {
+                                            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:10:34: error: unresolved reference 'TextAppearancePanel'.
+    private var appearancePanel: TextAppearancePanel? = null
+                                 ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:11:45: error: unresolved reference 'FrameLayout'.
+    private lateinit var appearanceOverlay: FrameLayout
+                                            ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:13:51: error: unresolved reference 'OnBackPressedCallback'.
+    private val appearanceBackCallback = object : OnBackPressedCallback(false) {
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:17:58: error: unresolved reference 'FrameLayout'.
+    protected open fun setupTextAppearancePanel(overlay: FrameLayout, applyAppearance: Runnable) {
+                                                         ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:20:9: error: unresolved reference 'onBackPressedDispatcher'.
+        onBackPressedDispatcher.addCallback(this, appearanceBackCallback)
+        ^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:28:27: error: unresolved reference 'TextAppearancePanel'.
+        appearancePanel = TextAppearancePanel(
+                          ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:31:22: error: unresolved reference 'TextAppearancePanel'.
+            object : TextAppearancePanel.Listener {
+                     ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:33:21: error: unresolved reference 'applyNightModeColors'.
+                    applyNightModeColors()
+                    ^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:39:13: error: unresolved reference 'RequestCodes'.
+            RequestCodes.FromActivity.TextAppearanceGetFonts,
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:40:13: error: unresolved reference 'RequestCodes'.
+            RequestCodes.FromActivity.TextAppearanceCustomColors,
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:41:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).also { it.show() }
+          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:41:16: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).also { it.show() }
+               ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:41:21: error: unresolved reference 'show'.
+        ).also { it.show() }
+                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:42:32: error: unresolved reference 'isEnabled'.
+        appearanceBackCallback.isEnabled = true
+                               ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:46:26: error: unresolved reference 'hide'.
+        appearancePanel?.hide()
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:48:32: error: unresolved reference 'isEnabled'.
+        appearanceBackCallback.isEnabled = false
+                               ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:52:9: error: unresolved reference 'BaseActivity'.
+        super.onStart()
+        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:52:15: error: unresolved reference 'onStart'.
+        super.onStart()
+              ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:53:26: error: unresolved reference 'displayValues'.
+        appearancePanel?.displayValues()
+                         ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:56:76: error: unresolved reference 'Intent'.
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                                                                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:57:9: error: unresolved reference 'BaseActivity'.
+        super.onActivityResult(requestCode, resultCode, data)
+        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:57:15: error: unresolved reference 'onActivityResult'.
+        super.onActivityResult(requestCode, resultCode, data)
+              ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/base/BaseTextAppearanceActivity.kt:58:26: error: unresolved reference 'onActivityResult'.
+        appearancePanel?.onActivityResult(requestCode)
+                         ^^^^^^^^^^^^^^^^

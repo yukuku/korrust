@@ -65,7 +65,19 @@ pub(crate) fn validate(method: &JavaMethod) -> Result<()> {
         .code
         .as_ref()
         .ok_or_else(|| unsupported("missing Code attribute"))?;
-    decode(code)?;
+    let body = decode(code)?;
+    let nested_owner = format!("{}$", method.owner);
+    if body.instructions.iter().any(|instruction| {
+        matches!(
+            &instruction.kind,
+            InlineOp::Reference { opcode: 0xbb, constant: InlineConstant::Class(owner), .. }
+                if owner.starts_with(&nested_owner)
+        )
+    }) {
+        return Err(unsupported(
+            "generated or nested inline-owner object allocation requires class regeneration",
+        ));
+    }
     Ok(())
 }
 
@@ -124,7 +136,7 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
                     | InlineConstant::Float(_)
                     | InlineConstant::String(_)
                         if opcode != 0x14 => {}
-                    InlineConstant::Long(_) if opcode == 0x14 => {}
+                    InlineConstant::Long(_) | InlineConstant::Double(_) if opcode == 0x14 => {}
                     _ => return Err(unsupported("ldc constant kind")),
                 }
                 InlineOp::Constant(constant)
@@ -137,12 +149,7 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
                 InlineOp::Branch { opcode, target }
             }
             0xac..=0xae | 0xb0 | 0xb1 => InlineOp::Return(opcode),
-            0xbb => {
-                return Err(unsupported(
-                    "object allocation and generated class regeneration are not supported",
-                ));
-            }
-            0xb2..=0xb9 | 0xbd | 0xc0 | 0xc1 => {
+            0xb2..=0xb9 | 0xbb | 0xbd | 0xc0 | 0xc1 => {
                 let constant = constant(code, word(&code.bytes, &mut cursor)?)?;
                 let valid = match &constant {
                     InlineConstant::Field { .. } => (0xb2..=0xb5).contains(&opcode),
@@ -328,7 +335,7 @@ pub(crate) fn lambda_calls(
                 }
             }
             InlineOp::Constant(value) => stack.push(Operand::Value(
-                if matches!(value, InlineConstant::Long(_)) {
+                if matches!(value, InlineConstant::Long(_) | InlineConstant::Double(_)) {
                     2
                 } else {
                     1
@@ -525,7 +532,7 @@ fn descriptor_width(bytes: &[u8], cursor: &mut usize, allow_void: bool) -> Resul
     let tag = byte(bytes, cursor)?;
     match tag {
         b'V' if allow_void => Ok(None),
-        b'J' => Ok(Some(2)),
+        b'J' | b'D' => Ok(Some(2)),
         b'I' | b'B' | b'C' | b'S' | b'Z' | b'F' => Ok(Some(1)),
         b'[' => {
             descriptor_width(bytes, cursor, false)?;
@@ -617,11 +624,92 @@ mod tests {
         );
         assert!(decode(&code(&[0x5a, 0xb1])).is_err());
         assert!(decode(&code(&[0xba, 0, 1, 0, 0, 0xb1])).is_err());
+    }
+
+    fn inline_method(code: JavaCode) -> JavaMethod {
+        JavaMethod {
+            library: Some(crate::classpath::LibraryMethod {
+                abstract_: false,
+                builtin_array: false,
+                kotlin_public: true,
+                source_name: "construct".into(),
+                type_parameters: Vec::new(),
+                receiver: None,
+                infix: false,
+                operator: false,
+                inline: true,
+                code: Some(code),
+            }),
+            owner: "example/Library".into(),
+            name: "construct".into(),
+            descriptor: "(Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;".into(),
+            access: 9,
+            unsupported: false,
+            source_property: None,
+            kotlin_params: None,
+            kotlin_result: None,
+            kotlin_internal: false,
+        }
+    }
+
+    fn allocation_body(owner: &str) -> JavaCode {
+        let mut input = code(&[
+            0x2a, 0xbb, 0, 1, 0x59, 0x08, 0xb7, 0, 2, 0xb9, 0, 3, 2, 0, 0xb0,
+        ]);
+        std::sync::Arc::make_mut(&mut input.constants).extend([
+            (1, InlineConstant::Class(owner.into())),
+            (2, method(owner, "<init>", "(I)V")),
+            (
+                3,
+                method(
+                    "kotlin/jvm/functions/Function1",
+                    "invoke",
+                    "(Ljava/lang/Object;)Ljava/lang/Object;",
+                ),
+            ),
+        ]);
+        input
+    }
+
+    #[test]
+    fn decodes_external_construction_and_tracks_lambdas_across_constructor_arguments() {
+        for owner in ["example/Widget", "example/Other$Inner"] {
+            let input = allocation_body(owner);
+            let body = decode(&input).unwrap();
+            assert!(matches!(&body.instructions[1].kind,
+                InlineOp::Reference { opcode: 0xbb, constant: InlineConstant::Class(class), .. } if class == owner));
+            assert_eq!(
+                lambda_calls(&body, &BTreeSet::from([0])).unwrap(),
+                BTreeMap::from([(9, 0)])
+            );
+            validate(&inline_method(input)).unwrap();
+        }
+    }
+
+    #[test]
+    fn rejects_inline_owner_nested_allocations_requiring_generated_classes() {
+        for owner in ["example/Library$Local", "example/Library$construct$1"] {
+            let method = inline_method(allocation_body(owner));
+            let error = validate(&method).unwrap_err();
+            assert!(error.message.contains("class regeneration"));
+        }
+    }
+
+    #[test]
+    fn rejects_allocations_without_a_class_constant() {
+        let mut input = code(&[0xbb, 0, 1, 0xb0]);
         assert!(
-            decode(&code(&[0xbb, 0, 1, 0xb0]))
+            decode(&input)
                 .unwrap_err()
                 .message
-                .contains("object allocation")
+                .contains("constant pool")
+        );
+        std::sync::Arc::make_mut(&mut input.constants).insert(1, InlineConstant::Integer(1));
+        assert!(
+            decode(&input)
+                .unwrap_err()
+                .message
+                .contains("constant pool reference kind")
         );
     }
 

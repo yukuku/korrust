@@ -1,0 +1,222 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:3:16: error: unresolved reference 'content'.
+import android.content.ContentValues
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:5:26: error: unresolved reference 'ac'.
+import yuku.alkitab.base.ac.DevotionActivity
+                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:6:26: error: unresolved reference 'devotion'.
+import yuku.alkitab.base.devotion.ArticleMeidA
+                         ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:7:26: error: unresolved reference 'devotion'.
+import yuku.alkitab.base.devotion.ArticleMorningEveningEnglish
+                         ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:8:26: error: unresolved reference 'devotion'.
+import yuku.alkitab.base.devotion.ArticleRenunganHarian
+                         ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:9:26: error: unresolved reference 'devotion'.
+import yuku.alkitab.base.devotion.ArticleRoc
+                         ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:10:26: error: unresolved reference 'devotion'.
+import yuku.alkitab.base.devotion.ArticleSantapanHarian
+                         ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:11:26: error: unresolved reference 'devotion'.
+import yuku.alkitab.base.devotion.DevotionArticle
+                         ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:12:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.Sqlitil
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:18:39: error: unresolved reference 'InternalDbHelper'.
+class DevotionDao(private val helper: InternalDbHelper) {
+                                      ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:25:31: error: unresolved reference 'DevotionArticle'.
+    fun storeArticle(article: DevotionArticle) {
+                              ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:26:25: error: unresolved reference 'writableDatabase'.
+        val db = helper.writableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:27:22: error: unresolved reference 'ContentValues'.
+        val values = ContentValues().apply {
+                     ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:27:38: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val values = ContentValues().apply {
+                                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:27:44: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val values = ContentValues().apply {
+                                           ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:28:13: error: unresolved reference 'put'.
+            put(Table.Devotion.name.name, article.kind.sourceName)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:28:17: error: unresolved reference 'Table'.
+            put(Table.Devotion.name.name, article.kind.sourceName)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:28:51: error: unresolved reference 'kind'.
+            put(Table.Devotion.name.name, article.kind.sourceName)
+                                                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:29:13: error: unresolved reference 'put'.
+            put(Table.Devotion.date.name, article.date)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:29:17: error: unresolved reference 'Table'.
+            put(Table.Devotion.date.name, article.date)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:29:51: error: unresolved reference 'date'.
+            put(Table.Devotion.date.name, article.date)
+                                                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:30:13: error: unresolved reference 'put'.
+            put(Table.Devotion.readyToUse.name, if (article.readyToUse) 1 else 0)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:30:17: error: unresolved reference 'Table'.
+            put(Table.Devotion.readyToUse.name, if (article.readyToUse) 1 else 0)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:30:61: error: unresolved reference 'readyToUse'.
+            put(Table.Devotion.readyToUse.name, if (article.readyToUse) 1 else 0)
+                                                            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:31:25: error: unresolved reference 'readyToUse'.
+            if (article.readyToUse) {
+                        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:32:17: error: unresolved reference 'put'.
+                put(Table.Devotion.body.name, article.body)
+                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:32:21: error: unresolved reference 'Table'.
+                put(Table.Devotion.body.name, article.body)
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:32:55: error: unresolved reference 'body'.
+                put(Table.Devotion.body.name, article.body)
+                                                      ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:34:17: error: unresolved reference 'putNull'.
+                putNull(Table.Devotion.body.name)
+                ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:34:25: error: unresolved reference 'Table'.
+                putNull(Table.Devotion.body.name)
+                        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:36:13: error: unresolved reference 'put'.
+            put(Table.Devotion.touchTime.name, Sqlitil.nowDateTime())
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:36:17: error: unresolved reference 'Table'.
+            put(Table.Devotion.touchTime.name, Sqlitil.nowDateTime())
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:36:48: error: unresolved reference 'Sqlitil'.
+            put(Table.Devotion.touchTime.name, Sqlitil.nowDateTime())
+                                               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:37:13: error: unresolved reference 'put'.
+            put(Table.Devotion.dataFormatVersion.name, 1)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:37:17: error: unresolved reference 'Table'.
+            put(Table.Devotion.dataFormatVersion.name, 1)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:43:17: error: unresolved reference 'Table'.
+                Table.Devotion.tableName(),
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:44:17: error: unresolved reference 'Table'.
+                Table.Devotion.name.name + "=? and " + Table.Devotion.date.name + "=?",
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:44:56: error: unresolved reference 'Table'.
+                Table.Devotion.name.name + "=? and " + Table.Devotion.date.name + "=?",
+                                                       ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:45:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                arrayOf(article.kind.sourceName, article.date),
+                ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:45:33: error: unresolved reference 'kind'.
+                arrayOf(article.kind.sourceName, article.date),
+                                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:45:58: error: unresolved reference 'date'.
+                arrayOf(article.kind.sourceName, article.date),
+                                                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:47:30: error: unresolved reference 'Table'.
+            db.insertOrThrow(Table.Devotion.tableName(), null, values)
+                             ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:55:23: error: unresolved reference 'writableDatabase'.
+        return helper.writableDatabase.delete(
+                      ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:56:13: error: unresolved reference 'Table'.
+            Table.Devotion.tableName(),
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:57:13: error: unresolved reference 'Table'.
+            Table.Devotion.touchTime.name + "<?",
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:58:21: error: unresolved reference 'Sqlitil'.
+            arrayOf(Sqlitil.toInt(date).toString()),
+                    ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:63:45: error: unresolved reference 'DevotionArticle'.
+    fun tryGet(name: String, date: String): DevotionArticle? {
+                                            ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:64:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:65:13: error: unresolved reference 'Table'.
+            Table.Devotion.tableName(),
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:67:13: error: unresolved reference 'Table'.
+            Table.Devotion.name.name + "=? and " + Table.Devotion.date.name + "=? and " +
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:67:52: error: unresolved reference 'Table'.
+            Table.Devotion.name.name + "=? and " + Table.Devotion.date.name + "=? and " +
+                                                   ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:68:17: error: unresolved reference 'Table'.
+                Table.Devotion.dataFormatVersion.name + "=?",
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:71:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:71:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:71:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:72:20: error: unresolved reference 'moveToNext'.
+            if (!c.moveToNext()) return null
+                   ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:73:29: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colBody = c.getColumnIndexOrThrow(Table.Devotion.body.name)
+                            ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:73:51: error: unresolved reference 'Table'.
+            val colBody = c.getColumnIndexOrThrow(Table.Devotion.body.name)
+                                                  ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:74:35: error: unresolved reference 'getColumnIndexOrThrow'.
+            val colReadyToUse = c.getColumnIndexOrThrow(Table.Devotion.readyToUse.name)
+                                  ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:74:57: error: unresolved reference 'Table'.
+            val colReadyToUse = c.getColumnIndexOrThrow(Table.Devotion.readyToUse.name)
+                                                        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:75:26: error: unresolved reference 'getString'.
+            val body = c.getString(colBody)
+                         ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:76:32: error: unresolved reference 'getInt'.
+            val readyToUse = c.getInt(colReadyToUse) > 0
+                               ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:78:24: error: unresolved reference 'DevotionActivity'.
+            val kind = DevotionActivity.DevotionKind.getByName(name) ?: return null
+                       ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:79:20: error: 'when' expression must be exhaustive. Add an 'else' branch.
+            return when (kind) {
+                   ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:80:17: error: unresolved reference 'DevotionActivity'.
+                DevotionActivity.DevotionKind.RH -> ArticleRenunganHarian(date, body, readyToUse)
+                ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:80:53: error: unresolved reference 'ArticleRenunganHarian'.
+                DevotionActivity.DevotionKind.RH -> ArticleRenunganHarian(date, body, readyToUse)
+                                                    ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:81:17: error: unresolved reference 'DevotionActivity'.
+                DevotionActivity.DevotionKind.SH -> ArticleSantapanHarian(date, body, readyToUse)
+                ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:81:53: error: unresolved reference 'ArticleSantapanHarian'.
+                DevotionActivity.DevotionKind.SH -> ArticleSantapanHarian(date, body, readyToUse)
+                                                    ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:82:17: error: unresolved reference 'DevotionActivity'.
+                DevotionActivity.DevotionKind.ME_EN -> ArticleMorningEveningEnglish(date, body, readyToUse)
+                ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:82:56: error: unresolved reference 'ArticleMorningEveningEnglish'.
+                DevotionActivity.DevotionKind.ME_EN -> ArticleMorningEveningEnglish(date, body, readyToUse)
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:83:17: error: unresolved reference 'DevotionActivity'.
+                DevotionActivity.DevotionKind.MEID_A -> ArticleMeidA(date, body, readyToUse)
+                ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:83:57: error: unresolved reference 'ArticleMeidA'.
+                DevotionActivity.DevotionKind.MEID_A -> ArticleMeidA(date, body, readyToUse)
+                                                        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:84:17: error: unresolved reference 'DevotionActivity'.
+                DevotionActivity.DevotionKind.ROC -> ArticleRoc(date, body, readyToUse)
+                ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/DevotionDao.kt:84:54: error: unresolved reference 'ArticleRoc'.
+                DevotionActivity.DevotionKind.ROC -> ArticleRoc(date, body, readyToUse)
+                                                     ^^^^^^^^^^

@@ -1,0 +1,481 @@
+{
+  "schema_version": 1,
+  "kind": "corpus",
+  "created_at": "2026-10-26T09:05:36.133522+00:00",
+  "status": "completed",
+  "selection": "Isolated first-diagnostic probes of pinned unchanged .kt sources; production/tests/tools distinguished.",
+  "reason": "Class emission, behavior, ABI and Kotlin consumers are separate dimensions. A rejected isolated file may need its source dependency closure; no whole-project language or Android runtime coverage claim.",
+  "compiler": {
+    "binary_sha256": "8d6e956407dff8ab32f59598c8be918e70b69e855a1cf20672ea701063ca4f7e",
+    "version": "korrust 0.1.0",
+    "frozen_inputs_sha256": {
+      "/workspace/korrust/reports/correctness/2026-10-26T084244960567Z-androidbible-resolved-inputs/build.json": "aa55853253167449c484c8bb6713cac24036948d1612457850d086fe8fd8a2eb",
+      "reports/correctness/2026-10-26T073039Z-androidbible-source-assessment.json": "3504a1a6e5dc1445a6ac9dd061e53d126d5a743bf8ef070dbf38b971d7d4673c",
+      "target/release/korrust": "8d6e956407dff8ab32f59598c8be918e70b69e855a1cf20672ea701063ca4f7e",
+      "tools/assess_androidbible.py": "23d70e2f84dbda7e5e150de59fbbb310e7e2deb5532793f91e4c2787b7d3c106",
+      "tests/androidbible_regression.json": "795de298765637462b60ead80454142f8be4908f70f27af55788e89d55a04b94",
+      "benchmarks/source-files.sha256.json": "48e5d343ebfb4b24c87485a754bdfb237164a1c574b7c40cce7cbc8fc0357a4c",
+      "src/bytecode/class_companion.rs": "e2d2fa736d0ba7ed6921f71e5941b097125b4147b0104d120c055db6d1f05db2",
+      "src/bytecode/data.rs": "1ad9ebda9bcb7b6211f42ad3416d5b8267c5f6b32f0037de0c84c2e5898c6d24",
+      "src/bytecode/defaults.rs": "0d374890585d5a83ee5e9c374fcc8a15682c46ab084bce95d2d8f1c0479ba486",
+      "src/bytecode/frames.rs": "21dd3a37e6fdbeb6eb4fbc2d158c0bedbf0b6fd370280ca5a50067480e1cec48",
+      "src/bytecode/inline.rs": "884b7dc6a7e1d8297ab14716e37f37f4f5b5adb7f48084b73ee87b2d5ffcf103",
+      "src/bytecode/interfaces.rs": "ca755ece1d09dc1359d618f6cc1b01493791c03e5412811da3c04e4caa0ef71e",
+      "src/bytecode/lambdas.rs": "1b7a56ef53ca78baed889fcce63bb779a319036290fa7cb608091e16c0bb041f",
+      "src/bytecode/objects.rs": "6ca5f2229052daef9fbb6edf58699cafd4a8aebda073480e0ecddb9e56751865",
+      "src/bytecode.rs": "283e686a8f1b7dd3fc121455fb14af650c3a7da970cb019940c057f2b16a7bb7",
+      "src/check.rs": "239af30ef79d6470047b6b59403cb9433d9d4f50f56006acc7d08ffb4517c3d8",
+      "src/check_captures.rs": "e61bb86399b4d7249ab2f2d570a3d30344848aa5760487e0144990a712353ee0",
+      "src/check_control.rs": "cc0921c13fca088823c80cb84a15750735136c20d1bdf82a2ff3d04b1c54af31",
+      "src/check_declarations.rs": "09bd142ce2a722de40975f3785643097a81fe4ea7c42ce7b2feb20a507d572f2",
+      "src/check_delegates.rs": "a638726a7a978a30012b37ca5009a3168cedd41f08fd056c5264eb1c427f1d91",
+      "src/check_functions.rs": "1b2e95777ea95f74d4e8af08085cc3407d9250fc080c162442677c7e4fbf4fb7",
+      "src/check_interfaces.rs": "f9027fdd1cebcea9ea6f2815aba3f15d81770c7aee45322ee3f4d38a9042e78e",
+      "src/check_library.rs": "f5d4b0e6d2b91ae0094b698ff6fb6670bb957afd66e38ff6a476de0e4c1e7b28",
+      "src/check_objects.rs": "63a6b7874e7cbe797197e028d38a1a0b6664bdc6d3b98b9199bb69eba2f6e79d",
+      "src/check_operations.rs": "510315fffbfef782c47a9f0f2a87aa137c7fad809fb85b0609c62d3d9265ce70",
+      "src/check_overloads.rs": "2a1f9f93816543d3fe8f2589ef4adda5798b56d90ebfcb985c04d9438f4cb22b",
+      "src/check_references.rs": "fb791bcab48054bb919bbe5ecb6c37675cc7b67181d0bad3c8c76944969c4c25",
+      "src/check_relations.rs": "2facbd895c35c74baabeca0f6485044c176f79b66f01e9cb3e41d842ff5b5004",
+      "src/check_singletons.rs": "309de0bde3ed51564911a5f54a6166d0aa3dca0277c4af54ac049d1e4ee104c8",
+      "src/classpath/aliases.rs": "a516926e0d607529e802384fbc335750ff78f7117ff567acad40aa5ec7d89743",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "e6770ba49c61dd4104ae3e962ad6b84cd8146731aee4aa2993c41b6393f6af68",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "3f61c55e317f9e50e9ff08f7818d636a1a10aaa35a42fee77a28d9938a6e2c55",
+      "src/classpath/source.rs": "b6660418a63ce0f2d667059b57ee11372501410f4d301af3f263dab7dd6751dd",
+      "src/classpath.rs": "4b869471886e08b8d8ca361ac139c78550d9ef23ad909415743583e87acf066d",
+      "src/compiled_inline.rs": "9f1594fa19f03985bce18213e3a1a2eb850c84e0f59731cffcdd0c2d2d94b550",
+      "src/lib.rs": "badca5c765434c8d78767fda68457be60a8fcefc6dfbdc1b16e4c1aa1aede8da",
+      "src/main.rs": "167905ee56f395f7b14ce7c4a690ce3d6c78c871d9e3aedea37b3b1a11d14ca4",
+      "src/metadata.rs": "98c2d0efdba51d073290627842ceab1462f25e6d36b14b80bd4e437f9e00b0b6",
+      "src/output.rs": "e0e4512a40dc32d19a72df2dda24974dd2d0d4ccd4992fa947f9676a024fbffa",
+      "src/syntax.rs": "2a8b18ec9bbf832baa3c0ac8065d24e98880188cbef682af4295dd27168a47d1",
+      "references/kotlinc/lib/allopen-compiler-plugin.jar": "4d10b6efd97edcdfff90ad064eb4410c60177653810844b104155b4a9086dfc6",
+      "references/kotlinc/lib/annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+      "references/kotlinc/lib/assignment-compiler-plugin.jar": "ca3c5b11501c5ed848b491d5a69bf13cb4197c79903a7cee2b2ad024bae5f601",
+      "references/kotlinc/lib/compose-compiler-plugin.jar": "e8b44d65a4ba5fb14f3e51d10fb605d7da2a0c35a9ee275c94ffd74cb3f2b11e",
+      "references/kotlinc/lib/jvm-abi-gen.jar": "88a5e104dde4ef2f3cd211b077bb93f0a5e2e54b61e53c373f146af061be4504",
+      "references/kotlinc/lib/kotlin-annotation-processing-cli.jar": "c44c21f9bedeca54e0062b825dcb394a75a3efc289d4354e153225213f498e5f",
+      "references/kotlinc/lib/kotlin-annotation-processing-runtime.jar": "d9bcc297a3263366e216956c9425f3ba7b04f4a72f8b0dffb06fdd88e48606b9",
+      "references/kotlinc/lib/kotlin-annotation-processing.jar": "51308691a3cbd4c3964c5669d6ffb771b4879a214ab95c1df6aab18f137b4fa6",
+      "references/kotlinc/lib/kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+      "references/kotlinc/lib/kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+      "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+      "references/kotlinc/lib/kotlin-daemon-client.jar": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be",
+      "references/kotlinc/lib/kotlin-daemon.jar": "b7c67e908442f64f7d2acf99ac6b68b625d5317541d7130efac72507de0c36cf",
+      "references/kotlinc/lib/kotlin-main-kts.jar": "d786b3ace9625918014c1da51d7c6ba29ef06e3291f6cc4264d39e6992acc4ee",
+      "references/kotlinc/lib/kotlin-metadata-jvm-sources.jar": "2ededf948f1afd503217a772c95718a41494e757762206216f4c1b42ada64585",
+      "references/kotlinc/lib/kotlin-metadata-jvm.jar": "00590f26a5a768777f04252c6cf93c016a3361a6bc93636df67375ad4d19557d",
+      "references/kotlinc/lib/kotlin-preloader.jar": "4fb08cc92cf83ace6af60953e968a7f79eb57c5304175a9c0a9a9ad14a9e6348",
+      "references/kotlinc/lib/kotlin-reflect-sources.jar": "8cbdca65092aa6888901e23c08c7d69d141544107a9bcc9aa47b5453d4dbcf7e",
+      "references/kotlinc/lib/kotlin-reflect.jar": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb",
+      "references/kotlinc/lib/kotlin-runner.jar": "b217c59d320058007fed21927f71d5fbb7899fb6acab817a6d63aec5544a548c",
+      "references/kotlinc/lib/kotlin-script-runtime-sources.jar": "275d90c0c92e9680aff9c013394f3f395bc46dc23762107c4fdccd9887a58561",
+      "references/kotlinc/lib/kotlin-script-runtime.jar": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e",
+      "references/kotlinc/lib/kotlin-scripting-common.jar": "69885751bdce7d4e1d1b9758baf4bc0fe03b24827abd7b7687e5a7c0b4d029ed",
+      "references/kotlinc/lib/kotlin-scripting-compiler-impl.jar": "fe93b36234d6ff2ae5d1c8f965c5ae7c61b5211c5945d1fe8f3b2136ef313520",
+      "references/kotlinc/lib/kotlin-scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5",
+      "references/kotlinc/lib/kotlin-scripting-jvm.jar": "8cb637132fc7fa511c700ee7f2b63b282630167f5ebd699a263a0b67b5d486ab",
+      "references/kotlinc/lib/kotlin-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+      "references/kotlinc/lib/kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+      "references/kotlinc/lib/kotlin-stdlib-jdk7.jar": "e2243abac2bed6e0b47be18b2b7fe1c1b4cf6a431480353dcd49d1ed35f31199",
+      "references/kotlinc/lib/kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+      "references/kotlinc/lib/kotlin-stdlib-jdk8.jar": "63091929246beba86b5fb2b020a6f5d06e01693a960b58a59959c8713667991c",
+      "references/kotlinc/lib/kotlin-stdlib-js-sources.jar": "f57cda653d86e12f005c68a684ed32cdf44416f55db140a4182d8dbb53697ef2",
+      "references/kotlinc/lib/kotlin-stdlib-sources.jar": "8693386ae174f7e4a91eb82c5c632d169d236704da24f78b9c8c84d87af2fd64",
+      "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "references/kotlinc/lib/kotlin-test-js-sources.jar": "b45aee3561d48173468db1eb05743925b3f91c7a99a30c8a3457e3a554819e78",
+      "references/kotlinc/lib/kotlin-test-junit-sources.jar": "3fd39bbf3f8283cf7b7759e02abdd752ddde9964352f645467b779257bccef20",
+      "references/kotlinc/lib/kotlin-test-junit.jar": "554739f282eaca114882ad7effcd8523de2651eb6d65189624425110992ca4ce",
+      "references/kotlinc/lib/kotlin-test-junit5-sources.jar": "5e0d4688277a3f859be086b874601b45f54b30b5b045800138b54e9418bdc95b",
+      "references/kotlinc/lib/kotlin-test-junit5.jar": "24350f53fe1be3b7fe0e8fcd7e1b777eb0b8fa16af720617fe7e87d0a77c2797",
+      "references/kotlinc/lib/kotlin-test-sources.jar": "bce4ebcf90507cc14ea3857f65088d10fd1a305616da62a6e5b6be0735ccb456",
+      "references/kotlinc/lib/kotlin-test-testng-sources.jar": "b88a8f12928480d14e29c6c879958c156afc946b9b8d333d1c2f4a428cdb1041",
+      "references/kotlinc/lib/kotlin-test-testng.jar": "da9c1164af8de599d8e31ae768f78c48caceb1a401790454139ec03cfe8ddf08",
+      "references/kotlinc/lib/kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+      "references/kotlinc/lib/kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "references/kotlinc/lib/kotlinx-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+      "references/kotlinc/lib/lombok-compiler-plugin.jar": "ab61ddad3977c19396223dbac64b82c5d33796b712e4cfac6d79a0fe2166cf24",
+      "references/kotlinc/lib/mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+      "references/kotlinc/lib/noarg-compiler-plugin.jar": "2f978ae34fec60a2e92ed3c1f6862f015b98922b07508a2648a019d898bf3761",
+      "references/kotlinc/lib/parcelize-compiler.jar": "edacd6e066bef87f00448e95ba4aff89b4e10f6ce27d99ba125c7e96f2d73ada",
+      "references/kotlinc/lib/parcelize-runtime.jar": "a21d5f85475efb27f17dd97d1a289d64874f2ddfdb508ea484477a4cf1afe969",
+      "references/kotlinc/lib/power-assert-compiler-plugin.jar": "29164fe3dd405d78204655bb533cf1abc409288be825039c3443fd894096745e",
+      "references/kotlinc/lib/sam-with-receiver-compiler-plugin.jar": "8e9eb418d5ddae8c24ee79da1d5394636dc256defc62a3ea347bd59aca8592fd",
+      "references/kotlinc/lib/scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5"
+    }
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "path": "references/kotlinc/bin/kotlinc",
+    "options_scope": "Recorded per case; matching dependency bytes, candidate unsupported options disclosed."
+  },
+  "inputs": {
+    "resolved_model": "/workspace/korrust/reports/correctness/2026-10-26T084244960567Z-androidbible-resolved-inputs/build.json",
+    "resolved_model_sha256": "aa55853253167449c484c8bb6713cac24036948d1612457850d086fe8fd8a2eb",
+    "source_inventory_sha256": "48e5d343ebfb4b24c87485a754bdfb237164a1c574b7c40cce7cbc8fc0357a4c",
+    "androidbible_commit": "624629093af37d0d7f85699bfa0caa562fc41e61",
+    "assessment_mode": "resolved",
+    "classpath_inputs": {
+      "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar": {
+        "kind": "file",
+        "sha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+      },
+      "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/core-lambda-stubs.jar": {
+        "kind": "file",
+        "sha256": "2feb8df434cae3218ed9ffe9bae01ddec101d1dc5e12824c4209f61e283e0d3d"
+      },
+      "/workspace/korrust/target/androidbible-model-task4-artifacts/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar": {
+        "kind": "file",
+        "sha256": "16aac87d200ab186fb701fcec8cffbb0f271d9b845dec8d3303c8a49ab50be32"
+      },
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar": {
+        "kind": "file",
+        "sha256": "60b10b5ef5769b79570172e015b8159405c92f034ba88b9391a977589c9deb4e"
+      },
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar": {
+        "kind": "file",
+        "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+      },
+      "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar": {
+        "kind": "file",
+        "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+      }
+    }
+  },
+  "commands": [
+    {
+      "label": "Candidate identity",
+      "argv": [
+        "/workspace/korrust/target/checkpoint-ab-repaired/target/release/korrust",
+        "--version"
+      ],
+      "timeout_seconds": 180.0,
+      "stdout": "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00000-stderr.txt",
+      "exit_code": 0
+    },
+    {
+      "label": "Pinned official identity",
+      "argv": [
+        "/workspace/korrust/target/checkpoint-ab-repaired/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "timeout_seconds": 180.0,
+      "stdout": "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00001-stderr.txt",
+      "exit_code": 0
+    },
+    {
+      "label": "Candidate benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+      "argv": [
+        "/workspace/korrust/target/checkpoint-ab-repaired/target/release/korrust",
+        "/workspace/korrust/target/checkpoint-ab-repaired/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+        "-cp",
+        "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar:/workspace/korrust-setup/android-sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/androidbible-model-task4-artifacts/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+        "-d",
+        "/workspace/korrust/target/checkpoint-ab-repaired/target/checks/2026-10-26T090536133522Z-androidbible-resolved-assessment/candidate/0"
+      ],
+      "timeout_seconds": 180.0,
+      "stdout": "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00002-stderr.txt",
+      "exit_code": 0
+    },
+    {
+      "label": "Pinned official benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+      "argv": [
+        "/workspace/korrust/target/checkpoint-ab-repaired/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checkpoint-ab-repaired/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "AlkitabModel",
+        "-cp",
+        "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar:/workspace/korrust-setup/android-sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/androidbible-model-task4-artifacts/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+        "-d",
+        "/workspace/korrust/target/checkpoint-ab-repaired/target/checks/2026-10-26T090536133522Z-androidbible-resolved-assessment/official/0"
+      ],
+      "timeout_seconds": 180.0,
+      "stdout": "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00003-stderr.txt",
+      "exit_code": 0
+    }
+  ],
+  "evidence": [
+    "tools/assess_androidbible.py",
+    "/workspace/korrust/reports/correctness/2026-10-26T084244960567Z-androidbible-resolved-inputs/build.json",
+    "reports/correctness/2026-10-26T073039Z-androidbible-source-assessment.json",
+    "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00000-stdout.txt",
+    "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00000-stderr.txt",
+    "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00001-stdout.txt",
+    "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00001-stderr.txt",
+    "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00002-stdout.txt",
+    "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00002-stderr.txt",
+    "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00003-stdout.txt",
+    "reports/correctness/2026-10-26T090536133522Z-androidbible-resolved-assessment/00003-stderr.txt"
+  ],
+  "cases": [
+    {
+      "id": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+      "module": "AlkitabModel",
+      "group": "production",
+      "source_sha256": "1ffdebcffa174e2c119205b2ed7698fc9d47a0dd2deaf9e816eb84faa388ab02",
+      "checks": {
+        "behavior": {
+          "outcome": "not_run",
+          "reason": "Emission probe does not execute behavior."
+        },
+        "abi": {
+          "outcome": "not_run"
+        },
+        "kotlin_consumer": {
+          "outcome": "not_run"
+        },
+        "emission": {
+          "outcome": "emitted"
+        }
+      },
+      "input_context": {
+        "mode": "resolved",
+        "task": "compileReleaseKotlin",
+        "resolved_compiler_version": "2.3.21",
+        "compiler_options": {
+          "jvmTarget": "JVM_21",
+          "languageVersion": null,
+          "apiVersion": null,
+          "freeCompilerArgs": [],
+          "javaParameters": "false",
+          "allWarningsAsErrors": "false",
+          "suppressWarnings": "false",
+          "progressiveMode": "false",
+          "optIn": [],
+          "jvmDefault": null,
+          "module_name": "AlkitabModel"
+        },
+        "plugin_classpath": [],
+        "plugin_options": [],
+        "source_roots": [
+          "/workspace/korrust/target/androidbible-model-task4/AlkitabModel/src/main/java/yuku/alkitab/model"
+        ],
+        "generated_source_roots": [],
+        "candidate_option_gaps": "Candidate invocation supports source/classpath/output only; JVM target, language/API, plugins and remaining Gradle options are recorded, not silently claimed equivalent.",
+        "source_dependency_scope": "Single-file probe; candidate-owned sibling sources and generated sources are not precompiled as dependencies. Unresolved sibling references are dependency gaps, not intrinsic invalidity."
+      },
+      "classpath_inputs": [
+        "/workspace/korrust-setup/android-sdk/platforms/android-36/android.jar",
+        "/workspace/korrust-setup/android-sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+        "/workspace/korrust/target/androidbible-model-task4-artifacts/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+        "/workspace/korrust-setup/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar"
+      ],
+      "outcome": "emitted",
+      "first_diagnostic": {
+        "path": null,
+        "line": null,
+        "column": null,
+        "message": ""
+      },
+      "candidate": {
+        "exit_code": 0,
+        "command_index": 2,
+        "emitted_classes_sha256": {
+          "yuku/alkitab/model/SingleChapterVerses$Companion$EMPTY$1.class": "55afaa575ef72d03e7bd64e40b328154b3e4296e94bb3ab8e612a54635188d26",
+          "yuku/alkitab/model/SingleChapterVerses$Companion.class": "7600c36e5bcb0ffb44a263edd0071ea1da273db655f2ddfe4925b4974f4869ed",
+          "yuku/alkitab/model/SingleChapterVerses$DefaultImpls.class": "03b4195884fe9342a1e3d989592f3e775e00ada9b89bbfbb46a117287451b7c9",
+          "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult$DefaultImpls.class": "fdff88a8a5c1aabfa799a702ce562f0f577bd3adeeeee6de2a712ea06aa5c7bf",
+          "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult.class": "4e45952b6d0f12b1808af5175e673b1e70e419b6f830fa934ce20f56109a7905",
+          "yuku/alkitab/model/SingleChapterVerses.class": "909159c0a10b171f52c7381277f4f7833f7d51a90c1c89c056f6a154039b3e3c"
+        }
+      },
+      "official": {
+        "exit_code": 0,
+        "command_index": 3,
+        "emitted_classes_sha256": {
+          "yuku/alkitab/model/SingleChapterVerses$Companion$EMPTY$1.class": "413d07de3ee9ce087a1b0e656a6d8c87313bce4315838c314c2d17ed695a3825",
+          "yuku/alkitab/model/SingleChapterVerses$Companion.class": "cc48fab324d1d6d219c423334c94fe0c2c2e7204581868d0ba051085503bc842",
+          "yuku/alkitab/model/SingleChapterVerses$DefaultImpls.class": "0db704f79eab8d0ae128cebcce6a48c17bcb1a4f6d1bd93447422512fd80d57a",
+          "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult$DefaultImpls.class": "4b040ba774fa3131715b16a6614ba03335c2124d15a1418ce501aca502632723",
+          "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult.class": "b84f8fa022a9293895cb2f74b3c3d56203ee3c0b472d38c571720c4c99f848b1",
+          "yuku/alkitab/model/SingleChapterVerses.class": "cd6c3c8e5d5757363de3f4d25bbee26c10ceb8947eb6c803ce0f5097be9427cc"
+        }
+      }
+    }
+  ],
+  "classpath_scope": "Resolved Gradle compilation-task classpath/options/plugin inputs; single-file probes with source-closure gaps disclosed.",
+  "comparison": {
+    "report": "reports/correctness/2026-10-26T073039Z-androidbible-source-assessment.json",
+    "prior_compiler": {
+      "version": "korrust 0.1.0",
+      "binary_sha256": "8666fbcf19f83b1fb1f658847204d90e683c73d31c64c4fcebf48f9391ef71be",
+      "profile": "debug",
+      "source_files_sha256": {
+        "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+        "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+        "reports/correctness/2026-10-26T073039Z-androidbible-source-assessment/reproduce.py": "b003a027a7534e449ccad717c9c29e31d3555668316896128ed7da4a34a85535",
+        "src/bytecode/class_companion.rs": "e2d2fa736d0ba7ed6921f71e5941b097125b4147b0104d120c055db6d1f05db2",
+        "src/bytecode/data.rs": "1ad9ebda9bcb7b6211f42ad3416d5b8267c5f6b32f0037de0c84c2e5898c6d24",
+        "src/bytecode/defaults.rs": "0d374890585d5a83ee5e9c374fcc8a15682c46ab084bce95d2d8f1c0479ba486",
+        "src/bytecode/frames.rs": "21dd3a37e6fdbeb6eb4fbc2d158c0bedbf0b6fd370280ca5a50067480e1cec48",
+        "src/bytecode/inline.rs": "884b7dc6a7e1d8297ab14716e37f37f4f5b5adb7f48084b73ee87b2d5ffcf103",
+        "src/bytecode/interfaces.rs": "ca755ece1d09dc1359d618f6cc1b01493791c03e5412811da3c04e4caa0ef71e",
+        "src/bytecode/lambdas.rs": "1b7a56ef53ca78baed889fcce63bb779a319036290fa7cb608091e16c0bb041f",
+        "src/bytecode/objects.rs": "6ca5f2229052daef9fbb6edf58699cafd4a8aebda073480e0ecddb9e56751865",
+        "src/bytecode.rs": "283e686a8f1b7dd3fc121455fb14af650c3a7da970cb019940c057f2b16a7bb7",
+        "src/check.rs": "9fb93d89492c61a41d682456db7592a62fed2e2eee3a606f0e6c24c81f05cc74",
+        "src/check_captures.rs": "e61bb86399b4d7249ab2f2d570a3d30344848aa5760487e0144990a712353ee0",
+        "src/check_control.rs": "cc0921c13fca088823c80cb84a15750735136c20d1bdf82a2ff3d04b1c54af31",
+        "src/check_declarations.rs": "87a6db7772e88d7d0596e76bfc22e2ae448df012808c604d49cc58b8694c4bc2",
+        "src/check_delegates.rs": "a638726a7a978a30012b37ca5009a3168cedd41f08fd056c5264eb1c427f1d91",
+        "src/check_functions.rs": "94a9e96952377ac0c8a9ea533fa7431f066c5b72a54037265a0f4814618ae16b",
+        "src/check_interfaces.rs": "f9027fdd1cebcea9ea6f2815aba3f15d81770c7aee45322ee3f4d38a9042e78e",
+        "src/check_library.rs": "91a98ca734967d67dfea342eb60de32c91b91cf159a0d75bea21e3b4e7b9a92a",
+        "src/check_objects.rs": "63a6b7874e7cbe797197e028d38a1a0b6664bdc6d3b98b9199bb69eba2f6e79d",
+        "src/check_operations.rs": "510315fffbfef782c47a9f0f2a87aa137c7fad809fb85b0609c62d3d9265ce70",
+        "src/check_overloads.rs": "2a1f9f93816543d3fe8f2589ef4adda5798b56d90ebfcb985c04d9438f4cb22b",
+        "src/check_references.rs": "fb791bcab48054bb919bbe5ecb6c37675cc7b67181d0bad3c8c76944969c4c25",
+        "src/check_relations.rs": "789fa625e48b5bbf8f1b25605c63fd1a687a029ac3993a88ffe107183869e7b0",
+        "src/check_singletons.rs": "309de0bde3ed51564911a5f54a6166d0aa3dca0277c4af54ac049d1e4ee104c8",
+        "src/classpath/aliases.rs": "a516926e0d607529e802384fbc335750ff78f7117ff567acad40aa5ec7d89743",
+        "src/classpath/archive.rs": "6f360444cc4df2714d48441185f002ec7b8ee7ae338a906db99256c0b9e9f697",
+        "src/classpath/metadata.rs": "e6770ba49c61dd4104ae3e962ad6b84cd8146731aee4aa2993c41b6393f6af68",
+        "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+        "src/classpath/signature.rs": "3f61c55e317f9e50e9ff08f7818d636a1a10aaa35a42fee77a28d9938a6e2c55",
+        "src/classpath/source.rs": "b6660418a63ce0f2d667059b57ee11372501410f4d301af3f263dab7dd6751dd",
+        "src/classpath.rs": "4b869471886e08b8d8ca361ac139c78550d9ef23ad909415743583e87acf066d",
+        "src/compiled_inline.rs": "9f1594fa19f03985bce18213e3a1a2eb850c84e0f59731cffcdd0c2d2d94b550",
+        "src/lib.rs": "59c08007fa509948548bdfba932d1af85e7e8fe6ddcaade99a266c743e766b2e",
+        "src/main.rs": "c17680b31cae9b79e19d58d9d0592d58e9302f2888dccec3b303fe609793c6bc",
+        "src/metadata.rs": "c6ba691d437bfde4cfdc7d3dd07cb80bb15f869a78946788293f9a09fba7b0b6",
+        "src/output.rs": "d991a876f22a16543179837c9e36655f41125a052ec6ff89b7b0b56fa7514d9b",
+        "src/syntax.rs": "2a8b18ec9bbf832baa3c0ac8065d24e98880188cbef682af4295dd27168a47d1"
+      }
+    },
+    "current_compiler": {
+      "binary_sha256": "8d6e956407dff8ab32f59598c8be918e70b69e855a1cf20672ea701063ca4f7e",
+      "version": "korrust 0.1.0",
+      "frozen_inputs_sha256": {
+        "/workspace/korrust/reports/correctness/2026-10-26T084244960567Z-androidbible-resolved-inputs/build.json": "aa55853253167449c484c8bb6713cac24036948d1612457850d086fe8fd8a2eb",
+        "reports/correctness/2026-10-26T073039Z-androidbible-source-assessment.json": "3504a1a6e5dc1445a6ac9dd061e53d126d5a743bf8ef070dbf38b971d7d4673c",
+        "target/release/korrust": "8d6e956407dff8ab32f59598c8be918e70b69e855a1cf20672ea701063ca4f7e",
+        "tools/assess_androidbible.py": "23d70e2f84dbda7e5e150de59fbbb310e7e2deb5532793f91e4c2787b7d3c106",
+        "tests/androidbible_regression.json": "795de298765637462b60ead80454142f8be4908f70f27af55788e89d55a04b94",
+        "benchmarks/source-files.sha256.json": "48e5d343ebfb4b24c87485a754bdfb237164a1c574b7c40cce7cbc8fc0357a4c",
+        "src/bytecode/class_companion.rs": "e2d2fa736d0ba7ed6921f71e5941b097125b4147b0104d120c055db6d1f05db2",
+        "src/bytecode/data.rs": "1ad9ebda9bcb7b6211f42ad3416d5b8267c5f6b32f0037de0c84c2e5898c6d24",
+        "src/bytecode/defaults.rs": "0d374890585d5a83ee5e9c374fcc8a15682c46ab084bce95d2d8f1c0479ba486",
+        "src/bytecode/frames.rs": "21dd3a37e6fdbeb6eb4fbc2d158c0bedbf0b6fd370280ca5a50067480e1cec48",
+        "src/bytecode/inline.rs": "884b7dc6a7e1d8297ab14716e37f37f4f5b5adb7f48084b73ee87b2d5ffcf103",
+        "src/bytecode/interfaces.rs": "ca755ece1d09dc1359d618f6cc1b01493791c03e5412811da3c04e4caa0ef71e",
+        "src/bytecode/lambdas.rs": "1b7a56ef53ca78baed889fcce63bb779a319036290fa7cb608091e16c0bb041f",
+        "src/bytecode/objects.rs": "6ca5f2229052daef9fbb6edf58699cafd4a8aebda073480e0ecddb9e56751865",
+        "src/bytecode.rs": "283e686a8f1b7dd3fc121455fb14af650c3a7da970cb019940c057f2b16a7bb7",
+        "src/check.rs": "239af30ef79d6470047b6b59403cb9433d9d4f50f56006acc7d08ffb4517c3d8",
+        "src/check_captures.rs": "e61bb86399b4d7249ab2f2d570a3d30344848aa5760487e0144990a712353ee0",
+        "src/check_control.rs": "cc0921c13fca088823c80cb84a15750735136c20d1bdf82a2ff3d04b1c54af31",
+        "src/check_declarations.rs": "09bd142ce2a722de40975f3785643097a81fe4ea7c42ce7b2feb20a507d572f2",
+        "src/check_delegates.rs": "a638726a7a978a30012b37ca5009a3168cedd41f08fd056c5264eb1c427f1d91",
+        "src/check_functions.rs": "1b2e95777ea95f74d4e8af08085cc3407d9250fc080c162442677c7e4fbf4fb7",
+        "src/check_interfaces.rs": "f9027fdd1cebcea9ea6f2815aba3f15d81770c7aee45322ee3f4d38a9042e78e",
+        "src/check_library.rs": "f5d4b0e6d2b91ae0094b698ff6fb6670bb957afd66e38ff6a476de0e4c1e7b28",
+        "src/check_objects.rs": "63a6b7874e7cbe797197e028d38a1a0b6664bdc6d3b98b9199bb69eba2f6e79d",
+        "src/check_operations.rs": "510315fffbfef782c47a9f0f2a87aa137c7fad809fb85b0609c62d3d9265ce70",
+        "src/check_overloads.rs": "2a1f9f93816543d3fe8f2589ef4adda5798b56d90ebfcb985c04d9438f4cb22b",
+        "src/check_references.rs": "fb791bcab48054bb919bbe5ecb6c37675cc7b67181d0bad3c8c76944969c4c25",
+        "src/check_relations.rs": "2facbd895c35c74baabeca0f6485044c176f79b66f01e9cb3e41d842ff5b5004",
+        "src/check_singletons.rs": "309de0bde3ed51564911a5f54a6166d0aa3dca0277c4af54ac049d1e4ee104c8",
+        "src/classpath/aliases.rs": "a516926e0d607529e802384fbc335750ff78f7117ff567acad40aa5ec7d89743",
+        "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+        "src/classpath/metadata.rs": "e6770ba49c61dd4104ae3e962ad6b84cd8146731aee4aa2993c41b6393f6af68",
+        "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+        "src/classpath/signature.rs": "3f61c55e317f9e50e9ff08f7818d636a1a10aaa35a42fee77a28d9938a6e2c55",
+        "src/classpath/source.rs": "b6660418a63ce0f2d667059b57ee11372501410f4d301af3f263dab7dd6751dd",
+        "src/classpath.rs": "4b869471886e08b8d8ca361ac139c78550d9ef23ad909415743583e87acf066d",
+        "src/compiled_inline.rs": "9f1594fa19f03985bce18213e3a1a2eb850c84e0f59731cffcdd0c2d2d94b550",
+        "src/lib.rs": "badca5c765434c8d78767fda68457be60a8fcefc6dfbdc1b16e4c1aa1aede8da",
+        "src/main.rs": "167905ee56f395f7b14ce7c4a690ce3d6c78c871d9e3aedea37b3b1a11d14ca4",
+        "src/metadata.rs": "98c2d0efdba51d073290627842ceab1462f25e6d36b14b80bd4e437f9e00b0b6",
+        "src/output.rs": "e0e4512a40dc32d19a72df2dda24974dd2d0d4ccd4992fa947f9676a024fbffa",
+        "src/syntax.rs": "2a8b18ec9bbf832baa3c0ac8065d24e98880188cbef682af4295dd27168a47d1",
+        "references/kotlinc/lib/allopen-compiler-plugin.jar": "4d10b6efd97edcdfff90ad064eb4410c60177653810844b104155b4a9086dfc6",
+        "references/kotlinc/lib/annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+        "references/kotlinc/lib/assignment-compiler-plugin.jar": "ca3c5b11501c5ed848b491d5a69bf13cb4197c79903a7cee2b2ad024bae5f601",
+        "references/kotlinc/lib/compose-compiler-plugin.jar": "e8b44d65a4ba5fb14f3e51d10fb605d7da2a0c35a9ee275c94ffd74cb3f2b11e",
+        "references/kotlinc/lib/jvm-abi-gen.jar": "88a5e104dde4ef2f3cd211b077bb93f0a5e2e54b61e53c373f146af061be4504",
+        "references/kotlinc/lib/kotlin-annotation-processing-cli.jar": "c44c21f9bedeca54e0062b825dcb394a75a3efc289d4354e153225213f498e5f",
+        "references/kotlinc/lib/kotlin-annotation-processing-runtime.jar": "d9bcc297a3263366e216956c9425f3ba7b04f4a72f8b0dffb06fdd88e48606b9",
+        "references/kotlinc/lib/kotlin-annotation-processing.jar": "51308691a3cbd4c3964c5669d6ffb771b4879a214ab95c1df6aab18f137b4fa6",
+        "references/kotlinc/lib/kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+        "references/kotlinc/lib/kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+        "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+        "references/kotlinc/lib/kotlin-daemon-client.jar": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be",
+        "references/kotlinc/lib/kotlin-daemon.jar": "b7c67e908442f64f7d2acf99ac6b68b625d5317541d7130efac72507de0c36cf",
+        "references/kotlinc/lib/kotlin-main-kts.jar": "d786b3ace9625918014c1da51d7c6ba29ef06e3291f6cc4264d39e6992acc4ee",
+        "references/kotlinc/lib/kotlin-metadata-jvm-sources.jar": "2ededf948f1afd503217a772c95718a41494e757762206216f4c1b42ada64585",
+        "references/kotlinc/lib/kotlin-metadata-jvm.jar": "00590f26a5a768777f04252c6cf93c016a3361a6bc93636df67375ad4d19557d",
+        "references/kotlinc/lib/kotlin-preloader.jar": "4fb08cc92cf83ace6af60953e968a7f79eb57c5304175a9c0a9a9ad14a9e6348",
+        "references/kotlinc/lib/kotlin-reflect-sources.jar": "8cbdca65092aa6888901e23c08c7d69d141544107a9bcc9aa47b5453d4dbcf7e",
+        "references/kotlinc/lib/kotlin-reflect.jar": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb",
+        "references/kotlinc/lib/kotlin-runner.jar": "b217c59d320058007fed21927f71d5fbb7899fb6acab817a6d63aec5544a548c",
+        "references/kotlinc/lib/kotlin-script-runtime-sources.jar": "275d90c0c92e9680aff9c013394f3f395bc46dc23762107c4fdccd9887a58561",
+        "references/kotlinc/lib/kotlin-script-runtime.jar": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e",
+        "references/kotlinc/lib/kotlin-scripting-common.jar": "69885751bdce7d4e1d1b9758baf4bc0fe03b24827abd7b7687e5a7c0b4d029ed",
+        "references/kotlinc/lib/kotlin-scripting-compiler-impl.jar": "fe93b36234d6ff2ae5d1c8f965c5ae7c61b5211c5945d1fe8f3b2136ef313520",
+        "references/kotlinc/lib/kotlin-scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5",
+        "references/kotlinc/lib/kotlin-scripting-jvm.jar": "8cb637132fc7fa511c700ee7f2b63b282630167f5ebd699a263a0b67b5d486ab",
+        "references/kotlinc/lib/kotlin-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+        "references/kotlinc/lib/kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+        "references/kotlinc/lib/kotlin-stdlib-jdk7.jar": "e2243abac2bed6e0b47be18b2b7fe1c1b4cf6a431480353dcd49d1ed35f31199",
+        "references/kotlinc/lib/kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+        "references/kotlinc/lib/kotlin-stdlib-jdk8.jar": "63091929246beba86b5fb2b020a6f5d06e01693a960b58a59959c8713667991c",
+        "references/kotlinc/lib/kotlin-stdlib-js-sources.jar": "f57cda653d86e12f005c68a684ed32cdf44416f55db140a4182d8dbb53697ef2",
+        "references/kotlinc/lib/kotlin-stdlib-sources.jar": "8693386ae174f7e4a91eb82c5c632d169d236704da24f78b9c8c84d87af2fd64",
+        "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+        "references/kotlinc/lib/kotlin-test-js-sources.jar": "b45aee3561d48173468db1eb05743925b3f91c7a99a30c8a3457e3a554819e78",
+        "references/kotlinc/lib/kotlin-test-junit-sources.jar": "3fd39bbf3f8283cf7b7759e02abdd752ddde9964352f645467b779257bccef20",
+        "references/kotlinc/lib/kotlin-test-junit.jar": "554739f282eaca114882ad7effcd8523de2651eb6d65189624425110992ca4ce",
+        "references/kotlinc/lib/kotlin-test-junit5-sources.jar": "5e0d4688277a3f859be086b874601b45f54b30b5b045800138b54e9418bdc95b",
+        "references/kotlinc/lib/kotlin-test-junit5.jar": "24350f53fe1be3b7fe0e8fcd7e1b777eb0b8fa16af720617fe7e87d0a77c2797",
+        "references/kotlinc/lib/kotlin-test-sources.jar": "bce4ebcf90507cc14ea3857f65088d10fd1a305616da62a6e5b6be0735ccb456",
+        "references/kotlinc/lib/kotlin-test-testng-sources.jar": "b88a8f12928480d14e29c6c879958c156afc946b9b8d333d1c2f4a428cdb1041",
+        "references/kotlinc/lib/kotlin-test-testng.jar": "da9c1164af8de599d8e31ae768f78c48caceb1a401790454139ec03cfe8ddf08",
+        "references/kotlinc/lib/kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+        "references/kotlinc/lib/kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+        "references/kotlinc/lib/kotlinx-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+        "references/kotlinc/lib/lombok-compiler-plugin.jar": "ab61ddad3977c19396223dbac64b82c5d33796b712e4cfac6d79a0fe2166cf24",
+        "references/kotlinc/lib/mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+        "references/kotlinc/lib/noarg-compiler-plugin.jar": "2f978ae34fec60a2e92ed3c1f6862f015b98922b07508a2648a019d898bf3761",
+        "references/kotlinc/lib/parcelize-compiler.jar": "edacd6e066bef87f00448e95ba4aff89b4e10f6ce27d99ba125c7e96f2d73ada",
+        "references/kotlinc/lib/parcelize-runtime.jar": "a21d5f85475efb27f17dd97d1a289d64874f2ddfdb508ea484477a4cf1afe969",
+        "references/kotlinc/lib/power-assert-compiler-plugin.jar": "29164fe3dd405d78204655bb533cf1abc409288be825039c3443fd894096745e",
+        "references/kotlinc/lib/sam-with-receiver-compiler-plugin.jar": "8e9eb418d5ddae8c24ee79da1d5394636dc256defc62a3ea347bd59aca8592fd",
+        "references/kotlinc/lib/scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5"
+      }
+    },
+    "prior_classpath_scope": "Pinned stdlib base entries (multi-release META-INF/versions entries excluded), original IntArrayList and Bintex Java classes, test-only Android type stubs, current Korrust SingleChapterVerses and AudioLogEntry. No other app, Android SDK, coroutine, Compose, serialization or test libraries.",
+    "current_classpath_scope": "Resolved Gradle compilation-task classpath/options/plugin inputs; single-file probes with source-closure gaps disclosed.",
+    "scope": "Historical rejected outcomes were unclassified and had no official compiler run; outcome renaming alone is not a compatibility improvement.",
+    "changes": []
+  },
+  "counts": {
+    "emitted": 1
+  },
+  "derived_counts": {
+    "outcomes": {
+      "emitted": 1
+    },
+    "groups": {
+      "production": {
+        "emitted": 1
+      }
+    },
+    "emission": {
+      "emitted": 1
+    },
+    "behavior": {
+      "not_run": 1
+    }
+  },
+  "finished_at": "2026-10-26T09:07:03.715526+00:00"
+}

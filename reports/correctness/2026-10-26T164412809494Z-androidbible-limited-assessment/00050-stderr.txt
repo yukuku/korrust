@@ -1,0 +1,147 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:7:13: error: unresolved reference 'afw'.
+import yuku.afw.App
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:8:13: error: unresolved reference 'afw'.
+import yuku.afw.storage.Preferences
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:9:26: error: unresolved reference 'model'.
+import yuku.alkitab.base.model.MVersionInternal
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:10:26: error: unresolved reference 'model'.
+import yuku.alkitab.base.model.VersionImpl
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:11:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.AppLog
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:12:21: error: unresolved reference 'debug'.
+import yuku.alkitab.debug.BuildConfig
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:13:21: error: unresolved reference 'debug'.
+import yuku.alkitab.debug.R
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:14:27: error: unresolved reference 'Version'.
+import yuku.alkitab.model.Version
+                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:34:45: error: unresolved reference 'Version'.
+    data class ResolvedVersion(val version: Version, val isFallback: Boolean)
+                                            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:42:68: error: unresolved reference 'Version'.
+    fun getAris(appWidgetId: Int, savedState: SavedState, version: Version, direction: Int): IntArray? {
+                                                                   ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:54:41: error: unresolved reference 'loadVerseText'.
+            if (candidate.all { version.loadVerseText(it) != null }) {
+                                        ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:59:13: error: unresolved reference 'AppLog'.
+            AppLog.d(TAG, "ari 0x${Integer.toHexString(candidate[0])} verseCount=$verseCount click=${savedState.click} are not available in version ${savedState.versionId}")
+            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:76:31: error: unresolved reference 'BuildConfig'.
+        val fifteenSecs = if (BuildConfig.DEBUG) {
+                              ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:91:26: error: unresolved reference 'App'.
+            BintexReader(App.context.resources.openRawResource(R.raw.daily_verses_bt)).use { reader ->
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:91:64: error: unresolved reference 'R'.
+            BintexReader(App.context.resources.openRawResource(R.raw.daily_verses_bt)).use { reader ->
+                                                               ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:107:41: error: unresolved reference 'Version'.
+    fun getVersion(versionId: String?): Version = resolveVersion(versionId).version
+                                        ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:111:26: error: unresolved reference 'MVersionInternal'.
+        if (versionId == MVersionInternal.getVersionInternalId()) {
+                         ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:112:36: error: unresolved reference 'VersionImpl'.
+            return ResolvedVersion(VersionImpl.getInternalVersion(), isFallback = false)
+                                   ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:116:47: error: unresolved reference 'App'.
+            for (version in yuku.alkitab.base.App.services.storage.db.listAllVersions()) {
+                                              ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:116:71: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+            for (version in yuku.alkitab.base.App.services.storage.db.listAllVersions()) {
+                                                                      ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:119:42: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                        version.version?.let { return ResolvedVersion(it, isFallback = false) }
+                                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:119:42: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+                        version.version?.let { return ResolvedVersion(it, isFallback = false) }
+                                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:119:46: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                        version.version?.let { return ResolvedVersion(it, isFallback = false) }
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:125:13: error: unresolved reference 'AppLog'.
+            AppLog.w(TAG, "Version selected for app widget: $versionId is no longer available. Reverting to internal version.")
+            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:128:32: error: unresolved reference 'VersionImpl'.
+        return ResolvedVersion(VersionImpl.getInternalVersion(), isFallback = true)
+                               ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:133:20: error: unresolved reference 'Preferences'.
+        darkText = Preferences.getBoolean("app_widget_${appWidgetId}_option_dark_text", false)
+                   ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:134:23: error: unresolved reference 'Preferences'.
+        hideAppIcon = Preferences.getBoolean("app_widget_${appWidgetId}_option_hide_app_icon", false)
+                      ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:135:20: error: unresolved reference 'Preferences'.
+        textSize = Preferences.getFloat("app_widget_${appWidgetId}_option_text_size", 14f)
+                   ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:136:33: error: unresolved reference 'Preferences'.
+        transparentBackground = Preferences.getBoolean("app_widget_${appWidgetId}_option_transparent_background", false)
+                                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:137:21: error: unresolved reference 'Preferences'.
+        versionId = Preferences.getString("app_widget_${appWidgetId}_version")
+                    ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:138:17: error: unresolved reference 'Preferences'.
+        click = Preferences.getInt("app_widget_${appWidgetId}_click", 0)
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:139:27: error: unresolved reference 'Preferences'.
+        backgroundAlpha = Preferences.getInt("app_widget_${appWidgetId}_option_backgroundAlpha", 255)
+                          ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:145:9: error: unresolved reference 'Preferences'.
+        Preferences.withTransaction {
+        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:147:17: error: unresolved reference 'Preferences'.
+                Preferences.remove("app_widget_${appWidgetId}_option_dark_text")
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:148:17: error: unresolved reference 'Preferences'.
+                Preferences.remove("app_widget_${appWidgetId}_option_hide_app_icon")
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:149:17: error: unresolved reference 'Preferences'.
+                Preferences.remove("app_widget_${appWidgetId}_option_text_size")
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:150:17: error: unresolved reference 'Preferences'.
+                Preferences.remove("app_widget_${appWidgetId}_option_transparent_background")
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:151:17: error: unresolved reference 'Preferences'.
+                Preferences.remove("app_widget_${appWidgetId}_version")
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:152:17: error: unresolved reference 'Preferences'.
+                Preferences.remove("app_widget_${appWidgetId}_click")
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:153:17: error: unresolved reference 'Preferences'.
+                Preferences.remove("app_widget_${appWidgetId}_option_backgroundAlpha")
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:155:17: error: unresolved reference 'Preferences'.
+                Preferences.setBoolean("app_widget_${appWidgetId}_option_dark_text", savedState.darkText)
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:156:17: error: unresolved reference 'Preferences'.
+                Preferences.setBoolean("app_widget_${appWidgetId}_option_hide_app_icon", savedState.hideAppIcon)
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:157:17: error: unresolved reference 'Preferences'.
+                Preferences.setFloat("app_widget_${appWidgetId}_option_text_size", savedState.textSize)
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:158:17: error: unresolved reference 'Preferences'.
+                Preferences.setBoolean("app_widget_${appWidgetId}_option_transparent_background", savedState.transparentBackground)
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:159:17: error: unresolved reference 'Preferences'.
+                Preferences.setString("app_widget_${appWidgetId}_version", savedState.versionId)
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:160:17: error: unresolved reference 'Preferences'.
+                Preferences.setInt("app_widget_${appWidgetId}_click", savedState.click)
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/appwidget/DailyVerseData.kt:161:17: error: unresolved reference 'Preferences'.
+                Preferences.setInt("app_widget_${appWidgetId}_option_backgroundAlpha", savedState.backgroundAlpha)
+                ^^^^^^^^^^^

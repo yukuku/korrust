@@ -1,0 +1,36 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:5:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.AppLog
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:6:21: error: unresolved reference 'io'.
+import yuku.alkitab.io.BibleReader
+                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:7:21: error: unresolved reference 'yes1'.
+import yuku.alkitab.yes1.Yes1Reader
+                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:8:21: error: unresolved reference 'yes2'.
+import yuku.alkitab.yes2.Yes2Reader
+                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:9:21: error: unresolved reference 'yes2'.
+import yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream
+                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:20:44: error: unresolved reference 'BibleReader'.
+    fun createYesReader(filename: String): BibleReader? {
+                                           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:29:17: error: unresolved reference 'AppLog'.
+                AppLog.e(TAG, "Yes file '" + filename + "' has not a correct header. Header is: " + header.contentToString())
+                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:34:25: error: unresolved reference 'Yes1Reader'.
+                0x01 -> Yes1Reader(filename) // VERSION 1 YES
+                        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:35:25: error: unresolved reference 'Yes2Reader'.
+                0x02 -> Yes2Reader(RandomAccessFileRandomInputStream(filename)) // VERSION 2 YES
+                        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:35:36: error: unresolved reference 'RandomAccessFileRandomInputStream'.
+                0x02 -> Yes2Reader(RandomAccessFileRandomInputStream(filename)) // VERSION 2 YES
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:37:21: error: unresolved reference 'AppLog'.
+                    AppLog.e(TAG, "Yes file version unsupported: " + header[7])
+                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/YesReaderFactory.kt:42:13: error: unresolved reference 'AppLog'.
+            AppLog.e(TAG, "@@createYesReader io exception", e)
+            ^^^^^^

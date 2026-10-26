@@ -81,7 +81,17 @@
     "id": "inline_allocation",
     "invalid": false,
     "source": "import interop.lib.allocationGate\nfun boundary(): Int = allocationGate { 3 }",
-    "candidate_diagnostic_regex": "Unsupported compiled inline body"
+    "candidate_diagnostic_regex": "Unsupported compiled inline body",
+    "supported_regression": {
+      "facade": "Boundary_inline_allocationKt",
+      "java_fixture": "InlineAllocationBoundaryCheck.java",
+      "main_class": "InlineAllocationBoundaryCheck",
+      "java_options": [
+        "-XX:+UnlockExperimentalVMOptions",
+        "-XX:hashCode=2"
+      ],
+      "scope": "Ordinary referenced-class allocation inside a compiled inline body; controlled HotSpot identity hash mode returns 1, so 64 calls independently require lambda result 3 plus allocated Object hash 1. This does not claim default-JVM identity hash values or generated/nested inline-owner class regeneration."
+    }
   },
   {
     "id": "inline_exception_handler",

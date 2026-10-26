@@ -13,6 +13,7 @@ pub(super) fn inner_attribute(pool: &mut Pool, owner: &str, companion: &str) -> 
     Ok(attribute)
 }
 
+#[allow(clippy::too_many_arguments)]
 pub(super) fn outer(
     pool: &mut Pool,
     companion: &ClassCompanion,
@@ -21,6 +22,7 @@ pub(super) fn outer(
     methods: &mut Vec<Vec<u8>>,
     lambdas: &[crate::check::LambdaDecl],
     delegated_properties: &[(String, Value)],
+    enum_data: Option<&crate::check::enums::CheckedEnum>,
 ) -> Result<()> {
     fields.extend(class_field(
         pool,
@@ -106,6 +108,9 @@ pub(super) fn outer(
         in_lambda: false,
         max_stack: 3,
     };
+    if let Some(enumeration) = enum_data {
+        enums::initialize(&mut code, owner, enumeration)?;
+    }
     for (name, value) in delegated_properties {
         code.value(value)?;
         code.field_reference(0xb3, owner, name, &value.ty.descriptor())?;
@@ -129,9 +134,12 @@ pub(super) fn outer(
     }
     code.bytes.push(0xb1);
     let max_stack = code.max_stack as u16;
-    let code = code.into_simple(companion.locals, max_stack)?;
+    let locals = companion
+        .locals
+        .max(enum_data.map_or(0, |enumeration| enumeration.initializer_locals));
+    let code = code.into_simple(locals, max_stack)?;
     let mut initializer = simple_method(pool, 0x0008, "<clinit>", "()V", code, None, false)?;
-    frames::attach(pool, &mut initializer, owner, &[], companion.locals, true)?;
+    frames::attach(pool, &mut initializer, owner, &[], locals, true)?;
     methods.push(initializer);
     Ok(())
 }
@@ -283,7 +291,7 @@ pub(super) fn emit(
         let mut method = simple_method(
             &mut pool,
             if function.private { 0x0012 } else { 0x0011 },
-            &function.name,
+            function.jvm_name(),
             &function.descriptor(),
             code,
             generic_function(function).as_deref(),

@@ -1,0 +1,606 @@
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:6:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.Dispatchers
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:7:12: error: unresolved reference 'junit'.
+import org.junit.After
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:8:12: error: unresolved reference 'junit'.
+import org.junit.Assert.*
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:9:12: error: unresolved reference 'junit'.
+import org.junit.Test
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:10:35: error: unresolved reference 'DevotionDownloader'.
+import yuku.alkitab.base.devotion.DevotionDownloader.Key
+                                  ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:11:35: error: unresolved reference 'DevotionDownloader'.
+import yuku.alkitab.base.devotion.DevotionDownloader.State
+                                  ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:14:30: error: unresolved reference 'ManualDispatcher'.
+    private val foreground = ManualDispatcher()
+                             ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:15:30: error: unresolved reference 'ManualDispatcher'.
+    private val background = ManualDispatcher()
+                             ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:16:41: error: unresolved reference 'Key'.
+    private val created = mutableListOf<Key>()
+                                        ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:17:43: error: unresolved reference 'Key'.
+    private val cancelled = mutableListOf<Key>()
+                                          ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:18:26: error: unresolved reference 'Key'.
+    private var action: (Key) -> State = { State.READY }
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:18:34: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+    private var action: (Key) -> State = { State.READY }
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:18:42: error: unresolved reference 'Key'.
+    private var action: (Key) -> State = { State.READY }
+                                         ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:18:44: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+    private var action: (Key) -> State = { State.READY }
+                                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:18:50: error: unresolved reference 'READY'.
+    private var action: (Key) -> State = { State.READY }
+                                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:19:30: error: unresolved reference 'DevotionDownloader'.
+    private val downloader = DevotionDownloader({ key, _ ->
+                             ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:19:51: error: cannot infer type for value parameter 'key'. Specify it explicitly.
+    private val downloader = DevotionDownloader({ key, _ ->
+                                                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:19:56: error: cannot infer type for implicit value parameter 'it'. Specify it explicitly.
+    private val downloader = DevotionDownloader({ key, _ ->
+                                                       ^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:21:18: error: unresolved reference 'DevotionDownloader'.
+        object : DevotionDownloader.Request {
+                 ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:26:21: error: unresolved reference 'Key'.
+    private val a = Key("me-en", "20260925")
+                    ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:27:21: error: unresolved reference 'Key'.
+    private val b = Key("me-en", "20260926")
+                    ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:28:21: error: unresolved reference 'Key'.
+    private val c = Key("me-en", "20260929")
+                    ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:29:29: error: unresolved reference 'Key'.
+    private fun select(key: Key) = downloader.select(key.name, key.date, true)
+                            ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:29:58: error: unresolved reference 'name'.
+    private fun select(key: Key) = downloader.select(key.name, key.date, true)
+                                                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:29:68: error: unresolved reference 'date'.
+    private fun select(key: Key) = downloader.select(key.name, key.date, true)
+                                                                   ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:30:28: error: unresolved reference 'Key'.
+    private fun state(key: Key) = downloader.getState(key.name, key.date)
+                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:30:59: error: unresolved reference 'name'.
+    private fun state(key: Key) = downloader.getState(key.name, key.date)
+                                                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:30:69: error: unresolved reference 'date'.
+    private fun state(key: Key) = downloader.getState(key.name, key.date)
+                                                                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:32:6: error: unresolved reference 'After'.
+    @After fun tearDown() = downloader.shutdown()
+     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:34:6: error: unresolved reference 'Test'.
+    @Test fun `a selected date completes while slow prefetch is still active`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:38:26: error: unresolved reference 'Dispatchers'.
+        val dispatcher = Dispatchers.IO.limitedParallelism(2)
+                         ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:39:30: error: unresolved reference 'DevotionDownloader'.
+        val realDownloader = DevotionDownloader({ key, _ ->
+                             ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:39:51: error: cannot infer type for value parameter 'key'. Specify it explicitly.
+        val realDownloader = DevotionDownloader({ key, _ ->
+                                                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:39:56: error: cannot infer type for implicit value parameter 'it'. Specify it explicitly.
+        val realDownloader = DevotionDownloader({ key, _ ->
+                                                       ^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:40:22: error: unresolved reference 'DevotionDownloader'.
+            object : DevotionDownloader.Request {
+                     ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:42:41: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+                override fun execute(): State {
+                                        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:45:25: error: unresolved reference 'assertTrue'.
+                        assertTrue(release.await(5, TimeUnit.SECONDS))
+                        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:47:28: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+                    return State.READY
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:47:34: error: unresolved reference 'READY'.
+                    return State.READY
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:53:13: error: unresolved reference 'assertTrue'.
+            assertTrue(started.await(5, TimeUnit.SECONDS))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:55:13: error: unresolved reference 'assertTrue'.
+            assertTrue(selectedDone.await(5, TimeUnit.SECONDS))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:56:13: error: unresolved reference 'assertEquals'.
+            assertEquals(State.DOWNLOADING, realDownloader.getState(a.name, a.date))
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:56:26: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            assertEquals(State.DOWNLOADING, realDownloader.getState(a.name, a.date))
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:56:32: error: unresolved reference 'DOWNLOADING'.
+            assertEquals(State.DOWNLOADING, realDownloader.getState(a.name, a.date))
+                               ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:63:6: error: unresolved reference 'Test'.
+    @Test fun `queued and in-flight requests deduplicate by source and date`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:66:18: error: unresolved reference 'Key'.
+        action = {
+                 ^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:67:13: error: unresolved reference 'assertEquals'.
+            assertEquals(State.DOWNLOADING, state(a))
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:67:26: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            assertEquals(State.DOWNLOADING, state(a))
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:67:32: error: unresolved reference 'DOWNLOADING'.
+            assertEquals(State.DOWNLOADING, state(a))
+                               ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:73:13: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.READY
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:73:19: error: unresolved reference 'READY'.
+            State.READY
+                  ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:76:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(a), created)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:76:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(a), created)
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:77:9: error: unresolved reference 'assertEquals'.
+        assertEquals(0, foreground.size)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:78:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.READY, state(a))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:78:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.READY, state(a))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:78:28: error: unresolved reference 'READY'.
+        assertEquals(State.READY, state(a))
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:81:6: error: unresolved reference 'Test'.
+    @Test fun `a queued prefetch date is promoted ahead of other background dates`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:86:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.QUEUED, state(c))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:86:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.QUEUED, state(c))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:86:28: error: unresolved reference 'QUEUED'.
+        assertEquals(State.QUEUED, state(c))
+                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:88:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(c), created)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:88:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(c), created)
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:90:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(c, a, b), created)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:90:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(c, a, b), created)
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:93:6: error: unresolved reference 'Test'.
+    @Test fun `rapid selections cancel obsolete foreground and start the latest date next`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:95:20: error: unresolved reference 'Key'.
+        action = { key ->
+                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:99:17: error: unresolved reference 'assertEquals'.
+                assertEquals(listOf(a), cancelled)
+                ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:99:30: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                assertEquals(listOf(a), cancelled)
+                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:100:17: error: unresolved reference 'assertEquals'.
+                assertEquals(State.QUEUED, state(c))
+                ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:100:30: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+                assertEquals(State.QUEUED, state(c))
+                             ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:100:36: error: unresolved reference 'QUEUED'.
+                assertEquals(State.QUEUED, state(c))
+                                   ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:102:13: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.READY
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:102:19: error: unresolved reference 'READY'.
+            State.READY
+                  ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:106:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(a, c), created)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:106:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(a, c), created)
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:107:9: error: unresolved reference 'assertNull'.
+        assertNull(state(a))
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:108:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.READY, state(c))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:108:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.READY, state(c))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:108:28: error: unresolved reference 'READY'.
+        assertEquals(State.READY, state(c))
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:110:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.READY, state(c))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:110:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.READY, state(c))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:110:28: error: unresolved reference 'READY'.
+        assertEquals(State.READY, state(c))
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:113:6: error: unresolved reference 'Test'.
+    @Test fun `returning to a cancelling request restarts it only after it ends`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:115:18: error: unresolved reference 'Key'.
+        action = {
+                 ^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:118:13: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.FAILED
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:118:19: error: unresolved reference 'FAILED'.
+            State.FAILED
+                  ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:121:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.QUEUED, state(a))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:121:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.QUEUED, state(a))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:121:28: error: unresolved reference 'QUEUED'.
+        assertEquals(State.QUEUED, state(a))
+                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:122:18: error: unresolved reference 'Key'.
+        action = { State.READY }
+                 ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:122:20: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        action = { State.READY }
+                   ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:122:26: error: unresolved reference 'READY'.
+        action = { State.READY }
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:124:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(a, a), created)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:124:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(a, a), created)
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:125:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.READY, state(a))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:125:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.READY, state(a))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:125:28: error: unresolved reference 'READY'.
+        assertEquals(State.READY, state(a))
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:128:6: error: unresolved reference 'Test'.
+    @Test fun `failure remains terminal until an explicit retry succeeds`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:129:18: error: unresolved reference 'Key'.
+        action = { throw IOException("offline") }
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:132:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.FAILED, state(a))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:132:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.FAILED, state(a))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:132:28: error: unresolved reference 'FAILED'.
+        assertEquals(State.FAILED, state(a))
+                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:134:9: error: unresolved reference 'assertEquals'.
+        assertEquals(0, foreground.size)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:135:18: error: unresolved reference 'Key'.
+        action = { State.READY }
+                 ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:135:20: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        action = { State.READY }
+                   ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:135:26: error: unresolved reference 'READY'.
+        action = { State.READY }
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:137:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.QUEUED, state(a))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:137:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.QUEUED, state(a))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:137:28: error: unresolved reference 'QUEUED'.
+        assertEquals(State.QUEUED, state(a))
+                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:139:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.READY, state(a))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:139:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.READY, state(a))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:139:28: error: unresolved reference 'READY'.
+        assertEquals(State.READY, state(a))
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:140:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(a, a), created)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:140:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(a, a), created)
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:143:6: error: unresolved reference 'Test'.
+    @Test fun `unavailable content is terminal and may be explicitly retried`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:144:18: error: unresolved reference 'Key'.
+        action = { State.UNAVAILABLE }
+                 ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:144:20: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        action = { State.UNAVAILABLE }
+                   ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:144:26: error: unresolved reference 'UNAVAILABLE'.
+        action = { State.UNAVAILABLE }
+                         ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:149:9: error: unresolved reference 'assertEquals'.
+        assertEquals(0, foreground.size)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:151:18: error: unresolved reference 'Key'.
+        action = { State.READY }
+                 ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:151:20: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        action = { State.READY }
+                   ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:151:26: error: unresolved reference 'READY'.
+        action = { State.READY }
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:153:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.READY, state(a))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:153:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.READY, state(a))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:153:28: error: unresolved reference 'READY'.
+        assertEquals(State.READY, state(a))
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:156:6: error: unresolved reference 'Test'.
+    @Test fun `the same date in different sources creates distinct requests`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:161:9: error: unresolved reference 'assertEquals'.
+        assertEquals(setOf(a, Key("rh", a.date)), created.toSet())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:161:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(setOf(a, Key("rh", a.date)), created.toSet())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:161:31: error: unresolved reference 'Key'.
+        assertEquals(setOf(a, Key("rh", a.date)), created.toSet())
+                              ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:161:59: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(setOf(a, Key("rh", a.date)), created.toSet())
+                                                          ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:164:6: error: unresolved reference 'Test'.
+    @Test fun `selecting cached content cancels an obsolete foreground without downloading the cache`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:166:18: error: unresolved reference 'Key'.
+        action = {
+                 ^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:168:13: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            State.READY
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:168:19: error: unresolved reference 'READY'.
+            State.READY
+                  ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:171:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(a), cancelled)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:171:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(a), cancelled)
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:172:9: error: unresolved reference 'assertEquals'.
+        assertEquals(listOf(a), created)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:172:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        assertEquals(listOf(a), created)
+                     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:173:9: error: unresolved reference 'assertEquals'.
+        assertEquals(0, foreground.size)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:176:6: error: unresolved reference 'Test'.
+    @Test fun `shutdown terminates queued states and rejects new work`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:180:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.FAILED, state(a))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:180:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.FAILED, state(a))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:180:28: error: unresolved reference 'FAILED'.
+        assertEquals(State.FAILED, state(a))
+                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:181:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.FAILED, state(b))
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:181:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.FAILED, state(b))
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:181:28: error: unresolved reference 'FAILED'.
+        assertEquals(State.FAILED, state(b))
+                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloaderTest.kt:183:9: error: unresolved reference 'assertNull'.
+        assertNull(state(c))
+        ^^^^^^^^^^

@@ -66,7 +66,7 @@ fn preserves_statement_boundaries_and_rejects_unsupported_syntax() {
     rejects("fun f(): Int = 1 /*", "Unterminated");
     rejects(
         "fun f(): Int = 1\nfun f(): Int = 2",
-        "Conflicting JVM function signature",
+        "Conflicting source function declaration",
     );
 }
 
@@ -241,7 +241,7 @@ fn rejects_malformed_chars_and_implicit_char_conversions() {
 }
 
 #[test]
-fn compound_addition_requires_mutable_int_locals() {
+fn compound_addition_requires_supported_mutable_locals() {
     assert!(
         compile(
             "fun f(x: Int): Int { var n = x; n += n + 2; return n }",
@@ -249,11 +249,13 @@ fn compound_addition_requires_mutable_int_locals() {
         )
         .is_ok()
     );
+    // The exact former String += boundary is now supported. Observable local,
+    // captured-cell and field stores are covered by the declaration/color suites.
+    assert!(compile("fun f() { var n = \"a\"; n += \"b\" }", "StringAdd.kt").is_ok());
     for (source, message) in [
         ("fun f() { val n = 1; n += 2 }", "Cannot reassign"),
         ("fun f(n: Int) { n += 2 }", "Cannot reassign"),
         ("fun f() { var n = 'a'; n += 2 }", "only mutable Int"),
-        ("fun f() { var n = \"a\"; n += \"b\" }", "only mutable Int"),
         ("fun f() { var n = true; n += false }", "only mutable Int"),
         ("fun f() { var n = 1; n += 'a' }", "Type mismatch"),
         ("fun f() { missing += 1 }", "Unresolved"),
@@ -397,7 +399,26 @@ fn accepts_bare_enums_and_uses_the_declaration_name() {
 }
 
 #[test]
-fn rejects_enum_features_outside_the_bare_declaration_scope() {
+fn promoted_enum_interface_and_internal_member_forms_remain_supported() {
+    for source in [
+        "enum class E() { A }",
+        "enum class E(val n: Int) { A(1) }",
+        "enum class E { A() }",
+        "enum class E { A; fun f() {} }",
+        "enum class E { A; val x = 1 }",
+        "enum class E { A; companion object {} }",
+        "enum class E { `A` }",
+        "class E() { internal fun x() {} }",
+        "fun interface E { fun f() }",
+        "object E { internal fun f() {} }",
+    ] {
+        let result = compile_all(source, "Promoted.kt");
+        assert!(result.is_ok(), "{source}: {:?}", result.err());
+    }
+}
+
+#[test]
+fn rejects_invalid_or_still_unsupported_enum_forms() {
     for source in [
         "private enum class E { A }",
         "protected enum class E { A }",
@@ -405,20 +426,14 @@ fn rejects_enum_features_outside_the_bare_declaration_scope() {
         "sealed enum class E { A }",
         "public internal enum class E { A }",
         "public public enum class E { A }",
-        "enum class E() { A }",
         "enum class E private constructor() { A }",
-        "enum class E(val n: Int) { A(1) }",
         "enum class E : Runnable { A }",
         "enum class E<T> { A }",
         "@Deprecated(\"x\") enum class E { A }",
         "enum class E { @Deprecated(\"x\") A }",
-        "enum class E { A() }",
         "enum class E { A(1) }",
         "enum class E { A {} }",
         "enum class E { A { fun f() {} } }",
-        "enum class E { A; fun f() {} }",
-        "enum class E { A; val x = 1 }",
-        "enum class E { A; companion object {} }",
         "enum class E { enum class Nested { A } }",
         "enum class E { A B }",
         "enum class E { A\nB }",
@@ -434,7 +449,6 @@ fn rejects_enum_features_outside_the_bare_declaration_scope() {
         "enum class E { name }",
         "enum class E { ordinal }",
         "enum class E { entries }",
-        "enum class E { `A` }",
     ] {
         assert!(compile(source, "Invalid.kt").is_err(), "accepted {source}");
     }
@@ -744,7 +758,6 @@ fn rejects_unsupported_class_surface_and_mixed_declarations() {
         "class E(private val x: Int, private val x: Int)",
         "class E() { constructor(x: Int) {} }",
         "class E() { var x: Int get() = 1 }",
-        "class E() { internal fun x() {} }",
         "class E() { private override fun x() {} }",
         "class E() { override override fun x() {} }",
         "class E() { fun String.extension(): Int = 1 }",
@@ -989,10 +1002,7 @@ fn supports_if_expressions_integer_strings_templates_and_explicit_throws() {
         r#"fun f(c: Char): String = "$c""#,
         "String templates support only",
     );
-    rejects(
-        r#"fun f(n: Int): String = "$`n`""#,
-        "Only simple ASCII name",
-    );
+    assert!(compile(r#"fun f(n: Int): String = "$`n`""#, "EscapedTemplate.kt").is_ok());
     rejects(r#"fun f(n: Int): String = "$n二""#, "Non-ASCII characters");
     rejects(
         "fun f(): String { throw IllegalArgumentException(1) }",
@@ -1031,7 +1041,6 @@ fn rejects_unsupported_interface_and_companion_forms() {
         "private interface E",
         "protected interface E",
         "sealed interface E",
-        "fun interface E { fun f() }",
         "interface E<T>",
         "interface E()",
         "interface E { var x: Int get() = 1 }",
@@ -1239,7 +1248,6 @@ fn rejects_unsupported_object_annotations_initializers_and_overloads() {
         "object E { @Suppress(\"x\") @Suppress(\"y\") fun f() {} }",
         "object E { inline fun f() {} }",
         "object E { private inline inline fun f() {} }",
-        "object E { internal fun f() {} }",
         "object E { private val bytes = ThreadLocal.withInitial { value -> ByteArray(value) } }",
         "object E { private val bytes = ThreadLocal.withInitial { ByteArray(missing) } }",
         "object E { fun f(value: Int): Int = value; fun f(value: Int): String = \"x\" }",

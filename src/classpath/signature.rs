@@ -121,6 +121,7 @@ impl<'a> Signature<'a> {
             b'C' => Type::Char,
             b'Z' => Type::Boolean,
             b'F' => Type::Float,
+            b'D' => Type::Double,
             b'V' => Type::Unit,
             b'T' => {
                 let name = self.name(b";")?;
@@ -132,6 +133,7 @@ impl<'a> Signature<'a> {
                 Type::Byte => Type::ByteArray,
                 Type::Char => Type::CharArray,
                 Type::String => Type::StringArray,
+                element if element.is_reference() => Type::Array(Box::new(element)),
                 _ => return Err(invalid()),
             },
             b'L' => {
@@ -241,6 +243,9 @@ pub(super) fn class(value: &str) -> Result<(Vec<TypeParameter>, Vec<Type>)> {
 }
 
 pub(super) fn nullability(ty: Type, annotations: &[Annotation]) -> Result<Type> {
+    if !ty.is_reference() {
+        return Ok(ty);
+    }
     let mut state = None;
     for annotation in annotations {
         if annotation.name == "Ljdk/internal/vm/annotation/IntrinsicCandidate;"
@@ -263,9 +268,6 @@ pub(super) fn nullability(ty: Type, annotations: &[Annotation]) -> Result<Type> 
             return Err(invalid());
         }
         state = Some(nullable);
-    }
-    if !ty.is_reference() {
-        return Ok(ty);
     }
     Ok(match state {
         Some(true) => Type::Nullable(Box::new(ty)),
@@ -335,11 +337,13 @@ pub(super) fn attach(
                 .collect::<Result<Vec<_>>>();
             let result = nullability(result, &attributes.annotations);
             if let (Ok(params), Ok(result)) = (converted, result) {
-                if !attributes.unsupported && method.access & (0x40 | 0x80 | 0x1000) == 0 {
+                if !attributes.unsupported && method.access & (0x40 | 0x1000) == 0 {
                     method.unsupported = false;
                     method.kotlin_params = Some(params);
                     method.kotlin_result = Some(result);
                     method.library = Some(LibraryMethod {
+                        abstract_: method.access & 0x400 != 0,
+                        builtin_array: false,
                         kotlin_public: method.access & 1 != 0,
                         source_name: method.name.clone(),
                         type_parameters: parameters,
@@ -402,7 +406,22 @@ mod tests {
             name: name.into(),
             values: Vec::new(),
         };
-        assert!(nullability(Type::Int, &[marker("Lsample/Unknown;")]).is_err());
+        assert_eq!(
+            nullability(Type::Int, &[marker("Lsample/Unknown;")]).unwrap(),
+            Type::Int
+        );
+        assert_eq!(
+            nullability(
+                Type::Double,
+                &[Annotation {
+                    name: "Lsample/Constraint;".into(),
+                    values: vec![("minimum".into(), AnnotationValue::Other)]
+                }]
+            )
+            .unwrap(),
+            Type::Double
+        );
+        assert!(nullability(Type::String, &[marker("Lsample/Unknown;")]).is_err());
         assert!(
             nullability(
                 Type::String,

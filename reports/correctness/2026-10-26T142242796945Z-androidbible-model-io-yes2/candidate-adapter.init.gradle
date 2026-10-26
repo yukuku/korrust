@@ -1,0 +1,265 @@
+
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+gradle.projectsEvaluated {
+    def moduleNames = new JsonSlurper().parseText(System.getenv('KORRUST_BUILD_MODULES'))
+    def moduleArtifacts = new JsonSlurper().parseText(System.getenv('KORRUST_BUILD_MODULE_ARTIFACTS'))
+    moduleNames.each { moduleName ->
+        def selected = gradle.rootProject.project(":" + moduleName)
+        def artifacts = new File(moduleArtifacts[moduleName])
+        def selectedTasks = ['compileDebugKotlin', 'compileReleaseKotlin']
+        def orderedPaths = { collection -> collection.files.collect { it.absolutePath } }
+        def optionValue = { value ->
+            def resolved = value instanceof org.gradle.api.provider.Provider ? value.orNull : value
+            if (resolved == null) return null
+            if (resolved instanceof Collection) return resolved.collect { it.toString() }
+            return resolved.toString()
+        }
+        def compilerOptions = { task ->
+            def result = [:]
+            ['jvmTarget', 'languageVersion', 'apiVersion', 'freeCompilerArgs', 'javaParameters',
+             'allWarningsAsErrors', 'suppressWarnings', 'progressiveMode', 'optIn', 'jvmDefault'].each { name ->
+                if (task.compilerOptions.hasProperty(name)) result[name] = optionValue(task.compilerOptions."${name}")
+            }
+            result.module_name = task.moduleName.get()
+            result
+        }
+        def sourceSets = {
+            selected.extensions.getByName('android').sourceSets.collectEntries { sourceSet ->
+                def kotlin = sourceSet.hasProperty('kotlin') ? sourceSet.kotlin.srcDirs.collect { it.absolutePath } : []
+                [(sourceSet.name): [name: sourceSet.name,
+                    role: sourceSet.name.toLowerCase().contains('test') ? 'test' : 'production',
+                    java_roots: sourceSet.java.srcDirs.collect { it.absolutePath }.sort(),
+                    kotlin_roots: kotlin.sort(),
+                    resource_roots: sourceSet.resources.srcDirs.collect { it.absolutePath }.sort(),
+                    manifest: sourceSet.manifest.srcFile.absolutePath]]
+            }
+        }
+        def compilationModel = { taskName ->
+            def task = selected.tasks.named(taskName).get()
+            def files = task.sources.files.findAll { it.name.endsWith('.kt') || it.name.endsWith('.java') }
+            def sourceRoot = new File(selected.projectDir, 'src').absolutePath + File.separator
+            def generated = files.findAll { !it.absolutePath.startsWith(sourceRoot) }
+            def result = [task: task.path,
+                role: taskName.toLowerCase().contains('test') ? 'test' : 'production',
+                sources: files.collect { it.absolutePath }.sort(),
+                source_roots: files.collect { it.parentFile.absolutePath }.unique().sort(),
+                generated_source_roots: generated.collect { it.parentFile.absolutePath }.unique().sort(),
+                compile_classpath: orderedPaths(task.libraries),
+                compiler_options: compilerOptions(task),
+                compiler_plugin_classpath: orderedPaths(task.pluginClasspath),
+                compiler_plugin_options: task.pluginOptions.get().collectMany { config -> config.allOptions().collectMany { id, options -> options.collect { option -> 'plugin:' + id + ':' + option.key + '=' + option.value } } }]
+            result
+        }
+
+        if (System.getenv('KORRUST_CAPTURE_ONLY') == '1') {
+            selected.tasks.register('korrustCaptureModel') {
+                doLast {
+                    def failures = []
+                    def safely = { field, action, fallback ->
+                        try { action() }
+                        catch (Exception error) {
+                            failures << [field: field, diagnostic: error.message]
+                            fallback
+                        }
+                    }
+                    def prefix = selected.name == 'Alkitab' ? 'Plain' : ''
+                    def names = ["compile${prefix}DebugKotlin", "compile${prefix}ReleaseKotlin", "compile${prefix}DebugUnitTestKotlin", "compile${prefix}ReleaseUnitTestKotlin"]
+                    def captured = [:]
+                    names.each { name ->
+                        def task = selected.tasks.findByName(name)
+                        if (task == null) {
+                            failures << [field: name, diagnostic: 'Required selected variant task is missing']
+                        } else {
+                            def configurationName = name.substring('compile'.length(), name.length() - 'Kotlin'.length())
+                            configurationName = configurationName[0].toLowerCase() + configurationName.substring(1) + 'CompileClasspath'
+                            def sourceFiles = safely(name + '.sources', { task.sources.files.findAll { it.name.endsWith('.kt') || it.name.endsWith('.java') }.collect { it.absolutePath }.sort() }, null)
+                            def isSourceIncomplete = sourceFiles == null
+                            def isTest = name.toLowerCase().contains('test')
+                            def buildType = name.contains('Release') ? 'Release' : 'Debug'
+                            def sourceSetNames = isTest ? ['test', 'test' + buildType] : ['main', buildType.toLowerCase()]
+                            if (prefix) sourceSetNames += isTest ? ['test' + prefix, 'test' + prefix + buildType] : [prefix.toLowerCase(), prefix.toLowerCase() + buildType]
+                            def selectedSets = sourceSets().findAll { key, value -> sourceSetNames.contains(key) }
+                            def declaredRoots = selectedSets.values().collectMany { value -> value.java_roots + value.kotlin_roots }.unique().sort()
+                            if (sourceFiles == null) sourceFiles = declaredRoots.collectMany { directory -> selected.fileTree(directory) { include '**/*.kt', '**/*.java' }.files.collect { it.absolutePath } }.unique().sort()
+                            def paths = safely(name + '.compile_classpath', { orderedPaths(task.libraries) }, null)
+                            def isIncomplete = paths == null
+                            if (paths == null) {
+                                def configuration = selected.configurations.findByName(configurationName)
+                                if (configuration != null) {
+                                    paths = safely(name + '.partial_component_classpath', {
+                                        def view = configuration.incoming.artifactView {
+                                            lenient = true
+                                            attributes { attribute(org.gradle.api.attributes.Attribute.of('artifactType', String), 'android-classes-jar') }
+                                        }.artifacts
+                                        view.failures.each { error -> failures << [field: name + '.partial_component_classpath', diagnostic: error.message] }
+                                        orderedPaths(view.artifactFiles)
+                                    }, [])
+                                } else { paths = [] }
+                            }
+                            def generatedOutputs = safely(name + '.source_generation_dependencies', {
+                                task.sources.buildDependencies.getDependencies(task).collect { producer -> [task: producer.path, outputs: orderedPaths(producer.outputs.files)] }
+                            }, [])
+                            captured[name] = [
+                                task: task.path,
+                                role: name.toLowerCase().contains('test') ? 'test' : 'production',
+                                sources: sourceFiles,
+                                source_roots: declaredRoots,
+                                source_collection_incomplete: isSourceIncomplete,
+                                source_collection_scope: isSourceIncomplete ? 'declared selected Android source sets; generated source providers unavailable' : 'actual Kotlin task sources',
+                                selected_source_sets: sourceSetNames,
+                                generated_source_roots: sourceFiles.findAll { !it.startsWith(new File(selected.projectDir, 'src').absolutePath + File.separator) }.collect { new File(it).parentFile.absolutePath }.unique().sort(),
+                                source_generation_dependencies: generatedOutputs,
+                                compile_classpath: paths,
+                                classpath_incomplete: isIncomplete,
+                                classpath_scope: isIncomplete ? 'partial resolved component artifacts; task classpath resolution failed' : 'actual selected Kotlin task libraries',
+                                compiler_options: safely(name + '.compiler_options', { compilerOptions(task) }, [:]),
+                                compiler_plugin_classpath: safely(name + '.compiler_plugin_classpath', { orderedPaths(task.pluginClasspath) }, []),
+                                compiler_plugin_options: safely(name + '.compiler_plugin_options', {
+                                    task.pluginOptions.get().collectMany { config -> config.allOptions().collectMany { id, options -> options.collect { option -> 'plugin:' + id + ':' + option.key + '=' + option.value } } }
+                                }, []),
+                            ]
+                        }
+                    }
+                    def release = selected.tasks.findByName("compile${prefix}ReleaseKotlin")
+                    def runtime = [:]
+                    ["${prefix.toLowerCase()}DebugRuntimeClasspath", "${prefix.toLowerCase()}ReleaseRuntimeClasspath"].each { rawName ->
+                        def name = prefix ? rawName : rawName[0].toLowerCase() + rawName.substring(1)
+                        def configuration = selected.configurations.findByName(name)
+                        if (configuration != null) {
+                            runtime[name] = safely(name, {
+                                def view = configuration.incoming.artifactView {
+                                    lenient = true
+                                    attributes { attribute(org.gradle.api.attributes.Attribute.of('artifactType', String), 'android-classes-jar') }
+                                }.artifacts
+                                view.failures.each { error -> failures << [field: name, diagnostic: error.message] }
+                                orderedPaths(view.artifactFiles)
+                            }, [])
+                        }
+                    }
+                    def compilerVersion = release == null ? null : safely('resolved_kotlin_compiler_version', { release.'getKotlinCompilerVersion$kotlin_gradle_plugin_common'().get().toString() }, null)
+                    def compilerPaths = release == null ? [] : safely('resolved_kotlin_compiler_classpath', { orderedPaths(release.'getDefaultCompilerClasspath$kotlin_gradle_plugin_common'()) }, [])
+                    def model = [schema_version: 2, module: selected.name, capture_only: true,
+                        source_sets: safely('source_sets', { sourceSets() }, [:]),
+                        compilation_tasks: captured, runtime_classpaths: runtime,
+                        classpath: captured["compile${prefix}ReleaseKotlin"]?.compile_classpath ?: [],
+                        resolved_kotlin_compiler_version: compilerVersion,
+                        resolved_kotlin_compiler_classpath: compilerPaths,
+                        setup_failures: failures,
+                        dependency_boundary: [selected_modules: moduleNames,
+                            candidate_owned_sources: captured.findAll { name, value -> value.role == 'production' }.collectMany { name, value -> value.sources.findAll { it.endsWith('.kt') } }.unique().sort(),
+                            production_compilation_executed: false,
+                            ownership: 'Input capture only. No selected production source was compiled by either compiler.',
+                            dependencies_compiler: 'Existing sibling outputs, if present, retain their recorded toolchain; no sibling compile task executed by capture.'],
+                        plugins: [gradle: gradle.gradleVersion, applied_plugin_classes: selected.plugins.collect { it.class.name }.sort()],
+                        options: [selected_variants: names, input_capture_only: true],
+                    ]
+                    new File(artifacts, 'gradle-model.json').text = JsonOutput.prettyPrint(JsonOutput.toJson(model))
+                }
+            }
+        } else {
+        if (System.getenv('KORRUST_BUILD_MODE') == 'korrust') {
+            selectedTasks.each { taskName ->
+                selected.tasks.named(taskName).configure { task ->
+                    task.setActions([])
+                    task.outputs.upToDateWhen { false }
+                    task.outputs.cacheIf { false }
+                    task.doLast {
+                        def request = [
+                            module: selected.name,
+                            task: task.path,
+                            compiler: System.getenv('KORRUST_BUILD_COMPILER'),
+                            sources: task.sources.files.findAll { it.name.endsWith('.kt') }.collect { it.absolutePath }.sort(),
+                            classpath: orderedPaths(task.libraries),
+                            module_name: task.moduleName.get(),
+                            source_roots: compilationModel(taskName).source_roots,
+                            generated_source_roots: compilationModel(taskName).generated_source_roots,
+                            compiler_options: compilerOptions(task),
+                            compiler_plugin_classpath: compilationModel(taskName).compiler_plugin_classpath,
+                            compiler_plugin_options: compilationModel(taskName).compiler_plugin_options,
+                            destination: task.destinationDirectory.get().asFile.absolutePath,
+                            stage: new File(selected.layout.buildDirectory.get().asFile, "tmp/korrust/${taskName}").absolutePath,
+                            work_dir: selected.rootDir.absolutePath,
+                            trace: new File(artifacts, "${taskName}.json").absolutePath,
+                        ]
+                        def requestFile = new File(artifacts, "${taskName}-request.json")
+                        requestFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(request))
+                        def process = new ProcessBuilder([
+                            System.getenv('KORRUST_BUILD_PYTHON'),
+                            System.getenv('KORRUST_BUILD_TOOL'),
+                            '--compile-request', requestFile.absolutePath,
+                        ]).directory(selected.rootDir).redirectErrorStream(true).start()
+                        process.inputStream.withReader { reader ->
+                            reader.eachLine { line -> selected.logger.lifecycle(line) }
+                        }
+                        if (process.waitFor() != 0) {
+                            throw new GradleException("Korrust failed for ${task.path}; official production Kotlin fallback is disabled")
+                        }
+                    }
+                }
+            }
+        }
+        selected.tasks.register('korrustBuildModel') {
+            mustRunAfter selected.tasks.named('testDebugUnitTest')
+            mustRunAfter selected.tasks.named('bundleReleaseAar')
+            doLast {
+                def releaseKotlin = selected.tasks.named('compileReleaseKotlin').get()
+                def debugKotlin = selected.tasks.named('compileDebugKotlin').get()
+                def releaseJava = selected.tasks.named('compileReleaseJavaWithJavac').get()
+                def testTask = selected.tasks.named('testDebugUnitTest').get()
+                def unitKotlin = selected.tasks.named('compileDebugUnitTestKotlin').get()
+                def model = [
+                    schema_version: 2,
+                    module: selected.name,
+                    source_sets: sourceSets(),
+                    compilation_tasks: ['compileDebugKotlin', 'compileReleaseKotlin', 'compileDebugUnitTestKotlin'].collectEntries { name -> [(name): compilationModel(name)] },
+                    generated_source_roots: ['compileDebugKotlin', 'compileReleaseKotlin', 'compileDebugUnitTestKotlin'].collectMany { name -> compilationModel(name).generated_source_roots }.unique().sort(),
+                    dependency_boundary: [
+                        selected_modules: moduleNames,
+                        candidate_owned_tasks: selectedTasks.collect { selected.path + ':' + it },
+                        candidate_owned_sources: selectedTasks.collectMany { name -> compilationModel(name).sources.findAll { it.endsWith('.kt') } }.unique().sort(),
+                        official_test_tasks: ['compileDebugUnitTestKotlin'],
+                        external_project_components: selected.configurations.findAll { it.canBeResolved && it.name in ['releaseCompileClasspath', 'debugCompileClasspath', 'debugUnitTestCompileClasspath', 'debugUnitTestRuntimeClasspath'] }.collectMany { configuration ->
+                            configuration.incoming.resolutionResult.allComponents.findAll { it.id instanceof org.gradle.api.artifacts.component.ProjectComponentIdentifier && !moduleNames.contains(it.id.projectPath.tokenize(':').last()) }.collect { it.id.displayName }
+                        }.unique().sort(),
+                        external_compiler: 'normal Gradle Kotlin/Java/NDK compilers for unselected modules',
+                    ],
+                    plugins: [
+                        android: selected.plugins.findPlugin('com.android.library').class.classLoader.loadClass('com.android.Version').getField('ANDROID_GRADLE_PLUGIN_VERSION').get(null),
+                        gradle: gradle.gradleVersion,
+                        applied_plugin_classes: selected.plugins.collect { it.class.name }.sort(),
+                    ],
+                    runtime_classpaths: [
+                        releaseRuntimeClasspath: orderedPaths(selected.configurations.getByName('releaseRuntimeClasspath').incoming.artifactView { attributes { attribute(org.gradle.api.attributes.Attribute.of('artifactType', String), 'android-classes-jar') } }.files),
+                        debugRuntimeClasspath: orderedPaths(selected.configurations.getByName('debugRuntimeClasspath').incoming.artifactView { attributes { attribute(org.gradle.api.attributes.Attribute.of('artifactType', String), 'android-classes-jar') } }.files),
+                        debugUnitTestRuntimeClasspath: orderedPaths(testTask.classpath),
+                    ],
+                    kotlin_classes: releaseKotlin.destinationDirectory.get().asFile.absolutePath,
+                    java_classes: releaseJava.destinationDirectory.get().asFile.absolutePath,
+                    debug_kotlin_classes: debugKotlin.destinationDirectory.get().asFile.absolutePath,
+                    classpath: orderedPaths(releaseKotlin.libraries),
+                    java_classpath: orderedPaths(releaseJava.classpath),
+                    test_runtime_classpath: orderedPaths(testTask.classpath),
+                    test_classes: testTask.testClassesDirs.files.collect { it.absolutePath }.sort(),
+                    test_results: testTask.reports.junitXml.outputLocation.get().asFile.absolutePath,
+                    aar: new File(selected.layout.buildDirectory.get().asFile, "outputs/aar/${selected.name}-release.aar").absolutePath,
+                    resolved_kotlin_compiler_version: releaseKotlin.'getKotlinCompilerVersion$kotlin_gradle_plugin_common'().get().toString(),
+                    resolved_kotlin_compiler_classpath: releaseKotlin.'getDefaultCompilerClasspath$kotlin_gradle_plugin_common'().files.collect { it.absolutePath }.sort(),
+                    options: [
+                        kotlin_jvm_target: releaseKotlin.compilerOptions.jvmTarget.get().target,
+                        kotlin_module_name: releaseKotlin.moduleName.get(),
+                        java_source_compatibility: releaseJava.sourceCompatibility,
+                        java_target_compatibility: releaseJava.targetCompatibility,
+                        unit_test_friend_paths: unitKotlin.'getFriendPathsSet$kotlin_gradle_plugin_common'().get().collect { new File(selected.layout.buildDirectory.get().asFile, it).absolutePath }.sort(),
+                        production_tasks: selectedTasks,
+                        unit_test_compiler: 'official Kotlin Gradle plugin',
+                        dependencies_compiler: 'normal Gradle Kotlin/Java/NDK compilers for unselected modules',
+                    ],
+                ]
+                new File(artifacts, 'gradle-model.json').text = JsonOutput.prettyPrint(JsonOutput.toJson(model))
+            }
+        }
+        }
+    }
+}

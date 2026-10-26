@@ -1,0 +1,108 @@
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:3:16: error: unresolved reference 'app'.
+import android.app.Application
+               ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:8:12: error: unresolved reference 'junit'.
+import org.junit.Assert.assertEquals
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:9:12: error: unresolved reference 'junit'.
+import org.junit.Assert.assertTrue
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:10:12: error: unresolved reference 'junit'.
+import org.junit.Before
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:11:12: error: unresolved reference 'junit'.
+import org.junit.Test
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:12:12: error: unresolved reference 'junit'.
+import org.junit.runner.RunWith
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:13:12: error: unresolved reference 'robolectric'.
+import org.robolectric.RobolectricTestRunner
+           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:14:12: error: unresolved reference 'robolectric'.
+import org.robolectric.RuntimeEnvironment
+           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:15:12: error: unresolved reference 'robolectric'.
+import org.robolectric.annotation.Config
+           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:16:13: error: unresolved reference 'afw'.
+import yuku.afw.storage.Preferences
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:18:2: error: unresolved reference 'RunWith'.
+@RunWith(RobolectricTestRunner::class)
+ ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:18:10: error: unresolved reference 'RobolectricTestRunner'.
+@RunWith(RobolectricTestRunner::class)
+         ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:19:2: error: unresolved reference 'Config'.
+@Config(application = Application::class, sdk = [34])
+ ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:19:23: error: unresolved reference 'Application'.
+@Config(application = Application::class, sdk = [34])
+                      ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:21:6: error: unresolved reference 'Before'.
+    @Before
+     ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:23:14: error: unresolved reference 'afw'.
+        yuku.afw.App.context = RuntimeEnvironment.getApplication()
+             ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:23:32: error: unresolved reference 'RuntimeEnvironment'.
+        yuku.afw.App.context = RuntimeEnvironment.getApplication()
+                               ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:24:9: error: unresolved reference 'Preferences'.
+        Preferences.invalidate()
+        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:25:9: error: unresolved reference 'History'.
+        History.replaceAllEntries(emptyList())
+        ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:25:35: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        History.replaceAllEntries(emptyList())
+                                  ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:28:6: error: unresolved reference 'Test'.
+    @Test
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:32:21: error: unresolved reference 'History'.
+        val entry = History.Entry("gid", 123, 456L, "device")
+                    ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:33:49: error: unresolved reference 'History'.
+        val replacement = object : AbstractList<History.Entry>() {
+                                                ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:35:43: error: unresolved reference 'History'.
+            override fun get(index: Int): History.Entry {
+                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:43:44: error: unresolved reference 'History'.
+            val writer = executor.submit { History.replaceAllEntries(replacement) }
+                                           ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:44:13: error: unresolved reference 'assertTrue'.
+            assertTrue(entered.await(10, TimeUnit.SECONDS))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:46:47: error: unresolved reference 'History'.
+            val reader = executor.submit<List<History.Entry>> {
+                                              ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:48:17: error: unresolved reference 'History'.
+                History.listAllEntries()
+                ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:50:13: error: unresolved reference 'assertTrue'.
+            assertTrue(readerStarted.await(10, TimeUnit.SECONDS))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:55:13: error: unresolved reference 'assertEquals'.
+            assertEquals(listOf(entry), snapshot)
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:55:26: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            assertEquals(listOf(entry), snapshot)
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:56:13: error: unresolved reference 'History'.
+            History.replaceAllEntries(emptyList())
+            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:56:39: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            History.replaceAllEntries(emptyList())
+                                      ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:57:13: error: unresolved reference 'assertEquals'.
+            assertEquals(listOf(entry), snapshot)
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:57:26: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            assertEquals(listOf(entry), snapshot)
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/HistoryConcurrencyTest.kt:61:13: error: unresolved reference 'assertTrue'.
+            assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS))
+            ^^^^^^^^^^

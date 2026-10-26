@@ -1,0 +1,81 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:3:27: error: unresolved reference 'Book'.
+import yuku.alkitab.model.Book
+                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:4:26: error: unresolved reference 'Ari'.
+import yuku.alkitab.util.Ari
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:5:13: error: unresolved reference 'alkitabconverter'.
+import yuku.alkitabconverter.util.DesktopVerseParser
+            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:14:48: error: unresolved reference 'Book'.
+    fun resolve(aris: IntArray, book: (Int) -> Book?): List<ReadingRange>? {
+                                               ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:18:17: error: unresolved reference 'Ari'.
+            if (Ari.toChapter(ari) == 0 && Ari.toVerse(ari) != 0) return null
+                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:18:44: error: unresolved reference 'Ari'.
+            if (Ari.toChapter(ari) == 0 && Ari.toVerse(ari) != 0) return null
+                                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:19:26: error: unresolved reference 'Ari'.
+            val b = book(Ari.toBook(ari)) ?: return null
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:20:27: error: unresolved reference 'Ari'.
+            val chapter = Ari.toChapter(ari).let { if (it == 0) if (end) b.chapter_count else 1 else it }
+                          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:20:46: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            val chapter = Ari.toChapter(ari).let { if (it == 0) if (end) b.chapter_count else 1 else it }
+                                             ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:20:46: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            val chapter = Ari.toChapter(ari).let { if (it == 0) if (end) b.chapter_count else 1 else it }
+                                             ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:20:50: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            val chapter = Ari.toChapter(ari).let { if (it == 0) if (end) b.chapter_count else 1 else it }
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:20:76: error: unresolved reference 'chapter_count'.
+            val chapter = Ari.toChapter(ari).let { if (it == 0) if (end) b.chapter_count else 1 else it }
+                                                                           ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:21:34: error: unresolved reference 'chapter_count'.
+            if (chapter !in 1..b.chapter_count || chapter > b.verse_counts.size) return null
+                                 ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:21:59: error: 'operator' modifier is required on 'fun String.compareTo(other: String, ignoreCase: Boolean = ...): Int'.
+            if (chapter !in 1..b.chapter_count || chapter > b.verse_counts.size) return null
+                                                          ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:21:63: error: unresolved reference 'verse_counts'.
+            if (chapter !in 1..b.chapter_count || chapter > b.verse_counts.size) return null
+                                                              ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:22:25: error: unresolved reference 'Ari'.
+            val verse = Ari.toVerse(ari).let { if (it == 0) if (end) b.verse_counts[chapter - 1] else 1 else it }
+                        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:22:42: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            val verse = Ari.toVerse(ari).let { if (it == 0) if (end) b.verse_counts[chapter - 1] else 1 else it }
+                                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:22:42: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            val verse = Ari.toVerse(ari).let { if (it == 0) if (end) b.verse_counts[chapter - 1] else 1 else it }
+                                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:22:46: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            val verse = Ari.toVerse(ari).let { if (it == 0) if (end) b.verse_counts[chapter - 1] else 1 else it }
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:22:72: error: unresolved reference 'verse_counts'.
+            val verse = Ari.toVerse(ari).let { if (it == 0) if (end) b.verse_counts[chapter - 1] else 1 else it }
+                                                                       ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:23:30: error: argument type mismatch: actual type is 'MatchGroup?', but 'Int' was expected.
+            if (verse !in 1..b.verse_counts[chapter - 1]) return null
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:23:32: error: unresolved reference 'verse_counts'.
+            if (verse !in 1..b.verse_counts[chapter - 1]) return null
+                               ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:24:20: error: unresolved reference 'Ari'.
+            return Ari.encode(b.bookId, chapter, verse)
+                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:24:33: error: unresolved reference 'bookId'.
+            return Ari.encode(b.bookId, chapter, verse)
+                                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:37:49: error: unresolved reference 'Book'.
+    fun parse(reference: String, book: (Int) -> Book?): IntArray? {
+                                                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:43:26: error: unresolved reference 'DesktopVerseParser'.
+            val parsed = DesktopVerseParser.parseReference(text) ?: return null
+                         ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/ReadingPassage.kt:44:46: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+            IntArray(parsed.size()) { parsed.get(it) }
+                                             ^^^

@@ -1,0 +1,975 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-26T08:38:49.375925+00:00",
+  "status": "completed",
+  "commands": [
+    {
+      "label": "official identity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/000-stderr.txt"
+    },
+    {
+      "label": "candidate identity",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "--version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/001-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/002-stderr.txt"
+    },
+    {
+      "label": "official/AudioLogEntry.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_twenty",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/003-stderr.txt"
+    },
+    {
+      "label": "candidate/AudioLogEntry.kt",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/004-stderr.txt"
+    },
+    {
+      "label": "baseline rejection official/jar/PlaybackState",
+      "argv": [
+        "target/checkpoint-a-baseline-build/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/baseline-official-jar-PlaybackState"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/005-stderr.txt"
+    },
+    {
+      "label": "candidate/PlaybackState.kt",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/fixed-official-jar-PlaybackState"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/006-stderr.txt"
+    },
+    {
+      "label": "baseline rejection official/jar/ExpectedResult",
+      "argv": [
+        "target/checkpoint-a-baseline-build/release/korrust",
+        "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/baseline-official-jar-ExpectedResult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/007-stderr.txt"
+    },
+    {
+      "label": "candidate/ExpectedResult.kt",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/fixed-official-jar-ExpectedResult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/008-stderr.txt"
+    },
+    {
+      "label": "baseline rejection official/directory/PlaybackState",
+      "argv": [
+        "target/checkpoint-a-baseline-build/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/stdlib:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/baseline-official-directory-PlaybackState"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/009-stderr.txt"
+    },
+    {
+      "label": "candidate/PlaybackState.kt",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/stdlib:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/fixed-official-directory-PlaybackState"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/010-stderr.txt"
+    },
+    {
+      "label": "baseline rejection official/directory/ExpectedResult",
+      "argv": [
+        "target/checkpoint-a-baseline-build/release/korrust",
+        "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/stdlib:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/baseline-official-directory-ExpectedResult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/011-stderr.txt"
+    },
+    {
+      "label": "candidate/ExpectedResult.kt",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/stdlib:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/fixed-official-directory-ExpectedResult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/012-stderr.txt"
+    },
+    {
+      "label": "baseline rejection candidate/jar/PlaybackState",
+      "argv": [
+        "target/checkpoint-a-baseline-build/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/baseline-candidate-jar-PlaybackState"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/013-stderr.txt"
+    },
+    {
+      "label": "candidate/PlaybackState.kt",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/014-stderr.txt"
+    },
+    {
+      "label": "baseline rejection candidate/jar/ExpectedResult",
+      "argv": [
+        "target/checkpoint-a-baseline-build/release/korrust",
+        "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/baseline-candidate-jar-ExpectedResult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/015-stderr.txt"
+    },
+    {
+      "label": "candidate/ExpectedResult.kt",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/016-stderr.txt"
+    },
+    {
+      "label": "baseline rejection candidate/directory/PlaybackState",
+      "argv": [
+        "target/checkpoint-a-baseline-build/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/stdlib:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/baseline-candidate-directory-PlaybackState"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/017-stderr.txt"
+    },
+    {
+      "label": "candidate/PlaybackState.kt",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/stdlib:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/fixed-candidate-directory-PlaybackState"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/018-stderr.txt"
+    },
+    {
+      "label": "baseline rejection candidate/directory/ExpectedResult",
+      "argv": [
+        "target/checkpoint-a-baseline-build/release/korrust",
+        "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/stdlib:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/baseline-candidate-directory-ExpectedResult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/019-stderr.txt"
+    },
+    {
+      "label": "candidate/ExpectedResult.kt",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/stdlib:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/fixed-candidate-directory-ExpectedResult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/020-stderr.txt"
+    },
+    {
+      "label": "baseline without explicit stdlib",
+      "argv": [
+        "target/checkpoint-a-baseline-build/release/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/baseline-no-stdlib"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/021-stderr.txt"
+    },
+    {
+      "label": "official/PlaybackState.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_twenty",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/022-stderr.txt"
+    },
+    {
+      "label": "official/ExpectedResult.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_twenty",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-app"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/023-stderr.txt"
+    },
+    {
+      "label": "official invalid inferred cycle",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/compatibility/CyclicInference.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-cycle"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/024-stderr.txt"
+    },
+    {
+      "label": "candidate invalid inferred cycle",
+      "argv": [
+        "target/checkpoint-a-compiler/korrust-fixed-release",
+        "/workspace/korrust/tests/fixtures/compatibility/CyclicInference.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-cycle"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/025-stderr.txt"
+    },
+    {
+      "label": "fixed Java caller against official output",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-app",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/java-caller",
+        "/workspace/korrust/tests/fixtures/compatibility/PlaybackCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/026-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller/official",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/java-caller:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-app:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "PlaybackCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/027-stderr.txt"
+    },
+    {
+      "label": "official Kotlin consumer/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/compatibility/PlaybackConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_twenty",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-app:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/028-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer/official",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-consumer:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-app:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "PlaybackConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/029-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller/candidate",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/java-caller:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-app:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "PlaybackCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/030-stderr.txt"
+    },
+    {
+      "label": "official Kotlin consumer/candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/compatibility/PlaybackConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "androidbible_twenty",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-app:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/031-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer/candidate",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-consumer:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-app:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "PlaybackConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/032-stderr.txt"
+    },
+    {
+      "label": "ABI/official/yuku.alkitab.base.audio.PlaybackState",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-app",
+        "yuku.alkitab.base.audio.PlaybackState"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/033-stderr.txt"
+    },
+    {
+      "label": "ABI/candidate/yuku.alkitab.base.audio.PlaybackState",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-app",
+        "yuku.alkitab.base.audio.PlaybackState"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/034-stderr.txt"
+    },
+    {
+      "label": "ABI/official/yuku.alkitab.base.audio.PlaybackState$Companion",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-app",
+        "yuku.alkitab.base.audio.PlaybackState$Companion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/035-stderr.txt"
+    },
+    {
+      "label": "ABI/candidate/yuku.alkitab.base.audio.PlaybackState$Companion",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-app",
+        "yuku.alkitab.base.audio.PlaybackState$Companion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/036-stderr.txt"
+    },
+    {
+      "label": "ABI/official/compatibility.Snapshot",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-app",
+        "compatibility.Snapshot"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/037-stderr.txt"
+    },
+    {
+      "label": "ABI/candidate/compatibility.Snapshot",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-app",
+        "compatibility.Snapshot"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/038-stderr.txt"
+    },
+    {
+      "label": "ABI/official/compatibility.ExpectedResultKt",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/official-app",
+        "compatibility.ExpectedResultKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/039-stderr.txt"
+    },
+    {
+      "label": "ABI/candidate/compatibility.ExpectedResultKt",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-model:/workspace/korrust/target/checks/2026-10-26T083849375925Z-playback-regression/candidate-app",
+        "compatibility.ExpectedResultKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 180,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-26T083849375925Z-playback-regression/040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-26T083849375925Z-playback-regression/040-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "baseline_rejection/official/jar/PlaybackState",
+      "outcome": "pass",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt:1:1: error: Cannot infer a source declaration signature: cyclic or unsupported initializer or expression body; add an explicit type",
+      "expected": "Compiler regression under real stdlib; previously successful report linked separately."
+    },
+    {
+      "id": "fixed_emission/official/jar/PlaybackState",
+      "outcome": "pass"
+    },
+    {
+      "id": "baseline_rejection/official/jar/ExpectedResult",
+      "outcome": "pass",
+      "diagnostic": "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt:1:1: error: Cannot infer a source declaration signature: cyclic or unsupported initializer or expression body; add an explicit type",
+      "expected": "Compiler regression under real stdlib; previously successful report linked separately."
+    },
+    {
+      "id": "fixed_emission/official/jar/ExpectedResult",
+      "outcome": "pass"
+    },
+    {
+      "id": "baseline_rejection/official/directory/PlaybackState",
+      "outcome": "pass",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt:1:1: error: Cannot infer a source declaration signature: cyclic or unsupported initializer or expression body; add an explicit type",
+      "expected": "Compiler regression under real stdlib; previously successful report linked separately."
+    },
+    {
+      "id": "fixed_emission/official/directory/PlaybackState",
+      "outcome": "pass"
+    },
+    {
+      "id": "baseline_rejection/official/directory/ExpectedResult",
+      "outcome": "pass",
+      "diagnostic": "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt:1:1: error: Cannot infer a source declaration signature: cyclic or unsupported initializer or expression body; add an explicit type",
+      "expected": "Compiler regression under real stdlib; previously successful report linked separately."
+    },
+    {
+      "id": "fixed_emission/official/directory/ExpectedResult",
+      "outcome": "pass"
+    },
+    {
+      "id": "baseline_rejection/candidate/jar/PlaybackState",
+      "outcome": "pass",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt:1:1: error: Cannot infer a source declaration signature: cyclic or unsupported initializer or expression body; add an explicit type",
+      "expected": "Compiler regression under real stdlib; previously successful report linked separately."
+    },
+    {
+      "id": "fixed_emission/candidate/jar/PlaybackState",
+      "outcome": "pass"
+    },
+    {
+      "id": "baseline_rejection/candidate/jar/ExpectedResult",
+      "outcome": "pass",
+      "diagnostic": "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt:1:1: error: Cannot infer a source declaration signature: cyclic or unsupported initializer or expression body; add an explicit type",
+      "expected": "Compiler regression under real stdlib; previously successful report linked separately."
+    },
+    {
+      "id": "fixed_emission/candidate/jar/ExpectedResult",
+      "outcome": "pass"
+    },
+    {
+      "id": "baseline_rejection/candidate/directory/PlaybackState",
+      "outcome": "pass",
+      "diagnostic": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt:1:1: error: Cannot infer a source declaration signature: cyclic or unsupported initializer or expression body; add an explicit type",
+      "expected": "Compiler regression under real stdlib; previously successful report linked separately."
+    },
+    {
+      "id": "fixed_emission/candidate/directory/PlaybackState",
+      "outcome": "pass"
+    },
+    {
+      "id": "baseline_rejection/candidate/directory/ExpectedResult",
+      "outcome": "pass",
+      "diagnostic": "/workspace/korrust/tests/fixtures/compatibility/ExpectedResult.kt:1:1: error: Cannot infer a source declaration signature: cyclic or unsupported initializer or expression body; add an explicit type",
+      "expected": "Compiler regression under real stdlib; previously successful report linked separately."
+    },
+    {
+      "id": "fixed_emission/candidate/directory/ExpectedResult",
+      "outcome": "pass"
+    },
+    {
+      "id": "classpath_trigger",
+      "outcome": "pass",
+      "scope": "Unchanged current source accepts without explicit stdlib but rejects with the ordinary library generic factory present. Raw JAR and full directory inputs fail alike before repair."
+    },
+    {
+      "id": "invalid_cycle/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid_cycle/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed_java_runtime",
+      "outcome": "pass",
+      "independent_assertions": 26,
+      "checks": "All IDLE values, identity, copy/getters/components/equality/hash, null failure, reduced factory result."
+    },
+    {
+      "id": "official_kotlin_consumers",
+      "outcome": "pass",
+      "scope": "Metadata, named copy/default arguments, companion IDLE/EMPTY, generic nullable result."
+    },
+    {
+      "id": "abi/yuku.alkitab.base.audio.PlaybackState",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/yuku.alkitab.base.audio.PlaybackState$Companion",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/compatibility.Snapshot",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/compatibility.ExpectedResultKt",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/000-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/000-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/001-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/001-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/002-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/002-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/003-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/003-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/004-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/004-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/005-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/005-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/006-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/006-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/007-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/007-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/008-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/008-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/009-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/009-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/010-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/010-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/011-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/011-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/012-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/012-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/013-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/013-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/014-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/014-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/015-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/015-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/016-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/016-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/017-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/017-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/018-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/018-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/019-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/019-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/020-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/020-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/021-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/021-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/022-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/022-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/023-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/023-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/024-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/024-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/025-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/025-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/026-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/026-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/027-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/027-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/028-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/028-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/029-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/029-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/030-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/030-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/031-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/031-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/032-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/032-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/033-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/033-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/034-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/034-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/035-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/035-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/036-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/036-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/037-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/037-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/038-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/038-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/039-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/039-stderr.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/040-stdout.txt",
+    "reports/correctness/2026-10-26T083849375925Z-playback-regression/040-stderr.txt"
+  ],
+  "compiler": {
+    "binary_sha256": "b5bbfde4c79419c3fbcfc5d2cd84d6e8801832c49edbb5c50f475dac392b56c3",
+    "source_files_sha256": {
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "src/bytecode/class_companion.rs": "e2d2fa736d0ba7ed6921f71e5941b097125b4147b0104d120c055db6d1f05db2",
+      "src/bytecode/data.rs": "1ad9ebda9bcb7b6211f42ad3416d5b8267c5f6b32f0037de0c84c2e5898c6d24",
+      "src/bytecode/defaults.rs": "0d374890585d5a83ee5e9c374fcc8a15682c46ab084bce95d2d8f1c0479ba486",
+      "src/bytecode/frames.rs": "21dd3a37e6fdbeb6eb4fbc2d158c0bedbf0b6fd370280ca5a50067480e1cec48",
+      "src/bytecode/inline.rs": "884b7dc6a7e1d8297ab14716e37f37f4f5b5adb7f48084b73ee87b2d5ffcf103",
+      "src/bytecode/interfaces.rs": "ca755ece1d09dc1359d618f6cc1b01493791c03e5412811da3c04e4caa0ef71e",
+      "src/bytecode/lambdas.rs": "1b7a56ef53ca78baed889fcce63bb779a319036290fa7cb608091e16c0bb041f",
+      "src/bytecode/objects.rs": "6ca5f2229052daef9fbb6edf58699cafd4a8aebda073480e0ecddb9e56751865",
+      "src/bytecode.rs": "283e686a8f1b7dd3fc121455fb14af650c3a7da970cb019940c057f2b16a7bb7",
+      "src/check.rs": "89e096c6d80b0f552bc313d988f4569b616f04959ccae487f1d321937384c446",
+      "src/check_captures.rs": "e61bb86399b4d7249ab2f2d570a3d30344848aa5760487e0144990a712353ee0",
+      "src/check_control.rs": "cc0921c13fca088823c80cb84a15750735136c20d1bdf82a2ff3d04b1c54af31",
+      "src/check_declarations.rs": "7c16283028428cd3f854e1f9ecbbdd73e8cff0acb1118ff12208f746d9452446",
+      "src/check_delegates.rs": "a638726a7a978a30012b37ca5009a3168cedd41f08fd056c5264eb1c427f1d91",
+      "src/check_functions.rs": "54d6653f309cd9bf2fd34fb8b93f532d114a21e44bfac03d2028f15e53064fdf",
+      "src/check_interfaces.rs": "f9027fdd1cebcea9ea6f2815aba3f15d81770c7aee45322ee3f4d38a9042e78e",
+      "src/check_library.rs": "91a98ca734967d67dfea342eb60de32c91b91cf159a0d75bea21e3b4e7b9a92a",
+      "src/check_objects.rs": "63a6b7874e7cbe797197e028d38a1a0b6664bdc6d3b98b9199bb69eba2f6e79d",
+      "src/check_operations.rs": "510315fffbfef782c47a9f0f2a87aa137c7fad809fb85b0609c62d3d9265ce70",
+      "src/check_overloads.rs": "2a1f9f93816543d3fe8f2589ef4adda5798b56d90ebfcb985c04d9438f4cb22b",
+      "src/check_references.rs": "fb791bcab48054bb919bbe5ecb6c37675cc7b67181d0bad3c8c76944969c4c25",
+      "src/check_relations.rs": "2facbd895c35c74baabeca0f6485044c176f79b66f01e9cb3e41d842ff5b5004",
+      "src/check_singletons.rs": "309de0bde3ed51564911a5f54a6166d0aa3dca0277c4af54ac049d1e4ee104c8",
+      "src/classpath/aliases.rs": "a516926e0d607529e802384fbc335750ff78f7117ff567acad40aa5ec7d89743",
+      "src/classpath/archive.rs": "6f360444cc4df2714d48441185f002ec7b8ee7ae338a906db99256c0b9e9f697",
+      "src/classpath/metadata.rs": "e6770ba49c61dd4104ae3e962ad6b84cd8146731aee4aa2993c41b6393f6af68",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "3f61c55e317f9e50e9ff08f7818d636a1a10aaa35a42fee77a28d9938a6e2c55",
+      "src/classpath/source.rs": "b6660418a63ce0f2d667059b57ee11372501410f4d301af3f263dab7dd6751dd",
+      "src/classpath.rs": "4b869471886e08b8d8ca361ac139c78550d9ef23ad909415743583e87acf066d",
+      "src/compiled_inline.rs": "9f1594fa19f03985bce18213e3a1a2eb850c84e0f59731cffcdd0c2d2d94b550",
+      "src/lib.rs": "59c08007fa509948548bdfba932d1af85e7e8fe6ddcaade99a266c743e766b2e",
+      "src/main.rs": "c17680b31cae9b79e19d58d9d0592d58e9302f2888dccec3b303fe609793c6bc",
+      "src/metadata.rs": "c6ba691d437bfde4cfdc7d3dd07cb80bb15f869a78946788293f9a09fba7b0b6",
+      "src/output.rs": "d991a876f22a16543179837c9e36655f41125a052ec6ff89b7b0b56fa7514d9b",
+      "src/syntax.rs": "2a8b18ec9bbf832baa3c0ac8065d24e98880188cbef682af4295dd27168a47d1",
+      "tests/fixtures/compatibility/CyclicInference.kt": "78bd04adc15ea3cba987c455759d363045d3131564adda09e9458a353630dfd0",
+      "tests/fixtures/compatibility/ExpectedResult.kt": "ca403d6ecbefa78f330b9d078d2d7e1bc6a6935bab280123439490cd45f1d9fc",
+      "tests/fixtures/compatibility/PlaybackCheck.java": "5c7b0475abedd2b03c7b37a1940818256daad41f2a3eb7ab6a58433cdaa9ae18",
+      "tests/fixtures/compatibility/PlaybackConsumer.kt": "19d6afb02add6eff4c55bb9f1ad98801881c89e10a42aff151661ae99006b0b9"
+    }
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "21",
+      "-module-name",
+      "androidbible_twenty"
+    ],
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "inputs": {
+    "baseline_revision": "9fdbdf6736f187c3ffbffc985a0c85b13f49de14",
+    "baseline_binary_sha256": "1810ac4ddc7d7d5ed6c2f644a7db0cda3f33209870184bba7561ba350b21ec20",
+    "sources_sha256": {
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt": "02c130ca13174deadca40c9054bc0e612bb50579ec3285178bca832b8bda99e3",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt": "ad8a96509404079595da548ba9ea602b7d17ccc6459c527f73f34f6864bc51db",
+      "tests/fixtures/compatibility/CyclicInference.kt": "78bd04adc15ea3cba987c455759d363045d3131564adda09e9458a353630dfd0",
+      "tests/fixtures/compatibility/ExpectedResult.kt": "ca403d6ecbefa78f330b9d078d2d7e1bc6a6935bab280123439490cd45f1d9fc",
+      "tests/fixtures/compatibility/PlaybackCheck.java": "5c7b0475abedd2b03c7b37a1940818256daad41f2a3eb7ab6a58433cdaa9ae18",
+      "tests/fixtures/compatibility/PlaybackConsumer.kt": "19d6afb02add6eff4c55bb9f1ad98801881c89e10a42aff151661ae99006b0b9",
+      "tools/check_playback_regression.py": "5fc810b2038fdd645dd7143db8e497adf79b3d71ae8326886948cec87f20fb15"
+    },
+    "stdlib_directory_policy": "Supported directory extraction including package metadata; omit only root/versioned module descriptors, never meaningful class overrides. Full extraction exposed a separately recorded descriptor-indexing defect addressed by task 6."
+  },
+  "selection": "Matched reproduction and repair validation of expected generic result inference; unchanged PlaybackState and AudioLogEntry. JVM source/consumer subset; no Android or full-module claim.",
+  "analysis": {
+    "cause": "Expected result constraints were lost when compiled generic calls were checked as constructor arguments. Presence of real stdlib activates ordinary library resolution instead of the previous fallback.",
+    "fix": "Propagate expected argument/result types through generic call specialization; preserve conflicting explicit and argument constraints, nullability, and original companion inference diagnostics.",
+    "historical_success": "reports/correctness/2026-10-24T094102532411Z-androidbible-twenty-features.json",
+    "scope": "Current baseline freshly built from isolated 9fdbdf673 sources. Historical report preserves its exact old compiler, commands, dependency/output hashes and JVM21 options; older binary was not rebuilt. Candidate has no JVM target switch, so target-bytecode equivalence is not claimed."
+  },
+  "counts": {
+    "pass": 25
+  }
+}

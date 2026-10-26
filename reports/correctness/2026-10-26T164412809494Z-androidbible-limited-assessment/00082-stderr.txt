@@ -1,0 +1,63 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:3:32: error: unresolved reference 'model'.
+import yuku.alkitab.base.audio.model.AudioSet
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:4:27: error: unresolved reference 'Book'.
+import yuku.alkitab.model.Book
+                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:5:27: error: unresolved reference 'Version'.
+import yuku.alkitab.model.Version
+                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:27:27: error: unresolved reference 'Version'.
+    fun neighbor(version: Version, bookId: Int, chapter_1: Int, direction: Int): Pair<Book, Int>? {
+                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:27:87: error: unresolved reference 'Book'.
+    fun neighbor(version: Version, bookId: Int, chapter_1: Int, direction: Int): Pair<Book, Int>? {
+                                                                                      ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:29:28: error: unresolved reference 'getBook'.
+        val book = version.getBook(bookId) ?: return null
+                           ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:31:58: error: cannot infer type for type parameter 'A'. Specify it explicitly.
+        if (target in 1..book.chapter_count) return book to target
+                                                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:31:58: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+        if (target in 1..book.chapter_count) return book to target
+                                                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:32:29: error: unresolved reference 'consecutiveBooks'.
+        val books = version.consecutiveBooks
+                            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:36:34: error: 'operator' modifier is required on 'fun String.compareTo(other: String, ignoreCase: Boolean = ...): Int'.
+            direction > 0 && idx < books.size - 1 -> books[idx + 1].let { it to 1 }
+                                 ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:36:75: error: return type mismatch: expected 'Pair<??? (Unresolved qualified name: Book), Int>?', actual 'Pair<MatchGroup?, Int>'.
+            direction > 0 && idx < books.size - 1 -> books[idx + 1].let { it to 1 }
+                                                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:37:34: error: 'operator' modifier is required on 'fun <T> Comparable<T>.compareTo(other: T): Int'.
+            direction < 0 && idx > 0 -> books[idx - 1].let { it to it.chapter_count }
+                                 ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:37:62: error: return type mismatch: expected 'Pair<??? (Unresolved qualified name: Book), Int>?', actual 'Pair<MatchGroup?, uninferred B (of fun <A, B> A.to)>'.
+            direction < 0 && idx > 0 -> books[idx - 1].let { it to it.chapter_count }
+                                                             ^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:37:65: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+            direction < 0 && idx > 0 -> books[idx - 1].let { it to it.chapter_count }
+                                                                ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:37:71: error: unresolved reference 'chapter_count'.
+            direction < 0 && idx > 0 -> books[idx - 1].let { it to it.chapter_count }
+                                                                      ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:55:18: error: unresolved reference 'Version'.
+        version: Version,
+                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:59:14: error: unresolved reference 'AudioSet'.
+        set: AudioSet?,
+             ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:60:13: error: unresolved reference 'Book'.
+    ): Pair<Book, Int>? {
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:62:43: error: unresolved reference 'bookId'.
+        if (set != null && neighbor.first.bookId != bookId && !set.coversBook(neighbor.first.bookId)) return null
+                                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:62:68: error: unresolved reference 'coversBook'.
+        if (set != null && neighbor.first.bookId != bookId && !set.coversBook(neighbor.first.bookId)) return null
+                                                                   ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/BibleNeighborResolver.kt:62:94: error: unresolved reference 'bookId'.
+        if (set != null && neighbor.first.bookId != bookId && !set.coversBook(neighbor.first.bookId)) return null
+                                                                                             ^^^^^^

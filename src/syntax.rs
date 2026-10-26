@@ -1,4 +1,4 @@
-use crate::{Diagnostic, Result};
+use crate::{Diagnostic, DiagnosticKind, Result};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Type {
@@ -8,6 +8,7 @@ pub enum Type {
     Char,
     Boolean,
     Float,
+    Double,
     IntArray,
     ByteArray,
     CharArray,
@@ -64,6 +65,7 @@ pub struct TypeParameter {
 #[derive(Clone, Debug)]
 pub struct LambdaParameter {
     pub name: String,
+    pub discard: bool,
     pub ty: Option<Type>,
 }
 
@@ -101,7 +103,7 @@ impl Type {
         matches!(self.base(), Self::Nullable(_) | Self::Null)
     }
     pub fn slots(&self) -> usize {
-        if self.base() == &Self::Long {
+        if matches!(self.base(), Self::Long | Self::Double) {
             2
         } else if self.base() == &Self::Unit {
             0
@@ -117,6 +119,7 @@ impl Type {
             Self::Char => "C".into(),
             Self::Boolean => "Z".into(),
             Self::Float => "F".into(),
+            Self::Double => "D".into(),
             Self::IntArray => "[I".into(),
             Self::ByteArray => "[B".into(),
             Self::CharArray => "[C".into(),
@@ -158,6 +161,7 @@ impl Type {
                 Self::Char => "Ljava/lang/Character;".into(),
                 Self::Boolean => "Ljava/lang/Boolean;".into(),
                 Self::Float => "Ljava/lang/Float;".into(),
+                Self::Double => "Ljava/lang/Double;".into(),
                 _ => inner.descriptor(),
             },
             Self::Platform(_) => unreachable!(),
@@ -167,6 +171,8 @@ impl Type {
 
 #[derive(Clone, Debug)]
 pub struct Module {
+    pub type_locations: Vec<(String, usize)>,
+    pub type_aliases: Vec<TypeAliasDecl>,
     pub package: String,
     pub imports: Vec<(String, String, usize)>,
     pub functions: Vec<Function>,
@@ -177,6 +183,20 @@ pub struct Module {
     pub class_decl: Option<ClassDecl>,
     pub interface_decl: Option<InterfaceDecl>,
     pub declarations: Vec<Declaration>,
+}
+#[derive(Clone, Debug)]
+pub struct TypeAliasDecl {
+    pub name: String,
+    pub offset: usize,
+    pub private: bool,
+    pub expanded: Type,
+}
+#[derive(Clone, Debug)]
+pub struct AnnotationUse {
+    pub name: String,
+    pub offset: usize,
+    pub use_site: Option<String>,
+    pub arguments: Vec<(Option<String>, Expr)>,
 }
 #[derive(Clone, Debug)]
 pub enum Declaration {
@@ -202,6 +222,8 @@ pub struct CatchClause {
 }
 #[derive(Clone, Debug)]
 pub struct InterfaceDecl {
+    pub annotations: Vec<AnnotationUse>,
+    pub fun_interface: bool,
     pub name: String,
     pub offset: usize,
     pub internal: bool,
@@ -214,6 +236,7 @@ pub struct InterfaceDecl {
 }
 #[derive(Clone, Debug)]
 pub struct InterfaceProperty {
+    pub annotations: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
     pub ty: Type,
@@ -236,6 +259,7 @@ pub struct CompanionDecl {
 }
 #[derive(Clone, Debug)]
 pub struct CompanionProperty {
+    pub annotations: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
     pub private: bool,
@@ -248,12 +272,16 @@ pub enum CompanionValue {
 }
 #[derive(Clone, Debug)]
 pub struct EnumDecl {
+    pub body: ClassDecl,
+    pub entry_arguments: Vec<Vec<Expr>>,
+    pub annotations: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
     pub entries: Vec<(String, usize)>,
 }
 #[derive(Clone, Debug)]
 pub struct ObjectDecl {
+    pub annotation_uses: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
     pub internal: bool,
@@ -268,6 +296,7 @@ pub struct ObjectDecl {
 }
 #[derive(Clone, Debug)]
 pub struct ObjectField {
+    pub annotations: Vec<AnnotationUse>,
     pub is_override: bool,
     pub name: String,
     pub offset: usize,
@@ -291,6 +320,7 @@ pub struct ObjectMethod {
 }
 #[derive(Clone, Debug)]
 pub struct ConstDecl {
+    pub annotations: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
     pub private: bool,
@@ -302,12 +332,15 @@ pub enum ConstValue {
     Int(i32),
     Long(i64),
     Float(u32),
+    Double(u64),
     Char(u16),
     Boolean(bool),
     String(Vec<u16>),
 }
 #[derive(Clone, Debug)]
 pub struct ClassDecl {
+    pub param_annotations: Vec<Vec<AnnotationUse>>,
+    pub annotations: Vec<AnnotationUse>,
     pub primary_constructor: bool,
     pub name: String,
     pub offset: usize,
@@ -338,6 +371,7 @@ pub struct ClassCompanion {
 }
 #[derive(Clone, Debug)]
 pub struct ClassCompanionProperty {
+    pub annotations: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
     pub private: bool,
@@ -351,6 +385,7 @@ pub struct ClassCompanionProperty {
 }
 #[derive(Clone, Debug)]
 pub struct PropertyDecl {
+    pub annotations: Vec<AnnotationUse>,
     pub name: String,
     pub private: bool,
     pub protected: bool,
@@ -375,6 +410,8 @@ pub struct ClassMethod {
 }
 #[derive(Clone, Debug)]
 pub struct Function {
+    pub param_annotations: Vec<Vec<AnnotationUse>>,
+    pub annotations: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
     pub private: bool,
@@ -382,6 +419,7 @@ pub struct Function {
     pub internal: bool,
     pub infix: bool,
     pub operator: bool,
+    pub vararg: bool,
     pub receiver: Option<Type>,
     pub type_params: Vec<TypeParameter>,
     pub params: Vec<(String, Type)>,
@@ -395,6 +433,11 @@ pub struct Statement {
     pub kind: StatementKind,
     pub offset: usize,
 }
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct DestructureEntry {
+    pub name: Option<String>,
+    pub ty: Option<Type>,
+}
 #[derive(Clone, Debug)]
 pub enum StatementKind {
     Block(Vec<Statement>),
@@ -402,7 +445,7 @@ pub enum StatementKind {
     Labeled(String, Box<Statement>),
     BreakLabel(String),
     ContinueLabel(String),
-    Destructure(Vec<Option<String>>, bool, Expr),
+    Destructure(Vec<DestructureEntry>, bool, Expr),
     Let(String, bool, Option<Type>, Expr),
     Declare(String, bool, Type),
     IndexAssign(Expr, Expr, Expr),
@@ -438,8 +481,56 @@ pub struct Expr {
     pub kind: ExprKind,
     pub offset: usize,
 }
+pub(crate) fn normalize_result_tail(body: &mut [Statement]) {
+    let Some(last) = body.last_mut() else {
+        return;
+    };
+    let offset = last.offset;
+    let block = |mut body: Vec<Statement>| {
+        normalize_result_tail(&mut body);
+        Expr {
+            offset: body.first().map_or(offset, |statement| statement.offset),
+            kind: ExprKind::Block(body),
+        }
+    };
+    let expression = match last.kind.clone() {
+        StatementKind::If(condition, yes, no) if !no.is_empty() => Some(ExprKind::If(
+            Box::new(condition),
+            Box::new(block(yes)),
+            Box::new(block(no)),
+        )),
+        StatementKind::When(subject, branches, Some(otherwise)) => Some(ExprKind::When(
+            Box::new(subject),
+            branches
+                .into_iter()
+                .map(|(conditions, body)| (conditions, block(body)))
+                .collect(),
+            Box::new(block(otherwise)),
+        )),
+        StatementKind::WhenBinding(name, subject, branches, Some(otherwise)) => {
+            Some(ExprKind::WhenBinding(
+                name,
+                Box::new(subject),
+                branches
+                    .into_iter()
+                    .map(|(conditions, body)| (conditions, block(body)))
+                    .collect(),
+                Box::new(block(otherwise)),
+            ))
+        }
+        _ => None,
+    };
+    if let Some(kind) = expression {
+        last.kind = StatementKind::Expression(Expr { offset, kind });
+    }
+}
+
 #[derive(Clone, Debug)]
 pub enum ExprKind {
+    VarargArray {
+        array: Type,
+        elements: Vec<Expr>,
+    },
     Block(Vec<Statement>),
     Try {
         body: Vec<Statement>,
@@ -452,6 +543,7 @@ pub enum ExprKind {
     Indices(Box<Expr>, Vec<Expr>),
     Int(i64),
     Float(u32),
+    Double(u64),
     NamedArgument(String, Box<Expr>),
     Generic(Box<Expr>, Vec<Type>),
     Return(Option<Box<Expr>>),
@@ -528,7 +620,10 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
                 ..
             } => pending.push(value),
             ExprKind::LambdaWithParams { body, .. } => shift_statement_offsets(body, offset),
-            ExprKind::Template(parts) => pending.extend(parts),
+            ExprKind::Template(parts)
+            | ExprKind::VarargArray {
+                elements: parts, ..
+            } => pending.extend(parts),
             ExprKind::If(condition, yes, no) => {
                 pending.push(condition);
                 pending.push(yes);
@@ -573,6 +668,16 @@ fn shift_statement_offsets(statements: &mut [Statement], offset: usize) {
             StatementKind::Block(body) => shift_statement_offsets(body, offset),
             StatementKind::LocalFunction(function) => {
                 function.offset += offset;
+                for annotation in function
+                    .annotations
+                    .iter_mut()
+                    .chain(function.param_annotations.iter_mut().flatten())
+                {
+                    annotation.offset += offset;
+                    for (_, argument) in &mut annotation.arguments {
+                        shift_expression_offsets(argument, offset);
+                    }
+                }
                 for value in function.defaults.iter_mut().flatten() {
                     shift_expression_offsets(value, offset);
                 }
@@ -644,6 +749,30 @@ struct Token {
     offset: usize,
 }
 
+fn escaped_identifier_end(source: &str, start: usize) -> Result<usize> {
+    let bytes = source.as_bytes();
+    let mut end = start + 1;
+    while end < bytes.len() && bytes[end] != b'`' {
+        if matches!(bytes[end], b'\n' | b'\r') {
+            return Err(Diagnostic::new(
+                start,
+                "Escaped identifiers cannot contain newlines",
+            ));
+        }
+        end += 1;
+    }
+    if end == bytes.len() {
+        return Err(Diagnostic::new(start, "Unterminated escaped identifier"));
+    }
+    if end == start + 1 {
+        return Err(Diagnostic::new(
+            start,
+            "Escaped identifiers cannot be empty",
+        ));
+    }
+    Ok(end + 1)
+}
+
 fn quoted_end(source: &str, start: usize, depth: usize) -> Result<usize> {
     if depth > 64 {
         return Err(Diagnostic::new(
@@ -672,6 +801,9 @@ fn quoted_end(source: &str, start: usize, depth: usize) -> Result<usize> {
             b'$' if bytes.get(i + 1) == Some(&b'{') => {
                 i = template_end(source, i + 2, depth + 1)? + 1
             }
+            b'$' if bytes.get(i + 1) == Some(&b'`') => {
+                i = escaped_identifier_end(source, i + 1)?;
+            }
             _ => i += 1,
         }
     }
@@ -691,6 +823,7 @@ fn template_end(source: &str, start: usize, depth: usize) -> Result<usize> {
         match bytes[i] {
             b'"' => i = quoted_end(source, i, depth + 1)?,
             b'\'' => i = char_literal(source, i)?.0,
+            b'`' => i = escaped_identifier_end(source, i)?,
             b'/' if bytes.get(i + 1) == Some(&b'/') => {
                 while i < bytes.len() && bytes[i] != b'\n' {
                     i += 1;
@@ -741,10 +874,15 @@ fn template_end(source: &str, start: usize, depth: usize) -> Result<usize> {
 }
 
 fn string_parts(source: &str, start: usize) -> Result<(usize, Vec<Expr>)> {
-    string_parts_depth(source, start, 0)
+    string_parts_depth(source, start, 0, &mut Vec::new())
 }
 
-fn string_parts_depth(source: &str, start: usize, depth: usize) -> Result<(usize, Vec<Expr>)> {
+fn string_parts_depth(
+    source: &str,
+    start: usize,
+    depth: usize,
+    type_locations: &mut Vec<(String, usize)>,
+) -> Result<(usize, Vec<Expr>)> {
     if depth > 64 {
         return Err(Diagnostic::new(
             start,
@@ -831,6 +969,7 @@ fn string_parts_depth(source: &str, start: usize, depth: usize) -> Result<(usize
                     pos: 0,
                     depth: depth + 1,
                     type_parameters: Vec::new(),
+                    type_locations: Vec::new(),
                 };
                 parser.lines();
                 let expression = parser.expr(0)?;
@@ -840,6 +979,7 @@ fn string_parts_depth(source: &str, start: usize, depth: usize) -> Result<(usize
                         parser.error("Braced string templates require one supported expression")
                     );
                 }
+                type_locations.extend(parser.type_locations);
                 parts.push(expression);
                 if parts.len() > 256 {
                     return Err(Diagnostic::new(
@@ -848,6 +988,25 @@ fn string_parts_depth(source: &str, start: usize, depth: usize) -> Result<(usize
                     ));
                 }
                 i += 1;
+            }
+            b'$' if bytes.get(i + 1) == Some(&b'`') => {
+                parts.push(Expr {
+                    offset: start,
+                    kind: ExprKind::String(std::mem::take(&mut units)),
+                });
+                let name_start = i + 1;
+                i = escaped_identifier_end(source, name_start)?;
+                let name = identifier_name(&source[name_start..i], name_start)?;
+                parts.push(Expr {
+                    offset: name_start,
+                    kind: ExprKind::Name(name.into()),
+                });
+                if parts.len() > 256 {
+                    return Err(Diagnostic::new(
+                        start,
+                        "String interpolation exceeds the current 128-name limit",
+                    ));
+                }
             }
             b'$' if bytes
                 .get(i + 1)
@@ -875,6 +1034,12 @@ fn string_parts_depth(source: &str, start: usize, depth: usize) -> Result<(usize
                         "Non-ASCII characters immediately after template names are not supported",
                     ));
                 }
+                if source[name_start..i].bytes().all(|byte| byte == b'_') {
+                    return Err(Diagnostic::new(
+                        name_start,
+                        "Names consisting only of underscores are reserved",
+                    ));
+                }
                 parts.push(Expr {
                     offset: name_start,
                     kind: ExprKind::Name(source[name_start..i].into()),
@@ -889,7 +1054,7 @@ fn string_parts_depth(source: &str, start: usize, depth: usize) -> Result<(usize
             b'$' if source[i + 1..]
                 .chars()
                 .next()
-                .is_some_and(|c| c == '{' || c == '`' || c.is_alphabetic()) =>
+                .is_some_and(|c| c == '{' || c.is_alphabetic()) =>
             {
                 return Err(Diagnostic::new(
                     i,
@@ -1037,13 +1202,21 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                 text: source[start..i].into(),
                 offset: start,
             });
+        } else if b == b'`' {
+            i = escaped_identifier_end(source, start)?;
+            tokens.push(Token {
+                text: source[start..i].into(),
+                offset: start,
+            });
         } else if b == b'\'' {
             i = char_literal(source, start)?.0;
             tokens.push(Token {
                 text: source[start..i].into(),
                 offset: start,
             });
-        } else if b.is_ascii_digit() {
+        } else if b.is_ascii_digit()
+            || b == b'.' && bytes.get(i + 1).is_some_and(u8::is_ascii_digit)
+        {
             i += 1;
             let radix = b == b'0' && matches!(bytes.get(i), Some(b'x' | b'X' | b'b' | b'B'));
             while i < bytes.len() {
@@ -1127,11 +1300,19 @@ fn lex(source: &str) -> Result<Vec<Token>> {
     Ok(tokens)
 }
 
+struct ClassHeader {
+    declaration: ClassDecl,
+    property_names: std::collections::HashSet<String>,
+    has_constructor: bool,
+    after_header: usize,
+}
+
 struct Parser {
     tokens: Vec<Token>,
     pos: usize,
     depth: usize,
     type_parameters: Vec<TypeParameter>,
+    type_locations: Vec<(String, usize)>,
 }
 impl Parser {
     fn token(&self) -> &Token {
@@ -1175,15 +1356,9 @@ impl Parser {
         Ok(())
     }
     fn name(&mut self) -> Result<String> {
-        let text = self.token().text.clone();
-        if text.bytes().all(|b| b == b'_') {
-            return Err(self.error("Names consisting only of underscores are reserved"));
-        }
-        if !identifier(&text) {
-            return Err(self.error("Expected an identifier"));
-        }
+        let name = identifier_name(&self.token().text, self.token().offset)?.to_owned();
         self.pos += 1;
-        Ok(text)
+        Ok(name)
     }
     fn plain_string(&self) -> Result<Vec<u16>> {
         string_literal(&self.token().text, 0)
@@ -1210,7 +1385,62 @@ impl Parser {
         self.depth -= 1;
         Ok(ty)
     }
+    fn reject_type_annotations(&self) -> Result<()> {
+        if self.at("@") {
+            return Err(self
+                .error("Annotations on type uses require unsupported type-annotation placement semantics")
+                .with_kind(DiagnosticKind::UnsupportedLanguage, "ANNOTATION_TYPE_USE_UNSUPPORTED"));
+        }
+        Ok(())
+    }
+    fn reject_parameterized_supertype(&self) -> Result<()> {
+        let mut index = self.pos;
+        loop {
+            while self
+                .tokens
+                .get(index)
+                .is_some_and(|token| token.text == "\n")
+            {
+                index += 1;
+            }
+            if self
+                .tokens
+                .get(index)
+                .is_some_and(|token| token.text == ".")
+            {
+                index += 1;
+                while self
+                    .tokens
+                    .get(index)
+                    .is_some_and(|token| token.text == "\n")
+                {
+                    index += 1;
+                }
+                if self
+                    .tokens
+                    .get(index)
+                    .is_some_and(|token| identifier(&token.text))
+                {
+                    index += 1;
+                    continue;
+                }
+            }
+            break;
+        }
+        if let Some(token) = self.tokens.get(index).filter(|token| token.text == "<") {
+            return Err(Diagnostic::new(
+                token.offset,
+                "Parameterized supertypes require unsupported source-supertype substitution",
+            )
+            .with_kind(
+                DiagnosticKind::UnsupportedLanguage,
+                "PARAMETERIZED_SUPERTYPE_UNSUPPORTED",
+            ));
+        }
+        Ok(())
+    }
     fn nonnullable_ty(&mut self) -> Result<Type> {
+        self.reject_type_annotations()?;
         if self.take("(") {
             self.lines();
             let mut params = Vec::new();
@@ -1258,6 +1488,7 @@ impl Parser {
         if self.at("suspend") {
             return Err(self.error("Suspend function types are unsupported"));
         }
+        let offset = self.token().offset;
         let mut name = self.name()?;
         while self.at(".")
             && self
@@ -1269,7 +1500,7 @@ impl Parser {
             name.push('/');
             name.push_str(&self.name()?);
         }
-        let receiver = self.named_ty(name)?;
+        let receiver = self.named_ty(name, offset)?;
         let position = self.pos;
         let receiver = if self.take("?") {
             Type::Nullable(Box::new(receiver))
@@ -1332,7 +1563,16 @@ impl Parser {
         self.expect(">")?;
         Ok(arguments)
     }
-    fn named_ty(&mut self, name: String) -> Result<Type> {
+    fn record_type(&mut self, name: &str, offset: usize) {
+        let name = match name {
+            "Any" => "java/lang/Object",
+            "CharSequence" => "java/lang/CharSequence",
+            other => other,
+        };
+        self.type_locations.push((name.into(), offset));
+    }
+    fn named_ty(&mut self, name: String, offset: usize) -> Result<Type> {
+        self.record_type(&name, offset);
         if self.at("<") {
             let arguments = self.type_arguments()?;
             let covariant = matches!(
@@ -1409,6 +1649,12 @@ impl Parser {
             "Char" => Type::Char,
             "Boolean" => Type::Boolean,
             "Float" => Type::Float,
+            "Double" => Type::Double,
+            "DoubleArray" => {
+                return Err(self.error(
+                    "DoubleArray semantics are unsupported; use supported scalar Double values",
+                ));
+            }
             "IntArray" => Type::IntArray,
             "ByteArray" => Type::ByteArray,
             "CharArray" => Type::CharArray,
@@ -1459,6 +1705,7 @@ impl Parser {
                         | Type::Char
                         | Type::Boolean
                         | Type::Float
+                        | Type::Double
                         | Type::Unit
                 ) || matches!(primitive_bound,Type::Java(name) if matches!(name.as_str(),"java/lang/Integer"|"java/lang/Long"|"java/lang/Byte"|"java/lang/Character"|"java/lang/Boolean"|"java/lang/Float"|"java/lang/Short"|"java/lang/Double"|"kotlin/Int"|"kotlin/Long"|"kotlin/Byte"|"kotlin/Char"|"kotlin/Boolean"|"kotlin/Float"|"kotlin/Short"|"kotlin/Double"|"kotlin/Unit"))
                 {
@@ -1485,7 +1732,7 @@ impl Parser {
         self.starts_declaration("enum")
     }
     fn starts_object(&self) -> bool {
-        self.at("@") || self.starts_declaration("object")
+        self.starts_declaration("object")
     }
     fn starts_class(&self) -> bool {
         self.starts_declaration("class")
@@ -1494,39 +1741,195 @@ impl Parser {
         self.starts_declaration("interface")
     }
     fn starts_declaration(&self, kind: &str) -> bool {
-        self.tokens[self.pos..]
-            .iter()
-            .find(|token| {
-                !matches!(
-                    token.text.as_str(),
-                    "public"
-                        | "internal"
-                        | "private"
-                        | "protected"
-                        | "open"
-                        | "final"
-                        | "abstract"
-                        | "sealed"
-                        | "data"
-                        | "expect"
-                        | "actual"
-                        | "external"
-                        | "inline"
-                        | "infix"
-                        | "operator"
-                        | "lateinit"
-                        | "override"
-                        | "value"
-                        | "companion"
-                        | "\n"
-                )
-            })
-            .is_some_and(|token| token.text == kind)
+        let mut index = self.pos;
+        loop {
+            let Some(token) = self.tokens.get(index) else {
+                return false;
+            };
+            if matches!(
+                token.text.as_str(),
+                "public"
+                    | "internal"
+                    | "private"
+                    | "protected"
+                    | "open"
+                    | "final"
+                    | "abstract"
+                    | "sealed"
+                    | "data"
+                    | "expect"
+                    | "actual"
+                    | "external"
+                    | "inline"
+                    | "infix"
+                    | "operator"
+                    | "lateinit"
+                    | "override"
+                    | "value"
+                    | "companion"
+                    | "\n"
+            ) {
+                index += 1;
+            } else if token.text == "@" {
+                index += 1;
+                if !self
+                    .tokens
+                    .get(index)
+                    .is_some_and(|token| identifier(&token.text))
+                {
+                    return false;
+                }
+                index += 1;
+                if self
+                    .tokens
+                    .get(index)
+                    .is_some_and(|token| token.text == ":")
+                {
+                    index += 2;
+                }
+                while self
+                    .tokens
+                    .get(index)
+                    .is_some_and(|token| token.text == ".")
+                {
+                    index += 2;
+                }
+                if self
+                    .tokens
+                    .get(index)
+                    .is_some_and(|token| token.text == "(")
+                {
+                    let mut depth = 1;
+                    index += 1;
+                    while depth > 0 {
+                        let Some(token) = self.tokens.get(index) else {
+                            return false;
+                        };
+                        match token.text.as_str() {
+                            "(" => depth += 1,
+                            ")" => depth -= 1,
+                            "<eof>" => return false,
+                            _ => {}
+                        }
+                        index += 1;
+                    }
+                }
+            } else if token.text == "fun" && kind == "interface" {
+                index += 1;
+                while self
+                    .tokens
+                    .get(index)
+                    .is_some_and(|token| token.text == "\n")
+                {
+                    index += 1;
+                }
+                return self
+                    .tokens
+                    .get(index)
+                    .is_some_and(|token| token.text == "interface");
+            } else {
+                return token.text == kind;
+            }
+        }
+    }
+    fn annotation(&mut self) -> Result<AnnotationUse> {
+        let offset = self.token().offset;
+        self.expect("@")?;
+        let first = self.declaration_name()?;
+        let (use_site, mut name) = if self.take(":") {
+            (Some(first), self.declaration_name()?)
+        } else {
+            (None, first)
+        };
+        while self.take(".") {
+            name.push('/');
+            name.push_str(&self.declaration_name()?);
+        }
+        let mut arguments = Vec::new();
+        if self.at("(") {
+            let mut index = self.pos + 1;
+            let mut depth = 1;
+            while let Some(token) = self.tokens.get(index) {
+                match token.text.as_str() {
+                    "(" => depth += 1,
+                    ")" => {
+                        depth -= 1;
+                        if depth == 0 {
+                            break;
+                        }
+                    }
+                    "[" if self.tokens[..index]
+                        .iter()
+                        .rev()
+                        .find(|previous| previous.text != "\n")
+                        .is_some_and(|previous| {
+                            matches!(previous.text.as_str(), "(" | "," | "=")
+                        }) =>
+                    {
+                        return Err(Diagnostic::new(
+                            token.offset,
+                            "Annotation array literals require unsupported array-valued annotation arguments",
+                        ).with_kind(DiagnosticKind::UnsupportedLanguage, "ANNOTATION_ARRAY_LITERAL_UNSUPPORTED"));
+                    }
+                    "<eof>" => break,
+                    _ => {}
+                }
+                index += 1;
+            }
+            for argument in self.arguments()? {
+                if let ExprKind::NamedArgument(name, value) = argument.kind {
+                    arguments.push((Some(name), *value));
+                } else {
+                    arguments.push((None, argument));
+                }
+            }
+        }
+        Ok(AnnotationUse {
+            name,
+            offset,
+            use_site,
+            arguments,
+        })
+    }
+    fn annotations(&mut self) -> Result<Vec<AnnotationUse>> {
+        let mut annotations = Vec::new();
+        while self.at("@") {
+            annotations.push(self.annotation()?);
+            self.lines();
+        }
+        Ok(annotations)
+    }
+    fn type_alias(&mut self) -> Result<TypeAliasDecl> {
+        let offset = self.token().offset;
+        let private = self.take("private");
+        if !private {
+            self.take("public");
+        }
+        self.lines();
+        self.expect("typealias")?;
+        let name = self.declaration_name()?;
+        if self.at("<") {
+            return Err(self.error("Generic type aliases are unsupported"));
+        }
+        self.expect("=")?;
+        self.lines();
+        let expanded = self.ty()?;
+        Ok(TypeAliasDecl {
+            name,
+            offset,
+            private,
+            expanded,
+        })
     }
     fn enum_decl(&mut self) -> Result<EnumDecl> {
         let offset = self.token().offset;
+        let mut annotations = self.annotations()?;
         let mut visibility = None;
-        while matches!(self.token().text.as_str(), "public" | "internal") {
+        while self.at("@") || matches!(self.token().text.as_str(), "public" | "internal") {
+            if self.at("@") {
+                annotations.extend(self.annotations()?);
+                continue;
+            }
             if visibility.is_some() {
                 return Err(self.error("Conflicting or repeated enum visibility modifiers"));
             }
@@ -1544,29 +1947,43 @@ impl Parser {
         }
         self.expect("enum")?;
         self.lines();
-        self.expect("class")?;
-        self.lines();
-        let name = self.class_name()?;
-        let after_name = self.pos;
-        self.lines();
+        if !self.at("class") {
+            return Err(self.error("Expected class after enum"));
+        }
+        let ClassHeader {
+            declaration: mut body,
+            mut property_names,
+            after_header,
+            ..
+        } = self.class_header()?;
+        body.offset = offset;
+        body.annotations = annotations.clone();
+        body.internal = visibility.as_deref() == Some("internal");
+        body.primary_constructor = true;
+        if body.defaults.iter().any(Option::is_some) {
+            return Err(self.error("Enum constructor default arguments are unsupported"));
+        }
+        if body.super_class.is_some() {
+            return Err(self.error("Explicit enum superclass constructors are unsupported"));
+        }
+        let name = body.name.clone();
+        let mut entries = Vec::new();
+        let mut entry_arguments = Vec::new();
         if !self.take("{") {
-            if matches!(self.token().text.as_str(), "(" | ":" | "<" | "where") {
-                return Err(
-                    self.error("Enum constructors, supertypes, and generics are not supported")
-                );
-            }
-            self.pos = after_name;
-            if self.at("\n") || self.at(";") || self.at("<eof>") {
+            self.pos = after_header;
+            if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
                 return Ok(EnumDecl {
+                    body,
+                    entry_arguments,
+                    annotations,
                     name,
                     offset,
-                    entries: Vec::new(),
+                    entries,
                 });
             }
-            return Err(self.error("Only bare enum classes with plain entries are supported"));
+            return Err(self.error("Expected an enum body or declaration separator"));
         }
         self.lines();
-        let mut entries = Vec::new();
         let mut names = std::collections::HashSet::new();
         while !self.at("}") && !self.at(";") {
             if self.at("<eof>") {
@@ -1583,19 +2000,34 @@ impl Parser {
             if !names.insert(entry.clone()) {
                 return Err(Diagnostic::new(entry_offset, "Duplicate enum entry"));
             }
+            self.lines();
+            let arguments = if self.at("(") {
+                self.arguments()?
+            } else {
+                Vec::new()
+            };
+            self.lines();
+            if self.at("{") {
+                return Err(self
+                    .error("Enum entry-specific class bodies are unsupported")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "ENUM_ENTRY_BODY_UNSUPPORTED",
+                    ));
+            }
             entries.push((entry, entry_offset));
+            entry_arguments.push(arguments);
             if entries.len() > 1024 {
                 return Err(Diagnostic::new(
                     entry_offset,
                     "Enum exceeds the current 1024-entry limit",
                 ));
             }
-            self.lines();
             if !self.take(",") {
                 if self.at("<eof>") {
                     return Err(self.error("Unterminated enum body"));
                 }
-                if !matches!(self.token().text.as_str(), "}" | ";" | "(" | "{") {
+                if !self.at("}") && !self.at(";") {
                     return Err(self
                         .error("Expected a comma, semicolon, or closing brace after enum entry"));
                 }
@@ -1604,25 +2036,43 @@ impl Parser {
             self.lines();
         }
         if self.take(";") {
-            self.lines();
-        }
-        if !self.take("}") {
-            if self.at("<eof>") {
-                return Err(self.error("Unterminated enum body"));
+            // Kotlin gives adjacent semicolons a distinct DOUBLE_SEMICOLON token.
+            if self.at(";") && self.token().offset == self.tokens[self.pos - 1].offset + 1 {
+                return Err(self
+                    .error("Repeated enum entry terminators are not valid")
+                    .with_kind(
+                        DiagnosticKind::InvalidKotlin,
+                        "ENUM_ENTRY_TERMINATOR_REPEATED",
+                    ));
             }
-            return Err(
-                self.error("Enum constructors, entry bodies, and members are not supported")
-            );
+            self.class_members(&mut body, &mut property_names)?;
+        } else {
+            self.expect("}")?;
+        }
+        if !body.secondary_constructors.is_empty() {
+            return Err(self.error("Secondary constructors in enums are unsupported"));
         }
         Ok(EnumDecl {
+            body,
+            entry_arguments,
+            annotations,
             name,
             offset,
             entries,
         })
     }
-    fn class_name(&mut self) -> Result<String> {
+    fn classifier_name(&mut self) -> Result<String> {
+        let text = self.token().text.as_str();
+        let name = text
+            .strip_prefix('`')
+            .and_then(|text| text.strip_suffix('`'))
+            .unwrap_or(text);
+        if name.contains('$') {
+            return Err(self.error("Escaped classifier names containing '$' require unsupported JVM nesting disambiguation")
+                .with_kind(DiagnosticKind::UnsupportedLanguage, "CLASSIFIER_DOLLAR_NAME_UNSUPPORTED"));
+        }
         if matches!(
-            self.token().text.as_str(),
+            name,
             "Int"
                 | "Long"
                 | "List"
@@ -1631,6 +2081,7 @@ impl Parser {
                 | "Byte"
                 | "Boolean"
                 | "Float"
+                | "Double"
                 | "IntArray"
                 | "ByteArray"
                 | "ThreadLocal"
@@ -1644,6 +2095,22 @@ impl Parser {
         }
         self.declaration_name()
     }
+    fn internal_property_error(offset: usize) -> Diagnostic {
+        Diagnostic::new(
+            offset,
+            "Internal properties require unsupported JVM accessor name mangling",
+        )
+        .with_kind(
+            DiagnosticKind::UnsupportedLanguage,
+            "INTERNAL_PROPERTY_VISIBILITY_UNSUPPORTED",
+        )
+    }
+    fn reject_internal_property(&self) -> Result<()> {
+        if self.at("internal") {
+            return Err(Self::internal_property_error(self.token().offset));
+        }
+        Ok(())
+    }
     fn declaration_name(&mut self) -> Result<String> {
         if matches!(self.token().text.as_str(), "catch" | "finally" | "import") {
             return Err(self.error("Expected an identifier"));
@@ -1652,23 +2119,7 @@ impl Parser {
     }
     fn object_decl(&mut self, depth: usize, class_count: &mut usize) -> Result<ObjectDecl> {
         let offset = self.token().offset;
-        let mut annotations = Vec::new();
-        while self.take("@") {
-            let mut name = self.declaration_name()?;
-            while self.take(".") {
-                name.push('/');
-                name.push_str(&self.declaration_name()?);
-            }
-            if self.at("(") || self.at(":") {
-                return Err(self
-                    .error("Object annotation arguments and use-site targets are not supported"));
-            }
-            annotations.push(name);
-            self.lines();
-        }
-        if depth > 1 && !annotations.is_empty() {
-            return Err(self.error("Annotated nested objects are not supported"));
-        }
+        let mut annotation_uses = self.annotations()?;
         if depth > 16 {
             return Err(self.error("Object nesting exceeds the current 16-class depth limit"));
         }
@@ -1677,7 +2128,11 @@ impl Parser {
             return Err(self.error("Objects exceed the current 256-class limit"));
         }
         let mut visibility = None;
-        while matches!(self.token().text.as_str(), "public" | "internal") {
+        while self.at("@") || matches!(self.token().text.as_str(), "public" | "internal") {
+            if self.at("@") {
+                annotation_uses.extend(self.annotations()?);
+                continue;
+            }
             if visibility.is_some() {
                 return Err(self.error("Conflicting or repeated object visibility modifiers"));
             }
@@ -1688,24 +2143,33 @@ impl Parser {
         if matches!(self.token().text.as_str(), "private" | "protected") {
             return Err(self.error("Unsupported object visibility; use public or internal"));
         }
+        let annotations = annotation_uses
+            .iter()
+            .filter(|annotation| annotation.use_site.is_none() && annotation.arguments.is_empty())
+            .map(|annotation| annotation.name.clone())
+            .collect();
         if !self.take("object") {
             return Err(
                 self.error("Unsupported object modifier; only public and internal are supported")
             );
         }
         self.lines();
-        let name = self.class_name()?;
+        let name = self.classifier_name()?;
         let mut interfaces = Vec::new();
         let after_name = self.pos;
         self.lines();
         if self.take(":") {
             loop {
                 self.lines();
+                self.reject_type_annotations()?;
+                let type_offset = self.token().offset;
                 let mut interface = self.declaration_name()?;
                 while self.take(".") {
                     interface.push('/');
                     interface.push_str(&self.declaration_name()?);
                 }
+                self.record_type(&interface, type_offset);
+                self.reject_parameterized_supertype()?;
                 interfaces.push(interface);
                 if interfaces.len() > 128 {
                     return Err(self.error("Object exceeds the current 128-interface limit"));
@@ -1733,6 +2197,7 @@ impl Parser {
             };
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
                 return Ok(ObjectDecl {
+                    annotation_uses,
                     name,
                     offset,
                     internal: visibility.as_deref() == Some("internal"),
@@ -1772,12 +2237,12 @@ impl Parser {
                 self.end()?;
                 continue;
             }
-            let member_name = if self.starts_object() && !self.at("@") {
+            let member_name = if self.starts_object() {
                 let object = self.object_decl(depth + 1, class_count)?;
                 let name = object.name.clone();
                 objects.push(object);
                 name
-            } else if self.at("@") || self.starts_declaration("fun") {
+            } else if self.starts_declaration("fun") {
                 methods.push(self.object_method()?);
                 if methods.len() > 1024 {
                     return Err(self.error("Objects exceed the current 1024-method limit"));
@@ -1788,18 +2253,21 @@ impl Parser {
                 || self.starts_declaration("var")
                 || self.at("lateinit")
             {
+                let annotations = self.annotations()?;
                 let is_override = self.take("override");
                 let private = self.take("private");
                 if !private {
                     self.take("public");
-                    self.take("internal");
+                    self.reject_internal_property()?;
                 }
                 self.lines();
                 let lateinit = self.take("lateinit");
                 self.lines();
-                let property = self.property(member_offset, private, false, lateinit, false)?;
+                let mut property = self.property(member_offset, private, false, lateinit, false)?;
+                property.annotations.splice(0..0, annotations);
                 let name = property.name.clone();
                 fields.push(ObjectField {
+                    annotations: property.annotations,
                     is_override,
                     name: property.name,
                     offset: property.offset,
@@ -1845,6 +2313,7 @@ impl Parser {
         }
         self.expect("}")?;
         Ok(ObjectDecl {
+            annotation_uses,
             name,
             offset,
             internal: visibility.as_deref() == Some("internal"),
@@ -1860,10 +2329,23 @@ impl Parser {
     }
     fn object_method(&mut self) -> Result<ObjectMethod> {
         let offset = self.token().offset;
+        let mut annotations = Vec::new();
         let mut jvm_static = false;
         let mut throws = None;
         let mut suppress = None;
-        while self.take("@") {
+        while self.at("@") {
+            let special = self.tokens.get(self.pos + 1).is_some_and(|token| {
+                matches!(token.text.as_str(), "JvmStatic" | "Throws" | "Suppress")
+            }) && !self
+                .tokens
+                .get(self.pos + 2)
+                .is_some_and(|token| matches!(token.text.as_str(), ":" | "."));
+            if !special {
+                annotations.push(self.annotation()?);
+                self.lines();
+                continue;
+            }
+            self.expect("@")?;
             let annotation = self.declaration_name()?;
             match annotation.as_str() {
                 "JvmStatic" => {
@@ -1896,6 +2378,10 @@ impl Parser {
                     self.lines();
                     let mut warnings = Vec::new();
                     loop {
+                        if self.at("[") {
+                            return Err(self.error("Annotation array literals require unsupported array-valued annotation arguments")
+                                .with_kind(DiagnosticKind::UnsupportedLanguage, "ANNOTATION_ARRAY_LITERAL_UNSUPPORTED"));
+                        }
                         if !self.token().text.starts_with('"') { return Err(self.error("@Suppress supports only ordinary String literal arguments")); }
                         let warning = String::from_utf16(&self.plain_string()?).map_err(|_| self.error("@Suppress arguments must be valid Unicode strings"))?;
                         warnings.push(warning);
@@ -1952,15 +2438,14 @@ impl Parser {
             }
             self.lines();
         }
-        if visibility.as_deref() == Some("internal") {
-            return Err(self.error("Internal object methods are not supported"));
-        }
         if inline && visibility.as_deref() != Some("private") {
             return Err(self.error("Only private inline object methods are supported"));
         }
         let mut function = self.function()?;
+        function.annotations.splice(0..0, annotations);
         function.offset = offset;
         function.private = visibility.as_deref() == Some("private");
+        function.internal = visibility.as_deref() == Some("internal");
         function.infix = infix;
         function.operator = operator;
         Self::validate_infix_function(&function)?;
@@ -1981,10 +2466,13 @@ impl Parser {
     }
     fn constant(&mut self) -> Result<ConstDecl> {
         let offset = self.token().offset;
+        let mut annotations = self.annotations()?;
         let mut visibility = None;
         let mut is_const = false;
         loop {
-            if matches!(
+            if self.at("@") {
+                annotations.extend(self.annotations()?);
+            } else if matches!(
                 self.token().text.as_str(),
                 "public" | "internal" | "private"
             ) {
@@ -2028,7 +2516,7 @@ impl Parser {
             self.lines();
         }
         let token = self.token();
-        let (value, ty) = if token.text.as_bytes()[0].is_ascii_digit() {
+        let (value, ty) = if starts_numeric_literal(&token.text) {
             match numeric_literal(&token.text, token.offset)? {
                 ExprKind::Int(value) => {
                     let value = if negative == Some(true) {
@@ -2051,6 +2539,14 @@ impl Parser {
                     let value = i64::try_from(value)
                         .map_err(|_| self.error("Long constant literal is out of range"))?;
                     (ConstValue::Long(value), Type::Long)
+                }
+                ExprKind::Double(value) => {
+                    let value = if negative == Some(true) {
+                        (-f64::from_bits(value)).to_bits()
+                    } else {
+                        value
+                    };
+                    (ConstValue::Double(value), Type::Double)
                 }
                 ExprKind::Float(value) => {
                     let value = if negative == Some(true) {
@@ -2087,6 +2583,7 @@ impl Parser {
                 .error("Const initializers support only literals; expressions are not supported"));
         }
         Ok(ConstDecl {
+            annotations,
             name,
             offset,
             private: visibility.as_deref() == Some("private"),
@@ -2095,14 +2592,43 @@ impl Parser {
         })
     }
     fn class_decl(&mut self) -> Result<ClassDecl> {
+        let ClassHeader {
+            mut declaration,
+            mut property_names,
+            has_constructor,
+            after_header,
+        } = self.class_header()?;
+        if !self.take("{") {
+            self.pos = after_header;
+            if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
+                return Ok(declaration);
+            }
+            return Err(self.error("Expected a class body or declaration separator"));
+        }
+        self.class_members(&mut declaration, &mut property_names)?;
+        declaration.primary_constructor =
+            has_constructor || declaration.secondary_constructors.is_empty();
+        Ok(declaration)
+    }
+    fn class_header(&mut self) -> Result<ClassHeader> {
         let offset = self.token().offset;
+        let mut annotations = self.annotations()?;
         let mut visibility = None;
         let mut final_modifier = false;
         let mut data = false;
         let mut open = false;
         let mut abstract_ = false;
         loop {
-            if matches!(self.token().text.as_str(), "public" | "internal") {
+            if self.at("@") {
+                annotations.extend(self.annotations()?);
+            } else if self.at("value") {
+                return Err(self
+                    .error("Value classes require unsupported JVM boxing and unboxing semantics")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "VALUE_CLASS_JVM_BOXING_UNSUPPORTED",
+                    ));
+            } else if matches!(self.token().text.as_str(), "public" | "internal") {
                 if visibility.is_some() {
                     return Err(self.error("Conflicting or repeated class visibility modifiers"));
                 }
@@ -2137,11 +2663,12 @@ impl Parser {
             return Err(self.error("Only ordinary final classes are supported"));
         }
         self.lines();
-        let name = self.class_name()?;
+        let name = self.classifier_name()?;
         let after_name = self.pos;
         self.lines();
         let has_constructor = self.take("(");
         let mut params = Vec::new();
+        let mut param_annotations = Vec::new();
         let mut public_params = Vec::new();
         let mut param_properties = Vec::new();
         let mut override_params = Vec::new();
@@ -2153,10 +2680,14 @@ impl Parser {
             self.lines();
             if !self.at(")") {
                 loop {
+                    let mut annotations = self.annotations()?;
                     let is_override = self.take("override");
+                    self.reject_internal_property()?;
                     let private = self.take("private");
                     let public = !private && self.take("public");
                     self.lines();
+                    annotations.extend(self.annotations()?);
+                    self.reject_internal_property()?;
                     let mutable = self.take("var");
                     let property = mutable || self.take("val");
                     if (private || public) && !property {
@@ -2189,6 +2720,7 @@ impl Parser {
                         }
                     }
                     params.push((param, self.ty()?));
+                    param_annotations.push(annotations);
                     if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > 254 {
                         return Err(
                             self.error("Class constructors support at most 254 parameter slots")
@@ -2223,11 +2755,15 @@ impl Parser {
         if self.take(":") {
             self.lines();
             loop {
+                self.reject_type_annotations()?;
+                let type_offset = self.token().offset;
                 let mut name = self.declaration_name()?;
                 while self.take(".") {
                     name.push('/');
                     name.push_str(&self.declaration_name()?);
                 }
+                self.record_type(&name, type_offset);
+                self.reject_parameterized_supertype()?;
                 if self.at("(") {
                     if super_class.is_some() {
                         return Err(self.error("Only one superclass constructor is allowed"));
@@ -2247,7 +2783,9 @@ impl Parser {
                 self.lines();
             }
         }
-        let mut declaration = ClassDecl {
+        let declaration = ClassDecl {
+            annotations,
+            param_annotations,
             primary_constructor: true,
             name,
             offset,
@@ -2270,17 +2808,12 @@ impl Parser {
             open,
             abstract_,
         };
-        if !self.take("{") {
-            self.pos = after_header;
-            if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
-                return Ok(declaration);
-            }
-            return Err(self.error("Expected a class body or declaration separator"));
-        }
-        self.class_members(&mut declaration, &mut property_names)?;
-        declaration.primary_constructor =
-            has_constructor || declaration.secondary_constructors.is_empty();
-        Ok(declaration)
+        Ok(ClassHeader {
+            declaration,
+            property_names,
+            has_constructor,
+            after_header,
+        })
     }
     fn class_members(
         &mut self,
@@ -2313,8 +2846,10 @@ impl Parser {
                 }
                 declaration.companion = Some(self.class_companion()?);
             } else {
+                let mut annotations = self.annotations()?;
                 let mut is_override = false;
                 let mut visibility = None;
+                let mut visibility_offset = offset;
                 let mut infix = false;
                 let mut operator = false;
                 let mut open = false;
@@ -2322,7 +2857,9 @@ impl Parser {
                 let mut lateinit = false;
                 let mut abstract_ = false;
                 loop {
-                    if self.take("override") {
+                    if self.at("@") {
+                        annotations.extend(self.annotations()?);
+                    } else if self.take("override") {
                         if is_override {
                             return Err(self.error("Repeated override modifier"));
                         }
@@ -2359,6 +2896,7 @@ impl Parser {
                             );
                         }
                         visibility = Some(self.token().text.clone());
+                        visibility_offset = self.token().offset;
                         self.pos += 1;
                     } else {
                         break;
@@ -2374,6 +2912,7 @@ impl Parser {
                         return Err(self.error("The lateinit modifier applies only to properties"));
                     }
                     let (mut function, has_body) = self.function_body(abstract_)?;
+                    function.annotations = annotations;
                     function.offset = offset;
                     function.private = visibility.as_deref() == Some("private");
                     function.protected = visibility.as_deref() == Some("protected");
@@ -2388,6 +2927,9 @@ impl Parser {
                         has_body,
                     });
                 } else if self.at("val") || self.at("var") {
+                    if visibility.as_deref() == Some("internal") {
+                        return Err(Self::internal_property_error(visibility_offset));
+                    }
                     if infix {
                         return Err(self.error("The infix modifier applies only to functions"));
                     }
@@ -2398,6 +2940,7 @@ impl Parser {
                         lateinit,
                         open,
                     )?;
+                    property.annotations.splice(0..0, annotations);
                     property.protected = visibility.as_deref() == Some("protected");
                     if !property_names.insert(property.name.clone()) {
                         return Err(Diagnostic::new(offset, "Duplicate class property name"));
@@ -2436,6 +2979,7 @@ impl Parser {
         lateinit: bool,
         open: bool,
     ) -> Result<PropertyDecl> {
+        let annotations = self.annotations()?;
         let mutable = self.take("var");
         if !mutable {
             self.expect("val")?;
@@ -2466,6 +3010,17 @@ impl Parser {
         loop {
             let save = self.pos;
             self.separators();
+            if matches!(
+                self.token().text.as_str(),
+                "public" | "private" | "protected" | "internal"
+            ) && self.tokens[self.pos + 1..]
+                .iter()
+                .find(|token| token.text != "\n")
+                .is_some_and(|token| matches!(token.text.as_str(), "get" | "set"))
+            {
+                return Err(self.error("Property accessor visibility requires unsupported independent JVM accessor visibility")
+                    .with_kind(DiagnosticKind::UnsupportedLanguage, "ACCESSOR_VISIBILITY_UNSUPPORTED"));
+            }
             if self.take("get") {
                 if has_getter {
                     return Err(self.error("Repeated property getter"));
@@ -2526,6 +3081,7 @@ impl Parser {
             ));
         }
         Ok(PropertyDecl {
+            annotations,
             name,
             private,
             protected: false,
@@ -2558,10 +3114,10 @@ impl Parser {
                 self.lines();
                 Expr {
                     offset,
-                    kind: ExprKind::NamedArgument(name, Box::new(self.expr(0)?)),
+                    kind: ExprKind::NamedArgument(name, Box::new(self.argument_value()?)),
                 }
             } else {
-                self.expr(0)?
+                self.argument_value()?
             };
             arguments.push(argument);
             self.lines();
@@ -2572,6 +3128,18 @@ impl Parser {
         }
         self.expect(")")?;
         Ok(arguments)
+    }
+    fn argument_value(&mut self) -> Result<Expr> {
+        let offset = self.token().offset;
+        if self.take("*") {
+            self.lines();
+            Ok(Expr {
+                offset,
+                kind: ExprKind::Unary("*".into(), Box::new(self.expr(0)?)),
+            })
+        } else {
+            self.expr(0)
+        }
     }
     fn secondary_constructor(&mut self) -> Result<SecondaryConstructor> {
         let offset = self.token().offset;
@@ -2651,6 +3219,8 @@ impl Parser {
             return Err(self.error("Only unnamed companion objects are supported"));
         }
         let mut declaration = ClassDecl {
+            annotations: Vec::new(),
+            param_annotations: Vec::new(),
             primary_constructor: true,
             name: "Companion".into(),
             offset: self.token().offset,
@@ -2677,6 +3247,7 @@ impl Parser {
         let mut properties = Vec::new();
         for property in declaration.properties {
             properties.push(ClassCompanionProperty {
+                annotations: property.annotations,
                 name: property.name,
                 offset: property.offset,
                 private: property.private,
@@ -2701,6 +3272,7 @@ impl Parser {
     }
     fn interface_decl(&mut self, depth: usize, count: &mut usize) -> Result<InterfaceDecl> {
         let offset = self.token().offset;
+        let mut annotations = self.annotations()?;
         if depth > 16 {
             return Err(
                 self.error("Interface nesting exceeds the current 16-declaration depth limit")
@@ -2711,7 +3283,11 @@ impl Parser {
             return Err(self.error("Interfaces exceed the current 256-declaration limit"));
         }
         let mut visibility = None;
-        while matches!(self.token().text.as_str(), "public" | "internal") {
+        while self.at("@") || matches!(self.token().text.as_str(), "public" | "internal") {
+            if self.at("@") {
+                annotations.extend(self.annotations()?);
+                continue;
+            }
             if visibility.is_some() {
                 return Err(self.error("Conflicting or repeated interface visibility modifiers"));
             }
@@ -2719,18 +3295,25 @@ impl Parser {
             self.pos += 1;
             self.lines();
         }
+        let fun_interface = self.take("fun");
+        self.lines();
         if !self.take("interface") {
             return Err(self.error("Only public or internal plain interfaces are supported"));
         }
         self.lines();
-        let name = self.class_name()?;
+        let name = self.classifier_name()?;
         let mut after_header = self.pos;
         self.lines();
         let mut interfaces = Vec::new();
         if self.take(":") {
             self.lines();
             loop {
-                interfaces.push(self.declaration_name()?);
+                self.reject_type_annotations()?;
+                let type_offset = self.token().offset;
+                let name = self.declaration_name()?;
+                self.record_type(&name, type_offset);
+                self.reject_parameterized_supertype()?;
+                interfaces.push(name);
                 if interfaces.len() > 32 {
                     return Err(self.error("Interfaces exceed the current 32-superinterface limit"));
                 }
@@ -2743,6 +3326,8 @@ impl Parser {
             }
         }
         let mut declaration = InterfaceDecl {
+            annotations,
+            fun_interface,
             name,
             offset,
             internal: visibility.as_deref() == Some("internal"),
@@ -2788,12 +3373,15 @@ impl Parser {
                 declaration.companion = Some(self.companion_decl()?);
             } else {
                 let offset = self.token().offset;
+                let mut annotations = self.annotations()?;
                 let mut is_override = false;
                 let mut public_modifier = false;
                 let mut infix = false;
                 let mut operator = false;
                 loop {
-                    if self.take("override") {
+                    if self.at("@") {
+                        annotations.extend(self.annotations()?);
+                    } else if self.take("override") {
                         if is_override {
                             return Err(self.error("Repeated override modifier"));
                         }
@@ -2820,6 +3408,7 @@ impl Parser {
                 }
                 if self.at("fun") {
                     let (mut function, has_body) = self.function_body(true)?;
+                    function.annotations = annotations;
                     function.infix = infix;
                     function.operator = operator;
                     Self::validate_infix_function(&function)?;
@@ -2860,6 +3449,7 @@ impl Parser {
                         None
                     };
                     declaration.properties.push(InterfaceProperty {
+                        annotations,
                         name,
                         offset,
                         ty,
@@ -2940,6 +3530,8 @@ impl Parser {
                 self.end()?;
                 continue;
             }
+            let annotations = self.annotations()?;
+            self.reject_internal_property()?;
             let mut cursor = self.pos;
             while self.tokens.get(cursor).is_some_and(|token| {
                 !matches!(
@@ -2961,16 +3553,18 @@ impl Parser {
                 let private = self.take("private");
                 if !private {
                     self.take("public");
-                    self.take("internal");
+                    self.reject_internal_property()?;
                 }
                 self.lines();
                 let lateinit = self.take("lateinit");
                 self.lines();
-                let property = self.property(offset, private, false, lateinit, false)?;
+                let mut property = self.property(offset, private, false, lateinit, false)?;
+                property.annotations.splice(0..0, annotations);
                 if !names.insert(property.name.clone()) {
                     return Err(Diagnostic::new(offset, "Duplicate companion property name"));
                 }
                 fields.push(ClassCompanionProperty {
+                    annotations: property.annotations,
                     name: property.name,
                     offset: property.offset,
                     private: property.private,
@@ -3063,7 +3657,10 @@ impl Parser {
                 }
                 self.expect(":")?;
                 self.lines();
+                let type_offset = self.token().offset;
                 let interface = self.declaration_name()?;
+                self.record_type(&interface, type_offset);
+                self.reject_parameterized_supertype()?;
                 if declared_type
                     .as_ref()
                     .is_some_and(|ty| ty != &Type::Java(interface.clone()))
@@ -3075,6 +3672,8 @@ impl Parser {
                 self.lines();
                 self.expect("{")?;
                 let mut object = ClassDecl {
+                    annotations: Vec::new(),
+                    param_annotations: Vec::new(),
                     primary_constructor: true,
                     name: String::new(),
                     offset,
@@ -3103,6 +3702,7 @@ impl Parser {
                 return Err(self.error("Companions support only literal String arrays and anonymous interface object initializers"));
             };
             properties.push(CompanionProperty {
+                annotations,
                 name,
                 offset,
                 private,
@@ -3123,7 +3723,9 @@ impl Parser {
     }
     fn validate_infix_function(function: &Function) -> Result<()> {
         if function.infix
-            && (function.params.len() != 1 || function.defaults.iter().any(Option::is_some))
+            && (function.vararg
+                || function.params.len() != 1
+                || function.defaults.iter().any(Option::is_some))
         {
             return Err(Diagnostic::new(
                 function.offset,
@@ -3137,11 +3739,14 @@ impl Parser {
     }
     fn function_body(&mut self, abstract_allowed: bool) -> Result<(Function, bool)> {
         let offset = self.token().offset;
+        let mut annotations = self.annotations()?;
         let mut visibility = None;
         let mut infix = false;
         let mut operator = false;
         loop {
-            if matches!(
+            if self.at("@") {
+                annotations.extend(self.annotations()?);
+            } else if matches!(
                 self.token().text.as_str(),
                 "private" | "public" | "internal"
             ) {
@@ -3170,9 +3775,10 @@ impl Parser {
         self.expect("fun")?;
         let type_parameter_count = self.type_parameters.len();
         let type_params = self.type_parameters()?;
+        let type_offset = self.token().offset;
         let first = self.name()?;
         let (receiver, name) = if self.at("<") || self.at("?") || self.at(".") {
-            let receiver = self.named_ty(first)?;
+            let receiver = self.named_ty(first, type_offset)?;
             let receiver = if self.take("?") {
                 Type::Nullable(Box::new(receiver))
             } else {
@@ -3186,15 +3792,55 @@ impl Parser {
         self.expect("(")?;
         self.lines();
         let mut params = Vec::new();
+        let mut param_annotations = Vec::new();
         let mut defaults = Vec::new();
+        let mut vararg = false;
         if !self.at(")") {
             loop {
+                let mut annotations = self.annotations()?;
+                let parameter_vararg = self.take("vararg");
+                if vararg {
+                    return Err(self.error(if parameter_vararg {
+                        "Repeated vararg parameters are unsupported"
+                    } else {
+                        "A vararg parameter must be the last parameter in this subset"
+                    }));
+                }
+                vararg = parameter_vararg;
+                annotations.extend(self.annotations()?);
                 let name = self.name()?;
                 self.expect(":")?;
                 self.lines();
-                params.push((name, self.ty()?));
+                let ty = self.ty()?;
+                let ty = if parameter_vararg {
+                    match ty {
+                        Type::Int => Type::IntArray,
+                        Type::Byte => Type::ByteArray,
+                        Type::Char => Type::CharArray,
+                        Type::Long | Type::Boolean | Type::Float | Type::Double => {
+                            return Err(self.error(
+                                "Source vararg parameters of this primitive type are unsupported",
+                            ));
+                        }
+                        Type::Java(ref name) if name == "Double" || name == "kotlin/Double" => {
+                            return Err(
+                                self.error("Source vararg Double parameters are unsupported")
+                            );
+                        }
+                        ty => Type::Array(Box::new(ty)),
+                    }
+                } else {
+                    ty
+                };
+                params.push((name, ty));
+                param_annotations.push(annotations);
                 self.lines();
                 defaults.push(if self.take("=") {
+                    if parameter_vararg {
+                        return Err(
+                            self.error("Vararg parameters with default values are unsupported")
+                        );
+                    }
                     self.lines();
                     Some(self.expr(0)?)
                 } else {
@@ -3211,7 +3857,7 @@ impl Parser {
             }
         }
         self.expect(")")?;
-        if infix && (params.len() != 1 || defaults.iter().any(Option::is_some)) {
+        if infix && (vararg || params.len() != 1 || defaults.iter().any(Option::is_some)) {
             return Err(
                 self.error("Infix functions require exactly one parameter without a default value")
             );
@@ -3251,6 +3897,8 @@ impl Parser {
         self.type_parameters.truncate(type_parameter_count);
         Ok((
             Function {
+                param_annotations,
+                annotations,
                 name,
                 offset,
                 private,
@@ -3258,6 +3906,7 @@ impl Parser {
                 internal,
                 infix,
                 operator,
+                vararg,
                 receiver,
                 type_params,
                 params,
@@ -3313,22 +3962,8 @@ impl Parser {
             if !mutable {
                 self.expect("val")?;
             }
-            if self.take("(") {
-                let mut names = Vec::new();
-                loop {
-                    let name = if self.take("_") {
-                        "_".into()
-                    } else {
-                        self.name()?
-                    };
-                    names.push(if name == "_" { None } else { Some(name) });
-                    self.lines();
-                    if !self.take(",") {
-                        break;
-                    }
-                    self.lines();
-                }
-                self.expect(")")?;
+            if self.at("(") {
+                let names = self.destructuring_names()?;
                 self.expect("=")?;
                 self.lines();
                 let kind = StatementKind::Destructure(names, mutable, self.expr(0)?);
@@ -3679,7 +4314,18 @@ impl Parser {
             if precedence < min {
                 break;
             }
-            self.pos += if negated_operator { 2 } else { 1 };
+            if op.starts_with('`') {
+                let operator_offset = self.token().offset;
+                op = self.name()?;
+                if escaped_name_conflicts_with_operator(&op) {
+                    return Err(Diagnostic::new(
+                        operator_offset,
+                        "Escaped infix names matching Kotlin operators are unsupported",
+                    ));
+                }
+            } else {
+                self.pos += if negated_operator { 2 } else { 1 };
+            }
             if op == "as"
                 && self.at("?")
                 && self.token().offset == self.tokens[self.pos - 1].offset + 2
@@ -3867,7 +4513,18 @@ impl Parser {
             self.expect(")")?;
             expr
         } else if self.token().text.starts_with('"') {
-            let mut parts = string_parts(&self.token().text, 0)?.1;
+            let mut type_locations = Vec::new();
+            let mut parts = string_parts_depth(&self.token().text, 0, 0, &mut type_locations)
+                .map_err(|mut error| {
+                    error.offset += offset;
+                    error
+                })?
+                .1;
+            self.type_locations.extend(
+                type_locations
+                    .into_iter()
+                    .map(|(name, type_offset)| (name, type_offset + offset)),
+            );
             for part in &mut parts {
                 shift_expression_offsets(part, offset);
             }
@@ -3903,11 +4560,24 @@ impl Parser {
                 offset,
                 kind: ExprKind::Boolean(value),
             }
-        } else if self.token().text.as_bytes()[0].is_ascii_digit() {
+        } else if starts_numeric_literal(&self.token().text) {
             let kind = numeric_literal(&self.token().text, self.token().offset)?;
             self.pos += 1;
             Expr { offset, kind }
         } else {
+            let escaped = self
+                .token()
+                .text
+                .strip_prefix('`')
+                .and_then(|text| text.strip_suffix('`'));
+            if escaped.is_some_and(|name| {
+                name == "this"
+                    || name == "super"
+                    || name.starts_with("this@")
+                    || name.starts_with("super@")
+            }) {
+                return Err(self.error("Escaped receiver-keyword references are unsupported"));
+            }
             Expr {
                 offset,
                 kind: ExprKind::Name(if self.take("this") {
@@ -3920,6 +4590,21 @@ impl Parser {
             }
         };
         loop {
+            if self.at("\n")
+                && let Some(token) = self.tokens[self.pos..]
+                    .iter()
+                    .find(|token| token.text != "\n")
+                && matches!(token.text.as_str(), "." | "?.")
+                && self.tokens[self.pos..]
+                    .iter()
+                    .skip_while(|next| next.text == "\n")
+                    .skip(1)
+                    .find(|next| next.text != "\n")
+                    .is_some_and(|next| identifier(&next.text))
+            {
+                return Err(Diagnostic::new(token.offset, "Newline-qualified expression continuation requires unsupported cross-line navigation parsing")
+                    .with_kind(DiagnosticKind::UnsupportedLanguage, "NEWLINE_QUALIFIED_CONTINUATION_UNSUPPORTED"));
+            }
             if self.take("@") {
                 let label = self.name()?;
                 expr = Expr {
@@ -3945,6 +4630,16 @@ impl Parser {
                     kind: ExprKind::Generic(Box::new(expr), arguments),
                 };
             } else if self.take("::") {
+                if self.at("class") {
+                    return Err(self
+                        .error(
+                            "Class literals require unsupported Kotlin class-reference semantics",
+                        )
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "CLASS_LITERAL_UNSUPPORTED",
+                        ));
+                }
                 expr = Expr {
                     offset,
                     kind: ExprKind::CallableReference {
@@ -4039,39 +4734,8 @@ impl Parser {
                         ExprKind::Indices(Box::new(expr), indices)
                     },
                 };
-            } else if self.take("(") {
-                self.lines();
-                let mut args = Vec::new();
-                if !self.at(")") {
-                    loop {
-                        let argument = if self
-                            .tokens
-                            .get(self.pos + 1)
-                            .is_some_and(|token| token.text == "=")
-                        {
-                            let offset = self.token().offset;
-                            let name = self.name()?;
-                            self.expect("=")?;
-                            self.lines();
-                            Expr {
-                                offset,
-                                kind: ExprKind::NamedArgument(name, Box::new(self.expr(0)?)),
-                            }
-                        } else {
-                            self.expr(0)?
-                        };
-                        args.push(argument);
-                        self.lines();
-                        if !self.take(",") {
-                            break;
-                        }
-                        self.lines();
-                        if self.at(")") {
-                            break;
-                        }
-                    }
-                }
-                self.expect(")")?;
+            } else if self.at("(") {
+                let args = self.arguments()?;
                 expr = Expr {
                     offset,
                     kind: ExprKind::Call(Box::new(expr), args),
@@ -4152,9 +4816,10 @@ impl Parser {
                         pending.push((target, depth));
                         pending.extend(arguments.iter().map(|argument| (argument, depth)));
                     }
-                    ExprKind::Template(parts) => {
-                        pending.extend(parts.iter().map(|part| (part, depth)))
-                    }
+                    ExprKind::Template(parts)
+                    | ExprKind::VarargArray {
+                        elements: parts, ..
+                    } => pending.extend(parts.iter().map(|part| (part, depth))),
                     ExprKind::When(subject, branches, otherwise)
                     | ExprKind::WhenBinding(_, subject, branches, otherwise) => {
                         pending.push((subject, depth));
@@ -4378,6 +5043,7 @@ impl Parser {
     fn call_type_arguments(&mut self) -> Option<Vec<Type>> {
         let position = self.pos;
         let depth = self.depth;
+        let type_location_count = self.type_locations.len();
         let result = self.type_arguments().ok().and_then(|arguments| {
             if !self.at("(") && !self.at("{") {
                 return None;
@@ -4396,10 +5062,11 @@ impl Parser {
         if result.is_none() {
             self.pos = position;
             self.depth = depth;
+            self.type_locations.truncate(type_location_count);
         }
         result
     }
-    fn destructuring_names(&mut self) -> Result<Vec<Option<String>>> {
+    fn destructuring_names(&mut self) -> Result<Vec<DestructureEntry>> {
         self.expect("(")?;
         self.lines();
         let mut names = Vec::new();
@@ -4409,7 +5076,14 @@ impl Parser {
             } else {
                 Some(self.declaration_name()?)
             };
-            names.push(name);
+            self.lines();
+            let ty = if self.take(":") {
+                self.lines();
+                Some(self.ty()?)
+            } else {
+                None
+            };
+            names.push(DestructureEntry { name, ty });
             self.lines();
             if !self.take(",") {
                 break;
@@ -4432,6 +5106,7 @@ impl Parser {
         self.separators();
         let start = self.pos;
         let depth = self.depth;
+        let type_location_count = self.type_locations.len();
         let mut destructures = Vec::new();
         let params = if self.take("->") {
             Some(Vec::new())
@@ -4440,6 +5115,7 @@ impl Parser {
             let parsed = (|| -> Result<()> {
                 loop {
                     let parameter_offset = self.token().offset;
+                    let discard = self.at("_");
                     let name = if self.at("(") {
                         let names = self.destructuring_names()?;
                         let name = format!("$destructure{parameter_offset}");
@@ -4466,7 +5142,7 @@ impl Parser {
                     } else {
                         None
                     };
-                    parameters.push(LambdaParameter { name, ty });
+                    parameters.push(LambdaParameter { name, discard, ty });
                     self.lines();
                     if !self.take(",") {
                         break;
@@ -4480,6 +5156,7 @@ impl Parser {
             } else {
                 self.pos = start;
                 self.depth = depth;
+                self.type_locations.truncate(type_location_count);
                 destructures.clear();
                 None
             }
@@ -4495,6 +5172,7 @@ impl Parser {
         }
         self.expect("}")?;
         self.depth -= 1;
+        normalize_result_tail(&mut body);
         if params.is_none()
             && body.len() == 1
             && matches!(body[0].kind, StatementKind::Expression(_))
@@ -4679,9 +5357,10 @@ impl Parser {
                     receiver: Some(receiver),
                     ..
                 } => pending.push((receiver, depth + 1)),
-                ExprKind::Template(parts) => {
-                    pending.extend(parts.iter().map(|part| (part, depth + 1)))
-                }
+                ExprKind::Template(parts)
+                | ExprKind::VarargArray {
+                    elements: parts, ..
+                } => pending.extend(parts.iter().map(|part| (part, depth + 1))),
                 ExprKind::When(subject, branches, otherwise) => {
                     pending.push((subject, depth + 1));
                     pending.push((otherwise, depth + 1));
@@ -4789,10 +5468,24 @@ fn numeric_literal(text: &str, offset: usize) -> Result<ExprKind> {
             || text.ends_with('d')
             || text.ends_with('D'))
     {
-        return Err(Diagnostic::new(
-            offset,
-            "Double literals are not supported; use a Float suffix",
-        ));
+        let bytes = text.as_bytes();
+        if bytes.iter().enumerate().any(|(index, byte)| {
+            *byte == b'_'
+                && (index == 0
+                    || index + 1 == bytes.len()
+                    || !bytes[index - 1].is_ascii_digit()
+                    || !bytes[index + 1].is_ascii_digit())
+        }) {
+            return Err(Diagnostic::new(
+                offset,
+                "Double literals require separators between decimal digits",
+            ));
+        }
+        let value: f64 = text
+            .replace('_', "")
+            .parse()
+            .map_err(|_| Diagnostic::new(offset, "Invalid Double literal"))?;
+        return Ok(ExprKind::Double(value.to_bits()));
     }
     Ok(ExprKind::Int(integer_literal(text, offset)?))
 }
@@ -4826,7 +5519,45 @@ fn integer_literal(text: &str, offset: usize) -> Result<i64> {
         .map_err(|_| Diagnostic::new(offset, "Integer literal is out of range"))
 }
 
+fn starts_numeric_literal(text: &str) -> bool {
+    let bytes = text.as_bytes();
+    bytes.first().is_some_and(u8::is_ascii_digit)
+        || (bytes.first() == Some(&b'.') && bytes.get(1).is_some_and(u8::is_ascii_digit))
+}
+
+fn identifier_name(text: &str, offset: usize) -> Result<&str> {
+    if text.bytes().all(|byte| byte == b'_') {
+        return Err(Diagnostic::new(
+            offset,
+            "Names consisting only of underscores are reserved",
+        ));
+    }
+    if !identifier(text) {
+        return Err(Diagnostic::new(offset, "Expected an identifier"));
+    }
+    let name = text
+        .strip_prefix('`')
+        .and_then(|text| text.strip_suffix('`'))
+        .unwrap_or(text);
+    if name
+        .chars()
+        .any(|character| ".;[]/<>:\\".contains(character) || character.is_control())
+    {
+        return Err(Diagnostic::new(
+            offset,
+            "Identifier contains a character forbidden in JVM names",
+        ));
+    }
+    Ok(name)
+}
+
 fn identifier(text: &str) -> bool {
+    if let Some(name) = text
+        .strip_prefix('`')
+        .and_then(|text| text.strip_suffix('`'))
+    {
+        return !name.is_empty() && !name.contains(['`', '\n', '\r']);
+    }
     text.as_bytes()
         .first()
         .is_some_and(|byte| byte.is_ascii_alphabetic() || *byte == b'_')
@@ -4868,6 +5599,10 @@ fn identifier(text: &str) -> bool {
         )
 }
 
+fn escaped_name_conflicts_with_operator(name: &str) -> bool {
+    precedence(name).is_some_and(|precedence| precedence != 7)
+}
+
 fn precedence(op: &str) -> Option<u8> {
     match op {
         "||" => Some(1),
@@ -4890,6 +5625,7 @@ pub fn parse(source: &str) -> Result<Module> {
         pos: 0,
         depth: 0,
         type_parameters: Vec::new(),
+        type_locations: Vec::new(),
     };
     p.separators();
     let mut package = String::new();
@@ -4923,6 +5659,7 @@ pub fn parse(source: &str) -> Result<Module> {
         p.end()?;
         imports.push((alias, name, offset));
     }
+    let mut type_aliases = Vec::new();
     let mut functions = Vec::new();
     let mut constants = Vec::new();
     let mut properties = Vec::new();
@@ -4932,19 +5669,25 @@ pub fn parse(source: &str) -> Result<Module> {
     let mut interface_decl = None;
     let mut declarations = Vec::new();
     while !p.at("<eof>") {
-        if p.starts_declaration("const") {
+        if p.starts_declaration("typealias") {
+            type_aliases.push(p.type_alias()?);
+        } else if p.starts_declaration("const") {
             constants.push(p.constant()?);
         } else if p.starts_declaration("val") || p.starts_declaration("var") {
             let offset = p.token().offset;
+            let mut annotations = p.annotations()?;
             let private = p.take("private");
             if !private {
                 p.take("public");
-                p.take("internal");
+                p.reject_internal_property()?;
             }
             p.lines();
+            annotations.extend(p.annotations()?);
             let lateinit = p.take("lateinit");
             p.lines();
-            properties.push(p.property(offset, private, false, lateinit, false)?);
+            let mut property = p.property(offset, private, false, lateinit, false)?;
+            property.annotations.splice(0..0, annotations);
+            properties.push(property);
         } else if p.starts_enum() {
             let declaration = p.enum_decl()?;
             if enum_decl.is_none() {
@@ -4979,6 +5722,7 @@ pub fn parse(source: &str) -> Result<Module> {
         p.end()?;
     }
     if functions.is_empty()
+        && type_aliases.is_empty()
         && constants.is_empty()
         && properties.is_empty()
         && enum_decl.is_none()
@@ -4989,6 +5733,8 @@ pub fn parse(source: &str) -> Result<Module> {
         return Err(p.error("Expected at least one function, enum class, object, or class"));
     }
     Ok(Module {
+        type_locations: p.type_locations,
+        type_aliases,
         package,
         imports,
         functions,
@@ -5005,6 +5751,833 @@ pub fn parse(source: &str) -> Result<Module> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn unsupported_syntax_guards_preserve_supported_neighbors() {
+        assert!(!starts_numeric_literal("."));
+        assert!(!starts_numeric_literal(".."));
+        assert!(starts_numeric_literal(".5"));
+        assert!(parse("const val HALF: Double = .5\nfun half(): Double = .5").is_ok());
+        assert!(parse("fun length(text: String): Int = text.length").is_ok());
+        assert!(parse("fun numericStatements(): Double { 1\n.5\nreturn .5 }").is_ok());
+        assert!(parse("class State { val value = 1\nprivate fun read(): Int = value }").is_ok());
+        let invalid_navigation = parse("fun bad(value: String) { value\n. }").err().unwrap();
+        assert_ne!(
+            invalid_navigation.code,
+            "NEWLINE_QUALIFIED_CONTINUATION_UNSUPPORTED"
+        );
+        let invalid_constant = parse("const val INVALID = .").err().unwrap();
+        assert_ne!(invalid_constant.message, "Invalid Double literal");
+        let generic_class = parse("class Generic<T>").err().unwrap();
+        assert_ne!(generic_class.code, "PARAMETERIZED_SUPERTYPE_UNSUPPORTED");
+    }
+
+    #[test]
+    fn class_literal_guard_preserves_callable_references_and_specialized_throws() {
+        for source in [
+            "fun use(value: Owner) = consume(value::method, Owner::method, ::top)",
+            "fun use(value: Owner) = consume(value::`class`, Owner::`class`, ::`class`)",
+            "object Holder { @Throws(RuntimeException::class) fun run() {} }",
+        ] {
+            assert!(parse(source).is_ok(), "{source}");
+        }
+        let error = parse("fun invalid() = ::class").err().unwrap();
+        assert_ne!(error.code, "CLASS_LITERAL_UNSUPPORTED");
+    }
+
+    #[test]
+    fn dollar_classifier_names_are_explicitly_unsupported_without_restricting_members() {
+        for source in [
+            "class `Outer$Inner`",
+            "object `Outer$Inner` {}",
+            "interface `Outer$Inner` {}",
+            "enum class `Outer$Inner` { A }",
+            "class Outer { class `Inner$Deep` }",
+        ] {
+            let error = parse(source).err().unwrap();
+            assert_eq!(error.code, "CLASSIFIER_DOLLAR_NAME_UNSUPPORTED", "{source}");
+            assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
+            assert_eq!(error.offset, source.find('`').unwrap(), "{source}");
+        }
+
+        let module = parse("class Outer { class Inner; class DefaultImpls; fun `name$module`() = 1; val `property$module`: Int = 1 }").unwrap();
+        let outer = module.class_decl.unwrap();
+        assert_eq!(outer.nested.len(), 2);
+        assert_eq!(outer.methods[0].function.name, "name$module");
+        assert_eq!(outer.properties[0].name, "property$module");
+        assert!(parse("interface Contract { fun value() = 1; interface DefaultImpls }").is_ok());
+    }
+
+    #[test]
+    fn internal_properties_are_rejected_at_the_modifier_without_erasing_visibility() {
+        for source in [
+            "internal val value = 1",
+            "object Holder { internal val value = 1 }",
+            "class Holder { internal val value = 1 }",
+            "class Holder { companion object { internal var value: Int = 1 } }",
+            "interface Contract { companion object { internal val value = 1 } }",
+            "interface Contract { companion object { internal val names = arrayOf(\"a\") } }",
+            "class Holder(internal val value: Int)",
+            "class Holder(@Mark internal var value: Int)",
+        ] {
+            let error = parse(source).err().unwrap();
+            assert_eq!(
+                error.code, "INTERNAL_PROPERTY_VISIBILITY_UNSUPPORTED",
+                "{source}: {}",
+                error.message
+            );
+            assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
+            assert_eq!(error.offset, source.find("internal").unwrap(), "{source}");
+        }
+        let module = parse("internal fun top() = 1\ninternal class Holder { internal fun member() = 2 }\ninternal object Functions { internal fun member() = 3 }").unwrap();
+        assert!(module.functions[0].internal);
+        assert!(module.class_decl.unwrap().internal);
+        let functions = module.object_decl.unwrap();
+        assert!(functions.internal);
+        assert!(functions.methods[0].function.internal);
+    }
+
+    #[test]
+    fn named_types_record_their_actual_tokens_including_nested_and_qualified_types() {
+        let source = "// Missing in a comment\nval label = \"Missing\"\nfun f(value: Missing): Missing = value";
+        let module = parse(source).unwrap();
+        let locations = module
+            .type_locations
+            .iter()
+            .filter(|(name, _)| name == "Missing")
+            .cloned()
+            .collect::<Vec<_>>();
+        assert_eq!(
+            locations,
+            [
+                (
+                    "Missing".into(),
+                    source.find("value: Missing").unwrap() + "value: ".len()
+                ),
+                (
+                    "Missing".into(),
+                    source.find("): Missing").unwrap() + "): ".len()
+                ),
+            ]
+        );
+
+        let source =
+            "fun f(value: demo.Box<external.Missing?>): (another.Input) -> finalpkg.Result = value";
+        let module = parse(source).unwrap();
+        for (name, spelling) in [
+            ("demo/Box", "demo.Box"),
+            ("external/Missing", "external.Missing"),
+            ("another/Input", "another.Input"),
+            ("finalpkg/Result", "finalpkg.Result"),
+        ] {
+            assert!(
+                module
+                    .type_locations
+                    .contains(&(name.into(), source.find(spelling).unwrap()))
+            );
+        }
+
+        let source = "fun f(value: Int): String = \"${make<demo.Missing>()}\"";
+        let module = parse(source).unwrap();
+        assert!(
+            module
+                .type_locations
+                .contains(&("demo/Missing".into(), source.find("demo.Missing").unwrap()))
+        );
+
+        let module = parse("fun f(a: Int, b: Int): Boolean = a < b && b > a").unwrap();
+        assert!(
+            module
+                .type_locations
+                .iter()
+                .all(|(name, _)| name != "a" && name != "b")
+        );
+    }
+
+    #[test]
+    fn unsupported_constructs_have_stable_codes_and_source_offsets() {
+        for (source, marker, code) in [
+            (
+                "@JvmInline\nvalue class Gid(val raw: Int)",
+                "value",
+                "VALUE_CLASS_JVM_BOXING_UNSUPPORTED",
+            ),
+            (
+                "object O { @kotlin.jvm.JvmInline value class Gid(val raw: Int) }",
+                "value",
+                "VALUE_CLASS_JVM_BOXING_UNSUPPORTED",
+            ),
+            (
+                "enum class E { A { fun answer() = 1 } }",
+                "{ fun",
+                "ENUM_ENTRY_BODY_UNSUPPORTED",
+            ),
+            (
+                "@Mark([1, 2]) class C",
+                "[",
+                "ANNOTATION_ARRAY_LITERAL_UNSUPPORTED",
+            ),
+            (
+                "@Mark(values =\n [1, 2]) class C",
+                "[",
+                "ANNOTATION_ARRAY_LITERAL_UNSUPPORTED",
+            ),
+            (
+                "fun f(input: @Mark String) {}",
+                "@",
+                "ANNOTATION_TYPE_USE_UNSUPPORTED",
+            ),
+            (
+                "fun f(input: List<@Mark String>) {}",
+                "@",
+                "ANNOTATION_TYPE_USE_UNSUPPORTED",
+            ),
+            (
+                "class C: @Mark Parent()",
+                "@",
+                "ANNOTATION_TYPE_USE_UNSUPPORTED",
+            ),
+            (
+                "object O: @Mark Parent",
+                "@",
+                "ANNOTATION_TYPE_USE_UNSUPPORTED",
+            ),
+            (
+                "interface I: @Mark Parent",
+                "@",
+                "ANNOTATION_TYPE_USE_UNSUPPORTED",
+            ),
+        ] {
+            let error = parse(source).err().unwrap();
+            assert_eq!(error.code, code, "{source}: {}", error.message);
+            assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
+            assert_eq!(error.offset, source.find(marker).unwrap(), "{source}");
+        }
+        let source = include_str!(
+            "../benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt"
+        );
+        let error = parse(source).err().unwrap();
+        assert_eq!(error.code, "VALUE_CLASS_JVM_BOXING_UNSUPPORTED");
+        assert_eq!(error.offset, source.find("value class").unwrap());
+    }
+
+    #[test]
+    fn enum_model_reuses_constructor_members_and_companion_shapes() {
+        let module = parse(include_str!(
+            "../tests/fixtures/compatibility_enums_numeric/EnumModel.kt"
+        ))
+        .unwrap();
+        let signal = module.enum_decl.unwrap();
+        assert_eq!(signal.body.name, "Signal");
+        assert_eq!(
+            signal.body.params,
+            [("code".into(), Type::Int), ("label".into(), Type::String)]
+        );
+        assert_eq!(signal.body.public_params, ["code"]);
+        assert_eq!(signal.body.param_properties, ["code", "label"]);
+        assert_eq!(signal.entry_arguments.len(), signal.entries.len());
+        assert_eq!(
+            signal
+                .entry_arguments
+                .iter()
+                .map(Vec::len)
+                .collect::<Vec<_>>(),
+            [2, 2]
+        );
+        assert_eq!(signal.body.properties[0].name, "doubled");
+        assert_eq!(signal.body.initializers.len(), 1);
+        assert_eq!(signal.body.methods[0].function.name, "caption");
+        let companion = signal.body.companion.unwrap();
+        assert_eq!(companion.properties[0].name, "initialized");
+        assert_eq!(companion.methods[0].function.name, "fromCode");
+        assert!(matches!(&module.declarations[0], Declaration::Enum(empty)
+            if empty.entries.is_empty() && empty.entry_arguments.is_empty() && empty.body.methods[0].function.name == "count"));
+    }
+
+    #[test]
+    fn unchanged_goto_tab_preserves_enum_arguments_and_function_alias() {
+        let module = parse(include_str!("../benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt")).unwrap();
+        let tab = module.enum_decl.unwrap();
+        assert_eq!(tab.body.params, [("ordinal1Based".into(), Type::Int)]);
+        assert_eq!(
+            tab.entries
+                .iter()
+                .map(|(name, _)| name.as_str())
+                .collect::<Vec<_>>(),
+            ["DIALER", "DIRECT", "GRID"]
+        );
+        assert_eq!(
+            tab.entry_arguments
+                .iter()
+                .map(|arguments| match arguments[0].kind {
+                    ExprKind::Int(value) => value,
+                    _ => panic!(),
+                })
+                .collect::<Vec<_>>(),
+            [1, 2, 3]
+        );
+        assert_eq!(module.type_aliases[0].name, "OnGotoFinished");
+    }
+
+    #[test]
+    fn enum_entries_keep_empty_semicolon_forms_and_explicit_unsupported_boundaries() {
+        for source in [
+            "enum class E",
+            "enum class E {}",
+            "enum class E { ; }",
+            "enum class E { A, }",
+            "enum class E { A; }",
+        ] {
+            let declaration = parse(source).unwrap().enum_decl.unwrap();
+            assert_eq!(declaration.entries.len(), declaration.entry_arguments.len());
+            assert!(declaration.body.params.is_empty());
+        }
+        for (source, message) in [
+            ("enum class E { A, A }", "Duplicate enum entry"),
+            (
+                "enum class E { A { fun answer() = 1 } }",
+                "entry-specific class bodies",
+            ),
+            (
+                "enum class E(val value: Int = 1) { A }",
+                "default arguments",
+            ),
+            (
+                "enum class E { A; constructor(value: Int) {} }",
+                "Secondary constructors",
+            ),
+        ] {
+            assert!(
+                parse(source).unwrap_err().message.contains(message),
+                "{source}"
+            );
+        }
+        for source in [
+            include_str!("../tests/fixtures/compatibility_enums_numeric/InvalidEnumForward.kt"),
+            include_str!("../tests/fixtures/compatibility_enums_numeric/InvalidEnumCompanion.kt"),
+        ] {
+            parse(source).unwrap();
+        }
+    }
+
+    #[test]
+    fn repeated_enum_entry_terminators_are_rejected_at_the_second_semicolon() {
+        for source in ["enum class E { A;; }", "enum class E { ;; }"] {
+            let error = parse(source).err().unwrap();
+            assert_eq!(error.code, "ENUM_ENTRY_TERMINATOR_REPEATED");
+            assert_eq!(error.kind, DiagnosticKind::InvalidKotlin);
+            assert_eq!(error.offset, source.match_indices(';').nth(1).unwrap().0);
+        }
+        for source in [
+            "enum class E { A; ; }",
+            "enum class E { A; /* comment */ ; }",
+            "enum class E { A;\n; }",
+            "enum class E { A; // comment\n; }",
+            "enum class E { A; /* comment\n */ ; }",
+            "enum class E { A; fun f() {}; val value = 1; }",
+            "enum class E { A;\nfun f() {}; val value = 1; }",
+            "class Ordinary { fun f() {}; val value = 1; }",
+        ] {
+            assert!(parse(source).is_ok(), "{source}");
+        }
+    }
+
+    #[test]
+    fn annotation_fixture_preserves_class_constructor_property_and_method_targets() {
+        let source = include_str!(
+            "../tests/fixtures/compatibility_annotations_visibility/positive/Annotated.kt"
+        );
+        let module = parse(source).unwrap();
+        let class = module.class_decl.unwrap();
+        assert_eq!(
+            class
+                .annotations
+                .iter()
+                .map(|annotation| annotation.name.as_str())
+                .collect::<Vec<_>>(),
+            ["RuntimeMark", "ClassMark", "SourceMark"]
+        );
+        assert_eq!(class.param_annotations.len(), class.params.len());
+        assert_eq!(
+            class.param_annotations[0]
+                .iter()
+                .map(|annotation| annotation.use_site.as_deref().unwrap())
+                .collect::<Vec<_>>(),
+            [
+                "param", "field", "get", "set", "setparam", "field", "get", "field"
+            ]
+        );
+        assert_eq!(class.methods[0].function.annotations[0].name, "RuntimeMark");
+        assert_eq!(class.methods[0].function.param_annotations.len(), 1);
+        assert!(class.methods[0].function.param_annotations[0].is_empty());
+        for annotation in class
+            .annotations
+            .iter()
+            .chain(class.param_annotations[0].iter())
+        {
+            assert_eq!(&source[annotation.offset..annotation.offset + 1], "@");
+        }
+    }
+
+    #[test]
+    fn declaration_annotations_survive_object_interface_enum_and_companion_wrappers() {
+        let module = parse("@Mark object Holder { @field:Mark val value = 1; @Mark const val LIMIT = 2; @Mark @JvmStatic @Throws(Exception::class) @Suppress(\"unused\") fun use(@Mark input: Int) {} }\n@Mark interface Contract { @get:Mark val value: Int; companion object { @field:Mark val count: Int = 1; @field:Mark private val names: Array<String> = arrayOf(\"a\") } }\n@Mark enum class Choice { FIRST }\n@field:Mark val top = 1\n@Mark const val LIMIT = 3").unwrap();
+        let object = module.object_decl.unwrap();
+        assert_eq!(object.annotation_uses[0].name, "Mark");
+        assert_eq!(object.annotations, ["Mark"]);
+        assert_eq!(
+            object.fields[0].annotations[0].use_site.as_deref(),
+            Some("field")
+        );
+        assert_eq!(object.constants[0].annotations[0].name, "Mark");
+        let method = &object.methods[0];
+        assert!(method.jvm_static);
+        assert_eq!(method.throws, ["Exception"]);
+        assert_eq!(method.suppress, ["unused"]);
+        assert_eq!(method.function.annotations[0].name, "Mark");
+        assert_eq!(method.function.param_annotations[0][0].name, "Mark");
+        let interface = module.interface_decl.unwrap();
+        assert_eq!(interface.annotations[0].name, "Mark");
+        assert_eq!(
+            interface.properties[0].annotations[0].use_site.as_deref(),
+            Some("get")
+        );
+        let companion = interface.companion.unwrap();
+        assert_eq!(
+            companion.fields[0].annotations[0].use_site.as_deref(),
+            Some("field")
+        );
+        assert_eq!(
+            companion.properties[0].annotations[0].use_site.as_deref(),
+            Some("field")
+        );
+        assert_eq!(module.enum_decl.unwrap().annotations[0].name, "Mark");
+        assert_eq!(
+            module.properties[0].annotations[0].use_site.as_deref(),
+            Some("field")
+        );
+        assert_eq!(module.constants[0].annotations[0].name, "Mark");
+        let class = parse("class C { companion object { @field:Mark val count: Int = 1 } }")
+            .unwrap()
+            .class_decl
+            .unwrap();
+        assert_eq!(
+            class.companion.unwrap().properties[0].annotations[0]
+                .use_site
+                .as_deref(),
+            Some("field")
+        );
+    }
+
+    #[test]
+    fn parameter_annotation_vectors_preserve_empty_positions_and_unknown_target_names() {
+        let module = parse("class C(first: Int, @field:Mark val second: String, third: Int)\nfun use(first: Int, @param:Mark second: Int, @unknown:Mark third: Int) {}").unwrap();
+        let class = module.class_decl.unwrap();
+        assert_eq!(
+            class
+                .param_annotations
+                .iter()
+                .map(Vec::len)
+                .collect::<Vec<_>>(),
+            [0, 1, 0]
+        );
+        let function = &module.functions[0];
+        assert_eq!(
+            function
+                .param_annotations
+                .iter()
+                .map(Vec::len)
+                .collect::<Vec<_>>(),
+            [0, 1, 1]
+        );
+        assert_eq!(
+            function.param_annotations[2][0].use_site.as_deref(),
+            Some("unknown")
+        );
+        assert!(parse("class C { @Mark constructor(value: Int) {} }").is_err());
+    }
+
+    #[test]
+    fn functional_interfaces_aliases_and_annotated_backticks_parse_unchanged() {
+        for source in [
+            include_str!("../tests/fixtures/compatibility_declarations/FunctionalInterfaces.kt"),
+            include_str!("../tests/fixtures/compatibility_declarations/Aliases.kt"),
+            include_str!("../tests/fixtures/compatibility_declarations/AliasUses.kt"),
+            include_str!("../tests/fixtures/compatibility_declarations/Backticks.kt"),
+        ] {
+            parse(source).unwrap();
+        }
+    }
+
+    #[test]
+    fn functional_interface_identity_is_separate_from_ordinary_interfaces() {
+        let module = parse("fun interface Action { fun run() }\ninterface Ordinary { fun run() }\nclass Container { fun interface Nested { fun call(): Int } }").unwrap();
+        assert!(module.interface_decl.unwrap().fun_interface);
+        assert!(
+            matches!(&module.declarations[0], Declaration::Interface(interface) if !interface.fun_interface)
+        );
+        let class = module.class_decl.unwrap();
+        assert!(
+            matches!(&class.nested[0], Declaration::Interface(interface) if interface.fun_interface)
+        );
+    }
+
+    #[test]
+    fn concrete_and_function_aliases_preserve_visibility_offsets_and_chains() {
+        let source = "typealias Label = String\nprivate typealias Caption = Label\ntypealias Callback = (Int) -> Unit";
+        let module = parse(source).unwrap();
+        assert_eq!(module.type_aliases.len(), 3);
+        assert_eq!(module.type_aliases[0].expanded, Type::String);
+        assert!(!module.type_aliases[0].private);
+        assert_eq!(module.type_aliases[1].expanded, Type::Java("Label".into()));
+        assert!(module.type_aliases[1].private);
+        assert_eq!(
+            module.type_aliases[1].offset,
+            source.find("private").unwrap()
+        );
+        assert!(
+            matches!(&module.type_aliases[2].expanded, Type::Function { params, result } if params == &[Type::Int] && **result == Type::Unit)
+        );
+        let error = parse("typealias Generic<T> = List<T>").unwrap_err();
+        assert!(error.message.contains("Generic type aliases"));
+    }
+
+    #[test]
+    fn function_annotations_keep_targets_arguments_and_method_locations() {
+        let source = "@example.Marker @target:Other(1, label = \"value\") public fun `top method`() {}\nclass Example { public @example.Test fun `test method`() {} }";
+        let module = parse(source).unwrap();
+        let function = &module.functions[0];
+        assert_eq!(function.annotations.len(), 2);
+        assert_eq!(function.annotations[0].name, "example/Marker");
+        assert_eq!(function.annotations[0].offset, 0);
+        assert_eq!(function.annotations[1].use_site.as_deref(), Some("target"));
+        assert_eq!(
+            function.annotations[1].arguments[1].0.as_deref(),
+            Some("label")
+        );
+        assert!(matches!(
+            &function.annotations[1].arguments[0].1.kind,
+            ExprKind::Int(1)
+        ));
+        assert_eq!(
+            module.class_decl.unwrap().methods[0].function.annotations[0].name,
+            "example/Test"
+        );
+        let declarations = parse("@Other class Example { @field:Other val value: Int = 1 }")
+            .unwrap()
+            .class_decl
+            .unwrap();
+        assert_eq!(declarations.annotations[0].name, "Other");
+        assert_eq!(
+            declarations.properties[0].annotations[0]
+                .use_site
+                .as_deref(),
+            Some("field")
+        );
+    }
+
+    #[test]
+    fn typed_destructuring_entries_distinguish_discard_and_named_types() {
+        let module = parse("fun use() { val (_: String, value: Int) = parts(); consume { (_: String, value: Int) -> value } }").unwrap();
+        let StatementKind::Destructure(entries, _, _) = &module.functions[0].body[0].kind else {
+            panic!()
+        };
+        assert_eq!(
+            entries[0],
+            DestructureEntry {
+                name: None,
+                ty: Some(Type::String)
+            }
+        );
+        assert_eq!(
+            entries[1],
+            DestructureEntry {
+                name: Some("value".into()),
+                ty: Some(Type::Int)
+            }
+        );
+    }
+
+    #[test]
+    fn discard_fixture_parses_without_rewriting() {
+        parse(include_str!(
+            "../tests/fixtures/compatibility_declarations/Discards.kt"
+        ))
+        .unwrap();
+    }
+
+    #[test]
+    fn escaped_method_declarations_and_references_parse_in_classes() {
+        let module = parse("class Example { fun `adds two numbers`(): Int = `when`(1); fun `when`(value: Int): Int = value + 1 }").unwrap();
+        let class = module.class_decl.unwrap();
+        assert_eq!(class.methods[0].function.name, "adds two numbers");
+        assert_eq!(class.methods[1].function.name, "when");
+    }
+
+    #[test]
+    fn escaped_names_in_braced_templates_do_not_close_interpolation() {
+        let source = "fun use(`}`: Int): String = \"${`}`}\"";
+        let module = parse(source).unwrap();
+        let StatementKind::Return(Some(Expr {
+            kind: ExprKind::Template(parts),
+            ..
+        })) = &module.functions[0].body[0].kind
+        else {
+            panic!()
+        };
+        assert!(
+            parts
+                .iter()
+                .any(|part| matches!(&part.kind, ExprKind::Name(name) if name == "}"))
+        );
+        assert!(parse("fun bad(): String = \"$_\"").is_err());
+    }
+
+    #[test]
+    fn escaped_unbraced_templates_use_identifier_rules_and_actual_token_offsets() {
+        for name in ["n", "a value", "!x?", "}", "a\"b", "λ", "name$module", "_"] {
+            let source = format!("fun f(`{name}`: Int): String = \"prefix $`{name}` suffix\"");
+            let module = parse(&source).unwrap();
+            let StatementKind::Return(Some(Expr {
+                kind: ExprKind::Template(parts),
+                ..
+            })) = &module.functions[0].body[0].kind
+            else {
+                panic!()
+            };
+            let expression = parts
+                .iter()
+                .find(|part| matches!(&part.kind, ExprKind::Name(_)))
+                .unwrap();
+            assert!(matches!(&expression.kind, ExprKind::Name(actual) if actual == name));
+            assert_eq!(expression.offset, source.rfind("$`").unwrap() + 1);
+        }
+        let source = "fun f(n: Int): String = \"$`n`\"";
+        let module = parse(source).unwrap();
+        assert!(matches!(
+            &module.functions[0].body[0].kind,
+            StatementKind::Return(Some(Expr {
+                kind: ExprKind::Template(_),
+                ..
+            }))
+        ));
+
+        for (source, message) in [
+            (
+                "fun f(): String = \"$`unfinished\"",
+                "Unterminated escaped identifier",
+            ),
+            (
+                "fun f(): String = \"$``\"",
+                "Escaped identifiers cannot be empty",
+            ),
+            (
+                "fun f(): String = \"$`bad\nname`\"",
+                "Escaped identifiers cannot contain newlines",
+            ),
+            (
+                "fun f(): String = \"$`bad/name`\"",
+                "Identifier contains a character forbidden in JVM names",
+            ),
+        ] {
+            let error = parse(source).err().unwrap();
+            assert!(
+                error.message.contains(message),
+                "{source}: {}",
+                error.message
+            );
+            assert_eq!(error.offset, source.find("$`").unwrap() + 1, "{source}");
+        }
+        assert!(
+            parse("fun f(n: Int): String = \"$n二\"")
+                .err()
+                .unwrap()
+                .message
+                .contains("Non-ASCII characters")
+        );
+    }
+
+    #[test]
+    fn malformed_escaped_templates_keep_source_offsets_through_public_compilation() {
+        for template in ["$`unfinished", "$``", "$`bad/name`"] {
+            let source = format!("\n\nfun f(n: Int): String = \"{template}\"");
+            let error = crate::compile(&source, "EscapedTemplate.kt").err().unwrap();
+            assert_eq!(
+                error.offset,
+                source.find("$`").unwrap() + 1,
+                "{}",
+                error.message
+            );
+            assert!(
+                error
+                    .render("EscapedTemplate.kt", &source)
+                    .starts_with("EscapedTemplate.kt:3:27: error:")
+            );
+        }
+    }
+
+    #[test]
+    fn vararg_parameters_record_physical_arrays_and_reject_unsupported_forms() {
+        for (element, array) in [
+            ("Int", Type::IntArray),
+            ("Byte", Type::ByteArray),
+            ("Char", Type::CharArray),
+            ("String", Type::Array(Box::new(Type::String))),
+            (
+                "String?",
+                Type::Array(Box::new(Type::Nullable(Box::new(Type::String)))),
+            ),
+        ] {
+            let module = parse(&format!(
+                "fun collect(first: Int, vararg values: {element}) {{}}"
+            ))
+            .unwrap();
+            let function = &module.functions[0];
+            assert!(function.vararg);
+            assert_eq!(function.params[1].1, array);
+        }
+        assert!(!parse("fun plain(value: Int) {}").unwrap().functions[0].vararg);
+        for source in [
+            "fun bad(vararg first: Int, vararg second: Int) {}",
+            "fun bad(vararg first: Int, second: Int) {}",
+            "fun bad(vararg first: Int = 1) {}",
+            "infix fun String.bad(vararg first: Int) {}",
+            "fun bad(vararg values: Long) {}",
+            "fun bad(vararg values: Boolean) {}",
+            "fun bad(vararg values: Float) {}",
+            "fun bad(vararg values: Double) {}",
+        ] {
+            assert!(parse(source).is_err(), "{source}");
+        }
+    }
+
+    #[test]
+    fn spread_arguments_keep_locations_and_named_argument_structure() {
+        let source = "fun use(values: IntArray) { collect(1, *values, rest = *values) }";
+        let module = parse(source).unwrap();
+        let StatementKind::Expression(Expr {
+            kind: ExprKind::Call(_, arguments),
+            ..
+        }) = &module.functions[0].body[0].kind
+        else {
+            panic!()
+        };
+        assert_eq!(arguments[1].offset, source.find("*values").unwrap());
+        assert!(
+            matches!(&arguments[1].kind, ExprKind::Unary(operator, value)
+            if operator == "*" && matches!(&value.kind, ExprKind::Name(name) if name == "values"))
+        );
+        assert!(
+            matches!(&arguments[2].kind, ExprKind::NamedArgument(name, value)
+            if name == "rest" && matches!(&value.kind, ExprKind::Unary(operator, _) if operator == "*"))
+        );
+        assert!(parse("fun bad(values: IntArray) = *values").is_err());
+    }
+
+    #[test]
+    fn escaped_identifiers_preserve_names_and_original_offsets() {
+        let source = "fun `when`(`a value`: Int): Int = `a value`\nfun `adds λ`(): Int = `when`(2)\nfun plain(): Int = `plain`(3)";
+        let tokens = lex(source).unwrap();
+        assert_eq!(tokens[1].text, "`when`");
+        assert_eq!(tokens[1].offset, source.find("`when`").unwrap());
+        let module = parse(source).unwrap();
+        assert_eq!(module.functions[0].name, "when");
+        assert_eq!(module.functions[0].params[0].0, "a value");
+        assert_eq!(module.functions[1].name, "adds λ");
+        let StatementKind::Return(Some(value)) = &module.functions[0].body[0].kind else {
+            panic!()
+        };
+        assert!(matches!(&value.kind, ExprKind::Name(name) if name == "a value"));
+        assert_eq!(value.offset, source.rfind("`a value`").unwrap());
+        let module = parse("fun use(): Int = 1 `add two` 2").unwrap();
+        assert!(matches!(&module.functions[0].body[0].kind,
+            StatementKind::Return(Some(Expr { kind: ExprKind::Binary(name, _, _), .. })) if name == "add two"));
+    }
+
+    #[test]
+    fn escaped_identifiers_reject_invalid_jvm_names_with_source_locations() {
+        for name in [
+            "bad/name",
+            "bad.name",
+            "bad;name",
+            "bad[name",
+            "bad]name",
+            "bad<name",
+            "bad>name",
+            "bad:name",
+            "bad\\name",
+        ] {
+            let source = format!("fun `{name}`() {{}}");
+            let error = parse(&source).unwrap_err();
+            assert_eq!(error.offset, 4, "{name}");
+            assert!(error.message.contains("JVM"), "{name}: {}", error.message);
+        }
+        for source in [
+            "fun ``() {}",
+            "fun `unterminated() {}",
+            "fun `new\nline`() {}",
+        ] {
+            let error = parse(source).unwrap_err();
+            assert_eq!(error.offset, 4);
+        }
+    }
+
+    #[test]
+    fn escaped_names_preserve_existing_unsupported_boundaries() {
+        for source in [
+            "fun use(): Int = 1 `is` 2",
+            "fun use(): Int = 1 `+` 2",
+            "class `Int`",
+            "fun use(`this`: Int): Int = `this`",
+            "fun use(`super@outer`: Int): Int = `super@outer`",
+        ] {
+            let error = parse(source).unwrap_err();
+            assert!(
+                error.message.contains("unsupported") || error.message.contains("not supported"),
+                "{source}: {}",
+                error.message
+            );
+        }
+    }
+
+    #[test]
+    fn raw_discards_and_escaped_underscore_bindings_remain_distinct() {
+        let module =
+            parse("fun use() {\nval (_, `_`, value) = parts()\nconsume { _, `_`, _ -> `_` }\n}")
+                .unwrap();
+        assert!(matches!(&module.functions[0].body[0].kind,
+            StatementKind::Destructure(names, _, _) if names.iter().map(|entry| entry.name.clone()).collect::<Vec<_>>() == vec![None, Some("_".into()), Some("value".into())]));
+        let StatementKind::Expression(Expr {
+            kind: ExprKind::Call(_, arguments),
+            ..
+        }) = &module.functions[0].body[1].kind
+        else {
+            panic!()
+        };
+        let ExprKind::LambdaWithParams {
+            params: Some(params),
+            ..
+        } = &arguments[0].kind
+        else {
+            panic!()
+        };
+        assert_eq!(
+            params
+                .iter()
+                .map(|parameter| parameter.discard)
+                .collect::<Vec<_>>(),
+            [true, false, true]
+        );
+        for source in [
+            "val _ = 1",
+            "fun bad() = _",
+            "fun bad(_) {}",
+            "fun bad() { val __ = 1 }",
+            "fun bad() { consume { _, _ -> _ } }",
+        ] {
+            assert!(parse(source).is_err(), "{source}");
+        }
+    }
 
     #[test]
     fn generic_function_types_and_projections_preserve_structure() {
@@ -5173,7 +6746,7 @@ mod tests {
             &module.functions[0].body[0].kind,
             StatementKind::Return(Some(Expr { kind: ExprKind::Float(bits), .. })) if *bits == 0.01f32.to_bits()
         ));
-        assert!(parse("fun f(): Float = 1.5").is_err());
+        assert!(parse("fun f(): Float = 1.5").is_ok());
         assert!(parse("fun f(): Float = 1e100f").is_err());
         assert!(parse("fun f(): Float = 1_.0f").is_err());
     }
@@ -5582,7 +7155,7 @@ mod tests {
             matches!(&body[0].kind, StatementKind::LocalFunction(function) if function.name == "local")
         );
         assert!(
-            matches!(&body[1].kind, StatementKind::Destructure(names, false, _) if names == &vec![Some("x".into()), None])
+            matches!(&body[1].kind, StatementKind::Destructure(names, false, _) if names.iter().map(|entry| entry.name.clone()).collect::<Vec<_>>() == vec![Some("x".into()), None])
         );
         assert!(matches!(&body[2].kind, StatementKind::Labeled(label, _) if label == "outer"));
         let StatementKind::Return(Some(value)) = &module.functions[1].body[0].kind else {

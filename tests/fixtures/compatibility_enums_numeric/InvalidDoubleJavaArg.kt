@@ -1,0 +1,1 @@
+fun bad(): Double = java.lang.Math.sqrt(1)

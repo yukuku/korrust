@@ -15,7 +15,7 @@ import sys
 import xml.etree.ElementTree as ET
 import zipfile
 
-from check_androidbible_module import ROOT, SNAPSHOT, classpath, relative, sha
+from check_androidbible_module import ROOT, SNAPSHOT, classpath, relative, sha, trace_source_records, checked_compile_invocations
 
 
 MODULES = ["AlkitabModel", "AlkitabYes2"]
@@ -165,17 +165,14 @@ def main():
                 trace, request = json.loads(trace_path.read_text()), json.loads(request_path.read_text())
                 if trace["fallback"] or trace["compiler_sha256"] != candidate["compiler_sha256"] or trace["task"] != ":" + module + ":" + task:
                     raise AssertionError("Candidate trace task/compiler/fallback mismatch")
-                invoked = [str(Path(item["source"]).relative_to(candidate["work_dir"])) for item in trace["invocations"]]
+                invocations = checked_compile_invocations(trace, request, candidate["compiler"], expected_sources, candidate["work_dir"])
+                invoked = [str(Path(item["source"]).relative_to(candidate["work_dir"])) for item in trace_source_records(trace)]
                 if sorted(invoked) != expected_kotlin[module]:
                     raise AssertionError("Trace source inventory mismatch")
                 emitted = set()
                 stage = trace_root / "module-build/tmp/korrust" / task
                 with zipfile.ZipFile(jars["candidate"][module]) as package:
-                    for invocation in trace["invocations"]:
-                        name = str(Path(invocation["source"]).relative_to(candidate["work_dir"]))
-                        command = invocation["command"]
-                        if invocation["returncode"] != 0 or invocation["source_sha256"] != expected_sources[name] or command[0] != candidate["compiler"] or command[1] != invocation["source"] or Path(command[command.index("-d") + 1]) != Path(request["stage"]):
-                            raise AssertionError("Candidate invocation provenance mismatch")
+                    for invocation in invocations:
                         outputs = [Path(line.strip()).relative_to(request["stage"]) for line in invocation["stdout"].splitlines() if line.strip().endswith(".class")]
                         if not outputs:
                             raise AssertionError("No class outputs recorded")

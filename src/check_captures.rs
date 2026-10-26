@@ -360,6 +360,7 @@ impl Checker<'_> {
             Type::Int => "Int",
             Type::Long => "Long",
             Type::Float => "Float",
+            Type::Double => "Double",
             Type::Byte => "Byte",
             Type::Char => "Char",
             Type::Boolean => "Boolean",
@@ -494,7 +495,7 @@ pub(super) fn free_names(
                 }
                 StatementKind::Destructure(names, _, value) => {
                     expression(value, bound, free);
-                    bound.extend(names.iter().flatten().cloned());
+                    bound.extend(names.iter().filter_map(|entry| entry.name.clone()));
                 }
                 StatementKind::IndicesAssign(receiver, indices, value) => {
                     expression(receiver, bound, free);

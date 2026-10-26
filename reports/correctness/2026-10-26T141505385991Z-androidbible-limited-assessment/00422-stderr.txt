@@ -1,0 +1,144 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:3:26: error: unresolved reference 'App'.
+import yuku.alkitab.base.App
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:4:26: error: unresolved reference 'storage'.
+import yuku.alkitab.base.storage.InternalDbTxWrapper
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:5:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.History
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:6:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.Sqlitil
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:7:34: error: unresolved reference 'model'.
+import yuku.alkitab.datatransfer.model.Pin
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:8:34: error: unresolved reference 'model'.
+import yuku.alkitab.datatransfer.model.Rpp
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:9:27: error: unresolved reference 'Label'.
+import yuku.alkitab.model.Label
+                          ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:10:27: error: unresolved reference 'Marker'.
+import yuku.alkitab.model.Marker
+                          ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:11:27: error: unresolved reference 'Marker_Label'.
+import yuku.alkitab.model.Marker_Label
+                          ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:12:27: error: unresolved reference 'ProgressMark'.
+import yuku.alkitab.model.ProgressMark
+                          ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:15:30: error: unresolved reference 'ReadonlyStorageImpl'.
+class ReadWriteStorageImpl : ReadonlyStorageImpl(), ReadWriteStorageInterface {
+                             ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:15:53: error: unresolved reference 'ReadWriteStorageInterface'.
+class ReadWriteStorageImpl : ReadonlyStorageImpl(), ReadWriteStorageInterface {
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:16:36: error: unresolved reference 'ReadWriteStorageInterface'.
+    override fun transact(action: (ReadWriteStorageInterface.TxHandle) -> Unit) {
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:17:9: error: unresolved reference 'InternalDbTxWrapper'.
+        InternalDbTxWrapper.transact(App.services.storage.db) { handle ->
+        ^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:17:38: error: unresolved reference 'App'.
+        InternalDbTxWrapper.transact(App.services.storage.db) { handle ->
+                                     ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:17:65: error: cannot infer type for value parameter 'handle'. Specify it explicitly.
+        InternalDbTxWrapper.transact(App.services.storage.db) { handle ->
+                                                                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:18:29: error: unresolved reference 'commit'.
+            action { handle.commit() }
+                            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:22:50: error: unresolved reference 'Marker_Label'.
+    override fun replaceMarkerLabel(markerLabel: Marker_Label) {
+                                                 ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:23:9: error: unresolved reference 'App'.
+        App.services.storage.db.insertOrUpdateMarker_Label(markerLabel)
+        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:26:47: error: unresolved reference 'History'.
+    override fun replaceHistory(entries: List<History.Entry>) {
+                                              ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:27:9: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        synchronized(History) {
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:27:22: error: unresolved reference 'History'.
+        synchronized(History) {
+                     ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:28:13: error: unresolved reference 'History'.
+            History.replaceAllEntries(entries)
+            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:29:13: error: unresolved reference 'History'.
+            History.save()
+            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:36:40: error: unresolved reference 'Marker'.
+    override fun replaceMarker(marker: Marker) {
+                                       ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:37:9: error: unresolved reference 'App'.
+        App.services.storage.db.insertOrUpdateMarker(marker)
+        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:43:38: error: unresolved reference 'Label'.
+    override fun replaceLabel(label: Label) {
+                                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:44:9: error: unresolved reference 'App'.
+        App.services.storage.db.insertOrUpdateLabel(label)
+        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:47:34: error: unresolved reference 'Pin'.
+    override fun replacePin(pin: Pin) {
+                                 ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:48:18: error: unresolved reference 'ProgressMark'.
+        val pm = ProgressMark().apply {
+                 ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:48:33: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val pm = ProgressMark().apply {
+                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:48:39: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val pm = ProgressMark().apply {
+                                      ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:49:13: error: unresolved reference 'preset_id'.
+            preset_id = pin.preset_id
+            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:49:29: error: unresolved reference 'preset_id'.
+            preset_id = pin.preset_id
+                            ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:50:13: error: unresolved reference 'ari'.
+            ari = pin.ari
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:50:23: error: unresolved reference 'ari'.
+            ari = pin.ari
+                      ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:51:13: error: unresolved reference 'caption'.
+            caption = pin.caption
+            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:51:27: error: unresolved reference 'caption'.
+            caption = pin.caption
+                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:52:13: error: unresolved reference 'modifyTime'.
+            modifyTime = Sqlitil.toDate(pin.modifyTime)
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:52:26: error: unresolved reference 'Sqlitil'.
+            modifyTime = Sqlitil.toDate(pin.modifyTime)
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:52:45: error: unresolved reference 'modifyTime'.
+            modifyTime = Sqlitil.toDate(pin.modifyTime)
+                                            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:54:9: error: unresolved reference 'App'.
+        App.services.storage.db.insertOrUpdateProgressMark(pm)
+        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:57:34: error: unresolved reference 'Rpp'.
+    override fun replaceRpp(rpp: Rpp) {
+                                 ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:58:45: error: unresolved reference 'done'.
+        val readingCodes = IntArrayList(rpp.done.size)
+                                            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:59:13: error: unresolved reference 'done'.
+        rpp.done.forEach { readingCodes.add(it) }
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:59:45: error: unresolved reference 'it'.
+        rpp.done.forEach { readingCodes.add(it) }
+                                            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:61:9: error: unresolved reference 'App'.
+        App.services.storage.db.replaceReadingPlanProgress(rpp.gid.value, readingCodes, System.currentTimeMillis())
+        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ReadWriteStorageImpl.kt:61:64: error: unresolved reference 'gid'.
+        App.services.storage.db.replaceReadingPlanProgress(rpp.gid.value, readingCodes, System.currentTimeMillis())
+                                                               ^^^

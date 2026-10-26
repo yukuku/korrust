@@ -1,0 +1,420 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:3:16: error: unresolved reference 'content'.
+import android.content.ContentValues
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:4:16: error: unresolved reference 'database'.
+import android.database.DatabaseUtils
+               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:5:12: error: unresolved reference 'google'.
+import com.google.gson.reflect.TypeToken
+           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:6:26: error: unresolved reference 'App'.
+import yuku.alkitab.base.App
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:7:26: error: unresolved reference 'model'.
+import yuku.alkitab.base.model.SyncLog
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:8:26: error: unresolved reference 'model'.
+import yuku.alkitab.base.model.SyncShadow
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:9:26: error: unresolved reference 'sync'.
+import yuku.alkitab.base.sync.SyncDiagnostics
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:10:26: error: unresolved reference 'sync'.
+import yuku.alkitab.base.sync.SyncRecorder
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:11:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.Sqlitil
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:21:41: error: unresolved reference 'InternalDbHelper'.
+class SyncShadowDao(private val helper: InternalDbHelper) {
+                                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:32:48: error: unresolved reference 'SyncShadow'.
+    fun getBySyncSetName(syncSetName: String): SyncShadow? {
+                                               ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:33:25: error: unresolved reference 'readableDatabase'.
+        val db = helper.readableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:41:27: error: unresolved reference 'Table'.
+                "select ${Table.SyncShadow.revno.name}," +
+                          ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:42:32: error: unresolved reference 'Table'.
+                    " length(${Table.SyncShadow.data.name})," +
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:44:30: error: unresolved reference 'Table'.
+                    " from ${Table.SyncShadow.tableName()}" +
+                             ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:45:31: error: unresolved reference 'Table'.
+                    " where ${Table.SyncShadow.syncSetName.name}=?",
+                              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:47:15: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            ).use { c ->
+              ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:47:15: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            ).use { c ->
+              ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:47:21: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            ).use { c ->
+                    ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:48:23: error: unresolved reference 'moveToNext'.
+                if (c.moveToNext()) {
+                      ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:49:31: error: unresolved reference 'getInt'.
+                    revno = c.getInt(0)
+                              ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:50:33: error: unresolved reference 'getInt'.
+                    dataLen = c.getInt(1)
+                                ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:51:28: error: unresolved reference 'getLong'.
+                    id = c.getLong(2)
+                           ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:63:38: error: unresolved reference 'Table'.
+                    "select substr(${Table.SyncShadow.data.name}, ${i + 1}, $chunkSize)" +
+                                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:64:34: error: unresolved reference 'Table'.
+                        " from ${Table.SyncShadow.tableName()} where _id=?",
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:66:19: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                ).use { c ->
+                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:66:19: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+                ).use { c ->
+                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:66:25: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                ).use { c ->
+                        ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:67:29: error: unresolved reference 'moveToNext'.
+                    check(c.moveToNext()) {
+                            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:70:35: error: unresolved reference 'getBlob'.
+                    val chunk = c.getBlob(0)
+                                  ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:85:20: error: unresolved reference 'SyncShadow'.
+            return SyncShadow().apply {
+                   ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:85:33: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            return SyncShadow().apply {
+                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:85:39: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            return SyncShadow().apply {
+                                      ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:86:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                this.syncSetName = syncSetName
+                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:86:22: error: unresolved reference 'syncSetName'.
+                this.syncSetName = syncSetName
+                     ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:87:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                this.revno = revno
+                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:87:22: error: unresolved reference 'revno'.
+                this.revno = revno
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:88:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                this.data = data
+                ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:88:22: error: unresolved reference 'data'.
+                this.data = data
+                     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:96:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:97:13: error: unresolved reference 'Table'.
+            Table.SyncShadow.tableName(),
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:98:13: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            arrayOf(Table.SyncShadow.revno.name),
+            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:98:21: error: unresolved reference 'Table'.
+            arrayOf(Table.SyncShadow.revno.name),
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:99:13: error: unresolved reference 'Table'.
+            Table.SyncShadow.syncSetName.name + "=?", arrayOf(syncSetName),
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:101:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:101:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:101:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:102:26: error: unresolved reference 'moveToNext'.
+            return if (c.moveToNext()) c.getInt(0) else 0
+                         ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:102:42: error: unresolved reference 'getInt'.
+            return if (c.moveToNext()) c.getInt(0) else 0
+                                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:107:41: error: unresolved reference 'SyncShadow'.
+    fun insertOrUpdateBySyncSetName(ss: SyncShadow) {
+                                        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:108:25: error: unresolved reference 'writableDatabase'.
+        val db = helper.writableDatabase
+                        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:111:25: error: unresolved reference 'DatabaseUtils'.
+            val count = DatabaseUtils.queryNumEntries(
+                        ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:112:21: error: unresolved reference 'Table'.
+                db, Table.SyncShadow.tableName(),
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:113:17: error: unresolved reference 'Table'.
+                Table.SyncShadow.syncSetName.name + "=?", arrayOf(ss.syncSetName),
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:113:59: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                Table.SyncShadow.syncSetName.name + "=?", arrayOf(ss.syncSetName),
+                                                          ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:113:70: error: unresolved reference 'syncSetName'.
+                Table.SyncShadow.syncSetName.name + "=?", arrayOf(ss.syncSetName),
+                                                                     ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:117:21: error: unresolved reference 'Table'.
+                    Table.SyncShadow.tableName(), toContentValues(ss),
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:118:21: error: unresolved reference 'Table'.
+                    Table.SyncShadow.syncSetName.name + "=?", arrayOf(ss.syncSetName),
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:118:63: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                    Table.SyncShadow.syncSetName.name + "=?", arrayOf(ss.syncSetName),
+                                                              ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:118:74: error: unresolved reference 'syncSetName'.
+                    Table.SyncShadow.syncSetName.name + "=?", arrayOf(ss.syncSetName),
+                                                                         ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:121:27: error: unresolved reference 'Table'.
+                db.insert(Table.SyncShadow.tableName(), null, toContentValues(ss))
+                          ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:129:64: error: unresolved reference 'writableDatabase'.
+    fun deleteBySyncSetName(syncSetName: String): Int = helper.writableDatabase.delete(
+                                                               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:130:9: error: unresolved reference 'Table'.
+        Table.SyncShadow.tableName(),
+        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:131:9: error: unresolved reference 'Table'.
+        Table.SyncShadow.syncSetName.name + "=?", arrayOf(syncSetName),
+        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:138:42: error: unresolved reference 'SyncRecorder'.
+    fun insertLog(createTime: Int, kind: SyncRecorder.EventKind, syncSetName: String?, params: String?) {
+                                         ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:139:18: error: unresolved reference 'ContentValues'.
+        val cv = ContentValues(4).apply {
+                 ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:139:35: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cv = ContentValues(4).apply {
+                                  ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:139:41: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cv = ContentValues(4).apply {
+                                        ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:140:13: error: unresolved reference 'put'.
+            put(Table.SyncLog.createTime.name, createTime)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:140:17: error: unresolved reference 'Table'.
+            put(Table.SyncLog.createTime.name, createTime)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:141:13: error: unresolved reference 'put'.
+            put(Table.SyncLog.kind.name, kind.code)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:141:17: error: unresolved reference 'Table'.
+            put(Table.SyncLog.kind.name, kind.code)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:142:13: error: unresolved reference 'put'.
+            put(Table.SyncLog.syncSetName.name, syncSetName)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:142:17: error: unresolved reference 'Table'.
+            put(Table.SyncLog.syncSetName.name, syncSetName)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:143:13: error: unresolved reference 'put'.
+            put(Table.SyncLog.params.name, params?.takeIf {
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:143:17: error: unresolved reference 'Table'.
+            put(Table.SyncLog.params.name, params?.takeIf {
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:144:30: error: unresolved reference 'SyncDiagnostics'.
+                it.length <= SyncDiagnostics.MAX_PARAM_BYTES && it.toByteArray(Charsets.UTF_8).size <= SyncDiagnostics.MAX_PARAM_BYTES
+                             ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:144:104: error: unresolved reference 'SyncDiagnostics'.
+                it.length <= SyncDiagnostics.MAX_PARAM_BYTES && it.toByteArray(Charsets.UTF_8).size <= SyncDiagnostics.MAX_PARAM_BYTES
+                                                                                                       ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:147:16: error: unresolved reference 'writableDatabase'.
+        helper.writableDatabase.apply {
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:147:33: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        helper.writableDatabase.apply {
+                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:147:39: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        helper.writableDatabase.apply {
+                                      ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:148:13: error: unresolved reference 'beginTransaction'.
+            beginTransaction()
+            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:150:17: error: unresolved reference 'insertOrThrow'.
+                insertOrThrow(Table.SyncLog.tableName(), null, cv)
+                ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:150:31: error: unresolved reference 'Table'.
+                insertOrThrow(Table.SyncLog.tableName(), null, cv)
+                              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:151:21: error: unresolved reference 'DatabaseUtils'.
+                if (DatabaseUtils.queryNumEntries(this, Table.SyncLog.tableName()) >= SyncDiagnostics.MAX_ROWS) {
+                    ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:151:51: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                if (DatabaseUtils.queryNumEntries(this, Table.SyncLog.tableName()) >= SyncDiagnostics.MAX_ROWS) {
+                                                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:151:57: error: unresolved reference 'Table'.
+                if (DatabaseUtils.queryNumEntries(this, Table.SyncLog.tableName()) >= SyncDiagnostics.MAX_ROWS) {
+                                                        ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:151:87: error: unresolved reference 'SyncDiagnostics'.
+                if (DatabaseUtils.queryNumEntries(this, Table.SyncLog.tableName()) >= SyncDiagnostics.MAX_ROWS) {
+                                                                                      ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:152:21: error: unresolved reference 'execSQL'.
+                    execSQL("DELETE FROM SyncLog WHERE _id <= " +
+                    ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:153:86: error: unresolved reference 'SyncDiagnostics'.
+                        "(SELECT _id FROM SyncLog ORDER BY _id DESC LIMIT 1 OFFSET ${SyncDiagnostics.RETAINED_ROWS})")
+                                                                                     ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:155:17: error: unresolved reference 'setTransactionSuccessful'.
+                setTransactionSuccessful()
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:157:17: error: unresolved reference 'endTransaction'.
+                endTransaction()
+                ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:162:40: error: unresolved reference 'SyncLog'.
+    fun listLatest(maxrows: Int): List<SyncLog> {
+                                       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:163:29: error: unresolved reference 'SyncLog'.
+        val res = ArrayList<SyncLog>()
+                            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:164:16: error: unresolved reference 'readableDatabase'.
+        helper.readableDatabase.query(
+               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:165:13: error: unresolved reference 'Table'.
+            Table.SyncLog.tableName(),
+            ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:167:17: error: unresolved reference 'Table'.
+                Table.SyncLog.createTime.name, Table.SyncLog.kind.name,
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:167:48: error: unresolved reference 'Table'.
+                Table.SyncLog.createTime.name, Table.SyncLog.kind.name,
+                                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:168:17: error: unresolved reference 'Table'.
+                Table.SyncLog.syncSetName.name, "CASE WHEN length(CAST(params AS BLOB)) <= ${SyncDiagnostics.MAX_PARAM_BYTES} THEN params ELSE NULL END",
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:168:94: error: unresolved reference 'SyncDiagnostics'.
+                Table.SyncLog.syncSetName.name, "CASE WHEN length(CAST(params AS BLOB)) <= ${SyncDiagnostics.MAX_PARAM_BYTES} THEN params ELSE NULL END",
+                                                                                             ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:171:45: error: unresolved reference 'SyncDiagnostics'.
+            "_id desc", maxrows.coerceIn(0, SyncDiagnostics.MAX_ROWS).toString(),
+                                            ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:172:11: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:172:11: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        ).use { c ->
+          ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:172:17: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        ).use { c ->
+                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:173:22: error: unresolved reference 'moveToNext'.
+            while (c.moveToNext()) {
+                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:174:24: error: unresolved reference 'SyncLog'.
+                res += SyncLog().apply {
+                       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:174:34: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                res += SyncLog().apply {
+                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:174:40: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                res += SyncLog().apply {
+                                       ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:175:21: error: unresolved reference 'createTime'.
+                    createTime = Sqlitil.toDate(c.getInt(0))
+                    ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:175:34: error: unresolved reference 'Sqlitil'.
+                    createTime = Sqlitil.toDate(c.getInt(0))
+                                 ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:175:51: error: unresolved reference 'getInt'.
+                    createTime = Sqlitil.toDate(c.getInt(0))
+                                                  ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:176:21: error: unresolved reference 'kind_code'.
+                    kind_code = c.getInt(1)
+                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:176:35: error: unresolved reference 'getInt'.
+                    kind_code = c.getInt(1)
+                                  ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:177:21: error: unresolved reference 'syncSetName'.
+                    syncSetName = c.getString(2)
+                    ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:177:37: error: unresolved reference 'getString'.
+                    syncSetName = c.getString(2)
+                                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:178:37: error: unresolved reference 'getString'.
+                    val paramsS = c.getString(3)
+                                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:179:21: error: unresolved reference 'params'.
+                    params = try {
+                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:180:46: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+                        if (paramsS == null) emptyMap() else
+                                             ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:180:46: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+                        if (paramsS == null) emptyMap() else
+                                             ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:181:29: error: unresolved reference 'App'.
+                            App.getDefaultGson().fromJson<Map<String, Any>>(paramsS, SYNC_LOG_PARAMS_TYPE) ?: emptyMap()
+                            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:181:111: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+                            App.getDefaultGson().fromJson<Map<String, Any>>(paramsS, SYNC_LOG_PARAMS_TYPE) ?: emptyMap()
+                                                                                                              ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:181:111: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+                            App.getDefaultGson().fromJson<Map<String, Any>>(paramsS, SYNC_LOG_PARAMS_TYPE) ?: emptyMap()
+                                                                                                              ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:183:25: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+                        emptyMap()
+                        ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:183:25: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+                        emptyMap()
+                        ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:194:53: error: unresolved reference 'TypeToken'.
+        private val SYNC_LOG_PARAMS_TYPE = object : TypeToken<Map<String, Any>>() {}.type
+                                                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:194:86: error: unresolved reference 'type'.
+        private val SYNC_LOG_PARAMS_TYPE = object : TypeToken<Map<String, Any>>() {}.type
+                                                                                     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:196:33: error: unresolved reference 'SyncShadow'.
+        fun toContentValues(ss: SyncShadow): ContentValues = ContentValues().apply {
+                                ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:196:46: error: unresolved reference 'ContentValues'.
+        fun toContentValues(ss: SyncShadow): ContentValues = ContentValues().apply {
+                                             ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:196:62: error: unresolved reference 'ContentValues'.
+        fun toContentValues(ss: SyncShadow): ContentValues = ContentValues().apply {
+                                                             ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:196:78: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun toContentValues(ss: SyncShadow): ContentValues = ContentValues().apply {
+                                                                             ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:196:84: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        fun toContentValues(ss: SyncShadow): ContentValues = ContentValues().apply {
+                                                                                   ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:197:13: error: unresolved reference 'put'.
+            put(Table.SyncShadow.syncSetName.name, ss.syncSetName)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:197:17: error: unresolved reference 'Table'.
+            put(Table.SyncShadow.syncSetName.name, ss.syncSetName)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:197:55: error: unresolved reference 'syncSetName'.
+            put(Table.SyncShadow.syncSetName.name, ss.syncSetName)
+                                                      ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:198:13: error: unresolved reference 'put'.
+            put(Table.SyncShadow.revno.name, ss.revno)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:198:17: error: unresolved reference 'Table'.
+            put(Table.SyncShadow.revno.name, ss.revno)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:198:49: error: unresolved reference 'revno'.
+            put(Table.SyncShadow.revno.name, ss.revno)
+                                                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:199:13: error: unresolved reference 'put'.
+            put(Table.SyncShadow.data.name, ss.data)
+            ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:199:17: error: unresolved reference 'Table'.
+            put(Table.SyncShadow.data.name, ss.data)
+                ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/SyncShadowDao.kt:199:48: error: unresolved reference 'data'.
+            put(Table.SyncShadow.data.name, ss.data)
+                                               ^^^^

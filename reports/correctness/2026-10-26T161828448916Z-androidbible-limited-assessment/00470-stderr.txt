@@ -1,0 +1,48 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:3:13: error: unresolved reference 'kpri'.
+import yuku.kpri.model.Lyric
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:4:13: error: unresolved reference 'kpri'.
+import yuku.kpri.model.Song
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:5:13: error: unresolved reference 'kpri'.
+import yuku.kpri.model.Verse
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:6:13: error: unresolved reference 'kpri'.
+import yuku.kpri.model.VerseKind
+            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:105:57: error: unresolved reference 'Song'.
+    fun decode(buf: ByteArray, dataFormatVersion: Int): Song {
+                                                        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:107:20: error: unresolved reference 'Song'.
+        val song = Song()
+                   ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:108:14: error: 'val' cannot be reassigned.
+        song.code = r.readString()
+             ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:108:19: error: assignment type mismatch: actual type is 'String?', but 'Int' was expected.
+        song.code = r.readString()
+                  ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:116:23: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        song.lyrics = readParcelableList(r) { readLyric(r) }
+                      ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:138:39: error: unresolved reference 'Lyric'.
+    private fun readLyric(r: Reader): Lyric {
+                                      ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:141:21: error: unresolved reference 'Lyric'.
+        val lyric = Lyric()
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:143:24: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        lyric.verses = readParcelableList(r) { readVerse(r) }
+                       ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:147:39: error: unresolved reference 'Verse'.
+    private fun readVerse(r: Reader): Verse {
+                                      ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:150:21: error: unresolved reference 'Verse'.
+        val verse = Verse()
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:153:22: error: unresolved reference 'VerseKind'.
+        verse.kind = VerseKind.entries.getOrNull(kindValue) ?: throw IllegalStateException("Unknown VerseKind value: $kindValue")
+                     ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt:154:15: error: variable expected.
+        verse.lines = r.readStringList()
+              ^^^^^

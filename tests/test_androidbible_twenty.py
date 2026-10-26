@@ -33,6 +33,11 @@ class TwentyFeatureEvidenceTests(unittest.TestCase):
             with self.subTest(case=case["id"]):
                 self.assertRegex(case["id"], r"^[a-z][a-z0-9_]*$")
                 self.assertTrue(case["source"].strip())
+                if case.get("supported_regression"):
+                    self.assertFalse(case["invalid"])
+                    self.assertNotIn("candidate_diagnostic", case)
+                    self.assertIsNone(case["official_diagnostic"])
+                    continue
                 self.assertTrue(case["candidate_diagnostic"])
                 self.assertNotIn(case["candidate_diagnostic"].lower(), ("Boundary_" + case["id"] + ".kt").lower())
                 if case["invalid"]:
@@ -41,6 +46,22 @@ class TwentyFeatureEvidenceTests(unittest.TestCase):
                     self.assertIsNone(case["official_diagnostic"])
         self.assertTrue(any(case["invalid"] for case in cases))
         self.assertTrue(any(not case["invalid"] for case in cases))
+
+    def test_promoted_boundaries_preserve_sources_and_fixed_java_callers(self):
+        cases = json.loads((twenty.FIXTURES / "rejections.json").read_text())
+        promoted = {case["id"]: case for case in cases if case.get("supported_regression")}
+        expected = {
+            "init_block": "class E { init { } }",
+            "general_inheritance": "open class E(val value: Int)",
+        }
+        self.assertEqual(set(promoted), set(expected))
+        for ident, source in expected.items():
+            with self.subTest(case=ident):
+                self.assertEqual(promoted[ident]["source"], source)
+                regression = promoted[ident]["supported_regression"]
+                self.assertEqual(regression["facade"], "E")
+                self.assertTrue(regression["main_class"])
+                self.assertTrue((twenty.FIXTURES / regression["java_fixture"]).is_file())
 
     def test_mask_fixture_reaches_high_bit_with_two_slot_parameters(self):
         source = (twenty.FIXTURES / "Mask32.kt").read_text()

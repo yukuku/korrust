@@ -16,9 +16,39 @@ fn open(path: &Path) -> Result<zip::ZipArchive<fs::File>> {
         .map_err(|e| error(path, e))
 }
 
+fn module_descriptor(name: &str) -> bool {
+    name.rsplit('/').next() == Some("module-info.class")
+}
+
+fn validate_multi_release(path: &Path, name: &str) -> Result<()> {
+    if name.starts_with("META-INF/versions/")
+        && name.ends_with(".class")
+        && !module_descriptor(name)
+    {
+        return Err(error(
+            path,
+            "multi-release JAR class overrides are unsupported",
+        ));
+    }
+    Ok(())
+}
+
+fn valid_entry_name(name: &str) -> bool {
+    let name = name.strip_suffix('/').unwrap_or(name);
+    !name.is_empty()
+        && !name.contains(['\\', '\0'])
+        && name.as_bytes().get(1) != Some(&b':')
+        && name.split('/').all(|part| !matches!(part, "" | "." | ".."))
+}
+
 pub(super) fn validate(paths: &[PathBuf]) -> Result<()> {
     for path in paths {
         if path.is_dir() {
+            let mut names = Vec::new();
+            collect(path, "META-INF/versions", true, &mut names)?;
+            for name in names {
+                validate_multi_release(path, &name)?;
+            }
             continue;
         }
         if !path.is_file() {
@@ -31,15 +61,10 @@ pub(super) fn validate(paths: &[PathBuf]) -> Result<()> {
         let mut names = std::collections::HashSet::new();
         for i in 0..archive.len() {
             let entry = archive.by_index(i).map_err(|e| error(path, e))?;
-            if entry.name().starts_with("META-INF/versions/")
-                && entry.name().ends_with(".class")
-                && !entry.name().ends_with("/module-info.class")
-            {
-                return Err(error(
-                    path,
-                    "multi-release JAR class overrides are unsupported",
-                ));
+            if !valid_entry_name(entry.name()) {
+                return Err(error(path, "malformed ZIP entry name"));
             }
+            validate_multi_release(path, entry.name())?;
             if !names.insert(entry.name().to_owned()) {
                 return Err(error(path, "duplicate ZIP entry names are unsupported"));
             }
@@ -58,6 +83,9 @@ pub(super) fn validate(paths: &[PathBuf]) -> Result<()> {
 }
 
 pub(super) fn read(path: &Path, name: &str) -> Result<Option<Vec<u8>>> {
+    if module_descriptor(name) {
+        return Ok(None);
+    }
     if path.is_dir() {
         let file = match fs::File::open(path.join(name)) {
             Ok(file) => file,
@@ -127,21 +155,29 @@ pub(super) fn names(path: &Path, package: &str) -> Result<Vec<String>> {
     let mut result = Vec::new();
     if path.is_dir() {
         collect(path, package, false, &mut result)?;
-        collect(path, "META-INF", true, &mut result)?;
+        let mut metadata = Vec::new();
+        collect(path, "META-INF", true, &mut metadata)?;
+        result.extend(
+            metadata
+                .into_iter()
+                .filter(|name| name.ends_with(".kotlin_module")),
+        );
     } else {
         let mut archive = open(path)?;
         for i in 0..archive.len() {
             let entry = archive.by_index(i).map_err(|e| error(path, e))?;
             let name = entry.name();
-            if name
-                .rsplit_once('/')
-                .map_or(package.is_empty(), |(p, _)| p == package)
-                || name.starts_with("META-INF/") && name.ends_with(".kotlin_module")
+            if !entry.is_dir()
+                && (name
+                    .rsplit_once('/')
+                    .map_or(package.is_empty(), |(p, _)| p == package)
+                    || name.starts_with("META-INF/") && name.ends_with(".kotlin_module"))
             {
                 result.push(name.into());
             }
         }
     }
+    result.retain(|name| !module_descriptor(name));
     result.sort();
     result.dedup();
     Ok(result)
@@ -177,8 +213,33 @@ mod tests {
     }
     impl Drop for Temp {
         fn drop(&mut self) {
-            let _ = fs::remove_file(&self.0);
+            if self.0.is_dir() {
+                let _ = fs::remove_dir_all(&self.0);
+            } else {
+                let _ = fs::remove_file(&self.0);
+            }
         }
+    }
+    fn directory(entries: &[(&str, &[u8])]) -> Temp {
+        let temp = Temp::new(&[]);
+        fs::remove_file(&temp.0).unwrap();
+        fs::create_dir(&temp.0).unwrap();
+        for (name, bytes) in entries {
+            let path = temp.0.join(name);
+            fs::create_dir_all(path.parent().unwrap()).unwrap();
+            fs::write(path, bytes).unwrap();
+        }
+        temp
+    }
+    fn entries(entries: &[(&str, &[u8])]) -> Temp {
+        let mut writer = zip::ZipWriter::new(Cursor::new(Vec::new()));
+        for (name, bytes) in entries {
+            writer
+                .start_file(*name, zip::write::FileOptions::default())
+                .unwrap();
+            writer.write_all(bytes).unwrap();
+        }
+        Temp::new(&writer.finish().unwrap().into_inner())
     }
     #[test]
     fn stored_and_deflated_archives_use_classpath_reader() {
@@ -227,6 +288,94 @@ mod tests {
                 .message
                 .contains("multi-release")
         );
+    }
+    #[test]
+    fn metadata_and_module_descriptors_follow_the_same_directory_and_archive_policy() {
+        let contents: &[(&str, &[u8])] = &[
+            ("p/A.class", b"class data"),
+            ("META-INF/library.kotlin_module", b"metadata"),
+            ("META-INF/resource.class", b"resource"),
+            ("module-info.class", b"descriptor"),
+            ("META-INF/versions/9/module-info.class", b"descriptor"),
+        ];
+        for path in [directory(contents), entries(contents)] {
+            validate(std::slice::from_ref(&path.0)).unwrap();
+            assert_eq!(
+                names(&path.0, "p").unwrap(),
+                ["META-INF/library.kotlin_module", "p/A.class"]
+            );
+            assert_eq!(
+                names(&path.0, "").unwrap(),
+                ["META-INF/library.kotlin_module"]
+            );
+            assert_eq!(
+                read(&path.0, "META-INF/library.kotlin_module")
+                    .unwrap()
+                    .unwrap(),
+                b"metadata"
+            );
+            assert!(read(&path.0, "module-info.class").unwrap().is_none());
+            assert!(
+                read(&path.0, "META-INF/versions/9/module-info.class")
+                    .unwrap()
+                    .is_none()
+            );
+            assert!(read(&path.0, "p/Missing.class").unwrap().is_none());
+        }
+    }
+    #[test]
+    fn directories_reject_multi_release_class_overrides_like_archives() {
+        let contents: &[(&str, &[u8])] = &[
+            ("p/A.class", b"base"),
+            ("META-INF/versions/9/p/A.class", b"override"),
+        ];
+        let mut diagnostics = Vec::new();
+        for path in [directory(contents), entries(contents)] {
+            diagnostics.push(
+                validate(std::slice::from_ref(&path.0))
+                    .unwrap_err()
+                    .message
+                    .rsplit_once(": ")
+                    .unwrap()
+                    .1
+                    .to_owned(),
+            );
+        }
+        assert_eq!(
+            diagnostics,
+            ["multi-release JAR class overrides are unsupported"; 2]
+        );
+    }
+    #[test]
+    fn malformed_archive_names_are_diagnosed() {
+        for name in [
+            "../A.class",
+            "/A.class",
+            "p/./A.class",
+            "p//A.class",
+            "p/../A.class",
+            "p\\A.class",
+            "C:/A.class",
+        ] {
+            let path = entries(&[(name, b"data")]);
+            let diagnostic = validate(std::slice::from_ref(&path.0)).unwrap_err();
+            assert!(
+                diagnostic.message.contains("malformed ZIP entry name"),
+                "{name}: {}",
+                diagnostic.message
+            );
+        }
+    }
+    #[test]
+    fn corrupt_entry_payload_is_diagnosed_when_read() {
+        let mut bytes = zip(zip::CompressionMethod::Stored);
+        let payload = bytes
+            .windows(10)
+            .position(|part| part == b"class data")
+            .unwrap();
+        bytes[payload] ^= 1;
+        let path = Temp::new(&bytes);
+        assert!(read(&path.0, "p/A.class").is_err());
     }
     #[test]
     fn truncated_and_oversized_archives_are_diagnosed() {

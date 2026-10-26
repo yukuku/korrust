@@ -1,0 +1,117 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:3:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.Jumper
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:4:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.Levenshtein
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:5:27: error: unresolved reference 'Book'.
+import yuku.alkitab.model.Book
+                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:14:51: error: unresolved reference 'Book'.
+fun computeCandidates(query: String, books: Array<Book>): List<Candidate> {
+                                                  ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:15:18: error: unresolved reference 'Jumper'.
+    val jumper = Jumper(query)
+                 ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:24:22: error: unresolved reference 'shortName'.
+        val n = book.shortName.lowercase()
+                     ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:25:30: error: operator call 'component1()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+        val (title, score) = when {
+                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:25:30: error: operator call 'component2()' is ambiguous for destructuring of type 'uninferred ??? (Unknown type for type parameter K)'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+        val (title, score) = when {
+                             ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:26:44: error: unresolved reference 'shortName'.
+            n.startsWith(bookName) -> book.shortName to 20
+                                           ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:26:54: error: cannot infer type for type parameter 'A'. Specify it explicitly.
+            n.startsWith(bookName) -> book.shortName to 20
+                                                     ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:26:54: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+            n.startsWith(bookName) -> book.shortName to 20
+                                                     ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:27:42: error: unresolved reference 'shortName'.
+            n.contains(bookName) -> book.shortName to 10
+                                         ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:27:52: error: cannot infer type for type parameter 'A'. Specify it explicitly.
+            n.contains(bookName) -> book.shortName to 10
+                                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:27:52: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+            n.contains(bookName) -> book.shortName to 10
+                                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:31:43: error: argument type mismatch: actual type is 'Any', but 'String' was expected.
+            if (addCandidate(jumper, out, title, score, book) != null) {
+                                          ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:32:39: error: unresolved reference 'bookId'.
+                addedBookIds.add(book.bookId)
+                                      ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:38:24: error: unresolved reference 'Jumper'.
+        val bookRefs = Jumper.createBookCandidates(books)
+                       ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:39:45: error: unresolved reference 'it'.
+        val bookIndex = books.associateBy { it.bookId }
+                                            ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:40:25: error: method 'iterator()' is ambiguous for this expression. Applicable candidates:
+fun <T> Enumeration<T>.iterator(): Iterator<T>
+fun <T> Iterator<T>.iterator(): Iterator<T>
+fun <K, V> Map<out K, V>.iterator(): Iterator<Map.Entry<K, V>>
+fun <K, V> MutableMap<K, V>.iterator(): MutableIterator<MutableMap.MutableEntry<K, V>>
+fun CharSequence.iterator(): CharIterator
+fun BufferedInputStream.iterator(): ByteIterator
+        for (bookRef in bookRefs) {
+                        ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:42:28: error: unresolved reference 'Levenshtein'.
+            val distance = Levenshtein.distance(bookName, bookRef.condensed)
+                           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:44:48: error: unresolved reference 'shortName'.
+            if (addCandidate(jumper, out, book.shortName, -distance, book) != null) {
+                                               ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:54:13: error: unresolved reference 'Jumper'.
+    jumper: Jumper,
+            ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:58:11: error: unresolved reference 'Book'.
+    book: Book,
+          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:63:28: error: unresolved reference 'chapter'.
+    val chapter_1 = jumper.chapter
+                           ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:67:30: error: unresolved reference 'verse'.
+        val verse_1 = jumper.verse
+                             ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:72:47: error: unresolved reference 'chapter_count'.
+        if (chapter_1 < 1 || chapter_1 > book.chapter_count) return null
+                                              ^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/Candidate.kt:73:60: error: unresolved reference 'verse_counts'.
+        if (verse_1 != 0 && (verse_1 < 1 || verse_1 > book.verse_counts[chapter_1 - 1])) return null
+                                                           ^^^^^^^^^^^^

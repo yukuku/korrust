@@ -1,0 +1,120 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:3:16: error: unresolved reference 'content'.
+import android.content.Context
+               ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:4:16: error: unresolved reference 'net'.
+import android.net.Uri
+               ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:5:16: error: unresolved reference 'provider'.
+import android.provider.OpenableColumns
+               ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:9:26: error: unresolved reference 'storage'.
+import yuku.alkitab.base.storage.YesReaderFactory
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:10:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.AddonManager
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:11:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.AppLog
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:12:21: error: unresolved reference 'debug'.
+import yuku.alkitab.debug.R
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:13:21: error: unresolved reference 'io'.
+import yuku.alkitab.io.OptionalGzipInputStream
+                    ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:18:40: error: unresolved reference 'Context'.
+class VersionFileImporter(val context: Context) {
+                                       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:27:28: error: unresolved reference 'Uri'.
+    fun importFromUri(uri: Uri): Result {
+                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:28:30: error: unresolved reference 'contentResolver'.
+        val cursor = context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
+                             ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:28:57: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val cursor = context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
+                                                        ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:28:65: error: unresolved reference 'OpenableColumns'.
+        val cursor = context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
+                                                                ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:28:95: error: unresolved reference 'OpenableColumns'.
+        val cursor = context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE), null, null, null)
+                                                                                              ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:35:16: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        cursor.use { c ->
+               ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:35:16: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+        cursor.use { c ->
+               ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:35:22: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        cursor.use { c ->
+                     ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:36:20: error: unresolved reference 'moveToNext'.
+            if (!c.moveToNext()) {
+                   ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:40:33: error: unresolved reference 'getString'.
+            val displayName = c.getString(0)
+                                ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:41:26: error: unresolved reference 'getLong'.
+            val size = c.getLong(1)
+                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:61:39: error: unresolved reference 'contentResolver'.
+            val inputStream = context.contentResolver.openInputStream(uri)
+                                      ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:64:38: error: unresolved reference 'cacheDir'.
+            cacheFile = File(context.cacheDir, "${UUID.randomUUID()}.$ext")
+                                     ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:66:25: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            inputStream.use { input ->
+                        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:66:25: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+            inputStream.use { input ->
+                        ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:66:31: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            inputStream.use { input ->
+                              ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:67:42: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+                cacheFile.outputStream().use { output ->
+                                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:68:21: error: unresolved reference 'AppLog'.
+                    AppLog.d(TAG, "Writing to cache file $cacheFile")
+                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:69:21: error: unresolved reference 'OptionalGzipInputStream'.
+                    OptionalGzipInputStream(input).use { it.copyTo(output) }
+                    ^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:69:52: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                    OptionalGzipInputStream(input).use { it.copyTo(output) }
+                                                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:69:52: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+                    OptionalGzipInputStream(input).use { it.copyTo(output) }
+                                                   ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:69:56: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                    OptionalGzipInputStream(input).use { it.copyTo(output) }
+                                                       ^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:95:9: error: unresolved reference 'YesReaderFactory'.
+        YesReaderFactory.createYesReader(cacheFile.absolutePath)
+        ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:99:23: error: unresolved reference 'AddonManager'.
+        val yesFile = AddonManager.getWritableVersionFile("$baseName.yes")
+                      ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:103:19: error: type mismatch: inferred type is '??? (Ambiguity: IOException, [java/io/IOException.IOException, java/io/IOException.IOException])', but 'Throwable' was expected.
+            throw IOException(context.getString(R.string.ed_file_file_sudah_ada_dalam_daftar_versi, "$baseName.yes"))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:103:39: error: unresolved reference 'getString'.
+            throw IOException(context.getString(R.string.ed_file_file_sudah_ada_dalam_daftar_versi, "$baseName.yes"))
+                                      ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:103:49: error: unresolved reference 'R'.
+            throw IOException(context.getString(R.string.ed_file_file_sudah_ada_dalam_daftar_versi, "$baseName.yes"))
+                                                ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:116:13: error: unresolved reference 'AddonManager'.
+        if (AddonManager.getReadableVersionFile(yesName) != null) {
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:117:19: error: type mismatch: inferred type is '??? (Ambiguity: IOException, [java/io/IOException.IOException, java/io/IOException.IOException])', but 'Throwable' was expected.
+            throw IOException(context.getString(R.string.ed_this_file_is_already_on_the_list))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:117:39: error: unresolved reference 'getString'.
+            throw IOException(context.getString(R.string.ed_this_file_is_already_on_the_list))
+                                      ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt:117:49: error: unresolved reference 'R'.
+            throw IOException(context.getString(R.string.ed_this_file_is_already_on_the_list))
+                                                ^

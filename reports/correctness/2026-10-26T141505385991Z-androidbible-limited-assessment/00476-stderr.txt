@@ -1,0 +1,45 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:3:8: error: unresolved reference 'kotlinx'.
+import kotlinx.serialization.Serializable
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:4:8: error: unresolved reference 'kotlinx'.
+import kotlinx.serialization.json.Json
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:19:16: error: unresolved reference 'Json'.
+    val json = Json {
+               ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:20:9: error: unresolved reference 'ignoreUnknownKeys'.
+        ignoreUnknownKeys = true
+        ^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:21:9: error: unresolved reference 'encodeDefaults'.
+        encodeDefaults = false
+        ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:25:21: error: unresolved reference 'SongDocument'.
+    fun encode(doc: SongDocument): String = json.encodeToString(SongDocument.serializer(), doc)
+                    ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:25:65: error: unresolved reference 'SongDocument'.
+    fun encode(doc: SongDocument): String = json.encodeToString(SongDocument.serializer(), doc)
+                                                                ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:28:31: error: unresolved reference 'SongDocument'.
+    fun decode(text: String): SongDocument = json.decodeFromString(SongDocument.serializer(), text)
+                              ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:28:68: error: unresolved reference 'SongDocument'.
+    fun decode(text: String): SongDocument = json.decodeFromString(SongDocument.serializer(), text)
+                                                                   ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:37:6: error: cannot access 'typealias Serializable = Serializable': it is internal in file.
+    @Serializable
+     ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:37:6: error: illegal annotation class 'Serializable'.
+    @Serializable
+     ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:40:25: error: unresolved reference 'SongDocument'.
+        val songs: List<SongDocument> = emptyList(),
+                        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:40:41: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+        val songs: List<SongDocument> = emptyList(),
+                                        ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:44:96: error: unresolved reference 'serializer'.
+    fun encodeSongBook(wrapper: SongBookWrapper): String = json.encodeToString(SongBookWrapper.serializer(), wrapper)
+                                                                                               ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentJson.kt:47:95: error: unresolved reference 'serializer'.
+    fun decodeSongBook(text: String): SongBookWrapper = json.decodeFromString(SongBookWrapper.serializer(), text)
+                                                                                              ^^^^^^^^^^

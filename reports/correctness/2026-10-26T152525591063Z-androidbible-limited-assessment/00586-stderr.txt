@@ -1,0 +1,470 @@
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:10:8: error: unresolved reference 'kotlinx'.
+import kotlinx.coroutines.Dispatchers
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:11:8: error: unresolved reference 'okhttp3'.
+import okhttp3.OkHttpClient
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:12:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Protocol
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:13:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Response
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:14:8: error: unresolved reference 'okhttp3'.
+import okhttp3.ResponseBody.Companion.toResponseBody
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:15:12: error: unresolved reference 'junit'.
+import org.junit.Assert.*
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:16:12: error: unresolved reference 'junit'.
+import org.junit.Test
+           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:17:26: error: unresolved reference 'ac'.
+import yuku.alkitab.base.ac.DevotionActivity.DevotionKind
+                         ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:18:35: error: unresolved reference 'DevotionDownloader'.
+import yuku.alkitab.base.devotion.DevotionDownloader.Key
+                                  ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:19:35: error: unresolved reference 'DevotionDownloader'.
+import yuku.alkitab.base.devotion.DevotionDownloader.State
+                                  ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:22:23: error: unresolved reference 'Key'.
+    private val key = Key("me-en", "20260929")
+                      ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:23:38: error: unresolved reference 'Key'.
+    private val cache = mutableMapOf<Key, DevotionArticle>()
+                                     ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:23:43: error: unresolved reference 'DevotionArticle'.
+    private val cache = mutableMapOf<Key, DevotionArticle>()
+                                          ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:29:26: error: unresolved reference 'OkHttpClient'.
+    private val client = OkHttpClient.Builder().addInterceptor { chain ->
+                         ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:29:66: error: cannot infer type for value parameter 'chain'. Specify it explicitly.
+    private val client = OkHttpClient.Builder().addInterceptor { chain ->
+                                                                 ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:31:30: error: unresolved reference 'request'.
+        cacheControl = chain.request().header("Cache-Control")
+                             ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:33:9: error: unresolved reference 'Response'.
+        Response.Builder().request(chain.request()).protocol(Protocol.HTTP_1_1)
+        ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:33:42: error: unresolved reference 'request'.
+        Response.Builder().request(chain.request()).protocol(Protocol.HTTP_1_1)
+                                         ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:33:62: error: unresolved reference 'Protocol'.
+        Response.Builder().request(chain.request()).protocol(Protocol.HTTP_1_1)
+                                                             ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:34:25: error: unresolved reference 'message'.
+            .code(code).message("test").body(output.toResponseBody()).build()
+                        ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:34:53: error: unresolved reference 'toResponseBody'.
+            .code(code).message("test").body(output.toResponseBody()).build()
+                                                    ^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:36:27: error: unresolved reference 'DevotionDownloadBackend'.
+    private val backend = DevotionDownloadBackend(
+                          ^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:37:72: error: unresolved reference 'it'.
+        client = { client }, url = { "http://localhost/devotion?name=${it.name}&date=${it.date}" },
+                                                                       ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:37:88: error: unresolved reference 'it'.
+        client = { client }, url = { "http://localhost/devotion?name=${it.name}&date=${it.date}" },
+                                                                                       ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:38:26: error: unresolved reference 'it'.
+        cached = { cache[it] }, store = { cache[Key(it.kind.sourceName, it.date)] = it },
+                         ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:38:43: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+        cached = { cache[it] }, store = { cache[Key(it.kind.sourceName, it.date)] = it },
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:38:43: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+        cached = { cache[it] }, store = { cache[Key(it.kind.sourceName, it.date)] = it },
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:38:49: error: unresolved reference 'Key'.
+        cached = { cache[it] }, store = { cache[Key(it.kind.sourceName, it.date)] = it },
+                                                ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:38:53: error: unresolved reference 'it'.
+        cached = { cache[it] }, store = { cache[Key(it.kind.sourceName, it.date)] = it },
+                                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:38:73: error: unresolved reference 'it'.
+        cached = { cache[it] }, store = { cache[Key(it.kind.sourceName, it.date)] = it },
+                                                                        ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:38:85: error: unresolved reference 'it'.
+        cached = { cache[it] }, store = { cache[Key(it.kind.sourceName, it.date)] = it },
+                                                                                    ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:41:6: error: unresolved reference 'Test'.
+    @Test fun `HTTP failure and offline errors are failures and retry stores the complete reading`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:43:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.FAILED, backend.createRequest(key, false).execute())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:43:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.FAILED, backend.createRequest(key, false).execute())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:43:28: error: unresolved reference 'FAILED'.
+        assertEquals(State.FAILED, backend.createRequest(key, false).execute())
+                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:44:9: error: unresolved reference 'assertTrue'.
+        assertTrue(cache.isEmpty())
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:47:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.FAILED, backend.createRequest(key, false).execute())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:47:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.FAILED, backend.createRequest(key, false).execute())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:47:28: error: unresolved reference 'FAILED'.
+        assertEquals(State.FAILED, backend.createRequest(key, false).execute())
+                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:49:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.READY, backend.createRequest(key, true).execute())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:49:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.READY, backend.createRequest(key, true).execute())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:49:28: error: unresolved reference 'READY'.
+        assertEquals(State.READY, backend.createRequest(key, true).execute())
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:50:9: error: unresolved reference 'assertEquals'.
+        assertEquals(output, cache[key]!!.body)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:50:43: error: unresolved reference 'body'.
+        assertEquals(output, cache[key]!!.body)
+                                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:51:9: error: unresolved reference 'assertTrue'.
+        assertTrue(cache[key]!!.readyToUse)
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:51:33: error: unresolved reference 'readyToUse'.
+        assertTrue(cache[key]!!.readyToUse)
+                                ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:54:6: error: unresolved reference 'Test'.
+    @Test fun `NG is unavailable and explicit retry bypasses its cached row`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:56:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.UNAVAILABLE, backend.createRequest(key, false).execute())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:56:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.UNAVAILABLE, backend.createRequest(key, false).execute())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:56:28: error: unresolved reference 'UNAVAILABLE'.
+        assertEquals(State.UNAVAILABLE, backend.createRequest(key, false).execute())
+                           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:57:9: error: unresolved reference 'assertFalse'.
+        assertFalse(cache[key]!!.readyToUse)
+        ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:57:34: error: unresolved reference 'readyToUse'.
+        assertFalse(cache[key]!!.readyToUse)
+                                 ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:58:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.UNAVAILABLE, backend.createRequest(key, false).execute())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:58:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.UNAVAILABLE, backend.createRequest(key, false).execute())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:58:28: error: unresolved reference 'UNAVAILABLE'.
+        assertEquals(State.UNAVAILABLE, backend.createRequest(key, false).execute())
+                           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:59:9: error: unresolved reference 'assertEquals'.
+        assertEquals(1, requests)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:61:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.READY, backend.createRequest(key, true).execute())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:61:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.READY, backend.createRequest(key, true).execute())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:61:28: error: unresolved reference 'READY'.
+        assertEquals(State.READY, backend.createRequest(key, true).execute())
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:62:9: error: unresolved reference 'assertEquals'.
+        assertEquals(2, requests)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:63:9: error: unresolved reference 'assertEquals'.
+        assertEquals("no-cache", cacheControl)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:66:6: error: unresolved reference 'Test'.
+    @Test fun `network failures and NG refreshes leave a ready offline reading intact`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:67:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.READY, backend.createRequest(key, false).execute())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:67:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.READY, backend.createRequest(key, false).execute())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:67:28: error: unresolved reference 'READY'.
+        assertEquals(State.READY, backend.createRequest(key, false).execute())
+                           ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:68:37: error: unresolved reference 'body'.
+        val original = cache[key]!!.body
+                                    ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:70:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.FAILED, backend.createRequest(key, true).execute())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:70:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.FAILED, backend.createRequest(key, true).execute())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:70:28: error: unresolved reference 'FAILED'.
+        assertEquals(State.FAILED, backend.createRequest(key, true).execute())
+                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:71:9: error: unresolved reference 'assertEquals'.
+        assertEquals(original, cache[key]!!.body)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:71:45: error: unresolved reference 'body'.
+        assertEquals(original, cache[key]!!.body)
+                                            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:74:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.UNAVAILABLE, backend.createRequest(key, true).execute())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:74:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.UNAVAILABLE, backend.createRequest(key, true).execute())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:74:28: error: unresolved reference 'UNAVAILABLE'.
+        assertEquals(State.UNAVAILABLE, backend.createRequest(key, true).execute())
+                           ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:75:9: error: unresolved reference 'assertTrue'.
+        assertTrue(cache[key]!!.readyToUse)
+        ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:75:33: error: unresolved reference 'readyToUse'.
+        assertTrue(cache[key]!!.readyToUse)
+                                ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:76:9: error: unresolved reference 'assertEquals'.
+        assertEquals(original, cache[key]!!.body)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:76:45: error: unresolved reference 'body'.
+        assertEquals(original, cache[key]!!.body)
+                                            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:79:6: error: unresolved reference 'Test'.
+    @Test fun `all sources use cached readings without network access`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:80:9: error: unresolved reference 'DevotionKind'.
+        DevotionKind.values().forEach { kind ->
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:80:41: error: cannot infer type for value parameter 'kind'. Specify it explicitly.
+        DevotionKind.values().forEach { kind ->
+                                        ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:81:29: error: unresolved reference 'Key'.
+            val sourceKey = Key(kind.sourceName, key.date)
+                            ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:81:38: error: unresolved reference 'sourceName'.
+            val sourceKey = Key(kind.sourceName, key.date)
+                                     ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:82:13: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+            cache[sourceKey] = kind.getArticle(key.date).apply { fillIn("<p>Cached ${kind.sourceName}</p>") }
+            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:82:13: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+            cache[sourceKey] = kind.getArticle(key.date).apply { fillIn("<p>Cached ${kind.sourceName}</p>") }
+            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:82:13: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <K, V> MutableMap<K, V>.set(key: K, value: V): Unit
+            cache[sourceKey] = kind.getArticle(key.date).apply { fillIn("<p>Cached ${kind.sourceName}</p>") }
+            ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:82:37: error: unresolved reference 'getArticle'.
+            cache[sourceKey] = kind.getArticle(key.date).apply { fillIn("<p>Cached ${kind.sourceName}</p>") }
+                                    ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:82:58: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            cache[sourceKey] = kind.getArticle(key.date).apply { fillIn("<p>Cached ${kind.sourceName}</p>") }
+                                                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:82:64: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+            cache[sourceKey] = kind.getArticle(key.date).apply { fillIn("<p>Cached ${kind.sourceName}</p>") }
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:82:66: error: unresolved reference 'fillIn'.
+            cache[sourceKey] = kind.getArticle(key.date).apply { fillIn("<p>Cached ${kind.sourceName}</p>") }
+                                                                 ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:82:91: error: unresolved reference 'sourceName'.
+            cache[sourceKey] = kind.getArticle(key.date).apply { fillIn("<p>Cached ${kind.sourceName}</p>") }
+                                                                                          ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:83:13: error: unresolved reference 'assertEquals'.
+            assertEquals(State.READY, backend.createRequest(sourceKey, false).execute())
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:83:26: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            assertEquals(State.READY, backend.createRequest(sourceKey, false).execute())
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:83:32: error: unresolved reference 'READY'.
+            assertEquals(State.READY, backend.createRequest(sourceKey, false).execute())
+                               ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:85:9: error: unresolved reference 'assertEquals'.
+        assertEquals(0, requests)
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:88:6: error: unresolved reference 'Test'.
+    @Test fun `persistence failure ends in failed state`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:89:22: error: unresolved reference 'DevotionDownloadBackend'.
+        val broken = DevotionDownloadBackend(
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:93:9: error: unresolved reference 'assertEquals'.
+        assertEquals(State.FAILED, broken.createRequest(key, false).execute())
+        ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:93:22: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+        assertEquals(State.FAILED, broken.createRequest(key, false).execute())
+                     ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:93:28: error: unresolved reference 'FAILED'.
+        assertEquals(State.FAILED, broken.createRequest(key, false).execute())
+                           ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:96:6: error: unresolved reference 'Test'.
+    @Test fun `selecting a new date cancels a stalled OkHttp foreground and starts the new reading`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:100:44: error: unresolved reference 'Key'.
+        val localCache = ConcurrentHashMap<Key, DevotionArticle>()
+                                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:100:49: error: unresolved reference 'DevotionArticle'.
+        val localCache = ConcurrentHashMap<Key, DevotionArticle>()
+                                                ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:120:27: error: unresolved reference 'OkHttpClient'.
+        val localClient = OkHttpClient.Builder().callTimeout(10, TimeUnit.SECONDS).build()
+                          ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:121:28: error: unresolved reference 'DevotionDownloadBackend'.
+        val localBackend = DevotionDownloadBackend(
+                           ^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:122:99: error: unresolved reference 'it'.
+            client = { localClient }, url = { "http://127.0.0.1:${server.address.port}/devotion/${it.date}" },
+                                                                                                  ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:123:35: error: unresolved reference 'it'.
+            cached = { localCache[it] }, store = {
+                                  ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:124:17: error: cannot infer type for type parameter 'K'. Specify it explicitly.
+                localCache[Key(it.kind.sourceName, it.date)] = it
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:124:17: error: cannot infer type for type parameter 'V'. Specify it explicitly.
+                localCache[Key(it.kind.sourceName, it.date)] = it
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:124:17: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <K, V> MutableMap<K, V>.set(key: K, value: V): Unit
+                localCache[Key(it.kind.sourceName, it.date)] = it
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:124:28: error: unresolved reference 'Key'.
+                localCache[Key(it.kind.sourceName, it.date)] = it
+                           ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:124:32: error: unresolved reference 'it'.
+                localCache[Key(it.kind.sourceName, it.date)] = it
+                               ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:124:52: error: unresolved reference 'it'.
+                localCache[Key(it.kind.sourceName, it.date)] = it
+                                                   ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:124:64: error: unresolved reference 'it'.
+                localCache[Key(it.kind.sourceName, it.date)] = it
+                                                               ^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:128:26: error: unresolved reference 'DevotionDownloader'.
+        val downloader = DevotionDownloader(localBackend, Dispatchers.IO, Dispatchers.IO)
+                         ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:128:59: error: unresolved reference 'Dispatchers'.
+        val downloader = DevotionDownloader(localBackend, Dispatchers.IO, Dispatchers.IO)
+                                                          ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:128:75: error: unresolved reference 'Dispatchers'.
+        val downloader = DevotionDownloader(localBackend, Dispatchers.IO, Dispatchers.IO)
+                                                                          ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:131:13: error: unresolved reference 'assertTrue'.
+            assertTrue(started.await(5, TimeUnit.SECONDS))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:133:13: error: unresolved reference 'assertTrue'.
+            assertTrue(selectedStored.await(5, TimeUnit.SECONDS))
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:134:13: error: unresolved reference 'assertEquals'.
+            assertEquals(output, localCache[key]!!.body)
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:134:52: error: unresolved reference 'body'.
+            assertEquals(output, localCache[key]!!.body)
+                                                   ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:135:13: error: unresolved reference 'assertNull'.
+            assertNull(localCache[Key("me-en", "20260925")])
+            ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:135:35: error: unresolved reference 'Key'.
+            assertNull(localCache[Key("me-en", "20260925")])
+                                  ^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:136:13: error: unresolved reference 'assertEquals'.
+            assertEquals(1L, release.count)
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:146:6: error: unresolved reference 'Test'.
+    @Test fun `a stalled response body reaches the total call timeout without production access`() {
+     ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:162:27: error: unresolved reference 'OkHttpClient'.
+        val timedClient = OkHttpClient.Builder().callTimeout(1, TimeUnit.SECONDS).build()
+                          ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:164:25: error: unresolved reference 'DevotionDownloadBackend'.
+            val local = DevotionDownloadBackend(
+                        ^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:166:46: error: unresolved reference 'fail'.
+                cached = { null }, store = { fail("A stalled body must not be persisted") },
+                                             ^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:168:13: error: unresolved reference 'assertEquals'.
+            assertEquals(State.FAILED, local.createRequest(key, false).execute())
+            ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:168:26: error: none of the following candidates is applicable:
+
+object State : Any:
+  Cannot access 'object State : Any': it is private in file.
+
+typealias State = Int:
+  Cannot access 'typealias State = Int': it is private in file.
+            assertEquals(State.FAILED, local.createRequest(key, false).execute())
+                         ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:168:32: error: unresolved reference 'FAILED'.
+            assertEquals(State.FAILED, local.createRequest(key, false).execute())
+                               ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/devotion/DevotionDownloadBackendTest.kt:169:13: error: unresolved reference 'assertEquals'.
+            assertEquals(0L, started.count)
+            ^^^^^^^^^^^^

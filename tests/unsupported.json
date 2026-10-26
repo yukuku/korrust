@@ -1,7 +1,11 @@
 [
   {
     "id": "nullable_double_types",
-    "source": "fun f(x: Double?): Double? = x"
+    "source": "fun f(x: Double?): Double? = x",
+    "supported_regression": {
+      "facade": "Nullable_double_typesKt",
+      "java_assertions": "if (Nullable_double_typesKt.f(null) != null) throw new AssertionError(\"nullable Double null\");\nDouble nan = Double.longBitsToDouble(0x7ff8000000000001L);\nif (Nullable_double_typesKt.f(nan) != nan) throw new AssertionError(\"nullable Double boxed identity\");\nif (Double.doubleToRawLongBits(Nullable_double_typesKt.f(-0.0)) != 0x8000000000000000L) throw new AssertionError(\"nullable Double negative zero\");\nif (Double.doubleToRawLongBits(Nullable_double_typesKt.f(0.0)) != 0L) throw new AssertionError(\"nullable Double positive zero\");"
+    }
   },
   {
     "id": "generic_overloads",
@@ -17,7 +21,11 @@
   },
   {
     "id": "escaped_string_template",
-    "source": "fun f(x: Int): String = \"$`x`\""
+    "source": "fun f(x: Int): String = \"$`x`\"",
+    "supported_regression": {
+      "facade": "Escaped_string_templateKt",
+      "java_assertions": "if (!\"0\".equals(Escaped_string_templateKt.f(0)) || !\"-7\".equals(Escaped_string_templateKt.f(-7)) || !\"2147483647\".equals(Escaped_string_templateKt.f(Integer.MAX_VALUE)) || !\"-2147483648\".equals(Escaped_string_templateKt.f(Integer.MIN_VALUE))) throw new AssertionError(\"escaped identifier string template values\");"
+    }
   },
   {
     "id": "when_range",
@@ -65,16 +73,24 @@
   {
     "id": "enum_constructor_parameters",
     "source": "enum class E(val number: Int) { A(1) }",
-    "message": "Enum constructors, supertypes, and generics"
+    "supported_regression": {
+      "facade": "E",
+      "java_assertions": "if (E.A.getNumber() != 1) throw new AssertionError(\"enum constructor property\");\nif (!E.A.name().equals(\"A\") || E.A.ordinal() != 0 || E.values().length != 1 || E.values()[0] != E.A) throw new AssertionError(\"enum entry identity/order\");\nE[] first = E.values(); first[0] = null;\nif (E.values()[0] != E.A || E.valueOf(\"A\") != E.A) throw new AssertionError(\"enum defensive array/valueOf\");\nif (E.getEntries().size() != 1 || E.getEntries().get(0) != E.A || E.getEntries() != E.getEntries()) throw new AssertionError(\"enum entries identity/order\");\ntry { E.valueOf(\"missing\"); throw new AssertionError(\"enum invalid name accepted\"); } catch (IllegalArgumentException expected) {}\ntry { E.valueOf(null); throw new AssertionError(\"enum null name accepted\"); } catch (NullPointerException expected) {}"
+    }
   },
   {
     "id": "enum_supertype",
     "source": "enum class E : java.io.Serializable { A }",
-    "message": "Enum constructors, supertypes, and generics"
+    "message": "Interfaces require explicit imports",
+    "scope": "Bounded enum headers require explicit imports for interface supertypes; this unchanged qualified Serializable header remains valid Kotlin but unsupported."
   },
   {
     "id": "enum_custom_member",
-    "source": "enum class E { A; fun number(): Int = 1 }"
+    "source": "enum class E { A; fun number(): Int = 1 }",
+    "supported_regression": {
+      "facade": "E",
+      "java_assertions": "if (E.A.number() != 1) throw new AssertionError(\"enum body method\");\nif (!E.A.name().equals(\"A\") || E.A.ordinal() != 0 || E.values().length != 1 || E.values()[0] != E.A) throw new AssertionError(\"enum entry identity/order\");\nE[] first = E.values(); first[0] = null;\nif (E.values()[0] != E.A || E.valueOf(\"A\") != E.A) throw new AssertionError(\"enum defensive array/valueOf\");\nif (E.getEntries().size() != 1 || E.getEntries().get(0) != E.A || E.getEntries() != E.getEntries()) throw new AssertionError(\"enum entries identity/order\");\ntry { E.valueOf(\"missing\"); throw new AssertionError(\"enum invalid name accepted\"); } catch (IllegalArgumentException expected) {}\ntry { E.valueOf(null); throw new AssertionError(\"enum null name accepted\"); } catch (NullPointerException expected) {}"
+    }
   },
   {
     "id": "enum_entry_body",
@@ -82,7 +98,11 @@
   },
   {
     "id": "enum_entry_arguments",
-    "source": "enum class E { A() }"
+    "source": "enum class E { A() }",
+    "supported_regression": {
+      "facade": "E",
+      "java_assertions": "if (!E.A.name().equals(\"A\") || E.A.ordinal() != 0 || E.values().length != 1 || E.values()[0] != E.A) throw new AssertionError(\"enum entry identity/order\");\nE[] first = E.values(); first[0] = null;\nif (E.values()[0] != E.A || E.valueOf(\"A\") != E.A) throw new AssertionError(\"enum defensive array/valueOf\");\nif (E.getEntries().size() != 1 || E.getEntries().get(0) != E.A || E.getEntries() != E.getEntries()) throw new AssertionError(\"enum entries identity/order\");\ntry { E.valueOf(\"missing\"); throw new AssertionError(\"enum invalid name accepted\"); } catch (IllegalArgumentException expected) {}\ntry { E.valueOf(null); throw new AssertionError(\"enum null name accepted\"); } catch (NullPointerException expected) {}"
+    }
   },
   {
     "id": "enum_mixed_declarations",
@@ -132,7 +152,11 @@
   {
     "id": "object_method",
     "source": "object O { internal fun number(): Int = 1 }",
-    "feature_name": "internal_object_methods"
+    "feature_name": "internal_object_methods",
+    "supported_regression": {
+      "facade": "O",
+      "java_assertions": "if (O.INSTANCE == null || O.INSTANCE != O.INSTANCE || O.INSTANCE.number$main() != 1) throw new AssertionError(\"internal singleton method and module name\");\ntry {\n    java.lang.reflect.Method method = O.class.getDeclaredMethod(\"number$main\");\n    if (!java.lang.reflect.Modifier.isPublic(method.getModifiers()) || java.lang.reflect.Modifier.isStatic(method.getModifiers()) || method.getReturnType() != int.class) throw new AssertionError(\"internal instance method JVM ABI\");\n} catch (ReflectiveOperationException failure) { throw new AssertionError(failure); }"
+    }
   },
   {
     "id": "object_init",

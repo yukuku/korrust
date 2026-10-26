@@ -1,8 +1,11 @@
+#[path = "check_annotation_placements.rs"]
+mod annotation_placements;
 use crate::classpath::{Classpath, JavaClass, JavaMethod};
 use crate::{
     Diagnostic, Result,
     syntax::{self, Expr, ExprKind, StatementKind, Type},
 };
+pub(crate) use annotation_placements::annotation_placements;
 use std::collections::{HashMap, HashSet};
 use std::{cell::RefCell, rc::Rc};
 
@@ -10,14 +13,20 @@ use std::{cell::RefCell, rc::Rc};
 mod declarations;
 #[path = "check_delegates.rs"]
 mod delegates;
+#[path = "check_enums.rs"]
+pub(crate) mod enums;
 use declarations::check_class;
-pub use declarations::{infer_source_results, source_inference_error};
+pub use declarations::{
+    infer_source_results, source_inference_error, unresolved_source_dependencies,
+};
 #[path = "check_captures.rs"]
 mod captures;
 #[path = "check_control.rs"]
 mod control;
 #[path = "check_functions.rs"]
 mod function_values;
+#[path = "check_ir_walk.rs"]
+pub(crate) mod ir_walk;
 #[path = "check_library.rs"]
 mod library;
 #[path = "check_operations.rs"]
@@ -29,6 +38,12 @@ mod references;
 #[path = "check_relations.rs"]
 mod relations;
 
+#[path = "check_varargs.rs"]
+mod varargs;
+
+#[path = "check_annotations.rs"]
+mod annotations;
+
 #[path = "check_interfaces.rs"]
 mod interfaces;
 #[path = "check_objects.rs"]
@@ -36,7 +51,22 @@ mod objects;
 #[path = "check_singletons.rs"]
 mod singletons;
 
+#[derive(Clone, Debug)]
+pub enum DeclarationAnnotationValue {
+    Int(i32),
+    Boolean(bool),
+    String(String),
+}
+
+#[derive(Clone, Debug)]
+pub struct DeclarationAnnotation {
+    pub descriptor: String,
+    pub runtime: bool,
+    pub values: Vec<(String, DeclarationAnnotationValue)>,
+}
+
 pub struct LambdaDecl {
+    pub defaults: Vec<JavaMethod>,
     pub owner: String,
     pub captures: Vec<(String, Type)>,
     pub function: Function,
@@ -176,6 +206,9 @@ pub struct ClassDecl {
     pub bridges: Vec<JavaMethod>,
 }
 pub struct Function {
+    pub jvm_name: Option<String>,
+    pub annotations: Vec<DeclarationAnnotation>,
+    pub vararg: bool,
     pub type_params: Vec<syntax::TypeParameter>,
     pub defaults: Vec<Option<Value>>,
     pub name: String,
@@ -187,6 +220,9 @@ pub struct Function {
     pub body: Vec<Statement>,
 }
 impl Function {
+    pub fn jvm_name(&self) -> &str {
+        self.jvm_name.as_deref().unwrap_or(&self.name)
+    }
     pub fn descriptor(&self) -> String {
         format!(
             "({}){}",
@@ -340,6 +376,7 @@ pub enum ValueKind {
         safe: bool,
     },
     Float(u32),
+    Double(u64),
     Box(Box<Value>),
     Unbox(Box<Value>),
     New {
@@ -460,6 +497,7 @@ impl Value {
                     .unwrap_or(1),
             ),
             ValueKind::Float(_) => 1,
+            ValueKind::Double(_) => 2,
             ValueKind::Box(value) | ValueKind::Unbox(value) => value.stack().max(2),
             ValueKind::JavaField { receiver, .. } => receiver
                 .as_ref()
@@ -551,7 +589,7 @@ struct Local {
     mutable: bool,
 }
 type ConstructorSignature<'a> = (&'a str, &'a Vec<(String, Type)>, &'a Vec<Option<Expr>>);
-type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u32);
+type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u64);
 type CallableParameters = (Vec<(String, Type)>, Vec<bool>);
 struct Checker<'a> {
     lambdas: Rc<RefCell<Vec<LambdaDecl>>>,
@@ -816,20 +854,7 @@ impl Checker<'_> {
                 } else {
                     arg
                 };
-                let value = if matches!(
-                    arg.kind,
-                    ExprKind::Lambda(_)
-                        | ExprKind::LambdaWithParams { .. }
-                        | ExprKind::CallableReference { .. }
-                        | ExprKind::Labeled(..)
-                ) {
-                    self.argument_value(arg, &params[i].1)?
-                } else {
-                    let context = self.inline_result.take();
-                    let value = self.value(arg);
-                    self.inline_result = context;
-                    value?
-                };
+                let value = self.argument_value(arg, &params[i].1)?;
                 if value.ty != params[i].1 {
                     score += if value.ty == Type::Null { 4 } else { 1 };
                 }
@@ -933,6 +958,16 @@ impl Checker<'_> {
         explicit: &[Type],
         offset: usize,
     ) -> Result<JavaMethod> {
+        self.select_method_expected(methods, args, explicit, None, offset)
+    }
+    fn select_method_expected(
+        &mut self,
+        methods: &[JavaMethod],
+        args: &[Expr],
+        explicit: &[Type],
+        expected: Option<&Type>,
+        offset: usize,
+    ) -> Result<JavaMethod> {
         if args
             .iter()
             .any(|a| matches!(a.kind, ExprKind::NamedArgument(..)))
@@ -947,12 +982,23 @@ impl Checker<'_> {
         let mut applicable = Vec::new();
         let mut failures = Vec::new();
         for original in methods {
-            if original.unsupported || original.kotlin_internal {
+            if original.unsupported
+                || (original.kotlin_internal && !self.classpath.internal_visible(&original.owner))
+            {
                 continue;
             }
+            let normalized = match self.vararg_arguments(original, args, offset) {
+                Ok(args) => args,
+                Err(error) => {
+                    failures.push(error);
+                    continue;
+                }
+            };
+            let normalized = normalized.as_slice();
             let next = self.next;
             let count = self.lambdas.borrow().len();
-            let specialized = self.specialize_method(original, args, explicit, offset);
+            let specialized =
+                self.specialize_method_expected(original, normalized, explicit, expected, offset);
             self.next = next;
             self.lambdas.borrow_mut().truncate(count);
             let method = match specialized {
@@ -990,7 +1036,7 @@ impl Checker<'_> {
             let score = self.applicability_result(
                 &params,
                 &defaults,
-                args,
+                normalized,
                 self.method_named(&method),
                 offset,
             );
@@ -1014,6 +1060,12 @@ impl Checker<'_> {
                 return Err(Diagnostic::new(offset, "Unsupported library declaration"));
             }
             return Err(Diagnostic::new(offset, "No applicable member overload"));
+        }
+        if applicable
+            .iter()
+            .any(|(_, original)| original.access & 0x80 == 0)
+        {
+            applicable.retain(|(_, original)| original.access & 0x80 == 0);
         }
         if applicable.len() > 1
             && applicable.iter().any(|(_, m)| {
@@ -1048,8 +1100,15 @@ impl Checker<'_> {
                     .is_some_and(|l| !l.type_parameters.is_empty())
             })
             .collect::<Vec<_>>();
-        let selected =
-            self.most_specific(&parameters, &defaults, &named, args, &generic, offset)?;
+        let normalized_arguments = self.vararg_arguments(&applicable[0].0, args, offset)?;
+        let selected = self.most_specific(
+            &parameters,
+            &defaults,
+            &named,
+            &normalized_arguments,
+            &generic,
+            offset,
+        )?;
         Ok(applicable.swap_remove(selected).0)
     }
     fn unsupported_parameters_inapplicable(
@@ -1093,7 +1152,7 @@ impl Checker<'_> {
             }
             let value = self.value(arg)?;
             let potential = match parameter {
-                "D" => matches!(value.ty.base(),Type::Java(n) if n=="java/lang/Double"),
+                "D" => value.ty.base() == &Type::Double,
                 "S" => matches!(value.ty.base(), Type::Int | Type::Java(_)),
                 _ => value.ty.descriptor() == parameter,
             };
@@ -1203,10 +1262,12 @@ impl Checker<'_> {
                     ));
                 }
                 seen_named = true;
-                params
-                    .iter()
-                    .position(|p| p.0 == *name)
-                    .ok_or_else(|| Diagnostic::new(arg.offset, "Unknown named argument"))?
+                params.iter().position(|p| p.0 == *name).ok_or_else(|| {
+                    Diagnostic::new(arg.offset, "Unknown named argument").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ARGUMENT_MAPPING_MISMATCH",
+                    )
+                })?
             } else {
                 if seen_named {
                     return Err(Diagnostic::new(
@@ -1217,17 +1278,25 @@ impl Checker<'_> {
                 position
             };
             if index >= params.len() || !used.insert(index) {
-                return Err(Diagnostic::new(arg.offset, "Wrong or duplicate arguments"));
+                return Err(
+                    Diagnostic::new(arg.offset, "Wrong or duplicate arguments").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ARGUMENT_MAPPING_MISMATCH",
+                    ),
+                );
             }
             mapping.push(index);
         }
         if (0..params.len())
             .any(|i| !used.contains(&i) && !defaults.get(i).copied().unwrap_or(false))
         {
-            return Err(Diagnostic::new(
-                offset,
-                "Wrong argument count: missing required argument",
-            ));
+            return Err(
+                Diagnostic::new(offset, "Wrong argument count: missing required argument")
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ARGUMENT_MAPPING_MISMATCH",
+                    ),
+            );
         }
         Ok(mapping)
     }
@@ -1239,10 +1308,10 @@ impl Checker<'_> {
         named: bool,
         offset: usize,
     ) -> Result<CheckedArguments> {
-        if params.len() > 32 && defaults.iter().any(|d| *d) {
+        if params.len() > 64 && defaults.iter().any(|d| *d) {
             return Err(Diagnostic::new(
                 offset,
-                "Default arguments support at most 32 parameters",
+                "Compiled default arguments support at most 64 parameters",
             ));
         }
         let mapping = Self::argument_mapping(params, defaults, args, named, offset)?;
@@ -1274,7 +1343,7 @@ impl Checker<'_> {
             values.push(if let Some(v) = value {
                 v
             } else {
-                mask |= 1u32 << i;
+                mask |= 1u64 << i;
                 zero_value(&params[i].1)
             });
         }
@@ -1302,17 +1371,41 @@ impl Checker<'_> {
         named: bool,
         offset: usize,
     ) -> Result<Value> {
+        if self
+            .classpath
+            .load(owner)
+            .is_ok_and(|class| class.access & 0x4000 != 0)
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Enum constructors can only be called by enum entry initialization",
+            ));
+        }
+        self.construct_value(owner, params, defaults, args, named, offset)
+    }
+    fn construct_value(
+        &mut self,
+        owner: &str,
+        params: &[(String, Type)],
+        defaults: &[bool],
+        args: &[Expr],
+        named: bool,
+        offset: usize,
+    ) -> Result<Value> {
         let (mut values, lets, mask) = self.arguments(params, defaults, args, named, offset)?;
         let mut descriptor = format!(
             "({}",
             params.iter().map(|p| p.1.descriptor()).collect::<String>()
         );
         if mask != 0 {
-            descriptor.push_str("ILkotlin/jvm/internal/DefaultConstructorMarker;");
-            values.push(Value {
-                ty: Type::Int,
-                kind: ValueKind::Int(mask as i32),
-            });
+            descriptor.push_str(&"I".repeat(params.len().div_ceil(32)));
+            descriptor.push_str("Lkotlin/jvm/internal/DefaultConstructorMarker;");
+            for index in 0..params.len().div_ceil(32) {
+                values.push(Value {
+                    ty: Type::Int,
+                    kind: ValueKind::Int((mask >> (index * 32)) as i32),
+                });
+            }
             values.push(Value {
                 ty: Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
                 kind: ValueKind::Null,
@@ -1559,9 +1652,12 @@ impl Checker<'_> {
         offset: usize,
     ) -> Result<Value> {
         if method.access & 1 == 0 {
-            let private_allowed = method.access & 2 != 0
-                && (self.lambda_owner == method.owner
-                    || self.lambda_owner.starts_with(&format!("{}$", method.owner)));
+            let private_allowed = self
+                .classpath
+                .file_private_visible(&self.lambda_owner, &method)
+                || method.access & 2 != 0
+                    && (self.lambda_owner == method.owner
+                        || self.lambda_owner.starts_with(&format!("{}$", method.owner)));
             let protected_allowed = method.access & 4 != 0
                 && self.receiver.as_ref().is_some_and(|current| {
                     self.subtype(&current.ty, &Type::Java(method.owner.clone()))
@@ -1574,7 +1670,7 @@ impl Checker<'_> {
                 ));
             }
         }
-        if method.kotlin_internal {
+        if method.kotlin_internal && !self.classpath.internal_visible(&method.owner) {
             return Err(Diagnostic::new(
                 offset,
                 "Cannot access internal library member",
@@ -1607,6 +1703,8 @@ impl Checker<'_> {
             .as_ref()
             .map(|v| v.iter().map(|p| p.2).collect::<Vec<_>>())
             .unwrap_or_else(|| vec![false; params.len()]);
+        let normalized = self.vararg_arguments(&method, args, offset)?;
+        let args = normalized.as_slice();
         let (mut values, mut lets, mask) =
             self.arguments(&params, &defaults, args, self.method_named(&method), offset)?;
         let receiver = if !lets.is_empty() {
@@ -1644,15 +1742,18 @@ impl Checker<'_> {
             }
         } else {
             let descriptor = format!(
-                "(L{};{}ILjava/lang/Object;){}",
+                "(L{};{}{}Ljava/lang/Object;){}",
                 method.owner,
                 method.descriptor[1..method.descriptor.find(')').unwrap()].to_owned(),
+                "I".repeat(params.len().div_ceil(32)),
                 &method.descriptor[method.descriptor.find(')').unwrap() + 1..]
             );
-            values.push(Value {
-                ty: Type::Int,
-                kind: ValueKind::Int(mask as i32),
-            });
+            for index in 0..params.len().div_ceil(32) {
+                values.push(Value {
+                    ty: Type::Int,
+                    kind: ValueKind::Int((mask >> (index * 32)) as i32),
+                });
+            }
             values.push(Value {
                 ty: Type::Java("java/lang/Object".into()),
                 kind: ValueKind::Null,
@@ -1847,7 +1948,8 @@ impl Checker<'_> {
         Err(Diagnostic::new(
             offset,
             format!("Type mismatch: expected {expected:?}, found {:?}", value.ty),
-        ))
+        )
+        .with_kind(crate::DiagnosticKind::InvalidKotlin, "TYPE_MISMATCH"))
     }
     fn java_type(&self, descriptor: &str, cursor: &mut usize, offset: usize) -> Result<Type> {
         let bytes = descriptor.as_bytes();
@@ -1857,6 +1959,7 @@ impl Checker<'_> {
             Some(b'I') => Type::Int,
             Some(b'J') => Type::Long,
             Some(b'F') => Type::Float,
+            Some(b'D') => Type::Double,
             Some(b'B') => Type::Byte,
             Some(b'C') => Type::Char,
             Some(b'Z') => Type::Boolean,
@@ -1924,7 +2027,7 @@ impl Checker<'_> {
         let methods = inherited
             .into_iter()
             .filter(|m| {
-                m.name == name
+                m.source_name() == name
                     && (m.access & 8 == 0 || singleton)
                     && (m.access & 1 != 0
                         || m.access & 4 != 0
@@ -1987,6 +2090,31 @@ impl Checker<'_> {
         }
         self.member_call(method, receiver, args, offset)
     }
+    fn qualified_java_class(&self, expression: &Expr) -> Option<String> {
+        fn parts<'a>(expression: &'a Expr, names: &mut Vec<&'a str>) -> bool {
+            match &expression.kind {
+                ExprKind::Name(name) => {
+                    names.push(name);
+                    true
+                }
+                ExprKind::Property(receiver, name) if parts(receiver, names) => {
+                    names.push(name);
+                    true
+                }
+                _ => false,
+            }
+        }
+        let mut names = Vec::new();
+        if !parts(expression, &mut names) || names.len() < 2 || !self.unshadowed(names[0]) {
+            return None;
+        }
+        let owner = names.join("/");
+        self.classpath
+            .load(&owner)
+            .ok()
+            .filter(|class| class.access & 1 != 0 && !class.kotlin_class)
+            .map(|_| owner)
+    }
     fn java_static(
         &mut self,
         owner: &str,
@@ -1998,7 +2126,7 @@ impl Checker<'_> {
             .classpath
             .methods(owner)?
             .into_iter()
-            .filter(|m| m.name == name && m.access & 9 == 9)
+            .filter(|m| m.source_name() == name && m.access & 9 == 9)
             .collect::<Vec<_>>();
         let method = self.select_method(&methods, args, offset)?;
         self.library_static_call(method, args, offset)
@@ -2137,9 +2265,11 @@ impl Checker<'_> {
         receiver: Option<Value>,
         offset: usize,
     ) -> Result<Value> {
+        let loaded = self.classpath.load(owner).ok();
         let class = self
             .classes
             .get(owner)
+            .or(loaded.as_ref())
             .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java class"))?;
         let field = class
             .fields
@@ -2168,6 +2298,7 @@ impl Checker<'_> {
                 C::Int(n) => ValueKind::Int(*n),
                 C::Long(n) => ValueKind::Long(*n),
                 C::Float(bits) => ValueKind::Float(*bits),
+                C::Double(bits) => ValueKind::Double(*bits),
                 C::String(v) => ValueKind::String(v.clone()),
             };
             let value = Value { ty, kind };
@@ -2779,6 +2910,9 @@ impl Checker<'_> {
     fn value(&mut self, expr: &Expr) -> Result<Value> {
         let offset = expr.offset;
         let (ty, kind) = match &expr.kind {
+            ExprKind::VarargArray { array, elements } => {
+                return self.vararg_array(array, elements, offset);
+            }
             ExprKind::Block(_)
             | ExprKind::Try { .. }
             | ExprKind::Labeled(..)
@@ -2805,6 +2939,7 @@ impl Checker<'_> {
                 ),
             ),
             ExprKind::Float(bits) => (Type::Float, ValueKind::Float(*bits)),
+            ExprKind::Double(bits) => (Type::Double, ValueKind::Double(*bits)),
             ExprKind::NamedArgument(_, _) | ExprKind::Generic(_, _) => {
                 return Err(Diagnostic::new(
                     offset,
@@ -2995,10 +3130,10 @@ impl Checker<'_> {
                 let condition = self.value(condition)?;
                 self.require(&condition, Type::Boolean, offset)?;
                 self.refine(source_condition, true);
-                let yes = self.value(yes)?;
+                let mut yes = self.value(yes)?;
                 self.refinements = before_refinements.clone();
                 self.refine(source_condition, false);
-                let no = self.value(no)?;
+                let mut no = self.value(no)?;
                 self.refinements = before_refinements;
                 if yes.ty == Type::Unit {
                     return Err(Diagnostic::new(
@@ -3007,10 +3142,43 @@ impl Checker<'_> {
                     ));
                 }
                 if yes.ty != no.ty {
-                    return Err(Diagnostic::new(
-                        offset,
-                        "Type mismatch between if expression branches; common type inference is not supported",
-                    ));
+                    let common = if yes.ty == Type::Null {
+                        Some(if no.ty.is_nullable() {
+                            no.ty.clone()
+                        } else {
+                            Type::Nullable(Box::new(no.ty.clone()))
+                        })
+                    } else if no.ty == Type::Null {
+                        Some(if yes.ty.is_nullable() {
+                            yes.ty.clone()
+                        } else {
+                            Type::Nullable(Box::new(yes.ty.clone()))
+                        })
+                    } else if yes.ty.is_nullable() && self.subtype(&no.ty, &yes.ty) {
+                        Some(yes.ty.clone())
+                    } else if no.ty.is_nullable() && self.subtype(&yes.ty, &no.ty) {
+                        Some(no.ty.clone())
+                    } else if (matches!(yes.ty, Type::Platform(_))
+                        || matches!(no.ty, Type::Platform(_)))
+                        && yes.ty.base() == no.ty.base()
+                    {
+                        Some(Type::Platform(Box::new(yes.ty.base().clone())))
+                    } else if self.subtype(&yes.ty, &no.ty) {
+                        Some(no.ty.clone())
+                    } else if self.subtype(&no.ty, &yes.ty) {
+                        Some(yes.ty.clone())
+                    } else {
+                        None
+                    };
+                    if let Some(common) = common {
+                        yes = self.coerce(yes, common.clone(), offset)?;
+                        no = self.coerce(no, common, offset)?;
+                    } else {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Type mismatch between if expression branches; common type inference is not supported",
+                        ));
+                    }
                 }
                 (
                     yes.ty.clone(),
@@ -3025,9 +3193,9 @@ impl Checker<'_> {
                 for part in parts {
                     let value = self.value(part)?;
                     if !matches!(
-                        value.ty,
+                        value.ty.base(),
                         Type::String | Type::Int | Type::Long | Type::Boolean | Type::Null
-                    ) && !matches!(&value.ty, Type::Nullable(inner) if inner.as_ref() == &Type::String)
+                    ) && !matches!(value.ty.base(), Type::Nullable(inner) if matches!(inner.as_ref(), Type::String | Type::Int | Type::Long | Type::Boolean))
                     {
                         return Err(Diagnostic::new(
                             part.offset,
@@ -3141,6 +3309,22 @@ impl Checker<'_> {
                 {
                     let value = self.value(expr)?;
                     return self.coerce(value, ty.clone(), offset);
+                }
+                if self.local(name).is_none() && !self.fields.contains_key(name) {
+                    if let Some((owner, member)) = self
+                        .imports
+                        .get(name)
+                        .and_then(|binding| binding.rsplit_once("::"))
+                    {
+                        if self.classes.get(owner).is_some_and(|class| {
+                            class
+                                .fields
+                                .iter()
+                                .any(|field| field.name == member && field.access & 8 != 0)
+                        }) {
+                            return self.java_field(owner, member, None, offset);
+                        }
+                    }
                 }
                 if let Some(local) = if name == "this" {
                     self.receiver.clone()
@@ -3257,7 +3441,10 @@ impl Checker<'_> {
                     self.require(&inner, Type::Boolean, offset)?;
                     (Type::Boolean, ValueKind::Not(Box::new(inner)))
                 } else {
-                    if !matches!(inner.ty, Type::Int | Type::Long | Type::Float) {
+                    if !matches!(
+                        inner.ty,
+                        Type::Int | Type::Long | Type::Float | Type::Double
+                    ) {
                         return Err(Diagnostic::new(
                             offset,
                             "Unary arithmetic requires Int or Long",
@@ -3327,7 +3514,11 @@ impl Checker<'_> {
                 if matches!(op.as_str(), "==" | "!=" | "===" | "!==") {
                     return self.check_equality(op, a, b, offset);
                 }
-                if a.ty == Type::Float || b.ty == Type::Float {
+                if a.ty == Type::Float
+                    || b.ty == Type::Float
+                    || a.ty == Type::Double
+                    || b.ty == Type::Double
+                {
                     return self.check_float_binary(op, a, b, offset);
                 }
                 if op == "+"
@@ -3401,6 +3592,21 @@ impl Checker<'_> {
                 (ty, ValueKind::Binary(op.clone(), Box::new(a), Box::new(b)))
             }
             ExprKind::Property(receiver, name) => {
+                if let Some(owner) = self.qualified_java_class(receiver) {
+                    return self.java_field(&owner, name, None, offset);
+                }
+                if let ExprKind::Name(primitive) = &receiver.kind {
+                    if matches!(primitive.as_str(), "Float" | "Double")
+                        && self.unshadowed(primitive)
+                    {
+                        return self.java_field(
+                            &format!("kotlin/jvm/internal/{primitive}CompanionObject"),
+                            name,
+                            None,
+                            offset,
+                        );
+                    }
+                }
                 if matches!(&receiver.kind, ExprKind::Name(n) if n == "Long")
                     && self.unshadowed("Long")
                 {
@@ -3441,7 +3647,9 @@ impl Checker<'_> {
                                             .iter()
                                             .find(|m| {
                                                 m.source_property.as_deref() == Some(name)
-                                                    && m.name == getter_name(name)
+                                                    && m.kotlin_params
+                                                        .as_ref()
+                                                        .is_some_and(Vec::is_empty)
                                             })
                                             .cloned()
                                         {
@@ -3455,6 +3663,21 @@ impl Checker<'_> {
                                                 offset,
                                             );
                                         }
+                                    }
+                                    if let Some(method) = class
+                                        .methods
+                                        .iter()
+                                        .find(|method| {
+                                            method.access & 8 != 0
+                                                && method.source_property.as_deref() == Some(name)
+                                                && method
+                                                    .kotlin_params
+                                                    .as_ref()
+                                                    .is_some_and(Vec::is_empty)
+                                        })
+                                        .cloned()
+                                    {
+                                        return self.library_static_call(method, &[], offset);
                                     }
                                     if let Some(field) =
                                         class.fields.iter().find(|f| f.name == "Companion")
@@ -3470,7 +3693,9 @@ impl Checker<'_> {
                                             .iter()
                                             .find(|m| {
                                                 m.source_property.as_deref() == Some(name)
-                                                    && m.name == getter_name(name)
+                                                    && m.kotlin_params
+                                                        .as_ref()
+                                                        .is_some_and(Vec::is_empty)
                                             })
                                             .cloned()
                                         {
@@ -3555,7 +3780,7 @@ impl Checker<'_> {
                                 .iter()
                                 .find(|m| {
                                     m.source_property.as_deref() == Some(name)
-                                        && m.name == getter_name(name)
+                                        && m.kotlin_params.as_ref().is_some_and(Vec::is_empty)
                                 })
                                 .cloned()
                             {
@@ -3570,6 +3795,9 @@ impl Checker<'_> {
                                 );
                             }
                         }
+                    }
+                    if let Some(value) = enums::property(self, &receiver, name, offset)? {
+                        return Ok(value);
                     }
                     if receiver.ty == Type::Char && name == "code" {
                         return Ok(Value {
@@ -3614,6 +3842,18 @@ impl Checker<'_> {
                             format!("Unresolved property: {name}"),
                         ));
                     }
+                    if let Some(owner) = library::type_owner(&receiver.ty) {
+                        if self.classpath.load(owner).is_ok_and(|class| {
+                            class.methods.iter().any(|method| {
+                                method.name == "<init>"
+                                    && method.kotlin_params.as_ref().is_some_and(|params| {
+                                        params.iter().any(|(parameter, _, _)| parameter == name)
+                                    })
+                            })
+                        }) {
+                            return Err(Diagnostic::new(offset, format!("Constructor parameter {name} is not a property and is unavailable outside initialization")).with_kind(crate::DiagnosticKind::InvalidKotlin, "NON_PROPERTY_CONSTRUCTOR_PARAMETER"));
+                        }
+                    }
                     return Err(Diagnostic::new(
                         offset,
                         format!("Unsupported property: {name}"),
@@ -3626,6 +3866,11 @@ impl Checker<'_> {
             ExprKind::Indices(array, indices) => return self.check_indices(array, indices, offset),
             ExprKind::Call(target, args) => match &target.kind {
                 ExprKind::Generic(target, types) => {
+                    if let ExprKind::Name(name) = &target.kind {
+                        if let Some(value) = self.lexical_call(name, args, types, None, offset)? {
+                            return Ok(value);
+                        }
+                    }
                     if let ExprKind::Name(name) = &target.kind {
                         if name == "Array" && self.unshadowed(name) {
                             return self.array_constructor(types, args, offset);
@@ -3647,7 +3892,7 @@ impl Checker<'_> {
                         }
                     }
                     let methods = match &target.kind {
-                        ExprKind::Name(name) => self.library_candidates(name),
+                        ExprKind::Name(name) => self.library_call_candidates(name),
                         ExprKind::Property(receiver, name) => {
                             if let ExprKind::Name(alias) = &receiver.kind {
                                 if let Some(owner) = self.imports.get(alias) {
@@ -3656,7 +3901,9 @@ impl Checker<'_> {
                                             .classpath
                                             .methods(owner)?
                                             .into_iter()
-                                            .filter(|m| m.name == *name && m.access & 9 == 9)
+                                            .filter(|m| {
+                                                m.source_name() == name && m.access & 9 == 9
+                                            })
                                             .collect::<Vec<_>>();
                                         let method = self
                                             .select_method_types(&methods, args, types, offset)?;
@@ -3705,8 +3952,11 @@ impl Checker<'_> {
                             kind: ValueKind::StringFromChars(values),
                         });
                     }
+                    if let Some(value) = self.lexical_call(name, args, &[], None, offset)? {
+                        return Ok(value);
+                    }
                     let imported = self
-                        .library_candidates(name)
+                        .library_call_candidates(name)
                         .into_iter()
                         .filter(|m| {
                             m.source_property.is_none()
@@ -3731,6 +3981,21 @@ impl Checker<'_> {
                     }
                     if let Some(owner) = self.imports.get(name) {
                         if let Some(class) = self.classes.get(owner) {
+                            if class.access & 0x4000 != 0 {
+                                return Err(Diagnostic::new(
+                                    offset,
+                                    "Enum constructors can only be called by enum entry initialization",
+                                ));
+                            }
+                            if class.kotlin_fun_interface {
+                                if args.len() != 1 {
+                                    return Err(Diagnostic::new(
+                                        offset,
+                                        "Functional interface construction requires one function argument",
+                                    ));
+                                }
+                                return self.expected_value(&args[0], &Type::Java(owner.clone()));
+                            }
                             let constructors: Vec<_> = class
                                 .methods
                                 .iter()
@@ -3743,6 +4008,8 @@ impl Checker<'_> {
                                 .cloned()
                                 .collect();
                             let method = self.select_method(&constructors, args, offset)?;
+                            let normalized = self.vararg_arguments(&method, args, offset)?;
+                            let args = normalized.as_slice();
                             let (types, _) = class_method_types(&method)?;
                             let params = method.kotlin_params.clone().unwrap_or_else(|| {
                                 types
@@ -3778,11 +4045,11 @@ impl Checker<'_> {
                     if self.object_methods.contains_key(name) {
                         return self.object_call(name, args, None, offset);
                     }
-                    if self.members.values().any(|m| m.name == *name) {
+                    if self.members.values().any(|m| m.source_name() == name) {
                         let candidates = self
                             .members
                             .values()
-                            .filter(|m| m.name == *name)
+                            .filter(|m| m.source_name() == name)
                             .cloned()
                             .collect::<Vec<_>>();
                         let method = self.select_method(&candidates, args, offset)?;
@@ -3803,10 +4070,18 @@ impl Checker<'_> {
                     if matches!(name.as_str(), "IntArray" | "ByteArray" | "CharArray")
                         && self.unshadowed(name)
                     {
+                        if args.len() == 2 {
+                            let array = match name.as_str() {
+                                "IntArray" => Type::IntArray,
+                                "ByteArray" => Type::ByteArray,
+                                _ => Type::CharArray,
+                            };
+                            return self.primitive_array_constructor(array, args, offset);
+                        }
                         if args.len() != 1 {
                             return Err(Diagnostic::new(
                                 offset,
-                                "Array allocation requires one size argument",
+                                "Array allocation requires size and optional initializer",
                             ));
                         }
                         let size = self.value(&args[0])?;
@@ -3836,6 +4111,9 @@ impl Checker<'_> {
                     return self.source_call(name, args, &[], offset);
                 }
                 ExprKind::Property(receiver, name) => {
+                    if let Some(owner) = self.qualified_java_class(receiver) {
+                        return self.java_static(&owner, name, args, offset);
+                    }
                     if self
                         .local(name)
                         .is_some_and(|l| matches!(l.ty, Type::ReceiverFunction { .. }))
@@ -3859,7 +4137,9 @@ impl Checker<'_> {
                             .classpath
                             .methods(&parent)?
                             .into_iter()
-                            .filter(|m| m.name == *name && m.access & 8 == 0 && m.access & 5 != 0)
+                            .filter(|m| {
+                                m.source_name() == name && m.access & 8 == 0 && m.access & 5 != 0
+                            })
                             .collect::<Vec<_>>();
                         let method = self.select_method(&methods, args, offset)?;
                         let call = self.member_call(method.clone(), this, args, offset)?;
@@ -3929,7 +4209,9 @@ impl Checker<'_> {
                                             .classpath
                                             .methods(owner)?
                                             .into_iter()
-                                            .filter(|m| m.name == *name && m.access & 1 != 0)
+                                            .filter(|m| {
+                                                m.source_name() == name && m.access & 1 != 0
+                                            })
                                             .collect::<Vec<_>>();
                                         let method = self.select_method(&methods, args, offset)?;
                                         return if method.access & 8 != 0 {
@@ -4032,17 +4314,24 @@ impl Checker<'_> {
                     }
                     if matches!(
                         receiver.ty,
-                        Type::Int | Type::Byte | Type::Char | Type::Long | Type::Float
+                        Type::Int
+                            | Type::Byte
+                            | Type::Char
+                            | Type::Long
+                            | Type::Float
+                            | Type::Double
                     ) && args.is_empty()
                         && matches!(
                             name.as_str(),
-                            "toInt" | "toByte" | "toChar" | "toLong" | "toFloat"
+                            "toInt" | "toByte" | "toChar" | "toLong" | "toFloat" | "toDouble"
                         )
                     {
-                        if matches!(receiver.ty, Type::Float | Type::Long) && name == "toChar" {
+                        if matches!(receiver.ty, Type::Float | Type::Double | Type::Long)
+                            && name == "toChar"
+                        {
                             return Err(Diagnostic::new(
                                 offset,
-                                "Direct Long and Float conversions to Char are deprecated; convert to Int first",
+                                "Direct Long, Float, and Double conversions to Char are deprecated; convert to Int first",
                             ));
                         }
                         let target = match name.as_str() {
@@ -4050,6 +4339,7 @@ impl Checker<'_> {
                             "toChar" => Type::Char,
                             "toLong" => Type::Long,
                             "toFloat" => Type::Float,
+                            "toDouble" => Type::Double,
                             _ => Type::Int,
                         };
                         return Ok(Value {
@@ -4075,12 +4365,12 @@ impl Checker<'_> {
                         .receiver
                         .as_ref()
                         .is_some_and(|this| this.ty == receiver.ty)
-                        && self.members.values().any(|m| m.name == *name)
+                        && self.members.values().any(|m| m.source_name() == name)
                     {
                         let candidates = self
                             .members
                             .values()
-                            .filter(|m| m.name == *name)
+                            .filter(|m| m.source_name() == name)
                             .cloned()
                             .collect::<Vec<_>>();
                         let selected = self.select_method(&candidates, args, offset);
@@ -4099,8 +4389,10 @@ impl Checker<'_> {
                             return self.member_call(method, receiver, args, offset);
                         }
                     }
-                    if matches!(receiver.ty, Type::Int | Type::Long)
-                        && name == "toString"
+                    if matches!(
+                        receiver.ty,
+                        Type::Int | Type::Long | Type::Float | Type::Double
+                    ) && name == "toString"
                         && args.is_empty()
                     {
                         return Ok(Value {
@@ -4353,6 +4645,8 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
                     offset,
                     format!("Type requires an explicit class import: {name}"),
                 )
+                .with_kind(crate::DiagnosticKind::MissingDependency, "CLASS_NOT_FOUND")
+                .for_type(name)
             }),
         _ => Ok(ty.clone()),
     }
@@ -4397,6 +4691,11 @@ fn loses_member_type(_ty: &Type) -> bool {
 }
 fn call_names(expr: &Expr, names: &mut HashSet<String>) {
     match &expr.kind {
+        ExprKind::VarargArray { elements, .. } => {
+            for element in elements {
+                call_names(element, names);
+            }
+        }
         ExprKind::Block(body) => body_call_names(body, names),
         ExprKind::Try {
             body,
@@ -4435,6 +4734,7 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
         | ExprKind::Int(_)
         | ExprKind::Long(_)
         | ExprKind::Float(_)
+        | ExprKind::Double(_)
         | ExprKind::Boolean(_)
         | ExprKind::String(_)
         | ExprKind::Char(_)
@@ -4646,6 +4946,12 @@ pub fn check_with_owner(
     let mut imports = HashMap::new();
     let mut classes = HashMap::new();
     for (alias, name, offset) in &source.imports {
+        if let Some((package, member)) = name.rsplit_once('/') {
+            if classpath.type_alias(package, member)?.is_some() {
+                imports.insert(alias.clone(), name.clone());
+                continue;
+            }
+        }
         if alias == "*" {
             let package = name.trim_end_matches("/*");
             let package_classes = classpath.package_classes(package)?;
@@ -4691,13 +4997,39 @@ pub fn check_with_owner(
             continue;
         }
         if classpath.load(name).is_err() {
+            if let Some((parent, member)) = name.rsplit_once('/') {
+                if let Ok(class) = classpath.load(parent) {
+                    if class
+                        .fields
+                        .iter()
+                        .any(|field| field.name == member && field.access & 8 != 0)
+                        || class.methods.iter().any(|method| {
+                            method.access & 8 != 0
+                                && (method.name == member
+                                    || method.source_property.as_deref() == Some(member)
+                                    || method
+                                        .library
+                                        .as_ref()
+                                        .is_some_and(|library| library.source_name == member))
+                        })
+                    {
+                        imports.insert(alias.clone(), format!("{parent}::{member}"));
+                        classes.insert(parent.into(), class);
+                        continue;
+                    }
+                }
+            }
             if let Some((package, member)) = name.rsplit_once('/') {
                 let mut found = false;
                 for class in classpath.package_classes(package)? {
                     if class.methods.iter().any(|m| {
                         m.source_property.as_deref() == Some(member)
                             || m.library.as_ref().is_some_and(|l| l.source_name == member)
-                    }) {
+                    }) || class
+                        .fields
+                        .iter()
+                        .any(|field| field.name == member && field.access & 8 != 0)
+                    {
                         imports.insert(alias.clone(), format!("{}::{member}", class.name));
                         classes.insert(class.name.clone(), class);
                         found = true;
@@ -4748,6 +5080,7 @@ pub fn check_with_owner(
                 | "ThreadLocal"
                 | "Char"
                 | "Float"
+                | "Double"
                 | "Boolean"
                 | "String"
                 | "IntArray"
@@ -4762,7 +5095,20 @@ pub fn check_with_owner(
                 "Imports shadowing builtin types are not supported",
             ));
         }
+        if let Some(code) = annotations::unsupported_lowering(name) {
+            return Err(Diagnostic::new(
+                *offset,
+                format!("Annotation {name} requires unsupported compiler JVM semantics"),
+            )
+            .with_kind(crate::DiagnosticKind::UnsupportedLanguage, code));
+        }
         let class = classpath.load(name)?;
+        if class.access & 0x2000 != 0 && class.annotation_definition.is_none() {
+            return Err(Diagnostic::new(
+                *offset,
+                format!("Unsupported annotation definition or required compiler plugin: {name}"),
+            ));
+        }
         if class.access & 1 == 0 || class.unsupported {
             return Err(Diagnostic::new(
                 *offset,
@@ -4830,6 +5176,8 @@ pub fn check_with_owner(
         classes.insert(
             class_owner.clone(),
             classpath.load(&class_owner).unwrap_or_else(|_| JavaClass {
+                annotation_definition: None,
+                kotlin_fun_interface: false,
                 library: None,
                 name: class_owner,
                 access: 1,
@@ -4886,23 +5234,50 @@ pub fn check_with_owner(
             own.extend(i.nested.iter());
         }
     }
+    let mut referenced = referenced.into_iter().collect::<Vec<_>>();
+    referenced.sort_by_key(|name| {
+        (
+            source
+                .type_locations
+                .iter()
+                .find(|(candidate, _)| candidate == name)
+                .map_or(usize::MAX, |(_, offset)| *offset),
+            name.clone(),
+        )
+    });
     for name in referenced {
+        let type_offset = source
+            .type_locations
+            .iter()
+            .find(|(candidate, _)| candidate == &name)
+            .map_or(0, |(_, offset)| *offset);
+        let resolved_owner = resolve_type(&Type::Java(name.clone()), &imports, 0)
+            .ok()
+            .and_then(|ty| match ty {
+                Type::Java(owner) if owner.contains('/') => Some(owner),
+                _ => None,
+            });
         if let std::collections::hash_map::Entry::Vacant(entry) = imports.entry(name.clone()) {
-            let owner = if source.package.is_empty() || name.contains('/') {
-                name.clone()
-            } else {
-                format!("{}/{}", source.package.replace('.', "/"), name)
-            };
+            let owner = resolved_owner.unwrap_or_else(|| {
+                if source.package.is_empty() || name.contains('/') {
+                    name.clone()
+                } else {
+                    format!("{}/{}", source.package.replace('.', "/"), name)
+                }
+            });
             if renamed_imports.contains(&owner) {
                 return Err(Diagnostic::new(
-                    0,
+                    type_offset,
                     format!("Unresolved aliased type: {name}"),
                 ));
             }
-            let class = classpath.load(&owner)?;
+            let class = classpath.load(&owner).map_err(|mut error| {
+                error.offset = type_offset;
+                error
+            })?;
             if class.access & 1 == 0 || class.unsupported {
                 return Err(Diagnostic::new(
-                    0,
+                    type_offset,
                     "Same-package class is inaccessible or unsupported",
                 ));
             }
@@ -5118,6 +5493,7 @@ pub fn check_with_owner(
         .properties
         .iter()
         .map(|p| syntax::ClassCompanionProperty {
+            annotations: p.annotations.clone(),
             name: p.name.clone(),
             offset: p.offset,
             private: p.private,
@@ -5161,10 +5537,10 @@ pub fn check_with_owner(
             params.iter().map(|p| p.1.descriptor()).collect::<String>()
         );
         if !jvm_signatures.insert(key) {
-            return Err(Diagnostic::new(
-                function.offset,
-                "Conflicting JVM function signature",
-            ));
+            return Err(
+                Diagnostic::new(function.offset, "Conflicting JVM function signature")
+                    .with_kind(crate::DiagnosticKind::InvalidKotlin, "JVM_SIGNATURE_CLASH"),
+            );
         }
     }
     let function_names = source
@@ -5295,6 +5671,15 @@ pub fn check_with_owner(
             params[0].0 = "<this>".into();
         }
         result.push(Function {
+            jvm_name: None,
+            annotations: annotations::declaration_annotations(
+                &function.annotations,
+                classpath,
+                &imports,
+                "METHOD",
+                None,
+            )?,
+            vararg: function.vararg,
             type_params: resolve_parameters(
                 &function.type_params,
                 &imports,
@@ -5369,6 +5754,7 @@ pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type
             ("C", Type::Char),
             ("Z", Type::Boolean),
             ("F", Type::Float),
+            ("D", Type::Double),
             ("V", Type::Unit),
         ] {
             if rest.starts_with(prefix) {
@@ -5433,6 +5819,7 @@ fn zero_value(ty: &Type) -> Value {
         kind: match ty {
             Type::Long => ValueKind::Long(0),
             Type::Float => ValueKind::Float(0),
+            Type::Double => ValueKind::Double(0),
             Type::Boolean => ValueKind::Boolean(false),
             t if t.is_reference() => ValueKind::Null,
             _ => ValueKind::Int(0),
@@ -5443,6 +5830,7 @@ fn zero_value(ty: &Type) -> Value {
 fn clone_constant(c: &syntax::ConstDecl) -> syntax::ConstDecl {
     use syntax::ConstValue as C;
     syntax::ConstDecl {
+        annotations: c.annotations.clone(),
         name: c.name.clone(),
         offset: c.offset,
         private: c.private,
@@ -5451,6 +5839,7 @@ fn clone_constant(c: &syntax::ConstDecl) -> syntax::ConstDecl {
             C::Int(v) => C::Int(*v),
             C::Long(v) => C::Long(*v),
             C::Float(v) => C::Float(*v),
+            C::Double(v) => C::Double(*v),
             C::Char(v) => C::Char(*v),
             C::Boolean(v) => C::Boolean(*v),
             C::String(v) => C::String(v.clone()),
@@ -5463,6 +5852,7 @@ fn constant_expr(value: &syntax::ConstValue) -> (Type, ExprKind) {
         C::Int(v) => (Type::Int, ExprKind::Int(i64::from(*v))),
         C::Long(v) => (Type::Long, ExprKind::Long(i128::from(*v))),
         C::Float(v) => (Type::Float, ExprKind::Float(*v)),
+        C::Double(v) => (Type::Double, ExprKind::Double(*v)),
         C::Char(v) => (Type::Char, ExprKind::Char(*v)),
         C::Boolean(v) => (Type::Boolean, ExprKind::Boolean(*v)),
         C::String(v) => (Type::String, ExprKind::String(v.clone())),

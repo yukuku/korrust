@@ -46,6 +46,53 @@ def executable(name):
     raise RuntimeError("Required executable is missing: " + name)
 
 
+def run_supported_regression(fixture, source, dependencies, *, work, kotlinc, compiler,
+                             stdlib, options, tools, run,
+                             normalize_abi=canonical_source_abi, verify_candidate=None):
+    regression = fixture["supported_regression"]
+    if regression.get("supplier_fields") and verify_candidate is None:
+        raise AssertionError("Supplier regression requires independent helper verification")
+    directory = work / "supported-regressions" / fixture["id"]
+    directory.mkdir(parents=True)
+    java_source = directory / "RegressionCheck.java"
+    java_source.write_text("public class RegressionCheck { public static void main(String[] args) throws Exception {\n" + regression["java_assertions"] + "\nSystem.out.println(\"ok\"); } }\n")
+    cp = lambda *paths: os.pathsep.join(str(path) for path in paths)
+    outputs = {}
+    for provider, tool in [("official", kotlinc), ("candidate", compiler)]:
+        output = directory / provider
+        args = [tool, source, *(["-cp", cp(*dependencies)] if dependencies else []), *([] if provider == "candidate" else options), "-d", output]
+        run("Compile supported regression " + fixture["id"] + " with " + provider, args)
+        outputs[provider] = output
+    driver_output = directory / "drivers"
+    run("Compile Java regression caller " + fixture["id"] + " against official Kotlin", [tools["javac"], "-cp", cp(outputs["official"], *dependencies, stdlib), "-d", driver_output, java_source])
+
+    def driver_hashes():
+        return {path.relative_to(driver_output).as_posix(): sha(path)
+                for path in sorted(driver_output.rglob("*.class"))}
+
+    fixed_driver = driver_hashes()
+    if "RegressionCheck.class" not in fixed_driver:
+        raise AssertionError("Missing official-compiled regression caller: " + fixture["id"])
+    for provider, output in outputs.items():
+        if driver_hashes() != fixed_driver:
+            raise AssertionError("Regression caller bytecode changed: " + fixture["id"])
+        result = run("Run supported regression " + fixture["id"] + " against " + provider, [tools["java"], "-Xverify:all", "-cp", cp(driver_output, output, *dependencies, stdlib), "RegressionCheck"])
+        if result.stdout != "ok\n":
+            raise AssertionError("Unexpected regression output: " + fixture["id"])
+    if driver_hashes() != fixed_driver:
+        raise AssertionError("Regression caller bytecode changed: " + fixture["id"])
+    signatures = [run("Inspect supported regression ABI " + fixture["id"] + " from " + provider, [tools["javap"], "-protected", "-s", "-classpath", output, regression["facade"]]).stdout for provider, output in outputs.items()]
+    if normalize_abi(signatures[0]) != normalize_abi(signatures[1]):
+        raise AssertionError("Regression JVM signatures differ: " + fixture["id"])
+    if verify_candidate is not None:
+        verify_candidate(outputs["candidate"])
+    return {"id": "regressions/" + fixture["id"], "outcome": "pass",
+            "scope": "Former unsupported fixture compiles with both providers. One Java caller compiled against official output runs independent assertions against both providers with JVM verification all; its classfile hashes remain identical. Public/protected javap declarations and descriptors match after member-order normalization and any explicitly verified Supplier filtering.",
+            "source_sha256": sha(source), "driver_sha256": sha(java_source),
+            "driver_classfiles_sha256": fixed_driver,
+            **({"runtime_checks": regression["runtime_checks"]} if "runtime_checks" in regression else {})}
+
+
 def main():
     now = datetime.now(timezone.utc)
     run_id = now.strftime("%Y-%m-%dT%H%M%S%fZ") + "-io-byte-arrays"
@@ -379,30 +426,13 @@ def main():
                           "scope": "Both compilers reject; Korrust diagnostic category checked. Exact official error wording is not compared."})
         def supported_regression(fixture, source, dependencies):
             regression = fixture["supported_regression"]
-            directory = work / "supported-regressions" / fixture["id"]
-            directory.mkdir(parents=True)
-            java_source = directory / "RegressionCheck.java"
-            java_source.write_text("public class RegressionCheck { public static void main(String[] args) {\n" + regression["java_assertions"] + "\nSystem.out.println(\"ok\"); } }\n")
-            outputs = {}
-            for provider, tool in [("official", kotlinc), ("candidate", compiler)]:
-                output = directory / provider
-                args = [tool, source, *(["-cp", cp(*dependencies)] if dependencies else []), *([] if provider == "candidate" else options), "-d", output]
-                run("Compile supported regression " + fixture["id"] + " with " + provider, args)
-                outputs[provider] = output
-            driver_output = directory / "drivers"
-            run("Compile Java regression caller " + fixture["id"] + " against official Kotlin", [javac, "-cp", cp(outputs["official"], *dependencies, stdlib), "-d", driver_output, java_source])
-            for provider, output in outputs.items():
-                result = run("Run supported regression " + fixture["id"] + " against " + provider, [java, "-Xverify:all", "-cp", cp(driver_output, output, *dependencies, stdlib), "RegressionCheck"])
-                if result.stdout != "ok\n":
-                    raise AssertionError("Unexpected regression output: " + fixture["id"])
-            signatures = [run("Inspect supported regression ABI " + fixture["id"] + " from " + provider, [javap, "-protected", "-s", "-classpath", output, regression["facade"]]).stdout for provider, output in outputs.items()]
             fields = regression.get("supplier_fields")
             normalize = (lambda text: source_abi(text, fields)) if fields else canonical_source_abi
-            if normalize(signatures[0]) != normalize(signatures[1]):
-                raise AssertionError("Regression JVM signatures differ: " + fixture["id"])
-            if fields:
-                run("Verify regression synthetic Supplier contracts " + fixture["id"], [java, "-Xverify:all", "-cp", cp(io_drivers, outputs["candidate"], *dependencies, stdlib), "SupplierCheck", regression["facade"]])
-            cases.append({"id": "regressions/" + fixture["id"], "outcome": "pass", "scope": "Former unsupported fixture now compiles with both providers; Java caller compiled against official output runs independent assertions against each provider under JVM verification all; public/protected javap declarations and descriptors match after member-order normalization and exact validated Supplier helper filtering.", "source_sha256": sha(source), "driver_sha256": sha(java_source)})
+            verify = (lambda output: run("Verify regression synthetic Supplier contracts " + fixture["id"], [java, "-Xverify:all", "-cp", cp(io_drivers, output, *dependencies, stdlib), "SupplierCheck", regression["facade"]])) if fields else None
+            cases.append(run_supported_regression(
+                fixture, source, dependencies, work=work, kotlinc=kotlinc, compiler=compiler,
+                stdlib=stdlib, options=options, tools={"java": java, "javac": javac, "javap": javap},
+                run=run, normalize_abi=normalize, verify_candidate=verify))
 
         for fixture in json.loads((ROOT / "tests/unsupported.json").read_text()):
             source = work / (fixture["id"] + ".kt")

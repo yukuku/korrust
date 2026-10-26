@@ -1,0 +1,23 @@
+{
+  "binary_sha256": "caa699dac6951e676fdd28375d0ab8488e978a4c5484e6a581caaef334dd42f5",
+  "rust_and_cargo_sources_identical": true,
+  "only_changed_files": [
+    "tests/interop_unsupported.json",
+    "tests/test_androidbible_assessment.py",
+    "tests/test_androidbible_build.py",
+    "tests/test_interop_boundary_promotions.py",
+    "tools/assess_androidbible.py",
+    "tools/build_androidbible.py",
+    "tools/check.py"
+  ],
+  "baseline_only_changes": [
+    "tests/interop_unsupported.json",
+    "tests/test_interop_boundary_promotions.py",
+    "tools/check.py"
+  ],
+  "scope": "Unchanged final compiler; baseline helper extraction preserves fixed official Java runtime/ABI and Supplier checks, adds immutable driver hashes, and promotes only the unchanged supported Java annotated-method row. Other six interop row objects remain byte-value identical. The complete v6 baseline independently rebuilt the release executable and reproduced the exact v4 SHA-256.",
+  "binary_first_built_in": "/workspace/korrust/target/final-compatibility-snapshot-v4",
+  "binary_rebuilt_in": "/workspace/korrust/target/final-compatibility-snapshot-v6",
+  "independent_baseline_rebuild_byte_identical": true,
+  "rebuild_command": "cargo build --release --locked --offline"
+}

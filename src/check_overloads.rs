@@ -83,16 +83,34 @@ impl Checker<'_> {
             .map(|params| params.len().saturating_sub(args.len()))
             .collect::<Vec<_>>();
         let forwards = |first: usize, second: usize| {
-            mapping[first].iter().zip(&mapping[second]).all(
-                |(first_parameter, second_parameter)| {
+            mapping[first].iter().zip(&mapping[second]).enumerate().all(
+                |(argument_index, (first_parameter, second_parameter))| {
                     let first = &parameters[first][*first_parameter];
                     let second = &parameters[second][*second_parameter];
                     if matches!(first, Type::Int | Type::Byte | Type::Long)
                         && matches!(second, Type::Int | Type::Byte | Type::Long)
                     {
                         first == second || first == &Type::Int
+                    } else if self.subtype(first, second) {
+                        true
                     } else {
-                        self.subtype(first, second)
+                        let mut argument = &args[argument_index];
+                        while let ExprKind::NamedArgument(_, value) | ExprKind::Labeled(_, value) =
+                            &argument.kind
+                        {
+                            argument = value;
+                        }
+                        matches!(
+                            argument.kind,
+                            ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
+                        ) && matches!(
+                            first.base(),
+                            Type::Function { .. } | Type::ReceiverFunction { .. }
+                        ) && self
+                            .sam_function(second, argument.offset)
+                            .ok()
+                            .flatten()
+                            .is_some_and(|(_, function)| self.subtype(first, &function))
                     }
                 },
             )

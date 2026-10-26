@@ -26,6 +26,10 @@ pub(crate) const DEFAULT_KOTLIN_PACKAGES: &[&str] = &[
 #[derive(Clone)]
 pub(crate) struct Classpath {
     paths: Vec<PathBuf>,
+    module_name: String,
+    friends: std::collections::HashSet<PathBuf>,
+    source_files: std::cell::RefCell<std::collections::HashMap<String, (String, bool)>>,
+    origins: std::cell::RefCell<std::collections::HashMap<String, PathBuf>>,
     cache: std::cell::RefCell<std::collections::HashMap<String, JavaClass>>,
     package_names: std::cell::RefCell<std::collections::HashMap<String, Vec<String>>>,
     sources: std::cell::RefCell<std::collections::HashSet<String>>,
@@ -38,8 +42,24 @@ struct PackageIndex {
     aliases: std::collections::HashMap<String, Vec<LibraryTypeAlias>>,
 }
 
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) enum AnnotationRetention {
+    Source,
+    Class,
+    Runtime,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) struct AnnotationDefinition {
+    pub retention: AnnotationRetention,
+    pub targets: Vec<String>,
+    pub parameters: Vec<(String, String, bool)>,
+}
+
 #[derive(Clone, Debug)]
 pub(crate) struct JavaClass {
+    pub annotation_definition: Option<AnnotationDefinition>,
+    pub kotlin_fun_interface: bool,
     pub library: Option<LibraryClass>,
     pub name: String,
     pub access: u16,
@@ -67,6 +87,7 @@ pub(crate) enum JavaConstant {
     Int(i32),
     Long(i64),
     Float(u32),
+    Double(u64),
     String(Vec<u16>),
 }
 
@@ -102,6 +123,8 @@ pub(crate) struct LibraryTypeAlias {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryMethod {
+    pub abstract_: bool,
+    pub builtin_array: bool,
     pub kotlin_public: bool,
     pub source_name: String,
     pub type_parameters: Vec<TypeParameter>,
@@ -127,6 +150,7 @@ pub(crate) enum InlineConstant {
     Integer(i32),
     Long(i64),
     Float(u32),
+    Double(u64),
     String(Vec<u16>),
     Field {
         owner: String,
@@ -139,6 +163,14 @@ pub(crate) enum InlineConstant {
         descriptor: String,
         interface: bool,
     },
+}
+
+impl JavaMethod {
+    pub(crate) fn source_name(&self) -> &str {
+        self.library
+            .as_ref()
+            .map_or(self.name.as_str(), |library| library.source_name.as_str())
+    }
 }
 
 impl Classpath {
@@ -210,8 +242,49 @@ impl Classpath {
         Ok(package)
     }
 
+    fn builtin_array_class(&self, package: &str) -> Result<Option<JavaClass>> {
+        if package != "kotlin" {
+            return Ok(None);
+        }
+        const OWNER: &str = "kotlin/<builtins>";
+        if let Some(class) = self.cache.borrow().get(OWNER).cloned() {
+            return Ok(Some(class));
+        }
+        for path in &self.paths {
+            if let Some(bytes) = archive::read(path, "kotlin/kotlin.kotlin_builtins")? {
+                let methods = metadata::builtin_array_factories(&bytes)?;
+                let class = JavaClass {
+                    annotation_definition: None,
+                    kotlin_fun_interface: false,
+                    library: Some(LibraryClass {
+                        type_aliases: Vec::new(),
+                        type_parameters: Vec::new(),
+                        supertypes: Vec::new(),
+                        package: Some("kotlin".into()),
+                        multifile_facade: None,
+                    }),
+                    name: OWNER.into(),
+                    access: 1,
+                    super_name: Some("java/lang/Object".into()),
+                    interfaces: Vec::new(),
+                    methods,
+                    fields: Vec::new(),
+                    kotlin_class: true,
+                    unsupported: false,
+                    kotlin_interface: false,
+                };
+                self.cache.borrow_mut().insert(OWNER.into(), class.clone());
+                return Ok(Some(class));
+            }
+        }
+        Ok(None)
+    }
+
     fn package_facades(&self, package: &str) -> Result<Vec<JavaClass>> {
         let mut names = std::collections::BTreeSet::new();
+        if let Some(class) = self.builtin_array_class(package)? {
+            names.insert(class.name);
+        }
         for name in self.sources.borrow().iter() {
             if name.rsplit_once('/').map_or("", |(package, _)| package) == package
                 && self.cache.borrow().get(name).is_some_and(|class| {
@@ -244,7 +317,93 @@ impl Classpath {
         }
         names.into_iter().map(|name| self.load(&name)).collect()
     }
+    pub(crate) fn register_source_file(&self, owner: &str, identity: &str, facade: bool) {
+        self.source_files
+            .borrow_mut()
+            .insert(owner.into(), (identity.into(), facade));
+    }
+
+    pub(crate) fn same_source_file(&self, first: &str, second: &str) -> bool {
+        let files = self.source_files.borrow();
+        files
+            .get(first)
+            .zip(files.get(second))
+            .is_some_and(|(a, b)| a.0 == b.0)
+    }
+
+    pub(crate) fn file_private_visible(&self, caller: &str, method: &JavaMethod) -> bool {
+        method.access & 2 != 0
+            && self
+                .source_files
+                .borrow()
+                .get(&method.owner)
+                .is_some_and(|(_, facade)| *facade)
+            && self.same_source_file(caller, &method.owner)
+    }
+
+    pub(crate) fn internal_visible(&self, owner: &str) -> bool {
+        self.is_source(owner)
+            || self
+                .origins
+                .borrow()
+                .get(owner)
+                .is_some_and(|origin| self.friends.contains(origin))
+    }
+
+    pub(crate) fn source_jvm_name(&self, owner: &str, name: &str, internal: bool) -> String {
+        if internal
+            && !self
+                .source_files
+                .borrow()
+                .get(owner)
+                .is_some_and(|(_, facade)| *facade)
+        {
+            format!(
+                "{name}${}",
+                self.module_name
+                    .chars()
+                    .map(|c| if c.is_ascii_alphanumeric() { c } else { '_' })
+                    .collect::<String>()
+            )
+        } else {
+            name.into()
+        }
+    }
+
+    pub(crate) fn source_methods(&self) -> Vec<JavaMethod> {
+        self.cache
+            .borrow()
+            .values()
+            .filter(|class| self.is_source(&class.name))
+            .flat_map(|class| class.methods.clone())
+            .collect()
+    }
+
+    pub(crate) fn apply_source_names(&self) {
+        for class in self.cache.borrow_mut().values_mut() {
+            if self.is_source(&class.name) {
+                for method in &mut class.methods {
+                    if method.kotlin_internal && !method.name.starts_with('<') {
+                        method.name =
+                            self.source_jvm_name(&method.owner, method.source_name(), true);
+                    }
+                }
+            }
+        }
+        self.package_index.borrow_mut().clear();
+    }
+
     pub(crate) fn register_source(&self, class: JavaClass) {
+        if !self.source_files.borrow().contains_key(&class.name) {
+            if let Some(parent) = class.name.strip_suffix("$Companion") {
+                let origin = { self.source_files.borrow().get(parent).cloned() };
+                if let Some((identity, _)) = origin {
+                    self.source_files
+                        .borrow_mut()
+                        .insert(class.name.clone(), (identity, false));
+                }
+            }
+        }
         self.sources.borrow_mut().insert(class.name.clone());
         let package = class
             .name
@@ -273,10 +432,32 @@ impl Classpath {
         self.register_source(source::header(module, owner, self)?);
         Ok(())
     }
+    #[cfg(test)]
     pub fn new(paths: &[PathBuf]) -> Result<Self> {
+        Self::with_options(paths, &crate::CompileOptions::default())
+    }
+
+    pub(crate) fn with_options(paths: &[PathBuf], options: &crate::CompileOptions) -> Result<Self> {
         archive::validate(paths)?;
+        let friends = options
+            .friend_paths
+            .iter()
+            .map(|path| {
+                std::fs::canonicalize(path).map_err(|error| {
+                    Diagnostic::new(
+                        0,
+                        format!("Invalid friend path {}: {error}", path.display()),
+                    )
+                    .with_kind(crate::DiagnosticKind::Setup, "INVALID_FRIEND_PATH")
+                })
+            })
+            .collect::<Result<_>>()?;
         Ok(Self {
             paths: paths.to_vec(),
+            module_name: options.module_name.clone(),
+            friends,
+            source_files: Default::default(),
+            origins: Default::default(),
             cache: Default::default(),
             package_names: Default::default(),
             sources: Default::default(),
@@ -316,10 +497,16 @@ impl Classpath {
         }
         for path in &self.paths {
             if let Some(bytes) = archive::read(path, &format!("{internal_name}.class"))? {
-                return parse(&bytes, internal_name).map_err(|mut e| {
+                let class = parse(&bytes, internal_name).map_err(|mut e| {
                     e.message = format!("{}!{internal_name}: {}", path.display(), e.message);
                     e
-                });
+                })?;
+                let origin = std::fs::canonicalize(path)
+                    .map_err(|error| Diagnostic::new(0, error.to_string()))?;
+                self.origins
+                    .borrow_mut()
+                    .insert(internal_name.into(), origin);
+                return Ok(class);
             }
         }
         if internal_name.starts_with("java/") || internal_name.starts_with("javax/") {
@@ -340,11 +527,13 @@ impl Classpath {
                 "Java class {} was not found on the classpath",
                 internal_name.replace('/', ".")
             ),
-        ))
+        )
+        .with_kind(crate::DiagnosticKind::MissingDependency, "CLASS_NOT_FOUND"))
     }
 
     pub fn package_classes(&self, package: &str) -> Result<Vec<JavaClass>> {
         let package = package.replace('.', "/");
+        let builtin = self.builtin_array_class(&package)?;
         if !package.is_empty() && !valid_name(&package) {
             return Err(invalid());
         }
@@ -352,6 +541,10 @@ impl Classpath {
             return names.iter().map(|name| self.load(name)).collect();
         }
         let mut names = std::collections::BTreeSet::new();
+        if let Some(class) = builtin {
+            names.insert(class.name);
+        }
+
         for name in self.sources.borrow().iter() {
             if name.rsplit_once('/').map_or("", |(package, _)| package) == package {
                 names.insert(name.clone());
@@ -464,6 +657,7 @@ enum Constant {
     Class(u16),
     Integer(u32),
     Float(u32),
+    Double(u64),
     Long(i64),
     String(u16),
     NameAndType(u16, u16),
@@ -490,6 +684,7 @@ fn inline_constants(pool: &[Constant]) -> Result<std::collections::BTreeMap<u16,
             Constant::Integer(value) => Some(InlineConstant::Integer(*value as i32)),
             Constant::Long(value) => Some(InlineConstant::Long(*value)),
             Constant::Float(value) => Some(InlineConstant::Float(*value)),
+            Constant::Double(value) => Some(InlineConstant::Double(*value)),
             Constant::String(index) => match pool.get(usize::from(*index)) {
                 Some(Constant::Utf8(_, units)) => Some(InlineConstant::String(units.clone())),
                 _ => return Err(invalid()),
@@ -574,6 +769,7 @@ fn modified_utf8(bytes: &[u8]) -> Result<String> {
 enum AnnotationValue {
     Integer(u32),
     String(String),
+    Enum { descriptor: String, name: String },
     Array(Vec<AnnotationValue>),
     Other,
 }
@@ -593,6 +789,7 @@ struct Attributes {
     signature: Option<String>,
     constant: Option<u16>,
     code: Option<JavaCode>,
+    annotation_default: bool,
 }
 
 fn annotation_value(
@@ -604,7 +801,7 @@ fn annotation_value(
         return Err(invalid());
     }
     Ok(match reader.u1()? {
-        b'I' => match pool.get(usize::from(reader.u2()?)) {
+        b'I' | b'Z' => match pool.get(usize::from(reader.u2()?)) {
             Some(Constant::Integer(value)) => AnnotationValue::Integer(*value),
             _ => return Err(invalid()),
         },
@@ -621,16 +818,15 @@ fn annotation_value(
             annotation(reader, pool, depth + 1)?;
             AnnotationValue::Other
         }
-        b'e' => {
-            utf8(pool, reader.u2()?)?;
-            utf8(pool, reader.u2()?)?;
-            AnnotationValue::Other
-        }
+        b'e' => AnnotationValue::Enum {
+            descriptor: utf8(pool, reader.u2()?)?.to_owned(),
+            name: utf8(pool, reader.u2()?)?.to_owned(),
+        },
         b'c' => {
             utf8(pool, reader.u2()?)?;
             AnnotationValue::Other
         }
-        b'B' | b'C' | b'D' | b'F' | b'J' | b'S' | b'Z' => {
+        b'B' | b'C' | b'D' | b'F' | b'J' | b'S' => {
             let index = usize::from(reader.u2()?);
             if index == 0 || index >= pool.len() {
                 return Err(invalid());
@@ -717,6 +913,13 @@ fn attributes(
                     exception_handlers,
                     constants: constants.clone(),
                 });
+            }
+            "AnnotationDefault" => {
+                if result.annotation_default {
+                    return Err(invalid());
+                }
+                annotation_value(&mut data, pool, 0)?;
+                result.annotation_default = true;
             }
             "ConstantValue" => {
                 if result.constant.is_some() {
@@ -1310,6 +1513,7 @@ fn typed_metadata_type(bytes: &[u8], strings: &[String]) -> Result<Type> {
                 "kotlin/Byte" => Type::Byte,
                 "kotlin/Char" => Type::Char,
                 "kotlin/Float" => Type::Float,
+                "kotlin/Double" => Type::Double,
                 "kotlin/String" => Type::String,
                 "kotlin/IntArray" => Type::IntArray,
                 "kotlin/ByteArray" => Type::ByteArray,
@@ -1693,6 +1897,138 @@ fn kotlin_typed_class(
     Ok((methods, flags & 14 == 0))
 }
 
+fn annotation_definition(
+    class: &JavaClass,
+    attrs: &Attributes,
+    methods: &[Attributes],
+) -> Result<Option<AnnotationDefinition>> {
+    if class.access & 0x2000 == 0 {
+        return Ok(None);
+    }
+    if class.access & 0x200 == 0
+        || class.super_name.as_deref() != Some("java/lang/Object")
+        || class.interfaces != ["java/lang/annotation/Annotation"]
+    {
+        return Err(invalid());
+    }
+    if attrs.unsupported || attrs.signature.is_some() || !attrs.parameter_annotations.is_empty() {
+        return Ok(None);
+    }
+    let mut retention = AnnotationRetention::Class;
+    let mut targets = [
+        "TYPE",
+        "FIELD",
+        "METHOD",
+        "PARAMETER",
+        "CONSTRUCTOR",
+        "LOCAL_VARIABLE",
+        "ANNOTATION_TYPE",
+        "PACKAGE",
+        "MODULE",
+        "RECORD_COMPONENT",
+    ]
+    .into_iter()
+    .map(str::to_owned)
+    .collect::<Vec<_>>();
+    let mut seen = std::collections::BTreeSet::new();
+    let mut supported = true;
+    for annotation in &attrs.annotations {
+        if !seen.insert(&annotation.name) {
+            return Err(invalid());
+        }
+        match annotation.name.as_str() {
+            "Ljava/lang/annotation/Retention;" => {
+                let [(key, AnnotationValue::Enum { descriptor, name })] =
+                    annotation.values.as_slice()
+                else {
+                    return Err(invalid());
+                };
+                if key != "value" || descriptor != "Ljava/lang/annotation/RetentionPolicy;" {
+                    return Err(invalid());
+                }
+                retention = match name.as_str() {
+                    "SOURCE" => AnnotationRetention::Source,
+                    "CLASS" => AnnotationRetention::Class,
+                    "RUNTIME" => AnnotationRetention::Runtime,
+                    _ => return Err(invalid()),
+                };
+            }
+            "Ljava/lang/annotation/Target;" => {
+                let [(key, AnnotationValue::Array(values))] = annotation.values.as_slice() else {
+                    return Err(invalid());
+                };
+                if key != "value" {
+                    return Err(invalid());
+                }
+                targets.clear();
+                for value in values {
+                    let AnnotationValue::Enum { descriptor, name } = value else {
+                        return Err(invalid());
+                    };
+                    if descriptor != "Ljava/lang/annotation/ElementType;"
+                        || !matches!(
+                            name.as_str(),
+                            "TYPE"
+                                | "FIELD"
+                                | "METHOD"
+                                | "PARAMETER"
+                                | "CONSTRUCTOR"
+                                | "LOCAL_VARIABLE"
+                                | "ANNOTATION_TYPE"
+                                | "PACKAGE"
+                                | "TYPE_PARAMETER"
+                                | "TYPE_USE"
+                                | "MODULE"
+                                | "RECORD_COMPONENT"
+                        )
+                        || targets.contains(name)
+                    {
+                        return Err(invalid());
+                    }
+                    targets.push(name.clone());
+                }
+            }
+            "Ljava/lang/annotation/Documented;" | "Ljava/lang/annotation/Inherited;" => {
+                if !annotation.values.is_empty() {
+                    return Err(invalid());
+                }
+            }
+            _ => supported = false,
+        }
+    }
+    if !supported {
+        return Ok(None);
+    }
+    let mut parameters = Vec::new();
+    for (method, attrs) in class.methods.iter().zip(methods) {
+        if method.name.starts_with('<') {
+            continue;
+        }
+        let Some(result) = method.descriptor.strip_prefix("()") else {
+            return Err(invalid());
+        };
+        if result.is_empty()
+            || result == "V"
+            || method.access & 9 != 1
+            || method.access & 0x400 == 0
+        {
+            return Err(invalid());
+        }
+        if attrs.code.is_some() || parameters.iter().any(|(name, _, _)| name == &method.name) {
+            return Err(invalid());
+        }
+        if attrs.unsupported || attrs.annotated {
+            return Ok(None);
+        }
+        parameters.push((method.name.clone(), result.into(), attrs.annotation_default));
+    }
+    Ok(Some(AnnotationDefinition {
+        retention,
+        targets,
+        parameters,
+    }))
+}
+
 fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
     let mut reader = Reader { bytes, offset: 0 };
     if reader.u4()? != 0xcafebabe {
@@ -1733,7 +2069,7 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
                 if tag == 5 {
                     Constant::Long(i64::from_be_bytes(value.try_into().map_err(|_| invalid())?))
                 } else {
-                    Constant::Empty
+                    Constant::Double(u64::from_be_bytes(value.try_into().map_err(|_| invalid())?))
                 }
             }
             16 | 19 | 20 => {
@@ -1792,6 +2128,7 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
                     }
                     ("J", Some(Constant::Long(value))) => Ok(Some(JavaConstant::Long(*value))),
                     ("F", Some(Constant::Float(value))) => Ok(Some(JavaConstant::Float(*value))),
+                    ("D", Some(Constant::Double(value))) => Ok(Some(JavaConstant::Double(*value))),
                     ("Ljava/lang/String;", Some(Constant::String(value))) => {
                         match pool.get(usize::from(*value)) {
                             Some(Constant::Utf8(_, units)) => {
@@ -1800,7 +2137,6 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
                             _ => Err(invalid()),
                         }
                     }
-                    ("D", Some(Constant::Empty)) => Ok(None),
                     _ => Err(invalid()),
                 },
             )
@@ -1830,7 +2166,7 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
         let unsupported = attrs.unsupported
             || attrs.annotated
             || attrs.signature.is_some()
-            || access & (0x0040 | 0x0080 | 0x1000) != 0;
+            || access & (0x0040 | 0x1000) != 0;
         method_attributes.push(attrs);
         methods.push(JavaMethod {
             library: None,
@@ -1850,6 +2186,8 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
         return Err(invalid());
     }
     let mut class = JavaClass {
+        annotation_definition: None,
+        kotlin_fun_interface: false,
         library: None,
         name,
         access,
@@ -1901,12 +2239,251 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
     } else {
         let _ = signature::attach(&mut class, &attrs, &method_attributes);
     }
+    if class.access & 0x2000 != 0 {
+        class.annotation_definition = annotation_definition(&class, &attrs, &method_attributes)?;
+        class.unsupported = class.annotation_definition.is_none();
+    }
     Ok(class)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn actual_junit_test_annotation_retains_runtime_target_and_unsupported_defaulted_parameters() {
+        let jar = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("target/compatibility-dependencies/junit-4.13.2.jar");
+        if !jar.is_file() {
+            return;
+        }
+        let bytes = archive::read(&jar, "org/junit/Test.class")
+            .unwrap()
+            .unwrap();
+        let class = parse(&bytes, "org/junit/Test").unwrap();
+        assert!(!class.unsupported);
+        let annotation = class.annotation_definition.unwrap();
+        assert_eq!(annotation.retention, AnnotationRetention::Runtime);
+        assert_eq!(annotation.targets, ["METHOD"]);
+        assert!(annotation.parameters.contains(&(
+            "expected".into(),
+            "Ljava/lang/Class;".into(),
+            true
+        )));
+        assert!(
+            annotation
+                .parameters
+                .contains(&("timeout".into(), "J".into(), true))
+        );
+    }
+
+    #[test]
+    fn javac_annotation_definitions_preserve_retention_targets_and_member_defaults() {
+        let javac = std::env::var_os("JAVA_HOME")
+            .map(PathBuf::from)
+            .map(|path| path.join("bin/javac"))
+            .unwrap_or_else(|| "javac".into());
+        let stamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let dir = std::env::temp_dir().join(format!(
+            "korrust-annotation-reader-{}-{stamp}",
+            std::process::id()
+        ));
+        std::fs::create_dir_all(&dir).unwrap();
+        let sources = [
+            (
+                "Marker",
+                "package sample; import java.lang.annotation.*; @Documented @Inherited @Retention(RetentionPolicy.RUNTIME) @Target({ElementType.METHOD,ElementType.FIELD}) public @interface Marker { int count(); boolean enabled() default true; String label() default \"ok\"; Class<?> expected() default Object.class; long timeout() default 0L; }",
+            ),
+            (
+                "SourceMarker",
+                "package sample; import java.lang.annotation.*; @Retention(RetentionPolicy.SOURCE) @Target(ElementType.METHOD) public @interface SourceMarker {}",
+            ),
+            (
+                "ClassMarker",
+                "package sample; public @interface ClassMarker {}",
+            ),
+            (
+                "Nowhere",
+                "package sample; import java.lang.annotation.*; @Target({}) public @interface Nowhere {}",
+            ),
+            (
+                "PluginMarker",
+                "package sample; import java.lang.annotation.*; @Target({ElementType.TYPE,ElementType.ANNOTATION_TYPE}) public @interface PluginMarker {}",
+            ),
+            (
+                "Unsupported",
+                "package sample; @PluginMarker public @interface Unsupported {}",
+            ),
+            (
+                "Ordinary",
+                "package sample; @PluginMarker public class Ordinary {}",
+            ),
+        ];
+        let mut command = std::process::Command::new(javac);
+        command.arg("-d").arg(&dir);
+        for (name, source) in sources {
+            let path = dir.join(format!("{name}.java"));
+            std::fs::write(&path, source).unwrap();
+            command.arg(path);
+        }
+        let output = command.output().unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let read = |name: &str| {
+            parse(
+                &std::fs::read(dir.join(format!("sample/{name}.class"))).unwrap(),
+                &format!("sample/{name}"),
+            )
+            .unwrap()
+        };
+        let marker = read("Marker");
+        assert!(!marker.unsupported);
+        let definition = marker.annotation_definition.unwrap();
+        assert_eq!(definition.retention, AnnotationRetention::Runtime);
+        assert_eq!(definition.targets, ["METHOD", "FIELD"]);
+        for (name, descriptor, default) in [
+            ("count", "I", false),
+            ("enabled", "Z", true),
+            ("label", "Ljava/lang/String;", true),
+            ("expected", "Ljava/lang/Class;", true),
+            ("timeout", "J", true),
+        ] {
+            assert!(
+                definition
+                    .parameters
+                    .contains(&(name.into(), descriptor.into(), default))
+            );
+        }
+        assert_eq!(
+            read("SourceMarker")
+                .annotation_definition
+                .unwrap()
+                .retention,
+            AnnotationRetention::Source
+        );
+        let default = read("ClassMarker").annotation_definition.unwrap();
+        assert_eq!(default.retention, AnnotationRetention::Class);
+        assert!(default.targets.contains(&"METHOD".into()));
+        assert!(!default.targets.contains(&"TYPE_USE".into()));
+        assert!(
+            read("Nowhere")
+                .annotation_definition
+                .unwrap()
+                .targets
+                .is_empty()
+        );
+        for name in ["Unsupported", "Ordinary"] {
+            let class = read(name);
+            assert!(class.unsupported);
+            assert!(class.annotation_definition.is_none());
+        }
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn annotation_defaults_validate_boolean_constants_and_full_attribute_payloads() {
+        let pool = vec![
+            Constant::Empty,
+            Constant::Utf8("AnnotationDefault".into(), Vec::new()),
+            Constant::Integer(1),
+        ];
+        let constants = std::sync::Arc::new(std::collections::BTreeMap::new());
+        let attribute = [0, 1, 0, 0, 0, 3, b'Z', 0, 2];
+        let bytes = [&[0, 1][..], &attribute].concat();
+        let parsed = attributes(
+            &mut Reader {
+                bytes: &bytes,
+                offset: 0,
+            },
+            &pool,
+            &constants,
+        )
+        .unwrap();
+        assert!(parsed.annotation_default);
+        let mut trailing = bytes.clone();
+        trailing[7] = 4;
+        trailing.push(0);
+        assert!(
+            attributes(
+                &mut Reader {
+                    bytes: &trailing,
+                    offset: 0
+                },
+                &pool,
+                &constants
+            )
+            .is_err()
+        );
+        let duplicate = [&[0, 2][..], &attribute, &attribute].concat();
+        assert!(
+            attributes(
+                &mut Reader {
+                    bytes: &duplicate,
+                    offset: 0
+                },
+                &pool,
+                &constants
+            )
+            .is_err()
+        );
+        let mut invalid_constant = bytes;
+        *invalid_constant.last_mut().unwrap() = 1;
+        assert!(
+            attributes(
+                &mut Reader {
+                    bytes: &invalid_constant,
+                    offset: 0
+                },
+                &pool,
+                &constants
+            )
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn malformed_annotation_retention_is_rejected_without_unhiding_ordinary_classes() {
+        let class = JavaClass {
+            annotation_definition: None,
+            kotlin_fun_interface: false,
+            library: None,
+            name: "sample/Marker".into(),
+            access: 0x2601,
+            super_name: Some("java/lang/Object".into()),
+            interfaces: vec!["java/lang/annotation/Annotation".into()],
+            methods: Vec::new(),
+            fields: Vec::new(),
+            kotlin_class: false,
+            unsupported: true,
+            kotlin_interface: false,
+        };
+        for value in [
+            AnnotationValue::String("RUNTIME".into()),
+            AnnotationValue::Enum {
+                descriptor: "Ljava/lang/annotation/RetentionPolicy;".into(),
+                name: "INVALID".into(),
+            },
+            AnnotationValue::Enum {
+                descriptor: "Lother/Policy;".into(),
+                name: "RUNTIME".into(),
+            },
+        ] {
+            let attrs = Attributes {
+                annotations: vec![Annotation {
+                    name: "Ljava/lang/annotation/Retention;".into(),
+                    values: vec![("value".into(), value)],
+                }],
+                ..Attributes::default()
+            };
+            assert!(annotation_definition(&class, &attrs, &[]).is_err());
+        }
+    }
+
     #[test]
     fn kotlin_metadata_preserves_generic_type_alias_expansions() {
         let standard = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -2367,6 +2944,8 @@ mod tests {
         })
         .collect();
         let class = JavaClass {
+            annotation_definition: None,
+            kotlin_fun_interface: false,
             library: None,
             name: "sample/Index".into(),
             access: 0x0601,
@@ -2636,6 +3215,8 @@ mod tests {
     #[test]
     fn kotlin_legacy_markers_validate_version_requirements_without_accepting_members() {
         let class = JavaClass {
+            annotation_definition: None,
+            kotlin_fun_interface: false,
             library: None,
             name: "sample/Marker".into(),
             access: 0x0601,

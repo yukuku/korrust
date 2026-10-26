@@ -1,0 +1,9 @@
+tests/fixtures/compatibility_annotations_visibility/negative/ExternalInternal.kt:3:33: error: cannot access 'fun moduleOnly(value: Int): Int': it is internal in file.
+import compatibility.visibility.moduleOnly
+                                ^^^^^^^^^^
+tests/fixtures/compatibility_annotations_visibility/negative/ExternalInternal.kt:4:30: error: cannot access 'fun moduleOnly(value: Int): Int': it is internal in file.
+fun illegalInternal(): Int = moduleOnly(1) + InternalObject.decorate(2)
+                             ^^^^^^^^^^
+tests/fixtures/compatibility_annotations_visibility/negative/ExternalInternal.kt:4:61: error: cannot access 'fun decorate(value: Int): Int': it is internal in 'compatibility.visibility.InternalObject'.
+fun illegalInternal(): Int = moduleOnly(1) + InternalObject.decorate(2)
+                                                            ^^^^^^^^

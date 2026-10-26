@@ -230,11 +230,44 @@ class Harness(LoggedHarness):
         elif self.args.preflight != "official":
             self.report["cases"].append({"id": "kotlin_consumer", "outcome": "not_run", "reason": "Some candidate features did not compile"})
 
+    def supported_boundary(self, boundary, source):
+        regression = boundary["supported_regression"]
+        java_options = regression.get("java_options", [])
+        self.report["inputs"].setdefault("supported_boundary_runtime_options", {})[boundary["id"]] = {"java_options": java_options, "scope": regression["scope"]}
+        outputs = {"official": self.work / ("official-boundary-" + boundary["id"])}
+        self.run("Compile supported official boundary " + boundary["id"], [self.kotlinc, source, *self.options, "-cp", classpath(self.library, self.stdlib), "-d", outputs["official"]])
+        if self.args.preflight != "official":
+            outputs["candidate"] = self.work / ("candidate-boundary-" + boundary["id"])
+            self.run("Compile supported candidate boundary " + boundary["id"], [self.compiler, source, "-cp", classpath(self.library, self.stdlib), "-d", outputs["candidate"]])
+        java_source = FIXTURES / regression["java_fixture"]
+        self.archive(java_source, "supported-" + boundary["id"] + "-" + java_source.name)
+        callers = self.work / ("supported-boundary-callers-" + boundary["id"])
+        self.run("Compile fixed Java boundary caller against official " + boundary["id"], [self.javac, "-cp", classpath(outputs["official"], self.library, self.stdlib), "-d", callers, java_source])
+        fixed_callers = tree_hashes(callers, ".class")
+        observations, abis = [], []
+        for provider, output in outputs.items():
+            if not tree_hashes(output, ".class"):
+                raise AssertionError("Supported boundary emitted no classes: " + boundary["id"])
+            result = self.run("Run fixed Java boundary caller " + provider + "/" + boundary["id"], [self.java, *java_options, "-Xverify:all", "-cp", classpath(callers, output, self.library, self.stdlib), regression["main_class"]])
+            observation = json.loads(result.stdout)
+            if observation.get("id") != boundary["id"] or not isinstance(observation.get("checks"), int) or observation["checks"] <= 0:
+                raise AssertionError("Missing independent positive boundary assertions: " + boundary["id"])
+            observations.append(observation)
+            abis.append(self.run("Inspect supported boundary ABI " + provider + "/" + boundary["id"], [self.javap, "-protected", "-s", "-classpath", output, regression["facade"]]).stdout)
+        if any(value != observations[0] for value in observations) or any(source_abi(value) != source_abi(abis[0]) for value in abis):
+            raise AssertionError("Positive boundary runtime or ABI differs: " + boundary["id"])
+        if fixed_callers != tree_hashes(callers, ".class"):
+            raise AssertionError("Fixed Java boundary caller changed: " + boundary["id"])
+        self.case("boundary/" + boundary["id"], supported_regression=True, official_outcome="accepted", source_sha256=sha(source), java_fixture_sha256=sha(java_source), fixed_java_callers_sha256=fixed_callers, runtime_checks=observations[0]["checks"], providers=list(outputs), java_options=java_options, jvm_verification="all", scope=regression["scope"])
+
     def boundaries(self):
         for boundary in json.loads((FIXTURES / "rejections.json").read_text()):
             source = self.work / ("Boundary_" + boundary["id"] + ".kt")
             source.write_text(boundary["source"] + "\n")
             self.archive(source, source.name)
+            if boundary.get("supported_regression"):
+                self.supported_boundary(boundary, source)
+                continue
             invalid = boundary.get("invalid", False)
             self.run("Official boundary " + boundary["id"], [self.kotlinc, source, *self.options, "-cp", classpath(self.library, self.stdlib), "-d", self.work / ("official-boundary-" + boundary["id"])], allowed=(1,) if invalid else (0,))
             if self.args.preflight == "official":
@@ -309,7 +342,7 @@ class Harness(LoggedHarness):
             related = {"boundary/" + name for name in FEATURE_BOUNDARIES.get(ident, [])}
             restrictions = [*RESTRICTIONS[ident], "Evidence is bounded to the recorded fixtures and pinned dependencies. No whole-app, Android-device runtime, or compilation-performance claim."]
             if ident in ["compiled_inline", "nonlocal_inline_returns"]:
-                restrictions.append("Compiled inline bodies requiring JVM NEW, exception tables, invokedynamic, switches or unsupported stack operations reject explicitly. This suite exercises Function0/Function1 bodies with branches/loops, primitive and captured values, and records allocation/handler rejection boundaries.")
+                restrictions.append("Ordinary referenced-class allocation in compiled inline bodies is tested under recorded controlled HotSpot identity hash options. Generated/nested inline-owner class regeneration, exception tables, invokedynamic, switches and unsupported stack operations still reject explicitly. This suite exercises Function0/Function1 bodies with branches/loops, primitive and captured values; the remaining exception-handler boundary is a rejection.")
                 related.update({"boundary/inline_allocation", "boundary/inline_exception_handler"})
             if ident in ["jar_classpath", "compiled_extensions"]:
                 related.update(case["id"] for case in self.report["cases"] if case["id"].startswith("androidbible/"))

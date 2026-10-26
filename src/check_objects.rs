@@ -49,13 +49,12 @@ fn legacy_check(
             }
         }
         if function.receiver.is_some()
-            || function.internal
             || method.jvm_static && function.private
             || method.inline && !function.private
         {
             return Err(Diagnostic::new(
                 function.offset,
-                "Object member extensions, internal members, and private JvmStatic methods are not supported",
+                "Object member extensions and private JvmStatic methods are not supported",
             ));
         }
         if function
@@ -116,6 +115,8 @@ fn legacy_check(
         }
         overloads.push(JavaMethod {
             library: function.infix.then(|| crate::classpath::LibraryMethod {
+                abstract_: false,
+                builtin_array: false,
                 source_name: function.name.clone(),
                 operator: function.operator,
                 kotlin_public: !function.private && !function.protected && !function.internal,
@@ -391,6 +392,9 @@ fn legacy_check(
         }
         methods.push(ObjectMethod {
             function: Function {
+                jvm_name: None,
+                annotations: Vec::new(),
+                vararg: false,
                 type_params: resolve_parameters(
                     &function.type_params,
                     imports,
@@ -522,12 +526,7 @@ pub(super) fn check(
                 "Only private inline object methods are supported",
             ));
         }
-        if function.internal {
-            return Err(Diagnostic::new(
-                function.offset,
-                "Internal object methods are unsupported",
-            ));
-        }
+
         if function.receiver.is_some() {
             return Err(Diagnostic::new(
                 function.offset,
@@ -589,6 +588,8 @@ pub(super) fn check(
             kotlin_result: Some(result),
             kotlin_internal: function.internal,
             library: Some(crate::classpath::LibraryMethod {
+                abstract_: false,
+                builtin_array: false,
                 source_name: function.name.clone(),
                 type_parameters: function.type_params.clone(),
                 receiver: None,
@@ -664,6 +665,7 @@ pub(super) fn check(
         }
         if field.delegate.is_some() {
             let property = syntax::PropertyDecl {
+                annotations: field.annotations.clone(),
                 name: field.name.clone(),
                 private: field.private,
                 protected: false,
@@ -978,6 +980,7 @@ pub(super) fn check(
             },
         );
         let source_property = syntax::ClassCompanionProperty {
+            annotations: field.annotations.clone(),
             name: field.name.clone(),
             offset: field.offset,
             private: field.private,
@@ -1003,6 +1006,9 @@ pub(super) fn check(
         };
         let function = if field.body.is_empty() {
             Function {
+                jvm_name: None,
+                annotations: Vec::new(),
+                vararg: false,
                 type_params: Vec::new(),
                 defaults: Vec::new(),
                 name: getter_name(&field.name),
@@ -1055,6 +1061,9 @@ pub(super) fn check(
             }
             methods.push(ObjectMethod {
                 function: Function {
+                    jvm_name: None,
+                    annotations: Vec::new(),
+                    vararg: false,
                     type_params: Vec::new(),
                     defaults: Vec::new(),
                     name: setter_name(&field.name),
@@ -1148,6 +1157,7 @@ pub(super) fn default_value(ty: &Type) -> Value {
     let kind = match ty {
         Type::Long => ValueKind::Long(0),
         Type::Float => ValueKind::Float(0),
+        Type::Double => ValueKind::Double(0),
         Type::Boolean => ValueKind::Boolean(false),
         Type::Char => ValueKind::Int(0),
         Type::Int | Type::Byte => ValueKind::Int(0),
@@ -1195,7 +1205,11 @@ impl Checker<'_> {
         offset: usize,
     ) -> Result<Value> {
         let mut options = self.object_methods[name].clone();
-        for inherited in self.members.values().filter(|method| method.name == name) {
+        for inherited in self
+            .members
+            .values()
+            .filter(|method| method.source_name() == name)
+        {
             if !options.iter().any(|method| {
                 declarations::member_key(&method.name, &method.descriptor)
                     == declarations::member_key(&inherited.name, &inherited.descriptor)
@@ -1357,10 +1371,7 @@ object Scratch {
             "object Throws { @Throws(IllegalArgumentException::class) fun f(): Int = 1 }",
             "Shadowed builtin",
         );
-        rejects(
-            "object Scratch { internal fun f(): Int = 1 }",
-            "Internal object methods",
-        );
+        assert!(checked("object Scratch { internal fun f(): Int = 1 }").is_ok());
         rejects(
             "object Scratch { inline fun f(): Int = 1 }",
             "private inline",

@@ -1,3 +1,5 @@
+pub(crate) mod annotation_files;
+mod annotations;
 use crate::{
     Diagnostic, Result,
     check::{Module, Statement, StringMethod, Value, ValueKind},
@@ -9,11 +11,13 @@ use std::{cell::RefCell, rc::Rc};
 mod class_companion;
 mod data;
 mod defaults;
+mod enums;
 mod frames;
 mod inline;
 mod interfaces;
 mod lambdas;
 mod objects;
+pub(crate) use enums::emit as emit_checked_enum;
 pub use interfaces::emit_interfaces;
 pub use lambdas::emit_lambdas;
 pub use objects::emit_dynamic_object;
@@ -36,6 +40,8 @@ fn load_opcode(ty: &Type) -> u8 {
         0x19
     } else if ty == &Type::Long {
         0x16
+    } else if ty == &Type::Double {
+        0x18
     } else if ty == &Type::Float {
         0x17
     } else {
@@ -47,6 +53,8 @@ fn store_opcode(ty: &Type) -> u8 {
         0x3a
     } else if ty == &Type::Long {
         0x37
+    } else if ty == &Type::Double {
+        0x39
     } else if ty == &Type::Float {
         0x38
     } else {
@@ -60,6 +68,8 @@ fn return_opcode(ty: &Type) -> u8 {
         0xb0
     } else if ty == &Type::Long {
         0xad
+    } else if ty == &Type::Double {
+        0xaf
     } else if ty == &Type::Float {
         0xae
     } else {
@@ -157,6 +167,7 @@ fn boxed_owner(ty: &Type) -> &'static str {
         Type::Int => "java/lang/Integer",
         Type::Long => "java/lang/Long",
         Type::Float => "java/lang/Float",
+        Type::Double => "java/lang/Double",
         Type::Byte => "java/lang/Byte",
         Type::Char => "java/lang/Character",
         Type::Boolean => "java/lang/Boolean",
@@ -168,6 +179,7 @@ fn boxed_descriptor(ty: &Type) -> &'static str {
         Type::Int => "Ljava/lang/Integer;",
         Type::Long => "Ljava/lang/Long;",
         Type::Float => "Ljava/lang/Float;",
+        Type::Double => "Ljava/lang/Double;",
         Type::Byte => "Ljava/lang/Byte;",
         Type::Char => "Ljava/lang/Character;",
         Type::Boolean => "Ljava/lang/Boolean;",
@@ -190,6 +202,7 @@ fn covariant_wildcard(ty: &Type) -> &'static str {
         Type::Int
         | Type::Long
         | Type::Float
+        | Type::Double
         | Type::Byte
         | Type::Char
         | Type::Boolean
@@ -432,6 +445,7 @@ fn cast_type_name(ty: &Type) -> String {
         Type::Int => "kotlin.Int".into(),
         Type::Long => "kotlin.Long".into(),
         Type::Float => "kotlin.Float".into(),
+        Type::Double => "kotlin.Double".into(),
         Type::Byte => "kotlin.Byte".into(),
         Type::Char => "kotlin.Char".into(),
         Type::Boolean => "kotlin.Boolean".into(),
@@ -458,6 +472,7 @@ fn invocation_types(descriptor: &str) -> Result<(Vec<Type>, Type)> {
             b'I' => Type::Int,
             b'J' => Type::Long,
             b'F' => Type::Float,
+            b'D' => Type::Double,
             b'B' => Type::Byte,
             b'C' => Type::Char,
             b'Z' => Type::Boolean,
@@ -526,6 +541,7 @@ enum Constant {
     Utf8(Vec<u8>),
     Integer(i32),
     Float(u32),
+    Double(u64),
     Long(i64),
     Reserved,
     Class(u16),
@@ -545,7 +561,7 @@ impl Pool {
         if let Some(index) = self.indices.get(&entry) {
             return Ok(*index);
         }
-        let width = if matches!(entry, Constant::Long(_)) {
+        let width = if matches!(entry, Constant::Long(_) | Constant::Double(_)) {
             2
         } else {
             1
@@ -630,6 +646,10 @@ impl Pool {
                 }
                 Constant::Float(value) => {
                     out.push(4);
+                    out.extend(value.to_be_bytes());
+                }
+                Constant::Double(value) => {
+                    out.push(6);
                     out.extend(value.to_be_bytes());
                 }
                 Constant::Long(value) => {
@@ -975,6 +995,7 @@ impl Code<'_> {
             Type::Int => "intValue",
             Type::Long => "longValue",
             Type::Float => "floatValue",
+            Type::Double => "doubleValue",
             Type::Byte => "byteValue",
             Type::Char => "charValue",
             Type::Boolean => "booleanValue",
@@ -991,7 +1012,10 @@ impl Code<'_> {
         if ty.is_reference() {
             return self.class_reference(0xc0, &reference_class(ty)?);
         }
-        let numeric = matches!(ty, Type::Int | Type::Long | Type::Float | Type::Byte);
+        let numeric = matches!(
+            ty,
+            Type::Int | Type::Long | Type::Float | Type::Double | Type::Byte
+        );
         let owner = if numeric {
             "java/lang/Number"
         } else {
@@ -1003,6 +1027,7 @@ impl Code<'_> {
                 Type::Int => "intValue",
                 Type::Long => "longValue",
                 Type::Float => "floatValue",
+                Type::Double => "doubleValue",
                 Type::Byte => "byteValue",
                 _ => unreachable!(),
             };
@@ -1152,7 +1177,7 @@ impl Code<'_> {
             ValueKind::Abrupt(body) => return self.block(body),
             ValueKind::Unbox(asserted) => {
                 if let ValueKind::RequireNotNull(operand) = &asserted.kind {
-                    if self.erased_list_value(operand)? {
+                    if self.erased_generic_value(operand)? {
                         self.bytes.push(0x59);
                         self.method_reference(
                             0xb8,
@@ -1166,13 +1191,41 @@ impl Code<'_> {
             }
             _ => {}
         }
-        if self.erased_list_value(value)? {
+        if self.erased_generic_value(value)? {
             return self.class_reference(0xc0, boxed_owner(&value.ty));
         }
         self.value(value)?;
         self.box_value(&value.ty)
     }
-    fn erased_list_value(&mut self, value: &Value) -> Result<bool> {
+    fn erased_generic_value(&mut self, value: &Value) -> Result<bool> {
+        let descriptor = match &value.kind {
+            ValueKind::JavaCall { method, .. } | ValueKind::MemberCall { method, .. } => {
+                Some(method.descriptor.as_str())
+            }
+            ValueKind::StaticCall { descriptor, .. } => Some(descriptor.as_str()),
+            ValueKind::Call(id, _) => {
+                let result = invocation_types(&self.functions[*id].descriptor())?.1;
+                if result == Type::Java("java/lang/Object".into()) {
+                    self.value(&Value {
+                        ty: result,
+                        kind: value.kind.clone(),
+                    })?;
+                    return Ok(true);
+                }
+                None
+            }
+            _ => None,
+        };
+        if let Some(descriptor) = descriptor {
+            let result = invocation_types(descriptor)?.1;
+            if result == Type::Java("java/lang/Object".into()) {
+                self.value(&Value {
+                    ty: result,
+                    kind: value.kind.clone(),
+                })?;
+                return Ok(true);
+            }
+        }
         match &value.kind {
             ValueKind::ListGet(receiver, index) => {
                 self.value(receiver)?;
@@ -1338,7 +1391,23 @@ impl Code<'_> {
                     "(Ljava/lang/Object;)Ljava/lang/Object;",
                 )?;
                 self.reference(0xb9, invoke);
-                self.bytes.extend([2, 0, 0x53, 0x84, index_slot, 1]);
+                self.bytes.extend([2, 0]);
+                let store = match array {
+                    Type::IntArray => {
+                        self.generic_result(&Type::Int)?;
+                        0x4f
+                    }
+                    Type::ByteArray => {
+                        self.generic_result(&Type::Byte)?;
+                        0x54
+                    }
+                    Type::CharArray => {
+                        self.generic_result(&Type::Char)?;
+                        0x55
+                    }
+                    _ => 0x53,
+                };
+                self.bytes.extend([store, 0x84, index_slot, 1]);
                 self.branch(0xa7, head);
                 self.mark(done);
                 self.bytes.extend([0x19, array_slot]);
@@ -1397,6 +1466,10 @@ impl Code<'_> {
                 self.bytes.extend([(args.len() + 1) as u8, 0]);
                 self.adapt_value(&Type::Java("java/lang/Object".into()), &value.ty)?;
             }
+            ValueKind::Double(bits) => {
+                let constant = self.pool.add(Constant::Double(*bits))?;
+                self.reference(0x14, constant);
+            }
             ValueKind::Float(bits) => {
                 let constant = self.pool.add(Constant::Float(*bits))?;
                 self.reference(0x13, constant);
@@ -1404,7 +1477,7 @@ impl Code<'_> {
             ValueKind::Box(inner) => self.boxed_value(inner)?,
             ValueKind::Unbox(inner) => {
                 if let ValueKind::RequireNotNull(operand) = &inner.kind {
-                    if self.erased_list_value(operand)? {
+                    if self.erased_generic_value(operand)? {
                         self.bytes.push(0x59);
                         self.method_reference(
                             0xb8,
@@ -1522,7 +1595,7 @@ impl Code<'_> {
                 self.method_reference(
                     0xb8,
                     self.owner,
-                    &format!("{}$default", function.name),
+                    &format!("{}$default", function.jvm_name()),
                     &descriptor,
                 )?;
                 self.adapt_value(&result, &value.ty)?;
@@ -1552,6 +1625,7 @@ impl Code<'_> {
                         match part.ty.base() {
                             Type::Long => "(J)Ljava/lang/StringBuilder;",
                             Type::Float => "(F)Ljava/lang/StringBuilder;",
+                            Type::Double => "(D)Ljava/lang/StringBuilder;",
                             Type::Char => "(C)Ljava/lang/StringBuilder;",
                             Type::Boolean => "(Z)Ljava/lang/StringBuilder;",
                             Type::Int | Type::Byte => "(I)Ljava/lang/StringBuilder;",
@@ -1678,6 +1752,12 @@ impl Code<'_> {
             ValueKind::Convert(target, value) => {
                 self.value(value)?;
                 match (value.ty.base(), target.base()) {
+                    (Type::Int | Type::Byte | Type::Char, Type::Double) => self.bytes.push(0x87),
+                    (Type::Long, Type::Double) => self.bytes.push(0x8a),
+                    (Type::Float, Type::Double) => self.bytes.push(0x8d),
+                    (Type::Double, Type::Int | Type::Byte | Type::Char) => self.bytes.push(0x8e),
+                    (Type::Double, Type::Long) => self.bytes.push(0x8f),
+                    (Type::Double, Type::Float) => self.bytes.push(0x90),
                     (Type::Long, Type::Float) => self.bytes.push(0x89),
                     (Type::Long, Type::Int | Type::Byte | Type::Char) => self.bytes.push(0x88),
                     (Type::Float, Type::Long) => self.bytes.push(0x8c),
@@ -1887,6 +1967,7 @@ impl Code<'_> {
                     match value.ty {
                         Type::Long => "(J)Ljava/lang/String;",
                         Type::Float => "(F)Ljava/lang/String;",
+                        Type::Double => "(D)Ljava/lang/String;",
                         Type::Char => "(C)Ljava/lang/String;",
                         Type::Boolean => "(Z)Ljava/lang/String;",
                         _ => "(I)Ljava/lang/String;",
@@ -2005,7 +2086,7 @@ impl Code<'_> {
                 self.bytes.extend([1, 0]);
             }
             ValueKind::ListGet(..) | ValueKind::ListSet(..) => {
-                self.erased_list_value(value)?;
+                self.erased_generic_value(value)?;
                 self.generic_result(&value.ty)?;
             }
             ValueKind::Boolean(b) => self.bytes.push(if *b { 0x04 } else { 0x03 }),
@@ -2027,6 +2108,8 @@ impl Code<'_> {
                 self.value(inner)?;
                 self.bytes.push(if inner.ty == Type::Long {
                     0x75
+                } else if inner.ty == Type::Double {
+                    0x77
                 } else if inner.ty == Type::Float {
                     0x76
                 } else {
@@ -2073,11 +2156,7 @@ impl Code<'_> {
                 let function = &self.functions[*id];
                 let (params, result) = invocation_types(&function.descriptor())?;
                 self.call_arguments(args, &params)?;
-                let name = if function.private && !self.lambdas.is_empty() {
-                    format!("access${}", function.name)
-                } else {
-                    function.name.clone()
-                };
+                let name = function.jvm_name().to_owned();
                 let method = self
                     .pool
                     .method(self.owner, &name, &function.descriptor())?;
@@ -2119,18 +2198,20 @@ impl Code<'_> {
             ValueKind::Binary(op, a, b) => {
                 self.value(a)?;
                 self.value(b)?;
-                if a.ty == Type::Float {
+                if matches!(a.ty, Type::Float | Type::Double) {
+                    let double = a.ty == Type::Double;
+                    let delta = u8::from(double);
                     match op.as_str() {
-                        "+" => self.bytes.push(0x62),
-                        "-" => self.bytes.push(0x66),
-                        "*" => self.bytes.push(0x6a),
-                        "/" => self.bytes.push(0x6e),
-                        "%" => self.bytes.push(0x72),
+                        "+" => self.bytes.push(0x62 + delta),
+                        "-" => self.bytes.push(0x66 + delta),
+                        "*" => self.bytes.push(0x6a + delta),
+                        "/" => self.bytes.push(0x6e + delta),
+                        "%" => self.bytes.push(0x72 + delta),
                         "==" | "!=" | "<" | ">=" | ">" | "<=" => {
                             self.bytes.push(if matches!(op.as_str(), "<" | "<=") {
-                                0x96
+                                0x96 + 2 * delta
                             } else {
-                                0x95
+                                0x95 + 2 * delta
                             });
                             self.comparison(match op.as_str() {
                                 "==" => 0x99,
@@ -2581,11 +2662,12 @@ impl Code<'_> {
         Ok(self.bytes)
     }
 }
-pub fn emit(
+pub(crate) fn emit_with_bridges(
     module: &Module,
     owner: &str,
     file: &str,
     metadata: &crate::metadata::Metadata,
+    bridges: &[crate::visibility::Bridge],
 ) -> Result<Vec<u8>> {
     let mut pool = Pool::default();
     let class = pool.class(owner)?;
@@ -2643,44 +2725,18 @@ pub fn emit(
         let completed = code.into_simple(function.locals, max_stack)?;
         let mut method = simple_method(
             &mut pool,
-            if function.private { 0x001a } else { 0x0019 },
-            &function.name,
+            (if function.private { 0x001a } else { 0x0019 })
+                | if function.vararg { 0x80 } else { 0 },
+            function.jvm_name(),
             &function.descriptor(),
             completed,
             generic_function(function).as_deref(),
             nonnull(&function.result),
         )?;
         parameter_annotations(&mut pool, &mut method, &function.params)?;
+        annotations::append_annotations(&mut pool, &mut method, &function.annotations)?;
         nullable_result(&mut pool, &mut method, &function.result)?;
         methods.push(method);
-        if function.private && !module.lambdas.is_empty() {
-            let slots = function
-                .params
-                .iter()
-                .map(|(_, ty)| ty.slots())
-                .sum::<usize>();
-            let mut code = SimpleCode::new(slots.max(function.result.slots()) as u16, slots as u16);
-            for (slot, (_, ty)) in parameter_slots(&function.params, 0)
-                .into_iter()
-                .zip(&function.params)
-            {
-                code.bytes.extend([load_opcode(ty), slot as u8]);
-            }
-            code.reference(
-                0xb8,
-                pool.method(owner, &function.name, &function.descriptor())?,
-            );
-            code.bytes.push(return_opcode(&function.result));
-            methods.push(simple_method(
-                &mut pool,
-                0x1009,
-                &format!("access${}", function.name),
-                &function.descriptor(),
-                code,
-                None,
-                false,
-            )?);
-        }
         if let Some(default) = defaults::function(
             &mut pool,
             &module.functions,
@@ -2691,6 +2747,9 @@ pub fn emit(
         )? {
             methods.push(default);
         }
+    }
+    for bridge in bridges.iter().filter(|bridge| bridge.owner == owner) {
+        methods.push(visibility_bridge(&mut pool, bridge)?);
     }
     let metadata = metadata_attribute(&mut pool, metadata)?;
     let mut fields = Vec::new();
@@ -2710,16 +2769,6 @@ pub fn emit(
                     .unwrap_or(0x0002)
                 | if property.mutable { 0 } else { 0x0010 },
         )?);
-        if !module.lambdas.is_empty() {
-            methods.extend(field_bridges(
-                &mut pool,
-                owner,
-                &property.name,
-                &property.ty,
-                true,
-                property.mutable,
-            )?);
-        }
     }
     if !module.properties.is_empty() || !module.initializers.is_empty() {
         let mut code = Code {
@@ -2933,7 +2982,7 @@ fn checked_method(
     let mut method = simple_method(
         pool,
         flags,
-        &function.name,
+        function.jvm_name(),
         &function.descriptor(),
         code,
         generic_function(function).as_deref(),
@@ -2950,6 +2999,45 @@ fn checked_method(
         is_static,
     )?;
     Ok(method)
+}
+
+fn visibility_bridge(pool: &mut Pool, bridge: &crate::visibility::Bridge) -> Result<Vec<u8>> {
+    use crate::visibility::BridgeTarget;
+    let slots = bridge
+        .params
+        .iter()
+        .map(|(_, ty)| ty.slots())
+        .sum::<usize>();
+    let mut code = SimpleCode::new((slots.max(bridge.result.slots()) + 1) as u16, slots as u16);
+    for (slot, (_, ty)) in parameter_slots(&bridge.params, 0)
+        .into_iter()
+        .zip(&bridge.params)
+    {
+        code.bytes.extend([load_opcode(ty), slot as u8]);
+    }
+    match &bridge.target {
+        BridgeTarget::Call {
+            owner,
+            name,
+            descriptor,
+        } => code.reference(0xb8, pool.method(owner, name, descriptor)?),
+        BridgeTarget::FieldGet { owner, name, ty } => {
+            code.reference(0xb2, pool.field(owner, name, &ty.descriptor())?)
+        }
+        BridgeTarget::FieldSet { owner, name, ty } => {
+            code.reference(0xb3, pool.field(owner, name, &ty.descriptor())?)
+        }
+    }
+    code.bytes.push(return_opcode(&bridge.result));
+    simple_method(
+        pool,
+        0x1019,
+        &bridge.name,
+        &bridge.descriptor,
+        code,
+        None,
+        false,
+    )
 }
 
 fn private_method_bridge(
@@ -2976,13 +3064,13 @@ fn private_method_bridge(
     }
     code.reference(
         if is_static { 0xb8 } else { 0xb7 },
-        pool.method(owner, &function.name, &function.descriptor())?,
+        pool.method(owner, function.jvm_name(), &function.descriptor())?,
     );
     code.bytes.push(return_opcode(&function.result));
     simple_method(
         pool,
         0x1008,
-        &format!("access${}", function.name),
+        &format!("access${}", function.jvm_name()),
         &if is_static {
             function.descriptor()
         } else {
@@ -3067,6 +3155,39 @@ fn protected_method_bridge(
         None,
         false,
     )
+}
+
+fn protected_lambda_calls(
+    owner: &str,
+    lambdas: &[crate::check::LambdaDecl],
+) -> HashSet<(String, String, String)> {
+    let mut calls = HashSet::new();
+    for lambda in lambdas {
+        if inline::contains_nonlocal(&lambda.function, lambdas) {
+            continue;
+        }
+        let mut body = lambda.function.body.clone();
+        crate::check::ir_walk::statements(
+            &mut body,
+            &lambda.owner,
+            &mut |value: &mut Value, _: &str| {
+                let method = match &value.kind {
+                    ValueKind::JavaCall { method, .. } | ValueKind::MemberCall { method, .. } => {
+                        method
+                    }
+                    _ => return,
+                };
+                if method.access & 4 != 0 && package_name(&method.owner) != package_name(owner) {
+                    calls.insert((
+                        method.owner.clone(),
+                        method.name.clone(),
+                        method.descriptor.clone(),
+                    ));
+                }
+            },
+        );
+    }
+    calls
 }
 
 fn field_bridges(
@@ -3399,6 +3520,7 @@ fn constant_field(pool: &mut Pool, constant: &crate::syntax::ConstDecl) -> Resul
         ConstValue::Int(value) => ("I", pool.add(Constant::Integer(*value))?, false),
         ConstValue::Long(value) => ("J", pool.add(Constant::Long(*value))?, false),
         ConstValue::Float(value) => ("F", pool.add(Constant::Float(*value))?, false),
+        ConstValue::Double(value) => ("D", pool.add(Constant::Double(*value))?, false),
         ConstValue::Char(value) => ("C", pool.add(Constant::Integer(i32::from(*value)))?, false),
         ConstValue::Boolean(value) => ("Z", pool.add(Constant::Integer(i32::from(*value)))?, false),
         ConstValue::String(value) => ("Ljava/lang/String;", pool.string_units(value)?, true),
@@ -3611,7 +3733,7 @@ pub fn emit_class_files(
 ) -> Result<Vec<crate::ClassFile>> {
     let mut files = vec![crate::ClassFile {
         internal_name: owner.into(),
-        bytes: emit_class_with(class, owner, file, metadata, 0x0001, lambdas, |_| {
+        bytes: emit_class_with(class, owner, file, metadata, 0x0001, lambdas, None, |_| {
             Ok(Vec::new())
         })?,
     }];
@@ -3654,6 +3776,7 @@ fn class_field(pool: &mut Pool, name: &str, ty: &Type, flags: u16) -> Result<Vec
     Ok(field)
 }
 
+#[allow(clippy::too_many_arguments)]
 fn emit_class_with(
     class: &crate::check::ClassDecl,
     owner: &str,
@@ -3661,6 +3784,7 @@ fn emit_class_with(
     metadata: &crate::metadata::Metadata,
     constructor_flags: u16,
     lambdas: &[crate::check::LambdaDecl],
+    enum_data: Option<&crate::check::enums::CheckedEnum>,
     additional_attributes: impl FnOnce(&mut Pool) -> Result<Vec<Vec<u8>>>,
 ) -> Result<Vec<u8>> {
     let mut pool = Pool::default();
@@ -3802,7 +3926,10 @@ fn emit_class_with(
             "<init>",
             &constructor_descriptor,
             code,
-            generic_method(&class.params, &Type::Unit).as_deref(),
+            enum_data
+                .map(enums::constructor_signature)
+                .or_else(|| generic_method(&class.params, &Type::Unit))
+                .as_deref(),
             false,
         )?;
         parameter_annotations(&mut pool, &mut constructor, &class.params)?;
@@ -3920,7 +4047,7 @@ fn emit_class_with(
         methods.extend(data::methods(&mut pool, class, owner)?);
     }
     for function in &class.methods {
-        let key = format!("{}{}", function.name, function.descriptor());
+        let key = format!("{}{}", function.jvm_name(), function.descriptor());
         let access = if function.private {
             0x0002
         } else if class.protected_methods.contains(&key) {
@@ -3931,7 +4058,7 @@ fn emit_class_with(
         if class.abstract_methods.contains(&key) {
             let mut method = Vec::new();
             u2(&mut method, access | 0x0400);
-            u2(&mut method, pool.utf8(&function.name)?);
+            u2(&mut method, pool.utf8(function.jvm_name())?);
             u2(&mut method, pool.utf8(&function.descriptor())?);
             let signature = generic_function(function);
             u2(&mut method, u16::from(signature.is_some()));
@@ -3941,6 +4068,7 @@ fn emit_class_with(
                 u2(&mut method, pool.utf8(&signature)?);
             }
             parameter_annotations(&mut pool, &mut method, &function.params)?;
+            annotations::append_annotations(&mut pool, &mut method, &function.annotations)?;
             nullable_result(&mut pool, &mut method, &function.result)?;
             methods.push(method);
             continue;
@@ -3997,13 +4125,14 @@ fn emit_class_with(
         let mut method = simple_method(
             &mut pool,
             flags,
-            &function.name,
+            function.jvm_name(),
             &function.descriptor(),
             code,
             generic_function(function).as_deref(),
             nonnull(&function.result),
         )?;
         parameter_annotations(&mut pool, &mut method, &function.params)?;
+        annotations::append_annotations(&mut pool, &mut method, &function.annotations)?;
         nullable_result(&mut pool, &mut method, &function.result)?;
         frames::attach(
             &mut pool,
@@ -4020,10 +4149,16 @@ fn emit_class_with(
             methods.push(default);
         }
     }
+    let required_protected = protected_lambda_calls(owner, lambdas);
     let mut protected_bridges = HashSet::new();
     for bridge in &class.bridges {
         if bridge.access & 4 != 0 {
-            if protected_bridges.insert((bridge.name.clone(), bridge.descriptor.clone())) {
+            if required_protected.contains(&(
+                bridge.owner.clone(),
+                bridge.name.clone(),
+                bridge.descriptor.clone(),
+            )) && protected_bridges.insert((bridge.name.clone(), bridge.descriptor.clone()))
+            {
                 methods.push(protected_method_bridge(&mut pool, owner, bridge)?);
             }
             continue;
@@ -4031,6 +4166,14 @@ fn emit_class_with(
         methods.push(interface_bridge(&mut pool, bridge)?);
     }
     let mut additional_attributes = additional_attributes(&mut pool)?;
+    let mut extra_field_count = 0;
+    if let Some(enumeration) = enum_data {
+        let generated = enums::members(&mut pool, owner, enumeration)?;
+        fields.extend(generated.fields);
+        methods.extend(generated.methods);
+        extra_field_count = generated.field_count;
+        additional_attributes.push(generated.signature);
+    }
     if let Some(companion) = &class.companion {
         class_companion::outer(
             &mut pool,
@@ -4040,13 +4183,14 @@ fn emit_class_with(
             &mut methods,
             lambdas,
             &class.delegated_properties,
+            enum_data,
         )?;
         additional_attributes.push(class_companion::inner_attribute(
             &mut pool,
             owner,
             &companion.owner,
         )?);
-    } else if !class.delegated_properties.is_empty() {
+    } else if !class.delegated_properties.is_empty() || enum_data.is_some() {
         let mut code = Code {
             pool: &mut pool,
             functions: &class.methods,
@@ -4068,15 +4212,19 @@ fn emit_class_with(
             in_lambda: false,
             max_stack: 2,
         };
+        if let Some(enumeration) = enum_data {
+            enums::initialize(&mut code, owner, enumeration)?;
+        }
         for (name, value) in &class.delegated_properties {
             code.value(value)?;
             code.field_reference(0xb3, owner, name, &value.ty.descriptor())?;
         }
         code.bytes.push(0xb1);
         let stack = code.max_stack as u16;
-        let code = code.into_simple(0, stack)?;
+        let locals = enum_data.map_or(0, |enumeration| enumeration.initializer_locals);
+        let code = code.into_simple(locals, stack)?;
         let mut method = simple_method(&mut pool, 0x0008, "<clinit>", "()V", code, None, false)?;
-        frames::attach(&mut pool, &mut method, owner, &[], 0, true)?;
+        frames::attach(&mut pool, &mut method, owner, &[], locals, true)?;
         methods.push(method);
     }
     let source_name = pool.utf8("SourceFile")?;
@@ -4089,7 +4237,9 @@ fn emit_class_with(
     pool.write(&mut out);
     u2(
         &mut out,
-        if class.abstract_ {
+        if enum_data.is_some() {
+            0x4031
+        } else if class.abstract_ {
             0x0421
         } else if class.open {
             0x0021
@@ -4106,6 +4256,7 @@ fn emit_class_with(
     u2(
         &mut out,
         (class.fields.len()
+            + extra_field_count
             + class.delegated_properties.len()
             + class
                 .companion

@@ -1,0 +1,10 @@
+tests/fixtures/compatibility_annotations_visibility/negative/ManglingCollision.kt:4:14: error: platform declaration clash: The following declarations have the same JVM signature (token$visibility_fixture()I):
+    fun token(): Int defined in compatibility.visibility.ManglingCollision
+    fun `token$visibility_fixture`(): Int defined in compatibility.visibility.ManglingCollision
+    internal fun token(): Int = 1
+             ^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/compatibility_annotations_visibility/negative/ManglingCollision.kt:5:5: error: platform declaration clash: The following declarations have the same JVM signature (token$visibility_fixture()I):
+    fun token(): Int defined in compatibility.visibility.ManglingCollision
+    fun `token$visibility_fixture`(): Int defined in compatibility.visibility.ManglingCollision
+    fun `token$visibility_fixture`(): Int = 2
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -1,0 +1,181 @@
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:4:8: error: unresolved reference 'okhttp3'.
+import okhttp3.CacheControl
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:5:8: error: unresolved reference 'okhttp3'.
+import okhttp3.OkHttpClient
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:6:8: error: unresolved reference 'okhttp3'.
+import okhttp3.Request
+       ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:7:26: error: unresolved reference 'App'.
+import yuku.alkitab.base.App
+                         ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:8:26: error: unresolved reference 'ac'.
+import yuku.alkitab.base.ac.DevotionActivity
+                         ^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:9:26: error: unresolved reference 'connection'.
+import yuku.alkitab.base.connection.Connections
+                         ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:10:26: error: unresolved reference 'events'.
+import yuku.alkitab.base.events.AppEvents
+                         ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:11:26: error: unresolved reference 'util'.
+import yuku.alkitab.base.util.AppLog
+                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:12:21: error: unresolved reference 'debug'.
+import yuku.alkitab.debug.BuildConfig
+                    ^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:15:31: error: unresolved reference 'OkHttpClient'.
+    private val client: () -> OkHttpClient,
+                              ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:16:23: error: unresolved reference 'DevotionDownloader'.
+    private val url: (DevotionDownloader.Key) -> String,
+                      ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:17:26: error: unresolved reference 'DevotionDownloader'.
+    private val cached: (DevotionDownloader.Key) -> DevotionArticle?,
+                         ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:17:53: error: unresolved reference 'DevotionArticle'.
+    private val cached: (DevotionDownloader.Key) -> DevotionArticle?,
+                                                    ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:18:25: error: unresolved reference 'DevotionArticle'.
+    private val store: (DevotionArticle) -> Unit,
+                        ^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:19:5: error: unresolved reference 'DevotionDownloader'.
+) : DevotionDownloader.Backend {
+    ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:20:37: error: unresolved reference 'DevotionDownloader'.
+    override fun createRequest(key: DevotionDownloader.Key, refresh: Boolean): DevotionDownloader.Request {
+                                    ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:20:80: error: unresolved reference 'DevotionDownloader'.
+    override fun createRequest(key: DevotionDownloader.Key, refresh: Boolean): DevotionDownloader.Request {
+                                                                               ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:22:23: error: unresolved reference 'Request'.
+        val request = Request.Builder().url(url(key))
+                      ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:23:43: error: unresolved reference 'CacheControl'.
+        if (refresh) request.cacheControl(CacheControl.FORCE_NETWORK)
+                                          ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:24:29: error: unresolved reference 'newCall'.
+        val call = client().newCall(request.build())
+                            ^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:25:25: error: unresolved reference 'DevotionDownloader'.
+        return object : DevotionDownloader.Request {
+                        ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:28:37: error: unresolved reference 'DevotionDownloader'.
+            override fun execute(): DevotionDownloader.State {
+                                    ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:32:38: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                        cached(key)?.let {
+                                     ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:32:38: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+                        cached(key)?.let {
+                                     ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:32:38: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <T, R> T.let(block: (T) -> R): R
+                        cached(key)?.let {
+                                     ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:32:42: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                        cached(key)?.let {
+                                         ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:33:43: error: unresolved reference 'readyToUse'.
+                            return if (it.readyToUse) DevotionDownloader.State.READY else DevotionDownloader.State.UNAVAILABLE
+                                          ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:33:55: error: unresolved reference 'DevotionDownloader'.
+                            return if (it.readyToUse) DevotionDownloader.State.READY else DevotionDownloader.State.UNAVAILABLE
+                                                      ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:33:91: error: unresolved reference 'DevotionDownloader'.
+                            return if (it.readyToUse) DevotionDownloader.State.READY else DevotionDownloader.State.UNAVAILABLE
+                                                                                          ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:38:49: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                    val output = call.execute().use { response ->
+                                                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:38:49: error: cannot infer type for type parameter 'R'. Specify it explicitly.
+                    val output = call.execute().use { response ->
+                                                ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:38:55: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+                    val output = call.execute().use { response ->
+                                                      ^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:39:39: error: unresolved reference 'isSuccessful'.
+                        if (!response.isSuccessful) throw IOException("Devotion HTTP ${response.code}")
+                                      ^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:40:34: error: unresolved reference 'body'.
+                        response.body.string()
+                                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:45:32: error: unresolved reference 'DevotionActivity'.
+                    val kind = DevotionActivity.DevotionKind.getByName(key.name)
+                               ^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:45:76: error: unresolved reference 'name'.
+                    val kind = DevotionActivity.DevotionKind.getByName(key.name)
+                                                                           ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:46:77: error: unresolved reference 'name'.
+                        ?: throw IOException("Unknown devotion source ${key.name}")
+                                                                            ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:47:55: error: unresolved reference 'date'.
+                    val article = kind.getArticle(key.date)
+                                                      ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:49:60: error: unresolved reference 'readyToUse'.
+                    if (article.readyToUse || cached(key)?.readyToUse != true) store(article)
+                                                           ^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:50:53: error: unresolved reference 'DevotionDownloader'.
+                    if (!article.readyToUse) return DevotionDownloader.State.UNAVAILABLE
+                                                    ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:53:21: error: unresolved reference 'AppEvents'.
+                    AppEvents.emitDevotionDownloaded(key.name, key.date)
+                    ^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:53:58: error: unresolved reference 'name'.
+                    AppEvents.emitDevotionDownloaded(key.name, key.date)
+                                                         ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:53:68: error: unresolved reference 'date'.
+                    AppEvents.emitDevotionDownloaded(key.name, key.date)
+                                                                   ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:54:28: error: unresolved reference 'DevotionDownloader'.
+                    return DevotionDownloader.State.READY
+                           ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:57:21: error: unresolved reference 'AppLog'.
+                    AppLog.d("DevotionDownloader", "Download failed for ${key.name} ${key.date}", e)
+                    ^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:57:79: error: unresolved reference 'name'.
+                    AppLog.d("DevotionDownloader", "Download failed for ${key.name} ${key.date}", e)
+                                                                              ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:57:91: error: unresolved reference 'date'.
+                    AppLog.d("DevotionDownloader", "Download failed for ${key.name} ${key.date}", e)
+                                                                                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:58:28: error: unresolved reference 'DevotionDownloader'.
+                    return DevotionDownloader.State.FAILED
+                           ^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:66:24: error: unresolved reference 'Connections'.
+            client = { Connections.devotionOkHttp },
+                       ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:67:19: error: unresolved reference 'DevotionDownloader.Key'.
+            url = {
+                  ^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:68:17: error: unresolved reference 'BuildConfig'.
+                BuildConfig.SERVER_HOST + "/devotion/get?name=${it.name}&date=${it.date}&" + App.getAppIdentifierParamsEncoded()
+                ^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:68:68: error: unresolved reference 'name'.
+                BuildConfig.SERVER_HOST + "/devotion/get?name=${it.name}&date=${it.date}&" + App.getAppIdentifierParamsEncoded()
+                                                                   ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:68:84: error: unresolved reference 'date'.
+                BuildConfig.SERVER_HOST + "/devotion/get?name=${it.name}&date=${it.date}&" + App.getAppIdentifierParamsEncoded()
+                                                                                   ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:68:94: error: unresolved reference 'App'.
+                BuildConfig.SERVER_HOST + "/devotion/get?name=${it.name}&date=${it.date}&" + App.getAppIdentifierParamsEncoded()
+                                                                                             ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:70:22: error: unresolved reference 'DevotionDownloader.Key'.
+            cached = { App.services.storage.db.tryGetDevotion(it.name, it.date) },
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:70:24: error: unresolved reference 'App'.
+            cached = { App.services.storage.db.tryGetDevotion(it.name, it.date) },
+                       ^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:70:66: error: unresolved reference 'name'.
+            cached = { App.services.storage.db.tryGetDevotion(it.name, it.date) },
+                                                                 ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:70:75: error: unresolved reference 'date'.
+            cached = { App.services.storage.db.tryGetDevotion(it.name, it.date) },
+                                                                          ^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:71:21: error: unresolved reference 'DevotionArticle'.
+            store = { App.services.storage.db.storeArticleToDevotions(it) },
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt:71:23: error: unresolved reference 'App'.
+            store = { App.services.storage.db.storeArticleToDevotions(it) },
+                      ^^^
