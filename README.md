@@ -47,8 +47,8 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 7. Primitive arrays with construction, indexing, writes, and selected copying operations.
 8. String arrays with indexing and constructor-field support.
 9. Character conversion APIs and String construction from character arrays.
-10. Java instance and static method calls through directory classpaths.
-11. Bare enum classes with generated JVM enum methods.
+10. Java instance and static method calls through directory and JAR classpaths.
+11. Enum classes with entry arguments, properties, methods, companions, and generated JVM enum APIs.
 12. Named and nested objects containing literal constants.
 13. Object methods with selected JVM annotations and exact-signature overloads.
 14. Thread-local array buffers with lazy initialization.
@@ -68,7 +68,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 28. String, Boolean, and Long when subjects.
 29. Subjectless when statements and expressions.
 30. Braced string templates containing supported expressions.
-31. Owned-output tracking and stale-output cleanup when recompiling a source.
+31. Owned-output tracking and stale-output cleanup for single-source and complete module compilations.
 32. Top-level literal constants with Kotlin metadata.
 33. Java field reads and writes, including volatile fields.
 34. Bounded overload resolution for Kotlin and Java calls.
@@ -82,26 +82,26 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 42. Nullable and list-typed class and interface member signatures.
 43. Null-check smart casts for stable local variables and parameters.
 44. List factories with selected mutable-list operations.
-45. Data-class properties containing nullable values, lists, and Float values.
+45. Data-class properties containing nullable values, lists, Float, and Double values.
 46. Data-class body methods and computed properties.
 47. Dependencies loaded directly from JAR files.
 48. Kotlin library metadata for classes, functions, and properties.
 49. Imported top-level declarations across compiled files and modules.
 50. Java generic signatures decoded from dependency class files.
 51. Type parameters, substitution, and checked generic bounds.
-52. Generic call type arguments inferred from supported argument constraints.
+52. Generic call inference from supported arguments, expected results, and lambda branches.
 53. Generic inheritance, variance, and supported type projections.
 54. Library nullability annotations and Java platform types.
 55. Overload resolution using generic constraints and candidate specificity.
 56. Extension functions resolved from compiled Kotlin libraries.
 57. Library properties accessed through their getters and setters.
-58. Named and default arguments for imported Kotlin functions.
+58. Named and default arguments for imported Kotlin functions and constructors.
 59. Function types with boxed JVM invocation bridges.
 60. Lambdas capturing immutable locals and shared mutable cells.
 61. Lambda parameter and result types inferred from expected contexts.
 62. Bound, unbound, and top-level function references.
 63. Inherited member resolution and virtual or interface dispatch.
-64. Lambda conversion to Java single-method interfaces.
+64. Lambda conversion to supported Java and Kotlin functional interfaces.
 65. Supported compiled inline bytecode expanded at call sites.
 66. Non-local returns from supported inline lambda arguments.
 67. Inclusive Int range loops with overflow-safe termination.
@@ -112,9 +112,9 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 72. Typed List iteration through JVM iterators.
 73. Compiled extension-property resolution, including indices used in loops.
 74. Do-while loops with break and continue.
-75. Float arithmetic and supported mixed numeric operands.
-76. Float ordering and equality with Kotlin NaN and signed-zero behavior.
-77. Float, Int, and Long numeric conversions.
+75. Float and Double arithmetic with supported mixed numeric operands.
+76. Float and Double ordering and equality with Kotlin NaN and signed-zero behavior.
+77. Float, Double, Int, and Long numeric conversions.
 78. Numeric local compound assignments.
 79. Prefix and postfix Int-local decrement.
 80. Nullable reference identity comparisons.
@@ -144,6 +144,18 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 104. Late-initialized reference properties with checked reads.
 105. Open and abstract classes, inheritance, overrides, protected access, and super calls.
 106. Secondary constructors and constructor delegation.
+107. Shared-source module compilation with cross-file declaration discovery and signature inference.
+108. Ordinary vararg calls for supported primitive and reference arrays.
+109. Spread arguments with checked array compatibility and evaluation order.
+110. Backtick identifiers for supported declarations and references.
+111. Discarded lambda parameters and destructuring components using `_`.
+112. Kotlin `fun interface` declarations with supported members and inheritance.
+113. Nongeneric source type aliases, including function-type aliases.
+114. Ordinary annotations with supported String, Int, and Boolean arguments, retention, and use-site targets.
+115. File-private top-level declarations, module-internal visibility, and friend-module access.
+116. Internal class and object methods with Kotlin-compatible JVM names and metadata.
+117. Structured diagnostics with stable categories, source paths, and precise positions.
+118. Selected Gradle module integration using captured compilation and friend inputs.
 
 ## Project contract
 
