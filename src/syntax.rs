@@ -2733,6 +2733,31 @@ impl Parser {
         let name = self.classifier_name()?;
         let after_name = self.pos;
         self.lines();
+        if self.at("@") {
+            let annotation_start = self.pos;
+            let depth = self.depth;
+            let type_location_count = self.type_locations.len();
+            let parsed = self.annotations().is_ok();
+            while matches!(
+                self.token().text.as_str(),
+                "public" | "private" | "protected" | "internal"
+            ) {
+                self.pos += 1;
+                self.lines();
+            }
+            let constructor = parsed && matches!(self.token().text.as_str(), "constructor" | "(");
+            self.pos = annotation_start;
+            self.depth = depth;
+            self.type_locations.truncate(type_location_count);
+            if annotation_start == after_name || constructor {
+                return Err(self
+                    .error("Primary constructor annotations are unsupported")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "CONSTRUCTOR_ANNOTATION_UNSUPPORTED",
+                    ));
+            }
+        }
         let has_constructor = self.take("(");
         let mut params = Vec::new();
         let mut param_annotations = Vec::new();
@@ -5811,6 +5836,21 @@ pub fn parse(source: &str) -> Result<Module> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn constructor_annotation_guards_preserve_separate_annotated_declarations() {
+        assert!(parse("class Empty\n@Ann class Next").is_ok());
+        assert!(parse("class Empty\n@Suppress(\"unused\") public class Next").is_ok());
+        for source in [
+            "class Bad @Ann constructor()",
+            "class Bad\n@Ann\nconstructor()",
+        ] {
+            let error = parse(source).err().unwrap();
+            assert_eq!(error.code, "CONSTRUCTOR_ANNOTATION_UNSUPPORTED");
+            assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
+        }
+    }
+
 
     #[test]
     fn raw_literals_preserve_utf16_backslashes_quotes_and_normalize_line_endings() {

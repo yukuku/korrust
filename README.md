@@ -157,6 +157,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 117. Structured diagnostics with stable categories, source paths, and precise positions.
 118. Selected Gradle module integration using captured compilation and friend inputs.
 119. Raw multiline string templates and Kotlin newline handling for supported expressions and qualified continuations.
+120. JVM overload generation for supported defaulted top-level, class, object, and companion functions.
 
 ## Project contract
 

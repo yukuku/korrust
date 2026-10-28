@@ -175,6 +175,7 @@ impl Builder {
         u4(&mut bytes, 0xcafebabe);
         u2(&mut bytes, 0);
         u2(&mut bytes, self.version);
+        defaults::unique_methods(&self.pool, &self.methods)?;
         self.pool.write(&mut bytes);
         u2(&mut bytes, self.flags);
         u2(&mut bytes, self.class);

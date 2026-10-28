@@ -44,6 +44,18 @@ pub(crate) fn annotation_placements(
                     &companion_owner,
                     &mut companion_output,
                 )?;
+                if checked(
+                    &method.function.annotations,
+                    classpath,
+                    &imports,
+                    "METHOD",
+                    None,
+                )?
+                .iter()
+                .any(|annotation| annotation.descriptor == "Lkotlin/jvm/JvmStatic;")
+                {
+                    function_parameters(&method.function, classpath, &imports, owner, &mut output)?;
+                }
             }
             for property in &companion.properties {
                 if !property.annotations.is_empty() {
@@ -481,5 +493,40 @@ fn function_parameters(
         .map(|method| method.name.clone())
         .unwrap_or_else(|| function.name.clone());
     member(&mut output.methods, &name, &descriptor).parameters = params;
+    if checked(&function.annotations, classpath, imports, "METHOD", None)?
+        .iter()
+        .any(|annotation| annotation.descriptor == "Lkotlin/jvm/JvmOverloads;")
+    {
+        let mut omitted = HashSet::new();
+        for index in (0..function.params.len()).rev() {
+            if !function.defaults.get(index).is_some_and(Option::is_some) {
+                continue;
+            }
+            omitted.insert(index);
+            let mut descriptor = String::from("(");
+            let mut parameters = Vec::new();
+            if let Some(receiver) = &function.receiver {
+                descriptor
+                    .push_str(&resolve_type(receiver, imports, function.offset)?.descriptor());
+                parameters.push(Vec::new());
+            }
+            for (index, ((_, ty), annotations)) in function
+                .params
+                .iter()
+                .zip(&function.param_annotations)
+                .enumerate()
+            {
+                if omitted.contains(&index) {
+                    continue;
+                }
+                descriptor.push_str(&resolve_type(ty, imports, function.offset)?.descriptor());
+                parameters.push(checked(annotations, classpath, imports, "PARAMETER", None)?);
+            }
+            descriptor.push(')');
+            descriptor
+                .push_str(&resolve_type(&function.result, imports, function.offset)?.descriptor());
+            member(&mut output.methods, &name, &descriptor).parameters = parameters;
+        }
+    }
     Ok(())
 }

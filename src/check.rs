@@ -3194,7 +3194,12 @@ impl Checker<'_> {
                     let value = self.value(part)?;
                     if !matches!(
                         value.ty.base(),
-                        Type::String | Type::Int | Type::Long | Type::Boolean | Type::Char | Type::Null
+                        Type::String
+                            | Type::Int
+                            | Type::Long
+                            | Type::Boolean
+                            | Type::Char
+                            | Type::Null
                     ) && !matches!(value.ty.base(), Type::Nullable(inner) if matches!(inner.as_ref(), Type::String | Type::Int | Type::Long | Type::Boolean | Type::Char))
                     {
                         return Err(Diagnostic::new(
@@ -4155,37 +4160,6 @@ impl Checker<'_> {
                             )),
                         };
                     }
-                    if matches!(&receiver.kind, ExprKind::Name(name) if name == "Character")
-                        && self.unshadowed("Character")
-                    {
-                        if args.len() != 1 {
-                            return Err(Diagnostic::new(
-                                offset,
-                                "Character conversion requires one Int argument",
-                            ));
-                        }
-                        let (descriptor, result) = match name.as_str() {
-                            "toLowerCase" => ("(I)I", Type::Int),
-                            "highSurrogate" | "lowSurrogate" => ("(I)C", Type::Char),
-                            _ => {
-                                return Err(Diagnostic::new(
-                                    offset,
-                                    "Unsupported Character static method",
-                                ));
-                            }
-                        };
-                        let value = self.value(&args[0])?;
-                        self.require(&value, Type::Int, args[0].offset)?;
-                        return Ok(Value {
-                            ty: result,
-                            kind: ValueKind::StaticCall {
-                                owner: "java/lang/Character".into(),
-                                name: name.clone(),
-                                descriptor: descriptor.into(),
-                                args: vec![value],
-                            },
-                        });
-                    }
                     if let ExprKind::Name(alias) = &receiver.kind {
                         if self.unshadowed(alias) {
                             let owner = format!("java/lang/{alias}");
@@ -5103,13 +5077,20 @@ pub fn check_with_owner(
             .with_kind(crate::DiagnosticKind::UnsupportedLanguage, code));
         }
         let class = classpath.load(name)?;
-        if class.access & 0x2000 != 0 && class.annotation_definition.is_none() {
+        let supported_jvm_marker = matches!(
+            name.as_str(),
+            "kotlin/jvm/JvmOverloads" | "kotlin/jvm/JvmStatic"
+        );
+        if class.access & 0x2000 != 0
+            && class.annotation_definition.is_none()
+            && !supported_jvm_marker
+        {
             return Err(Diagnostic::new(
                 *offset,
                 format!("Unsupported annotation definition or required compiler plugin: {name}"),
             ));
         }
-        if class.access & 1 == 0 || class.unsupported {
+        if class.access & 1 == 0 || (class.unsupported && !supported_jvm_marker) {
             return Err(Diagnostic::new(
                 *offset,
                 "Imported class is inaccessible or unsupported",
@@ -5420,6 +5401,10 @@ pub fn check_with_owner(
             return Err(Diagnostic::new(
                 function.offset,
                 "Default arguments on extension functions are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "SOURCE_EXTENSION_DEFAULTS_UNSUPPORTED",
             ));
         }
         functions.entry(function.name.clone()).or_insert(i);

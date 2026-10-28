@@ -87,6 +87,80 @@ pub(super) fn outer(
             )?);
         }
     }
+    for function in &companion.methods {
+        if !defaults::annotated(function, "JvmStatic") {
+            continue;
+        }
+        if function.private {
+            return Err(failure(
+                "Private companion JvmStatic methods are unsupported",
+            ));
+        }
+        let mut omitted = HashSet::new();
+        let mut variants = vec![function.params.clone()];
+        if defaults::annotated(function, "JvmOverloads") {
+            for index in (0..function.params.len()).rev() {
+                if function.defaults.get(index).is_some_and(Option::is_some) {
+                    omitted.insert(index);
+                    variants.push(
+                        function
+                            .params
+                            .iter()
+                            .enumerate()
+                            .filter(|(index, _)| !omitted.contains(index))
+                            .map(|(_, parameter)| parameter.clone())
+                            .collect(),
+                    );
+                }
+            }
+        }
+        for params in variants {
+            let slots = params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
+            let mut code = SimpleCode::new(
+                (slots + 1).max(function.result.slots()) as u16,
+                slots as u16,
+            );
+            code.reference(
+                0xb2,
+                pool.field(owner, "Companion", &format!("L{};", companion.owner))?,
+            );
+            for (slot, (_, ty)) in parameter_slots(&params, 0).into_iter().zip(&params) {
+                code.bytes.extend([load_opcode(ty), slot as u8]);
+            }
+            let reduced = crate::check::Function {
+                jvm_name: function.jvm_name.clone(),
+                annotations: function.annotations.clone(),
+                vararg: function.vararg && params.last() == function.params.last(),
+                type_params: function.type_params.clone(),
+                defaults: Vec::new(),
+                name: function.name.clone(),
+                private: false,
+                is_override: false,
+                params,
+                result: function.result.clone(),
+                locals: 0,
+                body: Vec::new(),
+            };
+            code.reference(
+                0xb6,
+                pool.method(&companion.owner, reduced.jvm_name(), &reduced.descriptor())?,
+            );
+            code.bytes.push(return_opcode(&function.result));
+            let mut method = simple_method(
+                pool,
+                0x0019 | if reduced.vararg { 0x80 } else { 0 },
+                reduced.jvm_name(),
+                &reduced.descriptor(),
+                code,
+                generic_function(&reduced).as_deref(),
+                nonnull(&reduced.result),
+            )?;
+            parameter_annotations(pool, &mut method, &reduced.params)?;
+            annotations::append_annotations(pool, &mut method, &reduced.annotations)?;
+            nullable_result(pool, &mut method, &reduced.result)?;
+            methods.push(method);
+        }
+    }
     let mut code = Code {
         pool,
         functions: &[],
@@ -238,6 +312,23 @@ pub(super) fn emit(
         }
     }
     for function in &companion.methods {
+        methods.extend(defaults::overloads(
+            &mut pool,
+            function,
+            &companion.owner,
+            false,
+            if function.private { 0x0012 } else { 0x0011 },
+        )?);
+        if let Some(default) = defaults::function(
+            &mut pool,
+            &companion.methods,
+            function,
+            &companion.owner,
+            false,
+            lambdas,
+        )? {
+            methods.push(default);
+        }
         if !lambdas.is_empty() && function.private {
             methods.push(private_method_bridge(
                 &mut pool,
@@ -298,6 +389,7 @@ pub(super) fn emit(
             nonnull(&function.result),
         )?;
         parameter_annotations(&mut pool, &mut method, &function.params)?;
+        annotations::append_annotations(&mut pool, &mut method, &function.annotations)?;
         nullable_result(&mut pool, &mut method, &function.result)?;
         frames::attach(
             &mut pool,
@@ -330,6 +422,7 @@ pub(super) fn emit(
     u4(&mut bytes, 0xcafebabe);
     u2(&mut bytes, 0);
     u2(&mut bytes, 52);
+    defaults::unique_methods(&pool, &methods)?;
     pool.write(&mut bytes);
     u2(&mut bytes, 0x0031);
     u2(&mut bytes, this);

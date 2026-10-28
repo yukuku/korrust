@@ -247,3 +247,180 @@ pub(super) fn constructors(
     }
     Ok(methods)
 }
+
+pub(super) fn annotated(function: &crate::check::Function, name: &str) -> bool {
+    function
+        .annotations
+        .iter()
+        .any(|annotation| annotation.descriptor == format!("Lkotlin/jvm/{name};"))
+}
+
+pub(super) fn overloads(
+    pool: &mut Pool,
+    function: &crate::check::Function,
+    owner: &str,
+    is_static: bool,
+    access: u16,
+) -> Result<Vec<Vec<u8>>> {
+    if !annotated(function, "JvmOverloads") {
+        return Ok(Vec::new());
+    }
+    let mut omitted = HashSet::new();
+    let mut methods = Vec::new();
+    for index in (0..function.params.len()).rev() {
+        if !function.defaults.get(index).is_some_and(Option::is_some) {
+            continue;
+        }
+        omitted.insert(index);
+        let reduced = crate::check::Function {
+            jvm_name: function.jvm_name.clone(),
+            annotations: function.annotations.clone(),
+            vararg: function.vararg && !omitted.contains(&(function.params.len() - 1)),
+            type_params: function.type_params.clone(),
+            defaults: Vec::new(),
+            name: function.name.clone(),
+            private: function.private,
+            is_override: false,
+            params: function
+                .params
+                .iter()
+                .enumerate()
+                .filter(|(index, _)| !omitted.contains(index))
+                .map(|(_, parameter)| parameter.clone())
+                .collect(),
+            result: function.result.clone(),
+            locals: 0,
+            body: Vec::new(),
+        };
+        let start = usize::from(!is_static);
+        let locals = start
+            + reduced
+                .params
+                .iter()
+                .map(|(_, ty)| ty.slots())
+                .sum::<usize>();
+        let stack = start
+            + function
+                .params
+                .iter()
+                .map(|(_, ty)| ty.slots())
+                .sum::<usize>()
+            + 2;
+        let mut code = SimpleCode::new(stack.max(function.result.slots()) as u16, locals as u16);
+        if !function.private {
+            for (slot, (name, ty)) in parameter_slots(&reduced.params, start)
+                .into_iter()
+                .zip(&reduced.params)
+            {
+                if nonnull(ty) {
+                    code.bytes.extend([0x19, slot as u8]);
+                    code.reference(0x13, pool.string(name)?);
+                    code.reference(
+                        0xb8,
+                        pool.method(
+                            "kotlin/jvm/internal/Intrinsics",
+                            "checkNotNullParameter",
+                            "(Ljava/lang/Object;Ljava/lang/String;)V",
+                        )?,
+                    );
+                }
+            }
+        }
+        if !is_static {
+            code.bytes.push(0x2a);
+        }
+        let mut slot = start;
+        for (index, (_, ty)) in function.params.iter().enumerate() {
+            if omitted.contains(&index) {
+                code.bytes.push(if ty.is_reference() {
+                    0x01
+                } else if ty == &Type::Long {
+                    0x09
+                } else if ty == &Type::Double {
+                    0x0e
+                } else if ty == &Type::Float {
+                    0x0b
+                } else {
+                    0x03
+                });
+            } else {
+                code.bytes.extend([load_opcode(ty), slot as u8]);
+                slot += ty.slots();
+            }
+        }
+        let mask = omitted
+            .iter()
+            .fold(0u32, |mask, index| mask | (1u32 << index));
+        if mask <= 5 {
+            code.bytes.push(0x03 + mask as u8);
+        } else {
+            code.reference(0x13, pool.add(Constant::Integer(mask as i32))?);
+        }
+        code.bytes.push(0x01);
+        let descriptor = format!(
+            "({}{}ILjava/lang/Object;){}",
+            if is_static {
+                String::new()
+            } else {
+                format!("L{owner};")
+            },
+            function
+                .params
+                .iter()
+                .map(|(_, ty)| ty.descriptor())
+                .collect::<String>(),
+            function.result.descriptor()
+        );
+        code.reference(
+            0xb8,
+            pool.method(
+                owner,
+                &format!("{}$default", function.jvm_name()),
+                &descriptor,
+            )?,
+        );
+        code.bytes.push(return_opcode(&function.result));
+        let mut method = simple_method(
+            pool,
+            access | if reduced.vararg { 0x80 } else { 0 },
+            reduced.jvm_name(),
+            &reduced.descriptor(),
+            code,
+            generic_function(&reduced).as_deref(),
+            nonnull(&reduced.result),
+        )?;
+        parameter_annotations(pool, &mut method, &reduced.params)?;
+        annotations::append_annotations(pool, &mut method, &reduced.annotations)?;
+        nullable_result(pool, &mut method, &reduced.result)?;
+        frames::attach(
+            pool,
+            &mut method,
+            owner,
+            &reduced.params,
+            locals as u16,
+            is_static,
+        )?;
+        methods.push(method);
+    }
+    Ok(methods)
+}
+
+pub(super) fn unique_methods(pool: &Pool, methods: &[Vec<u8>]) -> Result<()> {
+    let mut seen = HashSet::new();
+    for method in methods {
+        let name = u16::from_be_bytes([method[2], method[3]]);
+        let descriptor = u16::from_be_bytes([method[4], method[5]]);
+        if !seen.insert((name, descriptor)) {
+            let name = match &pool.entries[name as usize - 1] {
+                Constant::Utf8(value) => String::from_utf8_lossy(value).into_owned(),
+                _ => String::new(),
+            };
+            return Err(crate::Diagnostic::new(
+                0,
+                format!("Conflicting generated JVM method signature: {name}"),
+            )
+            .with_kind(crate::DiagnosticKind::InvalidKotlin, "JVM_SIGNATURE_CLASH"));
+        }
+    }
+    Ok(())
+}

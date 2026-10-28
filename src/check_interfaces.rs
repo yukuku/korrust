@@ -38,7 +38,7 @@ pub(super) fn check(
     }
     remove_own(source, &owner, &mut imports, &mut classes, classpath);
     register_names(source, &owner, "", &mut imports)?;
-    register_classes(source, &owner, &imports, &mut classes)?;
+    register_classes(source, &owner, &imports, &mut classes, classpath)?;
     let lambdas = Rc::new(RefCell::new(Vec::new()));
     let interface = check_interface(source, &owner, classpath, &imports, &classes, &lambdas)?;
     Ok(Module {
@@ -142,6 +142,7 @@ fn register_classes(
     owner: &str,
     imports: &HashMap<String, String>,
     classes: &mut HashMap<String, JavaClass>,
+    classpath: &Classpath,
 ) -> Result<()> {
     let mut interfaces = Vec::new();
     for alias in &source.interfaces {
@@ -212,7 +213,27 @@ fn register_classes(
     }
     for method in &source.methods {
         let function = &method.function;
+        declarations::validate_overriding_defaults(function, method.is_override)?;
         if !function.annotations.is_empty() {
+            if annotations::declaration_annotations(
+                &function.annotations,
+                classpath,
+                &imports,
+                "METHOD",
+                None,
+            )?
+            .iter()
+            .any(|annotation| annotation.descriptor == "Lkotlin/jvm/JvmStatic;")
+            {
+                return Err(Diagnostic::new(
+                    function.offset,
+                    "JvmStatic requires an object or companion member",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "JVM_STATIC_PLACEMENT_INVALID",
+                ));
+            }
             return Err(Diagnostic::new(
                 function.offset,
                 "Annotations on source interface methods are not supported",
@@ -338,6 +359,7 @@ fn register_classes(
             &format!("{owner}${}", nested.name),
             &imports,
             classes,
+            classpath,
         )?;
     }
     Ok(())

@@ -891,6 +891,29 @@ pub(super) fn check(
     for method in &source.methods {
         let function =
             context.function(&method.function, !method.jvm_static, method.is_override)?;
+        if function
+            .annotations
+            .iter()
+            .any(|annotation| annotation.descriptor == "Lkotlin/jvm/JvmStatic;")
+        {
+            return Err(Diagnostic::new(
+                method.function.offset,
+                "Qualified or aliased JvmStatic object annotations are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "JVM_STATIC_ANNOTATION_FORM_UNSUPPORTED",
+            ));
+        }
+        for descriptor in annotations::overload_descriptors(&function) {
+            if required.contains_key(&declarations::member_key(&function.name, &descriptor)) {
+                return Err(Diagnostic::new(
+                    method.function.offset,
+                    "Generated JVM overload clashes with an inherited declaration",
+                )
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "JVM_SIGNATURE_CLASH"));
+            }
+        }
         let inherited_key = declarations::member_key(&function.name, &function.descriptor());
         if let Some(parent) = required.get(&inherited_key) {
             if !method.is_override || parent.access & 16 != 0 {

@@ -2676,6 +2676,21 @@ pub(crate) fn emit_with_bridges(
     let source_file = pool.utf8(file)?;
     let mut methods = Vec::new();
     for function in &module.functions {
+        if defaults::annotated(function, "JvmStatic") {
+            return Err(
+                Diagnostic::new(0, "JvmStatic requires an object or companion member").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "JVM_STATIC_PLACEMENT_INVALID",
+                ),
+            );
+        }
+        methods.extend(defaults::overloads(
+            &mut pool,
+            function,
+            owner,
+            true,
+            if function.private { 0x001a } else { 0x0019 },
+        )?);
         let mut code = Code {
             pool: &mut pool,
             functions: &module.functions,
@@ -2811,6 +2826,7 @@ pub(crate) fn emit_with_bridges(
     u4(&mut out, 0xcafebabe);
     u2(&mut out, 0);
     u2(&mut out, 49);
+    defaults::unique_methods(&pool, &methods)?;
     pool.write(&mut out);
     u2(&mut out, 0x0031);
     u2(&mut out, class);
@@ -3409,6 +3425,7 @@ pub fn emit_enum(decl: &EnumDecl, owner: &str, file: &str) -> Result<Vec<u8>> {
     u4(&mut out, 0xcafebabe);
     u2(&mut out, 0);
     u2(&mut out, 49);
+    defaults::unique_methods(&pool, &methods)?;
     pool.write(&mut out);
     u2(&mut out, 0x4031);
     u2(&mut out, class);
@@ -4047,6 +4064,14 @@ fn emit_class_with(
         methods.extend(data::methods(&mut pool, class, owner)?);
     }
     for function in &class.methods {
+        if defaults::annotated(function, "JvmStatic") {
+            return Err(
+                Diagnostic::new(0, "JvmStatic requires an object or companion member").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "JVM_STATIC_PLACEMENT_INVALID",
+                ),
+            );
+        }
         let key = format!("{}{}", function.jvm_name(), function.descriptor());
         let access = if function.private {
             0x0002
@@ -4056,6 +4081,16 @@ fn emit_class_with(
             0x0001
         };
         if class.abstract_methods.contains(&key) {
+            if defaults::annotated(function, "JvmOverloads") {
+                return Err(crate::Diagnostic::new(
+                    0,
+                    "JvmOverloads cannot annotate an abstract method",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "JVM_OVERLOADS_ABSTRACT",
+                ));
+            }
             let mut method = Vec::new();
             u2(&mut method, access | 0x0400);
             u2(&mut method, pool.utf8(function.jvm_name())?);
@@ -4116,6 +4151,13 @@ fn emit_class_with(
         let max_stack = u16::try_from(code.max_stack)
             .map_err(|_| failure("JVM operand stack limit exceeded"))?;
         let code = code.into_simple(function.locals, max_stack)?;
+        methods.extend(defaults::overloads(
+            &mut pool,
+            function,
+            owner,
+            false,
+            access | 0x0010,
+        )?);
         let flags = access
             | if class.open_methods.contains(&key) || function.is_override {
                 0
@@ -4234,6 +4276,7 @@ fn emit_class_with(
     u4(&mut out, 0xcafebabe);
     u2(&mut out, 0);
     u2(&mut out, 52);
+    defaults::unique_methods(&pool, &methods)?;
     pool.write(&mut out);
     u2(
         &mut out,

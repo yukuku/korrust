@@ -39,6 +39,7 @@ pub(super) fn check_class_with_constants(
     validate_constructor_assignments(source)?;
     for method in &source.methods {
         validate_operator(&method.function, true)?;
+        validate_overriding_defaults(&method.function, method.is_override)?;
     }
     if source.data
         && (source.params.is_empty()
@@ -937,6 +938,15 @@ pub(super) fn check_class_with_constants(
             locals: checker.next,
             body,
         };
+        for descriptor in annotations::overload_descriptors(&method) {
+            if required.contains_key(&member_key(&method.name, &descriptor)) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Generated JVM overload clashes with an inherited declaration",
+                )
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "JVM_SIGNATURE_CLASH"));
+            }
+        }
         match required.get(&member_key(&method.name, &method.descriptor())) {
             Some(required) => {
                 if required.access & 0x0010 != 0 {
@@ -1555,6 +1565,7 @@ impl<'a> DeclarationContext<'a> {
         is_override: bool,
     ) -> Result<Function> {
         validate_operator(source, true)?;
+        validate_overriding_defaults(source, is_override)?;
 
         let result = resolve_type_checked(
             &source.result,
@@ -3373,6 +3384,23 @@ pub(super) fn direct_default_bridge(
         offset,
         "Inherited default method requires a directly implemented interface",
     ))
+}
+
+pub(super) fn validate_overriding_defaults(
+    function: &syntax::Function,
+    is_override: bool,
+) -> Result<()> {
+    if is_override && function.defaults.iter().any(Option::is_some) {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Overriding methods cannot declare default parameter values",
+        )
+        .with_kind(
+            crate::DiagnosticKind::InvalidKotlin,
+            "OVERRIDE_DEFAULT_ARGUMENT",
+        ));
+    }
+    Ok(())
 }
 
 pub(super) fn member_key(name: &str, descriptor: &str) -> String {

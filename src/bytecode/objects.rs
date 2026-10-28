@@ -113,6 +113,7 @@ fn method(
     if !declaration.throws.is_empty() {
         add_attribute(&mut method, exceptions(pool, &declaration.throws)?)?;
     }
+    annotations::append_annotations(pool, &mut method, &function.annotations)?;
     nullable_result(pool, &mut method, &function.result)?;
     frames::attach(
         pool,
@@ -428,6 +429,32 @@ pub fn emit_dynamic_object(
         builder.methods.push(method);
     }
     for declaration in &object.methods {
+        let mut overloads = defaults::overloads(
+            &mut builder.pool,
+            &declaration.function,
+            owner,
+            declaration.jvm_static,
+            (if declaration.function.private { 2 } else { 1 })
+                | 0x10
+                | if declaration.jvm_static { 8 } else { 0 },
+        )?;
+        for method in &mut overloads {
+            if declaration.jvm_static {
+                annotations::append_annotations(
+                    &mut builder.pool,
+                    method,
+                    &[crate::check::DeclarationAnnotation {
+                        descriptor: "Lkotlin/jvm/JvmStatic;".into(),
+                        runtime: true,
+                        values: Vec::new(),
+                    }],
+                )?;
+            }
+            if !declaration.throws.is_empty() {
+                add_attribute(method, exceptions(&mut builder.pool, &declaration.throws)?)?;
+            }
+        }
+        builder.methods.extend(overloads);
         if !lambdas.is_empty() && declaration.function.private {
             builder.methods.push(private_method_bridge(
                 &mut builder.pool,
@@ -439,7 +466,7 @@ pub fn emit_dynamic_object(
         builder
             .methods
             .push(method(&mut builder.pool, owner, declaration, lambdas)?);
-        if let Some(default) = defaults::function(
+        if let Some(mut default) = defaults::function(
             &mut builder.pool,
             &[],
             &declaration.function,
@@ -447,6 +474,12 @@ pub fn emit_dynamic_object(
             declaration.jvm_static,
             lambdas,
         )? {
+            if !declaration.throws.is_empty() {
+                add_attribute(
+                    &mut default,
+                    exceptions(&mut builder.pool, &declaration.throws)?,
+                )?;
+            }
             builder.methods.push(default);
         }
     }

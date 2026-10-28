@@ -1,0 +1,121 @@
+[
+  {
+    "id": "declared_collision",
+    "source": "package rejected\n@JvmOverloads fun collide(value: Int = 1): Int = value\nfun collide(): Int = 2",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "Conflicting generated JVM method signature"
+  },
+  {
+    "id": "generated_collision",
+    "source": "package rejected\n@JvmOverloads fun collide(value: Int = 1): Int = value\n@JvmOverloads fun collide(value: Long = 2L): Int = 2",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "Conflicting generated JVM method signature"
+  },
+  {
+    "id": "abstract_method",
+    "source": "package rejected\nabstract class Abstract { @JvmOverloads abstract fun value(a: Int = 1): Int }",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "JvmOverloads cannot annotate an abstract method"
+  },
+  {
+    "id": "annotation_argument",
+    "source": "package rejected\n@JvmOverloads(1) fun value(a: Int = 1): Int = a",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "JVM method annotation requires a function without annotation arguments"
+  },
+  {
+    "id": "duplicate_annotation",
+    "source": "package rejected\n@JvmOverloads @JvmOverloads fun value(a: Int = 1): Int = a",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "Repeated JVM method annotation"
+  },
+  {
+    "id": "invalid_class_target",
+    "source": "package rejected\n@JvmOverloads class Value(val a: Int)",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "JVM method annotation requires a function without annotation arguments"
+  },
+  {
+    "id": "constructor_annotation_boundary",
+    "source": "package rejected\nclass Value @JvmOverloads constructor(val a: Int = 1)",
+    "official": "accept",
+    "candidate": "reject",
+    "diagnostic": "constructor annotations are unsupported",
+    "code": "CONSTRUCTOR_ANNOTATION_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "interface_default_boundary",
+    "source": "package rejected\ninterface Value { @JvmOverloads fun value(a: Int = 1): Int = a }",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "Annotations on source interface methods are not supported"
+  },
+  {
+    "id": "extension_default_boundary",
+    "source": "package rejected\n@JvmOverloads fun String.value(a: Int = 1): Int = a",
+    "official": "accept",
+    "candidate": "reject",
+    "diagnostic": "Default arguments on extension functions are unsupported"
+  },
+  {
+    "id": "inherited_collision",
+    "source": "package rejected\nopen class Parent { fun value(): Int = 1 }\nclass Child : Parent() { @JvmOverloads fun value(a: Int = 2): Int = a }",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "Generated JVM overload clashes with an inherited declaration"
+  },
+  {
+    "id": "qualified_static_object_boundary",
+    "source": "package rejected\nobject Value { @kotlin.jvm.JvmStatic @JvmOverloads fun value(a: Int = 1): Int = a }",
+    "official": "accept",
+    "candidate": "reject",
+    "diagnostic": "Qualified or aliased JvmStatic object annotations are unsupported"
+  },
+  {
+    "id": "static_top_level",
+    "source": "package rejected\n@JvmStatic @JvmOverloads fun value(a: Int = 1): Int = a",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "JvmStatic requires an object or companion member",
+    "code": "JVM_STATIC_PLACEMENT_INVALID"
+  },
+  {
+    "id": "static_concrete_class",
+    "source": "package rejected\nclass Value { @JvmStatic fun value(a: Int): Int = a }",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "JvmStatic requires an object or companion member",
+    "code": "JVM_STATIC_PLACEMENT_INVALID"
+  },
+  {
+    "id": "static_abstract_class",
+    "source": "package rejected\nabstract class Value { @JvmStatic abstract fun value(a: Int): Int }",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "JvmStatic requires an object or companion member",
+    "code": "JVM_STATIC_PLACEMENT_INVALID"
+  },
+  {
+    "id": "static_interface",
+    "source": "package rejected\ninterface Value { @JvmStatic fun value(a: Int): Int = a }",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "JvmStatic requires an object or companion member",
+    "code": "JVM_STATIC_PLACEMENT_INVALID"
+  },
+  {
+    "id": "override_default",
+    "source": "package rejected\nopen class Parent { open fun value(a: Int): Int = a }\nclass Child : Parent() { @JvmOverloads override fun value(a: Int = 1): Int = a }",
+    "official": "reject",
+    "candidate": "reject",
+    "diagnostic": "Overriding methods cannot declare default parameter values",
+    "code": "OVERRIDE_DEFAULT_ARGUMENT"
+  }
+]

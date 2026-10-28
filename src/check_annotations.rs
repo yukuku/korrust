@@ -9,7 +9,6 @@ pub(crate) fn unsupported_lowering(owner: &str) -> Option<&'static str> {
         "kotlin/jvm/JvmName"
         | "kotlin/jvm/JvmSynthetic"
         | "kotlin/jvm/Synchronized"
-        | "kotlin/jvm/JvmOverloads"
         | "kotlin/jvm/JvmDefault"
         | "kotlin/jvm/JvmDefaultWithCompatibility"
         | "kotlin/jvm/JvmDefaultWithoutCompatibility"
@@ -85,6 +84,29 @@ pub(super) fn declaration_annotations(
                 annotation.offset,
                 "Annotation use-site target is not valid for this declaration",
             ));
+        }
+        if matches!(
+            owner.as_str(),
+            "kotlin/jvm/JvmOverloads" | "kotlin/jvm/JvmStatic"
+        ) {
+            if target != "METHOD" || use_site.is_some() || !annotation.arguments.is_empty() {
+                return Err(Diagnostic::new(
+                    annotation.offset,
+                    "JVM method annotation requires a function without annotation arguments",
+                ));
+            }
+            if !seen.insert(owner.clone()) {
+                return Err(Diagnostic::new(
+                    annotation.offset,
+                    "Repeated JVM method annotation",
+                ));
+            }
+            result.push(DeclarationAnnotation {
+                descriptor: format!("L{owner};"),
+                runtime: false,
+                values: Vec::new(),
+            });
+            continue;
         }
         let class = classpath.load(&owner).map_err(|mut error| {
             error.offset = annotation.offset;
@@ -207,6 +229,35 @@ pub(super) fn declaration_annotations(
     Ok(result)
 }
 
+pub(super) fn overload_descriptors(function: &Function) -> Vec<String> {
+    if !function
+        .annotations
+        .iter()
+        .any(|annotation| annotation.descriptor == "Lkotlin/jvm/JvmOverloads;")
+    {
+        return Vec::new();
+    }
+    let mut omitted = HashSet::new();
+    let mut result = Vec::new();
+    for index in (0..function.params.len()).rev() {
+        if function.defaults.get(index).is_some_and(Option::is_some) {
+            omitted.insert(index);
+            result.push(format!(
+                "({}){}",
+                function
+                    .params
+                    .iter()
+                    .enumerate()
+                    .filter(|(index, _)| !omitted.contains(index))
+                    .map(|(_, (_, ty))| ty.descriptor())
+                    .collect::<String>(),
+                function.result.descriptor()
+            ));
+        }
+    }
+    result
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -217,7 +268,6 @@ mod tests {
             "kotlin/jvm/JvmName",
             "kotlin/jvm/JvmSynthetic",
             "kotlin/jvm/Synchronized",
-            "kotlin/jvm/JvmOverloads",
             "kotlin/jvm/JvmDefaultWithCompatibility",
             "kotlin/jvm/Transient",
             "kotlin/jvm/Strictfp",
