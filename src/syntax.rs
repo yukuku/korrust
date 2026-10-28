@@ -781,18 +781,20 @@ fn quoted_end(source: &str, start: usize, depth: usize) -> Result<usize> {
         ));
     }
     let bytes = source.as_bytes();
-    if bytes[start..].starts_with(b"\"\"\"") {
-        return Err(Diagnostic::new(
-            start,
-            "Raw triple-quoted strings are not supported",
-        ));
-    }
-    let mut i = start + 1;
+    let raw = bytes[start..].starts_with(b"\"\"\"");
+    let mut i = start + if raw { 3 } else { 1 };
     while i < bytes.len() {
         match bytes[i] {
+            b'"' if raw => {
+                let end = i + bytes[i..].iter().take_while(|byte| **byte == b'"').count();
+                if end - i >= 3 {
+                    return Ok(end);
+                }
+                i = end;
+            }
             b'"' => return Ok(i + 1),
-            b'\\' => i += 2,
-            b'\n' | b'\r' => {
+            b'\\' if !raw => i += 2,
+            b'\n' | b'\r' if !raw => {
                 return Err(Diagnostic::new(
                     i,
                     "Newlines are not allowed in ordinary strings",
@@ -825,7 +827,7 @@ fn template_end(source: &str, start: usize, depth: usize) -> Result<usize> {
             b'\'' => i = char_literal(source, i)?.0,
             b'`' => i = escaped_identifier_end(source, i)?,
             b'/' if bytes.get(i + 1) == Some(&b'/') => {
-                while i < bytes.len() && bytes[i] != b'\n' {
+                while i < bytes.len() && !matches!(bytes[i], b'\n' | b'\r') {
                     i += 1;
                 }
             }
@@ -890,33 +892,47 @@ fn string_parts_depth(
         ));
     }
     let bytes = source.as_bytes();
-    if bytes[start..].starts_with(b"\"\"\"") {
-        return Err(Diagnostic::new(
-            start,
-            "Raw triple-quoted strings are not supported",
-        ));
-    }
-    let mut i = start + 1;
+    let raw = bytes[start..].starts_with(b"\"\"\"");
+    let mut i = start + if raw { 3 } else { 1 };
     let mut units = Vec::new();
     let mut parts = Vec::new();
     while i < bytes.len() {
         match bytes[i] {
+            b'"' if raw && !bytes[i..].starts_with(b"\"\"\"") => {
+                units.push(34);
+                i += 1;
+            }
             b'"' => {
+                let end = if raw {
+                    let end = i + bytes[i..].iter().take_while(|byte| **byte == b'"').count();
+                    units.extend(std::iter::repeat_n(34, end - i - 3));
+                    end
+                } else {
+                    i + 1
+                };
                 if !units.is_empty() || parts.is_empty() {
                     parts.push(Expr {
                         offset: start,
                         kind: ExprKind::String(units),
                     });
                 }
-                return Ok((i + 1, parts));
+                return Ok((end, parts));
             }
-            b'\n' | b'\r' => {
+            b'\r' if raw => {
+                units.push(10);
+                i += if bytes.get(i + 1) == Some(&b'\n') {
+                    2
+                } else {
+                    1
+                };
+            }
+            b'\n' | b'\r' if !raw => {
                 return Err(Diagnostic::new(
                     i,
                     "Newlines are not allowed in ordinary strings",
                 ));
             }
-            b'\\' => {
+            b'\\' if !raw => {
                 let escape = i;
                 i += 1;
                 let b = *bytes
@@ -1155,26 +1171,32 @@ fn char_literal(source: &str, start: usize) -> Result<(usize, u16)> {
 fn lex(source: &str) -> Result<Vec<Token>> {
     let bytes = source.as_bytes();
     let mut tokens = Vec::new();
+    let mut delimiters = Vec::new();
     let mut i = 0;
     while i < bytes.len() {
         let start = i;
         let b = bytes[i];
-        if b == b'\n' {
-            tokens.push(Token {
-                text: "\n".into(),
-                offset: i,
-            });
-            i += 1;
+        if matches!(b, b'\n' | b'\r') {
+            if !matches!(delimiters.last(), Some(b'(' | b'[')) {
+                tokens.push(Token {
+                    text: "\n".into(),
+                    offset: i,
+                });
+            }
+            i += if b == b'\r' && bytes.get(i + 1) == Some(&b'\n') {
+                2
+            } else {
+                1
+            };
         } else if b.is_ascii_whitespace() {
             i += 1;
         } else if bytes[i..].starts_with(b"//") {
-            while i < bytes.len() && bytes[i] != b'\n' {
+            while i < bytes.len() && !matches!(bytes[i], b'\n' | b'\r') {
                 i += 1;
             }
         } else if bytes[i..].starts_with(b"/*") {
             i += 2;
             let mut depth = 1;
-            let mut newline = false;
             while i < bytes.len() && depth > 0 {
                 if bytes[i..].starts_with(b"/*") {
                     depth += 1;
@@ -1183,18 +1205,11 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                     depth -= 1;
                     i += 2;
                 } else {
-                    newline |= bytes[i] == b'\n';
                     i += 1;
                 }
             }
             if depth != 0 {
                 return Err(Diagnostic::new(start, "Unterminated block comment"));
-            }
-            if newline {
-                tokens.push(Token {
-                    text: "\n".into(),
-                    offset: start,
-                });
             }
         } else if b == b'"' {
             i = quoted_end(source, start, 0)?;
@@ -1202,6 +1217,18 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                 text: source[start..i].into(),
                 offset: start,
             });
+        } else if b == b'$'
+            && bytes.get(i + bytes[i..].iter().take_while(|byte| **byte == b'$').count())
+                == Some(&b'"')
+        {
+            return Err(Diagnostic::new(
+                start,
+                "Multi-dollar string interpolation is not supported",
+            )
+            .with_kind(
+                DiagnosticKind::UnsupportedLanguage,
+                "MULTI_DOLLAR_STRING_UNSUPPORTED",
+            ));
         } else if b == b'`' {
             i = escaped_identifier_end(source, start)?;
             tokens.push(Token {
@@ -1252,6 +1279,13 @@ fn lex(source: &str) -> Result<Vec<Token>> {
                 offset: start,
             });
         } else if b"(){}[]:.,;=+-*/%<>!@?".contains(&b) || b == b'&' || b == b'|' {
+            match b {
+                b'(' | b'[' | b'{' => delimiters.push(b),
+                b')' | b']' | b'}' => {
+                    delimiters.pop();
+                }
+                _ => {}
+            }
             i += 1;
             if i < bytes.len()
                 && matches!(
@@ -1341,6 +1375,39 @@ impl Parser {
     }
     fn lines(&mut self) {
         while self.take("\n") {}
+    }
+    fn at_trailing_lambda(&self) -> bool {
+        self.at("{")
+            || (identifier(&self.token().text)
+                && self
+                    .tokens
+                    .get(self.pos + 1)
+                    .is_some_and(|token| token.text == "@")
+                && self
+                    .tokens
+                    .get(self.pos + 2)
+                    .is_some_and(|token| token.text == "{"))
+    }
+    fn lines_before_trailing_lambda(&mut self) -> Result<()> {
+        let saved = self.pos;
+        self.lines();
+        if self.at("@") {
+            let annotation_start = self.pos;
+            let depth = self.depth;
+            let type_location_count = self.type_locations.len();
+            let trailing = self.annotations().is_ok() && self.at_trailing_lambda();
+            self.pos = annotation_start;
+            self.depth = depth;
+            self.type_locations.truncate(type_location_count);
+            if trailing {
+                return Err(self.error("Annotated trailing lambdas require unsupported annotation-expression parsing")
+                    .with_kind(DiagnosticKind::UnsupportedLanguage, "ANNOTATED_CALL_SUFFIX_UNSUPPORTED"));
+            }
+        }
+        if !self.at_trailing_lambda() {
+            self.pos = saved;
+        }
+        Ok(())
     }
     fn separators(&mut self) {
         while self.take("\n") || self.take(";") {}
@@ -4365,6 +4432,7 @@ impl Parser {
             if !increment {
                 self.expect("--")?;
             }
+            self.lines();
             let value = Box::new(self.expr(12)?);
             return Self::bounded(Expr {
                 offset,
@@ -4384,6 +4452,7 @@ impl Parser {
         if self.at("-") || self.at("+") || self.at("!") {
             let op = self.token().text.clone();
             self.pos += 1;
+            self.lines();
             return Self::bounded(Expr {
                 offset,
                 kind: ExprKind::Unary(op, Box::new(self.expr(12)?)),
@@ -4591,19 +4660,12 @@ impl Parser {
         };
         loop {
             if self.at("\n")
-                && let Some(token) = self.tokens[self.pos..]
+                && let Some(next) = self.tokens[self.pos..]
                     .iter()
-                    .find(|token| token.text != "\n")
-                && matches!(token.text.as_str(), "." | "?.")
-                && self.tokens[self.pos..]
-                    .iter()
-                    .skip_while(|next| next.text == "\n")
-                    .skip(1)
-                    .find(|next| next.text != "\n")
-                    .is_some_and(|next| identifier(&next.text))
+                    .position(|token| token.text != "\n")
+                && matches!(self.tokens[self.pos + next].text.as_str(), "." | "?.")
             {
-                return Err(Diagnostic::new(token.offset, "Newline-qualified expression continuation requires unsupported cross-line navigation parsing")
-                    .with_kind(DiagnosticKind::UnsupportedLanguage, "NEWLINE_QUALIFIED_CONTINUATION_UNSUPPORTED"));
+                self.pos += next;
             }
             if self.take("@") {
                 let label = self.name()?;
@@ -4629,6 +4691,7 @@ impl Parser {
                     offset,
                     kind: ExprKind::Generic(Box::new(expr), arguments),
                 };
+                self.lines_before_trailing_lambda()?;
             } else if self.take("::") {
                 if self.at("class") {
                     return Err(self
@@ -4668,17 +4731,7 @@ impl Parser {
                         prefix: false,
                     },
                 };
-            } else if self.at("{")
-                || (identifier(&self.token().text)
-                    && self
-                        .tokens
-                        .get(self.pos + 1)
-                        .is_some_and(|token| token.text == "@")
-                    && self
-                        .tokens
-                        .get(self.pos + 2)
-                        .is_some_and(|token| token.text == "{"))
-            {
+            } else if self.at_trailing_lambda() {
                 let lambda = if self.at("{") {
                     self.lambda()?
                 } else {
@@ -4703,13 +4756,16 @@ impl Parser {
                         kind: ExprKind::Call(Box::new(Expr { offset, kind }), vec![lambda]),
                     },
                 };
+                self.lines_before_trailing_lambda()?;
             } else if self.take("?.") {
+                self.lines();
                 let name = self.name()?;
                 expr = Expr {
                     offset,
                     kind: ExprKind::SafeProperty(Box::new(expr), name),
                 };
             } else if self.take(".") {
+                self.lines();
                 let name = self.name()?;
                 expr = Expr {
                     offset,
@@ -4740,6 +4796,7 @@ impl Parser {
                     offset,
                     kind: ExprKind::Call(Box::new(expr), args),
                 };
+                self.lines_before_trailing_lambda()?;
             } else {
                 break;
             }
@@ -5045,8 +5102,11 @@ impl Parser {
         let depth = self.depth;
         let type_location_count = self.type_locations.len();
         let result = self.type_arguments().ok().and_then(|arguments| {
-            if !self.at("(") && !self.at("{") {
-                return None;
+            if !self.at("(") && !self.at_trailing_lambda() {
+                self.lines();
+                if !self.at_trailing_lambda() && !self.at("@") {
+                    return None;
+                }
             }
             arguments
                 .into_iter()
@@ -5751,6 +5811,114 @@ pub fn parse(source: &str) -> Result<Module> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn raw_literals_preserve_utf16_backslashes_quotes_and_normalize_line_endings() {
+        for (source, expected) in [
+            (r#""""\n\u0041\""""#, "\\n\\u0041\\"),
+            ("\"\"\"a\r\nb\rc\nd\"\"\"", "a\nb\nc\nd"),
+            (r#""""😀é""""#, "😀é"),
+            (r#""""""""#, ""),
+            (r#"""""""""#, "\""),
+            (r#"""""""""""#, "\"\"\""),
+            (r#""""" a """"""#, "\" a \"\""),
+        ] {
+            let (end, units) = string_literal(source, 0).unwrap();
+            assert_eq!(end, source.len(), "{source:?}");
+            assert_eq!(
+                units,
+                expected.encode_utf16().collect::<Vec<_>>(),
+                "{source:?}"
+            );
+            assert_eq!(quoted_end(source, 0, 0).unwrap(), source.len());
+        }
+        for source in [r#""""unterminated"#, r#""""${1"#, "\"ordinary\nnewline\""] {
+            assert!(quoted_end(source, 0, 0).is_err(), "{source:?}");
+        }
+    }
+
+    #[test]
+    fn trailing_lambda_newlines_follow_call_suffixes_without_crossing_parentheses() {
+        for source in [
+            "fun f(): Int = invokeInt()\n{ 3 }",
+            "fun f(): Int = invokeInt<Int>\n{ 3 }",
+            "fun f(): Int = invokeInt()\nlabel@{ 3 }",
+            "fun f(): Int = (invokeInt\n{ 3 })",
+        ] {
+            let module = parse(source).unwrap();
+            assert!(
+                matches!(&module.functions[0].body[0].kind,
+                StatementKind::Return(Some(Expr { kind: ExprKind::Call(_, arguments), .. })) if arguments.len() == 1),
+                "{source}"
+            );
+        }
+        for source in [
+            "fun f(): Int = invokeInt\n{ 3 }",
+            "fun f(): Int = (invokeInt())\n{ 3 }",
+        ] {
+            assert!(parse(source).is_err(), "{source}");
+        }
+    }
+
+    #[test]
+    fn multi_dollar_strings_remain_an_explicit_unsupported_boundary() {
+        for source in [
+            r#"fun f() = $$"""$literal $${1 + 2}""""#,
+            r#"fun f() = $$"$literal $${1 + 2}""#,
+        ] {
+            let error = parse(source).err().unwrap();
+            assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
+            assert_eq!(error.code, "MULTI_DOLLAR_STRING_UNSUPPORTED");
+            assert_eq!(error.offset, source.find('$').unwrap());
+        }
+    }
+
+    #[test]
+    fn raw_templates_allow_nested_quotes_raw_literals_and_multiline_expressions() {
+        for source in [
+            r#"fun f(name: String): String = """$name/${name.length}/\${'$'}foo""""#,
+            r#"fun f(): String = """${"a${"""b"""}"}""""#,
+            "fun f(): String = \"\"\"${\n(1\n+ 2)\n}\"\"\"",
+            "fun f(): String = \"${\n\"\"\"raw\ntext\"\"\"\n}\"",
+        ] {
+            assert!(parse(source).is_ok(), "{source:?}");
+        }
+    }
+
+    #[test]
+    fn newline_expression_modes_preserve_statement_boundaries() {
+        for source in [
+            "fun f(s: String): Int = s\n.\nlength",
+            "fun f(s: String?): Int? = s\n?.\nlength",
+            "fun f(): Int = (1\n+\n2)",
+            "fun f(): Int = first(1\n+ 2)",
+            "fun f(a: IntArray): Int = a[1\n+ 2]",
+            "fun f(): Int = -\n1",
+            "fun f(): Int { val x = 1\n+ 2\nreturn x }",
+            "fun f(): Int = first({ val x = 1\n+ 2\n x })",
+            "fun f(): Int = (1 // comment\r + 2)",
+            "fun f(): Int = (1 /* comment\n */ + 2)",
+            "fun f(): Int = 1 /* comment\n */ + 2",
+            "fun f(): Boolean = true\r&& false",
+        ] {
+            assert!(parse(source).is_ok(), "{source:?}");
+        }
+        let module = parse("fun f(): Int { val x = 1\n+ 2\nreturn x }").unwrap();
+        assert_eq!(module.functions[0].body.len(), 3);
+        let module = parse("fun f(): Int = first({ val x = 1\n+ 2\n x })").unwrap();
+        let StatementKind::Return(Some(Expr {
+            kind: ExprKind::Call(_, arguments),
+            ..
+        })) = &module.functions[0].body[0].kind
+        else {
+            panic!()
+        };
+        let ExprKind::LambdaWithParams { body, .. } = &arguments[0].kind else {
+            panic!()
+        };
+        assert_eq!(body.len(), 3);
+        assert!(parse("fun f(): Int = 1\n* 2").is_err());
+    }
 
     #[test]
     fn unsupported_syntax_guards_preserve_supported_neighbors() {

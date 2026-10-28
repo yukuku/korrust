@@ -1,0 +1,1 @@
+public final class UpstreamrawStrings { public static void main(String[] args) { String value = RawStringsKt.box(); if (!"OK".equals(value)) throw new AssertionError(value); System.out.println(value); } }

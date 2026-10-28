@@ -156,6 +156,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 116. Internal class and object methods with Kotlin-compatible JVM names and metadata.
 117. Structured diagnostics with stable categories, source paths, and precise positions.
 118. Selected Gradle module integration using captured compilation and friend inputs.
+119. Raw multiline string templates and Kotlin newline handling for supported expressions and qualified continuations.
 
 ## Project contract
 

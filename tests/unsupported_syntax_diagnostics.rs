@@ -8,8 +8,8 @@ use std::{
 
 const NAVIGATION_CASES: &[(&str, &str)] = &[
     (
-        "fun format(text: String): String = text\n    .replace(\"a\", \"b\")",
-        ".replace",
+        "fun length(text: String): Int = text\n    .length",
+        ".length",
     ),
     (
         "fun length(text: String?): Int? = text\n    ?.length",
@@ -46,15 +46,6 @@ const UNSIGNED_TEST_SOURCE: &str = include_str!(
     "../benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt"
 );
 const ORIGINALS: &[(&str, &str, &str, &str, usize)] = &[
-    (
-        "AudioHttpErrorBody.kt",
-        include_str!(
-            "../benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt"
-        ),
-        ".replace",
-        "NEWLINE_QUALIFIED_CONTINUATION_UNSUPPORTED",
-        24,
-    ),
     (
         "AlphanumComparator.kt",
         include_str!(
@@ -179,9 +170,19 @@ fn unsigned_test_cli_reports_the_first_line_class_literal_without_outputs() {
 }
 
 #[test]
-fn newline_qualified_expressions_report_the_navigation_token() {
-    for &(source, marker) in NAVIGATION_CASES {
-        assert_unsupported(source, marker, "NEWLINE_QUALIFIED_CONTINUATION_UNSUPPORTED");
+fn newline_qualified_expressions_compile() {
+    for &(source, _) in NAVIGATION_CASES {
+        let output = compile_batch_with_classpath(
+            &[SourceInput {
+                identity: "/original/Navigation.kt".into(),
+                file_name: "Navigation.kt".into(),
+                source: source.into(),
+            }],
+            &[],
+            "navigation",
+        )
+        .unwrap();
+        assert!(!output.is_empty());
     }
 }
 

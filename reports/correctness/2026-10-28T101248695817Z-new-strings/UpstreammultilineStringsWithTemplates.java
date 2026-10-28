@@ -1,0 +1,1 @@
+public final class UpstreammultilineStringsWithTemplates { public static void main(String[] args) { String value = MultilineStringsWithTemplatesKt.box(); if (!"OK".equals(value)) throw new AssertionError(value); System.out.println(value); } }

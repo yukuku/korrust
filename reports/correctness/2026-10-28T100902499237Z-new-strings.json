@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T10:09:02.499237+00:00",
+  "status": "fail",
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "harness",
+      "outcome": "fail",
+      "error": "/Users/yuku/f/git/korrust/tests/fixtures/new_families/strings/RawStrings.kt:10:68: error: String templates support only String, nullable String, null, Int, Long, and Boolean values\n"
+    }
+  ],
+  "commands": [
+    {
+      "label": "Pinned official compiler identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T100902499237Z-new-strings/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T100902499237Z-new-strings/000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T100902499237Z-new-strings/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T100902499237Z-new-strings/001-stderr.txt"
+    },
+    {
+      "label": "Candidate identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/checks/2026-10-28T100902499237Z-new-strings/korrust-frozen",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T100902499237Z-new-strings/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T100902499237Z-new-strings/002-stderr.txt"
+    },
+    {
+      "label": "Compile official official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/strings/RawStrings.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/strings/RawLineEndings.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/checks/2026-10-28T100902499237Z-new-strings/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T100902499237Z-new-strings/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T100902499237Z-new-strings/003-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/checks/2026-10-28T100902499237Z-new-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/strings/RawStrings.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/strings/RawLineEndings.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/checks/2026-10-28T100902499237Z-new-strings/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T100902499237Z-new-strings/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T100902499237Z-new-strings/004-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "files_sha256": {
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "03e0ac29bd2dc7d42c186fcdf40df5bb02990fc7f08d0423bcb0e272eb2e2f2f",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "27cc3c0291e86929a6d038ad5db75602e8563c7e636c178db7ef612ba66ff8b8",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "62a78136794537d26021aaa661c5e17e80174d026836c69bf1f62d2ce6fd9636",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "4d49104ec19917fcb834ee39e1a13e47f05eba87c950b148c6035cbd31713b34",
+      "src/bytecode/lambdas.rs": "60487f7bbfef94df047c43914794d6edc9a8957bf7b8c8a44447988e7d3028ae",
+      "src/bytecode/objects.rs": "c92a40b84c895d844da4efa16495ed1aff77397628b4c9720318db9057ac89e5",
+      "src/bytecode.rs": "7e417cee02f260c3f9c31b0e3f8f49916b0067a1bb99d306a8282e3aaa3ad163",
+      "src/check.rs": "8a5d67421cfe27ae4197b9a586b6c0474d5557e810701d9462b7bc392e63d9f1",
+      "src/check_annotation_placements.rs": "0c02924bef2ecd295c73d69675d33033f44099667bf7932d8bb6beb043d51fd9",
+      "src/check_annotations.rs": "9395f667cd9e1b0e52371d2a3b7a9004e82e24f4fc17d50a31d0eabde6d43698",
+      "src/check_captures.rs": "4415213c7aec5542f2a03c5a217da9d7976d062b1b3762578dde32b1d133ae10",
+      "src/check_control.rs": "7e6ed766e78b7d706f52d2bc19e0f05af765cd866a56cac03d2f7cbed18df816",
+      "src/check_declarations.rs": "c5c17a8c507080db51fc82d248267aeb938c5380344e7c42a680041fbd4e39c1",
+      "src/check_delegates.rs": "fc6e3f43a18b6b5b600c5515938d70b0712a616bca82d2c53eab6dd28dbf083e",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "0a97b74e03e2c9ae0539f578f4de25e7cc98d129a7ada14ff83960b4a8c6a34e",
+      "src/check_interfaces.rs": "6dde39484aacd8786bbabc9f73ecfca625f4253642e08a3fb3a4f175fe5866e1",
+      "src/check_ir_walk.rs": "4d1376ec4d903c5e2d230d055ac56c78b5a823ac2284b271bb3aa27a57d0f76d",
+      "src/check_library.rs": "4a9ec5872ba4ecc6952526542eaf4fc5fea417bb059482b1e6e4e0b7540d4e3a",
+      "src/check_objects.rs": "8b31a4822dcf67a6af1ca4021318be10e3f211dbefa2e080ca4ec12c099d2485",
+      "src/check_operations.rs": "724c6983005b1db7d640b2a255feb546e60c55c1ca4a6930c93e995187c3ffdf",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "fa0e93bc19f643084e61a58d8996294b057730fff07ab5848981762d9e95f616",
+      "src/classpath/aliases.rs": "c1759fd27e4969bd9767124a9fc71ab76797a75580953a0f4b6aff4f1b6563be",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "6edb3a37fa571562a69f6382027642d06a365dd94bf5742d90372ce452e8b48e",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "6e2bc0bb767d10c9beb32a37312fac62f5a4be611d99399f9cebf46e814ff24b",
+      "src/classpath/source.rs": "adf43154c8d9e21f9df8684ec0b5e0051ad5e9993b0ede9ffed9868a650a265d",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "37e570cfe9f857c0c4be0249a361d76b54472f6959536130de7865a4fe9509a2",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "d1f4f9bf92f483684533cc83c0ed142495c0222ca8fe753117ac57ea31ed9173",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "8b5b2cf07b9212e4cb5ddd73265af191750093df379fa8dbfa0d45bf65ae6774",
+      "src/metadata.rs": "0774202e07604a3f71dff257c75a256b00d766baf8d64f7de6d43ad12d49dce0",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "1278996902adccaad11dce38f9e5500c792330a84aa66b593fa1848658222147",
+      "src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa",
+      "tests/unsupported_syntax_diagnostics.rs": "41c9bcf99bbc7a44541e1798fbc2d9f9d764c003c9064a0fee55a9e488557e53",
+      "tools/check_new_strings.py": "c3b1c158c145c28345ed1c235bcd11e613f604f8f8bdeb34c550c116b9fcfdec",
+      "tests/fixtures/new_families/strings/Consumer.kt": "f5d56f577acf575bb760bb1d1f15fb97d6ded021ca0038f22652b2af6ab82a72",
+      "tests/fixtures/new_families/strings/ConsumerLauncher.java": "c40ababecf0f16266d8276239cd6bf29659a8054cbaf6bf1a47fb72bdfffc521",
+      "tests/fixtures/new_families/strings/RawLineEndings.kt": "14f996ba040dbcf71ce45682e1baac71dbeafd66ada42b72d2b88f281a4de9a2",
+      "tests/fixtures/new_families/strings/RawStrings.kt": "48c5eb3c23f70bcf16eaac811bc183c40cae3509c60d47acd8809d95e1d718d1",
+      "tests/fixtures/new_families/strings/StringsCheck.java": "8ac5a2422365dd21d8c80e80f9882d70acbcf9159204c0b7b62b025c464673a9",
+      "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt": "5ee1ac4401a57d6c6251af419bcdeb34114fde450c219990aec95a279013b28e",
+      "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt": "7d6202a5d197351e2a716222b819d51b67fdba120b59935b952ed91f86556f26",
+      "references/kotlin/compiler/testData/codegen/box/strings/multilineStringsWithTemplates.kt": "8ea5629c4f48c7ac4ec8aa7f7e5945b89ec351e609ea4eac977c3693b89b7288"
+    }
+  },
+  "compiler": {
+    "path": "target/checks/2026-10-28T100902499237Z-new-strings/korrust-frozen",
+    "original_path": "/Users/yuku/f/git/korrust/target/release/korrust",
+    "binary_sha256": "f7efd61695bd88e879bf034f8e1782d995d24f5005683e63f82599a16a5a4f93"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "new_strings"
+    ],
+    "compiler_pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "evidence": [
+    "reports/correctness/2026-10-28T100902499237Z-new-strings/000-stdout.txt",
+    "reports/correctness/2026-10-28T100902499237Z-new-strings/000-stderr.txt",
+    "reports/correctness/2026-10-28T100902499237Z-new-strings/001-stdout.txt",
+    "reports/correctness/2026-10-28T100902499237Z-new-strings/001-stderr.txt",
+    "reports/correctness/2026-10-28T100902499237Z-new-strings/002-stdout.txt",
+    "reports/correctness/2026-10-28T100902499237Z-new-strings/002-stderr.txt",
+    "reports/correctness/2026-10-28T100902499237Z-new-strings/003-stdout.txt",
+    "reports/correctness/2026-10-28T100902499237Z-new-strings/003-stderr.txt",
+    "reports/correctness/2026-10-28T100902499237Z-new-strings/004-stdout.txt",
+    "reports/correctness/2026-10-28T100902499237Z-new-strings/004-stderr.txt"
+  ],
+  "selection": "Bounded raw/multiline string templates and Kotlin lexical newline continuation; fixed Java bytecodes compiled only against official output and reused against both providers, independent expected values, JVM verification, public signatures, unchanged pinned raw-string fixtures, invalid Kotlin versus valid unsupported boundaries. No app/module/Android compatibility or performance claim.",
+  "summary": {
+    "pass": 1,
+    "fail": 1
+  },
+  "provenance_note": "Preserved failed development report; superseded by 2026-10-28T10:12:48.695817+00:00"
+}

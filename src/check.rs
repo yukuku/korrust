@@ -3194,12 +3194,12 @@ impl Checker<'_> {
                     let value = self.value(part)?;
                     if !matches!(
                         value.ty.base(),
-                        Type::String | Type::Int | Type::Long | Type::Boolean | Type::Null
-                    ) && !matches!(value.ty.base(), Type::Nullable(inner) if matches!(inner.as_ref(), Type::String | Type::Int | Type::Long | Type::Boolean))
+                        Type::String | Type::Int | Type::Long | Type::Boolean | Type::Char | Type::Null
+                    ) && !matches!(value.ty.base(), Type::Nullable(inner) if matches!(inner.as_ref(), Type::String | Type::Int | Type::Long | Type::Boolean | Type::Char))
                     {
                         return Err(Diagnostic::new(
                             part.offset,
-                            "String templates support only String, nullable String, null, Int, Long, and Boolean values",
+                            "String templates support only String, Char, Int, Long, Boolean, their nullable forms, and null",
                         ));
                     }
                     result = Value {
