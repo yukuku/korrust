@@ -218,6 +218,9 @@ fn covariant_wildcard(ty: &Type) -> &'static str {
 
 fn generic_parameter(ty: &Type) -> String {
     match ty {
+        Type::List(inner) if covariant_parameter_type(inner) => {
+            format!("Ljava/util/List<+{}>;", generic_parameter(inner))
+        }
         Type::ReceiverFunction {
             receiver,
             params,
@@ -248,6 +251,18 @@ fn generic_parameter(ty: &Type) -> String {
             }
         ),
         _ => generic_type(ty),
+    }
+}
+
+fn covariant_parameter_type(ty: &Type) -> bool {
+    match ty {
+        Type::Nullable(inner) | Type::Platform(inner) => covariant_parameter_type(inner),
+        Type::List(_)
+        | Type::MutableList(_)
+        | Type::Function { .. }
+        | Type::ReceiverFunction { .. }
+        | Type::Parameter { .. } => true,
+        _ => false,
     }
 }
 
@@ -357,6 +372,9 @@ fn generic_function(function: &crate::check::Function) -> Option<String> {
         .collect::<String>();
     fn parameter(ty: &Type, names: &[&str]) -> String {
         match ty {
+            Type::List(inner) if covariant_parameter_type(inner) => {
+                format!("Ljava/util/List<+{}>;", parameter(inner, names))
+            }
             Type::ReceiverFunction {
                 receiver,
                 params,

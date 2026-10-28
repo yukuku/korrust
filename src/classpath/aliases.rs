@@ -60,10 +60,12 @@ fn expand_at(
     depth: usize,
 ) -> Result<Type> {
     if depth > 64 {
-        return Err(Diagnostic::new(
-            0,
-            "Type alias expansion exceeds the current depth limit",
-        ));
+        return Err(
+            Diagnostic::new(0, "Type alias expansion exceeds the current depth limit").with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "TYPE_ALIAS_DEPTH_UNSUPPORTED",
+            ),
+        );
     }
     let (name, arguments) = match ty {
         Type::Java(name) => (Some(name), &[][..]),
@@ -73,10 +75,10 @@ fn expand_at(
     if let Some(name) = name {
         if let Some((key, alias)) = alias(cp, name, imports, packages)? {
             if !active.insert(key.clone()) {
-                return Err(Diagnostic::new(
-                    0,
-                    format!("Cyclic library type alias: {key}"),
-                ));
+                return Err(
+                    Diagnostic::new(0, format!("Cyclic type alias expansion: {key}"))
+                        .with_kind(crate::DiagnosticKind::InvalidKotlin, "RECURSIVE_TYPE_ALIAS"),
+                );
             }
             if alias.type_parameters.len() != arguments.len() {
                 return Err(Diagnostic::new(
@@ -86,12 +88,13 @@ fn expand_at(
                         alias.name,
                         alias.type_parameters.len()
                     ),
-                ));
+                )
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "TYPE_ALIAS_ARITY"));
             }
             let mut substitutions = HashMap::new();
             for (parameter, argument) in alias.type_parameters.iter().zip(arguments) {
                 if parameter.bounds.iter().any(|bound|!matches!(bound,Type::Nullable(inner) if matches!(inner.as_ref(),Type::Java(name) if name=="java/lang/Object"))) {
-                    return Err(Diagnostic::new(0,"Library type aliases with constrained parameter bounds are unsupported"));
+                    return Err(Diagnostic::new(0,"Library type aliases with constrained parameter bounds are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "TYPE_ALIAS_BOUND_UNSUPPORTED"));
                 }
                 substitutions.insert(parameter.name.clone(), argument.clone());
             }
@@ -158,9 +161,13 @@ fn substitute(ty: &Type, arguments: &HashMap<String, TypeArgument>) -> Result<Ty
                 return Err(Diagnostic::new(
                     0,
                     "Projected type alias arguments at nested type positions are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "TYPE_ALIAS_PROJECTION_UNSUPPORTED",
                 ));
             }
-            argument.ty.clone().ok_or_else(||Diagnostic::new(0,"Star-projected type alias expansion at a concrete type position is unsupported"))?
+            argument.ty.clone().ok_or_else(||Diagnostic::new(0,"Star-projected type alias expansion at a concrete type position is unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "TYPE_ALIAS_STAR_UNSUPPORTED"))?
         }
         Type::Parameterized {
             name,
@@ -179,6 +186,10 @@ fn substitute(ty: &Type, arguments: &HashMap<String, TypeArgument>) -> Result<Ty
                                     return Err(Diagnostic::new(
                                         0,
                                         "Conflicting projections in type alias expansion",
+                                    )
+                                    .with_kind(
+                                        crate::DiagnosticKind::InvalidKotlin,
+                                        "TYPE_ALIAS_PROJECTION_CONFLICT",
                                     ));
                                 }
                             };
@@ -306,7 +317,7 @@ mod tests {
                 .err()
                 .unwrap()
                 .message
-                .contains("Cyclic library type alias")
+                .contains("Cyclic type alias expansion")
         );
     }
 }

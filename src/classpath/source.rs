@@ -587,7 +587,19 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     } else {
                         alias.name.clone()
                     },
-                    type_parameters: Vec::new(),
+                    type_parameters: alias
+                        .type_params
+                        .iter()
+                        .map(|parameter| crate::syntax::TypeParameter {
+                            name: parameter.name.clone(),
+                            variance: parameter.variance,
+                            bounds: parameter
+                                .bounds
+                                .iter()
+                                .map(|bound| resolve(bound, module, cp))
+                                .collect(),
+                        })
+                        .collect(),
                     expanded: resolve(&alias.expanded, module, cp),
                 })
                 .collect(),

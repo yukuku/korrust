@@ -1,0 +1,441 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T10:46:23.399013+00:00",
+  "status": "failed",
+  "selection": "Source generic aliases in type positions: substitution, nullable/function/receiver/list/array/classifier aliases, public/private cross-file scope, arity/cycles/implicit target bounds and exported metadata. Existing nongeneric AndroidBible OnGotoFinished is a regression; no new app target or source generic-class support is claimed.",
+  "compiler": {
+    "path": "target/2026-10-28T104623Z-source-generic-aliases-korrust-frozen",
+    "sha256": "f67b87afeddb68b1f4ffd4d8f9b5accd325d45dd2dd5617d11065d1dfb1c3a56",
+    "source_snapshot": "target/new-aliases-snapshot-v3"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "inputs": {
+    "files_sha256": {
+      "target/new-aliases-snapshot-v3/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "target/new-aliases-snapshot-v3/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "target/new-aliases-snapshot-v3/src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "target/new-aliases-snapshot-v3/src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "target/new-aliases-snapshot-v3/src/bytecode/class_companion.rs": "bb6761630fc0b7e03ec253982105b92b9e1194f6e863e17bf07afaf185977f80",
+      "target/new-aliases-snapshot-v3/src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "target/new-aliases-snapshot-v3/src/bytecode/defaults.rs": "552858590b1d6b9814237eaed4d72d07ebec378fe53e8f1841d700d6261d4024",
+      "target/new-aliases-snapshot-v3/src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "target/new-aliases-snapshot-v3/src/bytecode/frames.rs": "62a78136794537d26021aaa661c5e17e80174d026836c69bf1f62d2ce6fd9636",
+      "target/new-aliases-snapshot-v3/src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "target/new-aliases-snapshot-v3/src/bytecode/interfaces.rs": "4d49104ec19917fcb834ee39e1a13e47f05eba87c950b148c6035cbd31713b34",
+      "target/new-aliases-snapshot-v3/src/bytecode/lambdas.rs": "60487f7bbfef94df047c43914794d6edc9a8957bf7b8c8a44447988e7d3028ae",
+      "target/new-aliases-snapshot-v3/src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "target/new-aliases-snapshot-v3/src/bytecode.rs": "893d62f80de3ed5dac878ebab9483f0324df28dca802c90b05b147f91eddba10",
+      "target/new-aliases-snapshot-v3/src/check.rs": "2be107870bca087755a9ff9885a9e2e54b121f8f43d7c07a579b7f1244d921f5",
+      "target/new-aliases-snapshot-v3/src/check_annotation_placements.rs": "4fda5777b5488899ee7a5594eac67efdb506fe874c50904b180ebd10fd01882a",
+      "target/new-aliases-snapshot-v3/src/check_annotations.rs": "5bd835e0bcf16899053b879adb98a1e4d01f6219bb82c200db82b424da03edcc",
+      "target/new-aliases-snapshot-v3/src/check_captures.rs": "4415213c7aec5542f2a03c5a217da9d7976d062b1b3762578dde32b1d133ae10",
+      "target/new-aliases-snapshot-v3/src/check_control.rs": "7e6ed766e78b7d706f52d2bc19e0f05af765cd866a56cac03d2f7cbed18df816",
+      "target/new-aliases-snapshot-v3/src/check_declarations.rs": "5bad7022e9e50cf26fabbe559c222bf1e09f029c664c7386b97f0f70bb3446ff",
+      "target/new-aliases-snapshot-v3/src/check_delegates.rs": "fc6e3f43a18b6b5b600c5515938d70b0712a616bca82d2c53eab6dd28dbf083e",
+      "target/new-aliases-snapshot-v3/src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "target/new-aliases-snapshot-v3/src/check_functions.rs": "0a97b74e03e2c9ae0539f578f4de25e7cc98d129a7ada14ff83960b4a8c6a34e",
+      "target/new-aliases-snapshot-v3/src/check_interfaces.rs": "6dde39484aacd8786bbabc9f73ecfca625f4253642e08a3fb3a4f175fe5866e1",
+      "target/new-aliases-snapshot-v3/src/check_ir_walk.rs": "4d1376ec4d903c5e2d230d055ac56c78b5a823ac2284b271bb3aa27a57d0f76d",
+      "target/new-aliases-snapshot-v3/src/check_library.rs": "4a9ec5872ba4ecc6952526542eaf4fc5fea417bb059482b1e6e4e0b7540d4e3a",
+      "target/new-aliases-snapshot-v3/src/check_objects.rs": "b04a52c6c906acc8aa368174819de1c773f200ebc9348c596e48b24d6e32687e",
+      "target/new-aliases-snapshot-v3/src/check_operations.rs": "724c6983005b1db7d640b2a255feb546e60c55c1ca4a6930c93e995187c3ffdf",
+      "target/new-aliases-snapshot-v3/src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "target/new-aliases-snapshot-v3/src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "target/new-aliases-snapshot-v3/src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "target/new-aliases-snapshot-v3/src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "target/new-aliases-snapshot-v3/src/check_varargs.rs": "fa0e93bc19f643084e61a58d8996294b057730fff07ab5848981762d9e95f616",
+      "target/new-aliases-snapshot-v3/src/classpath/aliases.rs": "1ba2d3730c704c3fbfb27b3056a046c8782981a9f312c91865939cacd4fef73e",
+      "target/new-aliases-snapshot-v3/src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "target/new-aliases-snapshot-v3/src/classpath/metadata.rs": "6edb3a37fa571562a69f6382027642d06a365dd94bf5742d90372ce452e8b48e",
+      "target/new-aliases-snapshot-v3/src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "target/new-aliases-snapshot-v3/src/classpath/signature.rs": "6e2bc0bb767d10c9beb32a37312fac62f5a4be611d99399f9cebf46e814ff24b",
+      "target/new-aliases-snapshot-v3/src/classpath/source.rs": "c351db363baf0e66048dba26e12c60c3a255447bf186613a4fca89498cfa5c2c",
+      "target/new-aliases-snapshot-v3/src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "target/new-aliases-snapshot-v3/src/classpath.rs": "37e570cfe9f857c0c4be0249a361d76b54472f6959536130de7865a4fe9509a2",
+      "target/new-aliases-snapshot-v3/src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "target/new-aliases-snapshot-v3/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "target/new-aliases-snapshot-v3/src/lib.rs": "d1f4f9bf92f483684533cc83c0ed142495c0222ca8fe753117ac57ea31ed9173",
+      "target/new-aliases-snapshot-v3/src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "target/new-aliases-snapshot-v3/src/metadata/enums.rs": "8b5b2cf07b9212e4cb5ddd73265af191750093df379fa8dbfa0d45bf65ae6774",
+      "target/new-aliases-snapshot-v3/src/metadata.rs": "bb517a38600cdc8e79fa7eb78bc26bed6b8189aa1a8818576cd9148bf8c8fc43",
+      "target/new-aliases-snapshot-v3/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "target/new-aliases-snapshot-v3/src/syntax.rs": "85d4a9e0d67332e7ced486a8489251497f6b1d8fe9857c6c43ef1a366ad9729f",
+      "target/new-aliases-snapshot-v3/src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa",
+      "tests/generic_aliases.rs": "32d89139eadfa5b6e014854887a417bbee4d91522f0341b3ad4efb233c645ed1",
+      "tools/check_new_aliases.py": "68341d2b5c5a1277fccd30fd31d5515bf69599d7ae9b3bb271947ce916b401f2",
+      "tools/upstream_jvm.py": "5de0b1dc40086cb5916fd50a1c55a8fe6b9b5ca7c3ecff8d790260b9ce969b2e",
+      "tests/fixtures/new_families/aliases/AliasesCheck.java": "e0911fc3dc3d086ba01da118e3d277d21f6d746956c563c6f9622a2e264b4abd",
+      "tests/fixtures/new_families/aliases/Consumer.kt": "0c27c7cad409f8f9099389b7e861e5151405743ba6a2b7e8e1fda4142b07cf75",
+      "tests/fixtures/new_families/aliases/Definitions.kt": "f23b5b797b619e6d1f599605042043c947308212c2b4b5309cfe1da684e10b29",
+      "tests/fixtures/new_families/aliases/Dependency.kt": "97d92ab241831bdb3a6cf72136de03956fd0153291c4a59a7aa1eb17f0b5c424",
+      "tests/fixtures/new_families/aliases/GotoRegression.kt": "6b568268af28427fd2e376904713b264c0cd37d550358ddafc58104a0e232d8e",
+      "tests/fixtures/new_families/aliases/UnsupportedAliasConstructor.kt": "977c63db09e4e67456d652dd38c514e676db5c721a7f566886d846283fecd2a6",
+      "tests/fixtures/new_families/aliases/UnsupportedGenericGetter.kt": "5ad1dfab49cf3c5d9b58d484c27ea3d4c9cfe2e3b33c7b46d16535e7b6701d8d",
+      "tests/fixtures/new_families/aliases/Uses.kt": "6b93aa6555c02ea5df5761e141f0cd3175b8f6b05f35398aa85c085d883c34d8",
+      "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasFunction.kt": "acf53d485f3305118dd2f10d923705911337ff12ab4b79e475451a301ebc91f8",
+      "references/kotlin/compiler/testData/codegen/box/typealias/simple.kt": "f09fe20925e38b1830b19602163dd09fc9609f13f3e165a6ddabfca65edfe190",
+      "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt": "a416c2b8cd2592f0674b9b4b6c2974cb23ba14a5861db6857e36dee05db4fe5b",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt": "8c684c8b766e51cfe8b033bfdde4e394ec4d9b8aa2a6490ea87b1787b89f502d",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+      "target/2026-10-28T104623Z-source-generic-aliases-korrust-frozen": "f67b87afeddb68b1f4ffd4d8f9b5accd325d45dd2dd5617d11065d1dfb1c3a56",
+      "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+    },
+    "fixed_java_caller_sha256": {
+      "newfamilies/aliases/AliasesCheck.class": "e5289b62ad17e01ad5319f712db361a16ad59bfb9fa24e84b22ff2acc09f2de6"
+    }
+  },
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home"
+  },
+  "commands": [
+    {
+      "label": "Pinned oracle identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0001-stderr.txt"
+    },
+    {
+      "label": "Compile ordinary generic dependency with pinned Kotlin",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/aliases/Dependency.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_aliases",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/dependencies"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0002-stderr.txt"
+    },
+    {
+      "label": "Compile official official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/aliases/Definitions.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/aliases/Uses.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_aliases",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/dependencies:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0003-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases-korrust-frozen",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/aliases/Definitions.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/aliases/Uses.kt",
+        "--module-name",
+        "new_aliases",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/dependencies:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0004-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-reversed",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases-korrust-frozen",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/aliases/Uses.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/aliases/Definitions.kt",
+        "--module-name",
+        "new_aliases",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/dependencies:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/candidate-reversed"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0005-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java assertions against official output",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/official:/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/dependencies:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/java-caller",
+        "/Users/yuku/f/git/korrust/tests/fixtures/new_families/aliases/AliasesCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0006-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java assertions official",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/java-caller:/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/official:/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/dependencies:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.aliases.AliasesCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0007-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java assertions candidate",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/java-caller:/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/candidate:/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/dependencies:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.aliases.AliasesCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0008-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java assertions candidate-reversed",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/java-caller:/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/candidate-reversed:/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/dependencies:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.aliases.AliasesCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0009-stderr.txt"
+    },
+    {
+      "label": "JVM signature official/DefinitionsKt",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/official",
+        "newfamilies.aliases.DefinitionsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0010-stderr.txt"
+    },
+    {
+      "label": "JVM signature candidate/DefinitionsKt",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/candidate",
+        "newfamilies.aliases.DefinitionsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0011-stderr.txt"
+    },
+    {
+      "label": "JVM signature candidate-reversed/DefinitionsKt",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/candidate-reversed",
+        "newfamilies.aliases.DefinitionsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0012-stderr.txt"
+    },
+    {
+      "label": "JVM signature official/UsesKt",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/official",
+        "newfamilies.aliases.UsesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0013-stderr.txt"
+    },
+    {
+      "label": "JVM signature candidate/UsesKt",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/candidate",
+        "newfamilies.aliases.UsesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0014-stderr.txt"
+    },
+    {
+      "label": "JVM signature candidate-reversed/UsesKt",
+      "argv": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.6/libexec/openjdk.jdk/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/2026-10-28T104623Z-source-generic-aliases/candidate-reversed",
+        "newfamilies.aliases.UsesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T104623Z-source-generic-aliases/commands/0015-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "dependency",
+      "outcome": "pass",
+      "scope": "Official-built generic dependency; excluded from source compiler feature count"
+    },
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "cross_file_order",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 32,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 32,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "runtime/candidate-reversed",
+      "outcome": "pass",
+      "independent_assertions": 32,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "signature/DefinitionsKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "harness_failure",
+      "outcome": "correctness_failure",
+      "error": "{'official': ['descriptor: (ILkotlin/jvm/functions/Function1;)Ljava/lang/String;', 'descriptor: (Laliasdep/Bounded;)Laliasdep/Bounded;', 'descriptor: (Laliasdep/Box;)Laliasdep/Box;', 'descriptor: (Ljava/lang/String;)Ljava/lang/String;', 'descriptor: (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;', 'descriptor: (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Ljava/lang/String;', 'descriptor: (Ljava/util/List;)I', 'descriptor: (Ljava/util/List;)I', 'descriptor: (Ljava/util/List;)I', 'descriptor: (Ljava/util/List;)Ljava/lang/String;', 'descriptor: (Lkotlin/jvm/functions/Function1;)Ljava/lang/String;', 'descriptor: ([Ljava/lang/String;)Ljava/lang/String;', 'public final class newfamilies.aliases.UsesKt {', 'public static final aliasdep.Bounded<java.lang.String> constrained(aliasdep.Bounded<java.lang.String>);', 'public static final aliasdep.Box<java.lang.String> boxed(aliasdep.Box<java.lang.String>);', 'public static final int count(java.util.List<java.lang.String>);', 'public static final int nullableCount(java.util.List<java.lang.String>);', 'public static final int sum(java.util.List<java.lang.Integer>);', 'public static final java.lang.String apply(java.lang.String, kotlin.jvm.functions.Function1<? super java.lang.String, java.lang.String>);', 'public static final java.lang.String convert(int, kotlin.jvm.functions.Function1<? super java.lang.Integer, java.lang.String>);', 'public static final java.lang.String firstNested(java.util.List<? extends java.util.List<java.lang.String>>);', 'public static final java.lang.String format(java.lang.String, kotlin.jvm.functions.Function2<? super java.lang.String, ? super java.lang.Integer, java.lang.String>);', 'public static final java.lang.String ignored(java.lang.String);', 'public static final java.lang.String optional(kotlin.jvm.functions.Function1<? super java.lang.String, java.lang.String>);', 'public static final java.lang.String swap(java.lang.String[]);', '}'], 'candidate': ['descriptor: (ILkotlin/jvm/functions/Function1;)Ljava/lang/String;', 'descriptor: (Laliasdep/Bounded;)Laliasdep/Bounded;', 'descriptor: (Laliasdep/Box;)Laliasdep/Box;', 'descriptor: (Ljava/lang/String;)Ljava/lang/String;', 'descriptor: (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;', 'descriptor: (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Ljava/lang/String;', 'descriptor: (Ljava/util/List;)I', 'descriptor: (Ljava/util/List;)I', 'descriptor: (Ljava/util/List;)I', 'descriptor: (Ljava/util/List;)Ljava/lang/String;', 'descriptor: (Lkotlin/jvm/functions/Function1;)Ljava/lang/String;', 'descriptor: ([Ljava/lang/String;)Ljava/lang/String;', 'public final class newfamilies.aliases.UsesKt {', 'public static final aliasdep.Bounded<java.lang.String> constrained(aliasdep.Bounded<java.lang.String>);', 'public static final aliasdep.Box<java.lang.String> boxed(aliasdep.Box<java.lang.String>);', 'public static final int count(java.util.List<java.lang.String>);', 'public static final int nullableCount(java.util.List<java.lang.String>);', 'public static final int sum(java.util.List<java.lang.Integer>);', 'public static final java.lang.String apply(java.lang.String, kotlin.jvm.functions.Function1<? super java.lang.String, java.lang.String>);', 'public static final java.lang.String convert(int, kotlin.jvm.functions.Function1<? super java.lang.Integer, java.lang.String>);', 'public static final java.lang.String firstNested(java.util.List<java.util.List<java.lang.String>>);', 'public static final java.lang.String format(java.lang.String, kotlin.jvm.functions.Function2<? super java.lang.String, ? super java.lang.Integer, java.lang.String>);', 'public static final java.lang.String ignored(java.lang.String);', 'public static final java.lang.String optional(kotlin.jvm.functions.Function1<? super java.lang.String, java.lang.String>);', 'public static final java.lang.String swap(java.lang.String[]);', '}'], 'candidate-reversed': ['descriptor: (ILkotlin/jvm/functions/Function1;)Ljava/lang/String;', 'descriptor: (Laliasdep/Bounded;)Laliasdep/Bounded;', 'descriptor: (Laliasdep/Box;)Laliasdep/Box;', 'descriptor: (Ljava/lang/String;)Ljava/lang/String;', 'descriptor: (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;', 'descriptor: (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Ljava/lang/String;', 'descriptor: (Ljava/util/List;)I', 'descriptor: (Ljava/util/List;)I', 'descriptor: (Ljava/util/List;)I', 'descriptor: (Ljava/util/List;)Ljava/lang/String;', 'descriptor: (Lkotlin/jvm/functions/Function1;)Ljava/lang/String;', 'descriptor: ([Ljava/lang/String;)Ljava/lang/String;', 'public final class newfamilies.aliases.UsesKt {', 'public static final aliasdep.Bounded<java.lang.String> constrained(aliasdep.Bounded<java.lang.String>);', 'public static final aliasdep.Box<java.lang.String> boxed(aliasdep.Box<java.lang.String>);', 'public static final int count(java.util.List<java.lang.String>);', 'public static final int nullableCount(java.util.List<java.lang.String>);', 'public static final int sum(java.util.List<java.lang.Integer>);', 'public static final java.lang.String apply(java.lang.String, kotlin.jvm.functions.Function1<? super java.lang.String, java.lang.String>);', 'public static final java.lang.String convert(int, kotlin.jvm.functions.Function1<? super java.lang.Integer, java.lang.String>);', 'public static final java.lang.String firstNested(java.util.List<java.util.List<java.lang.String>>);', 'public static final java.lang.String format(java.lang.String, kotlin.jvm.functions.Function2<? super java.lang.String, ? super java.lang.Integer, java.lang.String>);', 'public static final java.lang.String ignored(java.lang.String);', 'public static final java.lang.String optional(kotlin.jvm.functions.Function1<? super java.lang.String, java.lang.String>);', 'public static final java.lang.String swap(java.lang.String[]);', '}']}"
+    }
+  ],
+  "limitations": [
+    "Generic library-property getter result substitution and alias constructor resolution remain independently recorded failing boundaries.",
+    "Projected alias arguments at concrete nested positions are explicitly unsupported.",
+    "Source generic classes, full Kotlin metadata parity, full-app compatibility and performance are not claimed."
+  ],
+  "counts": {
+    "correctness_failure": 1,
+    "pass": 8
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "archived_from": "target/2026-10-28T104623Z-source-generic-aliases",
+  "reproduction_command": [
+    "python3",
+    "tools/upstream_jvm.py",
+    "--candidate",
+    "target/2026-10-28T104623Z-source-generic-aliases-korrust-frozen",
+    "--output",
+    "target/upstream-fresh-run"
+  ]
+}

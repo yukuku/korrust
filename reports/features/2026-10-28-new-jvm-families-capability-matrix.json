@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-10-28T11:05:00+00:00",
+  "status": "in_progress",
+  "selection": "Approximately twenty genuinely new families; current live execution matrix. Bounded acceptance does not establish unrestricted conformance. Infrastructure and existing support excluded.",
+  "validated_new_families": 3,
+  "features": [
+    {
+      "id": "family-01",
+      "number": 1,
+      "name": "Raw/multiline string templates and standard multiline expression/navigation parsing",
+      "status": "supported",
+      "acceptance_boundary": "UTF-16, raw escapes, line normalization, nested interpolation, newline grammar; original AudioHttpErrorBody and raw-literal tests. Multi-dollar interpolation remains outside the initial boundary.",
+      "restrictions": [
+        "Raw/multiline strings and bounded newline grammar; multi-dollar/annotated suffix/Unicode unbraced/Nothing templates remain explicit boundaries."
+      ],
+      "correctness_report": "reports/correctness/2026-10-28T102639408771Z-new-strings.json"
+    },
+    {
+      "id": "family-02",
+      "number": 2,
+      "name": "Source generic classifiers, parameterized inheritance and erased override bridges",
+      "status": "unassessed",
+      "acceptance_boundary": "AlphanumComparator; bounds, substitution, variance, Java dispatch, signatures and Kotlin metadata. Existing generic functions do not count."
+    },
+    {
+      "id": "family-03",
+      "number": 3,
+      "name": "Independent accessor visibility and internal property contracts",
+      "status": "unassessed",
+      "acceptance_boundary": "BackForwardList; private setters, inaccessible callers, internal JVM names, friend and nonfriend consumers."
+    },
+    {
+      "id": "family-04",
+      "number": 4,
+      "name": "JVM overload generation for default arguments",
+      "status": "supported",
+      "acceptance_boundary": "FormattedVerseText and SongInfo; top-level/member/object/companion/constructor overloads, masks, effects, collisions and annotations.",
+      "restrictions": [
+        "Function overload lowering; constructors/extensions/source interfaces/qualified object markers remain explicit boundaries; failing app probes retained."
+      ],
+      "correctness_report": "reports/correctness/2026-10-28T104259884676Z-new-jvm-overloads.json"
+    },
+    {
+      "id": "family-05",
+      "number": 5,
+      "name": "Remaining signed primitive/array representations",
+      "status": "unassessed",
+      "acceptance_boundary": "Short and Long/Boolean/Float/Double arrays; allocation, indexed read/write, iteration, vararg/spread, boxing and Java ABI. AudioHighlightColor needs real Android dependencies."
+    },
+    {
+      "id": "family-06",
+      "number": 6,
+      "name": "Class-reference expressions and bounded KClass/Class interoperability",
+      "status": "unassessed",
+      "acceptance_boundary": "Primitive/reference/array literals, nullable expression checks and ordinary .java resolution; no full reflection."
+    },
+    {
+      "id": "family-07",
+      "number": 7,
+      "name": "Single-field value-class JVM ABI",
+      "status": "unassessed",
+      "acceptance_boundary": "Gid and Rpp; reference/primitive representation, nullable/generic/interface boxing, mangling and official Kotlin/Java consumers. Experimental multi-field values excluded."
+    },
+    {
+      "id": "family-08",
+      "number": 8,
+      "name": "Sealed hierarchies and exhaustive when",
+      "status": "unassessed",
+      "acceptance_boundary": "VersionFileImporter.Result and AudioBarCommand; exhaustiveness, nullable subjects, module restrictions and metadata."
+    },
+    {
+      "id": "family-09",
+      "number": 9,
+      "name": "Inner/local classes and captured state",
+      "status": "unassessed",
+      "acceptance_boundary": "Actual AndroidBible inner adapters; outer receiver/capture identity, constructor ABI and lexical metadata. Existing nested classes/local functions excluded."
+    },
+    {
+      "id": "family-10",
+      "number": 10,
+      "name": "Class/interface delegation",
+      "status": "unassessed",
+      "acceptance_boundary": "Ordinary interface forwarding, properties, override precedence, evaluation order and generic bridge boundaries. Existing delegated properties excluded."
+    },
+    {
+      "id": "family-11",
+      "number": 11,
+      "name": "Expanded object semantics",
+      "status": "unassessed",
+      "acceptance_boundary": "Data objects, supported supertypes and object expressions; initialization, equality/hash/string behavior and metadata. Existing named singleton support excluded."
+    },
+    {
+      "id": "family-12",
+      "number": 12,
+      "name": "Expanded enum semantics",
+      "status": "unassessed",
+      "acceptance_boundary": "Entry-specific subclasses, interface implementations and constructor defaults; initialization, dispatch, signatures and metadata. Existing enum bodies/arguments excluded."
+    },
+    {
+      "id": "family-13",
+      "number": 13,
+      "name": "Generic source aliases",
+      "status": "supported",
+      "acceptance_boundary": "Substitution, bounds, visibility, cycles and exported metadata/Kotlin consumers. Existing nongeneric aliases excluded.",
+      "restrictions": [
+        "Generic aliases in type positions; generic imported getter/alias constructors and two larger originals remain actual failing boundary rows, not passes."
+      ],
+      "correctness_report": "reports/correctness/2026-10-28T105615Z-source-generic-aliases.json"
+    },
+    {
+      "id": "family-14",
+      "number": 14,
+      "name": "Unsigned representations and operations",
+      "status": "unassessed",
+      "acceptance_boundary": "Ordinary stdlib resolution through value-class ABI, arithmetic/comparison/conversion/boxing and array boundaries; no API-name substitutions."
+    },
+    {
+      "id": "family-15",
+      "number": 15,
+      "name": "Compile-time constant expressions and references",
+      "status": "unassessed",
+      "acceptance_boundary": "VersionFileImporter MAX_FILE_SIZE and SongBookUtil MAX_RESPONSE_SIZE; overflow, types, dependency constants and annotation values. Existing literals excluded.",
+      "execution": "Implementation and validation in progress; not counted as accepted."
+    },
+    {
+      "id": "family-16",
+      "number": 16,
+      "name": "Remaining Java member resolution rules",
+      "status": "unassessed",
+      "acceptance_boundary": "Static imports, inherited Object members and ordinary bean properties; visibility, ambiguity, nullability and annotation metadata. Existing direct fields/methods excluded.",
+      "execution": "Implementation and validation in progress; not counted as accepted."
+    },
+    {
+      "id": "family-17",
+      "number": 17,
+      "name": "Rich annotation values and source declarations",
+      "status": "unassessed",
+      "acceptance_boundary": "Numeric/enum/class/array/nested values, defaults, retention/placement and Java reflection/Kotlin consumers. Existing three scalar annotation kinds excluded."
+    },
+    {
+      "id": "family-18",
+      "number": 18,
+      "name": "Member/companion extensions and extension properties",
+      "status": "unassessed",
+      "acceptance_boundary": "Distinct dispatch and extension receivers, overload selection, accessors, captures and nullability. Existing top-level/library extensions excluded."
+    },
+    {
+      "id": "family-19",
+      "number": 19,
+      "name": "Source inline/reified semantics",
+      "status": "unassessed",
+      "acceptance_boundary": "Supported reified tests/casts/class literals, noinline/crossinline, evaluation order and non-local-return boundaries. Existing compiled inline expansion excluded."
+    },
+    {
+      "id": "family-20",
+      "number": 20,
+      "name": "Suspend functions and suspend function types",
+      "status": "unassessed",
+      "acceptance_boundary": "Real Continuation suspension/resumption, spilled state and exceptional completion; no synchronous shim or complete kotlinx.coroutines implementation."
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-28T102639408771Z-new-strings.json",
+    "reports/correctness/2026-10-28T104259884676Z-new-jvm-overloads.json",
+    "reports/correctness/2026-10-28T105615Z-source-generic-aliases.json"
+  ],
+  "limitations": [
+    "The approximately twenty-family request is not complete. Unassessed entries are not implemented-feature claims.",
+    "Upstream adapter diagnostic-equivalence/helpers/mixed compilation/incremental execution remain separately explicit harness boundaries.",
+    "No new complete AndroidBible module, full app, device behavior or speedup is claimed."
+  ]
+}

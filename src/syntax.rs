@@ -186,6 +186,7 @@ pub struct Module {
 }
 #[derive(Clone, Debug)]
 pub struct TypeAliasDecl {
+    pub type_params: Vec<TypeParameter>,
     pub name: String,
     pub offset: usize,
     pub private: bool,
@@ -1975,18 +1976,57 @@ impl Parser {
         self.lines();
         self.expect("typealias")?;
         let name = self.declaration_name()?;
-        if self.at("<") {
-            return Err(self.error("Generic type aliases are unsupported"));
-        }
-        self.expect("=")?;
-        self.lines();
-        let expanded = self.ty()?;
-        Ok(TypeAliasDecl {
-            name,
-            offset,
-            private,
-            expanded,
-        })
+        let scope = self.type_parameters.len();
+        let result = (|| {
+            let type_params = self.type_parameters().map_err(|error| {
+                if error.message.contains("Variance and reified") {
+                    error.with_kind(
+                        DiagnosticKind::InvalidKotlin,
+                        "INVALID_TYPE_ALIAS_PARAMETER",
+                    )
+                } else {
+                    error
+                }
+            })?;
+            if type_params
+                .iter()
+                .any(|parameter| !parameter.bounds.is_empty())
+                || self.at("where")
+            {
+                return Err(self
+                    .error("Type alias parameters cannot declare bounds")
+                    .with_kind(
+                        DiagnosticKind::InvalidKotlin,
+                        "INVALID_TYPE_ALIAS_PARAMETER",
+                    ));
+            }
+            self.expect("=")?;
+            self.lines();
+            let expanded = self.ty()?;
+            let mut target = &expanded;
+            while let Type::Nullable(inner) = target {
+                target = inner;
+            }
+            if matches!(target, Type::Parameter { .. }) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Type aliases must expand to a classifier or function type",
+                )
+                .with_kind(
+                    DiagnosticKind::InvalidKotlin,
+                    "TYPE_ALIAS_PARAMETER_TARGET_INVALID",
+                ));
+            }
+            Ok(TypeAliasDecl {
+                type_params,
+                name,
+                offset,
+                private,
+                expanded,
+            })
+        })();
+        self.type_parameters.truncate(scope);
+        result
     }
     fn enum_decl(&mut self) -> Result<EnumDecl> {
         let offset = self.token().offset;
@@ -5838,6 +5878,30 @@ mod tests {
     use super::*;
 
     #[test]
+    fn generic_type_alias_parameters_are_scoped_and_reject_invalid_declarations() {
+        let module = parse("typealias Values<T> = List<T>\ntypealias Callback<T> = ((T?) -> T)?\nfun later(value: T): T = value").unwrap();
+        assert_eq!(module.type_aliases[0].type_params[0].name, "T");
+        assert!(
+            matches!(&module.type_aliases[0].expanded, Type::List(inner) if matches!(inner.as_ref(), Type::Parameter { name, .. } if name == "T"))
+        );
+        assert_eq!(module.functions[0].params[0].1, Type::Java("T".into()));
+        for source in [
+            "typealias Identity<T> = T",
+            "typealias Identity<T> = T?",
+            "typealias Values<T: Any> = List<T>",
+            "typealias Values<in T> = List<T>",
+            "typealias Values<out T> = List<T>",
+            "typealias Values<reified T> = List<T>",
+        ] {
+            assert_eq!(
+                parse(source).err().unwrap().kind,
+                DiagnosticKind::InvalidKotlin,
+                "{source}"
+            );
+        }
+    }
+
+    #[test]
     fn constructor_annotation_guards_preserve_separate_annotated_declarations() {
         assert!(parse("class Empty\n@Ann class Next").is_ok());
         assert!(parse("class Empty\n@Suppress(\"unused\") public class Next").is_ok());
@@ -5850,7 +5914,6 @@ mod tests {
             assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
         }
     }
-
 
     #[test]
     fn raw_literals_preserve_utf16_backslashes_quotes_and_normalize_line_endings() {
@@ -6446,8 +6509,11 @@ mod tests {
         assert!(
             matches!(&module.type_aliases[2].expanded, Type::Function { params, result } if params == &[Type::Int] && **result == Type::Unit)
         );
-        let error = parse("typealias Generic<T> = List<T>").unwrap_err();
-        assert!(error.message.contains("Generic type aliases"));
+        let generic = parse("typealias Generic<T> = List<T>").unwrap();
+        assert_eq!(generic.type_aliases[0].type_params[0].name, "T");
+        assert!(
+            matches!(&generic.type_aliases[0].expanded, Type::List(inner) if matches!(inner.as_ref(), Type::Parameter { name, .. } if name == "T"))
+        );
     }
 
     #[test]

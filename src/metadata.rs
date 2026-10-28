@@ -2094,6 +2094,16 @@ fn type_alias_proto(
     let mut proto = Proto::default();
     proto.number(1, if alias.private { 2 } else { 6 });
     proto.number(2, strings.id(&alias.name)?);
+    for (index, parameter) in alias.type_params.iter().enumerate() {
+        let mut declaration = Proto::default();
+        declaration.number(1, index as u32);
+        declaration.number(2, strings.id(&parameter.name)?);
+        declaration.number(4, 2);
+        for bound in &parameter.bounds {
+            declaration.message(5, &type_proto(bound, imports, strings)?);
+        }
+        proto.message(3, &declaration);
+    }
     let expanded = type_proto(&alias.expanded, imports, strings)?;
     proto.message(4, &expanded);
     proto.message(6, &expanded);
