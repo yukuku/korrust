@@ -374,6 +374,9 @@ pub struct ObjectField {
     pub name: String,
     pub offset: usize,
     pub private: bool,
+    pub internal: bool,
+    pub getter_visibility: Option<PropertyVisibility>,
+    pub setter_visibility: Option<PropertyVisibility>,
     pub initializer: Option<Expr>,
     pub ty: Option<Type>,
     pub mutable: bool,
@@ -382,6 +385,26 @@ pub struct ObjectField {
     pub delegate: Option<Expr>,
     pub lateinit: bool,
 }
+impl ObjectField {
+    pub fn visibility(&self) -> PropertyVisibility {
+        if self.private {
+            PropertyVisibility::Private
+        } else if false {
+            PropertyVisibility::Protected
+        } else if self.internal {
+            PropertyVisibility::Internal
+        } else {
+            PropertyVisibility::Public
+        }
+    }
+    pub fn getter_visibility(&self) -> PropertyVisibility {
+        self.getter_visibility.unwrap_or_else(|| self.visibility())
+    }
+    pub fn setter_visibility(&self) -> PropertyVisibility {
+        self.setter_visibility.unwrap_or_else(|| self.visibility())
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct ObjectMethod {
     pub is_override: bool,
@@ -455,6 +478,9 @@ pub struct ClassCompanionProperty {
     pub name: String,
     pub offset: usize,
     pub private: bool,
+    pub internal: bool,
+    pub getter_visibility: Option<PropertyVisibility>,
+    pub setter_visibility: Option<PropertyVisibility>,
     pub mutable: bool,
     pub ty: Option<Type>,
     pub initializer: Option<Expr>,
@@ -463,11 +489,59 @@ pub struct ClassCompanionProperty {
     pub delegate: Option<Expr>,
     pub lateinit: bool,
 }
+impl ClassCompanionProperty {
+    pub fn visibility(&self) -> PropertyVisibility {
+        if self.private {
+            PropertyVisibility::Private
+        } else if false {
+            PropertyVisibility::Protected
+        } else if self.internal {
+            PropertyVisibility::Internal
+        } else {
+            PropertyVisibility::Public
+        }
+    }
+    pub fn getter_visibility(&self) -> PropertyVisibility {
+        self.getter_visibility.unwrap_or_else(|| self.visibility())
+    }
+    pub fn setter_visibility(&self) -> PropertyVisibility {
+        self.setter_visibility.unwrap_or_else(|| self.visibility())
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum PropertyVisibility {
+    Public,
+    Private,
+    Protected,
+    Internal,
+}
+impl PropertyVisibility {
+    pub fn access(self) -> u16 {
+        match self {
+            Self::Private => 2,
+            Self::Protected => 4,
+            Self::Public | Self::Internal => 1,
+        }
+    }
+    pub fn metadata(self) -> u32 {
+        match self {
+            Self::Private => 2,
+            Self::Protected => 4,
+            Self::Public => 6,
+            Self::Internal => 0,
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct PropertyDecl {
     pub annotations: Vec<AnnotationUse>,
     pub name: String,
     pub private: bool,
+    pub internal: bool,
+    pub getter_visibility: Option<PropertyVisibility>,
+    pub setter_visibility: Option<PropertyVisibility>,
     pub protected: bool,
     pub mutable: bool,
     pub inferred: bool,
@@ -481,6 +555,29 @@ pub struct PropertyDecl {
     pub lateinit: bool,
     pub open: bool,
 }
+impl PropertyDecl {
+    pub fn visibility(&self) -> PropertyVisibility {
+        if self.private {
+            PropertyVisibility::Private
+        } else if self.protected {
+            PropertyVisibility::Protected
+        } else if self.internal {
+            PropertyVisibility::Internal
+        } else {
+            PropertyVisibility::Public
+        }
+    }
+    pub fn getter_visibility(&self) -> PropertyVisibility {
+        self.getter_visibility.unwrap_or_else(|| self.visibility())
+    }
+    pub fn setter_visibility(&self) -> PropertyVisibility {
+        self.setter_visibility.unwrap_or_else(|| self.visibility())
+    }
+    pub fn new_visibility(&self) -> bool {
+        self.internal || self.getter_visibility.is_some() || self.setter_visibility.is_some()
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct ClassMethod {
     pub function: Function,
@@ -531,6 +628,7 @@ pub enum StatementKind {
     IndexAssign(Expr, Expr, Expr),
     IndicesAssign(Expr, Vec<Expr>, Expr),
     PropertyAssign(Expr, String, Expr),
+    SafePropertyAssign(Expr, String, Expr),
     Continue,
     Break,
     ForUntil(String, Expr, Expr, Vec<Statement>),
@@ -794,7 +892,8 @@ fn shift_statement_offsets(statements: &mut [Statement], offset: usize) {
                 shift_expression_offsets(index, offset);
                 shift_expression_offsets(value, offset);
             }
-            StatementKind::PropertyAssign(target, _, value) => {
+            StatementKind::PropertyAssign(target, _, value)
+            | StatementKind::SafePropertyAssign(target, _, value) => {
                 shift_expression_offsets(target, offset);
                 shift_expression_offsets(value, offset);
             }
@@ -2260,6 +2359,9 @@ impl Parser {
                     ));
             }
             self.class_members(&mut body, &mut property_names)?;
+            if let Some(property) = body.properties.iter().find(|p| p.new_visibility()) {
+                return Err(Diagnostic::new(property.offset, "Independent accessor and internal property visibility in enum members is unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PROPERTY_VISIBILITY_CONTEXT_UNSUPPORTED"));
+            }
         } else {
             self.expect("}")?;
         }
@@ -2321,7 +2423,7 @@ impl Parser {
     fn internal_property_error(offset: usize) -> Diagnostic {
         Diagnostic::new(
             offset,
-            "Internal properties require unsupported JVM accessor name mangling",
+            "Internal property visibility is unsupported in this declaration context",
         )
         .with_kind(
             DiagnosticKind::UnsupportedLanguage,
@@ -2487,15 +2589,15 @@ impl Parser {
             {
                 let annotations = self.annotations()?;
                 let is_override = self.take("override");
-                let private = self.take("private");
-                if !private {
-                    self.take("public");
-                    self.reject_internal_property()?;
-                }
+                let property_visibility = self.property_visibility_modifier()?;
+                let private = property_visibility == Some(PropertyVisibility::Private);
                 self.lines();
                 let lateinit = self.take("lateinit");
                 self.lines();
-                let mut property = self.property(member_offset, private, false, lateinit, false)?;
+                let mut property =
+                    self.property(member_offset, private, is_override, lateinit, false)?;
+                property.internal = property_visibility == Some(PropertyVisibility::Internal);
+                Self::validate_static_property_visibility(&property)?;
                 property.annotations.splice(0..0, annotations);
                 let name = property.name.clone();
                 fields.push(ObjectField {
@@ -2504,6 +2606,9 @@ impl Parser {
                     name: property.name,
                     offset: property.offset,
                     private: property.private,
+                    internal: property.internal,
+                    getter_visibility: property.getter_visibility,
+                    setter_visibility: property.setter_visibility,
                     initializer: property.initializer,
                     ty: if property.inferred {
                         None
@@ -3220,7 +3325,6 @@ impl Parser {
                 let mut annotations = self.annotations()?;
                 let mut is_override = false;
                 let mut visibility = None;
-                let mut visibility_offset = offset;
                 let mut infix = false;
                 let mut operator = false;
                 let mut open = false;
@@ -3267,7 +3371,6 @@ impl Parser {
                             );
                         }
                         visibility = Some(self.token().text.clone());
-                        visibility_offset = self.token().offset;
                         self.pos += 1;
                     } else {
                         break;
@@ -3298,9 +3401,6 @@ impl Parser {
                         has_body,
                     });
                 } else if self.at("val") || self.at("var") {
-                    if visibility.as_deref() == Some("internal") {
-                        return Err(Self::internal_property_error(visibility_offset));
-                    }
                     if infix {
                         return Err(self.error("The infix modifier applies only to functions"));
                     }
@@ -3313,6 +3413,8 @@ impl Parser {
                     )?;
                     property.annotations.splice(0..0, annotations);
                     property.protected = visibility.as_deref() == Some("protected");
+                    property.internal = visibility.as_deref() == Some("internal");
+                    Self::validate_property_visibility(&property)?;
                     if !property_names.insert(property.name.clone()) {
                         return Err(Diagnostic::new(offset, "Duplicate class property name"));
                     }
@@ -3342,6 +3444,95 @@ impl Parser {
         self.depth -= 1;
         result
     }
+    fn property_visibility_modifier(&mut self) -> Result<Option<PropertyVisibility>> {
+        let mut visibility = None;
+        while matches!(
+            self.token().text.as_str(),
+            "public" | "private" | "internal" | "protected"
+        ) {
+            if visibility.is_some() {
+                return Err(self
+                    .error("Conflicting or repeated property visibility modifiers")
+                    .with_kind(
+                        DiagnosticKind::InvalidKotlin,
+                        "REPEATED_PROPERTY_VISIBILITY",
+                    ));
+            }
+            visibility = Some(match self.token().text.as_str() {
+                "private" => PropertyVisibility::Private,
+                "internal" => PropertyVisibility::Internal,
+                "protected" => {
+                    return Err(self
+                        .error("Protected properties require a class declaration")
+                        .with_kind(DiagnosticKind::InvalidKotlin, "PROTECTED_PROPERTY_CONTEXT"));
+                }
+                _ => PropertyVisibility::Public,
+            });
+            self.pos += 1;
+            self.lines();
+        }
+        Ok(visibility)
+    }
+    fn validate_static_property_visibility(property: &PropertyDecl) -> Result<()> {
+        Self::validate_property_visibility(property)?;
+        if property.getter_visibility() == PropertyVisibility::Protected
+            || property.setter_visibility() == PropertyVisibility::Protected
+        {
+            return Err(Diagnostic::new(
+                property.offset,
+                "Protected accessors require an ordinary class member",
+            )
+            .with_kind(DiagnosticKind::InvalidKotlin, "PROTECTED_ACCESSOR_CONTEXT"));
+        }
+        Ok(())
+    }
+    fn validate_property_visibility(property: &PropertyDecl) -> Result<()> {
+        let visibility = property.visibility();
+        if property.getter_visibility().ne(&visibility) {
+            return Err(Diagnostic::new(
+                property.offset,
+                "Getter visibility must match property visibility",
+            )
+            .with_kind(DiagnosticKind::InvalidKotlin, "GETTER_VISIBILITY_MISMATCH"));
+        }
+        let setter = property.setter_visibility();
+        if property.mutable
+            && !match visibility {
+                PropertyVisibility::Public => true,
+                PropertyVisibility::Private => setter == PropertyVisibility::Private,
+                PropertyVisibility::Protected => matches!(
+                    setter,
+                    PropertyVisibility::Private | PropertyVisibility::Protected
+                ),
+                PropertyVisibility::Internal => matches!(
+                    setter,
+                    PropertyVisibility::Private | PropertyVisibility::Internal
+                ),
+            }
+        {
+            return Err(Diagnostic::new(
+                property.offset,
+                "Setter visibility cannot be more permissive than property visibility",
+            )
+            .with_kind(DiagnosticKind::InvalidKotlin, "SETTER_VISIBILITY_MISMATCH"));
+        }
+        if property.open && setter == PropertyVisibility::Private && property.mutable {
+            return Err(Diagnostic::new(
+                property.offset,
+                "Private setters are prohibited on open properties",
+            )
+            .with_kind(
+                DiagnosticKind::InvalidKotlin,
+                "PRIVATE_SETTER_ON_OPEN_PROPERTY",
+            ));
+        }
+        if property.new_visibility()
+            && (property.delegate.is_some() || property.lateinit || property.is_override)
+        {
+            return Err(Diagnostic::new(property.offset, "Independent accessor and internal visibility with delegates, lateinit, or overriding properties is unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PROPERTY_VISIBILITY_COMBINATION_UNSUPPORTED"));
+        }
+        Ok(())
+    }
     fn property(
         &mut self,
         offset: usize,
@@ -3356,6 +3547,14 @@ impl Parser {
             self.expect("val")?;
         }
         let name = self.declaration_name()?;
+        if self.at(".") {
+            return Err(self
+                .error("Extension property declarations are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "EXTENSION_PROPERTY_UNSUPPORTED",
+                ));
+        }
         let ty = if self.take(":") {
             self.lines();
             Some(self.ty()?)
@@ -3378,10 +3577,13 @@ impl Parser {
         let mut body = Vec::new();
         let mut setter = None;
         let mut has_getter = false;
+        let mut has_setter = false;
+        let mut getter_visibility = None;
+        let mut setter_visibility = None;
         loop {
             let save = self.pos;
             self.separators();
-            if matches!(
+            let accessor_visibility = if matches!(
                 self.token().text.as_str(),
                 "public" | "private" | "protected" | "internal"
             ) && self.tokens[self.pos + 1..]
@@ -3389,44 +3591,59 @@ impl Parser {
                 .find(|token| token.text != "\n")
                 .is_some_and(|token| matches!(token.text.as_str(), "get" | "set"))
             {
-                return Err(self.error("Property accessor visibility requires unsupported independent JVM accessor visibility")
-                    .with_kind(DiagnosticKind::UnsupportedLanguage, "ACCESSOR_VISIBILITY_UNSUPPORTED"));
-            }
+                let value = match self.token().text.as_str() {
+                    "private" => PropertyVisibility::Private,
+                    "protected" => PropertyVisibility::Protected,
+                    "internal" => PropertyVisibility::Internal,
+                    _ => PropertyVisibility::Public,
+                };
+                self.pos += 1;
+                self.lines();
+                Some(value)
+            } else {
+                None
+            };
             if self.take("get") {
                 if has_getter {
                     return Err(self.error("Repeated property getter"));
                 }
                 has_getter = true;
-                body = self.getter_body()?;
+                getter_visibility = accessor_visibility;
+                if self.at("(") {
+                    body = self.getter_body()?;
+                }
             } else if self.take("set") {
                 if !mutable {
-                    return Err(self.error("Read-only properties cannot have setters"));
+                    return Err(self
+                        .error("Read-only properties cannot have setters")
+                        .with_kind(DiagnosticKind::InvalidKotlin, "VAL_WITH_SETTER"));
                 }
-                if setter.is_some() {
+                if has_setter {
                     return Err(self.error("Repeated property setter"));
                 }
-                self.expect("(")?;
-                let parameter = self.name()?;
-                if self.take(":") {
-                    let parameter_type = self.ty()?;
-                    if ty.as_ref() != Some(&parameter_type) {
-                        return Err(self.error(
-                            "Setter parameter types require the matching explicit property type",
-                        ));
+                has_setter = true;
+                setter_visibility = accessor_visibility;
+                if self.take("(") {
+                    let parameter = self.name()?;
+                    if self.take(":") {
+                        let parameter_type = self.ty()?;
+                        if ty.as_ref() != Some(&parameter_type) {
+                            return Err(self.error("Setter parameter types require the matching explicit property type"));
+                        }
                     }
-                }
-                self.expect(")")?;
-                self.lines();
-                let statements = if self.take("=") {
+                    self.expect(")")?;
                     self.lines();
-                    vec![Statement {
-                        offset: self.token().offset,
-                        kind: StatementKind::Expression(self.expression_body()?),
-                    }]
-                } else {
-                    self.block()?
-                };
-                setter = Some((parameter, statements));
+                    let statements = if self.take("=") {
+                        self.lines();
+                        vec![Statement {
+                            offset: self.token().offset,
+                            kind: StatementKind::Expression(self.expression_body()?),
+                        }]
+                    } else {
+                        self.block()?
+                    };
+                    setter = Some((parameter, statements));
+                }
             } else {
                 self.pos = save;
                 break;
@@ -3455,6 +3672,9 @@ impl Parser {
             annotations,
             name,
             private,
+            internal: false,
+            getter_visibility,
+            setter_visibility,
             protected: false,
             mutable,
             inferred: ty.is_none(),
@@ -3620,11 +3840,15 @@ impl Parser {
         self.class_members(&mut declaration, &mut std::collections::HashSet::new())?;
         let mut properties = Vec::new();
         for property in declaration.properties {
+            Self::validate_static_property_visibility(&property)?;
             properties.push(ClassCompanionProperty {
                 annotations: property.annotations,
                 name: property.name,
                 offset: property.offset,
                 private: property.private,
+                internal: property.internal,
+                getter_visibility: property.getter_visibility,
+                setter_visibility: property.setter_visibility,
                 mutable: property.mutable,
                 ty: if property.inferred {
                     None
@@ -3948,7 +4172,6 @@ impl Parser {
                 continue;
             }
             let annotations = self.annotations()?;
-            self.reject_internal_property()?;
             let mut cursor = self.pos;
             while self.tokens.get(cursor).is_some_and(|token| {
                 !matches!(
@@ -3967,15 +4190,14 @@ impl Parser {
                     .get(cursor + 1)
                     .is_some_and(|token| matches!(token.text.as_str(), "arrayOf" | "object"));
             if !legacy {
-                let private = self.take("private");
-                if !private {
-                    self.take("public");
-                    self.reject_internal_property()?;
-                }
+                let property_visibility = self.property_visibility_modifier()?;
+                let private = property_visibility == Some(PropertyVisibility::Private);
                 self.lines();
                 let lateinit = self.take("lateinit");
                 self.lines();
                 let mut property = self.property(offset, private, false, lateinit, false)?;
+                property.internal = property_visibility == Some(PropertyVisibility::Internal);
+                Self::validate_static_property_visibility(&property)?;
                 property.annotations.splice(0..0, annotations);
                 if !names.insert(property.name.clone()) {
                     return Err(Diagnostic::new(offset, "Duplicate companion property name"));
@@ -3985,6 +4207,9 @@ impl Parser {
                     name: property.name,
                     offset: property.offset,
                     private: property.private,
+                    internal: property.internal,
+                    getter_visibility: property.getter_visibility,
+                    setter_visibility: property.setter_visibility,
                     mutable: property.mutable,
                     ty: if property.inferred {
                         None
@@ -4000,6 +4225,7 @@ impl Parser {
                 self.end()?;
                 continue;
             }
+            self.reject_internal_property()?;
             let private = self.take("private");
             if !private {
                 self.take("public");
@@ -4117,6 +4343,9 @@ impl Parser {
                     abstract_: false,
                 };
                 self.class_members(&mut object, &mut std::collections::HashSet::new())?;
+                if let Some(property) = object.properties.iter().find(|p| p.new_visibility()) {
+                    return Err(Diagnostic::new(property.offset, "Independent accessor and internal property visibility in anonymous object members is unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PROPERTY_VISIBILITY_CONTEXT_UNSUPPORTED"));
+                }
                 CompanionValue::Object(Box::new(object))
             } else {
                 return Err(self.error("Companions support only literal String arrays and anonymous interface object initializers"));
@@ -4662,6 +4891,9 @@ impl Parser {
                     ExprKind::Property(receiver, name) => {
                         StatementKind::PropertyAssign(*receiver, name, value)
                     }
+                    ExprKind::SafeProperty(receiver, name) => {
+                        StatementKind::SafePropertyAssign(*receiver, name, value)
+                    }
                     _ => {
                         return Err(self.error(
                             "Only locals, array elements, and supported properties can be assigned",
@@ -4669,6 +4901,14 @@ impl Parser {
                     }
                 }
             } else if matches!(self.token().text.as_str(), "+=" | "-=" | "*=" | "/=" | "%=") {
+                if matches!(target.kind, ExprKind::SafeProperty(_, _)) {
+                    return Err(self
+                        .error("Compound safe-call assignments are unsupported")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "SAFE_COMPOUND_ASSIGNMENT_UNSUPPORTED",
+                        ));
+                }
                 return Err(
                     self.error("Compound assignments currently require a local variable target")
                 );
@@ -5669,7 +5909,8 @@ impl Parser {
                     pending.extend(indices.iter().map(|index| (index, depth)));
                     pending.push((value, depth));
                 }
-                StatementKind::PropertyAssign(target, _, value) => {
+                StatementKind::PropertyAssign(target, _, value)
+                | StatementKind::SafePropertyAssign(target, _, value) => {
                     pending.push((target, depth));
                     pending.push((value, depth));
                 }
@@ -6083,16 +6324,15 @@ pub fn parse(source: &str) -> Result<Module> {
         } else if p.starts_declaration("val") || p.starts_declaration("var") {
             let offset = p.token().offset;
             let mut annotations = p.annotations()?;
-            let private = p.take("private");
-            if !private {
-                p.take("public");
-                p.reject_internal_property()?;
-            }
+            let property_visibility = p.property_visibility_modifier()?;
+            let private = property_visibility == Some(PropertyVisibility::Private);
             p.lines();
             annotations.extend(p.annotations()?);
             let lateinit = p.take("lateinit");
             p.lines();
             let mut property = p.property(offset, private, false, lateinit, false)?;
+            property.internal = property_visibility == Some(PropertyVisibility::Internal);
+            Parser::validate_static_property_visibility(&property)?;
             property.annotations.splice(0..0, annotations);
             properties.push(property);
         } else if p.starts_enum() {
@@ -6362,13 +6602,50 @@ mod tests {
     }
 
     #[test]
-    fn internal_properties_are_rejected_at_the_modifier_without_erasing_visibility() {
+    fn property_and_accessor_visibility_remain_independent_from_custom_bodies() {
+        let module = parse("class State { var first: Int = 0\n private set\ninternal var second: Int = 0\nvar third: Int = 0\n private set(value) { field = value } }").unwrap();
+        let class = module.class_decl.unwrap();
+        assert_eq!(class.properties[0].visibility(), PropertyVisibility::Public);
+        assert_eq!(
+            class.properties[0].setter_visibility(),
+            PropertyVisibility::Private
+        );
+        assert!(class.properties[0].setter.is_none());
+        assert_eq!(
+            class.properties[1].getter_visibility(),
+            PropertyVisibility::Internal
+        );
+        assert_eq!(
+            class.properties[1].setter_visibility(),
+            PropertyVisibility::Internal
+        );
+        assert!(class.properties[2].setter.is_some());
+    }
+
+    #[test]
+    fn safe_call_assignment_has_a_distinct_source_statement() {
+        let module = parse("fun change(value: State?) { value?.current = 1 }").unwrap();
+        assert!(
+            matches!(&module.functions[0].body[0].kind, StatementKind::SafePropertyAssign(Expr { kind: ExprKind::Name(value), .. }, name, _) if value == "value" && name == "current")
+        );
+        let error = parse("fun change(value: State?) { value?.current += 1 }")
+            .err()
+            .unwrap();
+        assert_eq!(error.code, "SAFE_COMPOUND_ASSIGNMENT_UNSUPPORTED");
+    }
+
+    #[test]
+    fn internal_property_visibility_is_preserved_and_unsupported_contexts_fail_explicitly() {
         for source in [
             "internal val value = 1",
             "object Holder { internal val value = 1 }",
             "class Holder { internal val value = 1 }",
             "class Holder { companion object { internal var value: Int = 1 } }",
             "interface Contract { companion object { internal val value = 1 } }",
+        ] {
+            assert!(parse(source).is_ok(), "{source}");
+        }
+        for source in [
             "interface Contract { companion object { internal val names = arrayOf(\"a\") } }",
             "class Holder(internal val value: Int)",
             "class Holder(@Mark internal var value: Int)",

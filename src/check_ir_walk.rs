@@ -343,6 +343,7 @@ mod tests {
                 name: "p".into(),
                 ty: Type::Int,
                 private: false,
+                setter_visibility: syntax::PropertyVisibility::Public,
                 mutable: false,
                 value: int(number),
             }],

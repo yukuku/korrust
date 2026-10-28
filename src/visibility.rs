@@ -537,13 +537,18 @@ pub(crate) fn plan(
                 && source.object_decl.is_none()
             {
                 for property in &source.properties {
-                    if property.private && property.delegate.is_none() && !property.lateinit {
-                        if property.body.is_empty() {
+                    if property.delegate.is_none() && !property.lateinit {
+                        if property.getter_visibility() == syntax::PropertyVisibility::Private
+                            && property.body.is_empty()
+                        {
                             planner
                                 .virtual_accessors
                                 .insert((owner.clone(), check::getter_name(&property.name)));
                         }
-                        if property.mutable && property.setter.is_none() {
+                        if property.mutable
+                            && property.setter_visibility() == syntax::PropertyVisibility::Private
+                            && property.setter.is_none()
+                        {
                             planner
                                 .virtual_accessors
                                 .insert((owner.clone(), check::setter_name(&property.name)));
@@ -616,7 +621,8 @@ pub(crate) fn plan(
         planner.names.insert(key.clone(), name.clone());
         let virtual_private_accessor = method.access & 2 != 0
             && method.source_property.is_some()
-            && (!planner.functions.contains_key(&key)
+            && (cp.default_source_accessor(&method).is_some()
+                || !planner.functions.contains_key(&key)
                 || planner
                     .virtual_accessors
                     .contains(&(key.0.clone(), key.1.clone())));

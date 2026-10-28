@@ -698,7 +698,7 @@ pub(super) fn check_class_with_constants(
         }
         declarations.push((
             getter_name(&property.name),
-            property.private,
+            property.getter_visibility() == syntax::PropertyVisibility::Private,
             property.is_override,
             Some(property.name.as_str()),
             Vec::new(),
@@ -717,7 +717,7 @@ pub(super) fn check_class_with_constants(
             }
             declarations.push((
                 setter_name(&property.name),
-                property.private,
+                property.setter_visibility() == syntax::PropertyVisibility::Private,
                 property.is_override,
                 Some(property.name.as_str()),
                 vec![(parameter.clone(), property_types[&property.name].clone())],
@@ -803,7 +803,7 @@ pub(super) fn check_class_with_constants(
                         .collect::<Result<Vec<_>>>()?,
                 ),
                 kotlin_result: Some(result.clone()),
-                kotlin_internal: false,
+                kotlin_internal: source.properties.iter().find(|p| p.offset == *offset).is_some_and(|p| if *name == getter_name(&p.name) { p.getter_visibility() } else { p.setter_visibility() } == syntax::PropertyVisibility::Internal),
                 owner: owner.clone(),
                 name: name.clone(),
                 descriptor: format!("({params}){}", result.descriptor()),
@@ -816,7 +816,7 @@ pub(super) fn check_class_with_constants(
                     || source
                         .properties
                         .iter()
-                        .any(|p| p.offset == *offset && p.protected)
+                        .any(|p| p.offset == *offset && (if *name == getter_name(&p.name) { p.getter_visibility() } else { p.setter_visibility() }) == syntax::PropertyVisibility::Protected)
                 {
                     4
                 } else {
@@ -1219,6 +1219,13 @@ pub(super) fn check_class_with_constants(
                 });
             }
             if field.mutable
+                && !source.properties.iter().any(|p| {
+                    p.name == field.name
+                        && p.setter_visibility() == syntax::PropertyVisibility::Private
+                        && p.setter.is_none()
+                        && p.delegate.is_none()
+                        && !p.lateinit
+                })
                 && !methods
                     .iter()
                     .any(|m| m.name == setter_name(&field.name) && m.params.len() == 1)
@@ -1617,13 +1624,16 @@ pub(super) fn check_class_with_constants(
     }
     let mut protected_methods = method_keys(|m| m.function.protected);
     for property in &source.properties {
-        if property.protected {
-            for method in &methods {
-                if method.name == getter_name(&property.name)
-                    || method.name == setter_name(&property.name)
-                {
-                    protected_methods.insert(format!("{}{}", method.name, method.descriptor()));
-                }
+        for method in &methods {
+            let visibility = if method.name == getter_name(&property.name) {
+                property.getter_visibility()
+            } else if method.name == setter_name(&property.name) {
+                property.setter_visibility()
+            } else {
+                continue;
+            };
+            if visibility == syntax::PropertyVisibility::Protected {
+                protected_methods.insert(format!("{}{}", method.name, method.descriptor()));
             }
         }
     }
@@ -2369,6 +2379,9 @@ fn infer_source_results_impl(
                         annotations: field.annotations.clone(),
                         name: field.name.clone(),
                         private: field.private,
+                        internal: field.internal,
+                        getter_visibility: field.getter_visibility,
+                        setter_visibility: field.setter_visibility,
                         protected: false,
                         mutable: field.mutable,
                         inferred: true,
@@ -2541,15 +2554,20 @@ pub(super) fn accessor_source(
     result: Type,
     body: Vec<syntax::Statement>,
 ) -> syntax::Function {
+    let visibility = if name == getter_name(&property.name) {
+        property.getter_visibility()
+    } else {
+        property.setter_visibility()
+    };
     syntax::Function {
         param_annotations: vec![Vec::new(); params.len()],
         annotations: Vec::new(),
         vararg: false,
         name,
         offset: property.offset,
-        private: property.private,
+        private: visibility == syntax::PropertyVisibility::Private,
         protected: false,
-        internal: false,
+        internal: visibility == syntax::PropertyVisibility::Internal,
         infix: false,
         operator: false,
         receiver: None,
@@ -2636,6 +2654,9 @@ pub(super) fn check_static_state(
                 annotations: property.annotations.clone(),
                 name: property.name.clone(),
                 private: property.private,
+                internal: property.internal,
+                getter_visibility: property.getter_visibility,
+                setter_visibility: property.setter_visibility,
                 protected: false,
                 mutable: property.mutable,
                 inferred: property.ty.is_none(),
@@ -2671,6 +2692,7 @@ pub(super) fn check_static_state(
                 name: delegated.metadata_name,
                 ty: metadata_type.clone(),
                 private: true,
+                setter_visibility: syntax::PropertyVisibility::Private,
                 mutable: false,
                 value: objects::default_value(&metadata_type),
             });
@@ -2686,6 +2708,7 @@ pub(super) fn check_static_state(
                 name: delegated.field.name,
                 ty: delegate_type.clone(),
                 private: true,
+                setter_visibility: syntax::PropertyVisibility::Private,
                 mutable: false,
                 value: objects::default_value(&delegate_type),
             });
@@ -2759,6 +2782,7 @@ pub(super) fn check_static_state(
             name: property.name.clone(),
             ty: ty.clone(),
             private: property.private,
+            setter_visibility: property.setter_visibility(),
             mutable: property.mutable,
             value: objects::default_value(&ty),
         });
@@ -2891,10 +2915,13 @@ pub(super) fn check_static_state(
                 false,
             )?
         };
-        getter.private = property.private;
+        getter.private = property.getter_visibility() == syntax::PropertyVisibility::Private;
         methods.push(getter);
-        if property.mutable {
-            let setter = if let Some((name, body)) = &property.setter {
+        if property.mutable
+            && (property.setter.is_some()
+                || property.setter_visibility() != syntax::PropertyVisibility::Private)
+        {
+            let mut setter = if let Some((name, body)) = &property.setter {
                 accessor_context.function(
                     &accessor_source(
                         setter_name(&property.name),
@@ -2953,6 +2980,7 @@ pub(super) fn check_static_state(
                     ],
                 }
             };
+            setter.private = property.setter_visibility() == syntax::PropertyVisibility::Private;
             methods.push(setter);
         }
     }
@@ -3130,6 +3158,9 @@ fn infer_static_properties(
                     annotations: property.annotations.clone(),
                     name: property.name.clone(),
                     private: property.private,
+                    internal: property.internal,
+                    getter_visibility: property.getter_visibility,
+                    setter_visibility: property.setter_visibility,
                     protected: false,
                     mutable: property.mutable,
                     inferred: true,
@@ -3284,7 +3315,8 @@ fn constructor_assignment_block(
             | StatementKind::Destructure(_, _, value) => {
                 constructor_read(value, fields, &locals, state)?
             }
-            StatementKind::PropertyAssign(receiver, _, value) => {
+            StatementKind::PropertyAssign(receiver, _, value)
+            | StatementKind::SafePropertyAssign(receiver, _, value) => {
                 constructor_read(receiver, fields, &locals, state)?;
                 constructor_read(value, fields, &locals, state)?;
             }

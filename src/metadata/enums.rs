@@ -61,6 +61,7 @@ pub(crate) fn for_enum(
         }
     }
     let mut strings = Strings {
+        jvm_names: Default::default(),
         indices: ordinary
             .data2
             .iter()

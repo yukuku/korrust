@@ -295,9 +295,39 @@ struct Strings {
     local_names: Vec<u32>,
     parameters: BTreeMap<String, u32>,
     jvm_descriptors: BTreeMap<(String, String), String>,
+    jvm_names: BTreeMap<(String, String), String>,
 }
 
 impl Strings {
+    fn checked_methods<'a>(
+        &mut self,
+        methods: impl IntoIterator<Item = &'a crate::check::Function>,
+    ) {
+        for method in methods {
+            let logical = format!(
+                "({}){}",
+                method
+                    .params
+                    .iter()
+                    .map(|p| p.1.descriptor())
+                    .collect::<String>(),
+                method.result.descriptor()
+            );
+            let physical = method.descriptor();
+            for descriptor in [&logical, &physical] {
+                self.jvm_names.insert(
+                    (method.name.clone(), descriptor.clone()),
+                    method.jvm_name().into(),
+                );
+            }
+            if method.jvm_result.is_some() {
+                for name in [method.name.as_str(), method.jvm_name()] {
+                    self.jvm_descriptors
+                        .insert((name.into(), logical.clone()), physical.clone());
+                }
+            }
+        }
+    }
     fn id(&mut self, value: &str) -> Result<u32> {
         if let Some(id) = self.indices.get(value) {
             return Ok(*id);
@@ -626,13 +656,24 @@ fn parameter(name: &str, ty: &Type, imports: Imports<'_>, strings: &mut Strings)
 
 fn method_signature(name: &str, desc: &str, strings: &mut Strings) -> Result<Proto> {
     let mut signature = Proto::default();
-    signature.number(1, strings.id(name)?);
-    let desc = strings
-        .jvm_descriptors
-        .get(&(name.into(), desc.into()))
+    let key = (name.into(), desc.into());
+    let physical_name = strings
+        .jvm_names
+        .get(&key)
         .cloned()
-        .unwrap_or(desc.into());
-    signature.number(2, strings.id(&desc)?);
+        .unwrap_or_else(|| name.into());
+    let physical_desc = strings
+        .jvm_descriptors
+        .get(&key)
+        .or_else(|| {
+            strings
+                .jvm_descriptors
+                .get(&(physical_name.clone(), desc.into()))
+        })
+        .cloned()
+        .unwrap_or_else(|| desc.into());
+    signature.number(1, strings.id(&physical_name)?);
+    signature.number(2, strings.id(&physical_desc)?);
     Ok(signature)
 }
 
@@ -780,25 +821,7 @@ fn class_metadata(
     checked: Option<&crate::check::ClassDecl>,
 ) -> Result<Metadata> {
     let mut strings = Strings::default();
-    if let Some(class) = checked {
-        for method in &class.methods {
-            if method.jvm_result.is_some() {
-                let logical = format!(
-                    "({}){}",
-                    method
-                        .params
-                        .iter()
-                        .map(|p| p.1.descriptor())
-                        .collect::<String>(),
-                    method.result.descriptor()
-                );
-                strings
-                    .jvm_descriptors
-                    .insert((method.jvm_name().into(), logical), method.descriptor());
-            }
-        }
-    }
-
+    strings.checked_methods(checked.into_iter().flat_map(|class| class.methods.iter()));
     let mut proto = Proto::default();
     proto.number(
         1,
@@ -1002,6 +1025,7 @@ fn class_metadata(
                 .map_or(&[], Vec::as_slice),
             ty,
             if public { 6 } else { 2 },
+            if public { 6 } else { 2 },
             false,
             false,
             class.mutable_params.contains(name),
@@ -1091,13 +1115,7 @@ fn class_metadata(
                     .map(|method| &method.result)
             })
             .unwrap_or(&property.ty);
-        let flags = (if property.private {
-            2
-        } else if property.protected {
-            4
-        } else {
-            6
-        }) | if property.open { 16 } else { 0 };
+        let flags = property.visibility().metadata() | if property.open { 16 } else { 0 };
         declaration.number(
             11,
             flags
@@ -1113,17 +1131,7 @@ fn class_metadata(
         );
         declaration.number(2, strings.id(&property.name)?);
         declaration.message(3, &type_proto(ty, imports, &mut strings)?);
-        if !property.body.is_empty() || property.delegate.is_some() {
-            declaration.number(7, flags | 64);
-        }
-        if property.mutable && (property.setter.is_some() || property.delegate.is_some()) {
-            declaration.number(8, flags | 64);
-            let name = property
-                .setter
-                .as_ref()
-                .map_or("<set-?>", |(name, _)| name.as_str());
-            declaration.message(6, &parameter(name, ty, imports, &mut strings)?);
-        }
+
         let mut signature = Proto::default();
         let backing = checked.and_then(|class| {
             class.fields.iter().find(|field| {
@@ -1153,7 +1161,13 @@ fn class_metadata(
                 )?,
             );
         }
-        if !property.private && property.mutable {
+        if !property.private
+            && property.mutable
+            && (property.setter_visibility() != crate::syntax::PropertyVisibility::Private
+                || property.setter.is_some()
+                || property.delegate.is_some()
+                || property.lateinit)
+        {
             signature.message(
                 4,
                 &method_signature(
@@ -1167,11 +1181,19 @@ fn class_metadata(
             &mut declaration,
             &property.annotations,
             ty,
-            flags,
+            property.getter_visibility().metadata() | if property.open { 16 } else { 0 },
+            property.setter_visibility().metadata() | if property.open { 16 } else { 0 },
             !property.body.is_empty() || property.delegate.is_some(),
             property.setter.is_some() || property.delegate.is_some(),
             property.mutable,
-            property.setter.as_ref().map_or("<set-?>", |(name, _)| name),
+            property.setter.as_ref().map_or(
+                if property.delegate.is_some() {
+                    "<set-?>"
+                } else {
+                    property.name.as_str()
+                },
+                |(name, _)| name,
+            ),
             imports,
             &mut strings,
         )?;
@@ -1195,7 +1217,8 @@ fn accessor_annotation_flags(
     property: &mut Proto,
     annotations: &[crate::syntax::AnnotationUse],
     ty: &Type,
-    visibility: u32,
+    getter_visibility: u32,
+    setter_visibility: u32,
     custom_getter: bool,
     custom_setter: bool,
     mutable: bool,
@@ -1208,31 +1231,31 @@ fn accessor_annotation_flags(
             .iter()
             .any(|annotation| annotation.use_site.as_deref() == Some(site))
     };
-    let property_annotations = property_has_annotations(annotations);
     let getter_annotations = has_site("get");
     let setter_annotations = has_site("set");
     let setter_parameter_annotations = has_site("setparam");
-    if getter_annotations != property_annotations || custom_getter && getter_annotations {
+    let property_annotations = property_has_annotations(annotations);
+    if custom_getter || getter_annotations != property_annotations {
         property.number(
             7,
-            visibility | (u32::from(custom_getter) * 64) | u32::from(getter_annotations),
+            getter_visibility | (u32::from(custom_getter) * 64) | u32::from(getter_annotations),
         );
     }
-    if mutable
-        && (setter_annotations != property_annotations
-            || custom_setter && setter_annotations
-            || setter_parameter_annotations)
-    {
+    let non_default_setter =
+        custom_setter || setter_parameter_annotations || setter_visibility != getter_visibility;
+    if mutable && (non_default_setter || setter_annotations != property_annotations) {
         property.number(
             8,
-            visibility
-                | (u32::from(custom_setter || setter_parameter_annotations) * 64)
+            setter_visibility
+                | (u32::from(non_default_setter) * 64)
                 | u32::from(setter_annotations),
         );
     }
-    if mutable && setter_parameter_annotations {
+    if mutable && non_default_setter {
         let mut value = parameter(setter_name, ty, imports, strings)?;
-        value.number(1, 1);
+        if setter_parameter_annotations {
+            value.number(1, 1);
+        }
         property.message(6, &value);
     }
     Ok(())
@@ -1432,6 +1455,7 @@ pub(crate) fn for_class_companion(
     ));
     let imports = bindings.as_slice();
     let mut strings = Strings::default();
+    strings.checked_methods(companion.methods.iter());
     let mut proto = Proto::default();
     proto.number(1, 390);
     proto.number(3, strings.id(&companion.owner.replace('$', "."))?);
@@ -1479,7 +1503,7 @@ pub(crate) fn for_class_companion(
         let mut declaration = Proto::default();
         declaration.number(
             11,
-            (if property.private { 514 } else { 518 })
+            (property.visibility().metadata() | 512)
                 | u32::from(property_has_annotations(&property.annotations))
                 | if property.mutable { 256 | 1024 } else { 0 }
                 | if property.lateinit { 4096 } else { 0 }
@@ -1489,18 +1513,7 @@ pub(crate) fn for_class_companion(
                     0
                 },
         );
-        let accessor_flags = if property.private { 2 } else { 6 };
-        if !property.body.is_empty() || property.delegate.is_some() {
-            declaration.number(7, accessor_flags | 64);
-        }
-        if property.mutable && (property.setter.is_some() || property.delegate.is_some()) {
-            declaration.number(8, accessor_flags | 64);
-            let name = property
-                .setter
-                .as_ref()
-                .map_or("<set-?>", |(name, _)| name.as_str());
-            declaration.message(6, &parameter(name, ty, imports, &mut strings)?);
-        }
+
         declaration.number(2, strings.id(&property.name)?);
         declaration.message(3, &type_proto(ty, imports, &mut strings)?);
         let mut signature = Proto::default();
@@ -1523,7 +1536,12 @@ pub(crate) fn for_class_companion(
                     &mut strings,
                 )?,
             );
-            if property.mutable {
+            if property.mutable
+                && (property.setter_visibility() != crate::syntax::PropertyVisibility::Private
+                    || property.setter.is_some()
+                    || property.delegate.is_some()
+                    || property.lateinit)
+            {
                 signature.message(
                     4,
                     &method_signature(
@@ -1538,11 +1556,19 @@ pub(crate) fn for_class_companion(
             &mut declaration,
             &property.annotations,
             ty,
-            if property.private { 2 } else { 6 },
+            property.getter_visibility().metadata(),
+            property.setter_visibility().metadata(),
             !property.body.is_empty() || property.delegate.is_some(),
             property.setter.is_some() || property.delegate.is_some(),
             property.mutable,
-            property.setter.as_ref().map_or("<set-?>", |(name, _)| name),
+            property.setter.as_ref().map_or(
+                if property.delegate.is_some() {
+                    "<set-?>"
+                } else {
+                    property.name.as_str()
+                },
+                |(name, _)| name,
+            ),
             imports,
             &mut strings,
         )?;
@@ -1686,6 +1712,7 @@ fn companion_metadata(
     checked: Option<&crate::check::ClassCompanion>,
 ) -> Result<Metadata> {
     let mut strings = Strings::default();
+    strings.checked_methods(checked.into_iter().flat_map(|state| state.methods.iter()));
     let mut proto = Proto::default();
     proto.number(1, 390);
     proto.number(3, strings.id(&owner.replace('$', "."))?);
@@ -1757,7 +1784,7 @@ fn companion_metadata(
         let mut declaration = Proto::default();
         declaration.number(
             11,
-            (if property.private { 514 } else { 518 })
+            (property.visibility().metadata() | 512)
                 | u32::from(property_has_annotations(&property.annotations))
                 | if property.mutable { 256 | 1024 } else { 0 }
                 | if property.lateinit { 4096 } else { 0 }
@@ -1767,18 +1794,7 @@ fn companion_metadata(
                     0
                 },
         );
-        let accessor_flags = if property.private { 2 } else { 6 };
-        if !property.body.is_empty() || property.delegate.is_some() {
-            declaration.number(7, accessor_flags | 64);
-        }
-        if property.mutable && (property.setter.is_some() || property.delegate.is_some()) {
-            declaration.number(8, accessor_flags | 64);
-            let name = property
-                .setter
-                .as_ref()
-                .map_or("<set-?>", |(name, _)| name.as_str());
-            declaration.message(6, &parameter(name, ty, imports, &mut strings)?);
-        }
+
         declaration.number(2, strings.id(&property.name)?);
         declaration.message(3, &type_proto(ty, imports, &mut strings)?);
         let mut signature = Proto::default();
@@ -1808,7 +1824,12 @@ fn companion_metadata(
                     &mut strings,
                 )?,
             );
-            if property.mutable {
+            if property.mutable
+                && (property.setter_visibility() != crate::syntax::PropertyVisibility::Private
+                    || property.setter.is_some()
+                    || property.delegate.is_some()
+                    || property.lateinit)
+            {
                 signature.message(
                     4,
                     &method_signature(
@@ -1823,11 +1844,19 @@ fn companion_metadata(
             &mut declaration,
             &property.annotations,
             ty,
-            if property.private { 2 } else { 6 },
+            property.getter_visibility().metadata(),
+            property.setter_visibility().metadata(),
             !property.body.is_empty() || property.delegate.is_some(),
             property.setter.is_some() || property.delegate.is_some(),
             property.mutable,
-            property.setter.as_ref().map_or("<set-?>", |(name, _)| name),
+            property.setter.as_ref().map_or(
+                if property.delegate.is_some() {
+                    "<set-?>"
+                } else {
+                    property.name.as_str()
+                },
+                |(name, _)| name,
+            ),
             imports,
             &mut strings,
         )?;
@@ -2040,6 +2069,11 @@ fn object_metadata(
         .insert(0, (object.name.clone(), owner.into(), object.offset));
     let module = &context;
     let mut strings = Strings::default();
+    strings.checked_methods(
+        checked
+            .into_iter()
+            .flat_map(|object| object.methods.iter().map(|method| &method.function)),
+    );
     let mut proto = Proto::default();
     proto.number(
         1,
@@ -2124,24 +2158,13 @@ fn object_metadata(
         let mut declaration = Proto::default();
         declaration.number(
             11,
-            (if field.private { 514 } else { 518 })
+            (field.visibility().metadata() | 512)
                 | u32::from(property_has_annotations(&field.annotations))
                 | if field.mutable { 256 | 1024 } else { 0 }
                 | if field.lateinit { 4096 } else { 0 }
                 | if field.delegate.is_some() { 32768 } else { 0 },
         );
-        let accessor_flags = if field.private { 2 } else { 6 };
-        if !field.body.is_empty() || field.delegate.is_some() {
-            declaration.number(7, accessor_flags | 64);
-        }
-        if field.mutable && (field.setter.is_some() || field.delegate.is_some()) {
-            declaration.number(8, accessor_flags | 64);
-            let name = field
-                .setter
-                .as_ref()
-                .map_or("<set-?>", |(name, _)| name.as_str());
-            declaration.message(6, &parameter(name, ty, &module.imports, &mut strings)?);
-        }
+
         declaration.number(2, strings.id(&field.name)?);
         let metadata_type = if matches!(ty, Type::ThreadLocal(_)) {
             inferred_thread_local(ty, &module.imports, &mut strings)?
@@ -2172,7 +2195,12 @@ fn object_metadata(
                     &mut strings,
                 )?,
             );
-            if field.mutable {
+            if field.mutable
+                && (field.setter_visibility() != crate::syntax::PropertyVisibility::Private
+                    || field.setter.is_some()
+                    || field.delegate.is_some()
+                    || field.lateinit)
+            {
                 signature.message(
                     4,
                     &method_signature(
@@ -2187,11 +2215,19 @@ fn object_metadata(
             &mut declaration,
             &field.annotations,
             ty,
-            if field.private { 2 } else { 6 },
+            field.getter_visibility().metadata(),
+            field.setter_visibility().metadata(),
             !field.body.is_empty() || field.delegate.is_some(),
             field.setter.is_some() || field.delegate.is_some(),
             field.mutable,
-            field.setter.as_ref().map_or("<set-?>", |(name, _)| name),
+            field.setter.as_ref().map_or(
+                if field.delegate.is_some() {
+                    "<set-?>"
+                } else {
+                    field.name.as_str()
+                },
+                |(name, _)| name,
+            ),
             &module.imports,
             &mut strings,
         )?;
@@ -2386,6 +2422,7 @@ pub(crate) fn for_checked_package(
         }
     }
     let mut strings = Strings::default();
+    strings.checked_methods(checked.functions.iter());
     let mut proto = Proto::default();
     for alias in &module.type_aliases {
         proto.message(5, &type_alias_proto(alias, &bindings, &mut strings)?);
@@ -2403,7 +2440,7 @@ pub(crate) fn for_checked_package(
         let mut declaration = Proto::default();
         declaration.number(
             11,
-            (if property.private { 514 } else { 518 })
+            (property.visibility().metadata() | 512)
                 | u32::from(property_has_annotations(&property.annotations))
                 | if property.mutable { 256 | 1024 } else { 0 }
                 | if property.lateinit { 4096 } else { 0 }
@@ -2413,18 +2450,7 @@ pub(crate) fn for_checked_package(
                     0
                 },
         );
-        let accessor_flags = if property.private { 2 } else { 6 };
-        if !property.body.is_empty() || property.delegate.is_some() {
-            declaration.number(7, accessor_flags | 64);
-        }
-        if property.mutable && (property.setter.is_some() || property.delegate.is_some()) {
-            declaration.number(8, accessor_flags | 64);
-            let name = property
-                .setter
-                .as_ref()
-                .map_or("<set-?>", |(name, _)| name.as_str());
-            declaration.message(6, &parameter(name, &property.ty, &bindings, &mut strings)?);
-        }
+
         declaration.number(2, strings.id(&property.name)?);
         declaration.message(3, &type_proto(&property.ty, &bindings, &mut strings)?);
         let mut signature = Proto::default();
@@ -2458,7 +2484,7 @@ pub(crate) fn for_checked_package(
             );
         }
         if property.mutable
-            && (!property.private
+            && (property.setter_visibility() != crate::syntax::PropertyVisibility::Private
                 || checked
                     .functions
                     .iter()
@@ -2477,11 +2503,19 @@ pub(crate) fn for_checked_package(
             &mut declaration,
             &property.annotations,
             &property.ty,
-            accessor_flags,
+            property.getter_visibility().metadata(),
+            property.setter_visibility().metadata(),
             !property.body.is_empty() || property.delegate.is_some(),
             property.setter.is_some() || property.delegate.is_some(),
             property.mutable,
-            property.setter.as_ref().map_or("<set-?>", |(name, _)| name),
+            property.setter.as_ref().map_or(
+                if property.delegate.is_some() {
+                    "<set-?>"
+                } else {
+                    property.name.as_str()
+                },
+                |(name, _)| name,
+            ),
             &bindings,
             &mut strings,
         )?;
@@ -2537,6 +2571,57 @@ mod tests {
             }
         }
         fields(&bytes[cursor + length..])
+    }
+
+    #[test]
+    fn restricted_default_setters_have_non_default_metadata_without_physical_signatures() {
+        for (source, expected_setter, physical) in [
+            (
+                "class State { var value: Int = 0\n private set }",
+                66,
+                false,
+            ),
+            (
+                "class State { var value: Int = 0\n internal set }",
+                64,
+                true,
+            ),
+            (
+                "open class State { var value: Int = 0\n protected set }",
+                68,
+                true,
+            ),
+        ] {
+            let source = crate::syntax::parse(source).unwrap();
+            let metadata = class_metadata(
+                source.class_decl.as_ref().unwrap(),
+                "State",
+                &[],
+                false,
+                None,
+            )
+            .unwrap();
+            let property = metadata_fields(&metadata)
+                .into_iter()
+                .find(|(key, _, _)| *key == 10)
+                .unwrap()
+                .2;
+            let property = fields(&property);
+            assert_eq!(
+                property.iter().find(|(key, _, _)| *key == 8).unwrap().1,
+                Some(expected_setter)
+            );
+            let parameter = fields(&property.iter().find(|(key, _, _)| *key == 6).unwrap().2);
+            let name = parameter
+                .iter()
+                .find(|(key, _, _)| *key == 2)
+                .unwrap()
+                .1
+                .unwrap();
+            assert_eq!(metadata.data2[name as usize], "value");
+            let signatures = fields(&property.iter().find(|(key, _, _)| *key == 100).unwrap().2);
+            assert_eq!(signatures.iter().any(|(key, _, _)| *key == 4), physical);
+        }
     }
 
     #[test]

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "kind": "features",
-  "created_at": "2026-10-28T14:42:13.148594+00:00",
+  "created_at": "2026-10-28T15:47:02.796897+00:00",
   "status": "in_progress",
   "selection": "Approximately twenty genuinely new families; current live execution matrix. Bounded acceptance does not establish unrestricted conformance. Infrastructure and existing support excluded.",
-  "validated_new_families": 8,
+  "validated_new_families": 9,
   "features": [
     {
       "id": "family-01",
@@ -33,9 +33,15 @@
       "id": "family-03",
       "number": 3,
       "name": "Independent accessor visibility and internal property contracts",
-      "status": "unassessed",
+      "status": "supported",
       "acceptance_boundary": "BackForwardList; private setters, inaccessible callers, internal JVM names, friend and nonfriend consumers.",
-      "execution": "Accessor/property visibility implementation and validation in an isolated physical source tree; not counted as accepted."
+      "correctness_report": "reports/correctness/2026-10-28T154702796897Z-new-properties-final.json",
+      "restrictions": [
+        "Supported ordinary class/object/companion/package properties, independent private/protected/internal setters, private default-setter omission and internal accessor metadata/module contracts.",
+        "New visibility combined with constructor/override/delegated/lateinit/enum/extension properties or accessor/JVM ABI annotations remains bounded; unsupported combinations reject explicitly.",
+        "Simple safe-call assignment preserves receiver/RHS order and access checks; compound assignment and differing generic backing-field representation adaptation remain unsupported.",
+        "Unchanged BackForwardList retains an actual removeAt compiler failure; no full-file or full-app success."
+      ]
     },
     {
       "id": "family-04",

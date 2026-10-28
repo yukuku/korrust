@@ -1,6 +1,51 @@
 use super::*;
 use crate::bytecode::annotation_files::{ClassAnnotations, MemberAnnotations};
 
+pub(super) fn preflight_property_visibility(
+    module: &syntax::Module,
+    classpath: &Classpath,
+) -> Result<()> {
+    let imports = module
+        .imports
+        .iter()
+        .map(|(name, owner, _)| (name.clone(), owner.clone()))
+        .collect::<HashMap<_, _>>();
+    macro_rules! validate {
+        ($properties:expr) => {
+            for property in $properties {
+                property_visibility_annotations(
+                    &property.annotations,
+                    property.visibility(),
+                    property.setter_visibility(),
+                    !property.body.is_empty(),
+                    property.setter.is_some(),
+                    property.internal
+                        || property.getter_visibility.is_some()
+                        || property.setter_visibility.is_some(),
+                    classpath,
+                    &imports,
+                )?;
+            }
+        };
+    }
+    validate!(&module.properties);
+    if let Some(class) = &module.class_decl {
+        validate!(&class.properties);
+        if let Some(companion) = &class.companion {
+            validate!(&companion.properties);
+        }
+    }
+    if let Some(object) = &module.object_decl {
+        validate!(&object.fields);
+    }
+    if let Some(interface) = &module.interface_decl {
+        if let Some(companion) = &interface.companion {
+            validate!(&companion.fields);
+        }
+    }
+    Ok(())
+}
+
 pub(crate) fn annotation_placements(
     module: &syntax::Module,
     classpath: &Classpath,
@@ -18,6 +63,18 @@ pub(crate) fn annotation_placements(
         output.annotations = checked(&class.annotations, classpath, &imports, "TYPE", None)?;
         constructor_parameters(class, false, classpath, &imports, &mut output)?;
         for property in &class.properties {
+            property_visibility_annotations(
+                &property.annotations,
+                property.visibility(),
+                property.setter_visibility(),
+                !property.body.is_empty(),
+                property.setter.is_some(),
+                property.internal
+                    || property.getter_visibility.is_some()
+                    || property.setter_visibility.is_some(),
+                classpath,
+                &imports,
+            )?;
             property_annotations(
                 &property.annotations,
                 &property.name,
@@ -58,6 +115,18 @@ pub(crate) fn annotation_placements(
                 }
             }
             for property in &companion.properties {
+                property_visibility_annotations(
+                    &property.annotations,
+                    property.visibility(),
+                    property.setter_visibility(),
+                    !property.body.is_empty(),
+                    property.setter.is_some(),
+                    property.internal
+                        || property.getter_visibility.is_some()
+                        || property.setter_visibility.is_some(),
+                    classpath,
+                    &imports,
+                )?;
                 if !property.annotations.is_empty() {
                     return Err(Diagnostic::new(
                         property.offset,
@@ -94,6 +163,18 @@ pub(crate) fn annotation_placements(
             .collect::<Vec<_>>();
         output.annotations = checked(&ordinary, classpath, &imports, "TYPE", None)?;
         for property in &object.fields {
+            property_visibility_annotations(
+                &property.annotations,
+                property.visibility(),
+                property.setter_visibility(),
+                !property.body.is_empty(),
+                property.setter.is_some(),
+                property.internal
+                    || property.getter_visibility.is_some()
+                    || property.setter_visibility.is_some(),
+                classpath,
+                &imports,
+            )?;
             if let Some(ty) = &property.ty {
                 property_annotations(
                     &property.annotations,
@@ -131,6 +212,20 @@ pub(crate) fn annotation_placements(
             function_parameters(&method.function, classpath, &imports, owner, &mut output)?;
         }
         if let Some(companion) = &interface.companion {
+            for property in &companion.fields {
+                property_visibility_annotations(
+                    &property.annotations,
+                    property.visibility(),
+                    property.setter_visibility(),
+                    !property.body.is_empty(),
+                    property.setter.is_some(),
+                    property.internal
+                        || property.getter_visibility.is_some()
+                        || property.setter_visibility.is_some(),
+                    classpath,
+                    &imports,
+                )?;
+            }
             if companion
                 .properties
                 .iter()
@@ -168,6 +263,18 @@ pub(crate) fn annotation_placements(
         }
     } else {
         for property in &module.properties {
+            property_visibility_annotations(
+                &property.annotations,
+                property.visibility(),
+                property.setter_visibility(),
+                !property.body.is_empty(),
+                property.setter.is_some(),
+                property.internal
+                    || property.getter_visibility.is_some()
+                    || property.setter_visibility.is_some(),
+                classpath,
+                &imports,
+            )?;
             property_annotations(
                 &property.annotations,
                 &property.name,
@@ -195,6 +302,50 @@ pub(crate) fn annotation_placements(
     }
     result.insert(owner.into(), output);
     Ok(result)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn property_visibility_annotations(
+    annotations: &[syntax::AnnotationUse],
+    visibility: syntax::PropertyVisibility,
+    setter_visibility: syntax::PropertyVisibility,
+    custom_getter: bool,
+    custom_setter: bool,
+    modified: bool,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+) -> Result<()> {
+    if !modified {
+        return Ok(());
+    }
+    for annotation in annotations {
+        let owner = annotations::annotation_owner(&annotation.name, classpath, imports);
+        if owner == "kotlin/jvm/JvmField"
+            && (setter_visibility != visibility || custom_getter || custom_setter)
+        {
+            return Err(Diagnostic::new(
+                annotation.offset,
+                "JvmField cannot expose a property with a restricted or custom accessor",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "JVM_FIELD_RESTRICTED_ACCESSOR",
+            ));
+        }
+        if matches!(
+            owner.as_str(),
+            "kotlin/jvm/JvmField" | "kotlin/jvm/JvmStatic"
+        ) {
+            return Err(Diagnostic::new(annotation.offset, "JVM ABI markers combined with independent accessor or internal property visibility are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "PROPERTY_VISIBILITY_ABI_ANNOTATION_UNSUPPORTED"));
+        }
+        if matches!(
+            annotation.use_site.as_deref(),
+            Some("get" | "set" | "setparam")
+        ) {
+            return Err(Diagnostic::new(annotation.offset, "Accessor-target annotations combined with independent accessor or internal property visibility are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "PROPERTY_VISIBILITY_ANNOTATION_UNSUPPORTED"));
+        }
+    }
+    Ok(())
 }
 
 fn checked(

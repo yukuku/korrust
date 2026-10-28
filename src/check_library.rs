@@ -488,6 +488,13 @@ impl Checker<'_> {
                 "Private JVM inline declaration requires complete inline expansion",
             ));
         }
+        if mask == 0 && self.classpath.default_source_accessor(&method).is_some() {
+            return Ok(Self::wrap_lets(
+                self.source_backing_accessor(&method, values, offset)?
+                    .unwrap(),
+                lets,
+            ));
+        }
         if method
             .library
             .as_ref()

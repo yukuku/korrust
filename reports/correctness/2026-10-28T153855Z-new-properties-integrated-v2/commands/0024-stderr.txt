@@ -1,0 +1,12 @@
+tests/fixtures/new_families/visibility/Reflection.kt:8:85: warning: unchecked cast of 'KProperty1<PrivateDefault, *>' to 'KMutableProperty1<PrivateDefault, Int>'.
+ val default = PrivateDefault::class.memberProperties.single { it.name == "value" } as KMutableProperty1<PrivateDefault, Int>
+                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/new_families/visibility/Reflection.kt:12:83: warning: unchecked cast of 'KProperty1<CustomPrivate, *>' to 'KMutableProperty1<CustomPrivate, Int>'.
+ val custom = CustomPrivate::class.memberProperties.single { it.name == "value" } as KMutableProperty1<CustomPrivate, Int>
+                                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/new_families/visibility/Reflection.kt:15:87: warning: unchecked cast of 'KProperty1<InternalDefault, *>' to 'KMutableProperty1<InternalDefault, Int>'.
+ val internal = InternalDefault::class.memberProperties.single { it.name == "value" } as KMutableProperty1<InternalDefault, Int>
+                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/fixtures/new_families/visibility/Reflection.kt:19:89: warning: unchecked cast of 'KProperty1<PublicInternalSetter, *>' to 'KMutableProperty1<PublicInternalSetter, Int>'.
+ val mixed = PublicInternalSetter::class.memberProperties.single { it.name == "value" } as KMutableProperty1<PublicInternalSetter, Int>
+                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -45,30 +45,15 @@ const CLASS_LITERAL_CASES: &[&str] = &[
 const UNSIGNED_TEST_SOURCE: &str = include_str!(
     "../benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt"
 );
-const ORIGINALS: &[(&str, &str, &str, &str, usize)] = &[
-    (
-        "AlphanumComparator.kt",
-        include_str!(
-            "../benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt"
-        ),
-        "<String>",
-        "PARAMETERIZED_SUPERTYPE_UNSUPPORTED",
-        35,
+const ORIGINALS: &[(&str, &str, &str, &str, usize)] = &[(
+    "AlphanumComparator.kt",
+    include_str!(
+        "../benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt"
     ),
-    (
-        "BackForwardList.kt",
-        include_str!(
-            "../benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt"
-        ),
-        "private set",
-        "ACCESSOR_VISIBILITY_UNSUPPORTED",
-        25,
-    ),
-];
-
-fn assert_unsupported(source: &str, marker: &str, code: &str) {
-    assert_unsupported_at(source, source.find(marker).unwrap(), code);
-}
+    "<String>",
+    "PARAMETERIZED_SUPERTYPE_UNSUPPORTED",
+    35,
+)];
 
 fn assert_unsupported_at(source: &str, offset: usize, code: &str) {
     let identity = "/original/UnsupportedSyntax.kt";
@@ -187,32 +172,63 @@ fn newline_qualified_expressions_compile() {
 }
 
 #[test]
-fn parameterized_supertypes_report_the_type_argument_opening() {
+fn parameterized_class_and_interface_supertypes_require_their_library() {
     for &source in SUPERTYPE_CASES {
-        assert_unsupported(source, "<", "PARAMETERIZED_SUPERTYPE_UNSUPPORTED");
+        if source.starts_with("object ") {
+            assert_unsupported_at(
+                source,
+                source.find('<').unwrap(),
+                "PARAMETERIZED_SUPERTYPE_UNSUPPORTED",
+            );
+        } else {
+            assert_missing_comparator(source);
+        }
     }
 }
 
-#[test]
-fn accessor_visibility_reports_the_accessor_modifier() {
-    for &(source, marker) in ACCESSOR_CASES {
-        assert_unsupported(source, marker, "ACCESSOR_VISIBILITY_UNSUPPORTED");
-    }
+fn assert_missing_comparator(source: &str) {
+    let identity = "/original/MissingComparator.kt";
+    let error = compile_batch_with_classpath(
+        &[SourceInput {
+            identity: identity.into(),
+            file_name: "MissingComparator.kt".into(),
+            source: source.into(),
+        }],
+        &[],
+        "missing_comparator",
+    )
+    .err()
+    .expect("Missing library class must not compile");
+    assert_eq!(
+        error.kind,
+        DiagnosticKind::MissingDependency,
+        "{}",
+        error.message
+    );
+    assert!(error.message.contains("Comparator"), "{}", error.message);
+    assert_eq!(error.source_identity.as_deref(), Some(identity));
 }
 
 #[test]
-fn unchanged_androidbible_sources_report_the_first_unsupported_construct() {
-    for &(_, source, marker, code, expected_line) in ORIGINALS {
-        assert_unsupported(source, marker, code);
-        let offset = source.find(marker).unwrap();
-        assert_eq!(
-            source[..offset]
-                .bytes()
-                .filter(|byte| *byte == b'\n')
-                .count()
-                + 1,
-            expected_line
+fn supported_accessor_visibility_compiles() {
+    for &(source, _) in ACCESSOR_CASES {
+        let result = compile_batch_with_classpath(
+            &[SourceInput {
+                identity: "/original/Visibility.kt".into(),
+                file_name: "Visibility.kt".into(),
+                source: source.into(),
+            }],
+            &[],
+            "visibility",
         );
+        assert!(result.is_ok(), "{source}: {:?}", result.err());
+    }
+}
+
+#[test]
+fn unchanged_androidbible_generic_source_without_its_classpath_reports_missing_dependency() {
+    for &(_, source, _, _, _) in ORIGINALS {
+        assert_missing_comparator(source);
     }
 }
 

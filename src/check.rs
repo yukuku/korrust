@@ -170,6 +170,7 @@ pub struct ClassCompanionProperty {
     pub name: String,
     pub ty: Type,
     pub private: bool,
+    pub setter_visibility: syntax::PropertyVisibility,
     pub mutable: bool,
     pub value: Value,
 }
@@ -667,6 +668,21 @@ impl Checker<'_> {
                 "Cannot infer list element type; empty or null-only factories require an explicit or expected element type",
             ));
         }
+        if matches!(name, "get" | "isEmpty" | "set" | "add")
+            && args.len()
+                != match name {
+                    "get" | "add" => 1,
+                    "set" => 2,
+                    _ => 0,
+                }
+        {
+            return Err(
+                Diagnostic::new(offset, "List member argument count mismatch").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "LIST_MEMBER_ARGUMENT_COUNT",
+                ),
+            );
+        }
         let (element, mutable) = match receiver.ty.base() {
             Type::List(e) => (e.as_ref().clone(), false),
             Type::MutableList(e) => (e.as_ref().clone(), true),
@@ -697,10 +713,7 @@ impl Checker<'_> {
             });
         }
         if !mutable {
-            return Err(Diagnostic::new(
-                offset,
-                "Read-only lists support size, get, isEmpty, and indexing",
-            ));
+            return self.extension_call(receiver, name, args, &[], offset);
         }
         if name == "set" && args.len() == 2 {
             let index = self.value(&args[0])?;
@@ -718,12 +731,7 @@ impl Checker<'_> {
                 "(ILjava/lang/Object;)Ljava/lang/Object;",
                 Type::Java("java/lang/Object".into()),
             ),
-            _ => {
-                return Err(Diagnostic::new(
-                    offset,
-                    "Unsupported mutable list operation",
-                ));
-            }
+            _ => return self.extension_call(receiver, name, args, &[], offset),
         };
         let mut values = vec![receiver];
         if name == "set" {
@@ -1673,6 +1681,94 @@ impl Checker<'_> {
         }
         Err(Diagnostic::new(offset, "Member access requires a receiver"))
     }
+    fn source_backing_accessor(
+        &self,
+        method: &JavaMethod,
+        mut args: Vec<Value>,
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        let Some(field) = self.classpath.default_source_accessor(method) else {
+            return Ok(None);
+        };
+        let setter = method.source_name() == setter_name(&field.name);
+        let (parameters, result) = class_method_types(method)?;
+        let logical = if setter {
+            parameters.last().unwrap().clone()
+        } else {
+            result
+        };
+        if logical.descriptor() != field.ty.descriptor() {
+            return Err(Diagnostic::new(
+                offset,
+                "Specialized private default accessors with different JVM field representations are unsupported",
+            ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SPECIALIZED_PRIVATE_ACCESSOR_UNSUPPORTED"));
+        }
+        let receiver = if method.access & 8 == 0 {
+            Some(args.remove(0))
+        } else {
+            None
+        };
+        let mut body = Vec::new();
+        let receiver = if field.is_static {
+            if let Some(receiver) = receiver {
+                body.push(Statement::Expression(receiver));
+            }
+            None
+        } else {
+            receiver
+        };
+        let result = if field.companion_bridge {
+            Value {
+                ty: if setter { Type::Unit } else { logical.clone() },
+                kind: ValueKind::StaticCall {
+                    owner: field.owner,
+                    name: format!(
+                        "access${}$cp",
+                        if setter {
+                            setter_name(&field.name)
+                        } else {
+                            getter_name(&field.name)
+                        }
+                    ),
+                    descriptor: if setter {
+                        format!("({})V", field.ty.descriptor())
+                    } else {
+                        format!("(){}", field.ty.descriptor())
+                    },
+                    args,
+                },
+            }
+        } else if setter {
+            body.push(Statement::JavaFieldStore {
+                owner: field.owner,
+                name: field.name,
+                ty: field.ty,
+                receiver,
+                value: args.remove(0),
+            });
+            Value {
+                ty: Type::Unit,
+                kind: ValueKind::Unit,
+            }
+        } else {
+            Value {
+                ty: logical,
+                kind: ValueKind::JavaField {
+                    owner: field.owner,
+                    name: field.name,
+                    receiver: receiver.map(Box::new),
+                },
+            }
+        };
+        Ok(Some(if body.is_empty() {
+            result
+        } else {
+            Value {
+                ty: result.ty.clone(),
+                kind: ValueKind::Block(body, Box::new(result)),
+            }
+        }))
+    }
     fn member_call(
         &mut self,
         method: JavaMethod,
@@ -1764,6 +1860,13 @@ impl Checker<'_> {
             receiver
         };
         values.insert(0, receiver);
+        if mask == 0 && self.classpath.default_source_accessor(&method).is_some() {
+            return Ok(Self::wrap_lets(
+                self.source_backing_accessor(&method, values, offset)?
+                    .unwrap(),
+                lets,
+            ));
+        }
         let mut method = method;
         if mask == 0
             && self
@@ -2107,7 +2210,8 @@ impl Checker<'_> {
         let methods = inherited
             .into_iter()
             .filter(|m| {
-                m.source_name() == name
+                m.source_property.is_none()
+                    && m.source_name() == name
                     && (m.access & 8 == 0 || singleton)
                     && (m.access & 1 != 0
                         || m.access & 4 != 0
@@ -2311,19 +2415,25 @@ impl Checker<'_> {
         expr: &Expr,
         offset: usize,
     ) -> Result<Statement> {
-        let loaded = self.classpath.load(&owner).ok();
         let class = self
             .classes
             .get(&owner)
-            .or(loaded.as_ref())
-            .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java class"))?;
+            .cloned()
+            .map(Ok)
+            .unwrap_or_else(|| self.classpath.load(&owner))?;
         let methods = self
             .classpath
             .methods(&owner)
             .unwrap_or_else(|_| class.methods.clone());
         if let Some(method) = methods
             .iter()
-            .find(|m| m.source_property.as_deref() == Some(name) && m.name == setter_name(name))
+            .find(|m| {
+                m.source_property.as_deref() == Some(name)
+                    && m.source_name() == setter_name(name)
+                    && (receiver.is_some()
+                        || m.access & 8 != 0
+                        || class.fields.iter().any(|field| field.name == "INSTANCE"))
+            })
             .cloned()
         {
             let call = if method.access & 8 != 0 {
@@ -2336,6 +2446,50 @@ impl Checker<'_> {
                 self.member_call(method, receiver, std::slice::from_ref(expr), offset)?
             };
             return Ok(Statement::Expression(call));
+        }
+        if receiver.is_none() && class.kotlin_class {
+            if let Some(companion) = class
+                .fields
+                .iter()
+                .find(|field| field.name == "Companion" && field.access & 9 == 9)
+                .and_then(|field| {
+                    field
+                        .descriptor
+                        .strip_prefix('L')
+                        .and_then(|name| name.strip_suffix(';'))
+                })
+            {
+                if let Some(method) =
+                    self.classpath
+                        .methods(companion)?
+                        .into_iter()
+                        .find(|method| {
+                            method.source_property.as_deref() == Some(name)
+                                && method.source_name() == setter_name(name)
+                        })
+                {
+                    if method.access & 2 != 0
+                        && self.lambda_owner != method.owner
+                        && (self.lambda_owner == owner
+                            || self.lambda_owner.starts_with(&format!("{owner}$")))
+                    {
+                        return Err(Diagnostic::new(offset, "Qualified private companion accessors from enclosing declarations require unsupported lexical bridge planning").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "PRIVATE_COMPANION_ACCESSOR_SCOPE_UNSUPPORTED"));
+                    }
+                    let receiver = Value {
+                        ty: Type::Java(companion.into()),
+                        kind: ValueKind::StaticField {
+                            owner: owner.clone(),
+                            name: "Companion".into(),
+                        },
+                    };
+                    return Ok(Statement::Expression(self.member_call(
+                        method,
+                        receiver,
+                        std::slice::from_ref(expr),
+                        offset,
+                    )?));
+                }
+            }
         }
         let candidates = self.classpath.field_candidates(&class.name, name)?;
         if !candidates.iter().any(|field| field.access & 1 != 0) {
@@ -2545,6 +2699,55 @@ impl Checker<'_> {
                 }
                 StatementKind::CompoundAssign(name, op, expr) => {
                     self.check_compound_assignment(name, op, expr, offset)?
+                }
+                StatementKind::SafePropertyAssign(receiver, name, expr) => {
+                    let temporary = format!("<safe-assignment-{}>", self.next);
+                    let named = || Expr {
+                        offset,
+                        kind: ExprKind::Name(temporary.clone()),
+                    };
+                    let statements = vec![
+                        syntax::Statement {
+                            offset,
+                            kind: StatementKind::Let(
+                                temporary.clone(),
+                                false,
+                                None,
+                                receiver.clone(),
+                            ),
+                        },
+                        syntax::Statement {
+                            offset,
+                            kind: StatementKind::If(
+                                Expr {
+                                    offset,
+                                    kind: ExprKind::Binary(
+                                        "!=".into(),
+                                        Box::new(named()),
+                                        Box::new(Expr {
+                                            offset,
+                                            kind: ExprKind::Null,
+                                        }),
+                                    ),
+                                },
+                                vec![syntax::Statement {
+                                    offset,
+                                    kind: StatementKind::PropertyAssign(
+                                        Expr {
+                                            offset,
+                                            kind: ExprKind::NonNull(Box::new(named())),
+                                        },
+                                        name.clone(),
+                                        expr.clone(),
+                                    ),
+                                }],
+                                Vec::new(),
+                            ),
+                        },
+                    ];
+                    let (statements, _) = self.block(&statements)?;
+                    body.extend(statements);
+                    continue;
                 }
                 StatementKind::PropertyAssign(receiver, name, expr) => {
                     self.field_assignment(receiver, name, expr, offset)?
@@ -3650,7 +3853,7 @@ impl Checker<'_> {
                     )
                 } else if let Some(method) = self.members.values().find(|method| {
                     method.source_property.as_deref() == Some(name)
-                        && method.name == getter_name(name)
+                        && method.source_name() == getter_name(name)
                 }) {
                     let receiver = self.receiver_value(offset)?;
                     return self.member_call(method.clone(), receiver, &[], offset);
@@ -4031,7 +4234,7 @@ impl Checker<'_> {
                     {
                         if let Some(method) = self.members.values().find(|method| {
                             method.source_property.as_deref() == Some(name)
-                                && method.name == getter_name(name)
+                                && method.source_name() == getter_name(name)
                         }) {
                             return self.member_call(method.clone(), receiver, &[], offset);
                         }
@@ -5124,7 +5327,7 @@ fn body_call_names(body: &[syntax::Statement], names: &mut HashSet<String>) {
                     call_names(e, names);
                 }
             }
-            StatementKind::PropertyAssign(a, _, b) => {
+            StatementKind::PropertyAssign(a, _, b) | StatementKind::SafePropertyAssign(a, _, b) => {
                 call_names(a, names);
                 call_names(b, names);
             }
@@ -5206,6 +5409,7 @@ pub fn check_with_owner(
     classpath: &Classpath,
     owner: &str,
 ) -> Result<Module> {
+    annotation_placements::preflight_property_visibility(source, classpath)?;
     if source.object_decl.as_ref().is_some_and(|object| {
         !object.annotations.is_empty()
             || !object.interfaces.is_empty()
@@ -5570,7 +5774,7 @@ pub fn check_with_owner(
                     format!("{}/{}", source.package.replace('.', "/"), name)
                 }
             });
-            if renamed_imports.contains(&owner) {
+            if !name.contains('/') && renamed_imports.contains(&owner) {
                 return Err(Diagnostic::new(
                     type_offset,
                     format!("Unresolved aliased type: {name}"),
@@ -5806,6 +6010,9 @@ pub fn check_with_owner(
             name: p.name.clone(),
             offset: p.offset,
             private: p.private,
+            internal: p.internal,
+            getter_visibility: p.getter_visibility,
+            setter_visibility: p.setter_visibility,
             mutable: p.mutable,
             ty: (!p.inferred).then(|| p.ty.clone()),
             initializer: p.initializer.clone(),

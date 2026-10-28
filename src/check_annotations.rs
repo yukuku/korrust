@@ -33,7 +33,7 @@ pub(crate) fn unsupported_lowering(owner: &str) -> Option<&'static str> {
     }
 }
 
-fn annotation_owner(
+pub(super) fn annotation_owner(
     name: &str,
     classpath: &Classpath,
     imports: &HashMap<String, String>,

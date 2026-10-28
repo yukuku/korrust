@@ -269,6 +269,7 @@ pub(super) fn emit(
             methods.push(getter);
         }
         if property.mutable
+            && property.setter_visibility != crate::syntax::PropertyVisibility::Private
             && !companion.methods.iter().any(|method| {
                 method.name == crate::check::setter_name(&property.name) && method.params.len() == 1
             })

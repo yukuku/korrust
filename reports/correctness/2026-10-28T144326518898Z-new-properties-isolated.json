@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T14:43:26.518898+00:00",
+  "status": "failed",
+  "selection": "Independent property/accessor visibility, default private-setter omission, custom private setters, protected setters and internal accessor names/metadata across ordinary class/object/companion/package scopes. Safe-call assignment and canonical qualified names are reusable prerequisites. Existing internal functions/private bridges are regressions, not new feature counts.",
+  "compiler": {
+    "path": "target/final-v3-korrust-frozen",
+    "sha256": "63bfcece0a9b0d9d6a02cfd1d47c6032fbe9309ab8d1b1b432464edc049e5c95"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "reflection_sha256": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "9108c7dafcbe6c5e4b8390a42c78f14c1ac961e90d77e34aba4725d074823a9e",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "552858590b1d6b9814237eaed4d72d07ebec378fe53e8f1841d700d6261d4024",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "4d49104ec19917fcb834ee39e1a13e47f05eba87c950b148c6035cbd31713b34",
+      "src/bytecode/lambdas.rs": "60487f7bbfef94df047c43914794d6edc9a8957bf7b8c8a44447988e7d3028ae",
+      "src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "src/bytecode.rs": "e07255c66a81578315ad85af50c53118d5283dc167f1b1df22307bd619a7480b",
+      "src/check.rs": "0c407f3539468f43089e0056e8582f59ac16d620aa2de6472165e09d2cb75540",
+      "src/check_annotation_placements.rs": "9af88441e5a610441d02e5b69c5cfca7253695fcdcabb5e774359ae265fe8be6",
+      "src/check_annotations.rs": "e4dfbf30686a5fdff94d61148ec1c940e522356d38ee954587d4f0045f04e0e3",
+      "src/check_captures.rs": "40074d38cd14d55cb88e297c1276e5cffe9b00d91d48c5f9ad87aa0d117b1173",
+      "src/check_control.rs": "7e6ed766e78b7d706f52d2bc19e0f05af765cd866a56cac03d2f7cbed18df816",
+      "src/check_declarations.rs": "d936d0f7cd839aabbf040dba01051a119f165bb57a769f1e3a1a2f557dbba67e",
+      "src/check_delegates.rs": "fc6e3f43a18b6b5b600c5515938d70b0712a616bca82d2c53eab6dd28dbf083e",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "0a97b74e03e2c9ae0539f578f4de25e7cc98d129a7ada14ff83960b4a8c6a34e",
+      "src/check_interfaces.rs": "6dde39484aacd8786bbabc9f73ecfca625f4253642e08a3fb3a4f175fe5866e1",
+      "src/check_ir_walk.rs": "e227d3906b84b23a2e9c18028d660d4103b8c23473b8c6e5e67509e787ac501b",
+      "src/check_library.rs": "fbf914300cb5a3e386463fd6086001abf29798d15437f8ac176b6ccde809ee99",
+      "src/check_objects.rs": "0472a6fd16d85258718548870fc817bca0a9668326192b72404406362b3e0886",
+      "src/check_operations.rs": "f7ff693febcef415f988d6921b0e3ebce6ad02eb35b40d1c267628527db97573",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/classpath/aliases.rs": "1ba2d3730c704c3fbfb27b3056a046c8782981a9f312c91865939cacd4fef73e",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "c583ac85445c937fde76d316e6ebb3f166cce189c8063deafa100ee0e4bd7433",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "092918451ea75b60f3cb7ea9cee74d9f4d08b879dddcaa2761b6aa966b9a9ac4",
+      "src/classpath/source.rs": "7c10ff908149574118b0ce4c57f9530104a07636900fb39b4604885725a7abd0",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "f54ceeb418da744dc8a37cd731e8f84c2fc3f17742037c71f09457be5637b6bf",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "d1f4f9bf92f483684533cc83c0ed142495c0222ca8fe753117ac57ea31ed9173",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "a6112f697b7f0adea366997512db4554e1fcbd5d94d42f5dc1d24649fa8944d9",
+      "src/metadata.rs": "5b50854485ee619082a70ea43691ad231dc9347c47cb966418b99122098a8fa1",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "c3a6eb62e0b10d876bff8cd218d0d36c8b252b49baaac4e48c45ed4a5ccf2598",
+      "src/visibility.rs": "5a6b553bdcd2f37ffea7633809066b334e7bbd4075ea441ecfc29c4a9e7600f4",
+      "tests/property_visibility.rs": "b230bf7b61660134de5a0106d6859c12f878785c8de5f42513678c249b957697",
+      "tests/unsupported_syntax_diagnostics.rs": "5fb6f57cc221589ba7902126dd0e6e0df679bf1c804d3bf851e382c2911174d6",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tools/check_new_visibility.py": "af6b22c6812853b33b2b2a12cae20f3e45fe4b4794cf36a7256a64ac212dbc5a",
+      "tools/upstream_jvm.py": "5de0b1dc40086cb5916fd50a1c55a8fe6b9b5ca7c3ecff8d790260b9ce969b2e",
+      "tests/fixtures/new_families/visibility/AliasedExtension.kt": "ce61088bd162d745c298896bf76181138980dca3e3754934becc5d40a7e2b489",
+      "tests/fixtures/new_families/visibility/AliasedShadow.kt": "f19836dc19abd6132972c2a25b0ee489d7edd0de9166f093bf368f34b325d084",
+      "tests/fixtures/new_families/visibility/CandidateFriend.kt": "410c074cc3c262b4370ea3c9013ecb3b9dde070943acfc9d6af1adba3e5279cb",
+      "tests/fixtures/new_families/visibility/DirectShadow.kt": "fe2251b4b86f396d8bab411e8b2c95eae3e6c0ff4b4264eda5a2f84d3cdf1f71",
+      "tests/fixtures/new_families/visibility/Effects.java": "9c417aad09a8166722643be900b5fab10392728d72669fd93ba8f4e268f2c512",
+      "tests/fixtures/new_families/visibility/ExplicitField.kt": "0a5160bb93b1f585ac5205ecd07967bb7f44bb0b7abd0ed2609e9bc37f23a01c",
+      "tests/fixtures/new_families/visibility/FakeCompanion.java": "75bc73cf7667d13bc8d7e510dce23d3025776a9f74676d0daea80fb9c0056c05",
+      "tests/fixtures/new_families/visibility/Friend.kt": "71e5563803fe270eee1e4d27e5f0a86076b0e7709e912540fd875903449227f3",
+      "tests/fixtures/new_families/visibility/FriendCalls.java": "a20303588218aa8e79c654b5f6f85869cf1c1d77244c4c41d36d5b2f427d5092",
+      "tests/fixtures/new_families/visibility/JvmField.java": "ca8ac0394fbed5527a2a6f8eea25a3fbf23b8a85ad811aa437c02d6143b78bda",
+      "tests/fixtures/new_families/visibility/Qualified.kt": "28dd524ec07d76b31a7ffb3fe2555818438aefb1dd85c023836a9b2093ace43a",
+      "tests/fixtures/new_families/visibility/Reflection.kt": "0f1ff486f7c50de26a51786d7b449e0dd80b9da6dd6ad8b47d5ec10d562112bb",
+      "tests/fixtures/new_families/visibility/Visibility.kt": "3b3761141babcf705b82bd16f1ea233f9d6cc7c6966203e6ed1888df35b93d7c",
+      "tests/fixtures/new_families/visibility/VisibilityCheck.java": "ec3eb39760e9a52a0d44b42819366d614ef630c6a574a6630d4490f1acc7101e",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/properties/accessToPrivateSetter.kt": "bca47d89d65097ec1d3f4726f6f7cf3c19c96c1ac0a735907e87be1d6dcfe9d8",
+      "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt": "bfce6040eacbff475ddeabd04f33503361e1be9fea03aaf68a6fddb9698de684",
+      "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc": "90750c977cc043dd2b05c69dd4e052c10377554925dd5a155e74ef732be28c7d",
+      "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-reflect.jar": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb",
+      "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+      "target/final-v3-korrust-frozen": "63bfcece0a9b0d9d6a02cfd1d47c6032fbe9309ab8d1b1b432464edc049e5c95"
+    }
+  },
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile_explicit_field/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "harness_failure",
+      "outcome": "correctness_failure",
+      "error": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/ExplicitField.kt\",\"offset\":93,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Java reference types require explicit imports\",\"path\":\"/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/ExplicitField.kt\",\"line\":3,\"column\":30}\n"
+    }
+  ],
+  "commands": [
+    {
+      "label": "Pinned oracle identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0001-stderr.txt"
+    },
+    {
+      "label": "Compile real Java effect helper",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/helpers",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Effects.java",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/JvmField.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0002-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Visibility.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Qualified.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/AliasedExtension.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/DirectShadow.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/AliasedShadow.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "visibility-feature",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0003-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Visibility.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Qualified.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/AliasedExtension.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/DirectShadow.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/AliasedShadow.kt",
+        "--module-name",
+        "visibility-feature",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0004-stderr.txt"
+    },
+    {
+      "label": "Compile ordinary Java field named Companion against official provider",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/official",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/helpers",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/FakeCompanion.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0005-stderr.txt"
+    },
+    {
+      "label": "Compile official/explicit-field-official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/ExplicitField.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "explicit_field",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/explicit-field-official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0006-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/explicit-field-candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/ExplicitField.kt",
+        "--module-name",
+        "explicit_field",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v3/explicit-field-candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/commands/0007-stderr.txt"
+    }
+  ],
+  "limitations": [
+    "New accessor/internal visibility combined with lateinit, delegates, overriding declarations, constructor properties, enum/anonymous members, extension properties or accessor annotations remains bounded; ordinary existing forms retain their existing support.",
+    "New property visibility combined with valid JVM ABI marker forms remains explicitly unsupported in this snapshot; restricted/custom JvmField accessors reject as invalid.",
+    "Only simple safe-call assignment is implemented; compound safe assignments remain unsupported.",
+    "Class-qualified private companion setter access from enclosing declarations remains unsupported; own-companion uses and imported public/internal setters are checked separately.",
+    "The unchanged BackForwardList assessment is preserved separately; no full-app, Android runtime or performance claim."
+  ],
+  "counts": {
+    "correctness_failure": 1,
+    "pass": 3
+  },
+  "feature_counts": {
+    "correctness_failure": 1,
+    "pass": 3
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "publication_hash_only_binary_inputs": [
+    "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+    "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+    "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-reflect.jar",
+    "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+    "target/final-v3-korrust-frozen"
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/frozen-inputs.zip",
+    "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/original-report.txt"
+  ],
+  "publication": {
+    "original_report_sha256": "6b139cff66a31ef92e655d098a93f0cae5d0272624c59ac5bbeebfea6a7184fa",
+    "frozen_input_archive": "reports/correctness/2026-10-28T144326518898Z-new-properties-isolated/frozen-inputs.zip",
+    "frozen_input_archive_sha256": "a9dd00033389d9e1862df897f25e52f084077cafc393290932794dab919ade51",
+    "archived_input_files": 70,
+    "original_snapshot_root": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation",
+    "note": "Preserved isolated accessor checkpoint. Exact available historical source bytes are archived; changed unavailable development inputs are listed explicitly. Acceptance uses fresh merged evidence, not a reduced or failed development fixture."
+  }
+}

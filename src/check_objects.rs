@@ -672,6 +672,9 @@ pub(super) fn check(
                 annotations: field.annotations.clone(),
                 name: field.name.clone(),
                 private: field.private,
+                internal: field.internal,
+                getter_visibility: field.getter_visibility,
+                setter_visibility: field.setter_visibility,
                 protected: false,
                 mutable: field.mutable,
                 inferred: field.ty.is_none(),
@@ -1011,6 +1014,9 @@ pub(super) fn check(
             name: field.name.clone(),
             offset: field.offset,
             private: field.private,
+            internal: field.internal,
+            getter_visibility: field.getter_visibility,
+            setter_visibility: field.setter_visibility,
             mutable: field.mutable,
             ty: Some(ty.clone()),
             initializer: field.initializer.clone(),
@@ -1067,7 +1073,10 @@ pub(super) fn check(
             throws: Vec::new(),
             inline: false,
         });
-        if field.mutable {
+        if field.mutable
+            && (field.setter.is_some()
+                || field.setter_visibility() != syntax::PropertyVisibility::Private)
+        {
             if let Some((parameter, body)) = &field.setter {
                 let function = accessor_context.function(
                     &declarations::accessor_source(

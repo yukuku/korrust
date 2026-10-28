@@ -1,0 +1,3030 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T14:27:43.715099+00:00",
+  "status": "failed",
+  "selection": "Independent property/accessor visibility, default private-setter omission, custom private setters, protected setters and internal accessor names/metadata across ordinary class/object/companion/package scopes. Safe-call assignment and canonical qualified names are reusable prerequisites. Existing internal functions/private bridges are regressions, not new feature counts.",
+  "compiler": {
+    "path": "target/final-v2-korrust-frozen",
+    "sha256": "cf62e1b96fd38e532782e11afd5cc06c6ce3adf804774d55322c8a62792297cc"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "reflection_sha256": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "9108c7dafcbe6c5e4b8390a42c78f14c1ac961e90d77e34aba4725d074823a9e",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "552858590b1d6b9814237eaed4d72d07ebec378fe53e8f1841d700d6261d4024",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "4d49104ec19917fcb834ee39e1a13e47f05eba87c950b148c6035cbd31713b34",
+      "src/bytecode/lambdas.rs": "60487f7bbfef94df047c43914794d6edc9a8957bf7b8c8a44447988e7d3028ae",
+      "src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "src/bytecode.rs": "e07255c66a81578315ad85af50c53118d5283dc167f1b1df22307bd619a7480b",
+      "src/check.rs": "242f64f53c645fd526f1d1ab4290d44ab1e1c867ce806a0c1c9ca4fde1c416b1",
+      "src/check_annotation_placements.rs": "ce4e86252295617070e55d77c43b59273f1180291d57c4cc05f9291e564c9642",
+      "src/check_annotations.rs": "e4dfbf30686a5fdff94d61148ec1c940e522356d38ee954587d4f0045f04e0e3",
+      "src/check_captures.rs": "40074d38cd14d55cb88e297c1276e5cffe9b00d91d48c5f9ad87aa0d117b1173",
+      "src/check_control.rs": "7e6ed766e78b7d706f52d2bc19e0f05af765cd866a56cac03d2f7cbed18df816",
+      "src/check_declarations.rs": "d936d0f7cd839aabbf040dba01051a119f165bb57a769f1e3a1a2f557dbba67e",
+      "src/check_delegates.rs": "fc6e3f43a18b6b5b600c5515938d70b0712a616bca82d2c53eab6dd28dbf083e",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "0a97b74e03e2c9ae0539f578f4de25e7cc98d129a7ada14ff83960b4a8c6a34e",
+      "src/check_interfaces.rs": "6dde39484aacd8786bbabc9f73ecfca625f4253642e08a3fb3a4f175fe5866e1",
+      "src/check_ir_walk.rs": "e227d3906b84b23a2e9c18028d660d4103b8c23473b8c6e5e67509e787ac501b",
+      "src/check_library.rs": "fbf914300cb5a3e386463fd6086001abf29798d15437f8ac176b6ccde809ee99",
+      "src/check_objects.rs": "0472a6fd16d85258718548870fc817bca0a9668326192b72404406362b3e0886",
+      "src/check_operations.rs": "f7ff693febcef415f988d6921b0e3ebce6ad02eb35b40d1c267628527db97573",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/classpath/aliases.rs": "1ba2d3730c704c3fbfb27b3056a046c8782981a9f312c91865939cacd4fef73e",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "c583ac85445c937fde76d316e6ebb3f166cce189c8063deafa100ee0e4bd7433",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "092918451ea75b60f3cb7ea9cee74d9f4d08b879dddcaa2761b6aa966b9a9ac4",
+      "src/classpath/source.rs": "7c10ff908149574118b0ce4c57f9530104a07636900fb39b4604885725a7abd0",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "f54ceeb418da744dc8a37cd731e8f84c2fc3f17742037c71f09457be5637b6bf",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "d1f4f9bf92f483684533cc83c0ed142495c0222ca8fe753117ac57ea31ed9173",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "a6112f697b7f0adea366997512db4554e1fcbd5d94d42f5dc1d24649fa8944d9",
+      "src/metadata.rs": "5b50854485ee619082a70ea43691ad231dc9347c47cb966418b99122098a8fa1",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "c3a6eb62e0b10d876bff8cd218d0d36c8b252b49baaac4e48c45ed4a5ccf2598",
+      "src/visibility.rs": "5a6b553bdcd2f37ffea7633809066b334e7bbd4075ea441ecfc29c4a9e7600f4",
+      "tests/property_visibility.rs": "b230bf7b61660134de5a0106d6859c12f878785c8de5f42513678c249b957697",
+      "tests/unsupported_syntax_diagnostics.rs": "5fb6f57cc221589ba7902126dd0e6e0df679bf1c804d3bf851e382c2911174d6",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tools/check_new_visibility.py": "9c46d930c6655ef6c8ee66351c58ca1c46f33845d0669f38f2fc6230e7937535",
+      "tools/upstream_jvm.py": "5de0b1dc40086cb5916fd50a1c55a8fe6b9b5ca7c3ecff8d790260b9ce969b2e",
+      "tests/fixtures/new_families/visibility/AliasedExtension.kt": "ce61088bd162d745c298896bf76181138980dca3e3754934becc5d40a7e2b489",
+      "tests/fixtures/new_families/visibility/CandidateFriend.kt": "410c074cc3c262b4370ea3c9013ecb3b9dde070943acfc9d6af1adba3e5279cb",
+      "tests/fixtures/new_families/visibility/Effects.java": "9c417aad09a8166722643be900b5fab10392728d72669fd93ba8f4e268f2c512",
+      "tests/fixtures/new_families/visibility/Friend.kt": "71e5563803fe270eee1e4d27e5f0a86076b0e7709e912540fd875903449227f3",
+      "tests/fixtures/new_families/visibility/FriendCalls.java": "a20303588218aa8e79c654b5f6f85869cf1c1d77244c4c41d36d5b2f427d5092",
+      "tests/fixtures/new_families/visibility/Qualified.kt": "28dd524ec07d76b31a7ffb3fe2555818438aefb1dd85c023836a9b2093ace43a",
+      "tests/fixtures/new_families/visibility/Reflection.kt": "0f1ff486f7c50de26a51786d7b449e0dd80b9da6dd6ad8b47d5ec10d562112bb",
+      "tests/fixtures/new_families/visibility/Visibility.kt": "3b3761141babcf705b82bd16f1ea233f9d6cc7c6966203e6ed1888df35b93d7c",
+      "tests/fixtures/new_families/visibility/VisibilityCheck.java": "1738a5739d466fa041ca45bd4d208d850e8e323bdde0f919aac804bfea70950a",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/properties/accessToPrivateSetter.kt": "bca47d89d65097ec1d3f4726f6f7cf3c19c96c1ac0a735907e87be1d6dcfe9d8",
+      "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt": "bfce6040eacbff475ddeabd04f33503361e1be9fea03aaf68a6fddb9698de684",
+      "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc": "90750c977cc043dd2b05c69dd4e052c10377554925dd5a155e74ef732be28c7d",
+      "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-reflect.jar": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb",
+      "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+      "target/final-v2-korrust-frozen": "cf62e1b96fd38e532782e11afd5cc06c6ce3adf804774d55322c8a62792297cc"
+    },
+    "fixed_java_callers_sha256": {
+      "visibilityprobe/VisibilityCheck.class": "6f1fdcbdaaaa7471d77446897097be70c7945716fd995f60207206ffeed72480",
+      "visibilityprobe/VisibilityCheck$Inherited.class": "b84d566b53dfe9a13d0f9f5e601f88843589cf0e2f94a40d8b1f384e3d2f0bd7"
+    },
+    "fixed_reflection_consumer_sha256": {
+      "visibilityreflection/ReflectionKt.class": "0e01b8db90a7d65113e845f07254f88903af802794a12d2d343e4da9539cc191"
+    },
+    "fixed_friend_caller_sha256": {
+      "FriendCalls.class": "381ff591092e95e030ab5fba924c20f894b0be699db03fe48b324448773d26e7"
+    }
+  },
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 43,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "metadata_friend/official",
+      "outcome": "pass",
+      "scope": "Official Kotlin consumer, exact output friend path and distinct consumer module"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 43,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "metadata_friend/candidate",
+      "outcome": "pass",
+      "scope": "Official Kotlin consumer, exact output friend path and distinct consumer module"
+    },
+    {
+      "id": "reflection/official",
+      "outcome": "pass",
+      "scope": "Property/setter visibility, internal physical JVM name, absent default private setter and present custom private setter; identical official-compiled consumer"
+    },
+    {
+      "id": "reflection/candidate",
+      "outcome": "pass",
+      "scope": "Property/setter visibility, internal physical JVM name, absent default private setter and present custom private setter; identical official-compiled consumer"
+    },
+    {
+      "id": "compiled_friend/official/official",
+      "outcome": "pass",
+      "independent_assertions": 11,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "compiled_friend/candidate/official",
+      "outcome": "pass",
+      "independent_assertions": 11,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "compiled_friend/official/candidate",
+      "outcome": "pass",
+      "independent_assertions": 11,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "compiled_friend/candidate/candidate",
+      "outcome": "pass",
+      "independent_assertions": 11,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "signature/visibilityprobe.PrivateDefault",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.CustomPrivate",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.ProtectedDefault",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.InternalDefault",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.PublicInternalSetter",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.ExplicitGetter",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.State",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.Host",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.Host$Companion",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.OtherTarget",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.CustomOther",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.SetterName",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.SafeTarget",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.WideTarget",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.NullableTarget",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.Contract",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.Contract$Companion",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.VisibilityKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityprobe.AliasedExtensionKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityqualified.Outer",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityqualified.Outer$Entry",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/visibilityqualified.QualifiedKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/getter_visibility",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/getter_visibility.kt:2:2: error: getter visibility must be the same as property visibility.\n private get }\n ^^^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/getter_visibility.kt",
+              "offset": 12,
+              "category": "invalid_kotlin",
+              "code": "GETTER_VISIBILITY_MISMATCH",
+              "message": "Getter visibility must match property visibility",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/getter_visibility.kt",
+              "line": 1,
+              "column": 13
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/setter_visibility",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/setter_visibility.kt:2:2: error: setter visibility cannot be more permissive than property visibility.\n public set }\n ^^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/setter_visibility.kt",
+              "offset": 12,
+              "category": "invalid_kotlin",
+              "code": "SETTER_VISIBILITY_MISMATCH",
+              "message": "Setter visibility cannot be more permissive than property visibility",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/setter_visibility.kt",
+              "line": 1,
+              "column": 13
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/internal_protected_setter",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/internal_protected_setter.kt:2:2: error: setter visibility cannot be more permissive than property visibility.\n protected set }\n ^^^^^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/internal_protected_setter.kt",
+              "offset": 12,
+              "category": "invalid_kotlin",
+              "code": "SETTER_VISIBILITY_MISMATCH",
+              "message": "Setter visibility cannot be more permissive than property visibility",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/internal_protected_setter.kt",
+              "line": 1,
+              "column": 13
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/protected_internal_setter",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/protected_internal_setter.kt:2:2: error: setter visibility cannot be more permissive than property visibility.\n internal set }\n ^^^^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/protected_internal_setter.kt",
+              "offset": 17,
+              "category": "invalid_kotlin",
+              "code": "SETTER_VISIBILITY_MISMATCH",
+              "message": "Setter visibility cannot be more permissive than property visibility",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/protected_internal_setter.kt",
+              "line": 1,
+              "column": 18
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/open_private_setter",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/open_private_setter.kt:2:2: error: private setters for open properties are prohibited.\n private set }\n ^^^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/open_private_setter.kt",
+              "offset": 17,
+              "category": "invalid_kotlin",
+              "code": "PRIVATE_SETTER_ON_OPEN_PROPERTY",
+              "message": "Private setters are prohibited on open properties",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/open_private_setter.kt",
+              "line": 1,
+              "column": 18
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/val_setter",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/val_setter.kt:2:2: error: a 'val' property cannot have a setter.\n private set }\n ^^^^^^^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/val_setter.kt",
+              "offset": 44,
+              "category": "invalid_kotlin",
+              "code": "VAL_WITH_SETTER",
+              "message": "Read-only properties cannot have setters",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/val_setter.kt",
+              "line": 2,
+              "column": 14
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/top_protected_setter",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/top_protected_setter.kt:2:2: error: modifier 'protected' is not applicable inside 'file'.\n protected set\n ^^^^^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/top_protected_setter.kt",
+              "offset": 0,
+              "category": "invalid_kotlin",
+              "code": "PROTECTED_ACCESSOR_CONTEXT",
+              "message": "Protected accessors require an ordinary class member",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/top_protected_setter.kt",
+              "line": 1,
+              "column": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/object_protected_setter",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/object_protected_setter.kt:2:2: error: modifier 'protected' is not applicable inside 'standalone object'.\n protected set }\n ^^^^^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/object_protected_setter.kt",
+              "offset": 13,
+              "category": "invalid_kotlin",
+              "code": "PROTECTED_ACCESSOR_CONTEXT",
+              "message": "Protected accessors require an ordinary class member",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/object_protected_setter.kt",
+              "line": 1,
+              "column": 14
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/private_write",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/private_write.kt:2:40: error: cannot access 'value': it is private in 'visibilityprobe.PrivateDefault'.\nfun bad(value: PrivateDefault) { value.value = 1 }\n                                       ^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_write.kt",
+              "offset": 71,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Java field is inaccessible or unsupported",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_write.kt",
+              "line": 2,
+              "column": 34
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/private_safe_write",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/private_safe_write.kt:2:42: error: cannot access 'value': it is private in 'visibilityprobe.PrivateDefault'.\nfun bad(value: PrivateDefault?) { value?.value = 1 }\n                                         ^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_safe_write.kt",
+              "offset": 72,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Java field is inaccessible or unsupported",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_safe_write.kt",
+              "line": 2,
+              "column": 35
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/known_null_private_write",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/known_null_private_write.kt:2:55: error: cannot access 'value': it is private in 'visibilityprobe.PrivateDefault'.\nfun bad() { val value: PrivateDefault? = null; value?.value = 1 }\n                                                      ^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/known_null_private_write.kt",
+              "offset": 85,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Java field is inaccessible or unsupported",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/known_null_private_write.kt",
+              "line": 2,
+              "column": 48
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/private_custom_write",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/private_custom_write.kt:2:39: error: cannot access 'value': it is private in 'visibilityprobe.CustomPrivate'.\nfun bad(value: CustomPrivate) { value.value = 1 }\n                                      ^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_custom_write.kt",
+              "offset": 69,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Java field is inaccessible or unsupported",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_custom_write.kt",
+              "line": 2,
+              "column": 33
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/protected_write",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/protected_write.kt:2:42: error: cannot access 'value': it is protected in 'visibilityprobe.ProtectedDefault'.\nfun bad(value: ProtectedDefault) { value.value = 1 }\n                                         ^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/protected_write.kt",
+              "offset": 75,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Member is inaccessible from this receiver",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/protected_write.kt",
+              "line": 2,
+              "column": 36
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/safe_rhs_type",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/safe_rhs_type.kt:2:44: error: assignment type mismatch: actual type is 'String', but 'Int' was expected.\nfun bad(value: SafeTarget?) { value?.value = \"bad\" }\n                                           ^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/safe_rhs_type.kt",
+              "offset": 79,
+              "category": "invalid_kotlin",
+              "code": "TYPE_MISMATCH",
+              "message": "Type mismatch: expected Int, found String",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/safe_rhs_type.kt",
+              "line": 2,
+              "column": 46
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/source_accessor_call",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/source_accessor_call.kt:3:18: error: unresolved reference 'setValue'.\nfun bad() { this.setValue(1) } }\n                 ^^^^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/source_accessor_call.kt",
+              "offset": 56,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Unresolved member or imported extension: setValue",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/source_accessor_call.kt",
+              "line": 3,
+              "column": 13
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/simple_renamed_type",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/simple_renamed_type.kt:2:16: error: unresolved reference 'UUID'.\nfun bad(value: UUID): Int = 1\n               ^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/simple_renamed_type.kt",
+              "offset": 46,
+              "category": "missing_dependency",
+              "code": "CLASS_NOT_FOUND",
+              "message": "Type requires an explicit class import: UUID",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/simple_renamed_type.kt",
+              "line": 2,
+              "column": 16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "invalid/jvm_field_restricted",
+      "outcome": "invalid_kotlin",
+      "actuals": {
+        "official": {
+          "returncode": 1,
+          "diagnostics": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/jvm_field_restricted.kt:1:13: error: jvmField cannot be applied to a property with a custom accessor.\nclass Bad { @JvmField var value: Int = 0\n            ^^^^^^^^^\n"
+        },
+        "candidate": {
+          "returncode": 1,
+          "diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/jvm_field_restricted.kt",
+              "offset": 0,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Unsupported annotation definition or required compiler plugin: kotlin/jvm/JvmField",
+              "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/jvm_field_restricted.kt",
+              "line": 1,
+              "column": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "boundary/lateinit",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/lateinit.kt",
+          "offset": 17,
+          "category": "unsupported_language",
+          "code": "PROPERTY_VISIBILITY_COMBINATION_UNSUPPORTED",
+          "message": "Independent accessor and internal visibility with delegates, lateinit, or overriding properties is unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/lateinit.kt",
+          "line": 1,
+          "column": 18
+        }
+      ]
+    },
+    {
+      "id": "boundary/constructor_property",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/constructor_property.kt",
+          "offset": 15,
+          "category": "unsupported_language",
+          "code": "INTERNAL_PROPERTY_VISIBILITY_UNSUPPORTED",
+          "message": "Internal property visibility is unsupported in this declaration context",
+          "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/constructor_property.kt",
+          "line": 1,
+          "column": 16
+        }
+      ]
+    },
+    {
+      "id": "boundary/override_property",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/override_property.kt",
+          "offset": 67,
+          "category": "unsupported_language",
+          "code": "PROPERTY_VISIBILITY_COMBINATION_UNSUPPORTED",
+          "message": "Independent accessor and internal visibility with delegates, lateinit, or overriding properties is unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/override_property.kt",
+          "line": 1,
+          "column": 68
+        }
+      ]
+    },
+    {
+      "id": "boundary/enum_property",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/enum_property.kt",
+          "offset": 27,
+          "category": "unsupported_language",
+          "code": "PROPERTY_VISIBILITY_CONTEXT_UNSUPPORTED",
+          "message": "Independent accessor and internal property visibility in enum members is unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/enum_property.kt",
+          "line": 1,
+          "column": 28
+        }
+      ]
+    },
+    {
+      "id": "boundary/extension_property",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/extension_property.kt",
+          "offset": 19,
+          "category": "unsupported_language",
+          "code": "EXTENSION_PROPERTY_UNSUPPORTED",
+          "message": "Extension property declarations are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/extension_property.kt",
+          "line": 1,
+          "column": 20
+        }
+      ]
+    },
+    {
+      "id": "boundary/jvm_static",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/jvm_static.kt",
+          "offset": 18,
+          "category": "unsupported_language",
+          "code": "PROPERTY_VISIBILITY_ABI_ANNOTATION_UNSUPPORTED",
+          "message": "JVM ABI markers combined with independent accessor or internal property visibility are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/jvm_static.kt",
+          "line": 1,
+          "column": 19
+        }
+      ]
+    },
+    {
+      "id": "harness_failure",
+      "outcome": "correctness_failure",
+      "error": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/internal_jvm_field.kt\",\"offset\":0,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unsupported annotation definition or required compiler plugin: kotlin/jvm/JvmField\",\"path\":\"/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/internal_jvm_field.kt\",\"line\":1,\"column\":1}\n"
+    }
+  ],
+  "commands": [
+    {
+      "label": "Pinned oracle identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0001-stderr.txt"
+    },
+    {
+      "label": "Compile real Java effect helper",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Effects.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0002-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Visibility.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Qualified.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/AliasedExtension.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "visibility-feature",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0003-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Visibility.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Qualified.kt",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/AliasedExtension.kt",
+        "--module-name",
+        "visibility-feature",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0004-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official provider only",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/callers",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/VisibilityCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0005-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java assertions official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/callers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "visibilityprobe.VisibilityCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0006-stderr.txt"
+    },
+    {
+      "label": "Compile official/metadata-official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Friend.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "official_friend",
+        "-Xfriend-paths=/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/metadata-official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0007-stderr.txt"
+    },
+    {
+      "label": "Verified official Kotlin friend metadata consumer official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/metadata-official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "visibilityconsumer.FriendKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0008-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java assertions candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/callers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "visibilityprobe.VisibilityCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0009-stderr.txt"
+    },
+    {
+      "label": "Compile official/metadata-candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Friend.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "official_friend",
+        "-Xfriend-paths=/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/metadata-candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0010-stderr.txt"
+    },
+    {
+      "label": "Verified official Kotlin friend metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/metadata-candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "visibilityconsumer.FriendKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0011-stderr.txt"
+    },
+    {
+      "label": "Compile official/reflection-caller",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/Reflection.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "reflection_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-reflect.jar:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/reflection-caller"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0012-stderr.txt"
+    },
+    {
+      "label": "Verified Kotlin reflection visibility and absent setter official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/reflection-caller:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-reflect.jar",
+        "visibilityreflection.ReflectionKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0013-stderr.txt"
+    },
+    {
+      "label": "Verified Kotlin reflection visibility and absent setter candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/reflection-caller:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-reflect.jar",
+        "visibilityreflection.ReflectionKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0014-stderr.txt"
+    },
+    {
+      "label": "Compile official/friend-official-official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/CandidateFriend.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "friend_calls",
+        "-Xfriend-paths=/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-official-official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0015-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/friend-candidate-official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/CandidateFriend.kt",
+        "--module-name",
+        "friend_calls",
+        "--diagnostic-format",
+        "json",
+        "--friend-paths",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-candidate-official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0016-stderr.txt"
+    },
+    {
+      "label": "Compile official/friend-official-candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/CandidateFriend.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "friend_calls",
+        "-Xfriend-paths=/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-official-candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0017-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/friend-candidate-candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/CandidateFriend.kt",
+        "--module-name",
+        "friend_calls",
+        "--diagnostic-format",
+        "json",
+        "--friend-paths",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-candidate-candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0018-stderr.txt"
+    },
+    {
+      "label": "Compile fixed imported-property Java caller only against official consumer/provider",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-official-official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-caller",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/tests/fixtures/new_families/visibility/FriendCalls.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0019-stderr.txt"
+    },
+    {
+      "label": "Verified imported property caller official/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-caller:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-official-official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "FriendCalls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0020-stderr.txt"
+    },
+    {
+      "label": "Verified imported property caller candidate/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-caller:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-candidate-official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "FriendCalls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0021-stderr.txt"
+    },
+    {
+      "label": "Verified imported property caller official/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-caller:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-official-candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "FriendCalls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0022-stderr.txt"
+    },
+    {
+      "label": "Verified imported property caller candidate/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-caller:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/friend-candidate-candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "FriendCalls"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0023-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.PrivateDefault",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.PrivateDefault"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0024-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.PrivateDefault",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.PrivateDefault"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0025-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.CustomPrivate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.CustomPrivate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0026-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.CustomPrivate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.CustomPrivate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0027-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.ProtectedDefault",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.ProtectedDefault"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0028-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.ProtectedDefault",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.ProtectedDefault"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0029-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.InternalDefault",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.InternalDefault"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0030-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.InternalDefault",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.InternalDefault"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0031-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.PublicInternalSetter",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.PublicInternalSetter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0032-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.PublicInternalSetter",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.PublicInternalSetter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0033-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.ExplicitGetter",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.ExplicitGetter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0034-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.ExplicitGetter",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.ExplicitGetter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0035-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.State",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.State"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0036-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.State",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.State"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0037-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.Host",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.Host"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0038-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.Host",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.Host"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0039-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.Host$Companion",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.Host$Companion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0040-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.Host$Companion",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.Host$Companion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0041-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.OtherTarget",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.OtherTarget"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0042-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.OtherTarget",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.OtherTarget"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0043-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.CustomOther",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.CustomOther"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0044-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.CustomOther",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.CustomOther"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0045-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.SetterName",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.SetterName"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0046-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.SetterName",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.SetterName"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0047-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.SafeTarget",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.SafeTarget"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0048-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.SafeTarget",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.SafeTarget"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0049-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.WideTarget",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.WideTarget"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0050-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.WideTarget",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.WideTarget"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0051-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.NullableTarget",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.NullableTarget"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0052-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.NullableTarget",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.NullableTarget"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0053-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.Contract",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.Contract"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0054-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.Contract",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.Contract"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0055-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.Contract$Companion",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.Contract$Companion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0056-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.Contract$Companion",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.Contract$Companion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0057-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.VisibilityKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.VisibilityKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0058-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.VisibilityKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.VisibilityKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0059-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityprobe.AliasedExtensionKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityprobe.AliasedExtensionKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0060-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityprobe.AliasedExtensionKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityprobe.AliasedExtensionKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0061-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityqualified.Outer",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityqualified.Outer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0062-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityqualified.Outer",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityqualified.Outer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0063-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityqualified.Outer$Entry",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityqualified.Outer$Entry"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0064-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityqualified.Outer$Entry",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityqualified.Outer$Entry"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0065-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures official/visibilityqualified.QualifiedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official",
+        "visibilityqualified.QualifiedKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0066-stderr.txt"
+    },
+    {
+      "label": "Protected JVM signatures candidate/visibilityqualified.QualifiedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate",
+        "visibilityqualified.QualifiedKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0067-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-getter_visibility",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/getter_visibility.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-getter_visibility"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0068-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-getter_visibility",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/getter_visibility.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-getter_visibility"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0069-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0069-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-setter_visibility",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/setter_visibility.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-setter_visibility"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0070-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0070-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-setter_visibility",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/setter_visibility.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-setter_visibility"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0071-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0071-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-internal_protected_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/internal_protected_setter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-internal_protected_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0072-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0072-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-internal_protected_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/internal_protected_setter.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-internal_protected_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0073-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0073-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-protected_internal_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/protected_internal_setter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-protected_internal_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0074-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0074-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-protected_internal_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/protected_internal_setter.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-protected_internal_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0075-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0075-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-open_private_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/open_private_setter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-open_private_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0076-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0076-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-open_private_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/open_private_setter.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-open_private_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0077-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0077-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-val_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/val_setter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-val_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0078-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0078-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-val_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/val_setter.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-val_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0079-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0079-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-top_protected_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/top_protected_setter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-top_protected_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0080-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0080-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-top_protected_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/top_protected_setter.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-top_protected_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0081-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0081-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-object_protected_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/object_protected_setter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-object_protected_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0082-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0082-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-object_protected_setter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/object_protected_setter.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-object_protected_setter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0083-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0083-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-private_write",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_write.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-private_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0084-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0084-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-private_write",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_write.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-private_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0085-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0085-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-private_safe_write",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_safe_write.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-private_safe_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0086-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0086-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-private_safe_write",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_safe_write.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-private_safe_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0087-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0087-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-known_null_private_write",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/known_null_private_write.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-known_null_private_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0088-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0088-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-known_null_private_write",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/known_null_private_write.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-known_null_private_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0089-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0089-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-private_custom_write",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_custom_write.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-private_custom_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0090-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0090-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-private_custom_write",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/private_custom_write.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-private_custom_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0091-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0091-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-protected_write",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/protected_write.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-protected_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0092-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0092-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-protected_write",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/protected_write.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-protected_write"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0093-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0093-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-safe_rhs_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/safe_rhs_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-safe_rhs_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0094-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0094-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-safe_rhs_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/safe_rhs_type.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-safe_rhs_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0095-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0095-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-source_accessor_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/source_accessor_call.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-source_accessor_call"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0096-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0096-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-source_accessor_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/source_accessor_call.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-source_accessor_call"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0097-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0097-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-simple_renamed_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/simple_renamed_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-simple_renamed_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0098-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0098-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-simple_renamed_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/simple_renamed_type.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-simple_renamed_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0099-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0099-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-jvm_field_restricted",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/jvm_field_restricted.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "outside",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-official-jvm_field_restricted"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0100-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0100-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-jvm_field_restricted",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/jvm_field_restricted.kt",
+        "--module-name",
+        "outside",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/invalid-candidate-jvm_field_restricted"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0101-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0101-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-lateinit",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/lateinit.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "boundary",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-official-lateinit"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0102-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0102-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-lateinit",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/lateinit.kt",
+        "--module-name",
+        "boundary",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-candidate-lateinit"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0103-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0103-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-constructor_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/constructor_property.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "boundary",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-official-constructor_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0104-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0104-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-constructor_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/constructor_property.kt",
+        "--module-name",
+        "boundary",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-candidate-constructor_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0105-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0105-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-override_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/override_property.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "boundary",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-official-override_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0106-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0106-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-override_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/override_property.kt",
+        "--module-name",
+        "boundary",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-candidate-override_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0107-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0107-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-enum_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/enum_property.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "boundary",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-official-enum_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0108-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0108-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-enum_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/enum_property.kt",
+        "--module-name",
+        "boundary",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-candidate-enum_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0109-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0109-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-extension_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/extension_property.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "boundary",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-official-extension_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0110-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0110-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-extension_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/extension_property.kt",
+        "--module-name",
+        "boundary",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-candidate-extension_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0111-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0111-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-jvm_static",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/jvm_static.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "boundary",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-official-jvm_static"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0112-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0112-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-jvm_static",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/jvm_static.kt",
+        "--module-name",
+        "boundary",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-candidate-jvm_static"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0113-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0113-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-internal_jvm_field",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/internal_jvm_field.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "boundary",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-official-internal_jvm_field"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0114-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0114-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-internal_jvm_field",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/internal_jvm_field.kt",
+        "--module-name",
+        "boundary",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation/target/final-v2/boundary-candidate-internal_jvm_field"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0115-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/commands/0115-stderr.txt"
+    }
+  ],
+  "limitations": [
+    "New accessor/internal visibility combined with lateinit, delegates, overriding declarations, constructor properties, enum/anonymous members, extension properties or accessor annotations remains bounded; ordinary existing forms retain their existing support.",
+    "New property visibility combined with valid JVM ABI marker forms remains explicitly unsupported in this snapshot; restricted/custom JvmField accessors reject as invalid.",
+    "Only simple safe-call assignment is implemented; compound safe assignments remain unsupported.",
+    "Class-qualified private companion setter access from enclosing declarations remains unsupported; own-companion uses and imported public/internal setters are checked separately.",
+    "The unchanged BackForwardList assessment is preserved separately; no full-app, Android runtime or performance claim."
+  ],
+  "counts": {
+    "correctness_failure": 1,
+    "invalid_kotlin": 17,
+    "pass": 34,
+    "unsupported_language": 6
+  },
+  "feature_counts": {
+    "correctness_failure": 1,
+    "invalid_kotlin": 17,
+    "pass": 34,
+    "unsupported_language": 6
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "publication_hash_only_binary_inputs": [
+    "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+    "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+    "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-reflect.jar",
+    "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+    "target/final-v2-korrust-frozen"
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/frozen-inputs.zip",
+    "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/original-report.txt"
+  ],
+  "publication": {
+    "original_report_sha256": "0294426c69ee2f3f1ba7578aec9a73e4d1e7b66d882ccf87245564d888e6ad95",
+    "frozen_input_archive": "reports/correctness/2026-10-28T142743715099Z-new-properties-isolated/frozen-inputs.zip",
+    "frozen_input_archive_sha256": "135c8d36213432c9d5e03e09d8ab4c0e92349b33e9f0265a390bccc0be614ce3",
+    "archived_input_files": 65,
+    "original_snapshot_root": "/Users/yuku/f/git/korrust/target/new-accessor-visibility-implementation",
+    "note": "Preserved isolated accessor checkpoint. Exact available historical source bytes are archived; changed unavailable development inputs are listed explicitly. Acceptance uses fresh merged evidence, not a reduced or failed development fixture."
+  }
+}

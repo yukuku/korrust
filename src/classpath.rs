@@ -30,11 +30,22 @@ pub(crate) struct Classpath {
     module_name: String,
     friends: std::collections::HashSet<PathBuf>,
     source_files: std::cell::RefCell<std::collections::HashMap<String, (String, bool)>>,
+    source_default_accessors:
+        std::cell::RefCell<std::collections::HashMap<(String, String), SourceBackingField>>,
     origins: std::cell::RefCell<std::collections::HashMap<String, PathBuf>>,
     cache: std::cell::RefCell<std::collections::HashMap<String, JavaClass>>,
     package_names: std::cell::RefCell<std::collections::HashMap<String, Vec<String>>>,
     sources: std::cell::RefCell<std::collections::HashSet<String>>,
     package_index: std::cell::RefCell<std::collections::HashMap<String, PackageIndex>>,
+}
+
+#[derive(Clone)]
+pub(crate) struct SourceBackingField {
+    pub(crate) owner: String,
+    pub(crate) name: String,
+    pub(crate) ty: Type,
+    pub(crate) is_static: bool,
+    pub(crate) companion_bridge: bool,
 }
 
 #[derive(Clone, Default)]
@@ -470,6 +481,19 @@ impl Classpath {
         source::expand_aliases(module, self)
     }
 
+    pub(crate) fn default_source_accessor(
+        &self,
+        method: &JavaMethod,
+    ) -> Option<SourceBackingField> {
+        (method.access & 2 != 0 && method.source_property.is_some())
+            .then(|| {
+                self.source_default_accessors
+                    .borrow()
+                    .get(&(method.owner.clone(), method.name.clone()))
+                    .cloned()
+            })
+            .flatten()
+    }
     pub(crate) fn source_header(&self, module: &crate::syntax::Module, owner: &str) -> Result<()> {
         self.register_source(source::header(module, owner, self)?);
         Ok(())
@@ -499,6 +523,7 @@ impl Classpath {
             module_name: options.module_name.clone(),
             friends,
             source_files: Default::default(),
+            source_default_accessors: Default::default(),
             origins: Default::default(),
             cache: Default::default(),
             package_names: Default::default(),

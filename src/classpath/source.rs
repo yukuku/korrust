@@ -189,6 +189,54 @@ fn accessor(owner: &str, name: &str, ty: Type, mutable: bool, private: bool) -> 
     result
 }
 
+#[allow(clippy::too_many_arguments)]
+fn property_accessors(
+    cp: &Classpath,
+    owner: &str,
+    storage_owner: &str,
+    name: &str,
+    ty: Type,
+    mutable: bool,
+    getter: crate::syntax::PropertyVisibility,
+    setter: crate::syntax::PropertyVisibility,
+    default_getter: bool,
+    default_setter: bool,
+    static_field: bool,
+) -> Vec<JavaMethod> {
+    use crate::syntax::PropertyVisibility;
+    let mut methods = accessor(
+        owner,
+        name,
+        ty.clone(),
+        mutable,
+        getter == PropertyVisibility::Private,
+    );
+    for (index, method) in methods.iter_mut().enumerate() {
+        let visibility = if index == 0 { getter } else { setter };
+        method.access = visibility.access();
+        method.kotlin_internal = visibility == PropertyVisibility::Internal;
+        if visibility == PropertyVisibility::Private
+            && if index == 0 {
+                default_getter
+            } else {
+                default_setter
+            }
+        {
+            cp.source_default_accessors.borrow_mut().insert(
+                (owner.into(), method.name.clone()),
+                SourceBackingField {
+                    owner: storage_owner.into(),
+                    name: name.into(),
+                    ty: ty.clone(),
+                    is_static: static_field,
+                    companion_bridge: owner != storage_owner,
+                },
+            );
+        }
+    }
+    methods
+}
+
 fn empty(owner: &str) -> JavaClass {
     JavaClass {
         sealed_: false,
@@ -413,18 +461,19 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         for property in &source.properties {
             let ty = (!property.inferred).then(|| resolve(&property.ty, module, cp));
             if let Some(ty) = ty {
-                let mut methods = accessor(
+                let mut methods = property_accessors(
+                    cp,
+                    owner,
                     owner,
                     &property.name,
                     ty,
                     property.mutable,
-                    property.private,
+                    property.getter_visibility(),
+                    property.setter_visibility(),
+                    property.body.is_empty() && property.delegate.is_none() && !property.lateinit,
+                    property.setter.is_none() && property.delegate.is_none() && !property.lateinit,
+                    false,
                 );
-                if property.protected {
-                    for method in &mut methods {
-                        method.access = 4;
-                    }
-                }
                 if !property.open {
                     for method in &mut methods {
                         method.access |= 0x10;
@@ -518,12 +567,18 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             );
             for p in &companion.properties {
                 if let Some(ty) = p.ty.as_ref().map(|t| resolve(t, module, cp)) {
-                    nested.methods.extend(accessor(
+                    nested.methods.extend(property_accessors(
+                        cp,
                         &companion_owner,
+                        owner,
                         &p.name,
                         ty,
                         p.mutable,
-                        p.private,
+                        p.getter_visibility(),
+                        p.setter_visibility(),
+                        p.body.is_empty() && p.delegate.is_none() && !p.lateinit,
+                        p.setter.is_none() && p.delegate.is_none() && !p.lateinit,
+                        true,
                     ));
                 }
             }
@@ -581,12 +636,22 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             );
             for property in &companion.fields {
                 if let Some(ty) = &property.ty {
-                    nested.methods.extend(accessor(
+                    nested.methods.extend(property_accessors(
+                        cp,
+                        &companion_owner,
                         &companion_owner,
                         &property.name,
                         resolve(ty, module, cp),
                         property.mutable,
-                        property.private,
+                        property.getter_visibility(),
+                        property.setter_visibility(),
+                        property.body.is_empty()
+                            && property.delegate.is_none()
+                            && !property.lateinit,
+                        property.setter.is_none()
+                            && property.delegate.is_none()
+                            && !property.lateinit,
+                        true,
                     ));
                 }
             }
@@ -651,9 +716,19 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         );
         for p in &source.fields {
             if let Some(ty) = p.ty.as_ref().map(|t| resolve(t, module, cp)) {
-                class
-                    .methods
-                    .extend(accessor(owner, &p.name, ty, p.mutable, p.private));
+                class.methods.extend(property_accessors(
+                    cp,
+                    owner,
+                    owner,
+                    &p.name,
+                    ty,
+                    p.mutable,
+                    p.getter_visibility(),
+                    p.setter_visibility(),
+                    p.body.is_empty() && p.delegate.is_none() && !p.lateinit,
+                    p.setter.is_none() && p.delegate.is_none() && !p.lateinit,
+                    true,
+                ));
             }
         }
         constants(&mut class, &source.constants)?;
@@ -698,12 +773,18 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         );
         for property in &module.properties {
             if !property.inferred {
-                let mut methods = accessor(
+                let mut methods = property_accessors(
+                    cp,
+                    owner,
                     owner,
                     &property.name,
                     resolve(&property.ty, module, cp),
                     property.mutable,
-                    property.private,
+                    property.getter_visibility(),
+                    property.setter_visibility(),
+                    property.body.is_empty() && property.delegate.is_none() && !property.lateinit,
+                    property.setter.is_none() && property.delegate.is_none() && !property.lateinit,
+                    true,
                 );
                 for method in &mut methods {
                     method.access |= 8;
