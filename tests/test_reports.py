@@ -96,6 +96,18 @@ class ReportsTest(unittest.TestCase):
         index = reports.generate(self.root)
         self.assertIn("Unreadable reports", index.read_text())
 
+    def test_untyped_evidence_keeps_its_page_without_entering_report_history(self):
+        self.write("correctness/evidence/source-map.json", {"original": "fixture.kt", "offsets": [0, 1]})
+        data = json.loads((self.root / "reports/correctness/check.json").read_text())
+        data["evidence"] = ["reports/correctness/evidence/source-map.json"]
+        self.write("correctness/check.json", data)
+        index = reports.generate(self.root)
+        self.assertNotIn("source-map.json", index.read_text())
+        evidence = self.output / "pages/correctness/evidence/source-map.json.html"
+        self.assertTrue(evidence.is_file())
+        report = self.output / "pages/correctness/check.json.html"
+        self.assertIn("evidence/source-map.json.html", report.read_text())
+
     def test_idempotence_and_deleted_report_cleanup(self):
         index = reports.generate(self.root)
         modified = index.stat().st_mtime_ns

@@ -163,6 +163,7 @@ def generate(root=ROOT, output=None):
         title = str(relative)
         body = f"<nav>{nav}</nav><h1>{escape(title)}</h1>"
         record = {"relative": relative, "page": page, "kind": "notes", "status": "note", "created_at": ""}
+        index_record = True
         if source.suffix == ".md":
             body += "<pre>" + escape(source.read_text()) + "</pre>"
         else:
@@ -170,6 +171,7 @@ def generate(root=ROOT, output=None):
                 data = json.loads(source.read_text())
                 if not isinstance(data, dict):
                     raise ValueError("Report must be a JSON object")
+                index_record = "kind" in data
                 record.update({key: str(data.get(key, "Not recorded")) for key in ["kind", "status", "created_at"]})
                 record["data"] = data
                 render = Renderer(root, output, page, data)
@@ -191,7 +193,8 @@ def generate(root=ROOT, output=None):
                 body += '<p class="error">Cannot read this report: ' + escape(error) + "</p>"
         atomic_write(page, document(title, body))
         written.add(str(page.relative_to(output)))
-        records.append(record)
+        if index_record:
+            records.append(record)
     index = output / "index.html"
     body = "<h1>Korrust reports</h1><p>Generated from dated source reports. Refresh this page after a report changes.</p>"
     unreadable = [r for r in records if r["status"] == "unreadable"]
