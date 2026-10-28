@@ -12,6 +12,10 @@ pub enum Type {
     IntArray,
     ByteArray,
     CharArray,
+    LongArray,
+    BooleanArray,
+    FloatArray,
+    DoubleArray,
     StringArray,
     Array(Box<Type>),
     ReceiverFunction {
@@ -70,6 +74,62 @@ pub struct LambdaParameter {
 }
 
 impl Type {
+    pub fn primitive_array_named(name: &str) -> Option<Type> {
+        match name.strip_prefix("kotlin/").unwrap_or(name) {
+            "IntArray" => Some(Self::IntArray),
+            "ByteArray" => Some(Self::ByteArray),
+            "CharArray" => Some(Self::CharArray),
+            "LongArray" => Some(Self::LongArray),
+            "BooleanArray" => Some(Self::BooleanArray),
+            "FloatArray" => Some(Self::FloatArray),
+            "DoubleArray" => Some(Self::DoubleArray),
+            _ => None,
+        }
+    }
+    pub fn primitive_array_element(&self) -> Option<Type> {
+        match self.base() {
+            Self::IntArray => Some(Self::Int),
+            Self::ByteArray => Some(Self::Byte),
+            Self::CharArray => Some(Self::Char),
+            Self::LongArray => Some(Self::Long),
+            Self::BooleanArray => Some(Self::Boolean),
+            Self::FloatArray => Some(Self::Float),
+            Self::DoubleArray => Some(Self::Double),
+            _ => None,
+        }
+    }
+    pub fn array_element(&self) -> Option<Type> {
+        self.primitive_array_element()
+            .or_else(|| match self.base() {
+                Self::StringArray => Some(Self::String),
+                Self::Array(element) => Some(element.as_ref().clone()),
+                _ => None,
+            })
+    }
+    pub fn primitive_array_for(element: &Type) -> Option<Type> {
+        match element {
+            Self::Int => Some(Self::IntArray),
+            Self::Byte => Some(Self::ByteArray),
+            Self::Char => Some(Self::CharArray),
+            Self::Long => Some(Self::LongArray),
+            Self::Boolean => Some(Self::BooleanArray),
+            Self::Float => Some(Self::FloatArray),
+            Self::Double => Some(Self::DoubleArray),
+            _ => None,
+        }
+    }
+    pub fn primitive_array_name(&self) -> Option<&'static str> {
+        match self.primitive_array_element()? {
+            Self::Int => Some("Int"),
+            Self::Byte => Some("Byte"),
+            Self::Char => Some("Char"),
+            Self::Long => Some("Long"),
+            Self::Boolean => Some("Boolean"),
+            Self::Float => Some("Float"),
+            Self::Double => Some("Double"),
+            _ => None,
+        }
+    }
     pub fn base(&self) -> &Type {
         match self {
             Self::Platform(t) => t.base(),
@@ -85,6 +145,10 @@ impl Type {
             Self::IntArray
                 | Self::ByteArray
                 | Self::CharArray
+                | Self::LongArray
+                | Self::BooleanArray
+                | Self::FloatArray
+                | Self::DoubleArray
                 | Self::StringArray
                 | Self::Array(_)
                 | Self::ReceiverFunction { .. }
@@ -123,6 +187,11 @@ impl Type {
             Self::IntArray => "[I".into(),
             Self::ByteArray => "[B".into(),
             Self::CharArray => "[C".into(),
+            Self::LongArray => "[J".into(),
+            Self::BooleanArray => "[Z".into(),
+            Self::FloatArray => "[F".into(),
+            Self::DoubleArray => "[D".into(),
+
             Self::StringArray => "[Ljava/lang/String;".into(),
             Self::Array(element) => {
                 if **element == Self::Unit {
@@ -1714,6 +1783,9 @@ impl Parser {
                 })),
             });
         }
+        if let Some(array) = Type::primitive_array_named(&name) {
+            return Ok(array);
+        }
         Ok(match name.as_str() {
             "Int" => Type::Int,
             "Long" => Type::Long,
@@ -1722,14 +1794,11 @@ impl Parser {
             "Boolean" => Type::Boolean,
             "Float" => Type::Float,
             "Double" => Type::Double,
-            "DoubleArray" => {
-                return Err(self.error(
-                    "DoubleArray semantics are unsupported; use supported scalar Double values",
-                ));
+            "Short" | "ShortArray" | "kotlin/Short" | "kotlin/ShortArray" => {
+                return Err(self
+                    .error("Short and ShortArray semantics are unsupported")
+                    .with_kind(DiagnosticKind::UnsupportedLanguage, "SHORT_UNSUPPORTED"));
             }
-            "IntArray" => Type::IntArray,
-            "ByteArray" => Type::ByteArray,
-            "CharArray" => Type::CharArray,
             "String" => Type::String,
             "Unit" => Type::Unit,
             "Any" => Type::Java("java/lang/Object".into()),
@@ -2194,6 +2263,10 @@ impl Parser {
                 | "Float"
                 | "Double"
                 | "IntArray"
+                | "LongArray"
+                | "BooleanArray"
+                | "FloatArray"
+                | "DoubleArray"
                 | "ByteArray"
                 | "ThreadLocal"
                 | "CharArray"
@@ -2202,7 +2275,12 @@ impl Parser {
                 | "String"
                 | "Unit"
         ) {
-            return Err(self.error("Declarations shadowing builtin types are not supported"));
+            return Err(self
+                .error("Declarations shadowing builtin types are not supported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "BUILTIN_CLASSIFIER_SHADOW_UNSUPPORTED",
+                ));
         }
         self.declaration_name()
     }
@@ -4004,22 +4082,7 @@ impl Parser {
                 self.lines();
                 let ty = self.ty()?;
                 let ty = if parameter_vararg {
-                    match ty {
-                        Type::Int => Type::IntArray,
-                        Type::Byte => Type::ByteArray,
-                        Type::Char => Type::CharArray,
-                        Type::Long | Type::Boolean | Type::Float | Type::Double => {
-                            return Err(self.error(
-                                "Source vararg parameters of this primitive type are unsupported",
-                            ));
-                        }
-                        Type::Java(ref name) if name == "Double" || name == "kotlin/Double" => {
-                            return Err(
-                                self.error("Source vararg Double parameters are unsupported")
-                            );
-                        }
-                        ty => Type::Array(Box::new(ty)),
-                    }
+                    Type::primitive_array_for(&ty).unwrap_or_else(|| Type::Array(Box::new(ty)))
                 } else {
                     ty
                 };
@@ -6755,6 +6818,10 @@ mod tests {
             ("Int", Type::IntArray),
             ("Byte", Type::ByteArray),
             ("Char", Type::CharArray),
+            ("Long", Type::LongArray),
+            ("Boolean", Type::BooleanArray),
+            ("Float", Type::FloatArray),
+            ("Double", Type::DoubleArray),
             ("String", Type::Array(Box::new(Type::String))),
             (
                 "String?",
@@ -6771,14 +6838,11 @@ mod tests {
         }
         assert!(!parse("fun plain(value: Int) {}").unwrap().functions[0].vararg);
         for source in [
+            "fun bad(vararg values: Short) {}",
             "fun bad(vararg first: Int, vararg second: Int) {}",
             "fun bad(vararg first: Int, second: Int) {}",
             "fun bad(vararg first: Int = 1) {}",
             "infix fun String.bad(vararg first: Int) {}",
-            "fun bad(vararg values: Long) {}",
-            "fun bad(vararg values: Boolean) {}",
-            "fun bad(vararg values: Float) {}",
-            "fun bad(vararg values: Double) {}",
         ] {
             assert!(parse(source).is_err(), "{source}");
         }

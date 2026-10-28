@@ -1,0 +1,3005 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T12:23:19.269745+00:00",
+  "status": "complete_with_recorded_boundaries",
+  "selection": "LongArray, BooleanArray, FloatArray and DoubleArray as one representation family; construction/initialization/indexing/store/iteration/vararg/spread, structural builtin factories, ordinary Java calls, Kotlin metadata and unchanged AndroidBible AudioHighlightColor with real dependencies. Byte/Int/Char arrays are regressions. Short remains unsupported.",
+  "compiler": {
+    "path": "target/final-v1-korrust-frozen",
+    "sha256": "223c4c46d140e9b3701ae9d594d7dc44e0b66fc79b6910cb5d58f968e18633da"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "inputs": {
+    "files_sha256": {
+      "tests/fixtures/compatibility_enums_numeric/UnsupportedDoubleArray.kt": "b5671f3d689bf51c579f4fe7785fce732d7d67c0322224c9c290868d7c66e92c",
+      "tests/fixtures/compatibility_enums_numeric/rejections.json": "fbf6ab740ebb1d6ed4a43795917cb655c96294c06c54dc5ab2b0e9c7819b47e0",
+      "tests/primitive_arrays.rs": "7cf818c4a3e2bb50269f6cd89298d4f09862872154dfa136423f03a72a8e6c8b",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "bb6761630fc0b7e03ec253982105b92b9e1194f6e863e17bf07afaf185977f80",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "552858590b1d6b9814237eaed4d72d07ebec378fe53e8f1841d700d6261d4024",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "62a78136794537d26021aaa661c5e17e80174d026836c69bf1f62d2ce6fd9636",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "4d49104ec19917fcb834ee39e1a13e47f05eba87c950b148c6035cbd31713b34",
+      "src/bytecode/lambdas.rs": "60487f7bbfef94df047c43914794d6edc9a8957bf7b8c8a44447988e7d3028ae",
+      "src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "src/bytecode.rs": "e07255c66a81578315ad85af50c53118d5283dc167f1b1df22307bd619a7480b",
+      "src/check.rs": "187598390ebf328365ef258e827484b7e48524d84322c496b2be07da0e40c048",
+      "src/check_annotation_placements.rs": "4fda5777b5488899ee7a5594eac67efdb506fe874c50904b180ebd10fd01882a",
+      "src/check_annotations.rs": "5bd835e0bcf16899053b879adb98a1e4d01f6219bb82c200db82b424da03edcc",
+      "src/check_captures.rs": "4415213c7aec5542f2a03c5a217da9d7976d062b1b3762578dde32b1d133ae10",
+      "src/check_control.rs": "7e6ed766e78b7d706f52d2bc19e0f05af765cd866a56cac03d2f7cbed18df816",
+      "src/check_declarations.rs": "4dffaa74d25d2687deae42d121bb998d76aae384db6291601199affb855581c6",
+      "src/check_delegates.rs": "fc6e3f43a18b6b5b600c5515938d70b0712a616bca82d2c53eab6dd28dbf083e",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "0a97b74e03e2c9ae0539f578f4de25e7cc98d129a7ada14ff83960b4a8c6a34e",
+      "src/check_interfaces.rs": "6dde39484aacd8786bbabc9f73ecfca625f4253642e08a3fb3a4f175fe5866e1",
+      "src/check_ir_walk.rs": "4d1376ec4d903c5e2d230d055ac56c78b5a823ac2284b271bb3aa27a57d0f76d",
+      "src/check_library.rs": "4a9ec5872ba4ecc6952526542eaf4fc5fea417bb059482b1e6e4e0b7540d4e3a",
+      "src/check_objects.rs": "b04a52c6c906acc8aa368174819de1c773f200ebc9348c596e48b24d6e32687e",
+      "src/check_operations.rs": "f7ff693febcef415f988d6921b0e3ebce6ad02eb35b40d1c267628527db97573",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/classpath/aliases.rs": "1ba2d3730c704c3fbfb27b3056a046c8782981a9f312c91865939cacd4fef73e",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "c583ac85445c937fde76d316e6ebb3f166cce189c8063deafa100ee0e4bd7433",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "a79c3cb552924ab5db52ba033a5e41a62109016333f4896f2e3a1c16de6f2c4a",
+      "src/classpath/source.rs": "c351db363baf0e66048dba26e12c60c3a255447bf186613a4fca89498cfa5c2c",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "3e6ae589a7be2a4bdd28233b91ca8a61206bd218d7a31d7919e7e8424820b37d",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "d1f4f9bf92f483684533cc83c0ed142495c0222ca8fe753117ac57ea31ed9173",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "8b5b2cf07b9212e4cb5ddd73265af191750093df379fa8dbfa0d45bf65ae6774",
+      "src/metadata.rs": "9b8b5527ce6965f7d1be8b33becd28c3e431d7d5fbb730376941461c55187802",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "fa29366bb0cd48558294dd74e17ff2fd8ad619efa4deaae51e164c8b0c55cc34",
+      "src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tools/check_new_arrays.py": "aeb0047298579c65e7b1491684b7f5775d9b607f1fb31cfbac4b45b7897bb0a4",
+      "tools/upstream_jvm.py": "5de0b1dc40086cb5916fd50a1c55a8fe6b9b5ca7c3ecff8d790260b9ce969b2e",
+      "tests/fixtures/new_families/primitive_arrays/AliasedFactory.kt": "7f54db2c1d3a2e17c6a25630114a8c71b9c8e9f8fff9de1c673239868f6efaf1",
+      "tests/fixtures/new_families/primitive_arrays/ArrayEffects.java": "1cb8d15b6c64fc0c85092d2d775ff6959699d0e0c5cceddd2bb1b4f8c33c8afd",
+      "tests/fixtures/new_families/primitive_arrays/Arrays.kt": "fa6ae335c6c34985ec3bb16c86aceb6d4bf039adf867a04fe012ebab4350b870",
+      "tests/fixtures/new_families/primitive_arrays/ArraysCheck.java": "7ee54f775942842a010f5f7561a9ac62309615fd640897b0e08def76fece184e",
+      "tests/fixtures/new_families/primitive_arrays/AudioCheck.java": "c3db50c10f47a8d3b0a2b7c7dc9b341c938200bad642173fcb978fa9953bae2c",
+      "tests/fixtures/new_families/primitive_arrays/Consumer.kt": "3a5758c156a74ad556e8b96aefcf3860979f19e16994512e1629a89fa93a8e97",
+      "tests/fixtures/new_families/primitive_arrays/Shadowed.kt": "927d319b0a3bec99d83a2996b28a1a006a1601f09c2900d637b3171f9fa12554",
+      "tests/fixtures/new_families/primitive_arrays/TypeUseCalls.kt": "57f6a19285b1d9fc9da4b0f414065ddfb731a942d18ea35a6896700c41c68287",
+      "tests/fixtures/new_families/primitive_arrays/TypeUses.java": "bd17aafa7926d4331a77b0cfcd89cdae3fc81732b40a6d44ac790c2f10ecc3e4",
+      "tests/fixtures/new_families/primitive_arrays/Unknown.java": "4612d8bfb2bd7ab693696ad1554e4720ce5c806c0b611ab76bf490c19ef05d73",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachLongArray.kt": "b7c27c4727e4868d1afd73e589e12b3638b31782f09b5a64e38f5ebc122570fa",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachBooleanArray.kt": "f366521bca05cbd66e51c5478c006234510fe458a87e39a36c282f41280f1f36",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachFloatArray.kt": "6a996ed20a85ce47bfa2b9963d82276c6b4d6f94933143e6d7eb8602a44c4fce",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachDoubleArray.kt": "af2afd457cbdda96fd7cd580fb5a0251760d984c54ebe33955dad44030ba4474",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachIntArray.kt": "428b491fbe0b8a68cced0cf689986be13399fe555912b0fcfb79fc444c186d9f",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachByteArray.kt": "f7ab1297d213710becaefb33e6a108b74dcd7db4cd6c8bb1be603dbfb4f9eca4",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachCharArray.kt": "b133277aff099c81b77196492bf3bb9d8c5685343fa7d49cda929c806fd4a3a6",
+      "target/final-v1-korrust-frozen": "223c4c46d140e9b3701ae9d594d7dc44e0b66fc79b6910cb5d58f968e18633da"
+    },
+    "type_use_annotations": [
+      {
+        "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar",
+        "sha256": "1fad6e6be7557781e4d33729d49ae1cdc8fdda6fe477bb0cc68ce351eafdfbab"
+      },
+      {
+        "path": "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar",
+        "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+      }
+    ],
+    "fixed_java_callers_sha256": {
+      "newfamilies/arrays/ArraysCheck.class": "2ea4322fa248d9ce54d9a08f353993f42d39ae58f632b4e23af740df63a94403"
+    },
+    "real_app_dependencies": [
+      {
+        "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.core/core/1.17.0/1eb461d3499f5bb832dd45edd3982471a11a3f95/core-1.17.0.aar",
+        "sha256": "e1bd22bbcf5cee3a992dedb7d2d3c3b31c9f761c01e56d00ea443c8aaa981182"
+      },
+      {
+        "path": "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/dependencies/core-1.17.0.jar",
+        "sha256": "168ce07232dad99dc06183c19373ab7023768b3db8cf5d4a211348264a23de40"
+      },
+      {
+        "path": "/Users/yuku/Library/Android/sdk/platforms/android-35/android.jar",
+        "sha256": "4566663c3876e022b4fa4ced8c8697c4ab1688267f090114fd92d027b32e619b"
+      },
+      {
+        "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.robolectric/android-all/15-robolectric-12650502/d58d66c41a3ca3acd2043811cea1910bb2c4149a/android-all-15-robolectric-12650502.jar",
+        "sha256": "6c0670454f6fcee9f1b17aa393e81d71bf26e7e6ae7c5777ed3924b062191d5b"
+      }
+    ],
+    "unchanged_app": {
+      "path": "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt",
+      "sha256": "f4540bbaefa4386f2874631ac8f697ec57ea8c8438efca3f115ca01b627afa53"
+    }
+  },
+  "commands": [
+    {
+      "label": "Pinned oracle identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0000-stdout.txt",
+      "stderr": "target/final-v1/commands/0000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0001-stdout.txt",
+      "stderr": "target/final-v1/commands/0001-stderr.txt"
+    },
+    {
+      "label": "Compile real Java effect/type-use helpers",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/ArrayEffects.java",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/TypeUses.java",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/Unknown.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0002-stdout.txt",
+      "stderr": "target/final-v1/commands/0002-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/Arrays.kt",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/AliasedFactory.kt",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/Shadowed.kt",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/TypeUseCalls.kt",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/compatibility_enums_numeric/UnsupportedDoubleArray.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0003-stdout.txt",
+      "stderr": "target/final-v1/commands/0003-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/Arrays.kt",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/AliasedFactory.kt",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/Shadowed.kt",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/TypeUseCalls.kt",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/compatibility_enums_numeric/UnsupportedDoubleArray.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0004-stdout.txt",
+      "stderr": "target/final-v1/commands/0004-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java assertions only against official output",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/callers",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/ArraysCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0005-stdout.txt",
+      "stderr": "target/final-v1/commands/0005-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java assertions official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/callers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.arrays.ArraysCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0006-stdout.txt",
+      "stderr": "target/final-v1/commands/0006-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin metadata consumer official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/consumer-official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0007-stdout.txt",
+      "stderr": "target/final-v1/commands/0007-stderr.txt"
+    },
+    {
+      "label": "Verified Kotlin metadata consumer official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/consumer-official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "arrayconsumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0008-stdout.txt",
+      "stderr": "target/final-v1/commands/0008-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java assertions candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/callers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.arrays.ArraysCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0009-stdout.txt",
+      "stderr": "target/final-v1/commands/0009-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/consumer-candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0010-stdout.txt",
+      "stderr": "target/final-v1/commands/0010-stderr.txt"
+    },
+    {
+      "label": "Verified Kotlin metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/consumer-candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "arrayconsumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0011-stdout.txt",
+      "stderr": "target/final-v1/commands/0011-stderr.txt"
+    },
+    {
+      "label": "JVM signatures official/newfamilies.arrays.ArraysKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official",
+        "newfamilies.arrays.ArraysKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0012-stdout.txt",
+      "stderr": "target/final-v1/commands/0012-stderr.txt"
+    },
+    {
+      "label": "JVM signatures candidate/newfamilies.arrays.ArraysKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/candidate",
+        "newfamilies.arrays.ArraysKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0013-stdout.txt",
+      "stderr": "target/final-v1/commands/0013-stderr.txt"
+    },
+    {
+      "label": "JVM signatures official/newfamilies.arrays.ArrayHolder",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official",
+        "newfamilies.arrays.ArrayHolder"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0014-stdout.txt",
+      "stderr": "target/final-v1/commands/0014-stderr.txt"
+    },
+    {
+      "label": "JVM signatures candidate/newfamilies.arrays.ArrayHolder",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/candidate",
+        "newfamilies.arrays.ArrayHolder"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0015-stdout.txt",
+      "stderr": "target/final-v1/commands/0015-stderr.txt"
+    },
+    {
+      "label": "JVM signatures official/newfamilies.arrays.AliasedFactoryKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official",
+        "newfamilies.arrays.AliasedFactoryKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0016-stdout.txt",
+      "stderr": "target/final-v1/commands/0016-stderr.txt"
+    },
+    {
+      "label": "JVM signatures candidate/newfamilies.arrays.AliasedFactoryKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/candidate",
+        "newfamilies.arrays.AliasedFactoryKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0017-stdout.txt",
+      "stderr": "target/final-v1/commands/0017-stderr.txt"
+    },
+    {
+      "label": "JVM signatures official/newfamilies.arrays.TypeUseCallsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official",
+        "newfamilies.arrays.TypeUseCallsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0018-stdout.txt",
+      "stderr": "target/final-v1/commands/0018-stderr.txt"
+    },
+    {
+      "label": "JVM signatures candidate/newfamilies.arrays.TypeUseCallsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/candidate",
+        "newfamilies.arrays.TypeUseCallsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0019-stdout.txt",
+      "stderr": "target/final-v1/commands/0019-stderr.txt"
+    },
+    {
+      "label": "JVM signatures official/newfamilies.arrays.shadow.ShadowedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official",
+        "newfamilies.arrays.shadow.ShadowedKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0020-stdout.txt",
+      "stderr": "target/final-v1/commands/0020-stderr.txt"
+    },
+    {
+      "label": "JVM signatures candidate/newfamilies.arrays.shadow.ShadowedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/candidate",
+        "newfamilies.arrays.shadow.ShadowedKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0021-stdout.txt",
+      "stderr": "target/final-v1/commands/0021-stderr.txt"
+    },
+    {
+      "label": "JVM signatures official/compatibility.unsupported.UnsupportedDoubleArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/official",
+        "compatibility.unsupported.UnsupportedDoubleArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0022-stdout.txt",
+      "stderr": "target/final-v1/commands/0022-stderr.txt"
+    },
+    {
+      "label": "JVM signatures candidate/compatibility.unsupported.UnsupportedDoubleArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/candidate",
+        "compatibility.unsupported.UnsupportedDoubleArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0023-stdout.txt",
+      "stderr": "target/final-v1/commands/0023-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-boxed_to_primitive",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boxed_to_primitive.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-official-boxed_to_primitive"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0024-stdout.txt",
+      "stderr": "target/final-v1/commands/0024-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-boxed_to_primitive",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boxed_to_primitive.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-candidate-boxed_to_primitive"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0025-stdout.txt",
+      "stderr": "target/final-v1/commands/0025-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-primitive_to_boxed",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/primitive_to_boxed.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-official-primitive_to_boxed"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0026-stdout.txt",
+      "stderr": "target/final-v1/commands/0026-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-primitive_to_boxed",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/primitive_to_boxed.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-candidate-primitive_to_boxed"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0027-stdout.txt",
+      "stderr": "target/final-v1/commands/0027-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-boolean_to_byte",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boolean_to_byte.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-official-boolean_to_byte"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0028-stdout.txt",
+      "stderr": "target/final-v1/commands/0028-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-boolean_to_byte",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boolean_to_byte.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-candidate-boolean_to_byte"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0029-stdout.txt",
+      "stderr": "target/final-v1/commands/0029-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-wrong_store",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/wrong_store.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-official-wrong_store"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0030-stdout.txt",
+      "stderr": "target/final-v1/commands/0030-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-wrong_store",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/wrong_store.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-candidate-wrong_store"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0031-stdout.txt",
+      "stderr": "target/final-v1/commands/0031-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-nonliteral_long_store",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nonliteral_long_store.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-official-nonliteral_long_store"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0032-stdout.txt",
+      "stderr": "target/final-v1/commands/0032-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-nonliteral_long_store",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nonliteral_long_store.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-candidate-nonliteral_long_store"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0033-stdout.txt",
+      "stderr": "target/final-v1/commands/0033-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-boolean_store",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boolean_store.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-official-boolean_store"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0034-stdout.txt",
+      "stderr": "target/final-v1/commands/0034-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-boolean_store",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boolean_store.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-candidate-boolean_store"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0035-stdout.txt",
+      "stderr": "target/final-v1/commands/0035-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-nullable_index",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nullable_index.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-official-nullable_index"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0036-stdout.txt",
+      "stderr": "target/final-v1/commands/0036-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-nullable_index",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nullable_index.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-candidate-nullable_index"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0037-stdout.txt",
+      "stderr": "target/final-v1/commands/0037-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-nonnull_type_use_argument",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nonnull_type_use_argument.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-official-nonnull_type_use_argument"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0038-stdout.txt",
+      "stderr": "target/final-v1/commands/0038-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-nonnull_type_use_argument",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nonnull_type_use_argument.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-candidate-nonnull_type_use_argument"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0039-stdout.txt",
+      "stderr": "target/final-v1/commands/0039-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-nullable_type_use_result",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nullable_type_use_result.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-official-nullable_type_use_result"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0040-stdout.txt",
+      "stderr": "target/final-v1/commands/0040-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-nullable_type_use_result",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nullable_type_use_result.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-candidate-nullable_type_use_result"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0041-stdout.txt",
+      "stderr": "target/final-v1/commands/0041-stderr.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-wrong_spread",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/wrong_spread.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-official-wrong_spread"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0042-stdout.txt",
+      "stderr": "target/final-v1/commands/0042-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-wrong_spread",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/wrong_spread.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/invalid-candidate-wrong_spread"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0043-stdout.txt",
+      "stderr": "target/final-v1/commands/0043-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-short_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/short_type.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boundary-official-short_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0044-stdout.txt",
+      "stderr": "target/final-v1/commands/0044-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-short_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/short_type.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boundary-candidate-short_type"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0045-stdout.txt",
+      "stderr": "target/final-v1/commands/0045-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-short_array",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/short_array.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boundary-official-short_array"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0046-stdout.txt",
+      "stderr": "target/final-v1/commands/0046-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-short_array",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/short_array.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boundary-candidate-short_array"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0047-stdout.txt",
+      "stderr": "target/final-v1/commands/0047-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-effectful_initializer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/effectful_initializer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boundary-official-effectful_initializer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0048-stdout.txt",
+      "stderr": "target/final-v1/commands/0048-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-effectful_initializer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/effectful_initializer.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boundary-candidate-effectful_initializer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0049-stdout.txt",
+      "stderr": "target/final-v1/commands/0049-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-nested_type_use",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nested_type_use.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boundary-official-nested_type_use"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0050-stdout.txt",
+      "stderr": "target/final-v1/commands/0050-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-nested_type_use",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nested_type_use.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boundary-candidate-nested_type_use"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0051-stdout.txt",
+      "stderr": "target/final-v1/commands/0051-stderr.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-unknown_type_use",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/unknown_type_use.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boundary-official-unknown_type_use"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0052-stdout.txt",
+      "stderr": "target/final-v1/commands/0052-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-unknown_type_use",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/unknown_type_use.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/helpers:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/annotations-13.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/boundary-candidate-unknown_type_use"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0053-stdout.txt",
+      "stderr": "target/final-v1/commands/0053-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/sources/main/forEachLongArray.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0054-stdout.txt",
+      "stderr": "target/final-v1/commands/0054-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/sources/main/forEachLongArray.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0055-stdout.txt",
+      "stderr": "target/final-v1/commands/0055-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/caller",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0056-stdout.txt",
+      "stderr": "target/final-v1/commands/0056-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0057-stdout.txt",
+      "stderr": "target/final-v1/commands/0057-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0058-stdout.txt",
+      "stderr": "target/final-v1/commands/0058-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0059-stdout.txt",
+      "stderr": "target/final-v1/commands/0059-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0060-stdout.txt",
+      "stderr": "target/final-v1/commands/0060-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0061-stdout.txt",
+      "stderr": "target/final-v1/commands/0061-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0062-stdout.txt",
+      "stderr": "target/final-v1/commands/0062-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/signatures/official/ForEachLongArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachLongArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0063-stdout.txt",
+      "stderr": "target/final-v1/commands/0063-stderr.txt"
+    },
+    {
+      "label": "original/forEachLongArray/signatures/candidate/ForEachLongArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachLongArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachLongArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0064-stdout.txt",
+      "stderr": "target/final-v1/commands/0064-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/sources/main/forEachBooleanArray.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0065-stdout.txt",
+      "stderr": "target/final-v1/commands/0065-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/sources/main/forEachBooleanArray.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0066-stdout.txt",
+      "stderr": "target/final-v1/commands/0066-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/caller",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0067-stdout.txt",
+      "stderr": "target/final-v1/commands/0067-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0068-stdout.txt",
+      "stderr": "target/final-v1/commands/0068-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0069-stdout.txt",
+      "stderr": "target/final-v1/commands/0069-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0070-stdout.txt",
+      "stderr": "target/final-v1/commands/0070-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0071-stdout.txt",
+      "stderr": "target/final-v1/commands/0071-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0072-stdout.txt",
+      "stderr": "target/final-v1/commands/0072-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0073-stdout.txt",
+      "stderr": "target/final-v1/commands/0073-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/signatures/official/ForEachBooleanArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachBooleanArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0074-stdout.txt",
+      "stderr": "target/final-v1/commands/0074-stderr.txt"
+    },
+    {
+      "label": "original/forEachBooleanArray/signatures/candidate/ForEachBooleanArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachBooleanArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachBooleanArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0075-stdout.txt",
+      "stderr": "target/final-v1/commands/0075-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/sources/main/forEachFloatArray.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0076-stdout.txt",
+      "stderr": "target/final-v1/commands/0076-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/sources/main/forEachFloatArray.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0077-stdout.txt",
+      "stderr": "target/final-v1/commands/0077-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/caller",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0078-stdout.txt",
+      "stderr": "target/final-v1/commands/0078-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0079-stdout.txt",
+      "stderr": "target/final-v1/commands/0079-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0080-stdout.txt",
+      "stderr": "target/final-v1/commands/0080-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0081-stdout.txt",
+      "stderr": "target/final-v1/commands/0081-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0082-stdout.txt",
+      "stderr": "target/final-v1/commands/0082-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0083-stdout.txt",
+      "stderr": "target/final-v1/commands/0083-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0084-stdout.txt",
+      "stderr": "target/final-v1/commands/0084-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/signatures/official/ForEachFloatArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachFloatArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0085-stdout.txt",
+      "stderr": "target/final-v1/commands/0085-stderr.txt"
+    },
+    {
+      "label": "original/forEachFloatArray/signatures/candidate/ForEachFloatArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachFloatArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachFloatArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0086-stdout.txt",
+      "stderr": "target/final-v1/commands/0086-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/sources/main/forEachDoubleArray.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0087-stdout.txt",
+      "stderr": "target/final-v1/commands/0087-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/sources/main/forEachDoubleArray.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0088-stdout.txt",
+      "stderr": "target/final-v1/commands/0088-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/caller",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0089-stdout.txt",
+      "stderr": "target/final-v1/commands/0089-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0090-stdout.txt",
+      "stderr": "target/final-v1/commands/0090-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0091-stdout.txt",
+      "stderr": "target/final-v1/commands/0091-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0092-stdout.txt",
+      "stderr": "target/final-v1/commands/0092-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0093-stdout.txt",
+      "stderr": "target/final-v1/commands/0093-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0094-stdout.txt",
+      "stderr": "target/final-v1/commands/0094-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0095-stdout.txt",
+      "stderr": "target/final-v1/commands/0095-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/signatures/official/ForEachDoubleArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachDoubleArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0096-stdout.txt",
+      "stderr": "target/final-v1/commands/0096-stderr.txt"
+    },
+    {
+      "label": "original/forEachDoubleArray/signatures/candidate/ForEachDoubleArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachDoubleArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachDoubleArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0097-stdout.txt",
+      "stderr": "target/final-v1/commands/0097-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/sources/main/forEachIntArray.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0098-stdout.txt",
+      "stderr": "target/final-v1/commands/0098-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/sources/main/forEachIntArray.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0099-stdout.txt",
+      "stderr": "target/final-v1/commands/0099-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/caller",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0100-stdout.txt",
+      "stderr": "target/final-v1/commands/0100-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0101-stdout.txt",
+      "stderr": "target/final-v1/commands/0101-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0102-stdout.txt",
+      "stderr": "target/final-v1/commands/0102-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0103-stdout.txt",
+      "stderr": "target/final-v1/commands/0103-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0104-stdout.txt",
+      "stderr": "target/final-v1/commands/0104-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0105-stdout.txt",
+      "stderr": "target/final-v1/commands/0105-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0106-stdout.txt",
+      "stderr": "target/final-v1/commands/0106-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/signatures/official/ForEachIntArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachIntArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0107-stdout.txt",
+      "stderr": "target/final-v1/commands/0107-stderr.txt"
+    },
+    {
+      "label": "original/forEachIntArray/signatures/candidate/ForEachIntArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachIntArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachIntArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0108-stdout.txt",
+      "stderr": "target/final-v1/commands/0108-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/sources/main/forEachByteArray.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0109-stdout.txt",
+      "stderr": "target/final-v1/commands/0109-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/sources/main/forEachByteArray.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0110-stdout.txt",
+      "stderr": "target/final-v1/commands/0110-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/caller",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0111-stdout.txt",
+      "stderr": "target/final-v1/commands/0111-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0112-stdout.txt",
+      "stderr": "target/final-v1/commands/0112-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0113-stdout.txt",
+      "stderr": "target/final-v1/commands/0113-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0114-stdout.txt",
+      "stderr": "target/final-v1/commands/0114-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0115-stdout.txt",
+      "stderr": "target/final-v1/commands/0115-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0116-stdout.txt",
+      "stderr": "target/final-v1/commands/0116-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0117-stdout.txt",
+      "stderr": "target/final-v1/commands/0117-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/signatures/official/ForEachByteArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachByteArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0118-stdout.txt",
+      "stderr": "target/final-v1/commands/0118-stderr.txt"
+    },
+    {
+      "label": "original/forEachByteArray/signatures/candidate/ForEachByteArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachByteArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachByteArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0119-stdout.txt",
+      "stderr": "target/final-v1/commands/0119-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/sources/main/forEachCharArray.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0120-stdout.txt",
+      "stderr": "target/final-v1/commands/0120-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/sources/main/forEachCharArray.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0121-stdout.txt",
+      "stderr": "target/final-v1/commands/0121-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/caller",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0122-stdout.txt",
+      "stderr": "target/final-v1/commands/0122-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0123-stdout.txt",
+      "stderr": "target/final-v1/commands/0123-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/caller:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0124-stdout.txt",
+      "stderr": "target/final-v1/commands/0124-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0125-stdout.txt",
+      "stderr": "target/final-v1/commands/0125-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0126-stdout.txt",
+      "stderr": "target/final-v1/commands/0126-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0127-stdout.txt",
+      "stderr": "target/final-v1/commands/0127-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0128-stdout.txt",
+      "stderr": "target/final-v1/commands/0128-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/signatures/official/ForEachCharArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/official/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachCharArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0129-stdout.txt",
+      "stderr": "target/final-v1/commands/0129-stderr.txt"
+    },
+    {
+      "label": "original/forEachCharArray/signatures/candidate/ForEachCharArrayKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/original/forEachCharArray/candidate/main:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachCharArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0130-stdout.txt",
+      "stderr": "target/final-v1/commands/0130-stderr.txt"
+    },
+    {
+      "label": "Compile official/app-official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_arrays",
+        "-cp",
+        "/Users/yuku/Library/Android/sdk/platforms/android-35/android.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/dependencies/core-1.17.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/app-official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 0,
+      "stdout": "target/final-v1/commands/0131-stdout.txt",
+      "stderr": "target/final-v1/commands/0131-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/app-candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1-korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt",
+        "--module-name",
+        "new_arrays",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/Library/Android/sdk/platforms/android-35/android.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/dependencies/core-1.17.0.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/app-candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 300,
+      "exit_code": 1,
+      "stdout": "target/final-v1/commands/0132-stdout.txt",
+      "stderr": "target/final-v1/commands/0132-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 111,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "metadata/official",
+      "outcome": "pass",
+      "scope": "Primitive-array result/parameter/nullability/vararg metadata, ordinary functions and aliased builtin factories"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 111,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "metadata/candidate",
+      "outcome": "pass",
+      "scope": "Primitive-array result/parameter/nullability/vararg metadata, ordinary functions and aliased builtin factories"
+    },
+    {
+      "id": "signature/newfamilies.arrays.ArraysKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/newfamilies.arrays.ArrayHolder",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/newfamilies.arrays.AliasedFactoryKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/newfamilies.arrays.TypeUseCallsKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/newfamilies.arrays.shadow.ShadowedKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/compatibility.unsupported.UnsupportedDoubleArrayKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/boxed_to_primitive",
+      "outcome": "invalid_kotlin"
+    },
+    {
+      "id": "invalid/primitive_to_boxed",
+      "outcome": "invalid_kotlin"
+    },
+    {
+      "id": "invalid/boolean_to_byte",
+      "outcome": "invalid_kotlin"
+    },
+    {
+      "id": "invalid/wrong_store",
+      "outcome": "invalid_kotlin"
+    },
+    {
+      "id": "invalid/nonliteral_long_store",
+      "outcome": "invalid_kotlin"
+    },
+    {
+      "id": "invalid/boolean_store",
+      "outcome": "invalid_kotlin"
+    },
+    {
+      "id": "invalid/nullable_index",
+      "outcome": "invalid_kotlin"
+    },
+    {
+      "id": "invalid/nonnull_type_use_argument",
+      "outcome": "invalid_kotlin"
+    },
+    {
+      "id": "invalid/nullable_type_use_result",
+      "outcome": "invalid_kotlin"
+    },
+    {
+      "id": "invalid/wrong_spread",
+      "outcome": "invalid_kotlin"
+    },
+    {
+      "id": "boundary/short_type",
+      "outcome": "unsupported_language",
+      "diagnostic": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/short_type.kt\",\"offset\":20,\"category\":\"unsupported_language\",\"code\":\"SHORT_UNSUPPORTED\",\"message\":\"Short and ShortArray semantics are unsupported\",\"path\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/short_type.kt\",\"line\":1,\"column\":21}\n"
+    },
+    {
+      "id": "boundary/short_array",
+      "outcome": "unsupported_language",
+      "diagnostic": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/short_array.kt\",\"offset\":12,\"category\":\"unsupported_language\",\"code\":\"SHORT_UNSUPPORTED\",\"message\":\"ShortArray semantics are unsupported\",\"path\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/short_array.kt\",\"line\":1,\"column\":13}\n"
+    },
+    {
+      "id": "boundary/effectful_initializer",
+      "outcome": "unsupported_language",
+      "diagnostic": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/effectful_initializer.kt\",\"offset\":61,\"category\":\"unsupported_language\",\"code\":\"ARRAY_INITIALIZER_EVALUATION_UNSUPPORTED\",\"message\":\"Array initializer evaluation order has a specification/oracle discrepancy; effectful initializer expressions are unsupported\",\"path\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/effectful_initializer.kt\",\"line\":1,\"column\":62}\n"
+    },
+    {
+      "id": "boundary/nested_type_use",
+      "outcome": "unsupported_language",
+      "diagnostic": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nested_type_use.kt\",\"offset\":82,\"category\":\"unsupported_language\",\"code\":\"LIBRARY_DECLARATION_UNSUPPORTED\",\"message\":\"Unsupported library declaration\",\"path\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/nested_type_use.kt\",\"line\":2,\"column\":48}\n"
+    },
+    {
+      "id": "boundary/unknown_type_use",
+      "outcome": "unsupported_language",
+      "diagnostic": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/unknown_type_use.kt\",\"offset\":78,\"category\":\"unsupported_language\",\"code\":\"LIBRARY_DECLARATION_UNSUPPORTED\",\"message\":\"Unsupported library declaration\",\"path\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v1/unknown_type_use.kt\",\"line\":2,\"column\":44}\n"
+    },
+    {
+      "id": "original/forEachLongArray",
+      "family": "primitive_arrays",
+      "root": "box",
+      "tier": "original",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachLongArray.kt",
+        "sha256": "b7c27c4727e4868d1afd73e589e12b3638b31782f09b5a64e38f5ebc122570fa"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "target/final-v1/original/forEachLongArray/sources/main/forEachLongArray.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/final-v1/original/forEachLongArray/caller/UpstreamBox.class": "f111e605ba2340176471a6683b5800e6946bf2369338b20533cb04be31dd9ebd"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "original/forEachBooleanArray",
+      "family": "primitive_arrays",
+      "root": "box",
+      "tier": "original",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachBooleanArray.kt",
+        "sha256": "f366521bca05cbd66e51c5478c006234510fe458a87e39a36c282f41280f1f36"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "target/final-v1/original/forEachBooleanArray/sources/main/forEachBooleanArray.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/final-v1/original/forEachBooleanArray/caller/UpstreamBox.class": "7c5941df569a092f3b6674bf1e42e219fb3ce016bc2dfc41b6c69122978358cc"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "original/forEachFloatArray",
+      "family": "primitive_arrays",
+      "root": "box",
+      "tier": "original",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachFloatArray.kt",
+        "sha256": "6a996ed20a85ce47bfa2b9963d82276c6b4d6f94933143e6d7eb8602a44c4fce"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "target/final-v1/original/forEachFloatArray/sources/main/forEachFloatArray.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/final-v1/original/forEachFloatArray/caller/UpstreamBox.class": "6f88ff22b02d617269867df0dee89a72e1bfb3d583af44c4b8f428d600c804e7"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "original/forEachDoubleArray",
+      "family": "primitive_arrays",
+      "root": "box",
+      "tier": "original",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachDoubleArray.kt",
+        "sha256": "af2afd457cbdda96fd7cd580fb5a0251760d984c54ebe33955dad44030ba4474"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "target/final-v1/original/forEachDoubleArray/sources/main/forEachDoubleArray.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/final-v1/original/forEachDoubleArray/caller/UpstreamBox.class": "1b59783aac84ef1c4f8f516b08a9068bc683c46b14d52b9c54fd1ac65fbf0c8c"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "original/forEachIntArray",
+      "family": "primitive_arrays",
+      "root": "box",
+      "tier": "original",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachIntArray.kt",
+        "sha256": "428b491fbe0b8a68cced0cf689986be13399fe555912b0fcfb79fc444c186d9f"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "target/final-v1/original/forEachIntArray/sources/main/forEachIntArray.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/final-v1/original/forEachIntArray/caller/UpstreamBox.class": "b18af038da664f42994533f696d61ae7febde818edb0d3fe007047a7fcdcc988"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "original/forEachByteArray",
+      "family": "primitive_arrays",
+      "root": "box",
+      "tier": "original",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachByteArray.kt",
+        "sha256": "f7ab1297d213710becaefb33e6a108b74dcd7db4cd6c8bb1be603dbfb4f9eca4"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "target/final-v1/original/forEachByteArray/sources/main/forEachByteArray.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/final-v1/original/forEachByteArray/caller/UpstreamBox.class": "6a38ee57c757446e796e6727ec4c1ca80ff5a7790657af902cb5f32ad9d4bd54"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "original/forEachCharArray",
+      "family": "primitive_arrays",
+      "root": "box",
+      "tier": "original",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachCharArray.kt",
+        "sha256": "b133277aff099c81b77196492bf3bb9d8c5685343fa7d49cda929c806fd4a3a6"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "target/final-v1/original/forEachCharArray/sources/main/forEachCharArray.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/final-v1/original/forEachCharArray/caller/UpstreamBox.class": "b8ff43bca5a5ec633b452e62fb883b6888ee5453837edcc9afaa579f122a0b71"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "app_compile/official",
+      "outcome": "pass",
+      "unchanged_original": true
+    },
+    {
+      "id": "app_compile/candidate",
+      "outcome": "correctness_failure",
+      "diagnostic": "{\"source_identity\":\"/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt\",\"offset\":0,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unsupported frame array type\",\"path\":\"/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt\",\"line\":1,\"column\":1}\n",
+      "unchanged_original": true
+    }
+  ],
+  "limitations": [
+    "Short/ShortArray are explicitly unsupported.",
+    "Effectful initializer-producing expressions retain the existing specification/oracle evaluation-order rejection boundary.",
+    "No source inline expansion, complete stdlib array API, Android device/full-app or performance claim.",
+    "JVM method return/formal parameter type-use nullability supports empty type paths only; unsupported targets/nested paths are preserved as unsupported."
+  ],
+  "counts": {
+    "correctness_failure": 1,
+    "invalid_kotlin": 10,
+    "pass": 20,
+    "unsupported_language": 5
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  }
+}

@@ -1,14 +1,7 @@
 use super::*;
 
 fn element_type(array: &Type) -> Option<Type> {
-    match array.base() {
-        Type::IntArray => Some(Type::Int),
-        Type::ByteArray => Some(Type::Byte),
-        Type::CharArray => Some(Type::Char),
-        Type::StringArray => Some(Type::String),
-        Type::Array(element) => Some(element.as_ref().clone()),
-        _ => None,
-    }
+    array.array_element()
 }
 
 impl Checker<'_> {
@@ -161,16 +154,11 @@ impl Checker<'_> {
         for (spread, value, position) in checked {
             if spread {
                 let actual = element_type(&value.ty).unwrap();
-                let matching_array_kind = matches!(
-                    (&array, value.ty.base()),
-                    (Type::IntArray, Type::IntArray)
-                        | (Type::ByteArray, Type::ByteArray)
-                        | (Type::CharArray, Type::CharArray)
-                        | (
-                            Type::Array(_) | Type::StringArray,
-                            Type::Array(_) | Type::StringArray
-                        )
-                );
+                let matching_array_kind = if array.primitive_array_element().is_some() {
+                    &array == value.ty.base()
+                } else {
+                    matches!(value.ty.base(), Type::Array(_) | Type::StringArray)
+                };
                 if !matching_array_kind || !self.subtype(&actual, &element) {
                     return Err(Diagnostic::new(
                         position,
@@ -216,12 +204,7 @@ impl Checker<'_> {
                 kind: ValueKind::Block(body, Box::new(local)),
             });
         }
-        let primitive = match &array {
-            Type::IntArray => Some("Int"),
-            Type::ByteArray => Some("Byte"),
-            Type::CharArray => Some("Char"),
-            _ => None,
-        };
+        let primitive = array.primitive_array_name();
         let owner = primitive.map_or_else(
             || "kotlin/jvm/internal/SpreadBuilder".into(),
             |name| format!("kotlin/jvm/internal/{name}SpreadBuilder"),

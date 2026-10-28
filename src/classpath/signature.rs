@@ -132,6 +132,11 @@ impl<'a> Signature<'a> {
                 Type::Int => Type::IntArray,
                 Type::Byte => Type::ByteArray,
                 Type::Char => Type::CharArray,
+                Type::Long => Type::LongArray,
+                Type::Boolean => Type::BooleanArray,
+                Type::Float => Type::FloatArray,
+                Type::Double => Type::DoubleArray,
+
                 Type::String => Type::StringArray,
                 element if element.is_reference() => Type::Array(Box::new(element)),
                 _ => return Err(invalid()),
@@ -242,7 +247,10 @@ pub(super) fn class(value: &str) -> Result<(Vec<TypeParameter>, Vec<Type>)> {
     Ok((parameters, parents))
 }
 
-pub(super) fn nullability(ty: Type, annotations: &[Annotation]) -> Result<Type> {
+pub(super) fn nullability<'a>(
+    ty: Type,
+    annotations: impl IntoIterator<Item = &'a Annotation>,
+) -> Result<Type> {
     if !ty.is_reference() {
         return Ok(ty);
     }
@@ -281,6 +289,9 @@ pub(super) fn attach(
     attrs: &Attributes,
     method_attrs: &[Attributes],
 ) -> Result<()> {
+    if !attrs.return_type_annotations.is_empty() || !attrs.parameter_type_annotations.is_empty() {
+        return Err(invalid());
+    }
     let (type_parameters, supertypes) = if let Some(value) = &attrs.signature {
         self::class(value)?
     } else {
@@ -318,6 +329,13 @@ pub(super) fn attach(
             if erased != method.descriptor {
                 continue;
             }
+            if attributes
+                .parameter_type_annotations
+                .iter()
+                .any(|(index, _)| *index >= params.len())
+            {
+                return Err(invalid());
+            }
             let converted = params
                 .into_iter()
                 .enumerate()
@@ -329,13 +347,23 @@ pub(super) fn attach(
                             attributes
                                 .parameter_annotations
                                 .get(i)
-                                .map_or(&[], Vec::as_slice),
+                                .into_iter()
+                                .flatten()
+                                .chain(attributes.parameter_type_annotations.iter().filter_map(
+                                    |(index, annotation)| (*index == i).then_some(annotation),
+                                )),
                         )?,
                         false,
                     ))
                 })
                 .collect::<Result<Vec<_>>>();
-            let result = nullability(result, &attributes.annotations);
+            let result = nullability(
+                result,
+                attributes
+                    .annotations
+                    .iter()
+                    .chain(attributes.return_type_annotations.iter()),
+            );
             if let (Ok(params), Ok(result)) = (converted, result) {
                 if !attributes.unsupported && method.access & (0x40 | 0x1000) == 0 {
                     method.unsupported = false;
@@ -436,6 +464,40 @@ mod tests {
             nullability(Type::String, &[]).unwrap(),
             Type::Platform(Box::new(Type::String))
         );
+    }
+
+    #[test]
+    fn declaration_and_type_use_nullability_merge_without_order_dependence() {
+        let not_null = Annotation {
+            name: "Lorg/jetbrains/annotations/NotNull;".into(),
+            values: Vec::new(),
+        };
+        let non_null = Annotation {
+            name: "Lorg/jspecify/annotations/NonNull;".into(),
+            values: Vec::new(),
+        };
+        let nullable = Annotation {
+            name: "Lorg/jspecify/annotations/Nullable;".into(),
+            values: Vec::new(),
+        };
+        let unknown = Annotation {
+            name: "Lsample/Unknown;".into(),
+            values: Vec::new(),
+        };
+        for annotations in [[&not_null, &non_null], [&non_null, &not_null]] {
+            assert_eq!(
+                nullability(Type::DoubleArray, annotations).unwrap(),
+                Type::DoubleArray
+            );
+        }
+        for annotations in [
+            [&nullable, &non_null],
+            [&non_null, &nullable],
+            [&unknown, &non_null],
+            [&non_null, &unknown],
+        ] {
+            assert!(nullability(Type::DoubleArray, annotations).is_err());
+        }
     }
 
     #[test]

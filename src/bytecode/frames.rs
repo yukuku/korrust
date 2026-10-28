@@ -354,9 +354,13 @@ fn transfer(
             pop(&mut frame)?;
             frame.stack.push(Verification::Object(
                 match bytes[offset + 1] {
-                    8 => "[B",
+                    4 => "[Z",
                     5 => "[C",
+                    6 => "[F",
+                    7 => "[D",
+                    8 => "[B",
                     10 => "[I",
+                    11 => "[J",
                     _ => return Err(failure("Unsupported frame array type")),
                 }
                 .into(),

@@ -161,6 +161,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 121. Generic source type aliases in supported type positions, with substitution and exported Kotlin metadata.
 122. Explicit Java static imports, bounded synthetic Java properties, and inherited-member access through accessible qualifiers.
 123. Typed scalar compile-time expressions, source constant references, and checked Java constant dependencies.
+124. Long, Boolean, Float, and Double primitive arrays with construction, indexing, iteration, varargs, and spread.
 
 ## Project contract
 

@@ -1,0 +1,41 @@
+{
+  "outcome": "correctness_failure",
+  "scope": "Immutable pre-feature compiler on unchanged app with same real dependencies as final candidate. Failure occurs before array exercise; no claim arrays were the sole blocker.",
+  "binary": "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+  "inputs_sha256": {
+    "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust": "e5efeaa7df7ea4ab6392b4ada5fd6558ca79b1bef2d7271e49785a66eb3002ee",
+    "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt": "f4540bbaefa4386f2874631ac8f697ec57ea8c8438efca3f115ca01b627afa53",
+    "/Users/yuku/Library/Android/sdk/platforms/android-35/android.jar": "4566663c3876e022b4fa4ced8c8697c4ab1688267f090114fd92d027b32e619b",
+    "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/dependencies/core-1.17.0.jar": "168ce07232dad99dc06183c19373ab7023768b3db8cf5d4a211348264a23de40",
+    "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "exit_code": 1,
+  "diagnostics": [
+    {
+      "source_identity": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt",
+      "offset": 0,
+      "category": "unclassified",
+      "code": "UNCLASSIFIED",
+      "message": "Cannot infer a source declaration signature: cyclic or unsupported initializer or expression body; add an explicit type",
+      "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt",
+      "line": 1,
+      "column": 1
+    }
+  ],
+  "stdout": "app-baseline-stdout.txt",
+  "stderr": "app-baseline-stderr.txt",
+  "command": [
+    "env",
+    "JAVA_HOME=/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+    "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioHighlightColor.kt",
+    "--module-name",
+    "new_arrays",
+    "--diagnostic-format",
+    "json",
+    "-cp",
+    "/Users/yuku/Library/Android/sdk/platforms/android-35/android.jar:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/dependencies/core-1.17.0.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+    "-d",
+    "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/app-immutable-baseline"
+  ]
+}

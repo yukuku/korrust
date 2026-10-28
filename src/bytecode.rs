@@ -472,6 +472,11 @@ fn cast_type_name(ty: &Type) -> String {
         Type::IntArray => "kotlin.IntArray".into(),
         Type::ByteArray => "kotlin.ByteArray".into(),
         Type::CharArray => "kotlin.CharArray".into(),
+        Type::LongArray => "kotlin.LongArray".into(),
+        Type::BooleanArray => "kotlin.BooleanArray".into(),
+        Type::FloatArray => "kotlin.FloatArray".into(),
+        Type::DoubleArray => "kotlin.DoubleArray".into(),
+
         Type::StringArray => "kotlin.Array<kotlin.String>".into(),
         Type::List(_) => "kotlin.collections.List".into(),
         Type::MutableList(_) => "kotlin.collections.MutableList".into(),
@@ -516,6 +521,11 @@ fn invocation_types(descriptor: &str) -> Result<(Vec<Type>, Type)> {
                     b"[I" => Type::IntArray,
                     b"[B" => Type::ByteArray,
                     b"[C" => Type::CharArray,
+                    b"[J" => Type::LongArray,
+                    b"[Z" => Type::BooleanArray,
+                    b"[F" => Type::FloatArray,
+                    b"[D" => Type::DoubleArray,
+
                     b"[Ljava/lang/String;" => Type::StringArray,
                     _ if element.is_reference() => Type::Array(Box::new(element)),
                     _ => return Err(failure("Unsupported JVM invocation array type")),
@@ -546,12 +556,33 @@ fn invocation_types(descriptor: &str) -> Result<(Vec<Type>, Type)> {
 }
 
 fn primitive_array_type(ty: &Type) -> Result<u8> {
-    match ty.base() {
-        Type::ByteArray => Ok(8),
-        Type::CharArray => Ok(5),
-        Type::IntArray => Ok(10),
+    match ty.primitive_array_element() {
+        Some(Type::Boolean) => Ok(4),
+        Some(Type::Char) => Ok(5),
+        Some(Type::Float) => Ok(6),
+        Some(Type::Double) => Ok(7),
+        Some(Type::Byte) => Ok(8),
+        Some(Type::Int) => Ok(10),
+        Some(Type::Long) => Ok(11),
         _ => Err(failure("Unsupported primitive array type")),
     }
+}
+
+fn array_load_opcode(array: &Type) -> Result<u8> {
+    match array.primitive_array_element() {
+        Some(Type::Int) => Ok(0x2e),
+        Some(Type::Long) => Ok(0x2f),
+        Some(Type::Float) => Ok(0x30),
+        Some(Type::Double) => Ok(0x31),
+        Some(Type::Byte | Type::Boolean) => Ok(0x33),
+        Some(Type::Char) => Ok(0x34),
+        _ if matches!(array.base(), Type::Array(_) | Type::StringArray) => Ok(0x32),
+        _ => Err(failure("Unsupported array component")),
+    }
+}
+
+fn array_store_opcode(array: &Type) -> Result<u8> {
+    Ok(array_load_opcode(array)? + 0x21)
 }
 
 #[derive(Clone, Hash, Eq, PartialEq)]
@@ -1410,21 +1441,10 @@ impl Code<'_> {
                 )?;
                 self.reference(0xb9, invoke);
                 self.bytes.extend([2, 0]);
-                let store = match array {
-                    Type::IntArray => {
-                        self.generic_result(&Type::Int)?;
-                        0x4f
-                    }
-                    Type::ByteArray => {
-                        self.generic_result(&Type::Byte)?;
-                        0x54
-                    }
-                    Type::CharArray => {
-                        self.generic_result(&Type::Char)?;
-                        0x55
-                    }
-                    _ => 0x53,
-                };
+                if let Some(element) = array.primitive_array_element() {
+                    self.generic_result(&element)?;
+                }
+                let store = array_store_opcode(array)?;
                 self.bytes.extend([store, 0x84, index_slot, 1]);
                 self.branch(0xa7, head);
                 self.mark(done);
@@ -2153,13 +2173,7 @@ impl Code<'_> {
                     self.method_reference(0xb6, "java/lang/String", "charAt", "(I)C")?;
                     return Ok(());
                 }
-                self.bytes.push(match array.ty.base() {
-                    Type::IntArray => 0x2e,
-                    Type::ByteArray => 0x33,
-                    Type::CharArray => 0x34,
-                    Type::StringArray | Type::Array(_) => 0x32,
-                    _ => return Err(failure("Unsupported array indexing operand")),
-                });
+                self.bytes.push(array_load_opcode(&array.ty)?);
                 if matches!(array.ty.base(), Type::Array(_)) {
                     self.generic_result(&value.ty)?;
                 }
@@ -2415,13 +2429,7 @@ impl Code<'_> {
                     if matches!(array.ty.base(), Type::Array(_)) && !value.ty.is_reference() {
                         self.box_value(&value.ty)?;
                     }
-                    self.bytes.push(match array.ty.base() {
-                        Type::IntArray => 0x4f,
-                        Type::ByteArray => 0x54,
-                        Type::CharArray => 0x55,
-                        Type::StringArray | Type::Array(_) => 0x53,
-                        _ => return Err(failure("Unsupported array store operand")),
-                    });
+                    self.bytes.push(array_store_opcode(&array.ty)?);
                 }
                 Statement::Break => self.loop_exit(None, false)?,
                 Statement::Continue => self.loop_exit(None, true)?,
@@ -2519,11 +2527,8 @@ impl Code<'_> {
                     let iterable_slot = self.local_slot(*iterable_slot)?;
                     let index_slot = self.local_slot(*index_slot)?;
                     let element = match iterable.ty.base() {
-                        Type::IntArray => Type::Int,
-                        Type::ByteArray => Type::Byte,
-                        Type::CharArray | Type::String => Type::Char,
-                        Type::StringArray => Type::String,
-                        Type::Array(element) => *element.clone(),
+                        Type::String => Type::Char,
+                        array if array.array_element().is_some() => array.array_element().unwrap(),
                         Type::List(element) | Type::MutableList(element) => *element.clone(),
                         _ => return Err(failure("Unsupported for-loop iterable type")),
                     };
@@ -2575,13 +2580,7 @@ impl Code<'_> {
                         if iterable.ty.base() == &Type::String {
                             self.method_reference(0xb6, "java/lang/String", "charAt", "(I)C")?;
                         } else {
-                            self.bytes.push(match iterable.ty.base() {
-                                Type::IntArray => 0x2e,
-                                Type::ByteArray => 0x33,
-                                Type::CharArray => 0x34,
-                                Type::StringArray | Type::Array(_) => 0x32,
-                                _ => unreachable!(),
-                            });
+                            self.bytes.push(array_load_opcode(&iterable.ty)?);
                             if matches!(iterable.ty.base(), Type::Array(_)) {
                                 self.generic_result(&element)?;
                             }

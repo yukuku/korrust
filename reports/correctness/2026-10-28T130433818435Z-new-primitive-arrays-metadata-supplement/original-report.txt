@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "status": "pass",
+  "selection": "Fresh official Kotlin consumers directly invoke all four source primitive varargs with scalar arguments, empty arguments and spread arguments; provider classes and compiler are unchanged from final-v2.",
+  "compiler": {
+    "path": "target/final-v2-korrust-frozen",
+    "sha256": "92ab24641730c5962222aa8e0528ca8a80ac5df23fd695647923404cfb9322cb"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "reused_runtime_evidence": {
+    "report_path": "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v2/report.json",
+    "report_sha256": "d3dbaae694e8936dcab4b9090bc03057bf49898f19d60c1fa5f0b4f27a357790",
+    "reason": "Only the consumer fixture changed. No compiler or provider source/class changed. Compiler/runtime, original upstream and real-app evidence is reused explicitly rather than claimed rerun."
+  },
+  "inputs": {
+    "consumer_fixture": "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/Consumer.kt",
+    "consumer_sha256": "db294a1d8b50e76bae27ef91702632a720536635d523f5c0b3c1d83711690d3a",
+    "previous_consumer_sha256": "3a5758c156a74ad556e8b96aefcf3860979f19e16994512e1629a89fa93a8e97",
+    "provider_class_hashes": {
+      "official": {
+        "compatibility/unsupported/UnsupportedDoubleArrayKt.class": "97806fd3130bd7ade17cfb323d6b1e219963e6eca391cf426e1a567e00a8d230",
+        "newfamilies/arrays/AliasedFactoryKt.class": "c16a12105111140d91838954e296b6f88b05ab344c400fdcc24a2a1c5a143259",
+        "newfamilies/arrays/ArrayHolder.class": "c31e9cbfaa2df785154f98bb8529184f3394a83281c46fb47422fe8f0124945f",
+        "newfamilies/arrays/ArraysKt.class": "05e724a34d10866e73e5e55d6577433d1f20947ed172a8d6815423049abb4e78",
+        "newfamilies/arrays/TypeUseCallsKt.class": "5bf1a42c7be5d348febc0a2c55231abbcdcd2d6bf77f1fdcf8c781967d1f0899",
+        "newfamilies/arrays/shadow/ShadowedKt.class": "449eda2cb5cd5a58afa0a7961d4814fc1296f99695f0c20432525bfdcedfad12"
+      },
+      "candidate": {
+        "compatibility/unsupported/UnsupportedDoubleArrayKt.class": "66ff5eeb5927f17105d0445c2b1b76b35e0b578df62c7c7d8456caee12fc392d",
+        "newfamilies/arrays/AliasedFactoryKt.class": "86d631e34700e8a1a588eb1d16ed24854bc4cbd1437e3b279cb749b71b1ed70d",
+        "newfamilies/arrays/ArrayHolder.class": "2715cc6ac697b03f780d39f9aaacf082e5f48f4607239e527c44cb7b928c2e97",
+        "newfamilies/arrays/ArraysKt.class": "4a7c7a56e4c6857f06bf5270c45ffc9e31c419bae81d6d928d3f776f7abb7331",
+        "newfamilies/arrays/TypeUseCallsKt.class": "744dd350db3dda92afec5728a27383b46c4eb9de110e2be0919ca89b1881d1a2",
+        "newfamilies/arrays/shadow/ShadowedKt.class": "4f494ab614bb7e8492c1cea118d95e42d90915d17f95762a8b03e3fb7660e714"
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "direct_source_vararg_metadata/official",
+      "outcome": "pass",
+      "new_vararg_assertions": 12,
+      "total_consumer_assertions": 31,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "direct_source_vararg_metadata/candidate",
+      "outcome": "pass",
+      "new_vararg_assertions": 12,
+      "total_consumer_assertions": 31,
+      "jvm_verification": "all"
+    }
+  ],
+  "input_integrity": "unchanged",
+  "commands": [
+    {
+      "label": "Compile direct-vararg official Kotlin consumer official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/metadata-supplement-v2/consumer-official"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/metadata-supplement-v2/commands/0000-stdout.txt",
+      "stderr": "target/metadata-supplement-v2/commands/0000-stderr.txt"
+    },
+    {
+      "label": "Verified direct-vararg Kotlin consumer official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/metadata-supplement-v2/consumer-official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v2/official:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "arrayconsumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/metadata-supplement-v2/commands/0001-stdout.txt",
+      "stderr": "target/metadata-supplement-v2/commands/0001-stderr.txt"
+    },
+    {
+      "label": "Compile direct-vararg official Kotlin consumer candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/tests/fixtures/new_families/primitive_arrays/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/metadata-supplement-v2/consumer-candidate"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/metadata-supplement-v2/commands/0002-stdout.txt",
+      "stderr": "target/metadata-supplement-v2/commands/0002-stderr.txt"
+    },
+    {
+      "label": "Verified direct-vararg Kotlin consumer candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/metadata-supplement-v2/consumer-candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v2/candidate:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/target/final-v2/helpers:/Users/yuku/f/git/korrust/target/new-primitive-arrays-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "arrayconsumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/metadata-supplement-v2/commands/0003-stdout.txt",
+      "stderr": "target/metadata-supplement-v2/commands/0003-stderr.txt"
+    }
+  ],
+  "counts": {
+    "pass": 2
+  }
+}

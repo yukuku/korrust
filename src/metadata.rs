@@ -505,6 +505,11 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
         Type::IntArray => "kotlin/IntArray",
         Type::ByteArray => "kotlin/ByteArray",
         Type::CharArray => "kotlin/CharArray",
+        Type::LongArray => "kotlin/LongArray",
+        Type::BooleanArray => "kotlin/BooleanArray",
+        Type::FloatArray => "kotlin/FloatArray",
+        Type::DoubleArray => "kotlin/DoubleArray",
+
         Type::String => "kotlin/String",
         Type::Unit => "kotlin/Unit",
         Type::Array(inner) => {
@@ -706,11 +711,7 @@ fn function_with_jvm_name(
         let mut param = parameter(name, ty, imports, strings)?;
         if function.vararg && index + 1 == function.params.len() {
             let element = match ty {
-                Type::IntArray => Type::Int,
-                Type::ByteArray => Type::Byte,
-                Type::CharArray => Type::Char,
-                Type::StringArray => Type::String,
-                Type::Array(element) => element.as_ref().clone(),
+                array if array.array_element().is_some() => array.array_element().unwrap(),
                 _ => {
                     return Err(Diagnostic::new(
                         function.offset,

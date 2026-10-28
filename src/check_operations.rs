@@ -57,11 +57,8 @@ impl Checker<'_> {
             });
         }
         let element = match iterable.ty.base() {
-            Type::IntArray => Type::Int,
-            Type::ByteArray => Type::Byte,
-            Type::CharArray | Type::String => Type::Char,
-            Type::StringArray => Type::String,
-            Type::Array(element) => element.as_ref().clone(),
+            Type::String => Type::Char,
+            array if array.array_element().is_some() => array.array_element().unwrap(),
             _ => {
                 return Err(Diagnostic::new(
                     offset,
@@ -327,6 +324,10 @@ impl Checker<'_> {
                 | Type::IntArray
                 | Type::ByteArray
                 | Type::CharArray
+                | Type::LongArray
+                | Type::BooleanArray
+                | Type::FloatArray
+                | Type::DoubleArray
                 | Type::StringArray
                 | Type::String
                 | Type::Java(_) => true,
@@ -1359,11 +1360,8 @@ impl Checker<'_> {
             ));
         }
         let element = match array.ty.base() {
-            Type::IntArray => Some(Type::Int),
-            Type::ByteArray => Some(Type::Byte),
-            Type::CharArray | Type::String => Some(Type::Char),
-            Type::StringArray => Some(Type::String),
-            Type::Array(element) => Some(element.as_ref().clone()),
+            Type::String => Some(Type::Char),
+            array if array.array_element().is_some() => array.array_element(),
             _ => None,
         };
         if let Some(element) = element {
@@ -1397,11 +1395,7 @@ impl Checker<'_> {
             ));
         }
         let element = match array.ty.base() {
-            Type::IntArray => Some(Type::Int),
-            Type::ByteArray => Some(Type::Byte),
-            Type::CharArray => Some(Type::Char),
-            Type::StringArray => Some(Type::String),
-            Type::Array(element) => Some(element.as_ref().clone()),
+            array if array.array_element().is_some() => array.array_element(),
             Type::List(_) => {
                 return Err(Diagnostic::new(
                     offset,
@@ -1446,17 +1440,9 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
-        let element = match array {
-            Type::IntArray => Type::Int,
-            Type::ByteArray => Type::Byte,
-            Type::CharArray => Type::Char,
-            _ => {
-                return Err(Diagnostic::new(
-                    offset,
-                    "Unsupported primitive array constructor",
-                ));
-            }
-        };
+        let element = array
+            .primitive_array_element()
+            .ok_or_else(|| Diagnostic::new(offset, "Unsupported primitive array constructor"))?;
         self.array_constructor_kind(&[element], args, offset, Some(array))
     }
 
@@ -1491,7 +1477,7 @@ impl Checker<'_> {
             return Err(Diagnostic::new(
                 offset,
                 "Array initializer evaluation order has a specification/oracle discrepancy; effectful initializer expressions are unsupported",
-            ));
+            ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "ARRAY_INITIALIZER_EVALUATION_UNSUPPORTED"));
         }
         let size = self.expected_value(&args[0], &Type::Int)?;
         let element = if let Some(ty) = types.first() {

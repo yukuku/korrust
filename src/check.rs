@@ -1059,7 +1059,12 @@ impl Checker<'_> {
                 ));
             }
             if methods.iter().any(|m| m.unsupported) && failures.is_empty() {
-                return Err(Diagnostic::new(offset, "Unsupported library declaration"));
+                return Err(
+                    Diagnostic::new(offset, "Unsupported library declaration").with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "LIBRARY_DECLARATION_UNSUPPORTED",
+                    ),
+                );
             }
             return Err(Diagnostic::new(offset, "No applicable member overload"));
         }
@@ -1994,6 +1999,22 @@ impl Checker<'_> {
             Some(b'[') if bytes.get(*cursor) == Some(&b'I') => {
                 *cursor += 1;
                 Type::IntArray
+            }
+            Some(b'[') if bytes.get(*cursor) == Some(&b'J') => {
+                *cursor += 1;
+                Type::LongArray
+            }
+            Some(b'[') if bytes.get(*cursor) == Some(&b'Z') => {
+                *cursor += 1;
+                Type::BooleanArray
+            }
+            Some(b'[') if bytes.get(*cursor) == Some(&b'F') => {
+                *cursor += 1;
+                Type::FloatArray
+            }
+            Some(b'[') if bytes.get(*cursor) == Some(&b'D') => {
+                *cursor += 1;
+                Type::DoubleArray
             }
             Some(b'L') => {
                 let end = descriptor[*cursor..]
@@ -3290,14 +3311,17 @@ impl Checker<'_> {
                         Type::String
                             | Type::Int
                             | Type::Long
+                            | Type::Byte
+                            | Type::Float
+                            | Type::Double
                             | Type::Boolean
                             | Type::Char
                             | Type::Null
-                    ) && !matches!(value.ty.base(), Type::Nullable(inner) if matches!(inner.as_ref(), Type::String | Type::Int | Type::Long | Type::Boolean | Type::Char))
+                    ) && !matches!(value.ty.base(), Type::Nullable(inner) if matches!(inner.as_ref(), Type::String | Type::Int | Type::Long | Type::Byte | Type::Float | Type::Double | Type::Boolean | Type::Char))
                     {
                         return Err(Diagnostic::new(
                             part.offset,
-                            "String templates support only String, Char, Int, Long, Boolean, their nullable forms, and null",
+                            "String templates support only String, supported primitives, their nullable forms, and null",
                         ));
                     }
                     result = Value {
@@ -3917,6 +3941,10 @@ impl Checker<'_> {
                             Type::IntArray
                                 | Type::ByteArray
                                 | Type::CharArray
+                                | Type::LongArray
+                                | Type::BooleanArray
+                                | Type::FloatArray
+                                | Type::DoubleArray
                                 | Type::StringArray
                                 | Type::Array(_)
                         )
@@ -4167,15 +4195,20 @@ impl Checker<'_> {
                             return Ok(call);
                         }
                     }
-                    if matches!(name.as_str(), "IntArray" | "ByteArray" | "CharArray")
-                        && self.unshadowed(name)
+                    if name == "ShortArray" && self.unshadowed(name) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "ShortArray semantics are unsupported",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::UnsupportedLanguage,
+                            "SHORT_UNSUPPORTED",
+                        ));
+                    }
+                    if let Some(array) =
+                        Type::primitive_array_named(name).filter(|_| self.unshadowed(name))
                     {
                         if args.len() == 2 {
-                            let array = match name.as_str() {
-                                "IntArray" => Type::IntArray,
-                                "ByteArray" => Type::ByteArray,
-                                _ => Type::CharArray,
-                            };
                             return self.primitive_array_constructor(array, args, offset);
                         }
                         if args.len() != 1 {
@@ -4184,13 +4217,7 @@ impl Checker<'_> {
                                 "Array allocation requires size and optional initializer",
                             ));
                         }
-                        let size = self.value(&args[0])?;
-                        self.require(&size, Type::Int, args[0].offset)?;
-                        let array = match name.as_str() {
-                            "IntArray" => Type::IntArray,
-                            "ByteArray" => Type::ByteArray,
-                            _ => Type::CharArray,
-                        };
+                        let size = self.expected_value(&args[0], &Type::Int)?;
                         return Ok(Value {
                             ty: array.clone(),
                             kind: if array == Type::IntArray {
@@ -5815,6 +5842,10 @@ pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type
             ("[I", Type::IntArray),
             ("[B", Type::ByteArray),
             ("[C", Type::CharArray),
+            ("[J", Type::LongArray),
+            ("[Z", Type::BooleanArray),
+            ("[F", Type::FloatArray),
+            ("[D", Type::DoubleArray),
             ("I", Type::Int),
             ("J", Type::Long),
             ("B", Type::Byte),

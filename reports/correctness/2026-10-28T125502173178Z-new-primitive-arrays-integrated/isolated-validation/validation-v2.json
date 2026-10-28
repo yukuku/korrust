@@ -1,0 +1,61 @@
+{
+  "compiler_sha256": "92ab24641730c5962222aa8e0528ca8a80ac5df23fd695647923404cfb9322cb",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "validation_logs": {
+    "rust-final-v2.txt": {
+      "sha256": "eb26816d321018e5a9471d0d43890725b3c95d499d67795f05511d16769fdada",
+      "test_results": [
+        "test result: ok. 239 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 182.88s",
+        "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 176.33s"
+      ]
+    },
+    "clippy-final-v2.txt": {
+      "sha256": "a6eaf37c6947ef9fe56feb97bb566468a5e84ef8ab9321db64913f5f0351ded7",
+      "test_results": []
+    },
+    "fmt-final-v2.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "test_results": []
+    },
+    "python-upstream-final-v2.txt": {
+      "sha256": "6e2c2e2d0c5d4f2445feb5005937a4d47635379f8adf4113de6f692d171b2766",
+      "test_results": []
+    },
+    "regressions-final-v2.txt": {
+      "sha256": "d27d3544c610471de972da9ac921dbeb59126d8d8d2b394c0f5bd02f8f47aabf",
+      "test_results": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 382.85s",
+        "test result: FAILED. 57 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 98.09s"
+      ]
+    },
+    "frontend-affected-final-v2.txt": {
+      "sha256": "ef1cac45a94f71320ccb6f21aae0da74ed597f9b86f34f67f7a21a4bea55e6df",
+      "test_results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 57 filtered out; finished in 8.57s"
+      ]
+    },
+    "remaining-regressions-final-v2.txt": {
+      "sha256": "7f49540117f79f555627c6cc378bcaf49db132e57fa27ee75a1c1b04e4b8d06f",
+      "test_results": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 31.14s",
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 30.06s"
+      ]
+    }
+  },
+  "frontend_stale_expectation": {
+    "previous_outcome": "57 pass,1 stale Char-template rejection in frozen alias base; preserved original failed log and test fixture. Baseline check.rs already supported Char templates; parent live expectation already corrected.",
+    "fresh_outcome": "Affected test passes after matching the existing live positive Char assertion. Production compiler source and binary unchanged.",
+    "previous_test_sha256": "ef53bbfd4030e5c46f52fa953f640b9ae76d6bdb6dc98e09ca1748b0290552c5",
+    "current_test_sha256": "657f61d1004a722d24555998d6d573b833b8ba41bfbaa469a5e8e98d8e767189"
+  },
+  "jvm_class_versions": {
+    "official": [
+      52
+    ],
+    "candidate": [
+      49,
+      52
+    ]
+  },
+  "jvm_version_scope": "Both providers emit versions supported by Java8. Candidate ordinary source ArrayHolder uses the existing version49 class emitter, while facades use52; no exact classfile/version equivalence claim."
+}

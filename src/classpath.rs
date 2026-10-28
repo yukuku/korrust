@@ -883,6 +883,10 @@ struct Attributes {
     annotated: bool,
     annotations: Vec<Annotation>,
     parameter_annotations: Vec<Vec<Annotation>>,
+    return_type_annotations: Vec<Annotation>,
+    parameter_type_annotations: Vec<(usize, Annotation)>,
+    type_annotation_targets: Vec<u8>,
+    type_annotation_parameter_indices: Vec<usize>,
     signature: Option<String>,
     constant: Option<u16>,
     code: Option<JavaCode>,
@@ -947,12 +951,57 @@ fn annotation(reader: &mut Reader<'_>, pool: &[Constant], depth: usize) -> Resul
     Ok(Annotation { name, values })
 }
 
+fn type_annotation_parameter_count(descriptor: &str) -> Result<usize> {
+    let bytes = descriptor.as_bytes();
+    if bytes.first() != Some(&b'(') {
+        return Err(invalid());
+    }
+    let mut cursor = 1;
+    let mut count = 0;
+    while bytes.get(cursor) != Some(&b')') {
+        while bytes.get(cursor) == Some(&b'[') {
+            cursor += 1;
+        }
+        match bytes.get(cursor) {
+            Some(b'B' | b'C' | b'D' | b'F' | b'I' | b'J' | b'S' | b'Z') => cursor += 1,
+            Some(b'L') => {
+                let end = descriptor[cursor + 1..].find(';').ok_or_else(invalid)? + cursor + 1;
+                if !valid_name(&descriptor[cursor + 1..end]) {
+                    return Err(invalid());
+                }
+                cursor = end + 1;
+            }
+            _ => return Err(invalid()),
+        }
+        count += 1;
+        if count > 255 {
+            return Err(invalid());
+        }
+    }
+    Ok(count)
+}
+
+fn validate_type_annotation_parameters(descriptor: &str, attributes: &Attributes) -> Result<()> {
+    if !attributes.type_annotation_parameter_indices.is_empty() {
+        let count = type_annotation_parameter_count(descriptor)?;
+        if attributes
+            .type_annotation_parameter_indices
+            .iter()
+            .any(|index| *index >= count)
+        {
+            return Err(invalid());
+        }
+    }
+    Ok(())
+}
+
 fn attributes(
     reader: &mut Reader<'_>,
     pool: &[Constant],
     constants: &std::sync::Arc<std::collections::BTreeMap<u16, InlineConstant>>,
 ) -> Result<Attributes> {
     let mut result = Attributes::default();
+    let mut type_attribute_names = std::collections::HashSet::new();
     for _ in 0..reader.u2()? {
         let name = utf8(pool, reader.u2()?)?;
         let length = usize::try_from(reader.u4()?).map_err(|_| invalid())?;
@@ -976,6 +1025,65 @@ fn attributes(
                 for annotations in &mut result.parameter_annotations {
                     for _ in 0..data.u2()? {
                         annotations.push(annotation(&mut data, pool, 0)?);
+                    }
+                }
+            }
+            "RuntimeVisibleTypeAnnotations" | "RuntimeInvisibleTypeAnnotations" => {
+                if !type_attribute_names.insert(name) {
+                    return Err(invalid());
+                }
+                for _ in 0..data.u2()? {
+                    let target = data.u1()?;
+                    result.type_annotation_targets.push(target);
+                    let parameter = match target {
+                        0x00 | 0x01 | 0x16 => Some(usize::from(data.u1()?)),
+                        0x10 | 0x17 | 0x42..=0x46 => {
+                            data.u2()?;
+                            None
+                        }
+                        0x11 | 0x12 => {
+                            data.u1()?;
+                            data.u1()?;
+                            None
+                        }
+                        0x13..=0x15 => None,
+                        0x40 | 0x41 => {
+                            for _ in 0..data.u2()? {
+                                data.u2()?;
+                                data.u2()?;
+                                data.u2()?;
+                            }
+                            None
+                        }
+                        0x47..=0x4b => {
+                            data.u2()?;
+                            data.u1()?;
+                            None
+                        }
+                        _ => return Err(invalid()),
+                    };
+                    if target == 0x16 {
+                        result
+                            .type_annotation_parameter_indices
+                            .push(parameter.ok_or_else(invalid)?);
+                    }
+                    let path_length = data.u1()?;
+                    for _ in 0..path_length {
+                        let kind = data.u1()?;
+                        let index = data.u1()?;
+                        if kind > 3 || kind != 3 && index != 0 {
+                            return Err(invalid());
+                        }
+                    }
+                    let value = annotation(&mut data, pool, 0)?;
+                    if path_length != 0 || !matches!(target, 0x14 | 0x16) {
+                        result.unsupported = true;
+                    } else if target == 0x14 {
+                        result.return_type_annotations.push(value);
+                    } else {
+                        result
+                            .parameter_type_annotations
+                            .push((parameter.ok_or_else(invalid)?, value));
                     }
                 }
             }
@@ -1283,6 +1391,11 @@ fn metadata_type<'a>(bytes: &[u8], strings: &'a [String]) -> Result<&'a str> {
         "kotlin/IntArray" => Ok("[I"),
         "kotlin/ByteArray" => Ok("[B"),
         "kotlin/CharArray" => Ok("[C"),
+        "kotlin/LongArray" => Ok("[J"),
+        "kotlin/BooleanArray" => Ok("[Z"),
+        "kotlin/FloatArray" => Ok("[F"),
+        "kotlin/DoubleArray" => Ok("[D"),
+
         "kotlin/Unit" => Ok("V"),
         _ => Err(invalid()),
     }
@@ -1615,6 +1728,11 @@ fn typed_metadata_type(bytes: &[u8], strings: &[String]) -> Result<Type> {
                 "kotlin/IntArray" => Type::IntArray,
                 "kotlin/ByteArray" => Type::ByteArray,
                 "kotlin/CharArray" => Type::CharArray,
+                "kotlin/LongArray" => Type::LongArray,
+                "kotlin/BooleanArray" => Type::BooleanArray,
+                "kotlin/FloatArray" => Type::FloatArray,
+                "kotlin/DoubleArray" => Type::DoubleArray,
+
                 "kotlin/Unit" => Type::Unit,
                 "kotlin/Any" => Type::Java("java/lang/Object".into()),
                 _ if !name.starts_with("kotlin/") && valid_name(&name.replace('.', "$")) => {
@@ -2216,6 +2334,13 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
         let field_name = utf8(&pool, reader.u2()?)?.to_owned();
         let descriptor = utf8(&pool, reader.u2()?)?.to_owned();
         let attrs = attributes(&mut reader, &pool, &constants)?;
+        if attrs
+            .type_annotation_targets
+            .iter()
+            .any(|target| *target != 0x13)
+        {
+            return Err(invalid());
+        }
         let constant = attrs
             .constant
             .map(
@@ -2260,6 +2385,14 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
         let method_name = utf8(&pool, reader.u2()?)?.to_owned();
         let descriptor = utf8(&pool, reader.u2()?)?.to_owned();
         let attrs = attributes(&mut reader, &pool, &constants)?;
+        if attrs
+            .type_annotation_targets
+            .iter()
+            .any(|target| !matches!(target, 0x01 | 0x12 | 0x14..=0x17))
+        {
+            return Err(invalid());
+        }
+        validate_type_annotation_parameters(&descriptor, &attrs)?;
         let unsupported = attrs.unsupported
             || attrs.annotated
             || attrs.signature.is_some()
@@ -2279,6 +2412,13 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
         });
     }
     let attrs = attributes(&mut reader, &pool, &constants)?;
+    if attrs
+        .type_annotation_targets
+        .iter()
+        .any(|target| !matches!(target, 0x00 | 0x10 | 0x11))
+    {
+        return Err(invalid());
+    }
     if reader.offset != bytes.len() {
         return Err(invalid());
     }
@@ -2346,6 +2486,69 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn type_annotation_targets_paths_and_parameter_indices_are_checked() {
+        fn decode(payload: &[u8]) -> Result<Attributes> {
+            decode_named(payload, "RuntimeVisibleTypeAnnotations")
+        }
+        fn decode_named(payload: &[u8], attribute_name: &str) -> Result<Attributes> {
+            let pool = vec![
+                Constant::Empty,
+                Constant::Utf8(
+                    attribute_name.into(),
+                    attribute_name.encode_utf16().collect(),
+                ),
+                Constant::Utf8(
+                    "Lorg/jspecify/annotations/NonNull;".into(),
+                    "Lorg/jspecify/annotations/NonNull;"
+                        .encode_utf16()
+                        .collect(),
+                ),
+            ];
+            let mut bytes = vec![0, 1, 0, 1];
+            bytes.extend((payload.len() as u32).to_be_bytes());
+            bytes.extend(payload);
+            attributes(
+                &mut Reader {
+                    bytes: &bytes,
+                    offset: 0,
+                },
+                &pool,
+                &std::sync::Arc::new(std::collections::BTreeMap::new()),
+            )
+        }
+        let valid = decode(&[0, 1, 0x16, 1, 0, 0, 2, 0, 0]).unwrap();
+        assert!(!valid.unsupported);
+        assert_eq!(valid.parameter_type_annotations[0].0, 1);
+        assert!(validate_type_annotation_parameters("(J[D)V", &valid).is_ok());
+        assert!(validate_type_annotation_parameters("([D)V", &valid).is_err());
+        let wrong_index = decode(&[0, 1, 0x16, 255, 0, 0, 2, 0, 0]).unwrap();
+        assert!(validate_type_annotation_parameters("(J[D)V", &wrong_index).is_err());
+        let nested_wrong_index = decode(&[0, 1, 0x16, 255, 1, 0, 0, 0, 2, 0, 0]).unwrap();
+        assert!(nested_wrong_index.unsupported);
+        assert!(validate_type_annotation_parameters("(J[D)V", &nested_wrong_index).is_err());
+        assert_eq!(type_annotation_parameter_count("(J[D)V").unwrap(), 2);
+        assert_eq!(type_annotation_parameter_count("([D)V").unwrap(), 1);
+        let returned = decode(&[0, 1, 0x14, 0, 0, 2, 0, 0]).unwrap();
+        assert_eq!(returned.return_type_annotations.len(), 1);
+        let invisible = decode_named(
+            &[0, 1, 0x14, 0, 0, 2, 0, 0],
+            "RuntimeInvisibleTypeAnnotations",
+        )
+        .unwrap();
+        assert_eq!(invisible.return_type_annotations.len(), 1);
+        assert!(decode(&[0, 1, 0x13, 0, 0, 2, 0, 0]).unwrap().unsupported);
+        assert!(
+            decode(&[0, 1, 0x16, 0, 1, 0, 0, 0, 2, 0, 0])
+                .unwrap()
+                .unsupported
+        );
+        assert!(decode(&[0, 1, 0x7f, 0, 0, 2, 0, 0]).is_err());
+        assert!(decode(&[0, 1, 0x16, 0, 1, 4, 0, 0, 2, 0, 0]).is_err());
+        assert!(decode(&[0, 1, 0x16, 0, 1, 0, 1, 0, 2, 0, 0]).is_err());
+        assert!(decode(&[0, 1, 0x16, 0, 0, 0, 2, 0]).is_err());
+    }
+
     #[test]
     fn actual_junit_test_annotation_retains_runtime_target_and_unsupported_defaulted_parameters() {
         let jar = PathBuf::from(env!("CARGO_MANIFEST_DIR"))

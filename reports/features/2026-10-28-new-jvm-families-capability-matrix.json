@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "kind": "features",
-  "created_at": "2026-10-28T12:50:15.991493+00:00",
+  "created_at": "2026-10-28T13:06:48.909647+00:00",
   "status": "in_progress",
   "selection": "Approximately twenty genuinely new families; current live execution matrix. Bounded acceptance does not establish unrestricted conformance. Infrastructure and existing support excluded.",
-  "validated_new_families": 5,
+  "validated_new_families": 6,
   "features": [
     {
       "id": "family-01",
@@ -47,9 +47,13 @@
       "id": "family-05",
       "number": 5,
       "name": "Remaining signed primitive/array representations",
-      "status": "unassessed",
+      "status": "supported",
       "acceptance_boundary": "Short and Long/Boolean/Float/Double arrays; allocation, indexed read/write, iteration, vararg/spread, boxing and Java ABI. AudioHighlightColor needs real Android dependencies.",
-      "execution": "Implementation and validation in isolated source copy; not counted as accepted."
+      "correctness_report": "reports/correctness/2026-10-28T125502173178Z-new-primitive-arrays-integrated.json",
+      "restrictions": [
+        "Long/Boolean/Float/Double native arrays as one representation family; Short/ShortArray, effectful initializer-producing expressions and builtin classifier shadows remain explicit boundaries.",
+        "JVM type-use annotation support is a prerequisite restricted to known nullability qualifiers at empty return/formal-parameter paths; unknown/nested targets reject."
+      ]
     },
     {
       "id": "family-06",

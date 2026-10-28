@@ -208,6 +208,11 @@ impl<'a> Context<'a> {
                 "kotlin/IntArray" => Type::IntArray,
                 "kotlin/ByteArray" => Type::ByteArray,
                 "kotlin/CharArray" => Type::CharArray,
+                "kotlin/LongArray" => Type::LongArray,
+                "kotlin/BooleanArray" => Type::BooleanArray,
+                "kotlin/FloatArray" => Type::FloatArray,
+                "kotlin/DoubleArray" => Type::DoubleArray,
+
                 "kotlin/Array" if arguments.len() == 1 && arguments[0].ty.is_some() => {
                     let inner = arguments.remove(0).ty.ok_or_else(invalid)?;
                     if inner == Type::String {
@@ -537,11 +542,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
         let element = context.field(&parameter, 4, 6)?;
         let returned = context.field(&function, 3, 7)?;
         let component = match &array {
-            Type::IntArray => Type::Int,
-            Type::ByteArray => Type::Byte,
-            Type::CharArray => Type::Char,
-            Type::StringArray => Type::String,
-            Type::Array(element) => element.as_ref().clone(),
+            array if array.array_element().is_some() => array.array_element().unwrap(),
             _ => continue,
         };
         if component != element || returned != array {
@@ -1417,7 +1418,16 @@ mod tests {
                 .iter()
                 .map(|method| method.name.as_str())
                 .collect::<Vec<_>>(),
-            ["arrayOf", "byteArrayOf", "charArrayOf", "intArrayOf"]
+            [
+                "arrayOf",
+                "booleanArrayOf",
+                "byteArrayOf",
+                "charArrayOf",
+                "doubleArrayOf",
+                "floatArrayOf",
+                "intArrayOf",
+                "longArrayOf"
+            ]
         );
         for method in &methods {
             assert_eq!(method.owner, "kotlin/<builtins>");
@@ -1437,7 +1447,14 @@ mod tests {
             matches!(methods[0].kotlin_result.as_ref().unwrap(), Type::Array(element)
             if matches!(element.as_ref(), Type::Parameter { name, .. } if name == "T"))
         );
-        assert_eq!(methods[3].descriptor, "([I)[I");
+        assert_eq!(
+            methods
+                .iter()
+                .find(|method| method.name == "intArrayOf")
+                .unwrap()
+                .descriptor,
+            "([I)[I"
+        );
     }
 
     #[test]
