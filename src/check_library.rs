@@ -786,6 +786,16 @@ impl Checker<'_> {
         else {
             return Ok(None);
         };
+        if class.access & (0x200 | 0x400) != 0 {
+            return Err(Diagnostic::new(
+                offset,
+                "Abstract classes and interfaces cannot be constructed",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "ABSTRACT_CONSTRUCTION_INVALID",
+            ));
+        }
         let constructors = class
             .methods
             .iter()
@@ -886,6 +896,16 @@ impl Checker<'_> {
             ));
         }
         relations::validate_type_arguments_with_classes(&ty, self.classpath, self.classes, offset)?;
+        if class.access & (0x200 | 0x400) != 0 {
+            return Err(Diagnostic::new(
+                offset,
+                "Abstract classes and interfaces cannot be constructed",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "ABSTRACT_CONSTRUCTION_INVALID",
+            ));
+        }
         let constructors = class
             .methods
             .iter()
@@ -940,5 +960,115 @@ impl Checker<'_> {
             },
             lets,
         )))
+    }
+}
+
+impl Checker<'_> {
+    pub(super) fn qualified_classifier(&self, expression: &Expr) -> Option<JavaClass> {
+        fn parts(expression: &Expr, names: &mut Vec<String>) -> bool {
+            match &expression.kind {
+                ExprKind::Name(name) => {
+                    names.push(name.clone());
+                    true
+                }
+                ExprKind::Property(receiver, name) if parts(receiver, names) => {
+                    names.push(name.clone());
+                    true
+                }
+                _ => false,
+            }
+        }
+        let mut names = Vec::new();
+        if !parts(expression, &mut names) || names.len() < 2 {
+            return None;
+        }
+        let root = &names[0];
+        if self.local(root).is_some()
+            || self.captured.contains_key(root)
+            || self.constants.contains_key(root)
+            || self.fields.contains_key(root)
+            || self.object_fields.contains_key(root)
+            || self.companion_fields.contains_key(root)
+            || self
+                .members
+                .values()
+                .any(|method| method.source_property.as_ref() == Some(root))
+        {
+            return None;
+        }
+        let qualified = names.join("/");
+        let owner = self
+            .imports
+            .get(&qualified)
+            .cloned()
+            .or_else(|| {
+                self.imports
+                    .get(&names[0])
+                    .map(|root| format!("{root}${}", names[1..].join("$")))
+            })
+            .unwrap_or(qualified);
+        self.classpath
+            .load(&owner)
+            .ok()
+            .filter(|class| class.access & 1 != 0 && !class.unsupported)
+    }
+    pub(super) fn qualified_constructor(
+        &mut self,
+        expression: &Expr,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        let Some(class) = self.qualified_classifier(expression) else {
+            return Ok(None);
+        };
+        if class
+            .fields
+            .iter()
+            .any(|f| f.name == "INSTANCE" && f.descriptor == format!("L{};", class.name))
+        {
+            return Ok(None);
+        }
+        if class.access & (0x200 | 0x400) != 0 {
+            return Err(Diagnostic::new(
+                offset,
+                "Abstract classes and interfaces cannot be constructed",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "ABSTRACT_CONSTRUCTION_INVALID",
+            ));
+        }
+        if class
+            .library
+            .as_ref()
+            .is_some_and(|l| !l.type_parameters.is_empty())
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Qualified generic construction requires unsupported explicit classifier handling",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "QUALIFIED_GENERIC_CONSTRUCTOR_UNSUPPORTED",
+            ));
+        }
+        let constructors = class
+            .methods
+            .iter()
+            .filter(|m| m.name == "<init>" && m.access & 1 != 0 && !m.unsupported)
+            .cloned()
+            .collect::<Vec<_>>();
+        let method = self.select_method(&constructors, args, offset)?;
+        let normalized = self.vararg_arguments(&method, args, offset)?;
+        let (params, defaults) = Self::method_parameters(&method)?;
+        self.constructor_call(
+            &class.name,
+            &params,
+            &defaults,
+            &normalized,
+            self.method_named(&method),
+            offset,
+        )
+        .map(Some)
     }
 }

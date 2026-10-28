@@ -36,6 +36,19 @@ pub(super) fn check_class_with_constants(
     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
     constants: &HashMap<String, (Type, Expr)>,
 ) -> Result<ClassDecl> {
+    if source.sealed_
+        && (!source.secondary_constructors.is_empty()
+            || source.defaults.iter().any(Option::is_some))
+    {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Sealed secondary constructors and default constructor parameters are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "SEALED_CONSTRUCTOR_DEFAULTS_UNSUPPORTED",
+        ));
+    }
     validate_classifier_generics(
         &source.type_params,
         &source.super_types,
@@ -54,13 +67,12 @@ pub(super) fn check_class_with_constants(
         && (source.params.is_empty()
             || source.params.len() > 32
             || source.param_properties.len() != source.params.len()
-            || !source.interfaces.is_empty()
             || !source.mutable_params.is_empty()
             || source.public_params.len() != source.params.len())
     {
         return Err(Diagnostic::new(
             source.offset,
-            "Data classes require 1 to 32 public val constructor properties without interfaces",
+            "Data classes require 1 to 32 public val constructor properties",
         ));
     }
     if source.data
@@ -198,6 +210,20 @@ pub(super) fn check_class_with_constants(
             "ENUM_DIRECT_INHERITANCE",
         ));
     }
+    for parent in
+        std::iter::once(&super_class).chain(source.interfaces.iter().filter_map(|n| imports.get(n)))
+    {
+        if classpath.load(parent).is_ok_and(|class| class.sealed_) && !classpath.is_source(&owner) {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Anonymous and local types cannot directly inherit sealed classifiers",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "SEALED_ANONYMOUS_SUBCLASS_INVALID",
+            ));
+        }
+    }
     let mut interfaces = Vec::new();
     let mut required = HashMap::new();
     if let Ok(object) = classpath.load("java/lang/Object") {
@@ -241,6 +267,16 @@ pub(super) fn check_class_with_constants(
             .get(alias)
             .ok_or_else(|| Diagnostic::new(source.offset, "Interfaces require explicit imports"))?;
         let interface = &classes[name];
+        if source.data && classpath.methods(name)?.iter().any(|m| m.access & 8 == 0) {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Data classes with non-marker interface contracts are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "DATA_CLASS_INTERFACE_MEMBERS_UNSUPPORTED",
+            ));
+        }
         if interfaces.contains(name) {
             return Err(Diagnostic::new(source.offset, "Duplicate interface"));
         }
@@ -294,6 +330,7 @@ pub(super) fn check_class_with_constants(
     }
     let mut mutable_fields: HashSet<_> = source.mutable_params.iter().cloned().collect();
     let mut initializer_checker = Checker {
+        exhaustiveness_flow: false,
         source_type_params: &[],
         source_infix: &HashSet::new(),
         source_operator: &HashSet::new(),
@@ -406,6 +443,15 @@ pub(super) fn check_class_with_constants(
             .map(|(value, ty)| initializer_checker.coerce(value, java_parameter(ty), source.offset))
             .collect::<Result<Vec<_>>>()?;
     }
+    if classpath
+        .load(&super_class)
+        .is_ok_and(|class| class.sealed_)
+    {
+        super_args.push(Value {
+            ty: Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
+            kind: ValueKind::Null,
+        });
+    }
     let mut constructor_locals = initializer_checker.next;
     drop(initializer_checker);
     let mut property_types = HashMap::new();
@@ -455,6 +501,7 @@ pub(super) fn check_class_with_constants(
         }
         if let Some(expr) = &property.initializer {
             let mut checker = Checker {
+                exhaustiveness_flow: false,
                 lambdas: lambdas.clone(),
                 captured: HashMap::new(),
                 captured_cells: HashMap::new(),
@@ -891,6 +938,7 @@ pub(super) fn check_class_with_constants(
             }
         }
         let mut checker = Checker {
+            exhaustiveness_flow: false,
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),
@@ -1581,6 +1629,11 @@ pub(super) fn check_class_with_constants(
     }
     let abstract_methods = method_keys(|m| !m.has_body);
     Ok(ClassDecl {
+        sealed_: source.sealed_,
+        sealed_subclasses: classpath
+            .load(&owner)
+            .map(|c| c.sealed_subclasses)
+            .unwrap_or_default(),
         type_params,
         super_types,
         generic_bridges,
@@ -1674,6 +1727,7 @@ impl<'a> DeclarationContext<'a> {
     }
     pub fn checker(&self, receiver: bool, next: u16, result: Type) -> Checker<'_> {
         Checker {
+            exhaustiveness_flow: false,
             lambdas: self.lambdas.clone(),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),

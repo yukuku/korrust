@@ -13,15 +13,18 @@ impl Checker<'_> {
             };
             let kind = match &statement.kind {
                 StatementKind::Expression(expr) => return Some(expr.clone()),
-                StatementKind::When(subject, branches, Some(otherwise)) => ExprKind::When(
+                StatementKind::When(subject, branches, otherwise) => ExprKind::When(
                     Box::new(subject.clone()),
                     branches
                         .iter()
                         .map(|(conditions, body)| (conditions.clone(), block(body)))
                         .collect(),
-                    Box::new(block(otherwise)),
+                    Box::new(otherwise.as_ref().map(|body| block(body)).unwrap_or(Expr {
+                        offset: statement.offset,
+                        kind: ExprKind::MissingWhenElse,
+                    })),
                 ),
-                StatementKind::WhenBinding(name, subject, branches, Some(otherwise)) => {
+                StatementKind::WhenBinding(name, subject, branches, otherwise) => {
                     ExprKind::WhenBinding(
                         name.clone(),
                         Box::new(subject.clone()),
@@ -29,7 +32,10 @@ impl Checker<'_> {
                             .iter()
                             .map(|(conditions, body)| (conditions.clone(), block(body)))
                             .collect(),
-                        Box::new(block(otherwise)),
+                        Box::new(otherwise.as_ref().map(|body| block(body)).unwrap_or(Expr {
+                            offset: statement.offset,
+                            kind: ExprKind::MissingWhenElse,
+                        })),
                     )
                 }
                 _ => return None,
@@ -66,7 +72,14 @@ impl Checker<'_> {
         let offset = expr.offset;
         match &expr.kind {
             ExprKind::Block(statements) => {
-                let (body, result) = self.result_block(statements, offset)?;
+                let (mut body, result) = self.result_block(statements, offset)?;
+                if let ValueKind::Abrupt(tail) = result.kind {
+                    body.extend(tail);
+                    return Ok(Value {
+                        ty: result.ty,
+                        kind: ValueKind::Abrupt(body),
+                    });
+                }
                 Ok(Value {
                     ty: result.ty.clone(),
                     kind: ValueKind::Block(body, Box::new(result)),

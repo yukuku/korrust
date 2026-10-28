@@ -225,6 +225,7 @@ fn legacy_check(
         let signatures = Vec::new();
         let extensions = HashSet::new();
         let mut checker = Checker {
+            exhaustiveness_flow: false,
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),
@@ -300,6 +301,7 @@ fn legacy_check(
             classes,
         )?;
         let mut checker = Checker {
+            exhaustiveness_flow: false,
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),

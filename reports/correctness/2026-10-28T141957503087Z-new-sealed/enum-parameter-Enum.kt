@@ -1,0 +1,1 @@
+enum class Label(val text:String) { A("a"), B("b") }

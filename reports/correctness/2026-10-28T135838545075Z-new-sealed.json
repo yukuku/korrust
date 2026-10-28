@@ -1,0 +1,243 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T13:58:38.545075+00:00",
+  "status": "failed",
+  "compiler": {
+    "binary": "target/debug/korrust",
+    "binary_sha256": "357b6e98c8a6c39a79c4298f49cd14fb9c5768b6f28a8f4cdc51e7a0e44ca0fb",
+    "frozen_source_root": "."
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "new_sealed"
+    ]
+  },
+  "inputs": {
+    "files_sha256": {
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "base-manifest.json": "c59e6bfbd39da872921fb11ad355c555d5247b8862cdc8bd2e35e0aa3eee5075",
+      "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt": "725aa743c8b56b9a69dcdbfdc0bc9341885760366d0dba3c71c3fc679cbe8d62",
+      "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionFileImporter.kt": "d4fd28353d64729e8cf510e336b5b2236c3ee38ee1e27702005be39afda31038",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/sealed/simple.kt": "3d3adf1c87fe56ed30596f4adb2d46a63eabcd080cf9a5fd7ba3e6b520bd3414",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "eed837a2e015b1a8a36eff3838b994c2612216e77d2902b007b1b2092668be21",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "fda47f001e4457653cf50ebe4fb7e72db43399f33461d8f4ad20df3f1e6124a2",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "62a78136794537d26021aaa661c5e17e80174d026836c69bf1f62d2ce6fd9636",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "3a9a8415c4b4b3eb95dfa2a4fbf3e1f069a0381743b4bcff3cfb77212473bce0",
+      "src/bytecode/lambdas.rs": "7b628142b176fab6c45c8a1bca10ea47ba83ea808c108c58fd7892a71ea2da4f",
+      "src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "src/bytecode.rs": "724728ffb7a6ac8496b40cde9d14523420eea2923ae74800578bc7f8771049f1",
+      "src/check.rs": "9072f0adee2beac3af4dabe5cf4ce33832c6ad024f42a30d8004e5386db2a9f1",
+      "src/check_annotation_placements.rs": "7e54592cbf5d6b2e112d879a1888731d02b8953cf39940b6a740c1ccf046476b",
+      "src/check_annotations.rs": "5bd835e0bcf16899053b879adb98a1e4d01f6219bb82c200db82b424da03edcc",
+      "src/check_captures.rs": "4415213c7aec5542f2a03c5a217da9d7976d062b1b3762578dde32b1d133ae10",
+      "src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+      "src/check_declarations.rs": "862c4872b6998584963d7401511031e5dd613150a33a101a3fd313d1f16beedf",
+      "src/check_delegates.rs": "954ec455179174b9f5d1ee1ce6fd25ae0031e8be82dab757ed2796a1fa9812dc",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "7a30eed0baabbb5e607c159daa666fdbae21f0d5024b1b5d4bcd226ff8701f6d",
+      "src/check_interfaces.rs": "a1bd7b04392e6619881ab763af734a1777807956798db1568cea1361711077fe",
+      "src/check_ir_walk.rs": "8e0859c2ee8251339dc0687b3346f572f73fa92abb7274ebb6478fd8f39b8cb2",
+      "src/check_java_properties.rs": "8218c0f0811bda1de65ea1598fd4097735fb2138fae9b14b8141dfbb4bd0f22e",
+      "src/check_library.rs": "9b4fbe04e38eac781edced8e24c22a56750ec44dbbe818dd3c813910512d50d4",
+      "src/check_objects.rs": "41efb80623dca09daf2261b8533801e9f31f4aa00b262bd04fd6a990a47db86d",
+      "src/check_operations.rs": "724c6983005b1db7d640b2a255feb546e60c55c1ca4a6930c93e995187c3ffdf",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "984646d9ec0154d9e028f3816e92c55a56ea3ec8de35c394ae301dc778e2599d",
+      "src/check_sealed.rs": "dd6e5a52f07295922416df35c2b17e9f2e0a4add58c6bddea32f2007c8a18669",
+      "src/check_singletons.rs": "1388090b8df87b6c02e45186e9466987f80454297ead3f1b73d7494d3612c57d",
+      "src/check_varargs.rs": "fa0e93bc19f643084e61a58d8996294b057730fff07ab5848981762d9e95f616",
+      "src/classpath/aliases.rs": "1c46d006199b89b1160b7591ed09e3f3cd095137a38783415977dfbc3fbf6fb1",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "786ede70f6ebb04aa89511fc2048af7594a4efae97a4400f3ae9043a6ee97733",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "b7c929d1dcfea40ef7d45963776790a620adb83eac385419404b6bcaedb9d381",
+      "src/classpath/source.rs": "e697a7fb1186057a8ba21b32146bcfff3216cb24a63d186c161af9c2bc7cb394",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "cbff50b38e57bdd061cf520178ce73b2a6fc889f0af1b7178ee76403a6460e01",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/const_eval.rs": "ff0badfe9fc9878d73350421c39345a1664dd4db8ba38df40a879c20857565af",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "07834addb869ccc179a48a9a7d9437a3961b834d8a0308bcb01d2089d5afc43d",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "fdb8421455409678b3526983ade209fc711dbdd870411db5637649e006dfd869",
+      "src/metadata.rs": "e662bf3f5439e6c2c6c00ab3f161b8dce41eddd7f1644db6988cabb30a07cfa5",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "579548128894079f96e75f5023bbe7fc47b43e2a26099d1e6123cf4297875446",
+      "src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa",
+      "tests/sealed_new/Calls.java": "6d0b6b974dac25fcdc2e414d002a675b2970222494ca6876739bcdf1422abe5b",
+      "tests/sealed_new/Consumer.kt": "0bf1c2429097cffadf253a06a1f34dcff9e6aeecb9e67432f80cb92303457a95",
+      "tests/sealed_new/ConsumerCalls.java": "e525dc9577f1eaf0e29a0df879a42c12709ffefba3ffa09c0ef14dc4becae878",
+      "tests/sealed_new/Probe.java": "32307f28ca3577e883a702e69f71f219d0cdcbc4868618bc65c30c71ff987b84",
+      "tests/sealed_new/Rejections.json": "51b3dfa404cf8569ac88ed7ee51adf8e03408c98c5ee9716be2aabf606bb32c9",
+      "tests/sealed_new/Use.kt": "d62b46292ce8d31f8b95c99a3c6860203d9be3f88c0e7fd06afe0d4123aedd27",
+      "tools/check_new_sealed.py": "117422997caaf36d8a84e41f6541919db33adcb2d07dce52b7960ef93f24141d"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "Independent observation dependency",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/dependency",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Probe.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T135838545075Z-new-sealed/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T135838545075Z-new-sealed/000-stderr.txt"
+    },
+    {
+      "label": "Official sealed declarations",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Use.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_sealed",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/dependency",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T135838545075Z-new-sealed/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T135838545075Z-new-sealed/001-stderr.txt"
+    },
+    {
+      "label": "Candidate sealed declarations",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/debug/korrust",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Use.kt",
+        "--module-name",
+        "new_sealed",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/dependency:/Users/yuku/f/git/korrust/target/new-sealed-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T135838545075Z-new-sealed/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T135838545075Z-new-sealed/002-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java assertions once against official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/official:/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/dependency:/Users/yuku/f/git/korrust/target/new-sealed-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/callers",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Calls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T135838545075Z-new-sealed/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T135838545075Z-new-sealed/003-stderr.txt"
+    },
+    {
+      "label": "Compile same Java assertions against candidate signatures",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/candidate:/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/dependency:/Users/yuku/f/git/korrust/target/new-sealed-implementation/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135838545075Z-new-sealed/candidate-signature-consumer",
+        "/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Calls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T135838545075Z-new-sealed/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T135838545075Z-new-sealed/004-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "harness",
+      "outcome": "correctness_failure",
+      "error": "Compile same Java assertions against candidate signatures\n/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Calls.java:11: error: incompatible types: Phase cannot be converted to Action\n        if (UseKt.action(Action.Begin.INSTANCE) != 1 || UseKt.action(Action.End.INSTANCE) != 2 || UseKt.action(Phase.UP) != 3 || UseKt.action(Phase.DOWN) != 4) throw new AssertionError();\n                                                                                                                    ^\n/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Calls.java:11: error: incompatible types: Phase cannot be converted to Action\n        if (UseKt.action(Action.Begin.INSTANCE) != 1 || UseKt.action(Action.End.INSTANCE) != 2 || UseKt.action(Phase.UP) != 3 || UseKt.action(Phase.DOWN) != 4) throw new AssertionError();\n                                                                                                                                                   ^\nNote: Some messages have been simplified; recompile with -Xdiags:verbose to get full output\n2 errors\n"
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "correctness_failure",
+      "changed": [
+        "tools/check_new_sealed.py"
+      ]
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-28T135838545075Z-new-sealed/frozen-inputs.zip",
+    "reports/correctness/2026-10-28T135838545075Z-new-sealed/original-report.txt"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_new_sealed.py",
+      "--compiler",
+      "target/debug/korrust",
+      "--source-root",
+      "."
+    ]
+  ],
+  "limitations": [
+    "Named non-generic sealed classes/interfaces in the current source batch and same package; implicit protected source constructors lower to private JVM constructors with public synthetic marker accessors; deterministic direct-child Kotlin metadata. Source generic sealed classifiers and explicit/default/secondary sealed constructors remain unsupported.",
+    "Exhaustive when supports bounded sealed closures, direct non-sealed leaves, sealed intermediates, objects, enum entries, booleans, nullable subjects, appropriate is/!is cases, branch result joins of equal/subtype/nullable types, returns/throws and definite assignment. Generic/intersection/flow-sensitive closure analysis and uninhabited closure proofs remain explicit boundaries.",
+    "JVM 1.8 fixed Java assertions, official Kotlin consumers, one unchanged pinned upstream original. Actual whole AndroidBible files are separately assessed and remain blocked; no extracted app fragment, Android runtime, full-app JVM21/plugin, performance, or complete Kotlin claim."
+  ],
+  "counts": {
+    "correctness_failure": 2
+  },
+  "feature_acceptance": {
+    "family": "sealed_classifiers_and_exhaustive_when",
+    "status": "failed",
+    "derived_counts": {
+      "correctness_failure": 2
+    },
+    "excluded_assessment_cases": []
+  },
+  "publication_input_archive_missing_or_changed": [
+    "src/bytecode/enums.rs",
+    "src/bytecode.rs",
+    "src/check.rs",
+    "src/check_sealed.rs",
+    "src/lib.rs",
+    "tests/sealed_new/Calls.java",
+    "tests/sealed_new/Rejections.json",
+    "tests/sealed_new/Use.kt",
+    "tools/check_new_sealed.py"
+  ],
+  "publication": {
+    "original_report_sha256": "98352d5b5f2991d524ab9fa7361b7448b03504c8908cdb1d9e269064bbe5a5e6",
+    "frozen_input_archive": "reports/correctness/2026-10-28T135838545075Z-new-sealed/frozen-inputs.zip",
+    "frozen_input_archive_sha256": "a422536ec7ac07bf6df490696495143c808973d76c4e3131c25fd65dbf22e4f9",
+    "archived_input_files": 56,
+    "original_snapshot_root": "/Users/yuku/f/git/korrust/target/new-sealed-implementation",
+    "note": "Original outcomes and command arguments retained. Text evidence copied; generated classes and compiler binaries remain ignored. Frozen source inputs archived by recorded hash."
+  }
+}

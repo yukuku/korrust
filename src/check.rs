@@ -1,5 +1,7 @@
 #[path = "check_annotation_placements.rs"]
 mod annotation_placements;
+#[path = "check_sealed.rs"]
+mod sealed;
 use crate::classpath::{Classpath, JavaClass, JavaMethod};
 use crate::{
     Diagnostic, Result,
@@ -122,6 +124,8 @@ pub struct ObjectMethod {
     pub inline: bool,
 }
 pub struct InterfaceDecl {
+    pub sealed_: bool,
+    pub sealed_subclasses: Vec<String>,
     pub type_params: Vec<syntax::TypeParameter>,
     pub super_types: Vec<Type>,
     pub owner: String,
@@ -192,6 +196,8 @@ pub struct GenericBridge {
     pub target_result: Type,
 }
 pub struct ClassDecl {
+    pub sealed_: bool,
+    pub sealed_subclasses: Vec<String>,
     pub type_params: Vec<syntax::TypeParameter>,
     pub super_types: Vec<Type>,
     pub generic_bridges: Vec<GenericBridge>,
@@ -609,6 +615,7 @@ type ConstructorSignature<'a> = (&'a str, &'a Vec<(String, Type)>, &'a Vec<Optio
 type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u64);
 type CallableParameters = (Vec<(String, Type)>, Vec<bool>);
 struct Checker<'a> {
+    exhaustiveness_flow: bool,
     lambdas: Rc<RefCell<Vec<LambdaDecl>>>,
     captured: HashMap<String, (String, Type)>,
     captured_cells: HashMap<String, Type>,
@@ -1975,7 +1982,10 @@ impl Checker<'_> {
                 kind: value.kind,
             });
         }
-        if matches!(value.ty, Type::Platform(_)) && value.ty.base() == &expected {
+        if matches!(value.ty, Type::Platform(_))
+            && (value.ty.base() == &expected
+                || value.ty.is_reference() && self.subtype(value.ty.base(), &expected))
+        {
             fn expression_name(kind: &ValueKind) -> String {
                 match kind {
                     ValueKind::Cast { value, .. }
@@ -2894,13 +2904,26 @@ impl Checker<'_> {
                     if subject.ty == Type::Unit {
                         return Err(Diagnostic::new(offset, "Unsupported when subject type"));
                     }
+                    let exhaustive = otherwise.is_none()
+                        && !matches!(source_subject.kind, ExprKind::WhenSubjectless)
+                        && self.closed_when_type(&subject.ty);
+                    if exhaustive {
+                        self.require_when_exhaustive(
+                            &subject.ty,
+                            &branches
+                                .iter()
+                                .flat_map(|(conditions, _)| conditions.iter())
+                                .collect::<Vec<_>>(),
+                            offset,
+                        )?;
+                    }
                     let subject_type = subject.ty.clone();
                     let slot = self.allocate_typed_slot(&subject.ty, offset)?;
                     body.push(Statement::Store(slot, subject));
                     let before = self.initialized.clone();
                     let mut continuing = Vec::new();
                     let mut checked = Vec::new();
-                    let mut all_return = otherwise.is_some();
+                    let mut all_return = otherwise.is_some() || exhaustive;
                     for (conditions, branch) in branches {
                         self.initialized = before.clone();
                         self.refinements = before_refinements.clone();
@@ -2940,6 +2963,12 @@ impl Checker<'_> {
                         }
                         all_return &= branch_returns;
                         branch
+                    } else if exhaustive {
+                        let value = self.unmatched_when(Type::Unit, offset)?;
+                        let ValueKind::Abrupt(body) = value.kind else {
+                            unreachable!()
+                        };
+                        body
                     } else {
                         continuing.push(before.clone());
                         Vec::new()
@@ -3026,6 +3055,7 @@ impl Checker<'_> {
                             .copied()
                             .collect(),
                     };
+                    self.exhaustiveness_flow |= y != n;
                     returns |= y && n;
                     Statement::If(cond, yes, no)
                 }
@@ -3053,7 +3083,21 @@ impl Checker<'_> {
     }
     fn value(&mut self, expr: &Expr) -> Result<Value> {
         let offset = expr.offset;
+        if let ExprKind::Call(target, args) = &expr.kind {
+            if let Some(value) = self.qualified_constructor(target, args, offset)? {
+                return Ok(value);
+            }
+        }
+
         let (ty, kind) = match &expr.kind {
+            ExprKind::WhenSubjectless => (Type::Boolean, ValueKind::Boolean(true)),
+            ExprKind::MissingWhenElse => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "A missing when branch requires exhaustive coverage",
+                )
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "NON_EXHAUSTIVE_WHEN"));
+            }
             ExprKind::VarargArray { array, elements } => {
                 return self.vararg_array(array, elements, offset);
             }
@@ -3214,6 +3258,24 @@ impl Checker<'_> {
                         "Unsupported when expression subject type",
                     ));
                 }
+                let missing = matches!(otherwise.kind, ExprKind::MissingWhenElse);
+                if missing {
+                    if matches!(source_subject.kind, ExprKind::WhenSubjectless) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Subjectless when expressions require an else branch",
+                        )
+                        .with_kind(crate::DiagnosticKind::InvalidKotlin, "NON_EXHAUSTIVE_WHEN"));
+                    }
+                    self.require_when_exhaustive(
+                        &subject.ty,
+                        &branches
+                            .iter()
+                            .flat_map(|(conditions, _)| conditions.iter())
+                            .collect::<Vec<_>>(),
+                        offset,
+                    )?;
+                }
                 let slot = self.allocate_typed_slot(&subject.ty, offset)?;
                 let mut checked = Vec::new();
                 for (conditions, branch) in branches {
@@ -3244,7 +3306,53 @@ impl Checker<'_> {
                     ));
                 }
                 self.refinements = before_refinements.clone();
-                let mut body = self.value(otherwise)?;
+                let mut body = if missing {
+                    let mut result: Option<Type> = None;
+                    for (_, value) in &checked {
+                        if matches!(value.kind, ValueKind::Abrupt(_)) {
+                            continue;
+                        }
+                        result = Some(match result {
+                            None => value.ty.clone(),
+                            Some(previous)
+                                if previous == value.ty || self.subtype(&value.ty, &previous) =>
+                            {
+                                previous
+                            }
+                            Some(previous) if self.subtype(&previous, &value.ty) => {
+                                value.ty.clone()
+                            }
+                            Some(Type::Null) => {
+                                if value.ty.is_nullable() {
+                                    value.ty.clone()
+                                } else {
+                                    Type::Nullable(Box::new(value.ty.clone()))
+                                }
+                            }
+                            Some(previous) if value.ty == Type::Null => {
+                                if previous.is_nullable() {
+                                    previous
+                                } else {
+                                    Type::Nullable(Box::new(previous))
+                                }
+                            }
+                            _ => {
+                                return Err(Diagnostic::new(
+                                    offset,
+                                    "The exhaustive when branch common type is unsupported",
+                                )
+                                .with_kind(
+                                    crate::DiagnosticKind::UnsupportedLanguage,
+                                    "WHEN_RESULT_JOIN_UNSUPPORTED",
+                                ));
+                            }
+                        });
+                    }
+                    let result = result.ok_or_else(|| Diagnostic::new(offset, "Exhaustive when expressions with only abrupt branches require unsupported Nothing inference").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "WHEN_ABRUPT_RESULT_UNSUPPORTED"))?;
+                    self.unmatched_when(result, offset)?
+                } else {
+                    self.value(otherwise)?
+                };
                 self.refinements = before_refinements;
                 if body.ty == Type::Unit {
                     return Err(Diagnostic::new(
@@ -3253,7 +3361,7 @@ impl Checker<'_> {
                     ));
                 }
                 for (condition, branch) in checked.into_iter().rev() {
-                    self.require(&branch, body.ty.clone(), offset)?;
+                    let branch = self.coerce(branch, body.ty.clone(), offset)?;
                     body = Value {
                         ty: body.ty.clone(),
                         kind: ValueKind::If(Box::new(condition), Box::new(branch), Box::new(body)),
@@ -3738,6 +3846,16 @@ impl Checker<'_> {
                 (ty, ValueKind::Binary(op.clone(), Box::new(a), Box::new(b)))
             }
             ExprKind::Property(receiver, name) => {
+                if let Some(class) = self.qualified_classifier(expr) {
+                    if class.fields.iter().any(|f| {
+                        f.name == "INSTANCE" && f.descriptor == format!("L{};", class.name)
+                    }) {
+                        return Ok(Value {
+                            ty: Type::Java(class.name.clone()),
+                            kind: ValueKind::ObjectInstance(class.name),
+                        });
+                    }
+                }
                 if let Some(owner) = self.qualified_java_class(receiver) {
                     return self.java_field(&owner, name, None, offset);
                 }
@@ -4140,6 +4258,16 @@ impl Checker<'_> {
                     }
                     if let Some(owner) = self.imports.get(name) {
                         if let Some(class) = self.classes.get(owner) {
+                            if class.access & (0x200 | 0x400) != 0 && !class.kotlin_fun_interface {
+                                return Err(Diagnostic::new(
+                                    offset,
+                                    "Abstract classes and interfaces cannot be constructed",
+                                )
+                                .with_kind(
+                                    crate::DiagnosticKind::InvalidKotlin,
+                                    "ABSTRACT_CONSTRUCTION_INVALID",
+                                ));
+                            }
                             if class.access & 0x4000 != 0 {
                                 return Err(Diagnostic::new(
                                     offset,
@@ -4775,6 +4903,19 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
                 .into(),
             ))
         }
+        Type::Java(name) if imports.contains_key(name) => Ok(Type::Java(imports[name].clone())),
+        Type::Java(name)
+            if name.split_once('/').is_some_and(|(root, _)| {
+                imports.get(root).is_some_and(|owner| !owner.contains("::"))
+            }) =>
+        {
+            let (root, nested) = name.split_once('/').unwrap();
+            Ok(Type::Java(format!(
+                "{}${}",
+                imports[root],
+                nested.replace('/', "$")
+            )))
+        }
         Type::Java(name) if name.contains('/') || imports.values().any(|n| n == name) => {
             Ok(ty.clone())
         }
@@ -4876,6 +5017,8 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
         | ExprKind::Long(_)
         | ExprKind::Float(_)
         | ExprKind::Double(_)
+        | ExprKind::MissingWhenElse
+        | ExprKind::WhenSubjectless
         | ExprKind::Boolean(_)
         | ExprKind::String(_)
         | ExprKind::Char(_)
@@ -5069,7 +5212,7 @@ pub fn check_with_owner(
                 && object.methods.is_empty()
                 && object.fields.is_empty()
     }) {
-        return singletons::check(source, classpath);
+        return singletons::check_with_owner(source, classpath, owner);
     }
     let renamed_imports = source
         .imports
@@ -5311,6 +5454,8 @@ pub fn check_with_owner(
         classes.insert(
             class_owner.clone(),
             classpath.load(&class_owner).unwrap_or_else(|_| JavaClass {
+                sealed_: false,
+                sealed_subclasses: Vec::new(),
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: None,
@@ -5764,6 +5909,7 @@ pub fn check_with_owner(
     for (id, function) in source.functions.iter().enumerate() {
         let (params, return_type) = signatures[id].clone();
         let mut checker = Checker {
+            exhaustiveness_flow: false,
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),

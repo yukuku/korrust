@@ -47,7 +47,21 @@ fn marker(
     Ok(())
 }
 
+#[cfg(test)]
 pub(super) fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
+    let object = source.object_decl.as_ref().unwrap();
+    let owner = if source.package.is_empty() {
+        object.name.clone()
+    } else {
+        format!("{}/{}", source.package.replace('.', "/"), object.name)
+    };
+    check_with_owner(source, classpath, &owner)
+}
+pub(super) fn check_with_owner(
+    source: &syntax::Module,
+    classpath: &Classpath,
+    owner: &str,
+) -> Result<Module> {
     let object = source.object_decl.as_ref().unwrap();
     if !object.fields.is_empty()
         || !object.methods.is_empty()
@@ -63,6 +77,14 @@ pub(super) fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Mo
     for (alias, name, offset) in &source.imports {
         if alias == &object.name || imports.insert(alias.clone(), name.clone()).is_some() {
             return Err(Diagnostic::new(*offset, "Conflicting singleton import"));
+        }
+        if !object
+            .interfaces
+            .iter()
+            .chain(&object.annotations)
+            .any(|used| used == alias)
+        {
+            continue;
         }
         let class = classpath.load(name)?;
         if class.access & 1 == 0
@@ -167,11 +189,7 @@ pub(super) fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Mo
             constants: object.constants.clone(),
             initializers: Vec::new(),
             locals: 0,
-            owner: if source.package.is_empty() {
-                object.name.clone()
-            } else {
-                format!("{}/{}", source.package.replace('.', "/"), object.name)
-            },
+            owner: owner.into(),
             interfaces,
             serializable,
             fields: Vec::new(),

@@ -163,6 +163,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 123. Typed scalar compile-time expressions, source constant references, and checked Java constant dependencies.
 124. Long, Boolean, Float, and Double primitive arrays with construction, indexing, iteration, varargs, and spread.
 125. Invariant source generic classes and interfaces, parameterized inheritance, and erased override bridges.
+126. Sealed classes and interfaces with bounded exhaustive when analysis, JVM constructor access, and Kotlin hierarchy metadata.
 
 ## Project contract
 

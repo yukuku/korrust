@@ -1,3 +1,4 @@
+mod sealed;
 use std::path::PathBuf;
 
 mod aliases;
@@ -58,6 +59,8 @@ pub(crate) struct AnnotationDefinition {
 
 #[derive(Clone, Debug)]
 pub(crate) struct JavaClass {
+    pub sealed_: bool,
+    pub sealed_subclasses: Vec<String>,
     pub annotation_definition: Option<AnnotationDefinition>,
     pub kotlin_fun_interface: bool,
     pub library: Option<LibraryClass>,
@@ -282,6 +285,8 @@ impl Classpath {
             if let Some(bytes) = archive::read(path, "kotlin/kotlin.kotlin_builtins")? {
                 let methods = metadata::builtin_array_factories(&bytes)?;
                 let class = JavaClass {
+                    sealed_: false,
+                    sealed_subclasses: Vec::new(),
                     annotation_definition: None,
                     kotlin_fun_interface: false,
                     library: Some(LibraryClass {
@@ -608,6 +613,12 @@ impl Classpath {
         Ok(classes)
     }
 
+    pub(crate) fn validate_source_sealed(
+        &self,
+        owners: &std::collections::HashSet<String>,
+    ) -> std::result::Result<(), (String, Diagnostic)> {
+        sealed::validate(self, owners)
+    }
     pub fn methods(&self, internal_name: &str) -> Result<Vec<JavaMethod>> {
         self.hierarchy_methods(internal_name, false)
     }
@@ -2423,6 +2434,8 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
         return Err(invalid());
     }
     let mut class = JavaClass {
+        sealed_: false,
+        sealed_subclasses: Vec::new(),
         annotation_definition: None,
         kotlin_fun_interface: false,
         library: None,
@@ -2749,6 +2762,8 @@ mod tests {
     #[test]
     fn malformed_annotation_retention_is_rejected_without_unhiding_ordinary_classes() {
         let class = JavaClass {
+            sealed_: false,
+            sealed_subclasses: Vec::new(),
             annotation_definition: None,
             kotlin_fun_interface: false,
             library: None,
@@ -3244,6 +3259,8 @@ mod tests {
         })
         .collect();
         let class = JavaClass {
+            sealed_: false,
+            sealed_subclasses: Vec::new(),
             annotation_definition: None,
             kotlin_fun_interface: false,
             library: None,
@@ -3515,6 +3532,8 @@ mod tests {
     #[test]
     fn kotlin_legacy_markers_validate_version_requirements_without_accepting_members() {
         let class = JavaClass {
+            sealed_: false,
+            sealed_subclasses: Vec::new(),
             annotation_definition: None,
             kotlin_fun_interface: false,
             library: None,

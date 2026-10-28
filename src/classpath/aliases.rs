@@ -245,6 +245,8 @@ mod tests {
     use super::*;
     fn class(aliases: Vec<LibraryTypeAlias>) -> JavaClass {
         JavaClass {
+            sealed_: false,
+            sealed_subclasses: Vec::new(),
             annotation_definition: None,
             kotlin_fun_interface: false,
             library: Some(LibraryClass {

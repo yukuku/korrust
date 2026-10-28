@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T14:24:18.903611+00:00",
+  "status": "completed",
+  "selection": "Supplementary Rust/format/lint/viewer and enum ABI validation for sealed v2; these checks are not additional language-family cases.",
+  "compiler": {
+    "binary": "target/final-sealed-build-v2/release/korrust",
+    "binary_sha256": "0ba5225b66856d4aeb9c833834025e5527e93c14222de300f6f4dac56df07a23",
+    "frozen_source_root": "target/final-sealed-source-v2"
+  },
+  "core_report": "reports/correctness/2026-10-28T141957503087Z-new-sealed.json",
+  "source_validation_scope": {
+    "full_library_247": "Semantic v1, identical to v2 except adding a structured UnsupportedLanguage code to the existing declaration resource guard.",
+    "frontend_59": "Development regression run, before final enum ABI/type-test/structured resource refinements; not asserted as final-binary full frontend evidence.",
+    "focused_final_4": "Final v2: source batch/module closure, invalid constructor/exhaustiveness, valid unsupported shapes and exact discarded-catch offset, structured batch resource limit.",
+    "enum_parameter_probe": "V1 emitter, identical to v2 emitter; final v2 core fixture independently compiles Java against candidate enum signatures too."
+  },
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release",
+        "--lib",
+        "--offline"
+      ],
+      "log": "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-lib-final.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--test",
+        "sealed_diagnostics",
+        "--test",
+        "frontend"
+      ],
+      "log": "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-frontend-dev-v2.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--test",
+        "sealed_diagnostics"
+      ],
+      "log": "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-diagnostics-final-v2.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "log": "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-clippy-final-v3.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_reports.py"
+      ],
+      "log": "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-report-tests-final.log"
+    }
+  ],
+  "environment": {
+    "JAVA_HOME": "/usr/libexec/java_home -v21",
+    "RUST_MIN_STACK": "16777216",
+    "CARGO_HOME": "/Users/yuku/f/git/korrust/target/cargo-home",
+    "RUSTUP_HOME": "/Users/yuku/f/git/korrust/target/rustup"
+  },
+  "cases": [
+    {
+      "id": "rust_library_247",
+      "outcome": "pass"
+    },
+    {
+      "id": "development_frontend_59",
+      "outcome": "pass"
+    },
+    {
+      "id": "final_diagnostics_4",
+      "outcome": "pass"
+    },
+    {
+      "id": "final_all_target_clippy",
+      "outcome": "pass"
+    },
+    {
+      "id": "viewer_7",
+      "outcome": "pass"
+    },
+    {
+      "id": "enum_source_parameter_javac_and_fixed_caller",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-lib-final.log",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-frontend-dev-v2.log",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-diagnostics-final-v2.log",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-clippy-final-v3.log",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-report-tests-final.log",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-frozen-build-v2.log",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/enum-parameter-result.json",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/enum-parameter-Enum.kt",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/enum-parameter-Calls.java"
+  ],
+  "files_sha256": {
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-frozen-build-v2.log": "76cb4fee498b16dc4aa08f4c996ba5a3bee1352ae3ed1c0a033a2cc726fb6eb9",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-clippy-final-v3.log": "fe7b2f04eaf47f7089af4311310d35ec91926052ba6d017b12e21b78ee78f300",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-diagnostics-final-v2.log": "19c0f58090893152c0cdfd3c0a9b6628c2477888a5e3d3c16b595931c8f00344",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/enum-parameter-Enum.kt": "259acaa6f5507bceec98a00d301579bb203c5f603efc8290adc6dbc33c87e6a0",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-frontend-dev-v2.log": "74b8b6519ac6a351a209616681a4d937c1f95a8d31732ed6375fced9bb848243",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/enum-parameter-Calls.java": "42b12c164de3ca1878c5489b98a4fb594c412578b7284558b1865b7b76d5b9a9",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/enum-parameter-result.json": "270b2d6222d206d7d6d77d39fa6df41d42e3ca6832f6dedb9438f1cd7222a070",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-lib-final.log": "e8543b8bce4859621e8ae34558a0800b23ddc55752c84b9ee76c41586ed7b2cb",
+    "reports/correctness/2026-10-28T141957503087Z-new-sealed/sealed-report-tests-final.log": "00972cb6336306ad4072b94b211e40abd9889fa132d9a19db774daee10a2417f"
+  }
+}

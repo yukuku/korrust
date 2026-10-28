@@ -1,0 +1,24 @@
+/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Calls.java:11: error: cannot access Phase
+        if (UseKt.action(Action.Begin.INSTANCE) != 1 || UseKt.action(Action.End.INSTANCE) != 2 || UseKt.action(Phase.UP) != 3 || UseKt.action(Phase.DOWN) != 4) throw new AssertionError();
+                                                                                                               ^
+  bad class file: /Users/yuku/f/git/korrust/target/new-sealed-implementation/target/checks/2026-10-28T135626417705Z-new-sealed/candidate/sealednew/Phase.class
+    bad RuntimeInvisibleParameterAnnotations attribute: Phase()
+    Please remove or make sure it appears in the correct subdirectory of the classpath.
+/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Calls.java:11: error: cannot find symbol
+        if (UseKt.action(Action.Begin.INSTANCE) != 1 || UseKt.action(Action.End.INSTANCE) != 2 || UseKt.action(Phase.UP) != 3 || UseKt.action(Phase.DOWN) != 4) throw new AssertionError();
+                                                                                                                                              ^
+  symbol:   variable Phase
+  location: class Calls
+/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Calls.java:12: error: cannot access Boolean
+        if (UseKt.bool(true) != 1 || UseKt.bool(false) != 0 || UseKt.bool(null) != -1) throw new AssertionError();
+                 ^
+  bad class file: /modules/java.base/java/lang/Boolean.class
+    bad RuntimeInvisibleParameterAnnotations attribute: Boolean(boolean)
+    Please remove or make sure it appears in the correct subdirectory of the classpath.
+/Users/yuku/f/git/korrust/target/new-sealed-implementation/tests/sealed_new/Calls.java:14: error: cannot access IllegalArgumentException
+        try { UseKt.throwing(new Choice.First(1)); throw new AssertionError(); } catch (IllegalArgumentException expected) { if (!"first".equals(expected.getMessage())) throw new AssertionError(); }
+                                                                                        ^
+  bad class file: /modules/java.base/java/lang/IllegalArgumentException.class
+    bad RuntimeInvisibleParameterAnnotations attribute: IllegalArgumentException()
+    Please remove or make sure it appears in the correct subdirectory of the classpath.
+4 errors

@@ -1338,6 +1338,7 @@ mod tests {
 
     fn with_checker(cp: &Classpath, action: impl FnOnce(&mut Checker<'_>)) {
         let mut checker = Checker {
+            exhaustiveness_flow: false,
             lambdas: Rc::new(RefCell::new(Vec::new())),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),

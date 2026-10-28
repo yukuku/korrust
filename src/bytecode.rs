@@ -4119,7 +4119,7 @@ fn emit_class_with(
             .into_iter()
             .zip(&class.params)
         {
-            if nonnull(ty) {
+            if !class.sealed_ && nonnull(ty) {
                 code.bytes.extend([0x19, slot as u8]);
                 let name = code.pool.string(name)?;
                 code.reference(0x13, name);
@@ -4173,7 +4173,7 @@ fn emit_class_with(
         let code = code.into_simple(constructor_locals, max_stack)?;
         let mut constructor = simple_method(
             &mut pool,
-            constructor_flags,
+            if class.sealed_ { 2 } else { constructor_flags },
             "<init>",
             &constructor_descriptor,
             code,
@@ -4183,7 +4183,15 @@ fn emit_class_with(
                 .as_deref(),
             false,
         )?;
-        parameter_annotations(&mut pool, &mut constructor, &class.params)?;
+        parameter_annotations(
+            &mut pool,
+            &mut constructor,
+            if enum_data.is_some() {
+                &class.params[2..]
+            } else {
+                &class.params
+            },
+        )?;
         frames::attach_constructor(
             &mut pool,
             &mut constructor,
@@ -4192,6 +4200,33 @@ fn emit_class_with(
             constructor_locals,
         )?;
         methods.push(constructor);
+        if class.sealed_ {
+            let slots = 1 + class.params.iter().map(|p| p.1.slots()).sum::<usize>();
+            let mut marker = SimpleCode::new(slots as u16, (slots + 1) as u16);
+            marker.bytes.push(0x2a);
+            for (slot, (_, ty)) in parameter_slots(&class.params, 1)
+                .into_iter()
+                .zip(&class.params)
+            {
+                marker.bytes.extend([load_opcode(ty), slot as u8]);
+            }
+            marker.reference(0xb7, pool.method(owner, "<init>", &constructor_descriptor)?);
+            marker.bytes.push(0xb1);
+            let descriptor = format!(
+                "{}Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+                constructor_descriptor.trim_end_matches(")V")
+            );
+            methods.push(simple_method(
+                &mut pool,
+                0x1001,
+                "<init>",
+                &descriptor,
+                marker,
+                None,
+                false,
+            )?);
+        }
+
         methods.extend(defaults::constructors(&mut pool, class, owner, lambdas)?);
     }
     for secondary in &class.secondary_constructors {
@@ -4445,13 +4480,15 @@ fn emit_class_with(
         methods.push(generic_override_bridge(&mut pool, owner, bridge)?);
     }
     let mut additional_attributes = additional_attributes(&mut pool)?;
-    if let Some(signature) = classifier_signature(
-        &class.type_params,
-        &class.super_types,
-        &class.super_class,
-        &class.interfaces,
-    ) {
-        additional_attributes.push(signature_attribute(&mut pool, &signature)?);
+    if enum_data.is_none() {
+        if let Some(signature) = classifier_signature(
+            &class.type_params,
+            &class.super_types,
+            &class.super_class,
+            &class.interfaces,
+        ) {
+            additional_attributes.push(signature_attribute(&mut pool, &signature)?);
+        }
     }
 
     let mut extra_field_count = 0;

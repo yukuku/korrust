@@ -1,0 +1,140 @@
+[
+  {
+    "id": "missing_leaf",
+    "source": "sealed interface S\nclass A : S\nclass B : S\nfun f(v: S): Int = when(v) { is A -> 1 }",
+    "official": "reject",
+    "code": "NON_EXHAUSTIVE_WHEN"
+  },
+  {
+    "id": "missing_null",
+    "source": "sealed interface S\nclass A : S\nfun f(v: S?): Int = when(v) { is A -> 1 }",
+    "official": "reject",
+    "code": "NON_EXHAUSTIVE_WHEN"
+  },
+  {
+    "id": "boolean_statement",
+    "source": "fun f(v: Boolean) { when(v) { true -> 1 } }",
+    "official": "reject",
+    "code": "NON_EXHAUSTIVE_WHEN"
+  },
+  {
+    "id": "enum_missing",
+    "source": "enum class E { A, B }\nfun f(v: E): Int = when(v) { E.A -> 1 }",
+    "official": "reject",
+    "code": "NON_EXHAUSTIVE_WHEN"
+  },
+  {
+    "id": "abstract_construction",
+    "source": "sealed class S\nfun f(): S = S()",
+    "official": "reject",
+    "code": "ABSTRACT_CONSTRUCTION_INVALID"
+  },
+  {
+    "id": "conflicting_modifiers",
+    "source": "open sealed class S",
+    "official": "reject",
+    "code": "SEALED_MODIFIER_INVALID"
+  },
+  {
+    "id": "public_constructor",
+    "source": "sealed class S public constructor()",
+    "official": "reject",
+    "code": "SEALED_CONSTRUCTOR_VISIBILITY_INVALID"
+  },
+  {
+    "id": "fun_interface",
+    "source": "sealed fun interface S { fun f(): Int }",
+    "official": "reject",
+    "code": "SEALED_FUN_INTERFACE_INVALID"
+  },
+  {
+    "id": "generic_sealed",
+    "source": "sealed class S<T>",
+    "official": "accept",
+    "code": "SEALED_GENERIC_CLASSIFIER_UNSUPPORTED"
+  },
+  {
+    "id": "private_constructor",
+    "source": "sealed class S private constructor()",
+    "official": "accept",
+    "code": "SEALED_CONSTRUCTOR_VISIBILITY_UNSUPPORTED"
+  },
+  {
+    "id": "constructor_defaults",
+    "source": "sealed class S(val v: Int = 1)",
+    "official": "accept",
+    "code": "SEALED_CONSTRUCTOR_DEFAULTS_UNSUPPORTED"
+  },
+  {
+    "id": "generic_leaf",
+    "source": "sealed interface S\nclass Leaf<T>(val value: T): S\nfun f(v:S):Int = when(v) { is Leaf<*> -> 1 }",
+    "official": "accept",
+    "code": "SEALED_GENERIC_EXHAUSTIVENESS_UNSUPPORTED"
+  },
+  {
+    "id": "data_object",
+    "source": "sealed interface S\ndata object A : S",
+    "official": "accept",
+    "code": "DATA_OBJECT_UNSUPPORTED"
+  },
+  {
+    "id": "discard_catch",
+    "source": "fun f(): Int = try { 1 } catch (_: Exception) { 2 }",
+    "official": "accept",
+    "code": "DISCARD_CATCH_BINDING_UNSUPPORTED"
+  },
+  {
+    "id": "mixed_result",
+    "source": "sealed interface S\nclass A:S\nclass B:S\nfun f(v:S):Any = when(v) { is A -> 1; is B -> \"s\" }",
+    "official": "accept",
+    "code": "WHEN_RESULT_JOIN_UNSUPPORTED"
+  },
+  {
+    "id": "intersection",
+    "source": "sealed interface S\ninterface J\nclass A:S,J\nclass B:S\nfun f(v:S):Int=when(v){is J->1; !is J->2}",
+    "official": "accept",
+    "code": "WHEN_TYPE_INTERSECTION_UNSUPPORTED"
+  },
+  {
+    "id": "protected_constructor",
+    "source": "sealed class S\nprotected constructor()",
+    "official": "accept",
+    "code": "SEALED_CONSTRUCTOR_VISIBILITY_UNSUPPORTED"
+  },
+  {
+    "id": "empty_hierarchy",
+    "source": "sealed interface S\nfun f(v:S):Int = when(v) {}",
+    "official": "reject",
+    "code": "NON_EXHAUSTIVE_WHEN"
+  },
+  {
+    "id": "subjectless",
+    "source": "fun f():Int=when{true->1}",
+    "official": "reject",
+    "code": "NON_EXHAUSTIVE_WHEN"
+  },
+  {
+    "id": "flow",
+    "source": "sealed interface S\nclass A:S\nclass B:S\nfun f(v:S):Int { if(v is A)return 1;return when(v){is B->2} }",
+    "official": "accept",
+    "code": "WHEN_FLOW_EXHAUSTIVENESS_UNSUPPORTED"
+  },
+  {
+    "id": "all_abrupt",
+    "source": "sealed interface S\nclass A:S\nfun f(v:S):Int=when(v){is A->throw IllegalStateException(\"x\")}",
+    "official": "accept",
+    "code": "WHEN_ABRUPT_RESULT_UNSUPPORTED"
+  },
+  {
+    "id": "anonymous_subclass",
+    "source": "sealed interface S\ninterface C { companion object { val bad = object : S {} } }",
+    "official": "reject",
+    "code": "SEALED_ANONYMOUS_SUBCLASS_INVALID"
+  },
+  {
+    "id": "inheritance_cycle",
+    "source": "sealed interface A:B\nsealed interface B:A",
+    "official": "reject",
+    "code": "INHERITANCE_CYCLE_INVALID"
+  }
+]

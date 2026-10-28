@@ -1543,6 +1543,8 @@ fn scalar_annotation_shape(expression: &Expr) -> bool {
         | ExprKind::Float(_)
         | ExprKind::Double(_)
         | ExprKind::Char(_)
+        | ExprKind::MissingWhenElse
+        | ExprKind::WhenSubjectless
         | ExprKind::Boolean(_)
         | ExprKind::String(_)
         | ExprKind::Null

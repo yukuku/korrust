@@ -383,6 +383,9 @@ fn encode_bytes(bytes: &[u8]) -> Vec<Vec<u16>> {
 type Imports<'a> = &'a [(String, String, usize)];
 
 fn imported_name<'a>(name: &'a str, imports: Imports<'a>) -> Result<&'a str> {
+    if let Some((_, resolved, _)) = imports.iter().find(|(alias, _, _)| alias == name) {
+        return Ok(resolved);
+    }
     if name.contains('/') {
         return Ok(name);
     }
@@ -807,7 +810,9 @@ fn class_metadata(
             6
         }) | u32::from(!class.annotations.is_empty())
             | if class.data { 1024 } else { 0 }
-            | if class.abstract_ {
+            | if class.sealed_ {
+                48
+            } else if class.abstract_ {
                 32
             } else if class.open {
                 16
@@ -826,6 +831,12 @@ fn class_metadata(
     }
     proto.number(3, name);
     classifier_parameters(&mut proto, &class.type_params, imports, &mut strings)?;
+    if let Some(checked) = checked {
+        for child in &checked.sealed_subclasses {
+            proto.number(16, strings.id(&child.replace('$', "."))?);
+        }
+    }
+
     for nested in &class.nested {
         proto.number(7, strings.id(crate::declaration_name(nested))?);
     }
@@ -860,7 +871,7 @@ fn class_metadata(
     }
     if !anonymous && class.primary_constructor {
         let mut constructor = Proto::default();
-        constructor.number(1, 6);
+        constructor.number(1, if class.sealed_ { 4 } else { 6 });
         let mut constructor_desc = String::from("(");
         for (index, (name, ty)) in class.params.iter().enumerate() {
             let mut param = parameter(name, ty, imports, &mut strings)?;
@@ -1574,12 +1585,23 @@ fn interface_metadata(
     let mut proto = Proto::default();
     proto.number(
         1,
-        (if interface.internal { 96 } else { 102 })
+        (if interface.internal { 64 } else { 70 })
+            | if checked.map_or(interface.sealed_, |c| c.sealed_) {
+                48
+            } else {
+                32
+            }
             | u32::from(!interface.annotations.is_empty())
             | if interface.fun_interface { 16384 } else { 0 },
     );
     proto.number(3, strings.id(&owner.replace('$', "."))?);
     classifier_parameters(&mut proto, &interface.type_params, imports, &mut strings)?;
+    if let Some(checked) = checked {
+        for child in &checked.sealed_subclasses {
+            proto.number(16, strings.id(&child.replace('$', "."))?);
+        }
+    }
+
     if interface.interfaces.is_empty() {
         let mut supertype = Proto::default();
         supertype.number(6, strings.id("kotlin/Any")?);

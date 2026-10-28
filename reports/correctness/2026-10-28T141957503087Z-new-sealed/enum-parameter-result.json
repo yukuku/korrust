@@ -1,0 +1,82 @@
+[
+  {
+    "argv": [
+      "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+      "target/sealed-enum-parameter-abi/Enum.kt",
+      "-jvm-target",
+      "1.8",
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-d",
+      "target/sealed-enum-parameter-abi/official"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/final-sealed-build-v1/release/korrust",
+      "target/sealed-enum-parameter-abi/Enum.kt",
+      "-cp",
+      "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+      "-d",
+      "target/sealed-enum-parameter-abi/candidate"
+    ],
+    "exit_code": 0,
+    "stdout": "/Users/yuku/f/git/korrust/target/new-sealed-implementation/target/sealed-enum-parameter-abi/candidate/Label.class\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+      "-cp",
+      "target/sealed-enum-parameter-abi/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+      "-d",
+      "target/sealed-enum-parameter-abi/callers",
+      "target/sealed-enum-parameter-abi/Calls.java"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+      "-cp",
+      "target/sealed-enum-parameter-abi/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+      "-d",
+      "target/sealed-enum-parameter-abi/candidate-callers",
+      "target/sealed-enum-parameter-abi/Calls.java"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+      "-Xverify:all",
+      "-cp",
+      "target/sealed-enum-parameter-abi/callers:target/sealed-enum-parameter-abi/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+      "Calls"
+    ],
+    "exit_code": 0,
+    "stdout": "OK\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+      "-Xverify:all",
+      "-cp",
+      "target/sealed-enum-parameter-abi/callers:target/sealed-enum-parameter-abi/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+      "Calls"
+    ],
+    "exit_code": 0,
+    "stdout": "OK\n",
+    "stderr": ""
+  }
+]

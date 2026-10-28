@@ -257,6 +257,8 @@ pub fn compile_batch_with_options(
             ));
         }
         classpath.register_source(classpath::JavaClass {
+            sealed_: false,
+            sealed_subclasses: Vec::new(),
             annotation_definition: None,
             kotlin_fun_interface: false,
             library: None,
@@ -458,6 +460,9 @@ pub fn compile_batch_with_options(
                 .source_header(unit, owner)
                 .map_err(|error| locate(error, owner))?;
         }
+        classpath
+            .validate_source_sealed(&owners)
+            .map_err(|(owner, error)| locate(error, &owner))?;
         let mut progress = 0;
         for (owner, unit) in &mut units {
             progress += check::infer_source_results(unit, &classpath, owner)
@@ -497,6 +502,9 @@ pub fn compile_batch_with_options(
     validate_batch_declarations(&units, &owner_sources, &sources)?;
     synchronize_nested_units(&mut units);
     validate_source_inheritance(&classpath, &owners)?;
+    classpath
+        .validate_source_sealed(&owners)
+        .map_err(|(owner, error)| locate(error, &owner))?;
     for (owner, unit) in &units {
         if unit
             .interface_decl
@@ -876,10 +884,12 @@ fn declaration_units(
     lexical_parents: &mut std::collections::HashMap<String, String>,
 ) -> Result<()> {
     if units.len() >= 256 {
-        return Err(Diagnostic::new(
-            0,
-            "Source exceeds the current 256-declaration limit",
-        ));
+        return Err(
+            Diagnostic::new(0, "Source exceeds the current 256-declaration limit").with_kind(
+                DiagnosticKind::UnsupportedLanguage,
+                "SOURCE_DECLARATION_LIMIT_UNSUPPORTED",
+            ),
+        );
     }
     let mut unit = syntax::Module {
         type_locations: context.type_locations.clone(),
@@ -1278,7 +1288,8 @@ fn validate_source_inheritance(
                     "Cyclic source inheritance involving {}",
                     name.replace('/', ".")
                 ),
-            ));
+            )
+            .with_kind(DiagnosticKind::InvalidKotlin, "INHERITANCE_CYCLE_INVALID"));
         }
         let class = classpath.load(name)?;
         for parent in class

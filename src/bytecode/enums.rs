@@ -101,9 +101,12 @@ pub(super) fn members(pool: &mut Pool, owner: &str, checked: &CheckedEnum) -> Re
     let mut signature = Vec::new();
     u2(&mut signature, pool.utf8("Signature")?);
     u4(&mut signature, 2);
+    let interfaces = checked.class.interfaces.iter().map(|owner| {
+        checked.class.super_types.iter().find(|ty| matches!(ty, Type::Java(name) | Type::Parameterized { name, .. } if name == owner)).map(generic_type).unwrap_or_else(|| format!("L{owner};"))
+    }).collect::<String>();
     u2(
         &mut signature,
-        pool.utf8(&format!("Ljava/lang/Enum<{descriptor}>;"))?,
+        pool.utf8(&format!("Ljava/lang/Enum<{descriptor}>;{interfaces}"))?,
     );
     Ok(Members {
         fields,

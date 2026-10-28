@@ -1,0 +1,1 @@
+public class Calls { public static void main(String[] args){if(!Label.A.getText().equals("a") || Label.values().length!=2)throw new AssertionError();System.out.println("OK");}}

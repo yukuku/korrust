@@ -292,6 +292,7 @@ pub struct CatchClause {
 }
 #[derive(Clone, Debug)]
 pub struct InterfaceDecl {
+    pub sealed_: bool,
     pub type_params: Vec<TypeParameter>,
     pub super_types: Vec<Type>,
     pub annotations: Vec<AnnotationUse>,
@@ -415,6 +416,7 @@ pub enum ConstValue {
 }
 #[derive(Clone, Debug)]
 pub struct ClassDecl {
+    pub sealed_: bool,
     pub type_params: Vec<TypeParameter>,
     pub super_types: Vec<Type>,
     pub param_annotations: Vec<Vec<AnnotationUse>>,
@@ -577,15 +579,18 @@ pub(crate) fn normalize_result_tail(body: &mut [Statement]) {
             Box::new(block(yes)),
             Box::new(block(no)),
         )),
-        StatementKind::When(subject, branches, Some(otherwise)) => Some(ExprKind::When(
+        StatementKind::When(subject, branches, otherwise) => Some(ExprKind::When(
             Box::new(subject),
             branches
                 .into_iter()
                 .map(|(conditions, body)| (conditions, block(body)))
                 .collect(),
-            Box::new(block(otherwise)),
+            Box::new(otherwise.map(block).unwrap_or(Expr {
+                offset,
+                kind: ExprKind::MissingWhenElse,
+            })),
         )),
-        StatementKind::WhenBinding(name, subject, branches, Some(otherwise)) => {
+        StatementKind::WhenBinding(name, subject, branches, otherwise) => {
             Some(ExprKind::WhenBinding(
                 name,
                 Box::new(subject),
@@ -593,7 +598,10 @@ pub(crate) fn normalize_result_tail(body: &mut [Statement]) {
                     .into_iter()
                     .map(|(conditions, body)| (conditions, block(body)))
                     .collect(),
-                Box::new(block(otherwise)),
+                Box::new(otherwise.map(block).unwrap_or(Expr {
+                    offset,
+                    kind: ExprKind::MissingWhenElse,
+                })),
             ))
         }
         _ => None,
@@ -605,6 +613,8 @@ pub(crate) fn normalize_result_tail(body: &mut [Statement]) {
 
 #[derive(Clone, Debug)]
 pub enum ExprKind {
+    MissingWhenElse,
+    WhenSubjectless,
     VarargArray {
         array: Type,
         elements: Vec<Expr>,
@@ -2361,6 +2371,14 @@ impl Parser {
             .filter(|annotation| annotation.use_site.is_none() && annotation.arguments.is_empty())
             .map(|annotation| annotation.name.clone())
             .collect();
+        if self.at("data") {
+            return Err(self
+                .error("Data object equality, hashing, and string contracts are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "DATA_OBJECT_UNSUPPORTED",
+                ));
+        }
         if !self.take("object") {
             return Err(
                 self.error("Unsupported object modifier; only public and internal are supported")
@@ -2370,6 +2388,7 @@ impl Parser {
         let name = self.classifier_name()?;
         let mut interfaces = Vec::new();
         let after_name = self.pos;
+        let mut after_header = after_name;
         self.lines();
         if self.take(":") {
             loop {
@@ -2384,6 +2403,7 @@ impl Parser {
                 self.record_type(&interface, type_offset);
                 self.reject_parameterized_supertype()?;
                 interfaces.push(interface);
+                after_header = self.pos;
                 if interfaces.len() > 128 {
                     return Err(self.error("Object exceeds the current 128-interface limit"));
                 }
@@ -2393,7 +2413,6 @@ impl Parser {
                 }
             }
         }
-        let after_header = self.pos;
         if depth > 1 && !interfaces.is_empty() {
             return Err(self.error("Nested object supertypes are not supported"));
         }
@@ -2733,6 +2752,8 @@ impl Parser {
                     | ExprKind::Double(_)
                     | ExprKind::Char(_)
                     | ExprKind::String(_)
+                    | ExprKind::MissingWhenElse
+                    | ExprKind::WhenSubjectless
                     | ExprKind::Boolean(_)
             )
             || significant_tokens == 2
@@ -2889,6 +2910,7 @@ impl Parser {
         let mut data = false;
         let mut open = false;
         let mut abstract_ = false;
+        let mut sealed_ = false;
         loop {
             if self.at("@") {
                 annotations.extend(self.annotations()?);
@@ -2910,6 +2932,11 @@ impl Parser {
                     return Err(self.error("Repeated data modifier"));
                 }
                 data = true;
+            } else if self.take("sealed") {
+                if sealed_ {
+                    return Err(self.error("Repeated sealed modifier"));
+                }
+                sealed_ = true;
             } else if self.take("abstract") {
                 abstract_ = true;
             } else if self.take("open") {
@@ -2927,6 +2954,12 @@ impl Parser {
             }
             self.lines();
         }
+        if sealed_ && (abstract_ || open || final_modifier || data) {
+            return Err(self
+                .error("Conflicting sealed class modifiers")
+                .with_kind(DiagnosticKind::InvalidKotlin, "SEALED_MODIFIER_INVALID"));
+        }
+        abstract_ |= sealed_;
         if matches!(self.token().text.as_str(), "private" | "protected") {
             return Err(self.error("Unsupported class visibility; use public or internal"));
         }
@@ -2936,6 +2969,38 @@ impl Parser {
         self.lines();
         let name = self.classifier_name()?;
         let type_params = self.type_parameters()?;
+        if sealed_ && !type_params.is_empty() {
+            return Err(self
+                .error("Source generic sealed classifiers are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "SEALED_GENERIC_CLASSIFIER_UNSUPPORTED",
+                ));
+        }
+        let before_visibility = self.pos;
+        self.lines();
+        if sealed_
+            && matches!(
+                self.token().text.as_str(),
+                "public" | "internal" | "private" | "protected" | "constructor"
+            )
+        {
+            if matches!(self.token().text.as_str(), "public" | "internal") {
+                return Err(self
+                    .error("Sealed constructors must be private or protected")
+                    .with_kind(
+                        DiagnosticKind::InvalidKotlin,
+                        "SEALED_CONSTRUCTOR_VISIBILITY_INVALID",
+                    ));
+            }
+            return Err(self
+                .error("Explicit sealed constructor visibility is unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "SEALED_CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
+                ));
+        }
+        self.pos = before_visibility;
         let after_name = self.pos;
         self.lines();
         if self.at("@") {
@@ -3087,6 +3152,7 @@ impl Parser {
                 ));
         }
         let declaration = ClassDecl {
+            sealed_,
             type_params,
             super_types,
             annotations,
@@ -3524,6 +3590,7 @@ impl Parser {
             return Err(self.error("Only unnamed companion objects are supported"));
         }
         let mut declaration = ClassDecl {
+            sealed_: false,
             type_params: Vec::new(),
             super_types: Vec::new(),
             annotations: Vec::new(),
@@ -3591,9 +3658,19 @@ impl Parser {
             return Err(self.error("Interfaces exceed the current 256-declaration limit"));
         }
         let mut visibility = None;
-        while self.at("@") || matches!(self.token().text.as_str(), "public" | "internal") {
+        let mut sealed_ = false;
+        while self.at("@") || matches!(self.token().text.as_str(), "public" | "internal" | "sealed")
+        {
             if self.at("@") {
                 annotations.extend(self.annotations()?);
+                continue;
+            }
+            if self.take("sealed") {
+                if sealed_ {
+                    return Err(self.error("Repeated sealed modifier"));
+                }
+                sealed_ = true;
+                self.lines();
                 continue;
             }
             if visibility.is_some() {
@@ -3604,6 +3681,14 @@ impl Parser {
             self.lines();
         }
         let fun_interface = self.take("fun");
+        if sealed_ && fun_interface {
+            return Err(self
+                .error("Functional interfaces cannot be sealed")
+                .with_kind(
+                    DiagnosticKind::InvalidKotlin,
+                    "SEALED_FUN_INTERFACE_INVALID",
+                ));
+        }
         self.lines();
         if !self.take("interface") {
             return Err(self.error("Only public or internal plain interfaces are supported"));
@@ -3611,6 +3696,14 @@ impl Parser {
         self.lines();
         let name = self.classifier_name()?;
         let type_params = self.type_parameters()?;
+        if sealed_ && !type_params.is_empty() {
+            return Err(self
+                .error("Source generic sealed classifiers are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "SEALED_GENERIC_CLASSIFIER_UNSUPPORTED",
+                ));
+        }
         let mut after_header = self.pos;
         self.lines();
         let mut interfaces = Vec::new();
@@ -3645,6 +3738,7 @@ impl Parser {
                 ));
         }
         let mut declaration = InterfaceDecl {
+            sealed_,
             type_params,
             super_types,
             annotations,
@@ -3995,6 +4089,7 @@ impl Parser {
                 self.lines();
                 self.expect("{")?;
                 let mut object = ClassDecl {
+                    sealed_: false,
                     type_params: Vec::new(),
                     super_types: Vec::new(),
                     annotations: Vec::new(),
@@ -4422,7 +4517,7 @@ impl Parser {
             } else {
                 Expr {
                     offset,
-                    kind: ExprKind::Boolean(true),
+                    kind: ExprKind::WhenSubjectless,
                 }
             };
             self.lines();
@@ -4730,6 +4825,14 @@ impl Parser {
                 self.lines();
                 if self.take("catch") {
                     self.expect("(")?;
+                    if self.at("_") {
+                        return Err(self
+                            .error("Discarded catch bindings are unsupported")
+                            .with_kind(
+                                DiagnosticKind::UnsupportedLanguage,
+                                "DISCARD_CATCH_BINDING_UNSUPPORTED",
+                            ));
+                    }
                     let name = self.declaration_name()?;
                     self.expect(":")?;
                     self.lines();
@@ -5276,7 +5379,7 @@ impl Parser {
         } else {
             Expr {
                 offset,
-                kind: ExprKind::Boolean(true),
+                kind: ExprKind::WhenSubjectless,
             }
         };
         self.lines();
@@ -5328,9 +5431,10 @@ impl Parser {
             self.end()?;
         }
         self.expect("}")?;
-        let otherwise = otherwise.ok_or_else(|| {
-            Diagnostic::new(offset, "When expressions require an explicit else branch")
-        })?;
+        let otherwise = otherwise.unwrap_or(Expr {
+            offset,
+            kind: ExprKind::MissingWhenElse,
+        });
         Ok(Expr {
             offset,
             kind: if let Some(name) = binding {

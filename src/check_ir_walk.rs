@@ -475,6 +475,8 @@ mod tests {
                 interface: None,
             }],
             class_decl: Some(ClassDecl {
+                sealed_: false,
+                sealed_subclasses: Vec::new(),
                 type_params: Vec::new(),
                 super_types: Vec::new(),
                 generic_bridges: Vec::new(),
@@ -508,6 +510,8 @@ mod tests {
                 bridges: Vec::new(),
             }),
             interface_decl: Some(InterfaceDecl {
+                sealed_: false,
+                sealed_subclasses: Vec::new(),
                 type_params: Vec::new(),
                 super_types: Vec::new(),
                 owner: "Contract".into(),

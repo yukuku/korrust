@@ -352,6 +352,11 @@ fn register_classes(
         .insert(
             owner.into(),
             JavaClass {
+                sealed_: source.sealed_,
+                sealed_subclasses: classpath
+                    .load(owner)
+                    .map(|c| c.sealed_subclasses)
+                    .unwrap_or_default(),
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
@@ -791,6 +796,8 @@ fn check_interface(
         )?;
     }
     Ok(InterfaceDecl {
+        sealed_: source.sealed_,
+        sealed_subclasses: class.sealed_subclasses.clone(),
         type_params: source.type_params.clone(),
         super_types: source
             .super_types
@@ -850,6 +857,7 @@ fn check_function(
     let signatures = Vec::new();
     let extensions = HashSet::new();
     let mut checker = Checker {
+        exhaustiveness_flow: false,
         lambdas: lambdas.clone(),
         captured: HashMap::new(),
         captured_cells: HashMap::new(),
@@ -1165,6 +1173,8 @@ interface Catalog {
         let classes = HashMap::from([(
             "Foreign".into(),
             JavaClass {
+                sealed_: false,
+                sealed_subclasses: Vec::new(),
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: None,
@@ -1207,6 +1217,7 @@ interface Catalog {
                 panic!()
             };
             let mut checker = Checker {
+                exhaustiveness_flow: false,
                 lambdas: Rc::new(RefCell::new(Vec::new())),
                 captured: HashMap::new(),
                 captured_cells: HashMap::new(),
@@ -1307,6 +1318,8 @@ interface Catalog {
             let classes = HashMap::from([(
                 "foreign/Parent".into(),
                 JavaClass {
+                    sealed_: false,
+                    sealed_subclasses: Vec::new(),
                     annotation_definition: None,
                     kotlin_fun_interface: false,
                     library: None,

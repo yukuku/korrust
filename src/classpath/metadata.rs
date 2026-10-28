@@ -1085,6 +1085,27 @@ pub(super) fn attach(
     class.kotlin_class = true;
     class.kotlin_interface = class.access & 0x200 != 0;
     let class_flags = proto.integer(1)?.unwrap_or(6);
+    class.sealed_ = kind == 1 && class_flags & 48 == 48;
+    class.sealed_subclasses = if class.sealed_ {
+        numbers(&proto, 16)?
+            .into_iter()
+            .map(|id| {
+                let name = metadata_name(&strings, Some(id))?.replace('.', "$");
+                if !valid_name(&name) {
+                    return Err(invalid());
+                }
+                Ok(name)
+            })
+            .collect::<Result<Vec<_>>>()?
+    } else {
+        Vec::new()
+    };
+    if class.sealed_subclasses.len() > 256 {
+        return Err(invalid());
+    }
+    class.sealed_subclasses.sort();
+    class.sealed_subclasses.dedup();
+
     class.kotlin_fun_interface = kind == 1 && class.kotlin_interface && class_flags & 16384 != 0;
     class.unsupported = kind == 1
         && (class_flags & 14 == 0
@@ -1567,6 +1588,8 @@ mod tests {
 
     fn bare_metadata_class(name: &str, access: u16) -> JavaClass {
         JavaClass {
+            sealed_: false,
+            sealed_subclasses: Vec::new(),
             annotation_definition: None,
             library: None,
             name: name.into(),

@@ -287,6 +287,7 @@ impl Checker<'_> {
         let receiver_fields = HashMap::new();
         let receiver_members = HashMap::new();
         let mut checker = Checker {
+            exhaustiveness_flow: false,
             lambdas: self.lambdas.clone(),
             captured,
             captured_cells,
@@ -740,6 +741,8 @@ mod shadowing_tests {
         let classes = HashMap::from([(
             "foreign/Library".into(),
             JavaClass {
+                sealed_: false,
+                sealed_subclasses: Vec::new(),
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
@@ -783,6 +786,7 @@ mod shadowing_tests {
             },
         )]);
         let mut checker = Checker {
+            exhaustiveness_flow: false,
             lambdas: Rc::new(RefCell::new(Vec::new())),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),

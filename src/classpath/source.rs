@@ -8,7 +8,16 @@ fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
         if let Some((_, path, _)) = module.imports.iter().find(|(alias, _, _)| alias == name) {
             return path.clone();
         }
-        if name.contains('/') {
+        if let Some((root, nested)) = name.split_once('/') {
+            if let Some(owner) = module
+                .imports
+                .iter()
+                .find(|(alias, _, _)| alias == root)
+                .map(|(_, owner, _)| owner)
+                .filter(|owner| !owner.contains("::"))
+            {
+                return format!("{owner}${}", nested.replace('/', "$"));
+            }
             return name.into();
         }
         match name {
@@ -182,6 +191,8 @@ fn accessor(owner: &str, name: &str, ty: Type, mutable: bool, private: bool) -> 
 
 fn empty(owner: &str) -> JavaClass {
     JavaClass {
+        sealed_: false,
+        sealed_subclasses: Vec::new(),
         annotation_definition: None,
         kotlin_fun_interface: false,
         library: None,
@@ -214,6 +225,8 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
     }
     let module = &context;
     let mut class = empty(owner);
+    class.sealed_ = module.class_decl.as_ref().is_some_and(|d| d.sealed_)
+        || module.interface_decl.as_ref().is_some_and(|d| d.sealed_);
     let imports = module
         .imports
         .iter()
@@ -288,6 +301,19 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
     }
 
     if let Some(source) = &module.class_decl {
+        if source.sealed_
+            && (!source.secondary_constructors.is_empty()
+                || source.defaults.iter().any(Option::is_some))
+        {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Sealed secondary constructors and default constructor parameters are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "SEALED_CONSTRUCTOR_DEFAULTS_UNSUPPORTED",
+            ));
+        }
         class.access = if source.abstract_ {
             0x401
         } else if source.open {
@@ -327,7 +353,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                         .map(|(_, t, _)| t.descriptor())
                         .collect::<String>()
                 ),
-                access: 1,
+                access: if source.sealed_ { 4 } else { 1 },
                 unsupported: false,
                 source_property: None,
                 kotlin_params: Some(params),
