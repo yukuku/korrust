@@ -575,7 +575,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     .extend(accessor(owner, &p.name, ty, p.mutable, p.private));
             }
         }
-        constants(&mut class, &source.constants);
+        constants(&mut class, &source.constants)?;
     } else {
         class.library = Some(LibraryClass {
             type_aliases: module
@@ -630,12 +630,12 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 class.methods.extend(methods);
             }
         }
-        constants(&mut class, &module.constants);
+        constants(&mut class, &module.constants)?;
     }
     Ok(class)
 }
 
-fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) {
+fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) -> Result<()> {
     for c in constants {
         let (ty, constant) = match &c.value {
             ConstValue::Int(n) => (Type::Int, JavaConstant::Int(*n)),
@@ -645,6 +645,16 @@ fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) {
             ConstValue::Boolean(n) => (Type::Boolean, JavaConstant::Int(i32::from(*n))),
             ConstValue::Char(n) => (Type::Char, JavaConstant::Int(i32::from(*n))),
             ConstValue::String(s) => (Type::String, JavaConstant::String(s.clone())),
+            ConstValue::Expression { .. } => {
+                return Err(Diagnostic::new(
+                    c.offset,
+                    "Constant expressions must be evaluated before source headers are built",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "UNEVALUATED_CONSTANT",
+                ));
+            }
         };
         class.fields.push(JavaField {
             constant: Some(constant),
@@ -655,6 +665,7 @@ fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) {
             unsupported: false,
         });
     }
+    Ok(())
 }
 
 pub(super) fn defaults(module: &mut Module, cp: &Classpath) {

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "kind": "features",
-  "created_at": "2026-10-28T12:26:12.296266+00:00",
+  "created_at": "2026-10-28T12:50:15.991493+00:00",
   "status": "in_progress",
   "selection": "Approximately twenty genuinely new families; current live execution matrix. Bounded acceptance does not establish unrestricted conformance. Infrastructure and existing support excluded.",
-  "validated_new_families": 4,
+  "validated_new_families": 5,
   "features": [
     {
       "id": "family-01",
@@ -56,7 +56,8 @@
       "number": 6,
       "name": "Class-reference expressions and bounded KClass/Class interoperability",
       "status": "unassessed",
-      "acceptance_boundary": "Primitive/reference/array literals, nullable expression checks and ordinary .java resolution; no full reflection."
+      "acceptance_boundary": "Primitive/reference/array literals, nullable expression checks and ordinary .java resolution; no full reflection.",
+      "execution": "Scope assessment and implementation in isolated source copy; not counted as accepted."
     },
     {
       "id": "family-07",
@@ -122,9 +123,13 @@
       "id": "family-15",
       "number": 15,
       "name": "Compile-time constant expressions and references",
-      "status": "unassessed",
+      "status": "supported",
       "acceptance_boundary": "VersionFileImporter MAX_FILE_SIZE and SongBookUtil MAX_RESPONSE_SIZE; overflow, types, dependency constants and annotation values. Existing literals excluded.",
-      "execution": "Implementation and validation in progress; not counted as accepted."
+      "correctness_report": "reports/correctness/2026-10-28T124400446784Z-new-constants.json",
+      "restrictions": [
+        "Typed scalar expressions and source references; Byte/Short declarations, constexpr calls, floating-point string formatting and compiled Kotlin constant visibility remain unsupported. Evaluation/reference depth and JVM modified UTF-8 limits are explicit.",
+        "Proven absent bare source names are invalid; unresolved qualified/external names remain explicit unsupported lookup boundaries."
+      ]
     },
     {
       "id": "family-16",

@@ -1,0 +1,17 @@
+const val A0 = "x"
+const val A1 = A0 + A0
+const val A2 = A1 + A1
+const val A3 = A2 + A2
+const val A4 = A3 + A3
+const val A5 = A4 + A4
+const val A6 = A5 + A5
+const val A7 = A6 + A6
+const val A8 = A7 + A7
+const val A9 = A8 + A8
+const val A10 = A9 + A9
+const val A11 = A10 + A10
+const val A12 = A11 + A11
+const val A13 = A12 + A12
+const val A14 = A13 + A13
+const val A15 = A14 + A14
+const val A16 = A15 + A15

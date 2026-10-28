@@ -3559,6 +3559,16 @@ fn constant_field(pool: &mut Pool, constant: &crate::syntax::ConstDecl) -> Resul
         ConstValue::Char(value) => ("C", pool.add(Constant::Integer(i32::from(*value)))?, false),
         ConstValue::Boolean(value) => ("Z", pool.add(Constant::Integer(i32::from(*value)))?, false),
         ConstValue::String(value) => ("Ljava/lang/String;", pool.string_units(value)?, true),
+        ConstValue::Expression { expression, .. } => {
+            return Err(crate::Diagnostic::new(
+                expression.offset,
+                "Unresolved constant initializer",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "CONSTANT_EXPRESSION_UNRESOLVED",
+            ));
+        }
     };
     let mut field = object_field(pool, &constant.name, descriptor, Some(value), not_null)?;
     if constant.private {
@@ -3567,7 +3577,11 @@ fn constant_field(pool: &mut Pool, constant: &crate::syntax::ConstDecl) -> Resul
     Ok(field)
 }
 
-fn emit_object(class: &ObjectClass<'_>, file: &str) -> Result<crate::ClassFile> {
+fn emit_object(
+    class: &ObjectClass<'_>,
+    file: &str,
+    metadata: &crate::metadata::Metadata,
+) -> Result<crate::ClassFile> {
     let owner = &class.lineage.last().unwrap().0;
     let mut pool = Pool::default();
     let this = pool.class(owner)?;
@@ -3634,6 +3648,7 @@ fn emit_object(class: &ObjectClass<'_>, file: &str) -> Result<crate::ClassFile> 
     u2(&mut attributes, pool.utf8("SourceFile")?);
     u4(&mut attributes, 2);
     u2(&mut attributes, pool.utf8(file)?);
+    attributes.extend(metadata_attribute(&mut pool, metadata)?);
     let mut bytes = Vec::new();
     u4(&mut bytes, 0xcafebabe);
     u2(&mut bytes, 0);
@@ -3648,7 +3663,7 @@ fn emit_object(class: &ObjectClass<'_>, file: &str) -> Result<crate::ClassFile> 
     u2(&mut bytes, 2);
     bytes.extend(constructor);
     bytes.extend(initializer);
-    u2(&mut bytes, 1 + u16::from(!inner_classes.is_empty()));
+    u2(&mut bytes, 2 + u16::from(!inner_classes.is_empty()));
     bytes.extend(attributes);
     Ok(crate::ClassFile {
         internal_name: owner.clone(),
@@ -3656,12 +3671,23 @@ fn emit_object(class: &ObjectClass<'_>, file: &str) -> Result<crate::ClassFile> 
     })
 }
 
-pub fn emit_objects(decl: &ObjectDecl, owner: &str, file: &str) -> Result<Vec<crate::ClassFile>> {
+pub fn emit_objects(
+    decl: &ObjectDecl,
+    owner: &str,
+    file: &str,
+    metadata: &std::collections::BTreeMap<String, crate::metadata::Metadata>,
+) -> Result<Vec<crate::ClassFile>> {
     let mut classes = Vec::new();
     collect_objects(decl, owner.into(), &mut Vec::new(), &mut classes)?;
     classes
         .iter()
-        .map(|class| emit_object(class, file))
+        .map(|class| {
+            let owner = &class.lineage.last().unwrap().0;
+            let metadata = metadata
+                .get(owner)
+                .ok_or_else(|| failure("Missing constant object metadata"))?;
+            emit_object(class, file, metadata)
+        })
         .collect()
 }
 

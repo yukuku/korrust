@@ -1,0 +1,2230 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T12:08:29.110999+00:00",
+  "status": "fail",
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 59,
+      "jvm_verification": "all",
+      "const_field_access": "reflection; no compile-time inlining by javac",
+      "dependency_clinit": "independently asserted not triggered"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 59,
+      "jvm_verification": "all",
+      "const_field_access": "reflection; no compile-time inlining by javac",
+      "dependency_clinit": "independently asserted not triggered"
+    },
+    {
+      "id": "public_signatures_constant_values",
+      "outcome": "pass",
+      "scope": "javap public descriptors and ConstantValue text compared; full verbose class attributes logged and reflection checks actual field contents"
+    },
+    {
+      "id": "kotlin_consumer/official",
+      "outcome": "pass",
+      "independently_compiled_against_provider": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "metadata_visibility/official/PrivateConsumer",
+      "outcome": "invalid_kotlin",
+      "official_consumer_rejects": true
+    },
+    {
+      "id": "metadata_visibility/official/InternalConsumer",
+      "outcome": "invalid_kotlin",
+      "official_consumer_rejects": true
+    },
+    {
+      "id": "kotlin_consumer/candidate",
+      "outcome": "pass",
+      "independently_compiled_against_provider": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "metadata_visibility/candidate/PrivateConsumer",
+      "outcome": "invalid_kotlin",
+      "official_consumer_rejects": true
+    },
+    {
+      "id": "metadata_visibility/candidate/InternalConsumer",
+      "outcome": "invalid_kotlin",
+      "official_consumer_rejects": true
+    },
+    {
+      "id": "boundary/enum_annotation_shadow",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/property_shadow",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/property_prefix_shadow",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/annotation_property_shadow",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/annotation_constructor_property_shadow",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/divide_zero",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/remainder_zero",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/negative_long_literal_range",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/positive_long_literal_range",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/wrong_declared_type",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/mixed_equality",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/null_concatenation",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/null_property",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/runtime_call",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/skipped_runtime_call",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/skipped_wrong_type",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/forward_same_owner",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/forward_qualified_owner",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/cross_file_cycle",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/file_private_cross_file",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/object_private_outside",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/java_non_constant",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/java_private",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/java_mutable",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/annotation_divide_zero",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/kotlin_library_internal",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "harness",
+      "outcome": "fail",
+      "error": "byte_const_expression: official classification changed"
+    }
+  ],
+  "commands": [
+    {
+      "label": "Pinned official compiler identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/001-stderr.txt"
+    },
+    {
+      "label": "Candidate identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/002-stderr.txt"
+    },
+    {
+      "label": "Compile Java constant and annotation dependencies",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/InitializationTrace.java",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/JavaConstants.java",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/RuntimeConstant.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/003-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin constant dependency",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/KotlinLibrary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-module-name",
+        "constant_library",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/004-stderr.txt"
+    },
+    {
+      "label": "Compile official official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/Shared.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/Constants.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/ImportedConstants.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/DefaultPriority.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/ImportChoice.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/SameFileChoice.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/005-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/Shared.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/Constants.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/ImportedConstants.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/DefaultPriority.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/ImportChoice.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/SameFileChoice.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/006-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official output",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/driver",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/ConstantsCheck.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/007-stderr.txt"
+    },
+    {
+      "label": "Run reflective fixed Java caller official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/driver:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.constants.ConstantsCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/008-stderr.txt"
+    },
+    {
+      "label": "Run reflective fixed Java caller candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/driver:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.constants.ConstantsCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/009-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata official newfamilies.constants.ConstantsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official",
+        "newfamilies.constants.ConstantsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/010-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes official newfamilies.constants.ConstantsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official",
+        "newfamilies.constants.ConstantsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/011-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata official newfamilies.shared.SharedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official",
+        "newfamilies.shared.SharedKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/012-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes official newfamilies.shared.SharedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official",
+        "newfamilies.shared.SharedKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/013-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata official newfamilies.constants.Holder",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official",
+        "newfamilies.constants.Holder"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/014-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes official newfamilies.constants.Holder",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official",
+        "newfamilies.constants.Holder"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/015-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata official newfamilies.constants.Holder$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official",
+        "newfamilies.constants.Holder$Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/016-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes official newfamilies.constants.Holder$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official",
+        "newfamilies.constants.Holder$Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/017-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata candidate newfamilies.constants.ConstantsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate",
+        "newfamilies.constants.ConstantsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/018-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes candidate newfamilies.constants.ConstantsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate",
+        "newfamilies.constants.ConstantsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/019-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata candidate newfamilies.shared.SharedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate",
+        "newfamilies.shared.SharedKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/020-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes candidate newfamilies.shared.SharedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate",
+        "newfamilies.shared.SharedKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/021-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata candidate newfamilies.constants.Holder",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate",
+        "newfamilies.constants.Holder"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/022-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes candidate newfamilies.constants.Holder",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate",
+        "newfamilies.constants.Holder"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/023-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata candidate newfamilies.constants.Holder$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate",
+        "newfamilies.constants.Holder$Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/024-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes candidate newfamilies.constants.Holder$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate",
+        "newfamilies.constants.Holder$Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/025-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin metadata consumer official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-module-name",
+        "constant_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/consumer-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/026-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-module-name",
+        "constant_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/consumer-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/027-stderr.txt"
+    },
+    {
+      "label": "Compile fixed metadata launcher",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/consumer-official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/consumer-driver",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/ConsumerLauncher.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/028-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin metadata consumer official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/consumer-driver:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/consumer-official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerLauncher"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/029-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata visibility official PrivateConsumer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/PrivateConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-module-name",
+        "constant_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-PrivateConsumer"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/030-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata visibility official InternalConsumer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/InternalConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-module-name",
+        "constant_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-InternalConsumer"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/031-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/consumer-driver:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/consumer-candidate:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerLauncher"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/032-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata visibility candidate PrivateConsumer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/PrivateConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-module-name",
+        "constant_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-PrivateConsumer"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/033-stderr.txt"
+    },
+    {
+      "label": "Reject Kotlin metadata visibility candidate InternalConsumer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/tests/fixtures/new_families/constants/InternalConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-module-name",
+        "constant_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-InternalConsumer"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/034-stderr.txt"
+    },
+    {
+      "label": "Compile official official-enum_annotation_shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/enum_annotation_shadow_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-enum_annotation_shadow"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/035-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-enum_annotation_shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/enum_annotation_shadow_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-enum_annotation_shadow"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/036-stderr.txt"
+    },
+    {
+      "label": "Compile official official-property_shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/property_shadow_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-property_shadow"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/037-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-property_shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/property_shadow_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-property_shadow"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/038-stderr.txt"
+    },
+    {
+      "label": "Compile official official-property_prefix_shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/property_prefix_shadow_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-property_prefix_shadow"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/039-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-property_prefix_shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/property_prefix_shadow_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-property_prefix_shadow"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/040-stderr.txt"
+    },
+    {
+      "label": "Compile official official-annotation_property_shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/annotation_property_shadow_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-annotation_property_shadow"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/041-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-annotation_property_shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/annotation_property_shadow_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-annotation_property_shadow"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/042-stderr.txt"
+    },
+    {
+      "label": "Compile official official-annotation_constructor_property_shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/annotation_constructor_property_shadow_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-annotation_constructor_property_shadow"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/043-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-annotation_constructor_property_shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/annotation_constructor_property_shadow_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-annotation_constructor_property_shadow"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/044-stderr.txt"
+    },
+    {
+      "label": "Compile official official-divide_zero",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/divide_zero_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-divide_zero"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/045-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-divide_zero",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/divide_zero_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-divide_zero"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/046-stderr.txt"
+    },
+    {
+      "label": "Compile official official-remainder_zero",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/remainder_zero_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-remainder_zero"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/047-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-remainder_zero",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/remainder_zero_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-remainder_zero"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/048-stderr.txt"
+    },
+    {
+      "label": "Compile official official-negative_long_literal_range",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/negative_long_literal_range_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-negative_long_literal_range"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/049-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-negative_long_literal_range",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/negative_long_literal_range_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-negative_long_literal_range"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/050-stderr.txt"
+    },
+    {
+      "label": "Compile official official-positive_long_literal_range",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/positive_long_literal_range_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-positive_long_literal_range"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/051-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-positive_long_literal_range",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/positive_long_literal_range_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-positive_long_literal_range"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/052-stderr.txt"
+    },
+    {
+      "label": "Compile official official-wrong_declared_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/wrong_declared_type_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-wrong_declared_type"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/053-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-wrong_declared_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/wrong_declared_type_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-wrong_declared_type"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/054-stderr.txt"
+    },
+    {
+      "label": "Compile official official-mixed_equality",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/mixed_equality_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-mixed_equality"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/055-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-mixed_equality",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/mixed_equality_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-mixed_equality"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/056-stderr.txt"
+    },
+    {
+      "label": "Compile official official-null_concatenation",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/null_concatenation_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-null_concatenation"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/057-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-null_concatenation",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/null_concatenation_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-null_concatenation"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/058-stderr.txt"
+    },
+    {
+      "label": "Compile official official-null_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/null_property_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-null_property"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/059-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-null_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/null_property_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-null_property"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/060-stderr.txt"
+    },
+    {
+      "label": "Compile official official-runtime_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/runtime_call_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-runtime_call"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/061-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-runtime_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/runtime_call_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-runtime_call"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/062-stderr.txt"
+    },
+    {
+      "label": "Compile official official-skipped_runtime_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/skipped_runtime_call_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-skipped_runtime_call"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/063-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-skipped_runtime_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/skipped_runtime_call_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-skipped_runtime_call"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/064-stderr.txt"
+    },
+    {
+      "label": "Compile official official-skipped_wrong_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/skipped_wrong_type_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-skipped_wrong_type"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/065-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-skipped_wrong_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/skipped_wrong_type_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-skipped_wrong_type"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/066-stderr.txt"
+    },
+    {
+      "label": "Compile official official-forward_same_owner",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/forward_same_owner_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-forward_same_owner"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/067-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-forward_same_owner",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/forward_same_owner_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-forward_same_owner"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/068-stderr.txt"
+    },
+    {
+      "label": "Compile official official-forward_qualified_owner",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/forward_qualified_owner_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-forward_qualified_owner"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/069-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/069-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-forward_qualified_owner",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/forward_qualified_owner_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-forward_qualified_owner"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/070-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/070-stderr.txt"
+    },
+    {
+      "label": "Compile official official-cross_file_cycle",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/cross_file_cycle_0.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/cross_file_cycle_1.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-cross_file_cycle"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/071-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/071-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-cross_file_cycle",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/cross_file_cycle_0.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/cross_file_cycle_1.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-cross_file_cycle"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/072-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/072-stderr.txt"
+    },
+    {
+      "label": "Compile official official-file_private_cross_file",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/file_private_cross_file_0.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/file_private_cross_file_1.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-file_private_cross_file"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/073-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/073-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-file_private_cross_file",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/file_private_cross_file_0.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/file_private_cross_file_1.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-file_private_cross_file"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/074-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/074-stderr.txt"
+    },
+    {
+      "label": "Compile official official-object_private_outside",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/object_private_outside_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-object_private_outside"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/075-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/075-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-object_private_outside",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/object_private_outside_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-object_private_outside"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/076-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/076-stderr.txt"
+    },
+    {
+      "label": "Compile official official-java_non_constant",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/java_non_constant_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-java_non_constant"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/077-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/077-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-java_non_constant",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/java_non_constant_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-java_non_constant"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/078-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/078-stderr.txt"
+    },
+    {
+      "label": "Compile official official-java_private",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/java_private_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-java_private"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/079-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/079-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-java_private",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/java_private_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-java_private"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/080-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/080-stderr.txt"
+    },
+    {
+      "label": "Compile official official-java_mutable",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/java_mutable_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-java_mutable"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/081-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/081-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-java_mutable",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/java_mutable_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-java_mutable"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/082-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/082-stderr.txt"
+    },
+    {
+      "label": "Compile official official-annotation_divide_zero",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/annotation_divide_zero_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-annotation_divide_zero"
+      ],
+      "exit_code": 2,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/083-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/083-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-annotation_divide_zero",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/annotation_divide_zero_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-annotation_divide_zero"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/084-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/084-stderr.txt"
+    },
+    {
+      "label": "Compile official official-kotlin_library_internal",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/kotlin_library_internal_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-kotlin_library_internal"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/085-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/085-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-kotlin_library_internal",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/kotlin_library_internal_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-kotlin_library_internal"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/086-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/086-stderr.txt"
+    },
+    {
+      "label": "Compile official official-byte_const_expression",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/byte_const_expression_0.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/official-byte_const_expression"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/087-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/087-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-byte_const_expression",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/byte_const_expression_0.kt",
+        "--module-name",
+        "new_constants",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/checks/2026-10-28T120829110999Z-new-constants/candidate-byte_const_expression"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T120829110999Z-new-constants/088-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T120829110999Z-new-constants/088-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "files_sha256": {
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "bb6761630fc0b7e03ec253982105b92b9e1194f6e863e17bf07afaf185977f80",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "552858590b1d6b9814237eaed4d72d07ebec378fe53e8f1841d700d6261d4024",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "62a78136794537d26021aaa661c5e17e80174d026836c69bf1f62d2ce6fd9636",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "4d49104ec19917fcb834ee39e1a13e47f05eba87c950b148c6035cbd31713b34",
+      "src/bytecode/lambdas.rs": "60487f7bbfef94df047c43914794d6edc9a8957bf7b8c8a44447988e7d3028ae",
+      "src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "src/bytecode.rs": "2dc454104f1169033bb981b84735e2fd809f347ca5811e4848551227ece1fc20",
+      "src/check.rs": "29ca5b60a0f42d6064dbec07ee1383752a817dbc55e77b8f0cb0349a58d9e67d",
+      "src/check_annotation_placements.rs": "7e54592cbf5d6b2e112d879a1888731d02b8953cf39940b6a740c1ccf046476b",
+      "src/check_annotations.rs": "5bd835e0bcf16899053b879adb98a1e4d01f6219bb82c200db82b424da03edcc",
+      "src/check_captures.rs": "4415213c7aec5542f2a03c5a217da9d7976d062b1b3762578dde32b1d133ae10",
+      "src/check_control.rs": "7e6ed766e78b7d706f52d2bc19e0f05af765cd866a56cac03d2f7cbed18df816",
+      "src/check_declarations.rs": "88361a3629ae5c349ecc7ec2963721483b154b9ce71310339714214d3baa4f37",
+      "src/check_delegates.rs": "fc6e3f43a18b6b5b600c5515938d70b0712a616bca82d2c53eab6dd28dbf083e",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "0a97b74e03e2c9ae0539f578f4de25e7cc98d129a7ada14ff83960b4a8c6a34e",
+      "src/check_interfaces.rs": "1d1ca04e28dab5e5e357831ee8706da6ae4f6c41eb4ddd7757d8ae4c4a46eae2",
+      "src/check_ir_walk.rs": "4d1376ec4d903c5e2d230d055ac56c78b5a823ac2284b271bb3aa27a57d0f76d",
+      "src/check_java_properties.rs": "8218c0f0811bda1de65ea1598fd4097735fb2138fae9b14b8141dfbb4bd0f22e",
+      "src/check_library.rs": "4dbb238bbab07e34104487021f583c9cd40c79c0662a4af5e1c532fd52929459",
+      "src/check_objects.rs": "f41ef9e1fede42add0075afbed6f4caae3ee0f610932b12ea97e09b7d95b0328",
+      "src/check_operations.rs": "724c6983005b1db7d640b2a255feb546e60c55c1ca4a6930c93e995187c3ffdf",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "fa0e93bc19f643084e61a58d8996294b057730fff07ab5848981762d9e95f616",
+      "src/classpath/aliases.rs": "1ba2d3730c704c3fbfb27b3056a046c8782981a9f312c91865939cacd4fef73e",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "b79574ab7e53955acf60b51669984ca767b074212549df3e8a1510466a1a3acb",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "6e2bc0bb767d10c9beb32a37312fac62f5a4be611d99399f9cebf46e814ff24b",
+      "src/classpath/source.rs": "3339f1240363c05afdf34202e5c026137786e3162df2755b126f256258990799",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "0828166abe538ecd8a960e1883f3610d903912b3cffc66cd568fec1bb9dbfaa2",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/const_eval.rs": "3fd2d1ee1ae9c06aaf0ef4c8e5eb03b392d6dcfc8609440a684ff43175675a50",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "f356371c4d1c1f5f2fd5c0ff96b4aa367e02793cdf4308eba4125efd0e7ba226",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "8b5b2cf07b9212e4cb5ddd73265af191750093df379fa8dbfa0d45bf65ae6774",
+      "src/metadata.rs": "b1137b0f71ea9b4a75a8bbd0c43e56784d0b1c8656ec52614f0c608e913296f4",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "ca173d4939a7288b1b3cb31c0369c6d721810a24b6065746d2f032db996c8e79",
+      "src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa",
+      "tests/frontend.rs": "4ca2d22bd11c41022af4bcb692c4485c2764dd73d7f89291e0ecae5b9637312c",
+      "tests/fixtures/new_families/constants/Constants.kt": "2c8aaf8573c1171bb0dc2005562f8d9645d246e1f7333fe35e9470d231f7b675",
+      "tests/fixtures/new_families/constants/ConstantsCheck.java": "f7b02aff7ac3201d3cae73e3678d4de871677ae74c1d5b1447442059650df274",
+      "tests/fixtures/new_families/constants/Consumer.kt": "5fa95b087b84a9501e3724e0e172edb498270cee2f9cb24671e794f399dc8de2",
+      "tests/fixtures/new_families/constants/ConsumerLauncher.java": "90e20bcb4436445c9d75b0e3ad70b0e4fae65cdd2f56d0ae911c095fab754c2d",
+      "tests/fixtures/new_families/constants/DefaultPriority.kt": "42d28c8c9ac74904c84107d91cf2fca6087b221b35bd65f018a3b79976983e9d",
+      "tests/fixtures/new_families/constants/ImportChoice.kt": "b9fec00efc0d19942850f7147595aa04e7b6ccaf33f6634c6dca8da82f420e6c",
+      "tests/fixtures/new_families/constants/ImportedConstants.kt": "9f781be7ad11c233deec32f59348bec74abcd4d7fa1bc3f7aca4fc2d22d3b5ff",
+      "tests/fixtures/new_families/constants/InitializationTrace.java": "3e8951bd9be88515262e9c2c7ff493461fe8fb0e553ab4182b22f0f630efeb61",
+      "tests/fixtures/new_families/constants/InternalConsumer.kt": "3cbfaa4e7516ba8c55bfff80fc1cc628823f95fec0c16b2d93cfdf47bb7f3881",
+      "tests/fixtures/new_families/constants/JavaConstants.java": "44e7a0c820fe8b16b430caf326b358959014818c7e358a7799cf9f0dac8a9ab1",
+      "tests/fixtures/new_families/constants/KotlinLibrary.kt": "a72abf43ff745fba3d27dcc92ba0878effe3473f13fa51043fc5582228ee00b5",
+      "tests/fixtures/new_families/constants/PrivateConsumer.kt": "26d50b9aff413c676048e67139bfb3a013a03ca6c62682c0b2eceab34e9e0067",
+      "tests/fixtures/new_families/constants/RuntimeConstant.java": "35b7e0477b21dc96e0606481ba6e7c5cbcd716ec15120c87d93d5e923242745d",
+      "tests/fixtures/new_families/constants/SameFileChoice.kt": "3b0f65882126cf1870029b3f01522ba120f0db136ca36826e049d6ebbee9bedf",
+      "tests/fixtures/new_families/constants/Shared.kt": "f546c24c13b7e09491b1d9578c32792e6fa980dd5366af2a8be8d586479700b5",
+      "tools/check_new_constants.py": "c8ada630e0ee737e67137e8a84a8105b2f8328cfe10e51c33356e01bbccfdc5c",
+      "references/kotlin/compiler/testData/codegen/box/constants/literalToLongConversion.kt": "e86948394f476209c220e201fc296e57592bb10b12ca5f0e73d2863537907038"
+    },
+    "source_snapshot": ".",
+    "reference_sources_manifest_sha256": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "constant_spec_sha256": {
+      "references/kotlin-spec/docs/src/md/kotlin.core/declarations.md": "2ed0769a437144f01c290e6a11688a2b846bdb7babcbb16d1ee2c5d26fe2b404",
+      "references/kotlin-spec/docs/src/md/kotlin.core/expressions.md": "43a857c055a18a7089d74526fbc2140338ff4fcf91b025adc5a88c1941abf380"
+    },
+    "dependency_classes_sha256": {
+      "newfamilies/library/JavaConstants.class": "67d3ff75673dd4b51b4a591080c281243b1825d170cf71bcfb77e1351c923d7f",
+      "newfamilies/library/RuntimeConstant.class": "03fd0c378f0f4aeaab60c0ec633b6e87a122b73126eba0dd2b89c5be084f89fe",
+      "newfamilies/library/InitializationTrace.class": "088fdad20bbdd5a1e0bea8662c26e95a7cecb7c1d2ed2560bc574ad677477cce",
+      "newfamilies/kotlinlibrary/KotlinLibraryKt.class": "0756e724621d3b43c57cafd0a3390e231eea0e952ee413573885354b9750316b"
+    },
+    "fixed_java_classes_sha256": {
+      "newfamilies/constants/ConstantsCheck.class": "ee482b7d3f0ff023062fbce7a850d041ac3cd826f291076cc6eae8fb2f833ec2"
+    },
+    "fixed_consumer_launcher_classes_sha256": {
+      "ConsumerLauncher.class": "29de81c83ce62169cf2f17ff1850f7daab1a4492b9b68bb83d92101996aded05"
+    }
+  },
+  "compiler": {
+    "path": "reports/correctness/2026-10-28T120829110999Z-new-constants/korrust-frozen",
+    "original_path": "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/release/korrust",
+    "binary_sha256": "84a33e882fc47c56144d97d0a85a07052a002d15cba7de0ed6ca4b6639ce5da8"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "new_constants"
+    ],
+    "compiler_pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "evidence": [
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/000-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/000-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/001-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/001-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/002-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/002-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/003-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/003-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/004-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/004-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/005-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/005-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/006-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/006-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/007-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/007-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/008-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/008-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/009-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/009-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/010-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/010-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/011-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/011-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/012-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/012-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/013-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/013-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/014-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/014-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/015-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/015-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/016-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/016-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/017-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/017-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/018-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/018-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/019-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/019-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/020-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/020-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/021-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/021-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/022-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/022-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/023-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/023-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/024-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/024-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/025-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/025-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/026-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/026-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/027-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/027-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/028-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/028-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/029-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/029-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/030-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/030-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/031-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/031-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/032-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/032-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/033-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/033-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/034-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/034-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/enum_annotation_shadow_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/035-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/035-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/036-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/036-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/property_shadow_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/037-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/037-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/038-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/038-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/property_prefix_shadow_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/039-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/039-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/040-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/040-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/annotation_property_shadow_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/041-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/041-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/042-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/042-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/annotation_constructor_property_shadow_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/043-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/043-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/044-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/044-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/divide_zero_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/045-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/045-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/046-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/046-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/remainder_zero_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/047-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/047-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/048-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/048-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/negative_long_literal_range_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/049-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/049-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/050-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/050-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/positive_long_literal_range_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/051-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/051-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/052-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/052-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/wrong_declared_type_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/053-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/053-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/054-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/054-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/mixed_equality_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/055-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/055-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/056-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/056-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/null_concatenation_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/057-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/057-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/058-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/058-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/null_property_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/059-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/059-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/060-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/060-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/runtime_call_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/061-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/061-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/062-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/062-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/skipped_runtime_call_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/063-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/063-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/064-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/064-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/skipped_wrong_type_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/065-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/065-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/066-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/066-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/forward_same_owner_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/067-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/067-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/068-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/068-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/forward_qualified_owner_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/069-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/069-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/070-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/070-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/cross_file_cycle_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/cross_file_cycle_1.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/071-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/071-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/072-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/072-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/file_private_cross_file_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/file_private_cross_file_1.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/073-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/073-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/074-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/074-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/object_private_outside_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/075-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/075-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/076-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/076-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/java_non_constant_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/077-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/077-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/078-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/078-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/java_private_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/079-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/079-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/080-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/080-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/java_mutable_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/081-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/081-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/082-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/082-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/annotation_divide_zero_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/083-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/083-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/084-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/084-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/kotlin_library_internal_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/085-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/085-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/086-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/086-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/byte_const_expression_0.kt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/087-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/087-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/088-stdout.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/088-stderr.txt",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/frozen-inputs.zip",
+    "reports/correctness/2026-10-28T120829110999Z-new-constants/original-report.txt"
+  ],
+  "selection": "Typed scalar compile-time expressions, Kotlin source constant references and checked Java ConstantValue dependencies; reflection observes actual provider fields instead of javac-inlined constants, fixed Java callers reused with JVM verification, official Kotlin metadata consumers, runtime annotation values, class-initialization independence, preserved upstream constant-expression fixture and official-invalid versus valid unsupported boundaries. Byte/Short const declarations, constexpr function interpretation and floating-point formatting are outside this bounded evaluator. Compiled Kotlin constant dependencies are conservatively unsupported until Kotlin visibility is represented; Java field access flags alone do not prove Kotlin visibility. No full-app/Android/runtime-performance claim.",
+  "limits": {
+    "active_constant_declarations": 128,
+    "combined_expression_reference_evaluation_frames": 128,
+    "constant_string_modified_utf8_bytes": 65535
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_new_constants.py",
+      "--compiler",
+      "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3/target/release/korrust"
+    ]
+  ],
+  "summary": {
+    "pass": 7,
+    "invalid_kotlin": 30,
+    "fail": 1
+  },
+  "publication": {
+    "original_report_sha256": "064e14d85309a2c01c2078c128bf252c187bde6fea00656088e07d3d89c7cda5",
+    "frozen_input_archive": "reports/correctness/2026-10-28T120829110999Z-new-constants/frozen-inputs.zip",
+    "frozen_input_archive_sha256": "0504507bbc2b5543dfa177ee2b21a8bcf922f608ab1e27cc6e649d8607e79b54",
+    "archived_input_files": 70,
+    "original_snapshot_root": "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v3",
+    "note": "Original outcomes and command arguments retained. Text evidence copied; generated classes and compiler binaries remain ignored. Frozen source inputs archived by recorded hash."
+  }
+}

@@ -330,6 +330,10 @@ pub struct ConstDecl {
 }
 #[derive(Clone, Debug)]
 pub enum ConstValue {
+    Expression {
+        expression: Box<Expr>,
+        declared_type: Option<Type>,
+    },
     Int(i32),
     Long(i64),
     Float(u32),
@@ -2612,6 +2616,56 @@ impl Parser {
         self.lines();
         self.expect("=")?;
         self.lines();
+        let initializer_start = self.pos;
+        let expression = self.expr(0)?;
+        let significant_tokens = self.tokens[initializer_start..self.pos]
+            .iter()
+            .filter(|token| token.text != "\n")
+            .count();
+        let literal = significant_tokens == 1
+            && matches!(
+                expression.kind,
+                ExprKind::Int(_)
+                    | ExprKind::Long(_)
+                    | ExprKind::Float(_)
+                    | ExprKind::Double(_)
+                    | ExprKind::Char(_)
+                    | ExprKind::String(_)
+                    | ExprKind::Boolean(_)
+            )
+            || significant_tokens == 2
+                && matches!(&expression.kind, ExprKind::Unary(operator, value)
+                if matches!(operator.as_str(), "+" | "-")
+                    && matches!(value.kind, ExprKind::Int(_) | ExprKind::Long(_) | ExprKind::Float(_) | ExprKind::Double(_)));
+        let scalar_type = declared_type.as_ref().is_none_or(|ty| {
+            matches!(
+                ty,
+                Type::Int
+                    | Type::Long
+                    | Type::Float
+                    | Type::Double
+                    | Type::Char
+                    | Type::Boolean
+                    | Type::String
+            )
+        });
+        if !literal || !scalar_type {
+            if !matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
+                return Err(self.error("Const initializers require one expression"));
+            }
+            return Ok(ConstDecl {
+                annotations,
+                name,
+                offset,
+                private: visibility.as_deref() == Some("private"),
+                internal: visibility.as_deref() == Some("internal"),
+                value: ConstValue::Expression {
+                    expression: Box::new(expression),
+                    declared_type,
+                },
+            });
+        }
+        self.pos = initializer_start;
         let negative = if self.take("-") {
             Some(true)
         } else if self.take("+") {
@@ -2638,13 +2692,18 @@ impl Parser {
                     }
                 }
                 ExprKind::Long(value) => {
+                    let value = i64::try_from(value).map_err(|_| {
+                        self.error("Long constant literal is out of range")
+                            .with_kind(
+                                DiagnosticKind::InvalidKotlin,
+                                "INTEGER_LITERAL_OUT_OF_RANGE",
+                            )
+                    })?;
                     let value = if negative == Some(true) {
                         -value
                     } else {
                         value
                     };
-                    let value = i64::try_from(value)
-                        .map_err(|_| self.error("Long constant literal is out of range"))?;
                     (ConstValue::Long(value), Type::Long)
                 }
                 ExprKind::Double(value) => {
@@ -5878,6 +5937,20 @@ mod tests {
     use super::*;
 
     #[test]
+    fn constructor_annotation_guards_preserve_separate_annotated_declarations() {
+        assert!(parse("class Empty\n@Ann class Next").is_ok());
+        assert!(parse("class Empty\n@Suppress(\"unused\") public class Next").is_ok());
+        for source in [
+            "class Bad @Ann constructor()",
+            "class Bad\n@Ann\nconstructor()",
+        ] {
+            let error = parse(source).err().unwrap();
+            assert_eq!(error.code, "CONSTRUCTOR_ANNOTATION_UNSUPPORTED");
+            assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
+        }
+    }
+
+    #[test]
     fn generic_type_alias_parameters_are_scoped_and_reject_invalid_declarations() {
         let module = parse("typealias Values<T> = List<T>\ntypealias Callback<T> = ((T?) -> T)?\nfun later(value: T): T = value").unwrap();
         assert_eq!(module.type_aliases[0].type_params[0].name, "T");
@@ -5898,20 +5971,6 @@ mod tests {
                 DiagnosticKind::InvalidKotlin,
                 "{source}"
             );
-        }
-    }
-
-    #[test]
-    fn constructor_annotation_guards_preserve_separate_annotated_declarations() {
-        assert!(parse("class Empty\n@Ann class Next").is_ok());
-        assert!(parse("class Empty\n@Suppress(\"unused\") public class Next").is_ok());
-        for source in [
-            "class Bad @Ann constructor()",
-            "class Bad\n@Ann\nconstructor()",
-        ] {
-            let error = parse(source).err().unwrap();
-            assert_eq!(error.code, "CONSTRUCTOR_ANNOTATION_UNSUPPORTED");
-            assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
         }
     }
 
@@ -7001,7 +7060,7 @@ mod tests {
     fn scalar_constants_and_float_exponents_preserve_values() {
         let module = parse(
             "private const val answer = 42\n\
-             internal const val count = -9223372036854775808L\n\
+             internal const val count = -9223372036854775807L\n\
              const val scale = -1.25e+2F\n\
              fun fraction(): Float = 1e-2f\n\
              fun range(x: Int): Boolean = x in 1..3",
@@ -7011,7 +7070,7 @@ mod tests {
         assert!(module.constants[1].internal);
         assert!(matches!(
             module.constants[1].value,
-            ConstValue::Long(i64::MIN)
+            ConstValue::Long(value) if value == -i64::MAX
         ));
         assert!(
             matches!(module.constants[2].value, ConstValue::Float(bits) if bits == (-125.0f32).to_bits())

@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T12:43:06.770973+00:00",
+  "status": "pass",
+  "source_snapshot": "target/new-constants-final-snapshot-v5",
+  "source_snapshot_manifest_sha256": "9f0b463cb103f368b1fc17dcde56c384afff0759bd445df03dec3997debb43ca",
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "RUST_MIN_STACK": "16777216",
+    "CARGO_HOME": "/Users/yuku/f/git/korrust/target/cargo-home",
+    "RUSTUP_HOME": "/Users/yuku/f/git/korrust/target/rustup"
+  },
+  "commands": [
+    {
+      "label": "format",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v5",
+      "exit_code": 0,
+      "log": "validation/00-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "const_units",
+      "argv": [
+        "cargo",
+        "test",
+        "--release",
+        "--locked",
+        "--offline",
+        "--lib",
+        "const_eval::tests"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v5",
+      "exit_code": 0,
+      "log": "validation/01-const_units.log",
+      "log_sha256": "6513c528d39c6ee27790eab4611756000c8ecb6a08638968ef725d692e445f7c"
+    },
+    {
+      "label": "template_assertions",
+      "argv": [
+        "cargo",
+        "test",
+        "--release",
+        "--locked",
+        "--offline",
+        "--test",
+        "frontend",
+        "supports_if_expressions_integer_strings_templates_and_explicit_throws"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v5",
+      "exit_code": 0,
+      "log": "validation/02-template_assertions.log",
+      "log_sha256": "236f702f4e69fa54f57bcc4cdf301c584228693e31a458510832f97ead577af3"
+    },
+    {
+      "label": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v5",
+      "exit_code": 0,
+      "log": "validation/03-clippy.log",
+      "log_sha256": "848a28895b239f08edfbf308f31588ae551107f6d4cacc6e896410eac00c4a6d"
+    },
+    {
+      "label": "build",
+      "argv": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v5",
+      "exit_code": 0,
+      "log": "validation/04-build.log",
+      "log_sha256": "2d5694fb348541fae3d68a033b004800c9c79f8f6edb468d5763b1d8f389597a"
+    },
+    {
+      "label": "differential",
+      "argv": [
+        "python3",
+        "tools/check_new_constants.py"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v5",
+      "exit_code": 0,
+      "log": "validation/05-differential.log",
+      "log_sha256": "ffa5e9b6a39fa451690962fc65ab577445ab8e64a25624e4a5046a0c7ec04010"
+    }
+  ],
+  "cases": [
+    {
+      "id": "const_units/const_eval::tests::private_references_cycles_and_cross_file_error_locations_fail_closed",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::short_circuit_checks_constant_operands_without_dividing_skipped_values",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::absent_source_names_are_invalid_without_claiming_external_resolution",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::constant_resolution_preserves_lexical_shadowing_and_explicit_import_priority",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::computed_string_growth_is_bounded_before_large_allocations",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::source_constants_resolve_forward_and_qualified_references_with_declared_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::scalar_constant_operations_preserve_wrapping_types_and_utf16",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::constant_reference_and_expression_depth_are_bounded_across_owner_scopes",
+      "outcome": "pass"
+    },
+    {
+      "id": "template_assertions/supports_if_expressions_integer_strings_templates_and_explicit_throws",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [
+    "validation/00-format.log",
+    "validation/01-const_units.log",
+    "validation/02-template_assertions.log",
+    "validation/03-clippy.log",
+    "validation/04-build.log",
+    "validation/05-differential.log"
+  ],
+  "reuse": {
+    "v4_validation": "target/new-constants-final-snapshot-v4/validation/report.json",
+    "reason": "Diagnostic-only unresolved source-name classification repair; full v4 implementation gates remain historical evidence. Current affected constant units and frontend template assertions rerun with formatting, all-target Clippy, build and full differential."
+  },
+  "summary": {
+    "pass": 9
+  }
+}

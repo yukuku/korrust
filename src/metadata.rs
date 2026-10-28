@@ -6,7 +6,7 @@ use crate::{
     Diagnostic, Result,
     syntax::{
         ClassDecl, CompanionDecl, CompanionValue, ConstDecl, ConstValue, Function, InterfaceDecl,
-        Module, Type, TypeAliasDecl, Variance,
+        Module, ObjectDecl, Type, TypeAliasDecl, Variance,
     },
 };
 
@@ -1841,7 +1841,6 @@ fn inferred_thread_local(ty: &Type, imports: Imports<'_>, strings: &mut Strings)
     platform_type(thread_local, strings)
 }
 
-#[cfg(test)]
 pub(crate) fn for_object(
     module: &Module,
     owner: &str,
@@ -1850,6 +1849,55 @@ pub(crate) fn for_object(
     serializable: bool,
 ) -> Result<Metadata> {
     object_metadata(module, owner, fields, interfaces, serializable, None)
+}
+
+pub(crate) fn for_constant_objects(
+    module: &Module,
+    owner: &str,
+) -> Result<BTreeMap<String, Metadata>> {
+    fn visit(
+        module: &Module,
+        object: &ObjectDecl,
+        owner: &str,
+        depth: usize,
+        output: &mut BTreeMap<String, Metadata>,
+    ) -> Result<()> {
+        let limit = if depth >= 16 {
+            Some("Object nesting exceeds the current depth limit of 16")
+        } else if output.len() >= 256 {
+            Some("Object tree exceeds the current 256-class limit")
+        } else if object.constants.len() > 1024 {
+            Some("Object exceeds the current 1024-constant limit")
+        } else {
+            None
+        };
+        if let Some(message) = limit {
+            return Err(Diagnostic::new(object.offset, message).with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "CONSTANT_OBJECT_METADATA_LIMIT",
+            ));
+        }
+        let mut context = module.clone();
+        context.object_decl = Some(object.clone());
+        output.insert(owner.into(), for_object(&context, owner, &[], &[], false)?);
+        for nested in &object.objects {
+            visit(
+                module,
+                nested,
+                &format!("{owner}${}", nested.name),
+                depth + 1,
+                output,
+            )?;
+        }
+        Ok(())
+    }
+    let object = module
+        .object_decl
+        .as_ref()
+        .ok_or_else(|| Diagnostic::new(0, "Object metadata requires an object declaration"))?;
+    let mut output = BTreeMap::new();
+    visit(module, object, owner, 0, &mut output)?;
+    Ok(output)
 }
 
 pub(crate) fn for_checked_object(
@@ -2062,6 +2110,16 @@ fn constant_proto(
         ConstValue::Char(_) => Type::Char,
         ConstValue::Boolean(_) => Type::Boolean,
         ConstValue::String(_) => Type::String,
+        ConstValue::Expression { .. } => {
+            return Err(Diagnostic::new(
+                constant.offset,
+                "Constant expressions must be evaluated before metadata is emitted",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "UNEVALUATED_CONSTANT",
+            ));
+        }
     };
     let mut proto = Proto::default();
     proto.number(

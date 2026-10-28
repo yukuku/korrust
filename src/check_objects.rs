@@ -477,7 +477,7 @@ pub(super) fn check(
     let mut context =
         declarations::DeclarationContext::new(&owner, classpath, imports, classes, &lambdas);
     for constant in &source.constants {
-        let (ty, kind) = constant_expr(&constant.value);
+        let (ty, kind) = constant_expr(&constant.value)?;
         context.constants.insert(
             constant.name.clone(),
             (

@@ -5421,7 +5421,7 @@ pub fn check_with_owner(
     }
     let mut constants = HashMap::new();
     for constant in &source.constants {
-        let (ty, kind) = constant_expr(&constant.value);
+        let (ty, kind) = constant_expr(&constant.value)?;
         if constants
             .insert(
                 constant.name.clone(),
@@ -5895,27 +5895,11 @@ fn zero_value(ty: &Type) -> Value {
 }
 
 fn clone_constant(c: &syntax::ConstDecl) -> syntax::ConstDecl {
-    use syntax::ConstValue as C;
-    syntax::ConstDecl {
-        annotations: c.annotations.clone(),
-        name: c.name.clone(),
-        offset: c.offset,
-        private: c.private,
-        internal: c.internal,
-        value: match &c.value {
-            C::Int(v) => C::Int(*v),
-            C::Long(v) => C::Long(*v),
-            C::Float(v) => C::Float(*v),
-            C::Double(v) => C::Double(*v),
-            C::Char(v) => C::Char(*v),
-            C::Boolean(v) => C::Boolean(*v),
-            C::String(v) => C::String(v.clone()),
-        },
-    }
+    c.clone()
 }
-fn constant_expr(value: &syntax::ConstValue) -> (Type, ExprKind) {
+fn constant_expr(value: &syntax::ConstValue) -> Result<(Type, ExprKind)> {
     use syntax::ConstValue as C;
-    match value {
+    Ok(match value {
         C::Int(v) => (Type::Int, ExprKind::Int(i64::from(*v))),
         C::Long(v) => (Type::Long, ExprKind::Long(i128::from(*v))),
         C::Float(v) => (Type::Float, ExprKind::Float(*v)),
@@ -5923,7 +5907,15 @@ fn constant_expr(value: &syntax::ConstValue) -> (Type, ExprKind) {
         C::Char(v) => (Type::Char, ExprKind::Char(*v)),
         C::Boolean(v) => (Type::Boolean, ExprKind::Boolean(*v)),
         C::String(v) => (Type::String, ExprKind::String(v.clone())),
-    }
+        C::Expression { expression, .. } => {
+            return Err(
+                Diagnostic::new(expression.offset, "Unresolved constant initializer").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "CONSTANT_EXPRESSION_UNRESOLVED",
+                ),
+            );
+        }
+    })
 }
 
 fn java_parameter(ty: Type) -> Type {

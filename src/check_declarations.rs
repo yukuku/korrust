@@ -1902,7 +1902,7 @@ fn infer_source_results_impl(
     let lambdas = Rc::new(RefCell::new(Vec::new()));
     let mut context = DeclarationContext::new(owner, classpath, &imports, &classes, &lambdas);
     for constant in &source.constants {
-        let (ty, kind) = constant_expr(&constant.value);
+        let (ty, kind) = constant_expr(&constant.value)?;
         context.constants.insert(
             constant.name.clone(),
             (

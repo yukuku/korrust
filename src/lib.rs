@@ -2,6 +2,7 @@ mod bytecode;
 mod check;
 mod classpath;
 mod compiled_inline;
+mod const_eval;
 mod metadata;
 mod visibility;
 
@@ -154,7 +155,7 @@ pub fn compile_batch_with_options(
     let mut units = Vec::new();
     let mut owner_sources = std::collections::HashMap::new();
     let mut lexical_parents = std::collections::HashMap::new();
-    for (source_index, input) in sources.iter().enumerate() {
+    for input in &sources {
         let source = input.source.as_str();
         let file_name = input.file_name.as_str();
         let stem = file_name.strip_suffix(".kt").ok_or_else(|| {
@@ -177,6 +178,12 @@ pub fn compile_batch_with_options(
                 .for_source(&input.identity));
         }
         let module = syntax::parse(source).map_err(|error| error.for_source(&input.identity))?;
+        modules.push(module);
+    }
+    const_eval::resolve(&mut modules, &classpath)
+        .map_err(|(index, error)| error.for_source(&sources[index].identity))?;
+    for (source_index, (input, module)) in sources.iter().zip(&modules).enumerate() {
+        let stem = input.file_name.strip_suffix(".kt").unwrap();
         let first_unit = units.len();
         let facade = format!("{}{}Kt", stem[..1].to_ascii_uppercase(), &stem[1..]);
         let qualify = |name: &str| {
@@ -212,14 +219,8 @@ pub fn compile_batch_with_options(
         declarations.sort_by_key(declaration_offset);
         for declaration in declarations {
             let owner = qualify(declaration_name(&declaration));
-            declaration_units(
-                declaration,
-                owner,
-                &module,
-                &mut units,
-                &mut lexical_parents,
-            )
-            .map_err(|error| error.for_source(&input.identity))?;
+            declaration_units(declaration, owner, module, &mut units, &mut lexical_parents)
+                .map_err(|error| error.for_source(&input.identity))?;
         }
         for (owner, _) in &units[first_unit..] {
             if owner_sources.insert(owner.clone(), source_index).is_some() {
@@ -230,7 +231,6 @@ pub fn compile_batch_with_options(
                 .for_source(&input.identity));
             }
         }
-        modules.push(module);
     }
     validate_alias_classifiers(&modules, &sources)?;
     let type_locations = units
@@ -1114,10 +1114,15 @@ fn emit_unit_without_annotations(
         )?);
     }
     if let Some(declaration) = &module.object_decl {
+        let metadata = metadata::for_constant_objects(module, internal_name)?
+            .into_iter()
+            .map(|(owner, metadata)| Ok((owner, metadata.in_module(module_name)?)))
+            .collect::<Result<std::collections::BTreeMap<_, _>>>()?;
         return with_lambdas(bytecode::emit_objects(
             declaration,
             internal_name,
             file_name,
+            &metadata,
         )?);
     }
     if let Some(source_declaration) = &module.class_decl {

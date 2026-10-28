@@ -1,0 +1,1 @@
+public final class UpstreamConstantCheck { public static void main(String[] args) { String value = LiteralToLongConversionKt.box(); if (!"OK".equals(value)) throw new AssertionError(value); System.out.println(value); } }

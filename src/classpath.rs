@@ -182,6 +182,7 @@ impl Classpath {
     ) -> Result<Type> {
         aliases::expand(self, ty, imports, packages)
     }
+
     pub(crate) fn builtin_class_declarations(&self, classifier: &str) -> Result<Vec<JavaMethod>> {
         metadata::builtin_class_declarations(&self.builtin_class_resource(classifier)?, classifier)
     }
@@ -305,6 +306,15 @@ impl Classpath {
             }
         }
         Ok(None)
+    }
+
+    pub(crate) fn package_constants(&self, package: &str, name: &str) -> Result<Vec<JavaField>> {
+        Ok(self
+            .package_facades(&package.replace('.', "/"))?
+            .into_iter()
+            .flat_map(|class| class.fields)
+            .filter(|field| field.name == name && field.constant.is_some())
+            .collect())
     }
 
     fn package_facades(&self, package: &str) -> Result<Vec<JavaClass>> {
@@ -2787,7 +2797,7 @@ mod tests {
     #[test]
     fn constant_fields_preserve_wide_values_float_bits_and_utf16_units() {
         let file = crate::compile(
-            "const val number: Long = -9223372036854775808L\nconst val text: String = \"\\uD800\\u0000\\uFFFF\"\nconst val fraction: Float = 1.25f",
+            "const val number: Long = -9223372036854775807L - 1L\nconst val text: String = \"\\uD800\\u0000\\uFFFF\"\nconst val fraction: Float = 1.25f",
             "Constants.kt",
         ).unwrap();
         let class = parse(&file.bytes, "ConstantsKt").unwrap();

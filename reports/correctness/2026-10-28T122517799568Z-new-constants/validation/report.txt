@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T12:24:02.177892+00:00",
+  "status": "pass",
+  "source_snapshot": "target/new-constants-final-snapshot-v4",
+  "source_snapshot_manifest_sha256": "28f8cfd6d429461bc2249e39cfc88fed10a3b790caa7c84226439d0e18ef8b22",
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "RUST_MIN_STACK": "16777216",
+    "CARGO_HOME": "/Users/yuku/f/git/korrust/target/cargo-home",
+    "RUSTUP_HOME": "/Users/yuku/f/git/korrust/target/rustup"
+  },
+  "commands": [
+    {
+      "label": "format",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v4",
+      "exit_code": 0,
+      "log": "validation/00-format.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "const_units",
+      "argv": [
+        "cargo",
+        "test",
+        "--release",
+        "--locked",
+        "--offline",
+        "--lib",
+        "const_eval::tests"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v4",
+      "exit_code": 0,
+      "log": "validation/01-const_units.log",
+      "log_sha256": "43f5125cbd8476ab9bc30293cec33956efe26ce0262a551d4f91f964ee4b7dc6"
+    },
+    {
+      "label": "string_char",
+      "argv": [
+        "cargo",
+        "test",
+        "--release",
+        "--locked",
+        "--offline",
+        "--test",
+        "frontend",
+        "rejects_malformed_chars_and_implicit_char_conversions"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v4",
+      "exit_code": 0,
+      "log": "validation/02-string_char.log",
+      "log_sha256": "b219f403584da4d54b604d7f31b0968cb1e6433f5bb39a394016f08e68823847"
+    },
+    {
+      "label": "string_limit",
+      "argv": [
+        "cargo",
+        "test",
+        "--release",
+        "--locked",
+        "--offline",
+        "--test",
+        "frontend",
+        "object_string_constants_obey_modified_utf8_limits"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v4",
+      "exit_code": 0,
+      "log": "validation/03-string_limit.log",
+      "log_sha256": "2c014c84d46f0024c279b2823b118e12d5a3a46ddfcd5d603ccb21ab7f108837"
+    },
+    {
+      "label": "literal_limit",
+      "argv": [
+        "cargo",
+        "test",
+        "--release",
+        "--locked",
+        "--offline",
+        "--test",
+        "frontend",
+        "checks_modified_utf8_constant_limit"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v4",
+      "exit_code": 0,
+      "log": "validation/04-literal_limit.log",
+      "log_sha256": "a70b604a35f4dc0760e5f3a1130fac19cb7213eaa61708181a1bcdd8116c5fa4"
+    },
+    {
+      "label": "template_assertions",
+      "argv": [
+        "cargo",
+        "test",
+        "--release",
+        "--locked",
+        "--offline",
+        "--test",
+        "frontend",
+        "supports_if_expressions_integer_strings_templates_and_explicit_throws"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v4",
+      "exit_code": 0,
+      "log": "validation/05-template_assertions.log",
+      "log_sha256": "bbd74a2ffe2fc278f1fe3ea54ea7b0dad1aa6f6bb2de2ef7ecb2ed6a136ab1da"
+    },
+    {
+      "label": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v4",
+      "exit_code": 0,
+      "log": "validation/06-clippy.log",
+      "log_sha256": "314fb8a6a8401adb6f86ff59285eceb4f694847643c672b7959dee7067ab59ce"
+    },
+    {
+      "label": "build",
+      "argv": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v4",
+      "exit_code": 0,
+      "log": "validation/07-build.log",
+      "log_sha256": "85c8dbac64ed6a362d668bf3988686e26e947620bb15cfdbe2e999a0ff8261b2"
+    },
+    {
+      "label": "differential",
+      "argv": [
+        "python3",
+        "tools/check_new_constants.py"
+      ],
+      "cwd": "target/new-constants-final-snapshot-v4",
+      "exit_code": 0,
+      "log": "validation/08-differential.log",
+      "log_sha256": "120d17cf28f5a8ab0dff6e2815a38c88257d975edd082d99ec78274aa939911b"
+    }
+  ],
+  "cases": [
+    {
+      "id": "const_units/const_eval::tests::source_constants_resolve_forward_and_qualified_references_with_declared_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::private_references_cycles_and_cross_file_error_locations_fail_closed",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::constant_resolution_preserves_lexical_shadowing_and_explicit_import_priority",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::scalar_constant_operations_preserve_wrapping_types_and_utf16",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::short_circuit_checks_constant_operands_without_dividing_skipped_values",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::computed_string_growth_is_bounded_before_large_allocations",
+      "outcome": "pass"
+    },
+    {
+      "id": "const_units/const_eval::tests::constant_reference_and_expression_depth_are_bounded_across_owner_scopes",
+      "outcome": "pass"
+    },
+    {
+      "id": "string_char/rejects_malformed_chars_and_implicit_char_conversions",
+      "outcome": "pass"
+    },
+    {
+      "id": "string_limit/object_string_constants_obey_modified_utf8_limits",
+      "outcome": "pass"
+    },
+    {
+      "id": "literal_limit/checks_modified_utf8_constant_limit",
+      "outcome": "pass"
+    },
+    {
+      "id": "template_assertions/supports_if_expressions_integer_strings_templates_and_explicit_throws",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [
+    "validation/00-format.log",
+    "validation/01-const_units.log",
+    "validation/02-string_char.log",
+    "validation/03-string_limit.log",
+    "validation/04-literal_limit.log",
+    "validation/05-template_assertions.log",
+    "validation/06-clippy.log",
+    "validation/07-build.log",
+    "validation/08-differential.log"
+  ],
+  "summary": {
+    "pass": 11
+  }
+}

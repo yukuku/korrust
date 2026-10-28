@@ -1,0 +1,625 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T11:12:12.920394+00:00",
+  "status": "fail",
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 55,
+      "jvm_verification": "all",
+      "const_field_access": "reflection; no compile-time inlining by javac",
+      "dependency_clinit": "independently asserted not triggered"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 55,
+      "jvm_verification": "all",
+      "const_field_access": "reflection; no compile-time inlining by javac",
+      "dependency_clinit": "independently asserted not triggered"
+    },
+    {
+      "id": "public_signatures_constant_values",
+      "outcome": "pass",
+      "scope": "javap public descriptors and ConstantValue text compared; full verbose class attributes logged and reflection checks actual field contents"
+    },
+    {
+      "id": "harness",
+      "outcome": "fail",
+      "error": "warning: argument -module-name is passed multiple times. Only the last value will be used: constant_consumer\ntests/fixtures/new_families/constants/Consumer.kt:8:38: error: unresolved reference 'Nested'.\n    if (Holder.TOTAL != 47 || Holder.Nested.NEXT != 48) return \"objects\"\n                                     ^^^^^^\n"
+    }
+  ],
+  "commands": [
+    {
+      "label": "Pinned official compiler identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/000-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/001-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/001-stderr.txt"
+    },
+    {
+      "label": "Candidate identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/korrust-frozen",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/002-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/002-stderr.txt"
+    },
+    {
+      "label": "Compile Java constant and annotation dependencies",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/dependencies",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/InitializationTrace.java",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/JavaConstants.java",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/RuntimeConstant.java"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/003-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/003-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin constant dependency",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/KotlinLibrary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-module-name",
+        "constant_library",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/dependencies"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/004-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/004-stderr.txt"
+    },
+    {
+      "label": "Compile official official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/Shared.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/Constants.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/005-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/005-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/Shared.kt",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/Constants.kt",
+        "--module-name",
+        "new_constants",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/006-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/006-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official output",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/driver",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/ConstantsCheck.java"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/007-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/007-stderr.txt"
+    },
+    {
+      "label": "Run reflective fixed Java caller official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/driver:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.constants.ConstantsCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/008-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/008-stderr.txt"
+    },
+    {
+      "label": "Run reflective fixed Java caller candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/driver:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.constants.ConstantsCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/009-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/009-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata official newfamilies.constants.ConstantsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official",
+        "newfamilies.constants.ConstantsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/010-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/010-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes official newfamilies.constants.ConstantsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official",
+        "newfamilies.constants.ConstantsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/011-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/011-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata official newfamilies.shared.SharedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official",
+        "newfamilies.shared.SharedKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/012-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/012-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes official newfamilies.shared.SharedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official",
+        "newfamilies.shared.SharedKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/013-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/013-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata official newfamilies.constants.Holder",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official",
+        "newfamilies.constants.Holder"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/014-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/014-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes official newfamilies.constants.Holder",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official",
+        "newfamilies.constants.Holder"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/015-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/015-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata official newfamilies.constants.Holder$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official",
+        "newfamilies.constants.Holder$Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/016-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/016-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes official newfamilies.constants.Holder$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official",
+        "newfamilies.constants.Holder$Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/017-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/017-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata candidate newfamilies.constants.ConstantsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate",
+        "newfamilies.constants.ConstantsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/018-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/018-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes candidate newfamilies.constants.ConstantsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate",
+        "newfamilies.constants.ConstantsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/019-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/019-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata candidate newfamilies.shared.SharedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate",
+        "newfamilies.shared.SharedKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/020-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/020-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes candidate newfamilies.shared.SharedKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate",
+        "newfamilies.shared.SharedKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/021-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/021-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata candidate newfamilies.constants.Holder",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate",
+        "newfamilies.constants.Holder"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/022-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/022-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes candidate newfamilies.constants.Holder",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate",
+        "newfamilies.constants.Holder"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/023-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/023-stderr.txt"
+    },
+    {
+      "label": "Inspect ConstantValue metadata candidate newfamilies.constants.Holder$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-constants",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate",
+        "newfamilies.constants.Holder$Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/024-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/024-stderr.txt"
+    },
+    {
+      "label": "Inspect class attributes candidate newfamilies.constants.Holder$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate",
+        "newfamilies.constants.Holder$Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/025-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/025-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin metadata consumer official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-module-name",
+        "constant_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/official:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/consumer-official"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/026-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/026-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/tests/fixtures/new_families/constants/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_constants",
+        "-module-name",
+        "constant_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/candidate:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/dependencies:/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/checks/2026-10-28T111212920394Z-new-constants/consumer-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T111212920394Z-new-constants/027-stdout.txt",
+      "stderr": "target/checks/2026-10-28T111212920394Z-new-constants/027-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "files_sha256": {
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "bb6761630fc0b7e03ec253982105b92b9e1194f6e863e17bf07afaf185977f80",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "552858590b1d6b9814237eaed4d72d07ebec378fe53e8f1841d700d6261d4024",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "62a78136794537d26021aaa661c5e17e80174d026836c69bf1f62d2ce6fd9636",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "4d49104ec19917fcb834ee39e1a13e47f05eba87c950b148c6035cbd31713b34",
+      "src/bytecode/lambdas.rs": "60487f7bbfef94df047c43914794d6edc9a8957bf7b8c8a44447988e7d3028ae",
+      "src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "src/bytecode.rs": "83b2c7a3bb69b1b805f0548596398de75fcbe2337d8dd6e0b0d63c307bd7410e",
+      "src/check.rs": "755ebae9b0b9c56adcd3c0750cb2dc300a88ddf267c109c0fab30ed8c1b4b61d",
+      "src/check_annotation_placements.rs": "7e54592cbf5d6b2e112d879a1888731d02b8953cf39940b6a740c1ccf046476b",
+      "src/check_annotations.rs": "5bd835e0bcf16899053b879adb98a1e4d01f6219bb82c200db82b424da03edcc",
+      "src/check_captures.rs": "4415213c7aec5542f2a03c5a217da9d7976d062b1b3762578dde32b1d133ae10",
+      "src/check_control.rs": "7e6ed766e78b7d706f52d2bc19e0f05af765cd866a56cac03d2f7cbed18df816",
+      "src/check_declarations.rs": "88361a3629ae5c349ecc7ec2963721483b154b9ce71310339714214d3baa4f37",
+      "src/check_delegates.rs": "fc6e3f43a18b6b5b600c5515938d70b0712a616bca82d2c53eab6dd28dbf083e",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "0a97b74e03e2c9ae0539f578f4de25e7cc98d129a7ada14ff83960b4a8c6a34e",
+      "src/check_interfaces.rs": "1d1ca04e28dab5e5e357831ee8706da6ae4f6c41eb4ddd7757d8ae4c4a46eae2",
+      "src/check_ir_walk.rs": "4d1376ec4d903c5e2d230d055ac56c78b5a823ac2284b271bb3aa27a57d0f76d",
+      "src/check_java_properties.rs": "29d858c6d5ed72b524f9395d0204a6d739fa7e489ecead60e1579ab9a15d25e1",
+      "src/check_library.rs": "198737da1d949520e74d67a60851d3df78799646492c6a13e1b2736789a5daa7",
+      "src/check_objects.rs": "f41ef9e1fede42add0075afbed6f4caae3ee0f610932b12ea97e09b7d95b0328",
+      "src/check_operations.rs": "724c6983005b1db7d640b2a255feb546e60c55c1ca4a6930c93e995187c3ffdf",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "fa0e93bc19f643084e61a58d8996294b057730fff07ab5848981762d9e95f616",
+      "src/classpath/aliases.rs": "1ba2d3730c704c3fbfb27b3056a046c8782981a9f312c91865939cacd4fef73e",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "0249130657ddef7e6531d2b734a8614c74eaead4b5bd4db84c369951b9fcb09a",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "6e2bc0bb767d10c9beb32a37312fac62f5a4be611d99399f9cebf46e814ff24b",
+      "src/classpath/source.rs": "3339f1240363c05afdf34202e5c026137786e3162df2755b126f256258990799",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "270bd1c91f8dc32b8b16f6f0f78198dcb6d79f64f95485eca3c2c46ffcb709bb",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/const_eval.rs": "9204ca256ade96205e994993ccde9409158d1c7683564df477d46f8f45206cf8",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "2dcc5b69b2580298b217e6ac741d0ccfaf19455f4f7ae9708ff1ac2d9d081aba",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "8b5b2cf07b9212e4cb5ddd73265af191750093df379fa8dbfa0d45bf65ae6774",
+      "src/metadata.rs": "d1005125259d98daa4ff990c3ada720b4a2932e009606a58b081bd20c5f9d25c",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "ca173d4939a7288b1b3cb31c0369c6d721810a24b6065746d2f032db996c8e79",
+      "src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa",
+      "tests/frontend.rs": "1b0f9cc70411d0a45a655174742281ac16d227f23a8dbe5a2f92e4e285676b89",
+      "tests/fixtures/new_families/constants/Constants.kt": "b1fde82405e424c96d0f70d2fd11bf0602e7cc779d2a2787e19c87500b6d619e",
+      "tests/fixtures/new_families/constants/ConstantsCheck.java": "87df1ff2816ce6b01d1405c1de1a568f60af09d6552f12d3344b4ed375ec8670",
+      "tests/fixtures/new_families/constants/Consumer.kt": "5fa95b087b84a9501e3724e0e172edb498270cee2f9cb24671e794f399dc8de2",
+      "tests/fixtures/new_families/constants/ConsumerLauncher.java": "90e20bcb4436445c9d75b0e3ad70b0e4fae65cdd2f56d0ae911c095fab754c2d",
+      "tests/fixtures/new_families/constants/InitializationTrace.java": "3e8951bd9be88515262e9c2c7ff493461fe8fb0e553ab4182b22f0f630efeb61",
+      "tests/fixtures/new_families/constants/InternalConsumer.kt": "3cbfaa4e7516ba8c55bfff80fc1cc628823f95fec0c16b2d93cfdf47bb7f3881",
+      "tests/fixtures/new_families/constants/JavaConstants.java": "44e7a0c820fe8b16b430caf326b358959014818c7e358a7799cf9f0dac8a9ab1",
+      "tests/fixtures/new_families/constants/KotlinLibrary.kt": "a72abf43ff745fba3d27dcc92ba0878effe3473f13fa51043fc5582228ee00b5",
+      "tests/fixtures/new_families/constants/PrivateConsumer.kt": "26d50b9aff413c676048e67139bfb3a013a03ca6c62682c0b2eceab34e9e0067",
+      "tests/fixtures/new_families/constants/RuntimeConstant.java": "35b7e0477b21dc96e0606481ba6e7c5cbcd716ec15120c87d93d5e923242745d",
+      "tests/fixtures/new_families/constants/Shared.kt": "f546c24c13b7e09491b1d9578c32792e6fa980dd5366af2a8be8d586479700b5",
+      "tools/check_new_constants.py": "f2c2be5048f3c9856330d7a5d941740662f524e9930c695629b4e7384b86941a",
+      "references/kotlin/compiler/testData/codegen/box/constants/literalToLongConversion.kt": "e86948394f476209c220e201fc296e57592bb10b12ca5f0e73d2863537907038"
+    },
+    "source_snapshot": ".",
+    "dependency_classes_sha256": {
+      "newfamilies/library/JavaConstants.class": "67d3ff75673dd4b51b4a591080c281243b1825d170cf71bcfb77e1351c923d7f",
+      "newfamilies/library/RuntimeConstant.class": "03fd0c378f0f4aeaab60c0ec633b6e87a122b73126eba0dd2b89c5be084f89fe",
+      "newfamilies/library/InitializationTrace.class": "088fdad20bbdd5a1e0bea8662c26e95a7cecb7c1d2ed2560bc574ad677477cce",
+      "newfamilies/kotlinlibrary/KotlinLibraryKt.class": "0756e724621d3b43c57cafd0a3390e231eea0e952ee413573885354b9750316b"
+    },
+    "fixed_java_classes_sha256": {
+      "newfamilies/constants/ConstantsCheck.class": "cffef6422a78011d1a9b52f388556500801b25f9802077b154cfa7743a26b328"
+    }
+  },
+  "compiler": {
+    "path": "target/checks/2026-10-28T111212920394Z-new-constants/korrust-frozen",
+    "original_path": "/Users/yuku/f/git/korrust/target/new-constants-final-snapshot-v1/target/release/korrust",
+    "binary_sha256": "60ee06abcfe064338d1f218c31e08d3859f66d1846f4a5f87b7ccadc5947d0db"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "new_constants"
+    ],
+    "compiler_pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "evidence": [
+    "target/checks/2026-10-28T111212920394Z-new-constants/000-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/000-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/001-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/001-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/002-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/002-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/003-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/003-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/004-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/004-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/005-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/005-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/006-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/006-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/007-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/007-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/008-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/008-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/009-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/009-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/010-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/010-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/011-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/011-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/012-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/012-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/013-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/013-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/014-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/014-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/015-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/015-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/016-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/016-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/017-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/017-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/018-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/018-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/019-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/019-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/020-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/020-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/021-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/021-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/022-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/022-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/023-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/023-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/024-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/024-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/025-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/025-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/026-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/026-stderr.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/027-stdout.txt",
+    "target/checks/2026-10-28T111212920394Z-new-constants/027-stderr.txt"
+  ],
+  "selection": "Typed scalar compile-time expressions, Kotlin source constant references and checked Java ConstantValue dependencies; reflection observes actual provider fields instead of javac-inlined constants, fixed Java callers reused with JVM verification, official Kotlin metadata consumers, runtime annotation values, class-initialization independence, preserved upstream constant-expression fixture and official-invalid versus valid unsupported boundaries. Byte/Short const declarations, constexpr function interpretation and floating-point formatting are outside this bounded evaluator. Compiled Kotlin constant dependencies are conservatively unsupported until Kotlin visibility is represented; Java field access flags alone do not prove Kotlin visibility. No full-app/Android/runtime-performance claim.",
+  "summary": {
+    "pass": 5,
+    "fail": 1
+  }
+}

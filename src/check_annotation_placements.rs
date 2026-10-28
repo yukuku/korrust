@@ -187,15 +187,7 @@ pub(crate) fn annotation_placements(
     for constant in &module.constants {
         let annotations = checked(&constant.annotations, classpath, &imports, "FIELD", None)?;
         if !annotations.is_empty() {
-            let ty = match &constant.value {
-                syntax::ConstValue::Int(_) => Type::Int,
-                syntax::ConstValue::Long(_) => Type::Long,
-                syntax::ConstValue::Float(_) => Type::Float,
-                syntax::ConstValue::Double(_) => Type::Double,
-                syntax::ConstValue::Boolean(_) => Type::Boolean,
-                syntax::ConstValue::Char(_) => Type::Char,
-                syntax::ConstValue::String(_) => Type::String,
-            };
+            let (ty, _) = constant_expr(&constant.value)?;
             member(&mut output.fields, &constant.name, &ty.descriptor())
                 .annotations
                 .extend(annotations);

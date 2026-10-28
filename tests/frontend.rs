@@ -224,7 +224,6 @@ fn rejects_malformed_chars_and_implicit_char_conversions() {
         "fun f(): Boolean = 'a' == 97",
         "fun f(): Boolean = 97 < 'a'",
         "fun f(): Boolean = 'a' < 97",
-        "fun f(): String = \"char\" + 'a'",
         "fun f(): String = \"x\".substring('a')",
         "fun f(a: CharArray): Char { var c = 'x'; c = 1; return c }",
         "fun f(a: CharArray): Char = a['a']",
@@ -232,6 +231,13 @@ fn rejects_malformed_chars_and_implicit_char_conversions() {
     ] {
         assert!(compile(source, "Invalid.kt").is_err(), "accepted {source}");
     }
+    assert!(
+        compile(
+            "fun f(value: Char): String = \"char\" + value",
+            "CharConcat.kt"
+        )
+        .is_ok()
+    );
     for builtin in ["Char", "CharArray"] {
         rejects(
             &format!("import missing.Foreign as {builtin}\nfun f() {{}}"),
@@ -564,6 +570,20 @@ fn compiles_all_nested_object_classes_without_a_facade() {
 }
 
 #[test]
+fn computed_constant_declarations_compile() {
+    for source in [
+        "object E { const val N = 1 + 2 }",
+        "object E { const val N = (1) }",
+        "object E { const val N = !false }",
+    ] {
+        assert!(
+            compile_all(source, "Computed.kt").is_ok(),
+            "rejected {source}"
+        );
+    }
+}
+
+#[test]
 fn rejects_unsupported_object_and_constant_forms() {
     for source in [
         "private object E",
@@ -584,17 +604,15 @@ fn rejects_unsupported_object_and_constant_forms() {
         "object E { object Nested() }",
         "object E { const val INSTANCE = 1 }",
         "object E { object INSTANCE }",
-        "object E { const val N = 1 + 2 }",
-        "object E { const val N = (1) }",
         "object E { const val N = other }",
         "object E { const val N = -true }",
-        "object E { const val N = !false }",
         "object E { const val N = null }",
         "object E { const val N: Boolean = 1 }",
         "object E { const val N: Char = 1 }",
         "object E { const val N: Int = 'a' }",
         "object E { const val N: String = false }",
         "object E { const val N = 9223372036854775808 }",
+        "object E { const val N = -9223372036854775808L }",
         "object E { const val N = 01 }",
         "object E { const val N = '😀' }",
         "object E { const val N = \"$value\" }",
@@ -998,10 +1016,7 @@ fn supports_if_expressions_integer_strings_templates_and_explicit_throws() {
     rejects("fun f(): Int = if (1) 2 else 3", "Type mismatch");
     rejects("fun f(): Int = if (true) 1 else false", "Type mismatch");
     rejects(r#"fun f(): String = "$missing""#, "Unresolved");
-    rejects(
-        r#"fun f(c: Char): String = "$c""#,
-        "String templates support only",
-    );
+    assert!(compile(r#"fun f(c: Char): String = "$c""#, "CharTemplate.kt").is_ok());
     assert!(compile(r#"fun f(n: Int): String = "$`n`""#, "EscapedTemplate.kt").is_ok());
     rejects(r#"fun f(n: Int): String = "$n二""#, "Non-ASCII characters");
     rejects(
@@ -1017,8 +1032,10 @@ fn supports_if_expressions_integer_strings_templates_and_explicit_throws() {
     );
     let source = r#"object E { const val S = "$missing" }"#;
     let error = compile(source, "Literal.kt").err().unwrap();
-    assert!(error.message.contains("literal initializers"));
-    assert_eq!(error.offset, source.find('"').unwrap());
+    assert_eq!(error.kind, korrust::DiagnosticKind::InvalidKotlin);
+    assert_eq!(error.code, "INVALID_CONSTANT_EXPRESSION");
+    assert!(error.message.contains("Unresolved constant reference"));
+    assert_eq!(error.offset, source.find("missing").unwrap());
 }
 
 #[test]
