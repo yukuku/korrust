@@ -1,0 +1,6 @@
+target/checks/2026-10-28T160308805337Z-new-class-literals/internal_outer.kt:1:5: error: 'public' function exposes its 'internal' return type argument containing declaration 'InternalOuter'.
+fun bad() = newfamilies.dependency.InternalOuter.PublicNested::class
+    ^^^
+target/checks/2026-10-28T160308805337Z-new-class-literals/internal_outer.kt:1:36: error: cannot access 'class InternalOuter : Any': it is internal in file.
+fun bad() = newfamilies.dependency.InternalOuter.PublicNested::class
+                                   ^^^^^^^^^^^^^

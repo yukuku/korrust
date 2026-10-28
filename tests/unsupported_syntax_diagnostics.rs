@@ -39,8 +39,6 @@ const ACCESSOR_CASES: &[(&str, &str)] = &[
 const CLASS_LITERAL_CASES: &[&str] = &[
     "fun stringClass() = String::class",
     "class ClassLiteralTarget\nfun sourceClass() = ClassLiteralTarget::class",
-    "@file:OptIn(ExperimentalUnsignedTypes::class)\nfun unsignedValues(): UIntArray = uintArrayOf(1u)",
-    "@OptIn(ExperimentalUnsignedTypes::class)\nfun unsignedValue(): UInt = 1u",
 ];
 const UNSIGNED_TEST_SOURCE: &str = include_str!(
     "../benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt"
@@ -54,6 +52,10 @@ const ORIGINALS: &[(&str, &str, &str, &str, usize)] = &[(
     "PARAMETERIZED_SUPERTYPE_UNSUPPORTED",
     35,
 )];
+
+fn assert_unsupported(source: &str, marker: &str, code: &str) {
+    assert_unsupported_at(source, source.find(marker).unwrap(), code);
+}
 
 fn assert_unsupported_at(source: &str, offset: usize, code: &str) {
     let identity = "/original/UnsupportedSyntax.kt";
@@ -97,21 +99,35 @@ fn assert_unsupported_at(source: &str, offset: usize, code: &str) {
 }
 
 #[test]
-fn ordinary_class_literals_report_the_keyword_at_the_original_source() {
-    for &source in CLASS_LITERAL_CASES
-        .iter()
-        .chain(std::iter::once(&UNSIGNED_TEST_SOURCE))
-    {
-        assert_unsupported_at(
-            source,
-            source.find("::class").unwrap() + 2,
-            "CLASS_LITERAL_UNSUPPORTED",
-        );
+fn ordinary_class_literals_compile_with_an_explicit_kotlin_runtime() {
+    let runtime =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc/lib/kotlin-stdlib.jar");
+    for &source in CLASS_LITERAL_CASES {
+        let output = compile_batch_with_classpath(
+            &[SourceInput {
+                identity: "/original/ClassLiteral.kt".into(),
+                file_name: "ClassLiteral.kt".into(),
+                source: source.into(),
+            }],
+            std::slice::from_ref(&runtime),
+            "class_literals",
+        )
+        .unwrap();
+        assert!(!output.is_empty());
     }
 }
 
 #[test]
-fn unsigned_test_cli_reports_the_first_line_class_literal_without_outputs() {
+fn unsigned_sources_retain_explicit_unsupported_boundaries() {
+    let file = "@file:OptIn(ExperimentalUnsignedTypes::class)\nfun unsignedValues(): UIntArray = uintArrayOf(1u)";
+    assert_unsupported(file, "@file", "FILE_ANNOTATION_UNSUPPORTED");
+    assert_unsupported(UNSIGNED_TEST_SOURCE, "@file", "FILE_ANNOTATION_UNSUPPORTED");
+    let declaration = "@OptIn(ExperimentalUnsignedTypes::class)\nfun unsignedValue(): UInt = 1u";
+    assert_unsupported(declaration, "1u", "UNSIGNED_LITERAL_UNSUPPORTED");
+}
+
+#[test]
+fn unsigned_test_cli_reports_the_file_annotation_boundary_without_outputs() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let input = root.join("benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt");
     let destination = std::env::temp_dir().join(format!(
@@ -135,10 +151,10 @@ fn unsigned_test_cli_reports_the_first_line_class_literal_without_outputs() {
     let diagnostic = String::from_utf8(result.stderr).unwrap();
     for expected in [
         "\"category\":\"unsupported_language\"",
-        "\"code\":\"CLASS_LITERAL_UNSUPPORTED\"",
-        "\"offset\":39",
+        "\"code\":\"FILE_ANNOTATION_UNSUPPORTED\"",
+        "\"offset\":0",
         "\"line\":1",
-        "\"column\":40",
+        "\"column\":1",
     ] {
         assert!(diagnostic.contains(expected), "{diagnostic}");
     }

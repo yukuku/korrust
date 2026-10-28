@@ -1,0 +1,17 @@
+Exception in thread "main" java.io.FileNotFoundException: /Users/yuku/.gradle/wrapper/dists/gradle-9.7.1-bin/1w1c7tv4s851m17nbqdsro2tv/gradle-9.7.1-bin.zip.lck (Operation not permitted)
+	at java.base/java.io.IoOverNioFileSystem.convertNioToIoExceptionInStreams(IoOverNioFileSystem.java:121)
+	at java.base/java.io.IoOverNioFileSystem.initializeStreamsUsingNio0(IoOverNioFileSystem.java:312)
+	at java.base/java.io.IoOverNioFileSystem.initializeStreamUsingNio(IoOverNioFileSystem.java:279)
+	at java.base/java.io.RandomAccessFile.<init>(RandomAccessFile.java:332)
+	at java.base/java.io.RandomAccessFile.<init>(RandomAccessFile.java:257)
+	at org.gradle.wrapper.Install.createDist(SourceFile:24)
+	at org.gradle.wrapper.GradleWrapperMain.lambda$prepareWrapper$0(SourceFile:2)
+	at org.gradle.wrapper.GradleWrapperMain.main(SourceFile:2)
+Caused by: java.nio.file.FileSystemException: /Users/yuku/.gradle/wrapper/dists/gradle-9.7.1-bin/1w1c7tv4s851m17nbqdsro2tv/gradle-9.7.1-bin.zip.lck: Operation not permitted
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:102)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:108)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:114)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newFileChannel(UnixFileSystemProvider.java:224)
+	at java.base/java.io.IoOverNioFileSystem.initializeStreamsUsingNio0(IoOverNioFileSystem.java:294)
+	... 6 more
+Build evidence: /Users/yuku/f/git/korrust/target/new-families-final10-module-artifacts/korrust/korrust/build.json

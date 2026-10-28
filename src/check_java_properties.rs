@@ -149,8 +149,8 @@ impl Checker<'_> {
             if parameters.is_empty() && result != Type::Unit && !method.unsupported {
                 if class.kotlin_class
                     || class.access & 0x4200 != 0
-                    || class.name.starts_with("java/lang/")
-                    || method.owner.starts_with("java/lang/")
+                    || crate::classpath::kotlin_mapped_classifier(&class.name).is_some()
+                    || crate::classpath::kotlin_mapped_classifier(&method.owner).is_some()
                 {
                     return Err(Diagnostic::new(offset, "Synthetic properties on mapped, interface, enum, or Kotlin receiver classes are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "JAVA_SYNTHETIC_RECEIVER_UNSUPPORTED"));
                 }

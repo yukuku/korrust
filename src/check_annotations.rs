@@ -160,6 +160,10 @@ pub(super) fn declaration_annotations(
                 ));
             }
             let value = match (&expression.kind, descriptor.as_str()) {
+                (ExprKind::ClassLiteral { .. }, "Ljava/lang/Class;") => {
+                    return Err(Diagnostic::new(expression.offset, "Class literal annotation arguments require unsupported class-descriptor annotation emission")
+                        .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "CLASS_LITERAL_ANNOTATION_UNSUPPORTED"));
+                }
                 (ExprKind::Int(value), "I") => {
                     DeclarationAnnotationValue::Int(i32::try_from(*value).map_err(|_| {
                         Diagnostic::new(

@@ -24,6 +24,37 @@ pub(crate) const DEFAULT_KOTLIN_PACKAGES: &[&str] = &[
     "kotlin/jvm",
 ];
 
+pub(crate) fn kotlin_mapped_classifier(owner: &str) -> Option<&'static str> {
+    Some(match owner {
+        "java/lang/Object" => "kotlin/Any",
+        "java/lang/String" => "kotlin/String",
+        "java/lang/CharSequence" => "kotlin/CharSequence",
+        "java/lang/Number" => "kotlin/Number",
+        "java/lang/Throwable" => "kotlin/Throwable",
+        "java/lang/Cloneable" => "kotlin/Cloneable",
+        "java/lang/Comparable" => "kotlin/Comparable",
+        "java/lang/Enum" => "kotlin/Enum",
+        "java/lang/annotation/Annotation" => "kotlin/Annotation",
+        "java/lang/Boolean" => "kotlin/Boolean",
+        "java/lang/Byte" => "kotlin/Byte",
+        "java/lang/Short" => "kotlin/Short",
+        "java/lang/Integer" => "kotlin/Int",
+        "java/lang/Long" => "kotlin/Long",
+        "java/lang/Character" => "kotlin/Char",
+        "java/lang/Float" => "kotlin/Float",
+        "java/lang/Double" => "kotlin/Double",
+        "java/lang/Iterable" => "kotlin/collections/Iterable",
+        "java/util/Iterator" => "kotlin/collections/Iterator",
+        "java/util/Collection" => "kotlin/collections/Collection",
+        "java/util/List" => "kotlin/collections/List",
+        "java/util/ListIterator" => "kotlin/collections/ListIterator",
+        "java/util/Set" => "kotlin/collections/Set",
+        "java/util/Map" => "kotlin/collections/Map",
+        "java/util/Map$Entry" => "kotlin/collections/Map.Entry",
+        _ => return None,
+    })
+}
+
 #[derive(Clone)]
 pub(crate) struct Classpath {
     paths: Vec<PathBuf>,
@@ -121,6 +152,7 @@ pub(crate) struct JavaMethod {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryClass {
+    pub kotlin_visibility: Option<u8>,
     pub type_aliases: Vec<LibraryTypeAlias>,
     pub type_parameters: Vec<TypeParameter>,
     pub supertypes: Vec<Type>,
@@ -301,6 +333,7 @@ impl Classpath {
                     annotation_definition: None,
                     kotlin_fun_interface: false,
                     library: Some(LibraryClass {
+                        kotlin_visibility: None,
                         type_aliases: Vec::new(),
                         type_parameters: Vec::new(),
                         supertypes: Vec::new(),

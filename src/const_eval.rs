@@ -326,6 +326,12 @@ fn evaluate_inner(
 ) -> Result<Value> {
     let offset = expression.offset;
     let constant = match &expression.kind {
+        ExprKind::ClassLiteral { .. } => {
+            return Err(invalid(
+                offset,
+                "Class literals cannot be compile-time scalar constants",
+            ));
+        }
         ExprKind::Int(value) => numeric_literal(i128::from(*value), false, offset)?,
         ExprKind::Long(value) => numeric_literal(*value, true, offset)?,
         ExprKind::Float(value) => ConstValue::Float(*value),
@@ -1739,6 +1745,13 @@ mod tests {
         let classpath = Classpath::new(&[])?;
         resolve(&mut modules, &classpath).map_err(|(_, error)| error)?;
         Ok(modules.remove(0).constants.remove(0).value)
+    }
+
+    #[test]
+    fn class_literals_are_invalid_scalar_constant_initializers() {
+        let error = fold("String::class").unwrap_err();
+        assert_eq!(error.kind, crate::DiagnosticKind::InvalidKotlin);
+        assert_eq!(error.code, "INVALID_CONSTANT_EXPRESSION");
     }
 
     #[test]

@@ -458,8 +458,10 @@ impl Checker<'_> {
                 return;
             }
         }
-        if let ExprKind::Boolean(truth) = &source.kind {
-            self.refine(&conditions[0], *truth);
+        match &source.kind {
+            ExprKind::Boolean(truth) => self.refine(&conditions[0], *truth),
+            ExprKind::WhenSubjectless => self.refine(&conditions[0], true),
+            _ => {}
         }
     }
 

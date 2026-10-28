@@ -1,0 +1,654 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T16:49:55.734301+00:00",
+  "status": "fail",
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 82,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 82,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "public_signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_consumer/official",
+      "outcome": "pass",
+      "independently_compiled_against_provider": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "kotlin_consumer/candidate",
+      "outcome": "pass",
+      "independently_compiled_against_provider": true,
+      "jvm_verification": "all"
+    }
+  ],
+  "commands": [
+    {
+      "label": "Official identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/000-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/001-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/001-stderr.txt"
+    },
+    {
+      "label": "Compile actual generic Java dependency",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/UnsafeGenerics.java",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/InitializationTrace.java",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/InitializationProbe.java",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/ClassMark.java"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/002-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/002-stderr.txt"
+    },
+    {
+      "label": "Compile generic Kotlin property and visibility dependencies",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/GenericProperties.kt",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/KotlinClassLibrary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_class_literals",
+        "-module-name",
+        "class_literal_library",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/003-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/003-stderr.txt"
+    },
+    {
+      "label": "Compile official official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/Classes.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_class_literals",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/official"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/004-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/004-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/Classes.kt",
+        "--module-name",
+        "new_class_literals",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/candidate"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/005-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/005-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official classes",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/official:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/driver",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/ClassesCheck.java"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/006-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/006-stderr.txt"
+    },
+    {
+      "label": "Execute fixed Java caller official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/driver:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/official:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.classes.ClassesCheck"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/007-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/007-stderr.txt"
+    },
+    {
+      "label": "Execute fixed Java caller candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/driver:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/candidate:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.classes.ClassesCheck"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/008-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/008-stderr.txt"
+    },
+    {
+      "label": "Public signature official newfamilies.classes.ClassesKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/official",
+        "newfamilies.classes.ClassesKt"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/009-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/009-stderr.txt"
+    },
+    {
+      "label": "Public signature official newfamilies.classes.FixtureType",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/official",
+        "newfamilies.classes.FixtureType"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/010-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/010-stderr.txt"
+    },
+    {
+      "label": "Public signature official newfamilies.classes.Outer",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/official",
+        "newfamilies.classes.Outer"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/011-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/011-stderr.txt"
+    },
+    {
+      "label": "Public signature official newfamilies.classes.Outer$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/official",
+        "newfamilies.classes.Outer$Nested"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/012-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/012-stderr.txt"
+    },
+    {
+      "label": "Metadata attributes official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/official",
+        "newfamilies.classes.ClassesKt"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/013-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/013-stderr.txt"
+    },
+    {
+      "label": "Public signature candidate newfamilies.classes.ClassesKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/candidate",
+        "newfamilies.classes.ClassesKt"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/014-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/014-stderr.txt"
+    },
+    {
+      "label": "Public signature candidate newfamilies.classes.FixtureType",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/candidate",
+        "newfamilies.classes.FixtureType"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/015-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/015-stderr.txt"
+    },
+    {
+      "label": "Public signature candidate newfamilies.classes.Outer",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/candidate",
+        "newfamilies.classes.Outer"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/016-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/016-stderr.txt"
+    },
+    {
+      "label": "Public signature candidate newfamilies.classes.Outer$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/candidate",
+        "newfamilies.classes.Outer$Nested"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/017-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/017-stderr.txt"
+    },
+    {
+      "label": "Metadata attributes candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/candidate",
+        "newfamilies.classes.ClassesKt"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/018-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/018-stderr.txt"
+    },
+    {
+      "label": "Compile independent official Kotlin consumer official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_class_literals",
+        "-module-name",
+        "class_literal_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/official:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/consumer-official"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/019-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/019-stderr.txt"
+    },
+    {
+      "label": "Compile independent official Kotlin consumer candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_class_literals",
+        "-module-name",
+        "class_literal_consumer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/candidate:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/consumer-candidate"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/020-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/020-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Kotlin consumer launcher",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/consumer-official:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/consumer-driver",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/ConsumerLauncher.java"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/021-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/021-stderr.txt"
+    },
+    {
+      "label": "Execute Kotlin metadata consumer official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/consumer-driver:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/consumer-official:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/official:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerLauncher"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/022-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/022-stderr.txt"
+    },
+    {
+      "label": "Execute Kotlin metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/consumer-driver:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/consumer-candidate:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/candidate:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerLauncher"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/023-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/023-stderr.txt"
+    },
+    {
+      "label": "Compile official integrated-official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/fixtures/new_families/class_literals/Integration.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_class_literals",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/integrated-official"
+      ],
+      "exit_code": 1,
+      "timeout_seconds": 120,
+      "stdout": "target/checks/2026-10-28T164955734301Z-new-class-literals/024-stdout.txt",
+      "stderr": "target/checks/2026-10-28T164955734301Z-new-class-literals/024-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "files_sha256": {
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tests/unsupported_syntax_diagnostics.rs": "87e1245ceb1f0d6699dfec3965abd81827622ae746325240311822150c132ec9",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "4364ec9fd9033c06eb0b802121b7d0f42fec6260dfba171ccdc7aae63fbc556d",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "fda47f001e4457653cf50ebe4fb7e72db43399f33461d8f4ad20df3f1e6124a2",
+      "src/bytecode/enums.rs": "1c2d8aca0d2ac22092fea8d587879d74dd0e1956e8577a50bbdc994118abd8ef",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "3a9a8415c4b4b3eb95dfa2a4fbf3e1f069a0381743b4bcff3cfb77212473bce0",
+      "src/bytecode/lambdas.rs": "7b628142b176fab6c45c8a1bca10ea47ba83ea808c108c58fd7892a71ea2da4f",
+      "src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "src/bytecode.rs": "c2bca3bcd831889f57cfea6a35a2bafd5bd99a4d90c8751da38ebf533faf3902",
+      "src/check.rs": "7e6d1878fcf1c7564ca0855f78a3c71cedde40b54578df23878436d6cc5aed69",
+      "src/check_annotation_placements.rs": "78d9d972f2918c33fd1ef6b9b8151f2ac2f4fc3a171b2f20cc0a06b35c634467",
+      "src/check_annotations.rs": "6bb1a6ac2e04156671eaaf096f3a81820a8bc25f71f3ff4ea6cd10d9274ab49d",
+      "src/check_captures.rs": "64d5a014b9ad74b43c8115ea0c2289f9023bed0c390094d119d2cad3873b5536",
+      "src/check_classes.rs": "67a05f9cd963aa55e45ca6cfb1ea854d538c4bccf997e3ed4f8a545c88edb07f",
+      "src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+      "src/check_declarations.rs": "d773014febbe78678c72602e7a2379a0ac0144bb3a15a4bae739707ad011b0b0",
+      "src/check_delegates.rs": "954ec455179174b9f5d1ee1ce6fd25ae0031e8be82dab757ed2796a1fa9812dc",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "d6def636ea9bf62874f3392f5d89f420d1acf74af75086ec8de94390db7c2463",
+      "src/check_interfaces.rs": "17daef21eacf61c97281feef8f5369fc49b66c35296c152d8052fe3da899cad8",
+      "src/check_ir_walk.rs": "cf667a71acc65700de5aa6da84448bd38dd5a3f41e5ff742b8800f8f6c382e69",
+      "src/check_java_properties.rs": "80f8d65c671b6bbbeed96848ba1dd243be0ebc4f49b5a68c51500f2a4b1dc1ae",
+      "src/check_library.rs": "c48c01efd7410146d46e5fad2f33abd142957a07afb9d52ef33c5d1563ac8c87",
+      "src/check_objects.rs": "67d25ec90423fd010709fcfc20f21937256e71ea5faf5f226773d8510a947d85",
+      "src/check_operations.rs": "8dc3f7226a0b692f7ca4fea267820b07b940cf1c653b3bbed7b155b7bfa4a06e",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "ced04b46b63a2897bbf37e84c8fb076a66e3bb8135093929232ced84ff353e1f",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "75c725bb4e7c361d52e0099d498093c479c4a876b6a923818885eda32c5e2086",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/classpath/aliases.rs": "3d272042c0e88cc2b5b8bceee27c678939ec9ad9445bf2f814ece9fed280d4f0",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "affcfc43e0a7fba5958b0e1d2ce53e76a2216bb2abe7fc9a2bea82dfa720bb61",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "76ee5d6828fdfa88da1468dd73a68f4bf3598f61e4ba9cedb3e3ed4314994476",
+      "src/classpath/source.rs": "ce88898835ba03c259c001cabcceb6da74785b5af476e1d6b4f0a1bab3f55ad3",
+      "src/classpath/source_enums.rs": "6614b2a483066aef492a7e4cad4af69312f911991723b180bb0e52a59efcefbb",
+      "src/classpath.rs": "07ff1ccaedd6211f08f60ab6feac982c6ed80af5da4b0803a74044253ab608f6",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/const_eval.rs": "b79b508f08b0c228921ed9c74295d1f13abad2eab88b9a3c9cc8e02225ad8d42",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "ef54e5f2546b3e751fd95601977725ca6177849ad1add457c6e2de095e55722e",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "3821d95c0acbda9351cf1810d5a765ab973975918a1be62b19cd26ff55baf51c",
+      "src/metadata.rs": "79f8cdee383281c533f01cb284add037b321e123605af533b0bafda3767320d2",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "a5127d9c92f10e504d81ea7c05479f758e7bbc350d77f2c5a01edb033b1c1988",
+      "src/visibility.rs": "5a6b553bdcd2f37ffea7633809066b334e7bbd4075ea441ecfc29c4a9e7600f4",
+      "tests/fixtures/new_families/class_literals/ClassMark.java": "344b4d976001dea881def90b2ee8c46bcf20a3e1372838d61dc09d753a6eb930",
+      "tests/fixtures/new_families/class_literals/Classes.kt": "24cbcf690ba2046e96765af9a71c836a640855b5f4c3da90bf0efedfc32cea61",
+      "tests/fixtures/new_families/class_literals/ClassesCheck.java": "d81dd01fd60ec375b4e253c6c37adda2562a60cbec3550839ef4a967bcb5e4dc",
+      "tests/fixtures/new_families/class_literals/Consumer.kt": "98db4270f226811bd6dbe8396d6d6c2fb9792e08a71392f57d953ff3d014ac91",
+      "tests/fixtures/new_families/class_literals/ConsumerLauncher.java": "378a5bd497b09409e94a47b693f417be2d5ef032a22b12c8ff0d154afe797066",
+      "tests/fixtures/new_families/class_literals/GenericProperties.kt": "03844f9d6aa77b03fbce1975917beb308d1264fd638aef829a66476057bdfbc2",
+      "tests/fixtures/new_families/class_literals/InitializationProbe.java": "6125d56ad9f722f26d57aa6893cfcc9e5982009a44b7442fe3863846673dfac9",
+      "tests/fixtures/new_families/class_literals/InitializationTrace.java": "945cbdf6d3266e9e9104ce8f6ce2a5cc63ecf048070a0d726bd2d55a7b7a269d",
+      "tests/fixtures/new_families/class_literals/Integration.kt": "881764cd62127f01fff02d5a943d6f67e5f8f96d79ac350e43dcc3ad4f9f578f",
+      "tests/fixtures/new_families/class_literals/IntegrationCheck.java": "883c2ff7a67f77a1a152fde3d02ccfc15131bae220b6fc1d46ff859f015d4a3f",
+      "tests/fixtures/new_families/class_literals/IntegrationConsumer.kt": "6e0f1848945f859aad87d8c3804f483b675444fe56f156bc49df15de1e33ad6c",
+      "tests/fixtures/new_families/class_literals/IntegrationLauncher.java": "88224499f0c54ac361d4a1ece1f583254cbf92ad9e1afaf4196909a3e5dd65a1",
+      "tests/fixtures/new_families/class_literals/KotlinClassLibrary.kt": "9eba8c3cb83cd4a6fafa1d7a5186494f55209d603326ecb3b2cea9ee7e5406d6",
+      "tests/fixtures/new_families/class_literals/UnsafeGenerics.java": "ddf760361f43043271563c0184204eafbdf0ceb3c85d56716deb0da2d4f0ba0f",
+      "tools/check_new_class_literals.py": "b049c72f8644de19eed23efdd74e21a4ccec8c7232a9116aac0bc5300df9c9d0",
+      "tools/upstream_jvm.py": "5de0b1dc40086cb5916fd50a1c55a8fe6b9b5ca7c3ecff8d790260b9ce969b2e",
+      "selection.json": "6bad95d95b3b99b731af991a42e70ae19e9bc8a7f8b83f2695f25e34232e2b38",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/simple.kt": "269a232f26fef4e3a87351e181857044612b480246be4286dff26c6a5b598774",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/smartCast.kt": "5a41aa74671fba800263a453efd2d6321c62fdc7ec19c050c4c34a5499380fd4",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/sideEffect.kt": "0f797b90e4d9ed91a1456cf5f30cc01019ed1bca90dbfb83e5ff2826d5d83d29",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/javaIntrinsicWithSideEffect.kt": "70b037d9b6211a84d535155dab93616ca2db2b05fd3f09c58b7df34f05366a54",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/bareArray.kt": "a07a3011c480e788ee11f2319ffb15a710085db6e6890c1efb1fd2a638c6858a",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt": "64bb8bc84e23ff63081dfc70ba5b8a1b7c5388dcc0119ac77d9e685dd3fc6b88"
+    },
+    "reference_sources_manifest_sha256": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "lowering_sources_sha256": {
+      "references/kotlin/compiler/fir/checkers/src/org/jetbrains/kotlin/fir/analysis/checkers/expression/FirClassLiteralChecker.kt": "ed94bd4cec40fa645e6810296d19a82c210bc3490cbb103a8fac3f58d044ac56",
+      "references/kotlin/compiler/ir/backend.jvm/codegen/src/org/jetbrains/kotlin/backend/jvm/codegen/ExpressionCodegen.kt": "f5333d2117b713afdfb321187445e15442406b9fe9b68d2fee4ddc58b2cd2d1b",
+      "references/kotlin/compiler/ir/backend.jvm/codegen/src/org/jetbrains/kotlin/backend/jvm/intrinsics/JavaClassProperty.kt": "26a90553ef241a0b3e9a638a9e69d8d85ea41b638ec1e7b67d0fea7872c530f8"
+    },
+    "spec_sha256": "43a857c055a18a7089d74526fbc2140338ff4fcf91b025adc5a88c1941abf380",
+    "dependency_classes_sha256": {
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/META-INF/class_literal_library.kotlin_module": "cf2731bb901bf7adb0b195a47c4d7ecd2f8b354f86539bd08604e1289c373d76",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/ClassMark.class": "891be8e84b1c9fd35d603f2dbe3032feeff4c44053a4c4696bcda170b7b59a03",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/GenericPropertiesKt.class": "737e0be1d8cb3d8d548c433495a9f3b71627e43c33f400084dd45ffc2397b5c3",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/InitializationProbe.class": "9bea17562d0f4bba375c7695e6feed0f2e17cfa6ecd04ed26acc2afb94c83121",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/InitializationTrace.class": "186c9318bf81a4954c116f159aa09a4ec84f2abc0e3db75d0d5e4bcee7058248",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/InternalKotlinType.class": "811c8e2c034fe116cd98be9ded186566a2c3860ef982535453afe2591510f739",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/InternalOuter$PublicNested.class": "4a91eaee785e0a6110d3e664406718c477b9a001129f5cd13115e0915cc9f1d2",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/InternalOuter.class": "d2d608bd5f2a4b658430963a626f1ef8331a14b8ed99f650746f000203a1e448",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/PrivateKotlinType.class": "9cf1ae51b00e64ab49e1dde1c3c62d7e848a3f5c36c9afcc5f61115ef8faf42e",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/PublicKotlinType.class": "25c84108b97d4fac31386da6626f53901af3bce548d9c98f14382df7edd3e751",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/PublicOuter$PrivateNested.class": "bb6aed3230cb0536d3ccde74df465f90604fc3892f66738a556ecc0eef350e22",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/PublicOuter$ProtectedNested.class": "c96156f7467f7df56d04d62b71fc243aed59d9079e7dd9069c334c39d9ff840d",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/PublicOuter$PublicNested.class": "2568c15227719fec0844141f760baf3172f4e24cb43a145eceed1c4466468033",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/PublicOuter.class": "5661d5d48ce7e43954d12f7ec3c0ef7ef8b0475f24a27856d12001c4cba6e7be",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/dependencies/newfamilies/dependency/UnsafeGenerics.class": "d530fdd5abea9b207b8f02af63e8300c61e20706b76aa3abc581e1ae99b57951"
+    },
+    "fixed_java_classes_sha256": {
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/driver/newfamilies/classes/ClassesCheck.class": "25da0715df5ed728e2a90d4d640432741dcdcad94d0e7ba69fbaca747d112ccb"
+    },
+    "fixed_consumer_driver_classes_sha256": {
+      "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T164955734301Z-new-class-literals/consumer-driver/ConsumerLauncher.class": "58cd341f502c065827615d138659dba6003e31fcb77393a0d2a289debe20aff9"
+    }
+  },
+  "evidence": [
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/000-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/000-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/001-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/001-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/002-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/002-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/003-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/003-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/004-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/004-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/005-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/005-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/006-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/006-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/007-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/007-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/008-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/008-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/009-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/009-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/010-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/010-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/011-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/011-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/012-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/012-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/013-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/013-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/014-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/014-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/015-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/015-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/016-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/016-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/017-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/017-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/018-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/018-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/019-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/019-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/020-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/020-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/021-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/021-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/022-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/022-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/023-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/023-stderr.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/024-stdout.txt",
+    "target/checks/2026-10-28T164955734301Z-new-class-literals/024-stderr.txt"
+  ],
+  "selection": "Source type/bound class literals create real KClass via the pinned runtime; ordinary generic extension-property metadata resolves actual Java mapping and unrelated relay getters. Physical JVM result descriptors determine boxed versus primitive class identity; direct immediate-lambda/compiled-inline representations remain explicit unsupported boundaries. No full reflection or full Android app claim. App probes use unchanged files with actual captured external dependencies and official sibling classes; source compilation only, not Android execution.",
+  "limits": {
+    "type_parameter_bound_steps": 64,
+    "containing_class_steps": 64,
+    "array_classifier_steps": 64,
+    "ordinary_command_seconds": 120,
+    "app_command_seconds": 600
+  },
+  "compiler": {
+    "path": "target/checks/2026-10-28T164955734301Z-new-class-literals/korrust-frozen",
+    "binary_sha256": "4b01aedbd4c8aa01f14f5e464d68c0a28e86be01f905c3820edf16161f0597a6"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "testlib_sha256": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "new_class_literals"
+    ]
+  },
+  "error": "tests/fixtures/new_families/class_literals/Integration.kt:18:54: error: logical expression in when-with-subject. The branch will be matched by comparing the result of the logical expression with the subject. To suppress the diagnostic, wrap the expression with parentheses.\nfun explicitFalse(value: Any?): Int = when (false) { value !is String -> value.length; else -> 0 }\n                                                     ^^^^^^^^^^^^^^^^\n",
+  "summary": {
+    "pass": 7
+  }
+}

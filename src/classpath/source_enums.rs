@@ -82,6 +82,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         });
     }
     class.library = Some(LibraryClass {
+        kotlin_visibility: Some(if source.body.internal { 0 } else { 3 }),
         type_aliases: Vec::new(),
         type_parameters: Vec::new(),
         supertypes: std::iter::once(Type::Parameterized {

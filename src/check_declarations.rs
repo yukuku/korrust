@@ -3594,7 +3594,8 @@ fn constructor_read(
             }
             constructor_read(otherwise, fields, &locals, state)?;
         }
-        ExprKind::CallableReference {
+        ExprKind::ClassLiteral { receiver, .. }
+        | ExprKind::CallableReference {
             receiver: Some(receiver),
             ..
         } => constructor_read(receiver, fields, locals, state)?,

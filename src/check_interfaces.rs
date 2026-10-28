@@ -360,6 +360,7 @@ fn register_classes(
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
+                    kotlin_visibility: Some(if source.internal { 0 } else { 3 }),
                     type_aliases: Vec::new(),
                     type_parameters: source
                         .type_params

@@ -1,0 +1,975 @@
+........................KORRUST production batch: /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmpur_k6je8/Module/src/debug/kotlin/B.kt /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmpur_k6je8/Module/src/debug/kotlin/A.kt
+..KORRUST production batch: /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmpm9m43_n1/Module/src/debug/kotlin/B.kt /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmpm9m43_n1/Module/src/debug/kotlin/A.kt
+rejected................E...F................EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEFEEEEEFEEEEE............EEEEEEE.........................................
+======================================================================
+ERROR: test_manifest_is_exact_pinned_baseline_and_restored_target (test_androidbible_regression.AndroidBibleRegressionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_androidbible_regression.py", line 31, in test_manifest_is_exact_pinned_baseline_and_restored_target
+    regression.validate_manifest(self.manifest)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tools/check_androidbible_regression.py", line 28, in validate_manifest
+    historical = json.loads((ROOT / manifest['historical_assessment']).read_text())
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/reports/correctness/2026-10-26T073039Z-androidbible-source-assessment.json'
+
+======================================================================
+ERROR: test_batch_changed_mapping_blocks_empty_publication (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 402, in test_batch_changed_mapping_blocks_empty_publication
+    self.batch([("First.kt", "fun first(): Int = 1")])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_changed_removed_source_output_blocks_cleanup (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 394, in test_batch_changed_removed_source_output_blocks_cleanup
+    self.batch([("First.kt", "object First"), ("Second.kt", "object Second")])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_compile_failure_uses_original_source_and_preserves_outputs (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 373, in test_batch_compile_failure_uses_original_source_and_preserves_outputs
+    self.batch([("First.kt", "object First"), ("Second.kt", "object Second")])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_corrupt_module_manifest_preserves_all_bytes (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 436, in test_batch_corrupt_module_manifest_preserves_all_bytes
+    self.batch([("First.kt", "object First")])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_default_module_and_explicit_main_are_same_owner (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 466, in test_batch_default_module_and_explicit_main_are_same_owner
+    self.batch([("First.kt", "object First"), ("Second.kt", "object Second")], module=None)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_duplicate_jvm_owner_preserves_existing_outputs (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 366, in test_batch_duplicate_jvm_owner_preserves_existing_outputs
+    self.batch([("First.kt", "object First"), ("Second.kt", "object Second")])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_duplicate_source_alias_rejects_before_publication (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 484, in test_batch_duplicate_source_alias_rejects_before_publication
+    result = self.batch([("Example.kt", None), ("Alias.kt", None)], success=False)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_legacy_and_other_module_ownership_collisions_preserve_bytes (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 424, in test_batch_legacy_and_other_module_ownership_collisions_preserve_bytes
+    self.compile("object Legacy")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_missing_output_blocks_cleanup (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 410, in test_batch_missing_output_blocks_cleanup
+    self.batch([("First.kt", "object First { object Nested }")])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_module_names_and_missing_sources_reject_before_publication (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 472, in test_batch_module_names_and_missing_sources_reject_before_publication
+    result = self.batch([("First.kt", "object First")], module=module, success=False)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_preflight_unowned_output_preserves_all_bytes (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 385, in test_batch_preflight_unowned_output_preserves_all_bytes
+    self.batch([("First.kt", "object First { object Nested }")])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_reordering_is_byte_deterministic (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 339, in test_batch_reordering_is_byte_deterministic
+    first = self.batch(sources)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_source_ownership_can_transfer_within_same_complete_module (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 451, in test_batch_source_ownership_can_transfer_within_same_complete_module
+    self.batch([("First.kt", "object Shared"), ("Second.kt", "object Other")])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_source_paths_support_non_ascii_and_whitespace (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 461, in test_batch_source_paths_support_non_ascii_and_whitespace
+    self.batch(sources)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_staging_failure_preserves_prior_outputs_and_metadata (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 444, in test_batch_staging_failure_preserves_prior_outputs_and_metadata
+    self.batch([("First.kt", "object First { object Nested }")])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_symlink_preflight_preserves_existing_outputs (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 490, in test_batch_symlink_preflight_preserves_existing_outputs
+    self.batch([("First.kt", "object First")])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_unrelated_module_and_legacy_outputs_survive_cleanup (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 417, in test_batch_unrelated_module_and_legacy_outputs_survive_cleanup
+    self.compile("object Legacy")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_removed_sources_facades_nested_outputs_and_empty_module_match_clean (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 349, in test_removed_sources_facades_nested_outputs_and_empty_module_match_clean
+    self.batch([("First.kt", "package sample; fun first(): Int = 1"),
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 329, in batch
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_canonical_source_alias_updates_existing_owner (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 279, in test_canonical_source_alias_updates_existing_owner
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_changed_owned_output_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 226, in test_changed_owned_output_rejects_without_changes
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_changed_package_mapping_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 131, in test_changed_package_mapping_rejects_without_changes
+    self.compile("fun value(): Int { return 1 }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_corrupt_index_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 199, in test_corrupt_index_rejects_without_changes
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_cross_source_collision_preserves_both_sources (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 173, in test_cross_source_collision_preserves_both_sources
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_duplicate_manifest_record_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 220, in test_duplicate_manifest_record_rejects_without_changes
+    self.compile("object Root")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_existing_lock_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 236, in test_existing_lock_rejects_without_changes
+    self.compile("object Root")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_interface_helpers_and_anonymous_outputs_match_clean_recompilation (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 152, in test_interface_helpers_and_anonymous_outputs_match_clean_recompilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_invalid_source_does_not_create_destination (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 169, in test_invalid_source_does_not_create_destination
+    self.compile("object Root { val invalid: Int = true }", success=False)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_invalid_source_preserves_previous_outputs_and_index (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 165, in test_invalid_source_preserves_previous_outputs_and_index
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_long_package_uses_bounded_mapping_filename (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 123, in test_long_package_uses_bounded_mapping_filename
+    self.compile(f"package {package}; fun value(): Int {{ return 1 }}")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_metadata_and_destination_symlinks_reject (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 268, in test_metadata_and_destination_symlinks_reject
+    self.compile("object Root", success=False)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_missing_owned_output_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 231, in test_missing_owned_output_rejects_without_changes
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_multiple_source_package_mappings_survive_recompilation (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 109, in test_multiple_source_package_mappings_survive_recompilation
+    self.compile("package sample; fun first(): Int { return 1 }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_object_supplier_removal_matches_clean_compilation (test_cli.OutputLifecycleTests) (version=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 85, in test_object_supplier_removal_matches_clean_compilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_object_supplier_removal_matches_clean_compilation (test_cli.OutputLifecycleTests) (version=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 85, in test_object_supplier_removal_matches_clean_compilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_object_supplier_removal_matches_clean_compilation (test_cli.OutputLifecycleTests) (version=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 85, in test_object_supplier_removal_matches_clean_compilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_object_supplier_removal_matches_clean_compilation (test_cli.OutputLifecycleTests) (version=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 85, in test_object_supplier_removal_matches_clean_compilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_owned_output_symlink_cannot_delete_target (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 253, in test_owned_output_symlink_cannot_delete_target
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_package_mapping_cleanup_matches_clean_compilation (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 102, in test_package_mapping_cleanup_matches_clean_compilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_package_mapping_directory_symlink_rejects (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 142, in test_package_mapping_directory_symlink_rejects
+    self.compile("fun value(): Int { return 1 }", success=False)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_package_symlink_cannot_escape_destination (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 242, in test_package_symlink_cannot_escape_destination
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_parent_traversal_after_missing_directory_rejects (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 302, in test_parent_traversal_after_missing_directory_rejects
+    self.compile("object Root", destination=destination, success=False)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests) (version=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 69, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    result = self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests) (version=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 69, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    result = self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests) (version=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 69, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    result = self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests) (version=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 69, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    result = self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests) (version=4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 69, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    result = self.compile(source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_source_path_encoding_handles_whitespace (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 308, in test_source_path_encoding_handles_whitespace
+    self.compile("object Root { object Child }", source=source)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_symlink_ancestor_above_destination_supports_creation_and_cleanup (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 293, in test_symlink_ancestor_above_destination_supports_creation_and_cleanup
+    self.compile("object Root { object Child }", destination=destination)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_traversal_and_absolute_manifest_paths_reject_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 204, in test_traversal_and_absolute_manifest_paths_reject_without_changes
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_unowned_class_is_not_adopted_or_overwritten (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 182, in test_unowned_class_is_not_adopted_or_overwritten
+    self.compile("object Root", success=False)
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_unrelated_outputs_survive_stale_cleanup (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 187, in test_unrelated_outputs_survive_stale_cleanup
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 25, in compile
+    result = subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_batch_diagnostic_identifies_failing_file_in_both_source_orders (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 23, in setUp
+    result = self.invoke([self.first, self.second])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 30, in invoke
+    return subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_invalid_flags_report_setup_without_changing_owned_outputs (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 23, in setUp
+    result = self.invoke([self.first, self.second])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 30, in invoke
+    return subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_invalid_operator_reports_invalid_signature_at_declaration (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 23, in setUp
+    result = self.invoke([self.first, self.second])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 30, in invoke
+    return subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_missing_signature_type_reports_class_code_at_type_token (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 23, in setUp
+    result = self.invoke([self.first, self.second])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 30, in invoke
+    return subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_missing_source_reports_io_without_fabricating_source_location (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 23, in setUp
+    result = self.invoke([self.first, self.second])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 30, in invoke
+    return subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_nonproperty_constructor_reference_reports_expression_location (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 23, in setUp
+    result = self.invoke([self.first, self.second])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 30, in invoke
+    return subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+ERROR: test_value_class_reports_utf8_byte_offset_and_unicode_column (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 23, in setUp
+    result = self.invoke([self.first, self.second])
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_diagnostic_cli.py", line 30, in invoke
+    return subprocess.run(
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 503, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 971, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/yuku/.pyenv/versions/3.10.16/lib/python3.10/subprocess.py", line 1863, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/release/korrust'
+
+======================================================================
+FAIL: test_preserved_harness_cases_exist_in_dated_evidence (test_androidbible_regression.AndroidBibleRegressionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_androidbible_regression.py", line 51, in test_preserved_harness_cases_exist_in_dated_evidence
+    self.assertTrue(path.is_file(), name)
+AssertionError: False is not true : 2026-10-24T094102516587Z-io-byte-arrays.json
+
+======================================================================
+FAIL: test_object_supplier_removal_matches_clean_compilation (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 93, in test_object_supplier_removal_matches_clean_compilation
+    self.assertEqual(set(self.classes()), {"moved/Renamed.class"})
+AssertionError: Items in the second set but not the first:
+'moved/Renamed.class'
+
+======================================================================
+FAIL: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/tests/test_cli.py", line 74, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    self.assertEqual(set(self.classes()), {"Final.class"})
+AssertionError: Items in the second set but not the first:
+'Final.class'
+
+----------------------------------------------------------------------
+Ran 167 tests in 1.021s
+
+FAILED (failures=3, errors=59)

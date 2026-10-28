@@ -1,0 +1,1 @@
+fun boundary() = Short::class

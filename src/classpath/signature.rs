@@ -395,6 +395,7 @@ pub(super) fn attach(
         class.unsupported = false;
     }
     class.library = Some(LibraryClass {
+        kotlin_visibility: None,
         type_aliases: Vec::new(),
         type_parameters,
         supertypes,

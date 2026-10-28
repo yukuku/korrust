@@ -1075,7 +1075,9 @@ pub(super) fn attach(
             }
         }
     }
+    let class_flags = proto.integer(1)?.unwrap_or(6);
     class.library = Some(LibraryClass {
+        kotlin_visibility: (kind == 1).then_some(((class_flags >> 1) & 7) as u8),
         type_aliases,
         type_parameters: parameters,
         supertypes,
@@ -1084,7 +1086,6 @@ pub(super) fn attach(
     });
     class.kotlin_class = true;
     class.kotlin_interface = class.access & 0x200 != 0;
-    let class_flags = proto.integer(1)?.unwrap_or(6);
     class.sealed_ = kind == 1 && class_flags & 48 == 48;
     class.sealed_subclasses = if class.sealed_ {
         numbers(&proto, 16)?
@@ -1183,7 +1184,18 @@ pub(super) fn attach(
     }
     for bytes in proto.messages(if kind == 1 { 10 } else { 4 })? {
         let property = Proto::parse(bytes)?;
+        let mut context = ctx.clone();
         let parsed = (|| -> Result<()> {
+            let type_parameters = context.type_parameters(&property, 4)?;
+            let unsupported_parameter_shadowing = kind == 1
+                && type_parameters.iter().any(|parameter| {
+                    ctx.parameters.values().any(
+                        |ty| matches!(ty, Type::Parameter { name, .. } if name == &parameter.name),
+                    )
+                });
+            if unsupported_parameter_shadowing {
+                return Err(invalid());
+            }
             let flags = property.integer(11)?.unwrap_or(518);
             if flags & (1 << 16) != 0 {
                 return Err(invalid());
@@ -1192,9 +1204,9 @@ pub(super) fn attach(
             if name.is_empty() || !name.is_ascii() {
                 return Err(invalid());
             }
-            let ty = ctx.field(&property, 3, 9)?;
+            let ty = context.field(&property, 3, 9)?;
             let receiver = if property.bytes(5)?.is_some() || property.integer(10)?.is_some() {
-                Some(ctx.field(&property, 5, 10)?)
+                Some(context.field(&property, 5, 10)?)
             } else {
                 None
             };
@@ -1215,7 +1227,7 @@ pub(super) fn attach(
                         params: Vec::new(),
                         result: ty.clone(),
                         receiver: receiver.clone(),
-                        type_parameters: Vec::new(),
+                        type_parameters: type_parameters.clone(),
                         flags: accessor_flags(7)?,
                     },
                     sig.bytes(3)?,
@@ -1232,7 +1244,7 @@ pub(super) fn attach(
                         params: vec![("value".into(), ty, false)],
                         result: Type::Unit,
                         receiver,
-                        type_parameters: Vec::new(),
+                        type_parameters,
                         flags: accessor_flags(8)?,
                     },
                     sig.bytes(4)?,

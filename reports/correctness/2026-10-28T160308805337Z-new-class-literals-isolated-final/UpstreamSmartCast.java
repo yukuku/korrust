@@ -1,0 +1,1 @@
+public final class UpstreamSmartCast { public static void main(String[] args) { String result = SmartCastKt.box(); if (!"OK".equals(result)) throw new AssertionError(result); System.out.println(result); } }

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "kind": "features",
-  "created_at": "2026-10-28T15:47:02.796897+00:00",
-  "status": "in_progress",
-  "selection": "Approximately twenty genuinely new families; current live execution matrix. Bounded acceptance does not establish unrestricted conformance. Infrastructure and existing support excluded.",
-  "validated_new_families": 9,
+  "created_at": "2026-10-28T17:17:30.269170+00:00",
+  "status": "complete_at_requested_ten_family_limit",
+  "selection": "User-limited delivery of ten genuinely new bounded feature families. Infrastructure and existing support are excluded; other original candidates remain unaccepted.",
+  "validated_new_families": 10,
   "features": [
     {
       "id": "family-01",
@@ -70,9 +70,15 @@
       "id": "family-06",
       "number": 6,
       "name": "Class-reference expressions and bounded KClass/Class interoperability",
-      "status": "unassessed",
+      "status": "supported",
       "acceptance_boundary": "Primitive/reference/array literals, nullable expression checks and ordinary .java resolution; no full reflection.",
-      "execution": "Class literals and bounded KClass/Class interop implementation and validation in an isolated physical source tree; not counted as accepted."
+      "correctness_report": "reports/correctness/2026-10-28T165643787905Z-new-class-literals-integrated-final.json",
+      "restrictions": [
+        "Seven supported scalar primitives, public source/library classifiers, native Long/Boolean/Float/Double/Int/Byte/Char arrays and bounded concrete nested/reference arrays; physical boxed versus primitive result identity preserved.",
+        "Actual compiled generic extension-property metadata resolves KClass/Class mapping and unrelated getters; read-only out capture is bounded and preserves projections.",
+        "Short/Unit, nullable or unreified literal forms, unsupported DNN/flow/projection/visibility/annotation representations and immediate-lambda/compiled-inline receiver forms remain explicit boundaries. Three oracle-invalid programs retain explicit candidate diagnostic-category gaps.",
+        "Larger primitiveClassEquality original and existing unparenthesized Boolean-when acceptance remain actual correctness failures. BareArray language-setting limitation is a harness boundary, not a pass. No full reflection, Android execution or full-app compatibility."
+      ]
     },
     {
       "id": "family-07",
@@ -106,7 +112,7 @@
       "name": "Class/interface delegation",
       "status": "unassessed",
       "acceptance_boundary": "Ordinary interface forwarding, properties, override precedence, evaluation order and generic bridge boundaries. Existing delegated properties excluded.",
-      "execution": "Implementation in a separate scratch after sealed checkpoint; actual AndroidBible inventory finds no class-header by target, and existing property delegation is excluded."
+      "execution": "Stopped at user ten-family limit; partial source/evidence archived without integration, acceptance or feature count."
     },
     {
       "id": "family-11",
@@ -170,7 +176,8 @@
       "number": 17,
       "name": "Rich annotation values and source declarations",
       "status": "unassessed",
-      "acceptance_boundary": "Numeric/enum/class/array/nested values, defaults, retention/placement and Java reflection/Kotlin consumers. Existing three scalar annotation kinds excluded."
+      "acceptance_boundary": "Numeric/enum/class/array/nested values, defaults, retention/placement and Java reflection/Kotlin consumers. Existing three scalar annotation kinds excluded.",
+      "execution": "Stopped at user ten-family limit; partial source/evidence archived without integration, acceptance or feature count."
     },
     {
       "id": "family-18",
@@ -196,12 +203,20 @@
   ],
   "evidence": [
     "reports/correctness/2026-10-28T102639408771Z-new-strings.json",
+    "reports/correctness/2026-10-28T125926394540Z-new-source-generics.json",
+    "reports/correctness/2026-10-28T154702796897Z-new-properties-final.json",
     "reports/correctness/2026-10-28T104259884676Z-new-jvm-overloads.json",
-    "reports/correctness/2026-10-28T105615Z-source-generic-aliases.json",
-    "reports/correctness/2026-10-28T121821034547Z-new-java-interop.json"
+    "reports/correctness/2026-10-28T125502173178Z-new-primitive-arrays-integrated.json",
+    "reports/correctness/2026-10-28T165643787905Z-new-class-literals-integrated-final.json",
+    "reports/correctness/2026-10-28T143225531318Z-new-sealed.json",
+    "reports/correctness/2026-10-28T133916098804Z-checkpoint7-alias-promotion.json",
+    "reports/correctness/2026-10-28T124400446784Z-new-constants.json",
+    "reports/correctness/2026-10-28T121821034547Z-new-java-interop.json",
+    "reports/correctness/2026-10-28T165440289154Z-androidbible-model-io-yes2.json",
+    "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json"
   ],
   "limitations": [
-    "The approximately twenty-family request is not complete. Unassessed entries are not implemented-feature claims.",
+    "The user stopped this delivery at ten accepted families. The other ten original candidates are not integrated or counted.",
     "Upstream adapter diagnostic-equivalence/helpers/mixed compilation/incremental execution remain separately explicit harness boundaries.",
     "No new complete AndroidBible module, full app, device behavior or speedup is claimed."
   ],
@@ -209,23 +224,26 @@
     "lead": {
       "model": "gpt-6.1-sol",
       "reasoning": "high",
-      "owns": "Live integration, review, records and publication"
+      "owns": "Completed integration, review, publication and ten-family delivery"
     },
     "syntax_families": {
       "model": "gpt-6.1-sol",
       "reasoning": "high",
-      "owns": "target/new-class-literals-work only; family6"
+      "owns": "Family6 handed off; family7 read-only research stopped"
     },
     "upstream_adapter": {
       "model": "gpt-6.1-sol",
       "reasoning": "high",
-      "owns": "target/new-accessor-visibility-implementation only; family3"
+      "owns": "Family17 stopped, unintegrated source-only handoff archived"
     },
     "feature_assessment": {
       "model": "gpt-6.1-sol",
       "reasoning": "high",
-      "owns": "target/new-class-delegation-implementation only; family10"
+      "owns": "Class delegation stopped, unintegrated source-only handoff archived"
     }
   },
-  "module_regression_report": "reports/correctness/2026-10-28T133943579061Z-androidbible-model-io-yes2.json"
+  "module_regression_report": "reports/correctness/2026-10-28T165440289154Z-androidbible-model-io-yes2.json",
+  "delivery_target_new_families": 10,
+  "broad_upstream_report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+  "unintegrated_work": "reports/features/2026-10-28-new-jvm-families-unintegrated-work/README.md"
 }

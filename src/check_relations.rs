@@ -1191,6 +1191,7 @@ impl Checker<'_> {
             substitutions.insert(parameter.name.clone(), self.resolve(ty, offset)?);
         }
         let fixed = substitutions.keys().cloned().collect::<HashSet<_>>();
+        let mut captures = HashMap::<String, TypeArgument>::new();
         let params = method
             .kotlin_params
             .as_ref()
@@ -1256,6 +1257,41 @@ impl Checker<'_> {
             } else {
                 self.value(arg)?
             };
+            if *index == 0
+                && library.receiver.is_some()
+                && let (
+                    Type::Parameterized {
+                        name,
+                        arguments: patterns,
+                    },
+                    Type::Parameterized {
+                        name: actual_name,
+                        arguments: actual,
+                    },
+                ) = (params[*index].1.base(), value.ty.base())
+                && name == actual_name
+            {
+                for (pattern, projection) in patterns.iter().zip(actual) {
+                    let Some(Type::Parameter { name, .. }) = pattern.ty.as_ref() else {
+                        continue;
+                    };
+                    if projection.variance == Variance::Invariant && projection.ty.is_some() {
+                        continue;
+                    }
+                    if projection.variance != Variance::Out
+                        || projection.ty.is_none()
+                        || fixed.contains(name)
+                        || params.iter().skip(1).any(|(_, ty, _)| mentions(ty, name))
+                        || captures
+                            .get(name)
+                            .is_some_and(|previous| previous != projection)
+                    {
+                        return Err(Diagnostic::new(offset, "Projected extension receiver requires unsupported writable or conflicting capture semantics")
+                            .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "PROJECTED_EXTENSION_CAPTURE_UNSUPPORTED"));
+                    }
+                    captures.insert(name.clone(), projection.clone());
+                }
+            }
             if !self.infer_constraints(&params[*index].1, &value.ty, &mut substitutions, &fixed, 0)
             {
                 return Err(Diagnostic::new(
@@ -1328,7 +1364,42 @@ impl Checker<'_> {
                 }
             }
         }
-        Ok(substitute_method(method.clone(), &substitutions))
+        let mut specialized = substitute_method(method.clone(), &substitutions);
+        if !captures.is_empty() {
+            if method.kotlin_result.as_ref().is_some_and(|result| {
+                if !captures.keys().any(|name| mentions(result, name)) {
+                    return false;
+                }
+                match result {
+                    Type::Parameter { .. } => false,
+                    Type::Parameterized { arguments, .. } => arguments.iter().any(|argument| {
+                        argument.ty.as_ref().is_some_and(|ty| {
+                            !matches!(ty, Type::Parameter { .. })
+                                && captures.keys().any(|name| mentions(ty, name))
+                        })
+                    }),
+                    _ => true,
+                }
+            }) {
+                return Err(Diagnostic::new(offset, "Projected extension receiver result requires unsupported nested capture semantics")
+                    .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "PROJECTED_EXTENSION_CAPTURE_UNSUPPORTED"));
+            }
+            if let (Some(original), Some(params)) =
+                (&method.kotlin_params, &mut specialized.kotlin_params)
+            {
+                params[0].1 = project_supertype(&original[0].1, &substitutions, &captures);
+            }
+            if let Some(result) = &method.kotlin_result {
+                specialized.kotlin_result =
+                    Some(project_supertype(result, &substitutions, &captures));
+            }
+            if let Some(library) = &mut specialized.library
+                && let Some(receiver) = &method.library.as_ref().unwrap().receiver
+            {
+                library.receiver = Some(project_supertype(receiver, &substitutions, &captures));
+            }
+        }
+        Ok(specialized)
     }
 }
 

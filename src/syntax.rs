@@ -763,6 +763,10 @@ pub enum ExprKind {
         params: Option<Vec<LambdaParameter>>,
         body: Vec<Statement>,
     },
+    ClassLiteral {
+        receiver: Box<Expr>,
+        classifier: Option<Type>,
+    },
     CallableReference {
         receiver: Option<Box<Expr>>,
         name: String,
@@ -801,7 +805,10 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
                     pending.push(branch);
                 }
             }
-            ExprKind::CallableReference {
+            ExprKind::ClassLiteral {
+                receiver: value, ..
+            }
+            | ExprKind::CallableReference {
                 receiver: Some(value),
                 ..
             } => pending.push(value),
@@ -1826,6 +1833,21 @@ impl Parser {
         self.type_locations.push((name.into(), offset));
     }
     fn named_ty(&mut self, name: String, offset: usize) -> Result<Type> {
+        if name.contains('$')
+            && !self
+                .type_parameters
+                .iter()
+                .any(|parameter| parameter.name == name)
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Classifier names containing '$' require unsupported JVM nesting disambiguation",
+            )
+            .with_kind(
+                DiagnosticKind::UnsupportedLanguage,
+                "CLASSIFIER_DOLLAR_NAME_UNSUPPORTED",
+            ));
+        }
         self.record_type(&name, offset);
         if self.at("<") {
             let arguments = self.type_arguments()?;
@@ -5003,6 +5025,78 @@ impl Parser {
         self.depth -= 1;
         Self::bounded(left)
     }
+    fn class_literal_prefix(&mut self) -> Result<Option<Expr>> {
+        if (!identifier(&self.token().text) && !self.at("("))
+            || matches!(
+                self.token().text.as_str(),
+                "true" | "false" | "null" | "this" | "super"
+            )
+        {
+            return Ok(None);
+        }
+        let position = self.pos;
+        let depth = self.depth;
+        let locations = self.type_locations.len();
+        let mut invalid_nullable = false;
+        let result = (|| {
+            let classifier = self.ty().ok()?;
+            let end = self.pos;
+            if self.at("?:")
+                && self
+                    .tokens
+                    .get(self.pos + 1)
+                    .is_some_and(|token| token.text == ":")
+                && self
+                    .tokens
+                    .get(self.pos + 2)
+                    .is_some_and(|token| token.text == "class")
+            {
+                invalid_nullable = true;
+                return None;
+            }
+            if !self.take("::") || !self.take("class") {
+                return None;
+            }
+            let mut names = self.tokens[position..end]
+                .iter()
+                .take_while(|token| !matches!(token.text.as_str(), "<" | "?"))
+                .filter(|token| !matches!(token.text.as_str(), "." | "\n" | "(" | ")"));
+            let first = names.next()?;
+            let mut receiver = Expr {
+                offset: first.offset,
+                kind: ExprKind::Name(identifier_name(&first.text, first.offset).ok()?.into()),
+            };
+            for name in names {
+                receiver = Expr {
+                    offset: receiver.offset,
+                    kind: ExprKind::Property(
+                        Box::new(receiver),
+                        identifier_name(&name.text, name.offset).ok()?.into(),
+                    ),
+                };
+            }
+            Some(Expr {
+                offset: self.tokens[position].offset,
+                kind: ExprKind::ClassLiteral {
+                    receiver: Box::new(receiver),
+                    classifier: Some(classifier),
+                },
+            })
+        })();
+        if result.is_none() {
+            self.pos = position;
+            self.depth = depth;
+            self.type_locations.truncate(locations);
+        }
+        if invalid_nullable {
+            return Err(Diagnostic::new(
+                self.tokens[position].offset,
+                "Nullable class literal classifiers are invalid",
+            )
+            .with_kind(DiagnosticKind::InvalidKotlin, "INVALID_CLASS_LITERAL"));
+        }
+        Ok(result)
+    }
     fn prefix(&mut self) -> Result<Expr> {
         let offset = self.token().offset;
         if self.at("++") || self.at("--") {
@@ -5036,7 +5130,9 @@ impl Parser {
                 kind: ExprKind::Unary(op, Box::new(self.expr(12)?)),
             });
         }
-        let mut expr = if self
+        let mut expr = if let Some(literal) = self.class_literal_prefix()? {
+            literal
+        } else if self
             .tokens
             .get(self.pos + 1)
             .is_some_and(|token| token.text == "@")
@@ -5279,22 +5375,22 @@ impl Parser {
                 };
                 self.lines_before_trailing_lambda()?;
             } else if self.take("::") {
-                if self.at("class") {
-                    return Err(self
-                        .error(
-                            "Class literals require unsupported Kotlin class-reference semantics",
-                        )
-                        .with_kind(
-                            DiagnosticKind::UnsupportedLanguage,
-                            "CLASS_LITERAL_UNSUPPORTED",
-                        ));
-                }
-                expr = Expr {
-                    offset,
-                    kind: ExprKind::CallableReference {
-                        receiver: Some(Box::new(expr)),
-                        name: self.name()?,
-                    },
+                expr = if self.take("class") {
+                    Expr {
+                        offset,
+                        kind: ExprKind::ClassLiteral {
+                            receiver: Box::new(expr),
+                            classifier: None,
+                        },
+                    }
+                } else {
+                    Expr {
+                        offset,
+                        kind: ExprKind::CallableReference {
+                            receiver: Some(Box::new(expr)),
+                            name: self.name()?,
+                        },
+                    }
                 };
             } else if self.take("!!") {
                 expr = Expr {
@@ -5472,7 +5568,10 @@ impl Parser {
                             pending.push((value, depth));
                         }
                     }
-                    ExprKind::CallableReference {
+                    ExprKind::ClassLiteral {
+                        receiver: value, ..
+                    }
+                    | ExprKind::CallableReference {
                         receiver: Some(value),
                         ..
                     } => pending.push((value, depth)),
@@ -6001,7 +6100,8 @@ impl Parser {
                     pending.push((yes, depth + 1));
                     pending.push((no, depth + 1));
                 }
-                ExprKind::CallableReference {
+                ExprKind::ClassLiteral { receiver, .. }
+                | ExprKind::CallableReference {
                     receiver: Some(receiver),
                     ..
                 } => pending.push((receiver, depth + 1)),
@@ -6044,6 +6144,37 @@ impl Parser {
     }
 }
 fn numeric_literal(text: &str, offset: usize) -> Result<ExprKind> {
+    if let Some(digits) = ["uL", "UL", "u", "U"]
+        .iter()
+        .find_map(|suffix| text.strip_suffix(suffix))
+    {
+        let (digits, radix) = if let Some(value) = digits
+            .strip_prefix("0x")
+            .or_else(|| digits.strip_prefix("0X"))
+        {
+            (value, 16)
+        } else if let Some(value) = digits
+            .strip_prefix("0b")
+            .or_else(|| digits.strip_prefix("0B"))
+        {
+            (value, 2)
+        } else {
+            (digits, 10)
+        };
+        if !digits.is_empty()
+            && !digits.starts_with('_')
+            && !digits.ends_with('_')
+            && !(radix == 10 && digits.len() > 1 && digits.starts_with('0'))
+            && u64::from_str_radix(&digits.replace('_', ""), radix).is_ok()
+        {
+            return Err(
+                Diagnostic::new(offset, "Unsigned numeric literals are unsupported").with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "UNSIGNED_LITERAL_UNSUPPORTED",
+                ),
+            );
+        }
+    }
     let radix_literal = text.starts_with("0x")
         || text.starts_with("0X")
         || text.starts_with("0b")
@@ -6276,6 +6407,21 @@ pub fn parse(source: &str) -> Result<Module> {
         type_locations: Vec::new(),
     };
     p.separators();
+    if p.at("@")
+        && p.tokens
+            .get(p.pos + 1)
+            .is_some_and(|token| token.text == "file")
+        && p.tokens
+            .get(p.pos + 2)
+            .is_some_and(|token| token.text == ":")
+    {
+        return Err(p
+            .error("File annotations require unsupported package-header annotation semantics")
+            .with_kind(
+                DiagnosticKind::UnsupportedLanguage,
+                "FILE_ANNOTATION_UNSUPPORTED",
+            ));
+    }
     let mut package = String::new();
     if p.take("package") {
         package = p.name()?;
@@ -6398,6 +6544,18 @@ pub fn parse(source: &str) -> Result<Module> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn adjacent_nullable_class_literals_have_an_invalid_diagnostic() {
+        for source in [
+            "fun bad() = String?::class",
+            "val String: Any = 7\nfun bad() = String?::class",
+        ] {
+            let error = parse(source).unwrap_err();
+            assert_eq!(error.kind, DiagnosticKind::InvalidKotlin);
+            assert_eq!(error.code, "INVALID_CLASS_LITERAL");
+        }
+    }
 
     #[test]
     fn constructor_annotation_guards_preserve_separate_annotated_declarations() {

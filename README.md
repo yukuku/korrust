@@ -165,6 +165,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 125. Invariant source generic classes and interfaces, parameterized inheritance, and erased override bridges.
 126. Sealed classes and interfaces with bounded exhaustive when analysis, JVM constructor access, and Kotlin hierarchy metadata.
 127. Independent property/accessor visibility, internal accessor contracts, and bounded safe-call property assignment.
+128. Source class literals and bounded KClass/Java Class interoperability through ordinary generic extension properties.
 
 ## Project contract
 

@@ -250,6 +250,7 @@ mod tests {
             annotation_definition: None,
             kotlin_fun_interface: false,
             library: Some(LibraryClass {
+                kotlin_visibility: None,
                 type_aliases: aliases,
                 type_parameters: Vec::new(),
                 supertypes: Vec::new(),

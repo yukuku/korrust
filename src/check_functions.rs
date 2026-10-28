@@ -746,6 +746,7 @@ mod shadowing_tests {
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
+                    kotlin_visibility: None,
                     type_parameters: Vec::new(),
                     type_aliases: Vec::new(),
                     supertypes: Vec::new(),

@@ -333,6 +333,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         });
     if let Some((parameters, _)) = generic {
         class.library = Some(LibraryClass {
+            kotlin_visibility: None,
             type_aliases: Vec::new(),
             type_parameters: parameters
                 .iter()
@@ -734,6 +735,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         constants(&mut class, &source.constants)?;
     } else {
         class.library = Some(LibraryClass {
+            kotlin_visibility: None,
             type_aliases: module
                 .type_aliases
                 .iter()
@@ -818,6 +820,41 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 .map(|name| Type::Java(name.clone()))
                 .collect();
         }
+    }
+    let declared = module
+        .class_decl
+        .as_ref()
+        .map(|value| (&value.name, value.internal))
+        .or_else(|| {
+            module
+                .object_decl
+                .as_ref()
+                .map(|value| (&value.name, value.internal))
+        })
+        .or_else(|| {
+            module
+                .interface_decl
+                .as_ref()
+                .map(|value| (&value.name, value.internal))
+        });
+    if let Some((name, internal)) = declared {
+        let named = !name.contains('$') && owner.rsplit(['/', '$']).next() == Some(name.as_str());
+        let supertypes = class
+            .super_name
+            .iter()
+            .chain(&class.interfaces)
+            .cloned()
+            .map(Type::Java)
+            .collect();
+        let library = class.library.get_or_insert_with(|| LibraryClass {
+            kotlin_visibility: None,
+            type_aliases: Vec::new(),
+            type_parameters: Vec::new(),
+            supertypes,
+            package: None,
+            multifile_facade: None,
+        });
+        library.kotlin_visibility = named.then_some(if internal { 0 } else { 3 });
     }
     Ok(class)
 }

@@ -1,0 +1,482 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T13:47:45.382220+00:00",
+  "status": "fail",
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 67,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 67,
+      "jvm_verification": "all"
+    }
+  ],
+  "commands": [
+    {
+      "label": "Official identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/001-stderr.txt"
+    },
+    {
+      "label": "Compile actual generic Java dependency",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/tests/fixtures/new_families/class_literals/UnsafeGenerics.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/002-stderr.txt"
+    },
+    {
+      "label": "Compile generic Kotlin property and visibility dependencies",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/tests/fixtures/new_families/class_literals/GenericProperties.kt",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/tests/fixtures/new_families/class_literals/KotlinClassLibrary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_class_literals",
+        "-module-name",
+        "class_literal_library",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/003-stderr.txt"
+    },
+    {
+      "label": "Compile official official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/tests/fixtures/new_families/class_literals/Classes.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_class_literals",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-work/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/004-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/tests/fixtures/new_families/class_literals/Classes.kt",
+        "--module-name",
+        "new_class_literals",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-work/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/005-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official classes",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/official:/Users/yuku/f/git/korrust/target/new-class-literals-work/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/driver",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/tests/fixtures/new_families/class_literals/ClassesCheck.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/006-stderr.txt"
+    },
+    {
+      "label": "Execute fixed Java caller official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/driver:/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/official:/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-work/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.classes.ClassesCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/007-stderr.txt"
+    },
+    {
+      "label": "Execute fixed Java caller candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/driver:/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/candidate:/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies:/Users/yuku/f/git/korrust/target/new-class-literals-work/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.classes.ClassesCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/008-stderr.txt"
+    },
+    {
+      "label": "Public signature official newfamilies.classes.ClassesKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/official",
+        "newfamilies.classes.ClassesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/009-stderr.txt"
+    },
+    {
+      "label": "Public signature official newfamilies.classes.FixtureType",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/official",
+        "newfamilies.classes.FixtureType"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/010-stderr.txt"
+    },
+    {
+      "label": "Public signature official newfamilies.classes.Outer",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/official",
+        "newfamilies.classes.Outer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/011-stderr.txt"
+    },
+    {
+      "label": "Public signature official newfamilies.classes.Outer$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/official",
+        "newfamilies.classes.Outer$Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/012-stderr.txt"
+    },
+    {
+      "label": "Metadata attributes official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/official",
+        "newfamilies.classes.ClassesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/013-stderr.txt"
+    },
+    {
+      "label": "Public signature candidate newfamilies.classes.ClassesKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/candidate",
+        "newfamilies.classes.ClassesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/014-stderr.txt"
+    },
+    {
+      "label": "Public signature candidate newfamilies.classes.FixtureType",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/candidate",
+        "newfamilies.classes.FixtureType"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/015-stderr.txt"
+    },
+    {
+      "label": "Public signature candidate newfamilies.classes.Outer",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/candidate",
+        "newfamilies.classes.Outer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/016-stderr.txt"
+    },
+    {
+      "label": "Public signature candidate newfamilies.classes.Outer$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/candidate",
+        "newfamilies.classes.Outer$Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/017-stderr.txt"
+    },
+    {
+      "label": "Metadata attributes candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/candidate",
+        "newfamilies.classes.ClassesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/018-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "files_sha256": {
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "bb6761630fc0b7e03ec253982105b92b9e1194f6e863e17bf07afaf185977f80",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "552858590b1d6b9814237eaed4d72d07ebec378fe53e8f1841d700d6261d4024",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "62a78136794537d26021aaa661c5e17e80174d026836c69bf1f62d2ce6fd9636",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "4d49104ec19917fcb834ee39e1a13e47f05eba87c950b148c6035cbd31713b34",
+      "src/bytecode/lambdas.rs": "60487f7bbfef94df047c43914794d6edc9a8957bf7b8c8a44447988e7d3028ae",
+      "src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "src/bytecode.rs": "2dc454104f1169033bb981b84735e2fd809f347ca5811e4848551227ece1fc20",
+      "src/check.rs": "d71a46c6f883dff13d21448e36927cac6b3cf3cac7359a990362e471279cb082",
+      "src/check_annotation_placements.rs": "7e54592cbf5d6b2e112d879a1888731d02b8953cf39940b6a740c1ccf046476b",
+      "src/check_annotations.rs": "5bd835e0bcf16899053b879adb98a1e4d01f6219bb82c200db82b424da03edcc",
+      "src/check_captures.rs": "1ba9eeeea2038e0060a3670d2e6235c146f6659d2f625d6f20d3aedf0f995de2",
+      "src/check_classes.rs": "a4944845fc57a8db542a487ddd55bbd3ae6a8de07dc6b38ec64a6b69b7f45f54",
+      "src/check_control.rs": "7e6ed766e78b7d706f52d2bc19e0f05af765cd866a56cac03d2f7cbed18df816",
+      "src/check_declarations.rs": "ef77bd1ce98863b1fff5be1401319ce0ba97141a59b6858f7e3037b21dbfd742",
+      "src/check_delegates.rs": "fc6e3f43a18b6b5b600c5515938d70b0712a616bca82d2c53eab6dd28dbf083e",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "74d77a801c9e45fcf21d02af1042a642995f95a8316818f32dfb68e38b8ba9b7",
+      "src/check_interfaces.rs": "1d1ca04e28dab5e5e357831ee8706da6ae4f6c41eb4ddd7757d8ae4c4a46eae2",
+      "src/check_ir_walk.rs": "4d1376ec4d903c5e2d230d055ac56c78b5a823ac2284b271bb3aa27a57d0f76d",
+      "src/check_java_properties.rs": "d18d55a07f87fb33d09b12fe8a459da8f073fad9109868016fc43197c1af1a87",
+      "src/check_library.rs": "4dbb238bbab07e34104487021f583c9cd40c79c0662a4af5e1c532fd52929459",
+      "src/check_objects.rs": "f41ef9e1fede42add0075afbed6f4caae3ee0f610932b12ea97e09b7d95b0328",
+      "src/check_operations.rs": "724c6983005b1db7d640b2a255feb546e60c55c1ca4a6930c93e995187c3ffdf",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "8f0a38f90a902c2df8b70f7d70e7a3df17129f27aa9c5a2e43b9e5632d31e3d8",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "fa0e93bc19f643084e61a58d8996294b057730fff07ab5848981762d9e95f616",
+      "src/classpath/aliases.rs": "49aab4a9f13d5a1dd4e5e31b79176f69ea35b1a195b7cd5bab807c1b8c9bbea0",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "8b7777faa7a2bf4b5067444183ca0e5b8494a415998786cfc05505b4e0f877bb",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "dca7c4f33806a1b29e91a5f84feb2d0c53ae372fbc0cbc881c470273e9991792",
+      "src/classpath/source.rs": "47fb9cbb41e74956d4790a2dba16fac1fab5f4fab5448b980c858c198b4f8c95",
+      "src/classpath/source_enums.rs": "6614b2a483066aef492a7e4cad4af69312f911991723b180bb0e52a59efcefbb",
+      "src/classpath.rs": "c1dead853bbef637b69b28fceeaddebd9d7a12ac71df169a3f668890c41a44c8",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/const_eval.rs": "ceb7afd240b6294bd7c2e71225bc0092d78887a179e81084347bc20fee5cb32f",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "f356371c4d1c1f5f2fd5c0ff96b4aa367e02793cdf4308eba4125efd0e7ba226",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "8b5b2cf07b9212e4cb5ddd73265af191750093df379fa8dbfa0d45bf65ae6774",
+      "src/metadata.rs": "b1137b0f71ea9b4a75a8bbd0c43e56784d0b1c8656ec52614f0c608e913296f4",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "569691acec1a1a25c395398de3ebeb2d2e1228e781cdaa4f094e18992cf6687b",
+      "src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa",
+      "tests/fixtures/new_families/class_literals/Classes.kt": "2da1c2078b0c99b42c22e0e95cd988a50a2efb859409b923f9c19e841f6e14f8",
+      "tests/fixtures/new_families/class_literals/ClassesCheck.java": "c1309120da45ae3b0e118fe08ec39af2b9b4031798dbd51a09520e758c579df4",
+      "tests/fixtures/new_families/class_literals/Consumer.kt": "73c25fb7b2e4125bc8e46707b06a864b0c7da071ca303e662260be72ea2ebf35",
+      "tests/fixtures/new_families/class_literals/ConsumerLauncher.java": "378a5bd497b09409e94a47b693f417be2d5ef032a22b12c8ff0d154afe797066",
+      "tests/fixtures/new_families/class_literals/GenericProperties.kt": "03844f9d6aa77b03fbce1975917beb308d1264fd638aef829a66476057bdfbc2",
+      "tests/fixtures/new_families/class_literals/KotlinClassLibrary.kt": "9eba8c3cb83cd4a6fafa1d7a5186494f55209d603326ecb3b2cea9ee7e5406d6",
+      "tests/fixtures/new_families/class_literals/UnsafeGenerics.java": "ddf760361f43043271563c0184204eafbdf0ceb3c85d56716deb0da2d4f0ba0f",
+      "tools/check_new_class_literals.py": "5a1eb5dae26dbe37a8b38c978ea3bd0fa63a9cd41f8f1f2cc6546283667f09e8",
+      "selection.json": "a0159e6bec4c974395bf602b8e80dbe913bde9f7216d580817b7a1fb986368d0",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/simple.kt": "269a232f26fef4e3a87351e181857044612b480246be4286dff26c6a5b598774",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/sideEffect.kt": "0f797b90e4d9ed91a1456cf5f30cc01019ed1bca90dbfb83e5ff2826d5d83d29",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/javaIntrinsicWithSideEffect.kt": "70b037d9b6211a84d535155dab93616ca2db2b05fd3f09c58b7df34f05366a54",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/bareArray.kt": "a07a3011c480e788ee11f2319ffb15a710085db6e6890c1efb1fd2a638c6858a",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt": "64bb8bc84e23ff63081dfc70ba5b8a1b7c5388dcc0119ac77d9e685dd3fc6b88"
+    },
+    "reference_sources_manifest_sha256": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "spec_sha256": "43a857c055a18a7089d74526fbc2140338ff4fcf91b025adc5a88c1941abf380",
+    "dependency_classes_sha256": {
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/GenericPropertiesKt.class": "737e0be1d8cb3d8d548c433495a9f3b71627e43c33f400084dd45ffc2397b5c3",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/InternalKotlinType.class": "811c8e2c034fe116cd98be9ded186566a2c3860ef982535453afe2591510f739",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/InternalOuter$PublicNested.class": "4a91eaee785e0a6110d3e664406718c477b9a001129f5cd13115e0915cc9f1d2",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/InternalOuter.class": "d2d608bd5f2a4b658430963a626f1ef8331a14b8ed99f650746f000203a1e448",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/PrivateKotlinType.class": "9cf1ae51b00e64ab49e1dde1c3c62d7e848a3f5c36c9afcc5f61115ef8faf42e",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/PublicKotlinType.class": "25c84108b97d4fac31386da6626f53901af3bce548d9c98f14382df7edd3e751",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/PublicOuter$PrivateNested.class": "bb6aed3230cb0536d3ccde74df465f90604fc3892f66738a556ecc0eef350e22",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/PublicOuter$ProtectedNested.class": "c96156f7467f7df56d04d62b71fc243aed59d9079e7dd9069c334c39d9ff840d",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/PublicOuter$PublicNested.class": "2568c15227719fec0844141f760baf3172f4e24cb43a145eceed1c4466468033",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/PublicOuter.class": "5661d5d48ce7e43954d12f7ec3c0ef7ef8b0475f24a27856d12001c4cba6e7be",
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/dependencies/newfamilies/dependency/UnsafeGenerics.class": "d530fdd5abea9b207b8f02af63e8300c61e20706b76aa3abc581e1ae99b57951"
+    },
+    "fixed_java_classes_sha256": {
+      "/Users/yuku/f/git/korrust/target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/driver/newfamilies/classes/ClassesCheck.class": "80756b42ec30b3dbbfb70fa49ec24b9c5670b0feb5423fe6a9959f7b638df518"
+    }
+  },
+  "evidence": [
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/000-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/000-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/001-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/001-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/002-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/002-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/003-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/003-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/004-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/004-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/005-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/005-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/006-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/006-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/007-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/007-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/008-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/008-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/009-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/009-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/010-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/010-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/011-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/011-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/012-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/012-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/013-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/013-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/014-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/014-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/015-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/015-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/016-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/016-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/017-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/017-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/018-stdout.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/018-stderr.txt",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/frozen-inputs.zip",
+    "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/original-report.txt"
+  ],
+  "selection": "Source type/bound class literals create real KClass via the pinned runtime; ordinary generic extension-property metadata resolves actual Java mapping and unrelated relay getters. Physical JVM result descriptors determine boxed versus primitive class identity; direct immediate-lambda/compiled-inline representations remain explicit unsupported boundaries. No full reflection or full Android app claim. App probes use unchanged files with actual captured external dependencies and official sibling classes; source compilation only, not Android execution.",
+  "compiler": {
+    "path": "target/new-class-literals-work/target/checks/2026-10-28T134745382220Z-new-class-literals/korrust-frozen",
+    "binary_sha256": "83cd5a9ad0ad740c107c8f2c662369fced062165250c26346bfefb3cc807a18e"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "new_class_literals"
+    ]
+  },
+  "error": "Public generic signatures differ",
+  "summary": {
+    "pass": 4
+  },
+  "publication_input_archive_missing_or_changed": [
+    "src/check.rs",
+    "src/check_annotations.rs",
+    "src/check_classes.rs",
+    "src/check_java_properties.rs",
+    "src/check_singletons.rs",
+    "src/classpath/metadata.rs",
+    "src/classpath/source.rs",
+    "src/syntax.rs",
+    "tests/fixtures/new_families/class_literals/Classes.kt",
+    "tests/fixtures/new_families/class_literals/ClassesCheck.java",
+    "tests/fixtures/new_families/class_literals/Consumer.kt",
+    "tools/check_new_class_literals.py",
+    "selection.json"
+  ],
+  "publication": {
+    "original_report_sha256": "d4e5ed531b9ebe6796ce210a22aad66fa276ac7e29a31038ad117ae02c869a92",
+    "frozen_input_archive": "reports/correctness/2026-10-28T134745382220Z-new-class-literals-isolated/frozen-inputs.zip",
+    "frozen_input_archive_sha256": "399b6893bc451e832a728f9ccbe29387b2032fe2ed70336f9b50c36a76b69b07",
+    "archived_input_files": 54,
+    "original_snapshot_root": "/Users/yuku/f/git/korrust/target/new-class-literals-work",
+    "note": "67assertions/provider beforepublic-signatureordercomparison failure. Historical outcomes, original identities and available exact frozen input bytes retained. Missing changed development bytes listed explicitly; acceptance uses a later fresh merged run.",
+    "binary_policy": "Actual verified local binary path retained under ignored target; binary is not included in text/source evidence archive."
+  }
+}

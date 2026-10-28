@@ -1,0 +1,1 @@
+fun boundary() = Unit::class

@@ -1,0 +1,548 @@
+{
+  "schema_version": 1,
+  "selection": "Purposive bounded upstream originals: six existing-language runtime regressions, twenty candidate family representatives and interaction/root checks. This matrix is an execution sample, not exhaustive coverage or a feature acceptance tally.",
+  "limitations": [
+    "Unknown directives, unimplemented helpers, diagnostic equivalence, unsupported compiler settings, mixed cyclic Java/Kotlin compilation, and incremental edit scenarios are harness_unsupported.",
+    "Compilation/signature-only cases are scoped explicitly and do not establish runtime behavior or Kotlin metadata compatibility.",
+    "Incremental input is inventoried only; no speedup or rebuild-correctness claim.",
+    "Primitive array, sealed, value, generic, suspend and other family representatives do not establish every family dimension. Family acceptance requires additional independent assertions, invalid cases and official consumers."
+  ],
+  "cases": [
+    {
+      "id": "baseline_int_when",
+      "family": "existing_control_flow",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/branching/when2.kt",
+      "kind": "box",
+      "tier": "regression",
+      "sha256": "fab72714f7c99ebbe8a93947b0b372e3bfe025fb89453a370679b47a7afaca28"
+    },
+    {
+      "id": "baseline_arrays",
+      "family": "existing_primitive_arrays",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachIntArray.kt",
+      "kind": "box",
+      "tier": "regression",
+      "sha256": "428b491fbe0b8a68cced0cf689986be13399fe555912b0fcfb79fc444c186d9f"
+    },
+    {
+      "id": "baseline_typealias",
+      "family": "existing_nongeneric_alias",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasConstructor.kt",
+      "kind": "box",
+      "tier": "regression",
+      "sha256": "f39bee49f74aa332cb68082c019de03502305a067c5e20927007d6b7cc6d0fe6"
+    },
+    {
+      "id": "baseline_default_arguments",
+      "family": "existing_default_arguments",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/simpleFromOtherFile.kt",
+      "kind": "box",
+      "tier": "regression",
+      "sha256": "75775f742707ff5aad7c66a819ae785102f52eb48831a1706b109f8ac3d5e578"
+    },
+    {
+      "id": "baseline_enum",
+      "family": "existing_enum",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/enum/inner.kt",
+      "kind": "box",
+      "tier": "regression",
+      "sha256": "625c283ebbe4787e01570b1efafb8308b5671767bb886c03e93697f1e021bcc6"
+    },
+    {
+      "id": "baseline_fun_interface",
+      "family": "existing_fun_interface",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/funInterface/basicFunInterfaceConversion.kt",
+      "kind": "box",
+      "tier": "regression",
+      "sha256": "43d8f4479302c25d02941b4f30847efaea36a89c3661ae397f0a15c978f5829a"
+    },
+    {
+      "id": "raw_strings",
+      "family": "raw_strings",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt",
+      "kind": "box",
+      "tier": "basic",
+      "sha256": "5ee1ac4401a57d6c6251af419bcdeb34114fde450c219990aec95a279013b28e"
+    },
+    {
+      "id": "raw_strings_quotes",
+      "family": "raw_strings",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+      "kind": "box",
+      "tier": "complex",
+      "sha256": "7d6202a5d197351e2a716222b819d51b67fdba120b59935b952ed91f86556f26"
+    },
+    {
+      "id": "generic_classifiers",
+      "family": "generic_classifiers",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/dataClasses/genericParam.kt",
+      "kind": "box",
+      "tier": "basic",
+      "sha256": "4d90d91655040e777f064a5ee5afa789618aa28d59cadfc5ea50bfe5925e1b98"
+    },
+    {
+      "id": "accessor_visibility",
+      "family": "accessor_visibility",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/properties/accessToPrivateSetter.kt",
+      "kind": "box",
+      "tier": "basic",
+      "sha256": "bca47d89d65097ec1d3f4726f6f7cf3c19c96c1ac0a735907e87be1d6dcfe9d8"
+    },
+    {
+      "id": "jvm_overloads",
+      "family": "jvm_overloads",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/jvmOverloads/constructorWithTypeParams.kt",
+      "kind": "box",
+      "tier": "interaction",
+      "sha256": "f61fe2f5494ef3304f18a71aa1452a5cfdbf70bd60879a88d90f2bf916045298"
+    },
+    {
+      "id": "primitive_arrays",
+      "family": "primitive_arrays",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachLongArray.kt",
+      "kind": "box",
+      "tier": "basic",
+      "sha256": "b7c27c4727e4868d1afd73e589e12b3638b31782f09b5a64e38f5ebc122570fa"
+    },
+    {
+      "id": "class_references",
+      "family": "class_references",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/simple.kt",
+      "kind": "box",
+      "tier": "interaction",
+      "sha256": "269a232f26fef4e3a87351e181857044612b480246be4286dff26c6a5b598774"
+    },
+    {
+      "id": "value_classes",
+      "family": "value_classes",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt",
+      "kind": "box",
+      "tier": "interaction",
+      "sha256": "ee9a31ea5400aa67b9d11ef0494cdf80ebac7be427a3e9015293557a487cdb70"
+    },
+    {
+      "id": "sealed_hierarchies",
+      "family": "sealed_hierarchies",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/sealed/delegatingConstructor.kt",
+      "kind": "box",
+      "tier": "basic",
+      "sha256": "2ee9221dc82708c99a62f22474e1ec3ee8ecfe3f47874c8a11b5855f940424b5"
+    },
+    {
+      "id": "inner_classes",
+      "family": "inner_classes",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/innerClass/simple.kt",
+      "kind": "box",
+      "tier": "basic",
+      "sha256": "750757723f3b66fc2a88e2e87dcd1b4f49f49d5f67621a527b687ab7aea9fa84"
+    },
+    {
+      "id": "interface_delegation",
+      "family": "interface_delegation",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt",
+      "kind": "box",
+      "tier": "interaction",
+      "sha256": "87e1f420a50df2fe2bc6917ba193b52a9070249b5cf16a5c35470918cb7b81a8"
+    },
+    {
+      "id": "data_objects",
+      "family": "expanded_objects",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/dataObjects/equals.kt",
+      "kind": "box",
+      "tier": "basic",
+      "sha256": "2f6061be9250e73090fb56bb1a5b2fef8edcf0e9fc385dd36aa3b7b7e4b3ec59"
+    },
+    {
+      "id": "enum_subclasses",
+      "family": "expanded_enums",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt",
+      "kind": "box",
+      "tier": "interaction",
+      "sha256": "f557b70100036251bfc54c081c3eff2dd86a99c3cca3567a875fbc38b1d838ce"
+    },
+    {
+      "id": "generic_aliases",
+      "family": "generic_aliases",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt",
+      "kind": "box",
+      "tier": "basic",
+      "sha256": "a416c2b8cd2592f0674b9b4b6c2974cb23ba14a5861db6857e36dee05db4fe5b"
+    },
+    {
+      "id": "unsigned",
+      "family": "unsigned",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt",
+      "kind": "box",
+      "tier": "basic",
+      "sha256": "abeddd4b29c3024780bc06179bc7f83823c83c7499bd97ced7db3026182a3af2"
+    },
+    {
+      "id": "constant_expressions",
+      "family": "constant_expressions",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/properties/initializerOfConstValWithConstExpr.kt",
+      "kind": "box",
+      "tier": "basic",
+      "sha256": "52f8b0aa5a21ea146fb4dda1286ceaf6b5fe79565d6ae3230697c2ccd51c1ffb"
+    },
+    {
+      "id": "java_static_imports",
+      "family": "java_member_resolution",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/enum/simpleJavaEnumWithStaticImport.kt",
+      "kind": "box",
+      "tier": "interaction",
+      "sha256": "4c92d1773b91145f002b8ec85b268a01f2bab43b96fa1820d5f0e849afe2b1f1"
+    },
+    {
+      "id": "rich_annotations",
+      "family": "rich_annotations",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt",
+      "kind": "box",
+      "tier": "interaction",
+      "sha256": "cc2a6d8fbfa40c2a3c699e95f1ea632f7b934ed36303dfb80d21cf74a0ea8268"
+    },
+    {
+      "id": "member_extensions",
+      "family": "member_extensions",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt",
+      "kind": "box",
+      "tier": "interaction",
+      "sha256": "a6ead4a04087fc0097e79c3128b11378bfeed42be48845a02b53ba0f8aca5273"
+    },
+    {
+      "id": "source_reified",
+      "family": "source_inline_reified",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt",
+      "kind": "box",
+      "tier": "interaction",
+      "sha256": "f500737df116ecdd44fa50403bf941dde82da05f55f7e092d75375d79b4d58ea"
+    },
+    {
+      "id": "suspension",
+      "family": "suspension",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/coroutines/async.kt",
+      "kind": "box",
+      "tier": "interaction",
+      "sha256": "fcc28400bf3f28b1e7bcb5c0aeda12891e29b99752e01aecd6f7b3d8913844d9"
+    },
+    {
+      "id": "inline_generics",
+      "family": "source_inline_reified",
+      "root": "boxInline",
+      "path": "references/kotlin/compiler/testData/codegen/boxInline/typeParameters/basic.kt",
+      "kind": "inline",
+      "tier": "interaction",
+      "sha256": "5dc0a84c78cdc5ab1dea24a02e9d60ed1d497141a458e0e8413708f917fd014c"
+    },
+    {
+      "id": "inline_nonlocal",
+      "family": "source_inline_reified",
+      "root": "boxInline",
+      "path": "references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt",
+      "kind": "inline",
+      "tier": "complex",
+      "sha256": "b10a8ee1323b6d69ea400193c9088222fb3f6a4c0ac6f6bea98118b0d81d68a0"
+    },
+    {
+      "id": "diagnostics_markers",
+      "family": "diagnostic_mapping",
+      "root": "diagnostics",
+      "path": "references/kotlin/compiler/testData/diagnostics/tests/controlFlowAnalysis/unresolvedReference.kt",
+      "kind": "diagnostics",
+      "tier": "invalid",
+      "sha256": "be51b2d72a2b6f000d4ef2a441bf69f5c64c19f2512ac40a94b5b9b32a41a7ca"
+    },
+    {
+      "id": "diagnostics_options",
+      "family": "diagnostic_mapping",
+      "root": "diagnostics",
+      "path": "references/kotlin/compiler/testData/diagnostics/tests/integerLiterals/typealiasOnLong.kt",
+      "kind": "diagnostics",
+      "tier": "interaction",
+      "sha256": "7b273a1dc0b12de5ea581e69f2a40fc60be4c2c637edeb17ce96527a517a055b"
+    },
+    {
+      "id": "java_consumes_void",
+      "family": "java_consumer_contract",
+      "root": "compileJavaAgainstKotlin",
+      "path": "references/kotlin/compiler/testData/compileJavaAgainstKotlin/method/Void.kt",
+      "kind": "java_consumer",
+      "tier": "regression",
+      "sha256": "b5e0af55af5ad7839fc2eb107430fe63757fb07fca584bfc4f776ec2fc9bd06a"
+    },
+    {
+      "id": "kotlin_consumes_nested_java",
+      "family": "java_member_resolution",
+      "root": "compileKotlinAgainstJava",
+      "path": "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.kt",
+      "kind": "kotlin_consumer",
+      "tier": "interaction",
+      "sha256": "88d18006d69378e006963848192da5215116f0dbc39d0204244bd62cf9a7b21e"
+    },
+    {
+      "id": "constructor_signature",
+      "family": "constructor_signature",
+      "root": "writeSignature",
+      "path": "references/kotlin/compiler/testData/writeSignature/constructor/Constructor0.kt",
+      "kind": "signature",
+      "tier": "regression",
+      "sha256": "84702e728eaa840f4c7ba4de80fb5749d7b82844b50e76a68a1a11eb8e4286a4"
+    },
+    {
+      "id": "spec_receiver_priority",
+      "family": "member_extensions",
+      "root": "tests-spec",
+      "path": "references/kotlin/compiler/tests-spec/testData/codegen/box/linked/overload-resolution/receivers/p-6/pos/2.2.kt",
+      "kind": "spec_box",
+      "tier": "interaction",
+      "sha256": "bce6ca16199272336a29190b21984e7ed365e28342fb6d592f25d7e088252161"
+    },
+    {
+      "id": "incremental_classpath_snapshot",
+      "family": "incremental_dependency_semantics",
+      "root": "incremental",
+      "path": "references/kotlin/compiler/incremental-compilation-impl/testData/org/jetbrains/kotlin/incremental/classpathDiff/ClasspathSnapshotterTest/kotlin/testSimpleClass/src/com/example/SimpleClass.kt",
+      "kind": "incremental",
+      "tier": "interaction",
+      "sha256": "9ae77b24c8265351afdff0305c053b79740b4e567e26457dd32c289f6ef41f60"
+    }
+  ],
+  "canonical_path_corrections": [
+    {
+      "id": "baseline_typealias",
+      "previous_path": "references/kotlin/compiler/testData/codegen/box/typeAlias/typeAliasConstructor.kt",
+      "canonical_tracked_path": "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasConstructor.kt"
+    }
+  ],
+  "validated_family_evidence": [
+    {
+      "family_number": 1,
+      "family": "Raw/multiline string templates and standard multiline expression/navigation parsing",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T102639408771Z-new-strings.json",
+      "unchanged_upstream_originals": [
+        {
+          "case": "upstream/rawStrings",
+          "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt",
+          "sha256": "5ee1ac4401a57d6c6251af419bcdeb34114fde450c219990aec95a279013b28e",
+          "outcome": "pass"
+        },
+        {
+          "case": "upstream/multilineStringsWithTemplates",
+          "path": "references/kotlin/compiler/testData/codegen/box/strings/multilineStringsWithTemplates.kt",
+          "sha256": "8ea5629c4f48c7ac4ec8aa7f7e5945b89ec351e609ea4eac977c3693b89b7288",
+          "outcome": "pass"
+        },
+        {
+          "case": "upstream/rawStringsWithManyQuotes",
+          "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+          "sha256": "7d6202a5d197351e2a716222b819d51b67fdba120b59935b952ed91f86556f26",
+          "outcome": "unsupported_language"
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 2,
+      "family": "Source generic classifiers, parameterized inheritance and erased override bridges",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T125926394540Z-new-source-generics.json",
+      "unchanged_upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/bridges/simpleReturnType.kt",
+          "sha256": "7b326733d823b5a63ee28931fe5429a687146f2613ffaee07a8bcbb2b593930b",
+          "outcome": "pass",
+          "provider_case_ids": [
+            "upstream/simpleReturnType/official",
+            "upstream/simpleReturnType/candidate"
+          ]
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/bridges/kt2920.kt",
+          "sha256": "78e30d1e7457a295992f09c34e43e60948fe441c9ceb8c0864f06acc570a388a",
+          "outcome": "pass",
+          "provider_case_ids": [
+            "upstream/kt2920/official",
+            "upstream/kt2920/candidate"
+          ]
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 4,
+      "family": "JVM overload generation for default arguments",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T104259884676Z-new-jvm-overloads.json",
+      "unchanged_upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/jvmOverloads/simpleJavaCall.kt",
+          "sha256": "b7b945fbdb56799796edffb06dfd2c9bdd563cb2dee3ef28e7f13ff2b1147092",
+          "outcome": "pass",
+          "provider_case_ids": [
+            "upstream/simpleJavaCall/official",
+            "upstream/simpleJavaCall/candidate"
+          ]
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 5,
+      "family": "Remaining signed primitive/array representations",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T125502173178Z-new-primitive-arrays-integrated.json",
+      "unchanged_upstream_originals": [
+        {
+          "case": "original/forEachLongArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachLongArray.kt",
+          "sha256": "b7c27c4727e4868d1afd73e589e12b3638b31782f09b5a64e38f5ebc122570fa",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachBooleanArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachBooleanArray.kt",
+          "sha256": "f366521bca05cbd66e51c5478c006234510fe458a87e39a36c282f41280f1f36",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachFloatArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachFloatArray.kt",
+          "sha256": "6a996ed20a85ce47bfa2b9963d82276c6b4d6f94933143e6d7eb8602a44c4fce",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachDoubleArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachDoubleArray.kt",
+          "sha256": "af2afd457cbdda96fd7cd580fb5a0251760d984c54ebe33955dad44030ba4474",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachIntArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachIntArray.kt",
+          "sha256": "428b491fbe0b8a68cced0cf689986be13399fe555912b0fcfb79fc444c186d9f",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachByteArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachByteArray.kt",
+          "sha256": "f7ab1297d213710becaefb33e6a108b74dcd7db4cd6c8bb1be603dbfb4f9eca4",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachCharArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachCharArray.kt",
+          "sha256": "b133277aff099c81b77196492bf3bb9d8c5685343fa7d49cda929c806fd4a3a6",
+          "outcome": "pass"
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 13,
+      "family": "Generic source aliases",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T133916098804Z-checkpoint7-alias-promotion.json",
+      "unchanged_upstream_originals": [
+        {
+          "case": "upstream/typeAliasFunction",
+          "path": "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasFunction.kt",
+          "sha256": "acf53d485f3305118dd2f10d923705911337ff12ab4b79e475451a301ebc91f8",
+          "outcome": "pass"
+        },
+        {
+          "case": "upstream/simple",
+          "path": "references/kotlin/compiler/testData/codegen/box/typealias/simple.kt",
+          "sha256": "f09fe20925e38b1830b19602163dd09fc9609f13f3e165a6ddabfca65edfe190",
+          "outcome": "correctness_failure"
+        },
+        {
+          "case": "upstream/genericTypeAliasConstructor2",
+          "path": "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt",
+          "sha256": "a416c2b8cd2592f0674b9b4b6c2974cb23ba14a5861db6857e36dee05db4fe5b",
+          "outcome": "correctness_failure"
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages.",
+      "initial_acceptance_report": "reports/correctness/2026-10-28T105615Z-source-generic-aliases.json"
+    },
+    {
+      "family_number": 15,
+      "family": "Compile-time constant expressions and references",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T124400446784Z-new-constants.json",
+      "unchanged_upstream_originals": [
+        {
+          "case": "upstream/literalToLongConversion",
+          "path": "references/kotlin/compiler/testData/codegen/box/constants/literalToLongConversion.kt",
+          "sha256": "e86948394f476209c220e201fc296e57592bb10b12ca5f0e73d2863537907038",
+          "outcome": "pass"
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 16,
+      "family": "Remaining Java member resolution rules",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T121821034547Z-new-java-interop.json",
+      "unchanged_upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/javaVisibility/package/inheritedPackageStaticFunction.kt",
+          "sha256": "5f49513980ea74e053eef07b62257eaddf37dfdcc7aa7e5f2fa4f2510012770b",
+          "outcome": "pass",
+          "provider_case_ids": [
+            "upstream/official",
+            "upstream/candidate"
+          ]
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 8,
+      "family": "Sealed hierarchies and bounded exhaustive when",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T143225531318Z-new-sealed.json",
+      "unchanged_upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/sealed/simple.kt",
+          "sha256": "3d3adf1c87fe56ed30596f4adb2d46a63eabcd080cf9a5fd7ba3e6b520bd3414",
+          "outcome": "pass"
+        }
+      ],
+      "additional_acceptance": "Fixed Java and official Kotlin exhaustive consumers, source module/package legality, constructor/enum ABI, independent effects/exceptions and explicit actual-app blockers. No full-app or unrestricted exhaustiveness claim."
+    },
+    {
+      "family_number": 3,
+      "family": "Independent accessor visibility and internal property contracts",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T154702796897Z-new-properties-final.json",
+      "unchanged_upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/properties/accessToPrivateSetter.kt",
+          "sha256": "bca47d89d65097ec1d3f4726f6f7cf3c19c96c1ac0a735907e87be1d6dcfe9d8",
+          "outcome": "pass"
+        }
+      ],
+      "additional_acceptance": "Fixed Java callers, official Kotlin friend/nonfriend consumers and reflection, absent default private setter versus custom method ABI, generic physical-storage boundary and actual unchanged app failure."
+    }
+  ]
+}

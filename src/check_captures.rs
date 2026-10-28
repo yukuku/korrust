@@ -54,7 +54,8 @@ pub(super) fn expression_names(expr: &Expr, names: &mut HashSet<String>) {
             }
             expression_names(otherwise, names);
         }
-        ExprKind::CallableReference {
+        ExprKind::ClassLiteral { receiver, .. }
+        | ExprKind::CallableReference {
             receiver: Some(receiver),
             ..
         } => expression_names(receiver, names),
@@ -190,7 +191,8 @@ pub(super) fn lambda_capture_names(statements: &[syntax::Statement]) -> HashSet<
                     expr_visit(arg, names);
                 }
             }
-            ExprKind::Generic(a, _)
+            ExprKind::ClassLiteral { receiver: a, .. }
+            | ExprKind::Generic(a, _)
             | ExprKind::NamedArgument(_, a)
             | ExprKind::Unary(_, a)
             | ExprKind::NonNull(a)
@@ -436,7 +438,8 @@ pub(super) fn free_names(
                     expression(arg, bound, free);
                 }
             }
-            ExprKind::Generic(a, _)
+            ExprKind::ClassLiteral { receiver: a, .. }
+            | ExprKind::Generic(a, _)
             | ExprKind::NamedArgument(_, a)
             | ExprKind::Unary(_, a)
             | ExprKind::NonNull(a)

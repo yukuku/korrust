@@ -23,6 +23,8 @@ pub use declarations::{
 };
 #[path = "check_captures.rs"]
 mod captures;
+#[path = "check_classes.rs"]
+mod classes;
 #[path = "check_control.rs"]
 mod control;
 #[path = "check_functions.rs"]
@@ -3301,6 +3303,10 @@ impl Checker<'_> {
                 )
                 .with_kind(crate::DiagnosticKind::InvalidKotlin, "NON_EXHAUSTIVE_WHEN"));
             }
+            ExprKind::ClassLiteral {
+                receiver,
+                classifier,
+            } => return self.class_literal(receiver, classifier.as_ref(), offset),
             ExprKind::VarargArray { array, elements } => {
                 return self.vararg_array(array, elements, offset);
             }
@@ -3663,7 +3669,7 @@ impl Checker<'_> {
                         return Err(Diagnostic::new(
                             part.offset,
                             "String templates support only String, supported primitives, their nullable forms, and null",
-                        ));
+                        ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "STRING_TEMPLATE_VALUE_UNSUPPORTED"));
                     }
                     result = Value {
                         ty: Type::String,
@@ -5241,7 +5247,8 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
             }
             call_names(a, names);
         }
-        ExprKind::Generic(a, _)
+        ExprKind::ClassLiteral { receiver: a, .. }
+        | ExprKind::Generic(a, _)
         | ExprKind::NamedArgument(_, a)
         | ExprKind::Unary(_, a)
         | ExprKind::NonNull(a)
@@ -5425,6 +5432,8 @@ pub fn check_with_owner(
             let original = path.rsplit('/').next()?;
             (alias != "*"
                 && alias != original
+                && alias != original.rsplit('$').next().unwrap_or(original)
+                && alias != &original.replace('$', "/")
                 && !source.imports.iter().any(|(other_alias, other_path, _)| {
                     other_path == path && other_alias == original
                 }))

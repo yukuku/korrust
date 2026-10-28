@@ -1,0 +1,34 @@
+{
+  "family": 7,
+  "status": "stopped_read_only_assessment",
+  "reason": "User steered to stop after ten validated families; family6 remains finalintegration candidate. No7implementation authorized tocontinue.",
+  "compiler_changes": false,
+  "new_oracle_runs": false,
+  "evidence_sha256": {
+    "target/new-value-classes-research/Probe.kt": "b7b3632b2e5136ae7e4c8d8d0212cf1bc3f0916f4e9052528a757498013c820e",
+    "target/new-value-classes-research/signatures.txt": "f4f770311d2d6bb9b06dfe74208e6d83261e3a30d2af8d08e49a1f1ea97f20c6",
+    "target/new-value-classes-research/metadata.txt": "8578a86faf3171bd4c06f234ed218a3fe98421c9853b7698b5a79825b2a0c273",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt": "487b8ecadfe52f276154df2c2fabe3d4bdea0deb550ad5cd7400dd63fe0ddc0c",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt": "edaa027f6e6f053e85ae87a9afe7e9a6ded54e0fb09f98a1fe2db12391ecf37d",
+    "references/kotlin/compiler/backend/src/org/jetbrains/kotlin/codegen/state/inlineClassManglingUtils.kt": "10f19ecdfac82e9e81d52ff0883b4bb93a267dd84a0e89e7aaae02c03068889b",
+    "references/kotlin/compiler/ir/backend.jvm/src/org/jetbrains/kotlin/backend/jvm/InlineClassAbi.kt": "11bcae258b1809c84094bb7fbde74bc48cb75d0fab736ca80472dbb471431dfd",
+    "references/kotlin/core/metadata/src/metadata.proto": "a08e508cc7d98cc225e8b0df7290724b545a0250f7d9c91460cfc1244a3c08e2"
+  },
+  "observations": [
+    "ActualGid is singleString-backedvalueclass withtoStringoverride; Rpp isordinarydata-classconsumer, notvalueclass",
+    "Pinned Id/Text/Wide wrappers exposeconstructor-impl nonvoid, purebox-impl/unbox-impl and staticmemberhelpers; ordinaryHolder(Id) usesprivatephysicalctor plusDefaultConstructorMarkerpublicbridge",
+    "Nullable V(nonnullString) mayretainnullableString carrier; nullable V(nullableString) mustbox to distinguishnull fromV(null)",
+    "Pinnedmangling hashes canonicalvaluetype/nullable signature andmemberreturncontext withMD5firstfivebytes URLbase64nopadding; metadata flags8199 observed, fields17/18/19 describeunderlyingproperty/type",
+    "Logicalvalueclass identity cannotbe replacedbycarrier identity: generic/Any/interface contexts requirewrappers; classliterals requirevalueclasswrapper identity evenwhenphysicalcarrierisprimitiveornullreference"
+  ],
+  "unapproved_design_sketch": [
+    "Consider Type::Value{name,carrier} plusLibraryClass.ValueClassInfo; retainlogicalnominalidentity andexplicitcontextualphysicaldescriptor/slots/boxedgenericrepresentations",
+    "Importedmetadata mustseparatehiddenstaticdispatchcarrier fromsourceextensionreceiver anddeclaredparameters; physicaldescriptor remainsactualbytecodeABI",
+    "Sourceconstructor-impl executesvalidation/init/effects once; wrapperconstructor/box-impl mustnotreplayeffects",
+    "Reuseordinarycalls/coercions withexplicitvalueclassbox/unbox lowering; genericresult/nullablecoercions needwrapper-awarehandling beforeordinaryreference/primitivepaths",
+    "Metadataemitvalueclassflag, underlyingproperty/type andexactphysicalconstructor/methodsignatures; ordinaryconsumerfields/getters/constructors requiremangling/markerABI too",
+    "Initialnongenericsinglepublicval subset couldcoverexistingprimitives/String andAny/genericBox/non-genericinterface contexts; genericunderlying,nested/unsupportedcarriers,Unit/Short andarraysrequireexplicitboundaries untilrepresented",
+    "Anyimplementation wouldrequirefreshcoherentrootbase anddesignapproval, fixedofficialJava reflectioncallers forhyphenatedABInames, Kotlinconsumers, boxing/null/effects/equality/classliteralchecks andunchangedGid/Rppprobes"
+  ],
+  "claims": "Architecture notes only; nofamily7support, acceptance, sourcecompilerimplementation orunsignedfoundation claim."
+}

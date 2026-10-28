@@ -1,0 +1,2335 @@
+--- a/src/bytecode.rs
++++ b/src/bytecode.rs
+@@ -4063,6 +4063,14 @@
+     for (name, value) in &class.delegated_properties {
+         fields.extend(class_field(&mut pool, name, &value.ty, 0x101a)?);
+     }
++    for delegate in &class.interface_delegate_storage {
++        fields.extend(class_field_scoped(
++            &mut pool,
++            &delegate.name,
++            &delegate.ty,
++            0x1012,
++        )?);
++    }
+     let mut methods = Vec::new();
+     if !lambdas.is_empty() {
+         for function in class.methods.iter().filter(|function| function.private) {
+@@ -4152,6 +4160,16 @@
+                 .sum::<usize>(),
+         );
+         code.method_reference(0xb7, &class.super_class, "<init>", &super_descriptor)?;
++        for delegate in &class.interface_delegate_storage {
++            code.max_stack = code.max_stack.max(2);
++            code.value(&delegate.initializer)?;
++            code.bytes
++                .extend([store_opcode(&delegate.ty), delegate.slot]);
++            code.bytes.push(0x2a);
++            code.bytes
++                .extend([load_opcode(&delegate.ty), delegate.slot]);
++            code.field_reference(0xb5, owner, &delegate.name, &delegate.ty.descriptor())?;
++        }
+         let slots = parameter_slots(&class.params, 1);
+         for field in &class.fields {
+             if field.param.is_none() && field.initializer.is_none() {
+@@ -4583,6 +4601,7 @@
+     u2(
+         &mut out,
+         (class.fields.len()
++            + class.interface_delegate_storage.len()
+             + extra_field_count
+             + class.delegated_properties.len()
+             + class
+--- a/src/check.rs
++++ b/src/check.rs
+@@ -1,5 +1,7 @@
+ #[path = "check_annotation_placements.rs"]
+ mod annotation_placements;
++#[path = "check_class_delegation.rs"]
++mod class_delegation;
+ #[path = "check_sealed.rs"]
+ mod sealed;
+ use crate::classpath::{Classpath, JavaClass, JavaMethod};
+@@ -195,7 +197,19 @@
+     pub target_params: Vec<Type>,
+     pub target_result: Type,
+ }
++pub struct InterfaceDelegateStorage {
++    pub slot: u8,
++    pub name: String,
++    pub ty: Type,
++    pub initializer: Value,
++}
++pub struct InterfaceDelegatedMember {
++    pub declaration: JavaMethod,
++    pub jvm_descriptor: String,
++}
+ pub struct ClassDecl {
++    pub interface_delegate_storage: Vec<InterfaceDelegateStorage>,
++    pub interface_delegated_members: Vec<InterfaceDelegatedMember>,
+     pub sealed_: bool,
+     pub sealed_subclasses: Vec<String>,
+     pub type_params: Vec<syntax::TypeParameter>,
+@@ -6019,6 +6033,13 @@
+     format!("set{}{}", suffix[..1].to_ascii_uppercase(), &suffix[1..])
+ }
+ 
++pub(crate) fn source_delegated_members(
++    classpath: &Classpath,
++    target: &Type,
++) -> Result<Vec<JavaMethod>> {
++    class_delegation::headers(classpath, target)
++}
++
+ pub(crate) fn source_jvm_result(
+     classpath: &Classpath,
+     supertypes: &[Type],
+--- /dev/null
++++ b/src/check_class_delegation.rs
+@@ -0,0 +1,566 @@
++use super::*;
++
++pub(super) struct Contract {
++    pub declaration: JavaMethod,
++    pub field: String,
++    pub receiver: Type,
++}
++
++fn unsupported(offset: usize, code: &'static str, message: &str) -> Diagnostic {
++    Diagnostic::new(offset, message).with_kind(crate::DiagnosticKind::UnsupportedLanguage, code)
++}
++
++pub(super) fn normalize_contract(
++    mut method: JavaMethod,
++    classpath: &Classpath,
++    offset: usize,
++) -> Result<JavaMethod> {
++    let owner = classpath.load(&method.owner)?;
++    if owner.kotlin_class {
++        return Ok(method);
++    }
++    if owner
++        .library
++        .as_ref()
++        .is_some_and(|l| !l.type_parameters.is_empty())
++        || method
++            .library
++            .as_ref()
++            .is_some_and(|l| !l.type_parameters.is_empty())
++    {
++        return Err(unsupported(
++            offset,
++            "INTERFACE_DELEGATION_JAVA_GENERIC_UNSUPPORTED",
++            "Generic Java interface delegation requires unsupported flexible parameter storage",
++        ));
++    }
++    fn complex(ty: &Type, cp: &Classpath) -> bool {
++        match ty {
++            Type::Platform(inner) | Type::Nullable(inner) => complex(inner, cp),
++            Type::Java(owner) => cp.load(owner).is_ok_and(|c| {
++                c.library
++                    .as_ref()
++                    .is_some_and(|l| !l.type_parameters.is_empty())
++            }),
++            Type::Parameter { .. }
++            | Type::Parameterized { .. }
++            | Type::Array(_)
++            | Type::StringArray
++            | Type::List(_)
++            | Type::MutableList(_)
++            | Type::Function { .. }
++            | Type::ReceiverFunction { .. } => true,
++            _ => false,
++        }
++    }
++    fn platform(ty: Type) -> Type {
++        if ty.is_reference() && !ty.is_nullable() && !matches!(ty, Type::Platform(_)) {
++            Type::Platform(Box::new(ty))
++        } else {
++            ty
++        }
++    }
++    let (params, result) = class_method_types(&method)?;
++    if params
++        .iter()
++        .chain(std::iter::once(&result))
++        .any(|ty| complex(ty, classpath))
++    {
++        return Err(unsupported(
++            offset,
++            "INTERFACE_DELEGATION_JAVA_TYPE_UNSUPPORTED",
++            "Delegation of Java generic, raw, function, or reference-array member types is unsupported",
++        ));
++    }
++    method.kotlin_params = Some(
++        params
++            .into_iter()
++            .enumerate()
++            .map(|(index, ty)| {
++                (
++                    method
++                        .kotlin_params
++                        .as_ref()
++                        .and_then(|p| p.get(index))
++                        .map_or_else(|| format!("p{index}"), |p| p.0.clone()),
++                    platform(ty),
++                    false,
++                )
++            })
++            .collect(),
++    );
++    method.kotlin_result = Some(platform(result));
++    Ok(method)
++}
++
++pub(super) fn headers(classpath: &Classpath, target: &Type) -> Result<Vec<JavaMethod>> {
++    let Some(owner) = library::type_owner(target) else {
++        return Ok(Vec::new());
++    };
++    let class = classpath.load(owner)?;
++    if class.access & 0x0200 == 0 {
++        return Ok(Vec::new());
++    }
++    classpath
++        .methods(owner)?
++        .into_iter()
++        .filter(|m| m.access & 9 == 1 && m.access & 0x40 == 0 && !m.name.starts_with('<'))
++        .map(|method| {
++            normalize_contract(
++                library::specialize_receiver(method, target, &class, classpath),
++                classpath,
++                0,
++            )
++        })
++        .collect()
++}
++
++fn internal_type(ty: &Type, classpath: &Classpath) -> bool {
++    match ty {
++        Type::Java(owner) => classpath.load(owner).is_ok_and(|c| {
++            c.library
++                .as_ref()
++                .is_some_and(|l| l.kotlin_visibility == Some(0))
++        }),
++        Type::Parameterized { name, arguments } => {
++            internal_type(&Type::Java(name.clone()), classpath)
++                || arguments
++                    .iter()
++                    .filter_map(|a| a.ty.as_ref())
++                    .any(|t| internal_type(t, classpath))
++        }
++        Type::Array(inner)
++        | Type::Nullable(inner)
++        | Type::Platform(inner)
++        | Type::List(inner)
++        | Type::MutableList(inner)
++        | Type::ThreadLocal(inner)
++        | Type::Parameter {
++            upper_bound: inner, ..
++        } => internal_type(inner, classpath),
++        Type::Function { params, result } => {
++            params.iter().any(|t| internal_type(t, classpath)) || internal_type(result, classpath)
++        }
++        Type::ReceiverFunction {
++            receiver,
++            params,
++            result,
++        } => {
++            internal_type(receiver, classpath)
++                || params.iter().any(|t| internal_type(t, classpath))
++                || internal_type(result, classpath)
++        }
++        _ => false,
++    }
++}
++
++fn nested_type(ty: &Type) -> bool {
++    match ty {
++        Type::Java(owner) => owner.contains('$'),
++        Type::Parameterized { name, arguments } => {
++            name.contains('$')
++                || arguments
++                    .iter()
++                    .filter_map(|a| a.ty.as_ref())
++                    .any(nested_type)
++        }
++        Type::Array(inner)
++        | Type::Nullable(inner)
++        | Type::Platform(inner)
++        | Type::List(inner)
++        | Type::MutableList(inner)
++        | Type::ThreadLocal(inner)
++        | Type::Parameter {
++            upper_bound: inner, ..
++        } => nested_type(inner),
++        Type::Function { params, result } => params.iter().any(nested_type) || nested_type(result),
++        Type::ReceiverFunction {
++            receiver,
++            params,
++            result,
++        } => nested_type(receiver) || params.iter().any(nested_type) || nested_type(result),
++        _ => false,
++    }
++}
++
++pub(super) fn prepare(
++    source: &syntax::ClassDecl,
++    checker: &mut Checker<'_>,
++) -> Result<(Vec<InterfaceDelegateStorage>, Vec<Contract>)> {
++    if source.interface_delegates.is_empty() {
++        return Ok((Vec::new(), Vec::new()));
++    }
++    if source.data || !source.secondary_constructors.is_empty() || source.super_class.is_some() {
++        return Err(unsupported(
++            source.offset,
++            "INTERFACE_DELEGATION_CLASS_SHAPE_UNSUPPORTED",
++            "Delegating data classes, secondary constructors, and explicit superclass interactions are unsupported",
++        ));
++    }
++    if checker.lambda_owner.contains('$') {
++        return Err(unsupported(
++            source.offset,
++            "INTERFACE_DELEGATION_NESTED_UNSUPPORTED",
++            "Nested or dollar-named delegating classifiers are unsupported",
++        ));
++    }
++    for ty in source
++        .params
++        .iter()
++        .map(|p| &p.1)
++        .chain(source.super_types.iter())
++    {
++        if nested_type(&checker.resolve(ty, source.offset)?) {
++            return Err(unsupported(
++                source.offset,
++                "INTERFACE_DELEGATION_NESTED_UNSUPPORTED",
++                "Delegation with nested or dollar-named exposed type shapes is unsupported",
++            ));
++        }
++    }
++    if !source.internal {
++        for ty in source
++            .params
++            .iter()
++            .map(|p| &p.1)
++            .chain(source.super_types.iter())
++        {
++            let ty = checker.resolve(ty, source.offset)?;
++            if internal_type(&ty, checker.classpath) {
++                return Err(Diagnostic::new(
++                    source.offset,
++                    "Public delegation exposes an internal constructor parameter or supertype",
++                )
++                .with_kind(
++                    crate::DiagnosticKind::InvalidKotlin,
++                    "DELEGATION_EXPOSED_INTERNAL_TYPE",
++                ));
++            }
++        }
++    }
++    for ty in &source.super_types {
++        let ty = checker.resolve(ty, source.offset)?;
++        if let Some(owner) = library::type_owner(&ty) {
++            if checker.classpath.methods(owner)?.iter().any(|method| {
++                method.access & 9 == 1
++                    && !method.name.starts_with('<')
++                    && method.access & 0x40 == 0
++                    && (method.access & 0x0400 == 0
++                        || method.library.as_ref().is_some_and(|l| !l.abstract_))
++            }) {
++                return Err(unsupported(
++                    source.offset,
++                    "INTERFACE_DELEGATION_DEFAULT_UNSUPPORTED",
++                    "Delegation combined with interface default implementations is unsupported",
++                ));
++            }
++        }
++    }
++    let mut storage = Vec::new();
++    let mut contracts = Vec::new();
++    let mut names = source
++        .params
++        .iter()
++        .map(|p| p.0.clone())
++        .chain(source.properties.iter().map(|p| p.name.clone()))
++        .collect::<HashSet<_>>();
++    let object_methods = checker.classpath.load("java/lang/Object")?.methods;
++    for delegate in &source.interface_delegates {
++        let ty = checker.resolve(&delegate.ty, delegate.offset)?;
++        if matches!(&ty, Type::Parameterized { arguments, .. } if arguments.iter().any(|a| a.variance != syntax::Variance::Invariant || a.ty.is_none()))
++        {
++            return Err(unsupported(
++                delegate.offset,
++                "INTERFACE_DELEGATION_PROJECTION_UNSUPPORTED",
++                "Projected interface delegation is unsupported",
++            ));
++        }
++        let owner = library::type_owner(&ty).ok_or_else(|| {
++            Diagnostic::new(delegate.offset, "Delegation requires an interface type").with_kind(
++                crate::DiagnosticKind::InvalidKotlin,
++                "INTERFACE_DELEGATION_TYPE_INVALID",
++            )
++        })?;
++        let interface = checker.classpath.load(owner)?;
++        if interface
++            .library
++            .as_ref()
++            .and_then(|l| l.kotlin_visibility)
++            .is_some_and(|v| v != 0 && v != 3)
++        {
++            return Err(Diagnostic::new(
++                delegate.offset,
++                "Delegated interface is inaccessible in Kotlin",
++            )
++            .with_kind(
++                crate::DiagnosticKind::InvalidKotlin,
++                "INTERFACE_DELEGATION_VISIBILITY_INVALID",
++            ));
++        }
++        if interface
++            .library
++            .as_ref()
++            .is_some_and(|l| l.kotlin_visibility == Some(0))
++        {
++            return Err(unsupported(
++                delegate.offset,
++                "INTERFACE_DELEGATION_INTERNAL_UNSUPPORTED",
++                "Delegation to internal interface contracts is unsupported",
++            ));
++        }
++        if owner.contains('$') {
++            return Err(unsupported(
++                delegate.offset,
++                "INTERFACE_DELEGATION_NESTED_UNSUPPORTED",
++                "Nested or dollar-named interface delegation contracts are unsupported",
++            ));
++        }
++        if ty.is_nullable() || interface.access & 0x0201 != 0x0201 {
++            return Err(Diagnostic::new(
++                delegate.offset,
++                "Delegation requires an accessible non-null interface type",
++            )
++            .with_kind(
++                crate::DiagnosticKind::InvalidKotlin,
++                "INTERFACE_DELEGATION_TYPE_INVALID",
++            ));
++        }
++        let returns = checker.allow_return;
++        checker.allow_return = false;
++        let value = checker.value(&delegate.expression);
++        checker.allow_return = returns;
++        let value = value?;
++        if !value.ty.is_reference() {
++            return Err(unsupported(
++                delegate.offset,
++                "INTERFACE_DELEGATION_PRIMITIVE_UNSUPPORTED",
++                "Primitive values as interface delegates are unsupported",
++            ));
++        }
++        let initializer = checker
++            .coerce(value, ty.clone(), delegate.offset)
++            .map_err(|error| {
++                if error.message.starts_with("Type mismatch") {
++                    error.with_kind(
++                        crate::DiagnosticKind::InvalidKotlin,
++                        "INTERFACE_DELEGATION_VALUE_INVALID",
++                    )
++                } else {
++                    error
++                }
++            })?;
++        let mut ordinal = storage.len();
++        let name = loop {
++            let name = format!("$$delegate_{ordinal}");
++            if names.insert(name.clone()) {
++                break name;
++            }
++            ordinal += 1;
++        };
++        for raw in library::remove_overridden(checker.classpath.methods(owner)?, checker.classpath)
++        {
++            if raw.name.starts_with('<') || raw.access & 9 != 1 || raw.access & 0x0040 != 0 {
++                continue;
++            }
++            if raw.library.as_ref().is_some_and(|l| l.has_annotations) {
++                return Err(unsupported(
++                    delegate.offset,
++                    "INTERFACE_DELEGATION_ANNOTATION_UNSUPPORTED",
++                    "Copying delegated declaration or parameter annotations is unsupported",
++                ));
++            }
++            if raw.unsupported
++                || raw.name != raw.source_name()
++                || raw
++                    .library
++                    .as_ref()
++                    .is_some_and(|l| !l.type_parameters.is_empty() || l.receiver.is_some())
++            {
++                return Err(unsupported(
++                    delegate.offset,
++                    "INTERFACE_DELEGATION_MEMBER_UNSUPPORTED",
++                    "Generic, extension, renamed, or unsupported interface members cannot be delegated",
++                ));
++            }
++            if raw.access & 0x0400 == 0 || raw.library.as_ref().is_some_and(|l| !l.abstract_) {
++                return Err(unsupported(
++                    delegate.offset,
++                    "INTERFACE_DELEGATION_DEFAULT_UNSUPPORTED",
++                    "Delegation of interface contracts containing default implementations is unsupported",
++                ));
++            }
++            if raw.access & 0x0080 != 0
++                || raw
++                    .kotlin_params
++                    .as_ref()
++                    .is_some_and(|p| p.iter().any(|p| p.2))
++            {
++                return Err(unsupported(
++                    delegate.offset,
++                    "INTERFACE_DELEGATION_ARGUMENT_SHAPE_UNSUPPORTED",
++                    "Delegation of vararg or default-argument interface contracts is unsupported",
++                ));
++            }
++            if object_methods
++                .iter()
++                .any(|m| m.access & 9 == 1 && m.name == raw.name && m.descriptor == raw.descriptor)
++            {
++                return Err(unsupported(
++                    delegate.offset,
++                    "INTERFACE_DELEGATION_ANY_MEMBER_UNSUPPORTED",
++                    "Delegation of explicitly redeclared Any members is unsupported",
++                ));
++            }
++            contracts.push(Contract {
++                declaration: normalize_contract(
++                    library::specialize_receiver(raw, &ty, &interface, checker.classpath),
++                    checker.classpath,
++                    delegate.offset,
++                )?,
++                field: name.clone(),
++                receiver: ty.clone(),
++            });
++        }
++        let slot = checker.allocate_typed_slot(&ty, delegate.offset)?;
++        storage.push(InterfaceDelegateStorage {
++            slot,
++            name,
++            ty,
++            initializer,
++        });
++    }
++    Ok((storage, contracts))
++}
++
++pub(super) fn forwarders(
++    contracts: &[Contract],
++    methods: &[Function],
++    owner: &str,
++    supertypes: &[Type],
++    classpath: &Classpath,
++    offset: usize,
++) -> Result<(Vec<Function>, Vec<InterfaceDelegatedMember>)> {
++    let mut output = Vec::new();
++    let mut declarations = Vec::new();
++    let mut generated = HashSet::new();
++    for contract in contracts {
++        let declaration = &contract.declaration;
++        let (parameters, result) = class_method_types(declaration)?;
++        if methods.iter().any(|method| {
++            method.name == declaration.name
++                && declarations::override_signature(
++                    declaration,
++                    &method
++                        .params
++                        .iter()
++                        .map(|p| p.1.clone())
++                        .collect::<Vec<_>>(),
++                    &method.result,
++                )
++                .unwrap_or(false)
++        }) {
++            continue;
++        }
++        let key = declarations::logical_member_key(declaration)?;
++        if !generated.insert(key) {
++            return Err(Diagnostic::new(
++                offset,
++                "Multiple delegated interfaces require an explicit override for a shared member",
++            )
++            .with_kind(
++                crate::DiagnosticKind::InvalidKotlin,
++                "INTERFACE_DELEGATION_CONFLICT_INVALID",
++            ));
++        }
++        let mut params = declaration
++            .kotlin_params
++            .as_ref()
++            .map(|p| p.iter().map(|p| (p.0.clone(), p.1.clone())).collect())
++            .unwrap_or_else(|| {
++                parameters
++                    .iter()
++                    .enumerate()
++                    .map(|(i, t)| (format!("p{i}"), java_parameter(t.clone())))
++                    .collect::<Vec<_>>()
++            });
++        if declaration.source_property.is_some() && result == Type::Unit && params.len() == 1 {
++            params[0].0 = "<set-?>".into();
++        }
++        let jvm_result = source_jvm_result(classpath, supertypes, declaration)?;
++        let physical_result = jvm_result.as_ref().unwrap_or(&result).clone();
++        let locals = 1 + params.iter().map(|p| p.1.slots()).sum::<usize>();
++        if locals > 255 {
++            return Err(unsupported(
++                offset,
++                "INTERFACE_DELEGATION_SLOT_LIMIT_UNSUPPORTED",
++                "Delegated members exceed JVM parameter slot limits",
++            ));
++        }
++        let mut next = 1u8;
++        let mut arguments = params
++            .iter()
++            .map(|(_, ty)| {
++                let slot = next;
++                next += ty.slots() as u8;
++                Value {
++                    ty: ty.clone(),
++                    kind: ValueKind::Local(slot),
++                }
++            })
++            .collect::<Vec<_>>();
++        arguments.insert(
++            0,
++            Value {
++                ty: contract.receiver.clone(),
++                kind: ValueKind::Field(
++                    contract.field.clone(),
++                    Box::new(Value {
++                        ty: Type::Java(owner.into()),
++                        kind: ValueKind::Local(0),
++                    }),
++                ),
++            },
++        );
++        let invocation = Value {
++            ty: physical_result,
++            kind: ValueKind::MemberCall {
++                method: declaration.clone(),
++                interface: true,
++                args: arguments,
++            },
++        };
++        let body = if result == Type::Unit {
++            vec![
++                Statement::Expression(invocation),
++                Statement::Return(Value {
++                    ty: Type::Unit,
++                    kind: ValueKind::Unit,
++                }),
++            ]
++        } else {
++            vec![Statement::Return(invocation)]
++        };
++        let function = Function {
++            class_type_params: Vec::new(),
++            jvm_result,
++            jvm_name: None,
++            annotations: Vec::new(),
++            vararg: false,
++            type_params: Vec::new(),
++            defaults: vec![None; params.len()],
++            name: declaration.name.clone(),
++            private: false,
++            is_override: true,
++            params,
++            result,
++            locals: next as u16,
++            body,
++        };
++        declarations.push(InterfaceDelegatedMember {
++            declaration: declaration.clone(),
++            jvm_descriptor: function.descriptor(),
++        });
++        output.push(function);
++    }
++    Ok((output, declarations))
++}
+--- a/src/check_declarations.rs
++++ b/src/check_declarations.rs
+@@ -49,6 +49,13 @@
+             "SEALED_CONSTRUCTOR_DEFAULTS_UNSUPPORTED",
+         ));
+     }
++    if !source.interface_delegates.is_empty()
++        && (source.data
++            || !source.secondary_constructors.is_empty()
++            || source.super_class.is_some())
++    {
++        return Err(Diagnostic::new(source.offset, "Delegating data classes, secondary constructors, and explicit superclass interactions are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "INTERFACE_DELEGATION_CLASS_SHAPE_UNSUPPORTED"));
++    }
+     validate_classifier_generics(
+         &source.type_params,
+         &source.super_types,
+@@ -251,8 +258,12 @@
+             .find(|t| library::type_owner(t) == Some(super_class.as_str()))
+             .cloned()
+             .unwrap_or(Type::Java(super_class.clone()));
+-        for method in classpath.methods(&super_class)? {
+-            let method = library::specialize_receiver(method, &parent_type, &parent, classpath);
++        let inherited = classpath
++            .methods(&super_class)?
++            .into_iter()
++            .map(|method| library::specialize_receiver(method, &parent_type, &parent, classpath))
++            .collect();
++        for method in library::remove_overridden(inherited, classpath) {
+             if !method.name.starts_with('<')
+                 && method.access & 8 == 0
+                 && method.access & 5 != 0
+@@ -267,6 +278,16 @@
+             .get(alias)
+             .ok_or_else(|| Diagnostic::new(source.offset, "Interfaces require explicit imports"))?;
+         let interface = &classes[name];
++        if !source.interface_delegates.is_empty() && interface.access & 0x0200 == 0 {
++            return Err(Diagnostic::new(
++                source.offset,
++                "Only interfaces can be delegated or implemented without a constructor call",
++            )
++            .with_kind(
++                crate::DiagnosticKind::InvalidKotlin,
++                "INTERFACE_DELEGATION_TYPE_INVALID",
++            ));
++        }
+         if source.data && classpath.methods(name)?.iter().any(|m| m.access & 8 == 0) {
+             return Err(Diagnostic::new(
+                 source.offset,
+@@ -290,6 +311,11 @@
+             interfaces::interface_methods(interface, classes, source.offset)?.into_values()
+         {
+             let method = library::specialize_receiver(method, &parent_type, interface, classpath);
++            let method = if source.interface_delegates.is_empty() {
++                method
++            } else {
++                class_delegation::normalize_contract(method, classpath, source.offset)?
++            };
+             if classpath.load("java/lang/Object").is_ok_and(|object| {
+                 object.methods.iter().any(|candidate| {
+                     candidate.access & 9 == 1
+@@ -299,18 +325,115 @@
+             }) {
+                 continue;
+             }
+-            if required
+-                .insert(logical_member_key(&method)?, method)
+-                .is_some()
+-            {
+-                return Err(Diagnostic::new(
++            let key = logical_member_key(&method)?;
++            if let Some(previous) = required.get(&key) {
++                let same_signature = previous.descriptor == method.descriptor
++                    && previous.source_property == method.source_property
++                    && class_method_types(previous)? == class_method_types(&method)?;
++                let default_body = previous.access & 0x0400 == 0
++                    || method.access & 0x0400 == 0
++                    || previous.library.as_ref().is_some_and(|l| !l.abstract_)
++                    || method.library.as_ref().is_some_and(|l| !l.abstract_);
++                if !source.interface_delegates.is_empty() && same_signature && default_body {
++                    let mut suppliers = 0;
++                    for delegate in &source.interface_delegates {
++                        let ty = resolve_type_checked(
++                            &delegate.ty,
++                            imports,
++                            delegate.offset,
++                            classpath,
++                            classes,
++                        )?;
++                        if class_delegation::headers(classpath, &ty)?
++                            .iter()
++                            .any(|candidate| logical_member_key(candidate).is_ok_and(|k| k == key))
++                        {
++                            suppliers += 1;
++                        }
++                    }
++                    let explicit = source.methods.iter().any(|m| {
++                        m.is_override
++                            && m.function.name == method.source_name()
++                            && m.function.params.len()
++                                == class_method_types(&method).map_or(usize::MAX, |p| p.0.len())
++                    }) || method.source_property.as_ref().is_some_and(|name| {
++                        source
++                            .properties
++                            .iter()
++                            .any(|p| p.name == *name && p.is_override)
++                            || source.override_params.contains(name)
++                    });
++                    if suppliers > 1 && !explicit {
++                        return Err(Diagnostic::new(source.offset, "Multiple delegated default implementations require an explicit override").with_kind(crate::DiagnosticKind::InvalidKotlin, "INTERFACE_DELEGATION_DEFAULT_CONFLICT_INVALID"));
++                    }
++                    return Err(Diagnostic::new(
++                        source.offset,
++                        "Delegation combined with interface default implementations is unsupported",
++                    )
++                    .with_kind(
++                        crate::DiagnosticKind::UnsupportedLanguage,
++                        "INTERFACE_DELEGATION_DEFAULT_UNSUPPORTED",
++                    ));
++                }
++                if previous.access & 0x0400 != 0
++                    && method.access & 0x0400 != 0
++                    && previous.library.as_ref().is_none_or(|l| l.abstract_)
++                    && method.library.as_ref().is_none_or(|l| l.abstract_)
++                    && previous.descriptor == method.descriptor
++                    && previous.source_property == method.source_property
++                    && class_method_types(previous)? == class_method_types(&method)?
++                {
++                    continue;
++                }
++                let error = Diagnostic::new(
+                     source.offset,
+-                    "Overloaded or conflicting interface methods are not supported",
+-                ));
+-            }
++                    if source.interface_delegates.is_empty() {
++                        "Overloaded or conflicting interface methods are not supported"
++                    } else {
++                        "Overlapping interface contracts with different erased signatures are unsupported"
++                    },
++                );
++                return Err(if source.interface_delegates.is_empty() {
++                    error
++                } else {
++                    error.with_kind(
++                        crate::DiagnosticKind::UnsupportedLanguage,
++                        "INTERFACE_DELEGATION_OVERLAP_UNSUPPORTED",
++                    )
++                });
++            }
++            required.insert(key, method);
+         }
+     }
+ 
++    for name in source
++        .properties
++        .iter()
++        .filter(|p| p.is_override && !p.mutable)
++        .map(|p| p.name.as_str())
++        .chain(
++            source
++                .override_params
++                .iter()
++                .filter(|name| !source.mutable_params.contains(name))
++                .map(String::as_str),
++        )
++    {
++        if required.values().any(|method| {
++            method.source_property.as_deref() == Some(name)
++                && class_method_types(method)
++                    .is_ok_and(|(parameters, result)| parameters.len() == 1 && result == Type::Unit)
++        }) {
++            return Err(Diagnostic::new(
++                source.offset,
++                "A var property cannot be overridden by a val property",
++            )
++            .with_kind(
++                crate::DiagnosticKind::InvalidKotlin,
++                "VAR_OVERRIDDEN_BY_VAL",
++            ));
++        }
++    }
+     let extensions = HashSet::new();
+     let signatures = Vec::new();
+     let functions = HashMap::new();
+@@ -452,6 +575,8 @@
+             kind: ValueKind::Null,
+         });
+     }
++    let (interface_delegate_storage, interface_contracts) =
++        class_delegation::prepare(source, &mut initializer_checker)?;
+     let mut constructor_locals = initializer_checker.next;
+     drop(initializer_checker);
+     let mut property_types = HashMap::new();
+@@ -767,6 +892,7 @@
+                     .iter()
+                     .find(|m| m.function.name == *name && m.function.params == *source_params)
+                     .map(|m| crate::classpath::LibraryMethod {
++                        has_annotations: false,
+                         abstract_: false,
+                         builtin_array: false,
+                         source_name: m.function.name.clone(),
+@@ -1121,14 +1247,15 @@
+                     return Err(Diagnostic::new(
+                         offset,
+                         "Interface implementation requires override and an exact supported JVM signature",
+-                    ));
++                    ).with_kind(crate::DiagnosticKind::InvalidKotlin, if !is_override { "OVERRIDE_REQUIRED" } else { "OVERRIDE_SIGNATURE_INVALID" }));
+                 }
+             }
+             None if is_override => {
+                 return Err(Diagnostic::new(
+                     offset,
+                     "Member overrides no supported interface declaration",
+-                ));
++                )
++                .with_kind(crate::DiagnosticKind::InvalidKotlin, "NOTHING_TO_OVERRIDE"));
+             }
+             None => {}
+         }
+@@ -1165,7 +1292,7 @@
+                 return Err(Diagnostic::new(
+                     source.offset,
+                     "Interface property implementation requires override and an exact supported signature",
+-                ));
++                ).with_kind(crate::DiagnosticKind::InvalidKotlin, if !property_override { "OVERRIDE_REQUIRED" } else { "OVERRIDE_SIGNATURE_INVALID" }));
+             }
+         } else if property_override {
+             return Err(Diagnostic::new(
+@@ -1265,6 +1392,15 @@
+             "GENERIC_CLASS_LAMBDA_UNSUPPORTED",
+         ));
+     }
++    let (forwarders, interface_delegated_members) = class_delegation::forwarders(
++        &interface_contracts,
++        &methods,
++        &owner,
++        &super_types,
++        classpath,
++        source.offset,
++    )?;
++    methods.extend(forwarders);
+     for method in &mut methods {
+         method.class_type_params = type_params.iter().map(|p| p.name.clone()).collect();
+         let probe = function_method(method, &owner, 0, None);
+@@ -1323,6 +1459,10 @@
+             return Err(Diagnostic::new(
+                 source.offset,
+                 format!("Missing interface implementation: {}", method.name),
++            )
++            .with_kind(
++                crate::DiagnosticKind::InvalidKotlin,
++                "MISSING_INTERFACE_IMPLEMENTATION",
+             ));
+         }
+         if classes
+@@ -1335,6 +1475,31 @@
+                 classpath,
+                 source.offset,
+             )?);
++        }
++    }
++    if !source.interface_delegates.is_empty() {
++        let mut signatures = HashSet::new();
++        for method in &methods {
++            for descriptor in std::iter::once(method.descriptor())
++                .chain(annotations::overload_descriptors(method))
++            {
++                if !signatures.insert((method.jvm_name().to_owned(), descriptor)) {
++                    return Err(Diagnostic::new(
++                        source.offset,
++                        "Delegation produces a JVM signature clash",
++                    )
++                    .with_kind(crate::DiagnosticKind::InvalidKotlin, "JVM_SIGNATURE_CLASH"));
++                }
++            }
++        }
++        for bridge in &generic_bridges {
++            if !signatures.insert((bridge.erased.name.clone(), bridge.erased.descriptor.clone())) {
++                return Err(Diagnostic::new(
++                    source.offset,
++                    "Delegation produces a JVM bridge signature clash",
++                )
++                .with_kind(crate::DiagnosticKind::InvalidKotlin, "JVM_SIGNATURE_CLASH"));
++            }
+         }
+     }
+     if methods.len() + bridges.len() + 1 > 65535 {
+@@ -1629,6 +1794,8 @@
+     }
+     let abstract_methods = method_keys(|m| !m.has_body);
+     Ok(ClassDecl {
++        interface_delegate_storage,
++        interface_delegated_members,
+         sealed_: source.sealed_,
+         sealed_subclasses: classpath
+             .load(&owner)
+@@ -3063,6 +3230,9 @@
+ ) -> Result<bool> {
+     let (expected_params, expected_result) = class_method_types(method)?;
+     fn compatible(expected: &Type, actual: &Type) -> bool {
++        if expected == actual {
++            return true;
++        }
+         match expected {
+             Type::Platform(inner) => {
+                 inner.as_ref() == actual || matches!(actual,Type::Nullable(actual) if actual==inner)
+@@ -3636,7 +3806,7 @@
+             .collect(),
+     }
+ }
+-fn logical_member_key(method: &JavaMethod) -> Result<String> {
++pub(super) fn logical_member_key(method: &JavaMethod) -> Result<String> {
+     let (parameters, result) = class_method_types(method)?;
+     Ok(member_key(
+         &method.name,
+--- a/src/check_functions.rs
++++ b/src/check_functions.rs
+@@ -746,6 +746,7 @@
+                 annotation_definition: None,
+                 kotlin_fun_interface: false,
+                 library: Some(crate::classpath::LibraryClass {
++                    kotlin_visibility: None,
+                     type_parameters: Vec::new(),
+                     type_aliases: Vec::new(),
+                     supertypes: Vec::new(),
+@@ -762,6 +763,7 @@
+                 kotlin_interface: false,
+                 methods: vec![JavaMethod {
+                     library: Some(crate::classpath::LibraryMethod {
++                        has_annotations: false,
+                         abstract_: false,
+                         builtin_array: false,
+                         source_name: "getLibraryNumber".into(),
+--- a/src/check_interfaces.rs
++++ b/src/check_interfaces.rs
+@@ -257,6 +257,10 @@
+             return Err(Diagnostic::new(
+                 function.offset,
+                 "Annotations on source interface methods are not supported",
++            )
++            .with_kind(
++                crate::DiagnosticKind::UnsupportedLanguage,
++                "INTERFACE_METHOD_ANNOTATION_UNSUPPORTED",
+             ));
+         }
+         if function.defaults.iter().any(Option::is_some) {
+@@ -309,6 +313,7 @@
+             JavaMethod {
+                 library: (function.infix || function.operator).then(|| {
+                     crate::classpath::LibraryMethod {
++                        has_annotations: false,
+                         abstract_: false,
+                         builtin_array: false,
+                         source_name: function.name.clone(),
+@@ -360,6 +365,7 @@
+                 annotation_definition: None,
+                 kotlin_fun_interface: false,
+                 library: Some(crate::classpath::LibraryClass {
++                    kotlin_visibility: None,
+                     type_aliases: Vec::new(),
+                     type_parameters: source
+                         .type_params
+@@ -421,10 +427,13 @@
+     offset: usize,
+ ) -> Result<()> {
+     if inherited_object_method(&method.name) {
+-        return Err(Diagnostic::new(
+-            offset,
+-            "Any and Object inherited members are not supported",
+-        ));
++        return Err(
++            Diagnostic::new(offset, "Any and Object inherited members are not supported")
++                .with_kind(
++                    crate::DiagnosticKind::UnsupportedLanguage,
++                    "INTERFACE_ANY_MEMBER_UNSUPPORTED",
++                ),
++        );
+     }
+     if !names.insert(method.name.clone()) {
+         return Err(Diagnostic::new(
+--- a/src/check_ir_walk.rs
++++ b/src/check_ir_walk.rs
+@@ -221,6 +221,9 @@
+ }
+ 
+ pub(crate) fn class(node: &mut ClassDecl, owner: &str, visitor: &mut impl Visitor) {
++    for delegate in &mut node.interface_delegate_storage {
++        value(&mut delegate.initializer, owner, visitor);
++    }
+     for (_, initializer) in &mut node.delegated_properties {
+         value(initializer, owner, visitor);
+     }
+@@ -479,6 +482,8 @@
+                 sealed_subclasses: Vec::new(),
+                 type_params: Vec::new(),
+                 super_types: Vec::new(),
++                interface_delegate_storage: Vec::new(),
++                interface_delegated_members: Vec::new(),
+                 generic_bridges: Vec::new(),
+                 exposed_fields: HashMap::new(),
+                 delegated_properties: vec![("delegate".into(), int(5))],
+--- a/src/check_objects.rs
++++ b/src/check_objects.rs
+@@ -115,6 +115,7 @@
+         }
+         overloads.push(JavaMethod {
+             library: function.infix.then(|| crate::classpath::LibraryMethod {
++                has_annotations: false,
+                 abstract_: false,
+                 builtin_array: false,
+                 source_name: function.name.clone(),
+@@ -592,6 +593,7 @@
+             kotlin_result: Some(result),
+             kotlin_internal: function.internal,
+             library: Some(crate::classpath::LibraryMethod {
++                has_annotations: false,
+                 abstract_: false,
+                 builtin_array: false,
+                 source_name: function.name.clone(),
+--- a/src/check_relations.rs
++++ b/src/check_relations.rs
+@@ -1130,6 +1130,7 @@
+             ),
+             kotlin_result: Some(result.clone()),
+             library: Some(crate::classpath::LibraryMethod {
++                has_annotations: false,
+                 abstract_: false,
+                 builtin_array: false,
+                 source_name: String::new(),
+--- a/src/classpath/aliases.rs
++++ b/src/classpath/aliases.rs
+@@ -250,6 +250,7 @@
+             annotation_definition: None,
+             kotlin_fun_interface: false,
+             library: Some(LibraryClass {
++                kotlin_visibility: None,
+                 type_aliases: aliases,
+                 type_parameters: Vec::new(),
+                 supertypes: Vec::new(),
+--- a/src/classpath/metadata.rs
++++ b/src/classpath/metadata.rs
+@@ -561,6 +561,7 @@
+             kotlin_result: Some(array),
+             kotlin_internal: false,
+             library: Some(LibraryMethod {
++                has_annotations: false,
+                 builtin_array: true,
+                 abstract_: false,
+                 kotlin_public: true,
+@@ -782,7 +783,7 @@
+     }
+     all.extend(params.iter().map(|(_, ty, _)| ty.descriptor()));
+     let descriptor = format!("({}){}", all.concat(), result.descriptor());
+-    let (jvm_name, jvm_descriptor) = if let Some(bytes) = signature {
++    let (jvm_name, jvm_descriptor, explicit_descriptor) = if let Some(bytes) = signature {
+         let p = Proto::parse(bytes)?;
+         p.allowed(&[1, 2])?;
+         (
+@@ -794,9 +795,10 @@
+                 .map(|i| metadata_name(strings, Some(i)))
+                 .transpose()?
+                 .unwrap_or(&descriptor),
++            p.integer(2)?.is_some(),
+         )
+     } else {
+-        (name, descriptor.as_str())
++        (name, descriptor.as_str(), false)
+     };
+     let matching = class
+         .methods
+@@ -809,7 +811,17 @@
+         return Err(invalid());
+     };
+     if jvm_descriptor != descriptor {
+-        return Err(invalid());
++        let (logical_parameters, _) = descriptor.split_once(')').ok_or_else(invalid)?;
++        let (physical_parameters, physical_result) =
++            jvm_descriptor.split_once(')').ok_or_else(invalid)?;
++        if !explicit_descriptor
++            || logical_parameters != physical_parameters
++            || result.is_reference()
++            || result == Type::Unit
++            || physical_result != Type::Nullable(Box::new(result.clone())).descriptor()
++        {
++            return Err(invalid());
++        }
+     }
+     if let Some(signature) = &attributes[*index].signature {
+         let class_parameters = class
+@@ -879,6 +891,7 @@
+     method.source_property = property;
+     method.unsupported = false;
+     method.library = Some(LibraryMethod {
++        has_annotations: flags & 1 != 0,
+         builtin_array: false,
+         abstract_: flags & 0x30 == 32,
+         kotlin_public: flags & 14 == 6,
+@@ -921,6 +934,7 @@
+             && method.library.is_none()
+         {
+             method.library = Some(LibraryMethod {
++                has_annotations: false,
+                 builtin_array: false,
+                 abstract_: member
+                     .integer(if name == "<init>" { 1 } else { 9 })?
+@@ -1075,6 +1089,11 @@
+         }
+     }
+     class.library = Some(LibraryClass {
++        kotlin_visibility: if kind == 1 {
++            Some(((proto.integer(1)?.unwrap_or(6) >> 1) & 7) as u8)
++        } else {
++            None
++        },
+         type_aliases,
+         type_parameters: parameters,
+         supertypes,
+@@ -1141,9 +1160,14 @@
+                 } else {
+                     metadata_name(&strings, member.integer(2)?)?
+                 };
+-                let flags = member
++                let mut flags = member
+                     .integer(if constructor { 1 } else { 9 })?
+                     .unwrap_or(6);
++                for parameter in member.messages(if constructor { 2 } else { 6 })? {
++                    if Proto::parse(parameter)?.integer(1)?.unwrap_or(0) & 1 != 0 {
++                        flags |= 1;
++                    }
++                }
+                 let params = member
+                     .messages(if constructor { 2 } else { 6 })?
+                     .into_iter()
+@@ -1589,6 +1613,64 @@
+     }
+ 
+     #[test]
++    fn boxed_metadata_results_require_explicit_descriptors_and_matching_parameters() {
++        for (physical, explicit, parameter, accepted) in [
++            ("()Ljava/lang/Integer;", true, false, true),
++            ("()Ljava/lang/Integer;", false, false, false),
++            ("()Ljava/lang/Long;", true, false, false),
++            ("(Ljava/lang/String;)Ljava/lang/Integer;", true, true, false),
++        ] {
++            let mut signature = int(1, 1);
++            if explicit {
++                signature.extend(int(2, 3));
++            }
++            let mut function = [
++                int(2, 1),
++                blob(3, &int(6, 2)),
++                int(9, 150),
++                blob(100, &signature),
++            ]
++            .concat();
++            if parameter {
++                function.extend(blob(6, &[int(2, 4), blob(3, &int(6, 2))].concat()));
++            }
++            let proto = [int(1, 6), int(3, 0), blob(9, &function)].concat();
++            let annotation = metadata_annotation(
++                1,
++                &[
++                    "sample/BoxReturn",
++                    "read",
++                    "kotlin/Int",
++                    physical,
++                    "argument",
++                ],
++                &proto,
++            );
++            let mut class = bare_metadata_class("sample/BoxReturn", 0x31);
++            class.methods.push(JavaMethod {
++                library: None,
++                owner: class.name.clone(),
++                name: "read".into(),
++                descriptor: physical.into(),
++                access: 1,
++                unsupported: false,
++                source_property: None,
++                kotlin_params: None,
++                kotlin_result: None,
++                kotlin_internal: false,
++            });
++            attach(&annotation, &mut class, &[Attributes::default()]).unwrap();
++            assert_eq!(
++                !class.methods[0].unsupported, accepted,
++                "{physical}, explicit={explicit}"
++            );
++            if accepted {
++                assert_eq!(class.methods[0].kotlin_result, Some(Type::Int));
++            }
++        }
++    }
++
++    #[test]
+     fn metadata_decodes_functional_interface_identity_and_abstract_member_modality() {
+         for (fun, abstract_) in [(false, true), (true, true), (true, false)] {
+             let function = [
+--- a/src/classpath/signature.rs
++++ b/src/classpath/signature.rs
+@@ -342,6 +342,7 @@
+                     method.kotlin_params = Some(params);
+                     method.kotlin_result = Some(result);
+                     method.library = Some(LibraryMethod {
++                        has_annotations: false,
+                         abstract_: method.access & 0x400 != 0,
+                         builtin_array: false,
+                         kotlin_public: method.access & 1 != 0,
+@@ -367,6 +368,7 @@
+         class.unsupported = false;
+     }
+     class.library = Some(LibraryClass {
++        kotlin_visibility: None,
+         type_aliases: Vec::new(),
+         type_parameters,
+         supertypes,
+--- a/src/classpath/source.rs
++++ b/src/classpath/source.rs
+@@ -116,6 +116,8 @@
+     );
+     JavaMethod {
+         library: Some(LibraryMethod {
++            has_annotations: !function.annotations.is_empty()
++                || function.param_annotations.iter().any(|a| !a.is_empty()),
+             abstract_: access & 0x400 != 0,
+             builtin_array: false,
+             kotlin_public: !function.private && !function.protected && !function.internal,
+@@ -285,6 +287,7 @@
+         });
+     if let Some((parameters, _)) = generic {
+         class.library = Some(LibraryClass {
++            kotlin_visibility: None,
+             type_aliases: Vec::new(),
+             type_parameters: parameters
+                 .iter()
+@@ -460,6 +463,7 @@
+                 let name = format!("component{}", index + 1);
+                 class.methods.push(JavaMethod {
+                     library: Some(LibraryMethod {
++                        has_annotations: false,
+                         abstract_: false,
+                         builtin_array: false,
+                         kotlin_public: true,
+@@ -550,6 +554,23 @@
+             if p.body.is_none() {
+                 for method in &mut methods {
+                     method.access |= 0x400;
++                }
++            }
++            if !p.annotations.is_empty() {
++                for method in &mut methods {
++                    method.library = Some(LibraryMethod {
++                        has_annotations: true,
++                        abstract_: method.access & 0x400 != 0,
++                        builtin_array: false,
++                        kotlin_public: true,
++                        source_name: method.name.clone(),
++                        type_parameters: Vec::new(),
++                        receiver: None,
++                        infix: false,
++                        operator: false,
++                        inline: false,
++                        code: None,
++                    });
+                 }
+             }
+             class.methods.extend(methods);
+@@ -659,6 +680,7 @@
+         constants(&mut class, &source.constants)?;
+     } else {
+         class.library = Some(LibraryClass {
++            kotlin_visibility: None,
+             type_aliases: module
+                 .type_aliases
+                 .iter()
+@@ -713,6 +735,60 @@
+         }
+         constants(&mut class, &module.constants)?;
+     }
++    let visibility = module
++        .class_decl
++        .as_ref()
++        .map(|d| d.internal)
++        .or_else(|| module.interface_decl.as_ref().map(|d| d.internal))
++        .or_else(|| module.object_decl.as_ref().map(|d| d.internal));
++    if let (Some(internal), Some(library)) = (visibility, &mut class.library) {
++        library.kotlin_visibility = Some(if internal { 0 } else { 3 });
++    }
++    if let Some(source) = &module.class_decl {
++        for delegate in &source.interface_delegates {
++            let ty = resolve(&delegate.ty, module, cp);
++            for mut method in crate::check::source_delegated_members(cp, &ty)? {
++                let (params, result) = crate::check::class_method_types(&method)?;
++                if class.methods.iter().any(|own| {
++                    own.name == method.name
++                        && crate::check::class_method_types(own).is_ok_and(|(a, _)| {
++                            a.iter()
++                                .map(Type::descriptor)
++                                .eq(params.iter().map(Type::descriptor))
++                        })
++                }) {
++                    continue;
++                }
++                method.owner = owner.into();
++                method.access = 1;
++                method.descriptor = format!(
++                    "({}){}",
++                    params.iter().map(Type::descriptor).collect::<String>(),
++                    result.descriptor()
++                );
++                if let Some(library) = &mut method.library {
++                    library.abstract_ = false;
++                    library.inline = false;
++                    library.code = None;
++                } else {
++                    method.library = Some(LibraryMethod {
++                        has_annotations: false,
++                        abstract_: false,
++                        builtin_array: false,
++                        kotlin_public: true,
++                        source_name: method.name.clone(),
++                        type_parameters: Vec::new(),
++                        receiver: None,
++                        infix: false,
++                        operator: false,
++                        inline: false,
++                        code: None,
++                    });
++                }
++                class.methods.push(method);
++            }
++        }
++    }
+     if module.class_decl.is_some() {
+         let supertypes = class
+             .library
+--- a/src/classpath/source_enums.rs
++++ b/src/classpath/source_enums.rs
+@@ -52,6 +52,7 @@
+     ] {
+         class.methods.push(JavaMethod {
+             library: Some(LibraryMethod {
++                has_annotations: false,
+                 abstract_: false,
+                 builtin_array: false,
+                 kotlin_public: true,
+@@ -82,6 +83,7 @@
+         });
+     }
+     class.library = Some(LibraryClass {
++        kotlin_visibility: None,
+         type_aliases: Vec::new(),
+         type_parameters: Vec::new(),
+         supertypes: std::iter::once(Type::Parameterized {
+--- a/src/classpath.rs
++++ b/src/classpath.rs
+@@ -110,6 +110,7 @@
+ 
+ #[derive(Clone, Debug)]
+ pub(crate) struct LibraryClass {
++    pub kotlin_visibility: Option<u8>,
+     pub type_aliases: Vec<LibraryTypeAlias>,
+     pub type_parameters: Vec<TypeParameter>,
+     pub supertypes: Vec<Type>,
+@@ -126,6 +127,7 @@
+ 
+ #[derive(Clone, Debug)]
+ pub(crate) struct LibraryMethod {
++    pub has_annotations: bool,
+     pub abstract_: bool,
+     pub builtin_array: bool,
+     pub kotlin_public: bool,
+@@ -290,6 +292,7 @@
+                     annotation_definition: None,
+                     kotlin_fun_interface: false,
+                     library: Some(LibraryClass {
++                        kotlin_visibility: None,
+                         type_aliases: Vec::new(),
+                         type_parameters: Vec::new(),
+                         supertypes: Vec::new(),
+--- a/src/compiled_inline.rs
++++ b/src/compiled_inline.rs
+@@ -629,6 +629,7 @@
+     fn inline_method(code: JavaCode) -> JavaMethod {
+         JavaMethod {
+             library: Some(crate::classpath::LibraryMethod {
++                has_annotations: false,
+                 abstract_: false,
+                 builtin_array: false,
+                 kotlin_public: true,
+--- a/src/metadata.rs
++++ b/src/metadata.rs
+@@ -872,6 +872,9 @@
+         let mut constructor = Proto::default();
+         constructor.number(1, if class.sealed_ { 4 } else { 6 });
+         let mut constructor_desc = String::from("(");
++        if let Some(checked) = checked {
++            interface_delegation_members(&mut proto, checked, imports, &mut strings)?;
++        }
+         for (index, (name, ty)) in class.params.iter().enumerate() {
+             let mut param = parameter(name, ty, imports, &mut strings)?;
+             let flags = (u32::from(class.defaults.get(index).is_some_and(Option::is_some)) * 2)
+@@ -1178,6 +1181,99 @@
+         proto.message(10, &declaration);
+     }
+     strings.finish(1, proto)
++}
++
++fn interface_delegation_members(
++    proto: &mut Proto,
++    class: &crate::check::ClassDecl,
++    imports: Imports<'_>,
++    strings: &mut Strings,
++) -> Result<()> {
++    let mut properties: BTreeMap<String, Vec<&crate::check::InterfaceDelegatedMember>> =
++        BTreeMap::new();
++    for member in &class.interface_delegated_members {
++        if let Some(property) = &member.declaration.source_property {
++            properties.entry(property.clone()).or_default().push(member);
++            continue;
++        }
++        let method = class
++            .methods
++            .iter()
++            .find(|method| {
++                method.name == member.declaration.name
++                    && method.descriptor() == member.jvm_descriptor
++            })
++            .ok_or_else(|| Diagnostic::new(0, "Missing delegated method metadata contract"))?;
++        let mut function = Proto::default();
++        let extra = member.declaration.library.as_ref().map_or(0, |l| {
++            (u32::from(l.operator) * 256) | (u32::from(l.infix) * 512)
++        });
++        function.number(9, 150 | extra);
++        function.number(2, strings.id(&method.name)?);
++        function.message(3, &type_proto(&method.result, imports, strings)?);
++        for (name, ty) in &method.params {
++            function.message(6, &parameter(name, ty, imports, strings)?);
++        }
++        function.message(
++            100,
++            &method_signature(method.jvm_name(), &member.jvm_descriptor, strings)?,
++        );
++        proto.message(9, &function);
++    }
++    for (name, members) in properties {
++        let mut getter = None;
++        let mut setter = None;
++        for member in members {
++            let method = class
++                .methods
++                .iter()
++                .find(|method| {
++                    method.name == member.declaration.name
++                        && method.descriptor() == member.jvm_descriptor
++                })
++                .ok_or_else(|| {
++                    Diagnostic::new(0, "Missing delegated property metadata contract")
++                })?;
++            if method.result == Type::Unit && method.params.len() == 1 {
++                setter = Some((member, method));
++            } else if method.params.is_empty() {
++                getter = Some((member, method));
++            } else {
++                return Err(Diagnostic::new(
++                    0,
++                    "Unsupported delegated property metadata shape",
++                ));
++            }
++        }
++        let ty = getter
++            .map(|(_, method)| &method.result)
++            .or_else(|| setter.map(|(_, method)| &method.params[0].1))
++            .ok_or_else(|| Diagnostic::new(0, "Missing delegated property type"))?;
++        let mut property = Proto::default();
++        property.number(
++            11,
++            150 | if getter.is_some() { 512 } else { 0 }
++                | if setter.is_some() { 256 | 1024 } else { 0 },
++        );
++        property.number(2, strings.id(&name)?);
++        property.message(3, &type_proto(ty, imports, strings)?);
++        let mut signature = Proto::default();
++        if let Some((member, method)) = getter {
++            signature.message(
++                3,
++                &method_signature(method.jvm_name(), &member.jvm_descriptor, strings)?,
++            );
++        }
++        if let Some((member, method)) = setter {
++            signature.message(
++                4,
++                &method_signature(method.jvm_name(), &member.jvm_descriptor, strings)?,
++            );
++        }
++        property.message(100, &signature);
++        proto.message(10, &property);
++    }
++    Ok(())
+ }
+ 
+ fn property_has_annotations(annotations: &[crate::syntax::AnnotationUse]) -> bool {
+--- a/src/syntax.rs
++++ b/src/syntax.rs
+@@ -347,6 +347,7 @@
+ }
+ #[derive(Clone, Debug)]
+ pub struct ClassDecl {
++    pub interface_delegates: Vec<InterfaceDelegate>,
+     pub sealed_: bool,
+     pub type_params: Vec<TypeParameter>,
+     pub super_types: Vec<Type>,
+@@ -373,6 +374,12 @@
+     pub super_class: Option<(String, Vec<Expr>)>,
+     pub open: bool,
+     pub abstract_: bool,
++}
++#[derive(Clone, Debug)]
++pub struct InterfaceDelegate {
++    pub ty: Type,
++    pub expression: Expr,
++    pub offset: usize,
+ }
+ #[derive(Clone, Debug)]
+ pub struct ClassCompanion {
+@@ -1000,6 +1007,7 @@
+                     token.offset += expression_start;
+                 }
+                 let mut parser = Parser {
++                    in_delegation_expression: false,
+                     tokens,
+                     pos: 0,
+                     depth: depth + 1,
+@@ -1361,6 +1369,7 @@
+ }
+ 
+ struct Parser {
++    in_delegation_expression: bool,
+     tokens: Vec<Token>,
+     pos: usize,
+     depth: usize,
+@@ -1396,16 +1405,17 @@
+         while self.take("\n") {}
+     }
+     fn at_trailing_lambda(&self) -> bool {
+-        self.at("{")
+-            || (identifier(&self.token().text)
+-                && self
+-                    .tokens
+-                    .get(self.pos + 1)
+-                    .is_some_and(|token| token.text == "@")
+-                && self
+-                    .tokens
+-                    .get(self.pos + 2)
+-                    .is_some_and(|token| token.text == "{"))
++        !self.in_delegation_expression
++            && (self.at("{")
++                || (identifier(&self.token().text)
++                    && self
++                        .tokens
++                        .get(self.pos + 1)
++                        .is_some_and(|token| token.text == "@")
++                    && self
++                        .tokens
++                        .get(self.pos + 2)
++                        .is_some_and(|token| token.text == "{")))
+     }
+     fn lines_before_trailing_lambda(&mut self) -> Result<()> {
+         let saved = self.pos;
+@@ -2101,6 +2111,14 @@
+                     "ENUM_TYPE_PARAMETERS_INVALID",
+                 ));
+         }
++        if !body.interface_delegates.is_empty() {
++            return Err(self
++                .error("Enum interface delegation is unsupported")
++                .with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "INTERFACE_DELEGATION_ENUM_UNSUPPORTED",
++                ));
++        }
+         body.offset = offset;
+         body.annotations = annotations.clone();
+         body.internal = visibility.as_deref() == Some("internal");
+@@ -2330,6 +2348,14 @@
+                     return Err(self.error("Object exceeds the current 128-interface limit"));
+                 }
+                 self.lines();
++                if self.at("by") {
++                    return Err(self
++                        .error("Delegating object declarations are unsupported")
++                        .with_kind(
++                            DiagnosticKind::UnsupportedLanguage,
++                            "INTERFACE_DELEGATION_OBJECT_UNSUPPORTED",
++                        ));
++                }
+                 if !self.take(",") {
+                     break;
+                 }
+@@ -3036,6 +3062,7 @@
+         self.lines();
+         let mut interfaces = Vec::new();
+         let mut super_types = Vec::new();
++        let mut interface_delegates = Vec::new();
+         let mut super_class = None;
+         if self.take(":") {
+             self.lines();
+@@ -3045,8 +3072,35 @@
+                     Type::Java(name) | Type::Parameterized { name, .. } => name.clone(),
+                     _ => return Err(self.error("A supertype must name a class or interface")),
+                 };
+-                super_types.push(ty);
+-                if self.at("(") {
++                super_types.push(ty.clone());
++                let before_by = self.pos;
++                self.lines();
++                let delegated = self.take("by");
++                if !delegated {
++                    self.pos = before_by;
++                }
++                if delegated {
++                    self.lines();
++                    let offset = self.token().offset;
++                    if self.at("object") {
++                        return Err(self
++                            .error("Delegation to object expressions is unsupported")
++                            .with_kind(
++                                DiagnosticKind::UnsupportedLanguage,
++                                "INTERFACE_DELEGATION_OBJECT_UNSUPPORTED",
++                            ));
++                    }
++                    let old = self.in_delegation_expression;
++                    self.in_delegation_expression = true;
++                    let expression = self.expr(0);
++                    self.in_delegation_expression = old;
++                    interface_delegates.push(InterfaceDelegate {
++                        ty,
++                        expression: expression?,
++                        offset,
++                    });
++                    interfaces.push(name);
++                } else if self.at("(") {
+                     if super_class.is_some() {
+                         return Err(self.error("Only one superclass constructor is allowed"));
+                     }
+@@ -3074,6 +3128,7 @@
+                 ));
+         }
+         let declaration = ClassDecl {
++            interface_delegates,
+             sealed_,
+             type_params,
+             super_types,
+@@ -3512,6 +3567,7 @@
+             return Err(self.error("Only unnamed companion objects are supported"));
+         }
+         let mut declaration = ClassDecl {
++            interface_delegates: Vec::new(),
+             sealed_: false,
+             type_params: Vec::new(),
+             super_types: Vec::new(),
+@@ -3645,6 +3701,14 @@
+                 }
+                 after_header = self.pos;
+                 self.lines();
++                if self.at("by") {
++                    return Err(self
++                        .error("Interfaces cannot delegate their supertypes")
++                        .with_kind(
++                            DiagnosticKind::InvalidKotlin,
++                            "INTERFACE_DELEGATION_IN_INTERFACE_INVALID",
++                        ));
++                }
+                 if !self.take(",") {
+                     break;
+                 }
+@@ -4011,6 +4075,7 @@
+                 self.lines();
+                 self.expect("{")?;
+                 let mut object = ClassDecl {
++                    interface_delegates: Vec::new(),
+                     sealed_: false,
+                     type_params: Vec::new(),
+                     super_types: Vec::new(),
+@@ -5965,6 +6030,7 @@
+ }
+ pub fn parse(source: &str) -> Result<Module> {
+     let mut p = Parser {
++        in_delegation_expression: false,
+         tokens: lex(source)?,
+         pos: 0,
+         depth: 0,
+--- /dev/null
++++ b/tests/class_delegation_diagnostics.rs
+@@ -0,0 +1,114 @@
++use korrust::{DiagnosticKind, compile_outputs_with_classpath};
++use std::path::PathBuf;
++
++fn classpath() -> Vec<PathBuf> {
++    vec![PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc/lib/kotlin-stdlib.jar")]
++}
++
++#[test]
++fn generic_interface_delegation_builds_forwarders_properties_and_bridges() {
++    let source = "interface I<T>{fun echo(value:T):T;var value:T}\nclass Generic<T>(delegate:I<T>):I<T> by delegate\nclass Scalar(delegate:I<Int>):I<Int> by delegate";
++    let outputs = compile_outputs_with_classpath(source, "Delegation.kt", &classpath()).unwrap();
++    for name in ["I.class", "Generic.class", "Scalar.class"] {
++        assert!(outputs.iter().any(|o| o.relative_path == name));
++    }
++}
++
++#[test]
++fn invalid_delegation_contracts_do_not_return_artifacts() {
++    for (source, code) in [
++        (
++            "interface I\nclass C:I by \"bad\"",
++            "INTERFACE_DELEGATION_VALUE_INVALID",
++        ),
++        (
++            "class I\nclass C(value:I):I by value",
++            "INTERFACE_DELEGATION_TYPE_INVALID",
++        ),
++        (
++            "interface I{fun f():Int}\ninterface J:I\nclass C(a:I,b:J):I by a,J by b",
++            "INTERFACE_DELEGATION_CONFLICT_INVALID",
++        ),
++        (
++            "interface I{fun f():Int}\ninterface J{fun g():Int}\nclass C(a:I):I by a,J",
++            "MISSING_INTERFACE_IMPLEMENTATION",
++        ),
++        (
++            "internal interface I{fun f():Int}\nclass C(value:I):I by value",
++            "DELEGATION_EXPOSED_INTERNAL_TYPE",
++        ),
++    ] {
++        let error = compile_outputs_with_classpath(source, "Delegation.kt", &classpath())
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{}",
++            error.message
++        );
++        assert_eq!(error.code, code, "{}", error.message);
++    }
++}
++
++#[test]
++fn valid_unimplemented_delegation_shapes_have_explicit_boundaries() {
++    for (source, code) in [
++        (
++            "interface I{fun f():Int=1}\nclass C(value:I):I by value",
++            "INTERFACE_DELEGATION_DEFAULT_UNSUPPORTED",
++        ),
++        (
++            "interface I{fun <T> f(value:T):T}\nclass C(value:I):I by value",
++            "INTERFACE_DELEGATION_MEMBER_UNSUPPORTED",
++        ),
++        (
++            "interface I\ndata class C(val value:I):I by value",
++            "INTERFACE_DELEGATION_CLASS_SHAPE_UNSUPPORTED",
++        ),
++        (
++            "internal interface I{fun f():Int}\ninternal class C(value:I):I by value",
++            "INTERFACE_DELEGATION_INTERNAL_UNSUPPORTED",
++        ),
++    ] {
++        let error = compile_outputs_with_classpath(source, "Delegation.kt", &classpath())
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::UnsupportedLanguage,
++            "{}",
++            error.message
++        );
++        assert_eq!(error.code, code, "{}", error.message);
++    }
++}
++
++#[test]
++fn delegation_cannot_turn_a_var_override_into_a_val_or_hide_contract_members() {
++    for (source, code) in [
++        (
++            "interface I{var value:Int}\nclass C(d:I):I by d{override val value:Int=1}",
++            "VAR_OVERRIDDEN_BY_VAL",
++        ),
++        (
++            "interface I{var value:Int}\nclass C(d:I,override val value:Int):I by d",
++            "VAR_OVERRIDDEN_BY_VAL",
++        ),
++        (
++            "interface I{fun f():Int}\nclass C(d:I):I by d{fun f():Int=1}",
++            "OVERRIDE_REQUIRED",
++        ),
++    ] {
++        let error = compile_outputs_with_classpath(source, "Delegation.kt", &classpath())
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{}",
++            error.message
++        );
++        assert_eq!(error.code, code, "{}", error.message);
++    }
++}
+--- /dev/null
++++ b/tests/class_delegation_new/Calls.java
+@@ -0,0 +1,101 @@
++import delegated.*;
++public class Calls {
++    static final class Ints implements Contract<Integer> {
++        Integer stored=new Integer(1000); Integer lastInput; int effects;
++        public Integer echo(Integer value){effects++;lastInput=value;return stored;}
++        public Integer getValue(){effects++;return stored;}
++        public void setValue(Integer v){effects++;stored=v;}
++        public String getLabel(){return "label";}
++    }
++    static final class Refs implements Contract<String> {
++        String stored; int effects;
++        public String echo(String v){effects++;return stored;}
++        public String getValue(){effects++;return stored;}
++        public void setValue(String v){effects++;stored=v;}
++        public String getLabel(){return "label";}
++    }
++    static final class Values<T> implements Contract<T> {
++        T stored;T last;int effects;
++        Values(T value){stored=value;}
++        public T echo(T value){effects++;last=value;return stored;}
++        public T getValue(){effects++;return stored;}
++        public void setValue(T value){effects++;stored=value;}
++        public String getLabel(){return "value";}
++    }
++    static final class Counts implements Counter {
++        int count; final String name;
++        Counts(int count,String name){this.count=count;this.name=name;}
++        public int getCount(){return count;}
++        public void setCount(int value){count=value;}
++        public String getName(){return name;}
++        public int read(){return count;}
++        public long twice(long value){return value+read();}
++    }
++    static final class Ones implements A { public int one(int value){return value+5;} }
++    static final class LeftImpl implements Left { public int value(){return 1;} }
++    static final class RightImpl implements Right { public int value(){return 2;} }
++    static final class Bs implements B { int count;public int getCount(){return count;}public void setCount(int v){count=v;} }
++    static final class JavaTexts implements JavaText {
++        int effects; Object value;
++        public String echo(String value){effects++;return value;}
++        public Object getValue(){effects++;return value;}
++        public void setValue(Object value){effects++;this.value=value;}
++    }
++    public static void main(String[] args){
++        Ints i=new Ints();PlainIntForward p=new PlainIntForward(i);Integer expected=i.stored;
++        if(p.echo(7)!=expected || p.getValue()!=expected)throw new AssertionError("identity");
++        i.stored=null;if(p.echo(7)!=null || p.getValue()!=null)throw new AssertionError("null result");
++        Contract raw=p;i.effects=0;
++        try{raw.echo(null);throw new AssertionError();}catch(NullPointerException e){}
++        try{raw.echo("wrong");throw new AssertionError();}catch(ClassCastException e){}
++        if(i.effects!=0)throw new AssertionError("bridge effects");
++        raw.setValue(1001);if(p.getValue()!=1001)throw new AssertionError();
++        Forward<Integer> generic=new Forward<>(i);if(generic.echo(null)!=i.stored)throw new AssertionError();
++        Refs r=new Refs();RefForward ref=new RefForward(r);if(ref.getValue()!=null || ref.echo("x")!=null)throw new AssertionError();
++        r.effects=0;try{ref.echo(null);throw new AssertionError();}catch(NullPointerException e){}
++        if(r.effects!=0)throw new AssertionError("nonnull effects");
++        Counts first=new Counts(2,"first"), second=new Counts(9,"second");
++        Events.trace="";Saved saved=new Saved(first);
++        if(!Events.trace.equals("134") || saved.getInitialized()!=3)throw new AssertionError("initialization "+Events.trace);
++        saved.setCurrent(second);saved.setCount(7);
++        if(saved.getCurrent()!=second || saved.getCount()!=7 || first.count!=7 || second.count!=9 || !saved.getName().equals("first") || saved.read()!=7 || saved.twice(0x100000001L)!=0x100000008L || !Events.trace.equals("134"))throw new AssertionError("saved receiver");
++        OverrideCounter override=new OverrideCounter(first);
++        if(override.getCount()!=11 || override.read()!=99 || override.twice(1L)!=8L)throw new AssertionError("override precedence");
++        override.setCount(12);if(override.getCount()!=12 || first.count!=7)throw new AssertionError("property override");
++        Events.trace="";Bs bs=new Bs();Ordered ordered=new Ordered(new Ones(),bs);
++        if(!Events.trace.equals("1234") || ordered.one(7)!=12 || ordered.getInitialized()!=3)throw new AssertionError("multiple delegates "+Events.trace);
++        ordered.setCount(17);if(ordered.getCount()!=17 || bs.count!=17)throw new AssertionError();
++        Child<String> child=new Inherited<String>((value)->value+"K");if(!child.echo("O").equals("OK"))throw new AssertionError("inherited generic");
++        Events.trace="";try{new Saved(null);throw new AssertionError();}catch(NullPointerException e){}
++        if(!Events.trace.isEmpty())throw new AssertionError("null constructor effects");
++        if(new Collision(first).read()!=7 || new Shared(new LeftImpl(),new RightImpl()).value()!=77)throw new AssertionError();
++        if(UseKt.scalar(new PlainIntForward(new Ints()))!=1000 || UseKt.stringValue(ref)!=null)throw new AssertionError("source callers");
++        Events.trace="";Caught caught=new Caught(first);
++        if(caught.read()!=7 || !Events.trace.equals("5"))throw new AssertionError("caught initializer");
++        JavaTexts jt=new JavaTexts();JavaForward jf=new JavaForward(jt);
++        if(jf.echo(null)!=null || jt.effects!=1 || UseKt.platformConsumer(jf)!=null || jt.effects!=2)throw new AssertionError("Java platform parameters");
++        Object identity=new Object();jf.setValue(identity);if(jf.getValue()!=identity)throw new AssertionError("Java platform result");
++        if(new Derived(first).read()!=7)throw new AssertionError("inherited forwarders");
++        i.stored=expected;i.effects=0;raw.echo(2.9);if(i.lastInput!=2 || i.effects!=1)throw new AssertionError("numeric bridge conversion");
++        Values<Long> longs=new Values<Long>(new Long(0x100000001L));LongForward lf=new LongForward(longs);
++        if(lf.echo(9L)!=longs.stored || lf.getValue()!=longs.stored)throw new AssertionError("wide boxed identity");
++        ((Contract)lf).echo(7.9);if(longs.last!=7L)throw new AssertionError("wide bridge conversion");
++        longs.stored=null;if(lf.getValue()!=null)throw new AssertionError();
++        Values<Boolean> booleans=new Values<Boolean>(new Boolean(true));BooleanForward bf=new BooleanForward(booleans);
++        if(bf.echo(false)!=booleans.stored)throw new AssertionError("Boolean identity");
++        booleans.effects=0;try{((Contract)bf).echo(1);throw new AssertionError();}catch(ClassCastException e){}
++        if(booleans.effects!=0)throw new AssertionError();
++        Values<Character> chars=new Values<Character>(new Character('\uD800'));CharForward cf=new CharForward(chars);
++        if(cf.echo('x')!=chars.stored || cf.getValue().charValue()!='\uD800')throw new AssertionError("UTF16 character identity");
++        Values<Integer> nullable=new Values<Integer>(null);NullableForward nf=new NullableForward(nullable);
++        if(nf.echo(null)!=null || nullable.effects!=1)throw new AssertionError("nullable primary parameter");
++        ((Contract)nf).echo(null);if(nullable.effects!=2 || nullable.last!=null)throw new AssertionError("nullable bridge parameter");
++        r.stored="\u0000\uD800\uDC00\uDFFF";if(ref.echo("input")!=r.stored)throw new AssertionError("UTF16 reference identity");
++        RuntimeException failure=new IllegalStateException("initializer");Events.failure=failure;Events.failAt=2;Events.trace="";
++        try{new Ordered(new Ones(),new Bs());throw new AssertionError();}catch(RuntimeException e){if(e!=failure)throw new AssertionError();}
++        if(!Events.trace.equals("12"))throw new AssertionError("exception order "+Events.trace);
++        Events.failure=null;Events.failAt=0;
++        Diamond diamond=()->23;if(new DiamondForward(diamond).shared()!=23)throw new AssertionError("abstract diamond");
++        System.out.println("OK");
++    }
++}
+--- /dev/null
++++ b/tests/class_delegation_new/Consumer.kt
+@@ -0,0 +1,10 @@
++import delegated.*
++fun scalarConsumer(value: PlainIntForward): Int = value.value
++fun stringConsumer(value: RefForward): String = value.value
++fun genericConsumer(value: Forward<String>): String = value.echo(value.value)
++fun inheritedConsumer(value: Inherited<String>): String = value.echo("O")
++fun counterConsumer(value: Saved): Int {
++    value.count = 13
++    return value.read() + value.count
++}
++fun platformMetadataConsumer(value: JavaForward): String? = value.echo(null)
+--- /dev/null
++++ b/tests/class_delegation_new/ConsumerCalls.java
+@@ -0,0 +1,18 @@
++import delegated.*;
++public class ConsumerCalls {
++    public static void main(String[] args){
++        Calls.Ints ints=new Calls.Ints();PlainIntForward i=new PlainIntForward(ints);
++        if(ConsumerKt.scalarConsumer(i)!=1000)throw new AssertionError();
++        ints.stored=null;ints.effects=0;
++        try{ConsumerKt.scalarConsumer(i);throw new AssertionError();}catch(NullPointerException e){}
++        if(ints.effects!=1)throw new AssertionError();
++        Calls.Refs refs=new Calls.Refs();RefForward ref=new RefForward(refs);
++        if(ConsumerKt.stringConsumer(ref)!=null)throw new AssertionError();
++        refs.stored="OK";if(!ConsumerKt.genericConsumer(new Forward<String>(refs)).equals("OK"))throw new AssertionError();
++        if(!ConsumerKt.inheritedConsumer(new Inherited<String>((value)->value+"K")).equals("OK"))throw new AssertionError();
++        if(ConsumerKt.counterConsumer(new Saved(new Calls.Counts(1,"n")))!=26)throw new AssertionError();
++        Calls.JavaTexts javaText=new Calls.JavaTexts();
++        if(ConsumerKt.platformMetadataConsumer(new JavaForward(javaText))!=null || javaText.effects!=1)throw new AssertionError();
++        System.out.println("OK");
++    }
++}
+--- /dev/null
++++ b/tests/class_delegation_new/Events.java
+@@ -0,0 +1,8 @@
++package delegated;
++public class Events {
++    public static String trace="";
++    public static int failAt;
++    public static RuntimeException failure;
++    public static int mark(int value){trace+=value;return value;}
++    public static Object pick(Object value,int order){mark(order);if(failure!=null && failAt==order)throw failure;return value;}
++}
+--- /dev/null
++++ b/tests/class_delegation_new/Inventory.java
+@@ -0,0 +1,28 @@
++import java.nio.file.Files;
++import java.nio.file.Path;
++import com.intellij.openapi.util.Disposer;
++import com.intellij.psi.util.PsiTreeUtil;
++import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
++import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles;
++import org.jetbrains.kotlin.config.CompilerConfiguration;
++import org.jetbrains.kotlin.psi.KtPsiFactory;
++import org.jetbrains.kotlin.psi.KtDelegatedSuperTypeEntry;
++public class Inventory {
++    public static void main(String[] args) throws Exception {
++        var disposable=Disposer.newDisposable();
++        try {
++            var environment=KotlinCoreEnvironment.createForProduction(disposable,new CompilerConfiguration(),EnvironmentConfigFiles.JVM_CONFIG_FILES);
++            var factory=new KtPsiFactory(environment.getProject(),false);
++            int files=0,hits=0;
++            try(var paths=Files.walk(Path.of(args[0]))) {
++                for(Path path:paths.filter(p->p.toString().endsWith(".kt")).sorted().toList()) {
++                    var file=factory.createFile(path.getFileName().toString(),Files.readString(path));files++;
++                    for(var entry:PsiTreeUtil.collectElementsOfType(file,KtDelegatedSuperTypeEntry.class)) {
++                        hits++;System.out.println(path+":"+entry.getTextOffset()+":"+entry.getText().replace("\n"," "));
++                    }
++                }
++            }
++            System.out.println("FILES="+files+" HEADER_DELEGATIONS="+hits);
++        } finally {Disposer.dispose(disposable);}
++    }
++}
+--- /dev/null
++++ b/tests/class_delegation_new/JavaArrays.java
+@@ -0,0 +1,2 @@
++package delegated;
++public interface JavaArrays { String[] values(); }
+--- /dev/null
++++ b/tests/class_delegation_new/JavaDefaults.java
+@@ -0,0 +1,2 @@
++package delegated;
++public interface JavaDefaults { int value(); default int computed(){return value();} }
+--- /dev/null
++++ b/tests/class_delegation_new/JavaGeneric.java
+@@ -0,0 +1,2 @@
++package delegated;
++public interface JavaGeneric<T> { T echo(T value); }
+--- /dev/null
++++ b/tests/class_delegation_new/JavaText.java
+@@ -0,0 +1,6 @@
++package delegated;
++public interface JavaText {
++    String echo(String value);
++    Object getValue();
++    void setValue(Object value);
++}
+--- /dev/null
++++ b/tests/class_delegation_new/MetadataDump.java
+@@ -0,0 +1,11 @@
++public class MetadataDump {
++    public static void main(String[] names) throws Exception {
++        for(String name:names) {
++            kotlin.Metadata m=Class.forName(name).getAnnotation(kotlin.Metadata.class);
++            var data=org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil.readClassDataFrom(m.d1(),m.d2());
++            System.out.println(name);
++            for(var f:data.getSecond().getFunctionList()) System.out.println("fun "+data.getFirst().getString(f.getName())+" flags "+f.getFlags());
++            for(var p:data.getSecond().getPropertyList()) System.out.println("prop "+data.getFirst().getString(p.getName())+" flags "+p.getFlags()+" getter "+p.hasGetterFlags()+"/"+p.getGetterFlags()+" setter "+p.hasSetterFlags()+"/"+p.getSetterFlags());
++        }
++    }
++}
+--- /dev/null
++++ b/tests/class_delegation_new/Tag.java
+@@ -0,0 +1,4 @@
++package delegated;
++@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
++@java.lang.annotation.Target({java.lang.annotation.ElementType.METHOD,java.lang.annotation.ElementType.PARAMETER})
++public @interface Tag {}
+--- /dev/null
++++ b/tests/class_delegation_new/Use.kt
+@@ -0,0 +1,61 @@
++package delegated
++import delegated.Events
++interface Contract<T> { fun echo(value:T):T; var value:T; val label:String }
++class Forward<T>(val impl: Contract<T>): Contract<T> by impl
++class IntForward(impl: Contract<Int>): Contract<Int> by impl {
++    override fun echo(value:Int):Int=value+1
++}
++class RefForward(impl: Contract<String>): Contract<String> by impl
++interface A { fun one(value:Int):Int }
++interface B { var count:Int }
++class PairForward(a:A,b:B):A by a,B by b
++class PlainIntForward(impl: Contract<Int>): Contract<Int> by impl
++interface Counter {
++    var count: Int
++    val name: String
++    fun read(): Int
++    fun twice(value: Long): Long
++}
++fun pickCounter(value: Counter): Counter = Events.pick(value, 1) as Counter
++class Saved(var current: Counter) : Counter by pickCounter(current) {
++    val initialized: Int = Events.mark(3)
++    init { Events.mark(4) }
++}
++fun pickA(value: A): A = Events.pick(value, 1) as A
++fun pickB(value: B): B = Events.pick(value, 2) as B
++class Ordered(a: A, b: B) : A by pickA(a), B by pickB(b) {
++    val initialized: Int = Events.mark(3)
++    init { Events.mark(4) }
++}
++class OverrideCounter(delegate: Counter): Counter by delegate {
++    override var count: Int = 11
++    override fun read(): Int = 99
++}
++interface Parent<T> { fun echo(value: T): T }
++interface Child<T>: Parent<T>
++class Inherited<T>(delegate: Parent<T>) : Child<T>, Parent<T> by delegate
++fun scalar(value: PlainIntForward): Int = value.value
++fun stringValue(value: RefForward): String = value.value
++class Collision(val `$$delegate_0`: Counter) : Counter by `$$delegate_0`
++interface Left { fun value(): Int }
++interface Right { fun value(): Int }
++class Shared(a: Left, b: Right) : Left by a, Right by b { override fun value(): Int = 77 }
++class Caught(delegate: Counter): Counter by try {
++    if (Events.mark(5) == 5) throw IllegalStateException("delegate")
++    delegate
++} catch (error: IllegalStateException) {
++    delegate
++}
++class JavaForward(delegate: JavaText) : JavaText by delegate
++open class OpenForward(delegate: Counter): Counter by delegate
++class Derived(delegate: Counter): OpenForward(delegate)
++fun platformConsumer(value: JavaForward): String? = value.echo(null)
++class LongForward(delegate: Contract<Long>): Contract<Long> by delegate
++class BooleanForward(delegate: Contract<Boolean>): Contract<Boolean> by delegate
++class CharForward(delegate: Contract<Char>): Contract<Char> by delegate
++class NullableForward(delegate: Contract<Int?>): Contract<Int?> by delegate
++interface DiamondRoot { fun shared(): Int }
++interface DiamondLeft : DiamondRoot
++interface DiamondRight : DiamondRoot
++interface Diamond : DiamondLeft, DiamondRight
++class DiamondForward(delegate: Diamond) : Diamond by delegate
+--- /dev/null
++++ b/tools/check_new_class_delegation.py
+@@ -0,0 +1,179 @@
++#!/usr/bin/env python3
++import argparse
++from collections import Counter
++from datetime import datetime, timezone
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++import time
++from upstream_jvm import parse_fixture, assess, options_for
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURES = ROOT / 'tests/class_delegation_new'
++UPSTREAM_ROOT = ROOT / 'references/kotlin/compiler/testData/codegen/box/delegation'
++UPSTREAMS = [('delegationDifferentModule.kt',True),('delegationDifferentModule2.kt',True),('inClassDeclaration.kt',False),('kt30102_comparable.kt',False)]
++APP = ROOT/'benchmarks/sources/androidbible'
++
++
++def sha(path): return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++def relative(path):
++    path=Path(path).resolve()
++    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
++def cp(*paths): return os.pathsep.join(map(str,paths))
++def signatures(output):
++    result=[]
++    for line in output.splitlines():
++        line=line.strip()
++        if line.startswith(('public ','protected ','descriptor:')) and ' #' not in line and (';' in line or line.startswith('descriptor:') or line.endswith('{')): result.append(line)
++        elif line.startswith('Signature:') and '// ' in line: result.append('Signature: '+line.split('// ',1)[1])
++    return sorted(result)
++
++
++class Check:
++    def __init__(self,args):
++        self.args=args;self.compiler=args.compiler.resolve();self.now=datetime.now(timezone.utc)
++        self.ident=self.now.strftime('%Y-%m-%dT%H%M%S%fZ')+'-new-class-delegation'
++        self.work=ROOT/'target/checks'/self.ident;self.logs=ROOT/'reports/correctness'/self.ident
++        self.work.mkdir(parents=True);self.logs.mkdir(parents=True)
++        self.pin=json.loads((ROOT/'references/compiler.json').read_text())
++        self.kotlin=ROOT/self.pin['path']/'bin/kotlinc';self.stdlib=ROOT/self.pin['path']/'lib/kotlin-stdlib.jar';self.compiler_jar=ROOT/self.pin['path']/'lib/kotlin-compiler.jar'
++        home=Path(os.environ['JAVA_HOME']);self.java,self.javac,self.javap=[home/'bin'/n for n in ['java','javac','javap']]
++        self.options=['-language-version','2.3','-api-version','2.3','-jvm-target','1.8','-module-name','class_delegation']
++        frozen=[*args.source_root.glob('src/**/*.rs'),args.source_root/'Cargo.toml',args.source_root/'Cargo.lock',*FIXTURES.glob('*'),Path(__file__),ROOT/'tools/upstream_jvm.py',ROOT/'base-manifest.json',*[UPSTREAM_ROOT/n for n,_ in UPSTREAMS],*APP.rglob('*.kt')]
++        self.frozen={relative(p):sha(p) for p in sorted(frozen) if p.is_file()}
++        self.report=dict(schema_version=1,kind='correctness',created_at=self.now.isoformat(),status='running',compiler={'binary':relative(self.compiler),'binary_sha256':sha(self.compiler),'frozen_source_root':relative(args.source_root)},reference_compiler={'version':self.pin['version'],'archive_sha256':self.pin['archive_sha256'],'options':self.options,'compiler_jar_sha256':sha(self.compiler_jar)},inputs={'files_sha256':self.frozen,'stdlib_sha256':sha(self.stdlib)},commands=[],cases=[],evidence=[],reproduction_commands=[['python3','tools/check_new_class_delegation.py','--compiler',relative(self.compiler),'--source-root',relative(args.source_root)]],limitations=['One new family: class-header interface delegation. Existing property delegation, source classifiers/generics and ordinary interface implementation remain prerequisites. Saved private-final-synthetic receivers, one evaluation after super construction and before property/init execution, disjoint multiple delegates, explicit overrides, interface getter/setter forwarding, generic substitution/erased bridges and delegated Kotlin member metadata are covered.','Public top-level interfaces and ordinary top-level delegators; invariant Kotlin interface parameters and nongeneric Java scalar/reference contracts. Default bodies, internal/nested/dollar-named classifier/type shapes, delegating objects/data classes/enums/secondary constructors/explicit superclass combinations, decorated/generic/extension/renamed/vararg/default-argument members, complex overlapping erased signatures and Java generic/raw/reference-array member types remain explicit boundaries. Extra private saved fields are permitted; final constructor backing-field reuse is not an optimization goal.','Fixed Java assertions compile once against official and execute against both outputs with verification. Separate official Kotlin consumers and metadata flag/ABI checks. Original upstream multi-module files/directives are preserved. Pinned PSI inventory establishes zero AndroidBible header delegation uses; no new app-file, APK/device/full-app, performance or complete Kotlin claim.'])
++
++    def run(self,label,args,accepted=(0,),timeout=300):
++        started=time.monotonic();index=len(self.report['commands'])
++        result=subprocess.run(list(map(str,args)),cwd=ROOT,capture_output=True,text=True,timeout=timeout)
++        entry={'label':label,'argv':list(map(str,args)),'cwd':'.','exit_code':result.returncode,'wall_time_seconds':time.monotonic()-started}
++        for stream in ['stdout','stderr']:
++            path=self.logs/f'{index:03d}-{stream}.txt';path.write_text(getattr(result,stream));entry[stream]=relative(path)
++        self.report['commands'].append(entry)
++        if result.returncode not in accepted: raise AssertionError(label+'\n'+result.stdout+result.stderr)
++        return result
++
++    def case(self,ident,passed,**fields):
++        self.report['cases'].append({'id':ident,'outcome':'pass' if passed else 'correctness_failure',**fields})
++
++    def boundary(self,item,dependency):
++        directory=self.work/'boundaries'/item['id'];directory.mkdir(parents=True);source=directory/'Boundary.kt';source.write_text(item['source'])
++        oracle=self.run('Official boundary '+item['id'],[self.kotlin,source,*self.options,'-cp',cp(dependency,self.stdlib),'-d',directory/'official'],accepted=(0,1))
++        actual=self.run('Candidate boundary '+item['id'],[self.compiler,source,'--diagnostic-format','json','-cp',cp(dependency,self.stdlib),'-d',directory/'candidate'],accepted=(0,1))
++        diagnostics=[json.loads(line) for line in actual.stderr.splitlines() if line.startswith('{')]
++        category='invalid_kotlin' if item['official']=='reject' else 'unsupported_language'
++        valid=(oracle.returncode==0)==(item['official']=='accept') and actual.returncode!=0 and any(d.get('code')==item['code'] and d.get('category')==category for d in diagnostics)
++        self.report['cases'].append({'id':'boundary/'+item['id'],'outcome':('invalid_rejected' if item['official']=='reject' else 'unsupported_language') if valid else 'correctness_failure','official_accepted':oracle.returncode==0,'diagnostics':diagnostics,'source_sha256':sha(source)})
++
++    def upstream(self,name,supported):
++        fixture=parse_fixture(UPSTREAM_ROOT/name);state,reasons=assess(fixture,'box')
++        if state!='ready':
++            self.report['cases'].append({'id':'upstream/'+name,'outcome':state,'reasons':reasons});return
++        directory=self.work/'upstream'/Path(name).stem;directory.mkdir(parents=True)
++        sources={};mapping=[]
++        for module in fixture['modules']:
++            paths=[]
++            for file in module['files']:
++                path=directory/'sources'/module['name']/file['name'];path.parent.mkdir(parents=True,exist_ok=True);path.write_text(file['text']);paths.append(path)
++                mapping.append({'module':module['name'],'materialized':relative(path),'sha256':sha(path),'original_char_offsets':file['original_char_offsets']})
++            sources[module['name']]=paths
++        self.report.setdefault('upstream_materializations',[]).append({'original':relative(UPSTREAM_ROOT/name),'sha256':fixture['sha256'],'modules':[{k:v for k,v in m.items() if k!='files'} for m in fixture['modules']],'files':mapping})
++        outputs={p:{} for p in ['official','candidate']};java_outputs={};failure=None
++        for provider in outputs:
++            for module in fixture['modules']:
++                module_name=module['name'];dependency=[outputs[provider][dep] for dep in dict.fromkeys(module['dependencies']+module['friends'])]
++                java_files=[p for p in sources[module_name] if p.suffix=='.java'];kotlin_files=[p for p in sources[module_name] if p.suffix=='.kt']
++                if java_files:
++                    if provider=='official':
++                        java_outputs[module_name]=directory/'java'/module_name
++                        self.run('Original Java dependency '+name,[self.javac,'-cp',cp(*dependency,self.stdlib),'-d',java_outputs[module_name],*java_files])
++                    dependency.append(java_outputs[module_name])
++                output=directory/provider/module_name
++                if provider=='official': command=[self.kotlin,*kotlin_files,*options_for(module),'-module-name',module_name,'-cp',cp(*dependency,self.stdlib),'-d',output]
++                else: command=[self.compiler,*kotlin_files,'--module-name',module_name,'--diagnostic-format','json','-cp',cp(*dependency,self.stdlib),'-d',output]
++                actual=self.run('Unchanged original '+name+'/'+provider+'/'+module_name,command,accepted=(0,1))
++                if provider=='official' and actual.returncode: raise AssertionError('Official original rejected '+name)
++                if actual.returncode:
++                    diagnostics=[json.loads(line) for line in actual.stderr.splitlines() if line.startswith('{')]
++                    failure=diagnostics
++                    self.report['cases'].append({'id':'upstream/'+name+'/boundary','outcome':'unsupported_language' if not supported and diagnostics and diagnostics[0].get('category')=='unsupported_language' else 'correctness_failure','original':fixture['path'],'sha256':fixture['sha256'],'diagnostics':diagnostics})
++                    break
++                outputs[provider][module_name]=output
++        if failure is not None:return
++        if not supported:
++            self.case('upstream/'+name+'/unexpected_acceptance',False);return
++        box_file=next((m,f) for m in fixture['modules'] for f in m['files'] if re.search(r'\bfun\s+box\s*\(',f['text']))
++        package=re.search(r'^\s*package\s+([\w.]+)',box_file[1]['text'],re.MULTILINE)
++        owner=((package.group(1)+'.') if package else '')+Path(box_file[1]['name']).stem[:1].upper()+Path(box_file[1]['name']).stem[1:]+'Kt'
++        driver=directory/'UpstreamCalls.java';driver.write_text('public class UpstreamCalls { public static void main(String[] args) { if(!'+owner+'.box().equals("OK"))throw new AssertionError();System.out.println("OK"); }}')
++        callers=directory/'callers';self.run('Compile fixed original assertions '+name,[self.javac,'-cp',cp(*outputs['official'].values(),*java_outputs.values(),self.stdlib),'-d',callers,driver])
++        for provider in outputs:
++            result=self.run('Execute unchanged original '+name+'/'+provider,[self.java,'-Xverify:all','-cp',cp(callers,*outputs[provider].values(),*java_outputs.values(),self.stdlib),'UpstreamCalls'])
++            self.case('upstream/'+name+'/'+provider,result.stdout=='OK\n',original=fixture['path'],sha256=fixture['sha256'],reused_assertion_bytecodes=True)
++
++    def execute(self):
++        dependency=self.work/'dependency'
++        self.run('Compile independent Java effects and contracts',[self.javac,'-d',dependency,*[FIXTURES/name for name in ['Events.java','JavaText.java','JavaGeneric.java','JavaDefaults.java','JavaArrays.java','Tag.java']]])
++        outputs={p:self.work/p for p in ['official','candidate']}
++        self.run('Official delegation declarations',[self.kotlin,FIXTURES/'Use.kt',*self.options,'-cp',dependency,'-d',outputs['official']])
++        self.run('Candidate delegation declarations',[self.compiler,FIXTURES/'Use.kt','--module-name','class_delegation','-cp',cp(dependency,self.stdlib),'-d',outputs['candidate']])
++        callers=self.work/'callers'
++        self.run('Compile fixed Java assertions once against official',[self.javac,'-cp',cp(outputs['official'],dependency,self.stdlib),'-d',callers,FIXTURES/'Calls.java'])
++        self.run('Compile same Java assertions against candidate signatures',[self.javac,'-cp',cp(outputs['candidate'],dependency,self.stdlib),'-d',self.work/'candidate-signature-consumer',FIXTURES/'Calls.java'])
++        for provider,output in outputs.items():
++            result=self.run('Execute identical Java bytecodes '+provider,[self.java,'-Xverify:all','-cp',cp(callers,output,dependency,self.stdlib),'Calls'])
++            self.case('java/'+provider,result.stdout=='OK\n',reused_assertion_bytecodes=True,scope='Saved receivers, multiple delegates, init/property order, overrides, interface getters/setters, wide values, boxed null/identity, scalar/nullable/numeric bridges and pre-effect failures, UTF16, platform Java contracts, caught/escaping initializer exceptions and source inheritance')
++            for consumer_kind in ['official','candidate']:
++                consumer=self.work/(provider+'-'+consumer_kind+'-consumer')
++                command=[self.kotlin,FIXTURES/'Consumer.kt',*self.options,'-cp',cp(output,dependency),'-d',consumer] if consumer_kind=='official' else [self.compiler,FIXTURES/'Consumer.kt','-cp',cp(output,dependency,self.stdlib),'-d',consumer]
++                self.run(consumer_kind+' Kotlin metadata consumer '+provider,command)
++                launcher=self.work/(provider+'-'+consumer_kind+'-launcher')
++                self.run('Compile Kotlin consumer assertions '+provider+'/'+consumer_kind,[self.javac,'-cp',cp(consumer,output,dependency,callers,self.stdlib),'-d',launcher,FIXTURES/'ConsumerCalls.java'])
++                result=self.run('Execute Kotlin metadata consumer '+provider+'/'+consumer_kind,[self.java,'-Xverify:all','-cp',cp(launcher,consumer,output,dependency,callers,self.stdlib),'ConsumerCalls'])
++                self.case('metadata/'+provider+'/'+consumer_kind,result.stdout=='OK\n')
++        for path in sorted(outputs['official'].rglob('*.class')):
++            owner=str(path.relative_to(outputs['official']).with_suffix('')).replace(os.sep,'.')
++            expected=self.run('Official public ABI '+owner,[self.javap,'-protected','-s','-v','-classpath',outputs['official'],owner]).stdout
++            actual=self.run('Candidate public ABI '+owner,[self.javap,'-protected','-s','-v','-classpath',outputs['candidate'],owner]).stdout
++            self.case('abi/'+owner,signatures(expected)==signatures(actual),expected=signatures(expected),actual=signatures(actual))
++        metadata_tool=self.work/'metadata-tool';self.run('Compile pinned metadata declaration inspector',[self.javac,'-cp',cp(self.compiler_jar,self.stdlib),'-d',metadata_tool,FIXTURES/'MetadataDump.java'])
++        owners=['delegated.'+n for n in ['Forward','IntForward','PlainIntForward','LongForward','BooleanForward','CharForward','NullableForward','RefForward','Saved','Ordered','Inherited','Shared','JavaForward','DiamondForward']]
++        inspected={}
++        for provider,output in outputs.items():
++            result=self.run('Inspect delegated metadata kind/modality '+provider,[self.java,'-cp',cp(metadata_tool,output,dependency,self.compiler_jar,self.stdlib),'MetadataDump',*owners])
++            inspected[provider]=sorted(result.stdout.splitlines())
++        self.case('metadata/delegated_member_flags',inspected['official']==inspected['candidate'],expected=inspected['official'],actual=inspected['candidate'])
++        for item in json.loads((FIXTURES/'Rejections.json').read_text()):self.boundary(item,dependency)
++        annotated=self.work/'Annotated.kt';annotated.write_text('package decorated\nimport delegated.Tag\ninterface AnnotatedMember { @Tag fun f():Int }\ninterface AnnotatedParameter { fun f(@Tag value:Int):Int }')
++        annotation_output=self.work/'annotated-dependency';self.run('Official decorated interface dependencies',[self.kotlin,annotated,*self.options,'-cp',dependency,'-d',annotation_output])
++        self.report.setdefault('auxiliary_sources_sha256',{})[relative(annotated)]=sha(annotated)
++        for classifier in ['AnnotatedMember','AnnotatedParameter']:
++            self.boundary({'id':'imported_'+classifier,'source':'import decorated.'+classifier+'\nclass F(d:'+classifier+'):'+classifier+' by d','official':'accept','code':'INTERFACE_DELEGATION_ANNOTATION_UNSUPPORTED'},cp(dependency,annotation_output))
++        for name,supported in UPSTREAMS:self.upstream(name,supported)
++        inventory_tool=self.work/'inventory-tool';self.run('Compile pinned PSI inventory',[self.javac,'-cp',cp(self.compiler_jar,self.stdlib),'-d',inventory_tool,FIXTURES/'Inventory.java'])
++        inventory=self.run('Inventory actual unchanged AndroidBible classifier delegation',[self.java,'-cp',cp(inventory_tool,self.compiler_jar,self.stdlib),'Inventory',APP])
++        count=len(list(APP.rglob('*.kt')))
++        self.case('androidbible/header_delegation_inventory',inventory.stdout==f'FILES={count} HEADER_DELEGATIONS=0\n',acceptance_scope='application_inventory_only',files=count,header_delegations=0,new_app_coverage_claim=False)
++        self.report['emitted_classes_sha256']={p:{relative(f):sha(f) for f in output.rglob('*.class')} for p,output in outputs.items()}
++
++    def finish(self):
++        changed=[p for p,h in self.frozen.items() if sha(ROOT/p)!=h]
++        self.case('frozen_inputs',not changed and sha(self.compiler)==self.report['compiler']['binary_sha256'],changed=changed)
++        self.report['counts']=dict(Counter(c['outcome'] for c in self.report['cases']))
++        selected=[c for c in self.report['cases'] if c.get('acceptance_scope')!='application_inventory_only'];counts=dict(Counter(c['outcome'] for c in selected));failed=sum(v for k,v in counts.items() if k not in ['pass','invalid_rejected','unsupported_language'])
++        self.report['feature_acceptance']={'family':'class_header_interface_delegation','status':'failed' if failed else 'passed','derived_counts':counts,'excluded_assessment_cases':[c['id'] for c in self.report['cases'] if c.get('acceptance_scope')=='application_inventory_only']}
++        self.report['status']='failed' if failed else 'completed';path=ROOT/'reports/correctness'/(self.ident+'.json');path.write_text(json.dumps(self.report,indent=2)+'\n')
++        subprocess.run(['python3','tools/reports.py'],cwd=ROOT,check=True,capture_output=True,text=True)
++        print(relative(path));print(json.dumps(self.report['counts'],sort_keys=True));return 1 if failed else 0
++
++
++def main():
++    p=argparse.ArgumentParser();p.add_argument('--compiler',type=Path,required=True);p.add_argument('--source-root',type=Path,default=ROOT);args=p.parse_args();args.source_root=args.source_root.resolve();check=Check(args)
++    try:check.execute()
++    except Exception as error:check.report['cases'].append({'id':'harness','outcome':'correctness_failure','error':str(error)})
++    return check.finish()
++
++if __name__=='__main__':raise SystemExit(main())

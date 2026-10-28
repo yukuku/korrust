@@ -1,0 +1,6 @@
+target/checks/2026-10-28T165643787905Z-new-class-literals/protected_nested.kt:1:5: error: 'public' function exposes its 'protected (in PublicOuter)' return type argument 'ProtectedNested'.
+fun bad() = newfamilies.dependency.PublicOuter.ProtectedNested::class
+    ^^^
+target/checks/2026-10-28T165643787905Z-new-class-literals/protected_nested.kt:1:48: error: cannot access 'class ProtectedNested : Any': it is protected in 'newfamilies.dependency.PublicOuter'.
+fun bad() = newfamilies.dependency.PublicOuter.ProtectedNested::class
+                                               ^^^^^^^^^^^^^^^

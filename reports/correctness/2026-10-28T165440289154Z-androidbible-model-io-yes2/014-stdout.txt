@@ -1,0 +1,29 @@
+Compiled from "BibleReader.java"
+public interface yuku.alkitab.io.BibleReader {
+  public abstract java.lang.String getLocale();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract java.lang.String getShortName();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract java.lang.String getLongName();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract java.lang.String getDescription();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract yuku.alkitab.model.Book[] loadBooks();
+    descriptor: ()[Lyuku/alkitab/model/Book;
+
+  public abstract yuku.alkitab.model.SingleChapterVerses loadVerseText(yuku.alkitab.model.Book, int, boolean, boolean);
+    descriptor: (Lyuku/alkitab/model/Book;IZZ)Lyuku/alkitab/model/SingleChapterVerses;
+
+  public abstract int loadPericope(int, int, yuku.alkitab.util.IntArrayList, java.util.List<yuku.alkitab.model.PericopeBlock>);
+    descriptor: (IILyuku/alkitab/util/IntArrayList;Ljava/util/List;)I
+
+  public abstract yuku.alkitab.model.XrefEntry getXrefEntry(int);
+    descriptor: (I)Lyuku/alkitab/model/XrefEntry;
+
+  public abstract yuku.alkitab.model.FootnoteEntry getFootnoteEntry(int);
+    descriptor: (I)Lyuku/alkitab/model/FootnoteEntry;
+}

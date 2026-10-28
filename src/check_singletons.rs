@@ -303,7 +303,6 @@ mod tests {
     #[test]
     fn annotation_and_singleton_extensions_fail_closed() {
         for source in [
-            "@Serializable(with = Custom::class) object Example",
             "@Serializable data object Example",
             "object Example : Base()",
             "object Example : Base<String>",
@@ -316,6 +315,7 @@ mod tests {
         // declaration/dependencies and selected lowering are supported.
         for source in [
             "@Serializable() object Example",
+            "@Serializable(with = Custom::class) object Example",
             "@Serializable class Example",
         ] {
             assert!(syntax::parse(source).is_ok(), "{source}");
