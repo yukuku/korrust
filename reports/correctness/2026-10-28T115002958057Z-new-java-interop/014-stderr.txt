@@ -1,0 +1,15 @@
+target/checks/2026-10-28T115002958057Z-new-java-interop/boundaries/java_named_argument/Boundary.kt:2:19: error: none of the following candidates is applicable:
+
+static fun choose(p0: Int): String!
+static fun choose(p0: String!): String!
+fun f(): String = choose(value = 1)
+                  ^^^^^^
+target/checks/2026-10-28T115002958057Z-new-java-interop/boundaries/java_named_argument/Boundary.kt:2:19: error: no value passed for parameter 'p0'.
+fun f(): String = choose(value = 1)
+                  ^^^^^^
+target/checks/2026-10-28T115002958057Z-new-java-interop/boundaries/java_named_argument/Boundary.kt:2:26: error: named arguments are prohibited for non-Kotlin functions.
+fun f(): String = choose(value = 1)
+                         ^^^^^
+target/checks/2026-10-28T115002958057Z-new-java-interop/boundaries/java_named_argument/Boundary.kt:2:26: error: no parameter with name 'value' found.
+fun f(): String = choose(value = 1)
+                         ^^^^^

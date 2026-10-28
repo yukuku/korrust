@@ -182,6 +182,33 @@ impl Classpath {
     ) -> Result<Type> {
         aliases::expand(self, ty, imports, packages)
     }
+    pub(crate) fn builtin_class_declarations(&self, classifier: &str) -> Result<Vec<JavaMethod>> {
+        metadata::builtin_class_declarations(&self.builtin_class_resource(classifier)?, classifier)
+    }
+
+    fn builtin_class_resource(&self, classifier: &str) -> Result<Vec<u8>> {
+        if !valid_name(classifier) {
+            return Err(invalid());
+        }
+        let (package, _) = classifier.rsplit_once('/').ok_or_else(invalid)?;
+        let resource = format!(
+            "{package}/{}.kotlin_builtins",
+            package.rsplit('/').next().unwrap()
+        );
+        for path in &self.paths {
+            if let Some(bytes) = archive::read(path, &resource)? {
+                return Ok(bytes);
+            }
+        }
+        Err(Diagnostic::new(
+            0,
+            format!("Kotlin builtin declarations are missing for {classifier}"),
+        )
+        .with_kind(
+            crate::DiagnosticKind::MissingDependency,
+            "BUILTIN_DECLARATIONS_NOT_FOUND",
+        ))
+    }
     pub(crate) fn type_alias(&self, package: &str, name: &str) -> Result<Option<LibraryTypeAlias>> {
         let package = self.index_package(package)?;
         let index = self.package_index.borrow();
@@ -572,13 +599,26 @@ impl Classpath {
     }
 
     pub fn methods(&self, internal_name: &str) -> Result<Vec<JavaMethod>> {
+        self.hierarchy_methods(internal_name, false)
+    }
+
+    pub(crate) fn ordinary_methods(&self, internal_name: &str) -> Result<Vec<JavaMethod>> {
+        self.hierarchy_methods(internal_name, true)
+    }
+
+    fn hierarchy_methods(
+        &self,
+        internal_name: &str,
+        include_object: bool,
+    ) -> Result<Vec<JavaMethod>> {
         fn visit(
             cp: &Classpath,
             name: &str,
+            include_object: bool,
             seen: &mut std::collections::HashSet<String>,
             methods: &mut Vec<JavaMethod>,
         ) -> Result<()> {
-            if !seen.insert(name.into()) || name == "java/lang/Object" {
+            if !seen.insert(name.into()) || !include_object && name == "java/lang/Object" {
                 return Ok(());
             }
             if seen.len() > 256 {
@@ -594,7 +634,7 @@ impl Classpath {
                 }
             }
             for parent in class.super_name.iter().chain(class.interfaces.iter()) {
-                visit(cp, parent, seen, methods)?;
+                visit(cp, parent, include_object, seen, methods)?;
             }
             Ok(())
         }
@@ -602,10 +642,57 @@ impl Classpath {
         visit(
             self,
             internal_name,
+            include_object,
             &mut std::collections::HashSet::new(),
             &mut methods,
         )?;
         Ok(methods)
+    }
+
+    pub(crate) fn field_candidates(
+        &self,
+        internal_name: &str,
+        name: &str,
+    ) -> Result<Vec<JavaField>> {
+        fn visit(
+            cp: &Classpath,
+            owner: &str,
+            name: &str,
+            seen: &mut std::collections::HashSet<String>,
+        ) -> Result<Vec<JavaField>> {
+            if !seen.insert(owner.into()) {
+                return Ok(Vec::new());
+            }
+            if seen.len() > 256 {
+                return Err(invalid());
+            }
+            let class = cp.load(owner)?;
+            let declared = class
+                .fields
+                .into_iter()
+                .filter(|field| field.name == name)
+                .collect::<Vec<_>>();
+            if !declared.is_empty() {
+                return Ok(declared);
+            }
+            let mut fields = Vec::new();
+            for parent in class.super_name.iter().chain(class.interfaces.iter()) {
+                for field in visit(cp, parent, name, seen)? {
+                    if !fields.iter().any(|previous: &JavaField| {
+                        previous.owner == field.owner && previous.name == field.name
+                    }) {
+                        fields.push(field);
+                    }
+                }
+            }
+            Ok(fields)
+        }
+        visit(
+            self,
+            internal_name,
+            name,
+            &mut std::collections::HashSet::new(),
+        )
     }
 }
 

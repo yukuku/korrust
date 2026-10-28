@@ -17,7 +17,7 @@ fn classpath(paths: &[&Path]) -> std::ffi::OsString {
 }
 
 #[test]
-fn existing_static_members_are_unsupported_and_missing_members_remain_dependencies() {
+fn explicit_static_members_compile_and_missing_members_remain_dependencies() {
     let project = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let kotlin = project.join("references/kotlinc/bin/kotlinc");
     let standard = project.join("references/kotlinc/lib/kotlin-stdlib.jar");
@@ -63,26 +63,9 @@ fn existing_static_members_are_unsupported_and_missing_members_remain_dependenci
             file_name: "StaticImport.kt".into(),
             source: (*source).into(),
         };
-        let error = compile_batch_with_classpath(&[input], &dependencies, "static_imports")
-            .err()
-            .expect("Existing static-member import must reject without artifacts");
-        assert_eq!(
-            error.kind,
-            DiagnosticKind::UnsupportedLanguage,
-            "{}",
-            error.message
-        );
-        assert_eq!(error.code, "STATIC_MEMBER_IMPORT_UNSUPPORTED");
-        assert_eq!(
-            error.source_identity.as_deref(),
-            Some("/original/StaticImport.kt")
-        );
-        assert_eq!(error.offset, source.find("dep.Utility").unwrap());
-        assert!(
-            error
-                .render("StaticImport.kt", source)
-                .starts_with("StaticImport.kt:3:8: error:")
-        );
+        let output = compile_batch_with_classpath(&[input], &dependencies, "static_imports")
+            .unwrap_or_else(|error| panic!("{source}\n{}", error.message));
+        assert!(!output.is_empty());
         let file = root.join(format!("StaticImport{index}.kt"));
         std::fs::write(&file, format!("package fixture.case{index}\n{source}")).unwrap();
         official_sources.push(file);

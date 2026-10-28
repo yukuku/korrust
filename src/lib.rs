@@ -1443,6 +1443,16 @@ fn validate_source_imports(
             ));
         }
         if alias == "*" {
+            if classpath.load(path.trim_end_matches("/*")).is_ok() {
+                return Err(Diagnostic::new(
+                    *offset,
+                    "Static-member wildcard imports are unsupported",
+                )
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "STATIC_MEMBER_WILDCARD_UNSUPPORTED",
+                ));
+            }
             if classpath
                 .package_classes(path.trim_end_matches("/*"))?
                 .is_empty()
@@ -1474,10 +1484,9 @@ fn validate_source_imports(
                 }
                 if classpath.load(package).is_ok_and(|class| {
                     class.access & 1 != 0
-                        && (class
-                            .fields
-                            .iter()
-                            .any(|field| field.name == member && field.access & 9 == 9)
+                        && (classpath
+                            .field_candidates(package, member)
+                            .is_ok_and(|fields| fields.iter().any(|field| field.access & 9 == 9))
                             || class.methods.iter().any(|method| {
                                 method.source_name() == member && method.access & 9 == 9
                             })
@@ -1487,14 +1496,7 @@ fn validate_source_imports(
                                 })
                             }))
                 }) {
-                    return Err(Diagnostic::new(
-                        *offset,
-                        "Static class-member imports are not supported",
-                    )
-                    .with_kind(
-                        DiagnosticKind::UnsupportedLanguage,
-                        "STATIC_MEMBER_IMPORT_UNSUPPORTED",
-                    ));
+                    continue;
                 }
             }
             diagnostic.offset = *offset;

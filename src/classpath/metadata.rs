@@ -465,7 +465,7 @@ pub(super) fn builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
     })
 }
 
-fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
+fn builtin_fragment(bytes: &[u8]) -> Result<(Vec<String>, Vec<String>, Proto<'_>)> {
     let mut reader = Reader { bytes, offset: 0 };
     let count = reader.u4()?;
     if count != 3 {
@@ -496,6 +496,11 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
         .collect::<Result<Vec<_>>>()?;
     let qualified_names =
         builtin_qualified_names(&strings, fragment.bytes(2)?.ok_or_else(invalid)?)?;
+    Ok((strings, qualified_names, fragment))
+}
+
+fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
+    let (strings, qualified_names, fragment) = builtin_fragment(bytes)?;
     let package = Proto::parse(fragment.bytes(3)?.ok_or_else(invalid)?)?;
     let mut context = Context::new(&strings, &package)?;
     context.qualified_names = Some(&qualified_names);
@@ -570,6 +575,117 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
         });
     }
     Ok(result)
+}
+
+pub(super) fn builtin_class_declarations(
+    bytes: &[u8],
+    classifier: &str,
+) -> Result<Vec<JavaMethod>> {
+    let (strings, qualified_names, fragment) = builtin_fragment(bytes)?;
+    let mut selected = None;
+    for bytes in fragment.messages(4)? {
+        let class = Proto::parse(bytes)?;
+        let index =
+            usize::try_from(class.integer(3)?.ok_or_else(invalid)?).map_err(|_| invalid())?;
+        if qualified_names.get(index).ok_or_else(invalid)? != classifier {
+            continue;
+        }
+        if selected.replace(class).is_some() {
+            return Err(invalid());
+        }
+    }
+    let class = selected.ok_or_else(|| {
+        Diagnostic::new(0, format!("Builtin classifier not found: {classifier}")).with_kind(
+            crate::DiagnosticKind::MissingDependency,
+            "BUILTIN_CLASSIFIER_NOT_FOUND",
+        )
+    })?;
+    if !class.messages(5)?.is_empty() {
+        return Err(Diagnostic::new(
+            0,
+            "Generic builtin class member inventories are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "BUILTIN_GENERIC_MEMBERS_UNSUPPORTED",
+        ));
+    }
+    let mut context = Context::new(&strings, &class)?;
+    context.qualified_names = Some(&qualified_names);
+    let mut result = Vec::new();
+    for bytes in class.messages(9)? {
+        let function = Proto::parse(bytes)?;
+        if function.integer(9)?.unwrap_or(6) & 14 != 6 {
+            continue;
+        }
+        if !function.messages(4)?.is_empty()
+            || function.bytes(5)?.is_some()
+            || function.integer(8)?.is_some()
+            || !function.messages(10)?.is_empty()
+            || !numbers(&function, 11)?.is_empty()
+            || !function.messages(13)?.is_empty()
+        {
+            return Err(Diagnostic::new(
+                0,
+                "Generic, extension, or context builtin member inventories are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "BUILTIN_MEMBER_SIGNATURE_UNSUPPORTED",
+            ));
+        }
+        let mut context = context.clone();
+        context.set_table(&function)?;
+        let mut descriptor = String::from("(");
+        let mut parameters = Vec::new();
+        for parameter in function.messages(6)? {
+            let parameter = Proto::parse(parameter)?;
+            let ty = context.field(&parameter, 3, 5)?;
+            if ty == Type::Unit {
+                return Err(invalid());
+            }
+            descriptor.push_str(&ty.descriptor());
+            parameters.push((
+                metadata_name(&strings, parameter.integer(2)?)?.to_owned(),
+                ty,
+                parameter.integer(1)?.unwrap_or(0) & 2 != 0,
+            ));
+        }
+        descriptor.push(')');
+        let returned = context.field(&function, 3, 7)?;
+        descriptor.push_str(&returned.descriptor());
+        result.push(JavaMethod {
+            owner: classifier.into(),
+            name: metadata_name(&strings, function.integer(2)?)?.to_owned(),
+            descriptor,
+            access: 1,
+            unsupported: false,
+            source_property: None,
+            kotlin_params: Some(parameters),
+            kotlin_result: Some(returned),
+            kotlin_internal: false,
+            library: None,
+        });
+    }
+    result.sort_by(|a, b| (&a.name, &a.descriptor).cmp(&(&b.name, &b.descriptor)));
+    if result
+        .windows(2)
+        .any(|pair| pair[0].name == pair[1].name && pair[0].descriptor == pair[1].descriptor)
+    {
+        return Err(invalid());
+    }
+    Ok(result)
+}
+
+#[cfg(test)]
+pub(super) fn builtin_class_members(
+    bytes: &[u8],
+    classifier: &str,
+) -> Result<Vec<(String, String)>> {
+    Ok(builtin_class_declarations(bytes, classifier)?
+        .into_iter()
+        .map(|method| (method.name, method.descriptor))
+        .collect())
 }
 
 pub(super) fn module_parts(bytes: &[u8], package: &str) -> Result<Vec<String>> {
@@ -1184,6 +1300,108 @@ mod tests {
             fragment,
         ]
         .concat()
+    }
+
+    #[test]
+    fn builtin_class_inventory_uses_declared_names_and_signatures() {
+        let strings = [
+            "kotlin",
+            "Probe",
+            "Int",
+            "Boolean",
+            "argument",
+            "arbitraryMember",
+        ]
+        .into_iter()
+        .flat_map(|value| blob(1, value.as_bytes()))
+        .collect::<Vec<_>>();
+        let names = [
+            blob(1, &int(2, 0)),
+            blob(1, &[int(1, 0), int(2, 1), int(3, 0)].concat()),
+            blob(1, &[int(1, 0), int(2, 2), int(3, 0)].concat()),
+            blob(1, &[int(1, 0), int(2, 3), int(3, 0)].concat()),
+        ]
+        .concat();
+        let function = [
+            int(2, 5),
+            blob(3, &int(6, 3)),
+            blob(6, &[int(2, 4), blob(3, &int(6, 2))].concat()),
+        ]
+        .concat();
+        let class = [int(3, 1), blob(9, &function)].concat();
+        let header = [3u32, 1, 0, 7]
+            .into_iter()
+            .flat_map(u32::to_be_bytes)
+            .collect::<Vec<_>>();
+        let fixture = [
+            header.clone(),
+            blob(1, &strings),
+            blob(2, &names),
+            blob(4, &class),
+        ]
+        .concat();
+        assert_eq!(
+            builtin_class_members(&fixture, "kotlin/Probe").unwrap(),
+            [("arbitraryMember".into(), "(I)Z".into())]
+        );
+        assert_eq!(
+            builtin_class_members(&fixture, "kotlin/Missing")
+                .unwrap_err()
+                .code,
+            "BUILTIN_CLASSIFIER_NOT_FOUND"
+        );
+        let generic = [
+            header,
+            blob(1, &strings),
+            blob(2, &names),
+            blob(4, &[class, blob(5, &[])].concat()),
+        ]
+        .concat();
+        assert_eq!(
+            builtin_class_members(&generic, "kotlin/Probe")
+                .unwrap_err()
+                .code,
+            "BUILTIN_GENERIC_MEMBERS_UNSUPPORTED"
+        );
+        assert!(builtin_class_members(&fixture[..8], "kotlin/Probe").is_err());
+    }
+
+    #[test]
+    fn pinned_any_member_inventory_matches_its_jvm_contract() {
+        let standard = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("references/kotlinc/lib/kotlin-stdlib.jar");
+        let bytes = archive::read(&standard, "kotlin/kotlin.kotlin_builtins")
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            builtin_class_members(&bytes, "kotlin/Any").unwrap(),
+            [
+                ("equals".into(), "(Ljava/lang/Object;)Z".into()),
+                ("hashCode".into(), "()I".into()),
+                ("toString".into(), "()Ljava/lang/String;".into()),
+            ]
+        );
+        let declarations = builtin_class_declarations(&bytes, "kotlin/Any").unwrap();
+        let equality = declarations
+            .iter()
+            .find(|method| method.name == "equals")
+            .unwrap();
+        assert_eq!(
+            equality.kotlin_params.as_ref().unwrap(),
+            &[(
+                "other".into(),
+                Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))),
+                false
+            )]
+        );
+        assert_eq!(
+            declarations
+                .iter()
+                .find(|method| method.name == "toString")
+                .unwrap()
+                .kotlin_result,
+            Some(Type::String)
+        );
     }
 
     #[test]

@@ -27,6 +27,8 @@ mod control;
 mod function_values;
 #[path = "check_ir_walk.rs"]
 pub(crate) mod ir_walk;
+#[path = "check_java_properties.rs"]
+mod java_properties;
 #[path = "check_library.rs"]
 mod library;
 #[path = "check_operations.rs"]
@@ -1719,6 +1721,23 @@ impl Checker<'_> {
             receiver
         };
         values.insert(0, receiver);
+        let mut method = method;
+        if mask == 0
+            && self
+                .classpath
+                .load(&method.owner)
+                .is_ok_and(|declaring| !declaring.kotlin_class && declaring.access & 1 == 0)
+        {
+            if let Some(qualifier) = library::type_owner(&values[0].ty) {
+                if self
+                    .classpath
+                    .load(qualifier)
+                    .is_ok_and(|class| class.access & 1 != 0)
+                {
+                    method.owner = qualifier.into();
+                }
+            }
+        }
         let interface = self
             .classes
             .get(&method.owner)
@@ -2013,13 +2032,14 @@ impl Checker<'_> {
             .cloned()
             .map(Ok)
             .unwrap_or_else(|| self.classpath.load(owner))?;
-        let inherited = match self.classpath.methods(owner) {
-            Ok(methods) => methods,
-            Err(_) if class.library.is_none() && self.classes.contains_key(owner) => {
-                class.methods.clone()
-            }
-            Err(error) => return Err(error),
-        };
+        let inherited =
+            match library::ordinary_member_methods(self.classpath, owner, name, args.len()) {
+                Ok(methods) => methods,
+                Err(_) if class.library.is_none() && self.classes.contains_key(owner) => {
+                    class.methods.clone()
+                }
+                Err(error) => return Err(error),
+            };
         let singleton = class
             .fields
             .iter()
@@ -2126,9 +2146,24 @@ impl Checker<'_> {
             .classpath
             .methods(owner)?
             .into_iter()
-            .filter(|m| m.source_name() == name && m.access & 9 == 9)
+            .filter(|m| {
+                m.source_name() == name
+                    && m.access & 9 == 9
+                    && (m.owner == owner
+                        || self
+                            .classpath
+                            .load(&m.owner)
+                            .is_ok_and(|declaring| declaring.access & 0x0200 == 0))
+            })
             .collect::<Vec<_>>();
-        let method = self.select_method(&methods, args, offset)?;
+        let mut method = self.select_method(&methods, args, offset)?;
+        if self
+            .classpath
+            .load(&method.owner)
+            .is_ok_and(|declaring| !declaring.kotlin_class && declaring.access & 1 == 0)
+        {
+            method.owner = owner.into();
+        }
         self.library_static_call(method, args, offset)
     }
     fn field_assignment(
@@ -2171,33 +2206,33 @@ impl Checker<'_> {
                     (owner.clone(), None)
                 } else {
                     let value = self.value(receiver)?;
-                    let Type::Java(owner) = value.ty.base() else {
+                    let Some(owner) = library::type_owner(&value.ty) else {
                         return Err(Diagnostic::new(
                             offset,
                             "Java field requires a class receiver",
                         ));
                     };
-                    (owner.clone(), Some(value))
+                    (owner.to_owned(), Some(value))
                 }
             } else {
                 let value = self.value(receiver)?;
-                let Type::Java(owner) = value.ty.base() else {
+                let Some(owner) = library::type_owner(&value.ty) else {
                     return Err(Diagnostic::new(
                         offset,
                         "Java field requires a class receiver",
                     ));
                 };
-                (owner.clone(), Some(value))
+                (owner.to_owned(), Some(value))
             }
         } else {
             let value = self.value(receiver)?;
-            let Type::Java(owner) = value.ty.base() else {
+            let Some(owner) = library::type_owner(&value.ty) else {
                 return Err(Diagnostic::new(
                     offset,
                     "Java field requires a class receiver",
                 ));
             };
-            (owner.clone(), Some(value))
+            (owner.to_owned(), Some(value))
         };
         if receiver.as_ref().is_some_and(|v| v.ty.is_nullable()) {
             return Err(Diagnostic::new(
@@ -2205,9 +2240,21 @@ impl Checker<'_> {
                 "Nullable field receivers require a not-null assertion",
             ));
         }
+        self.assign_java_member(owner, receiver, name, expr, offset)
+    }
+    fn assign_java_member(
+        &mut self,
+        owner: String,
+        receiver: Option<Value>,
+        name: &str,
+        expr: &Expr,
+        offset: usize,
+    ) -> Result<Statement> {
+        let loaded = self.classpath.load(&owner).ok();
         let class = self
             .classes
             .get(&owner)
+            .or(loaded.as_ref())
             .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java class"))?;
         let methods = self
             .classpath
@@ -2229,11 +2276,28 @@ impl Checker<'_> {
             };
             return Ok(Statement::Expression(call));
         }
-        let field = class
-            .fields
-            .iter()
-            .find(|f| f.name == name)
-            .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java field"))?;
+        let candidates = self.classpath.field_candidates(&class.name, name)?;
+        if !candidates.iter().any(|field| field.access & 1 != 0) {
+            if let Some(value) = &receiver {
+                if let Some(method) = self.java_property_setter(&value.ty, name, offset)? {
+                    let call = self.member_call(
+                        method,
+                        value.clone(),
+                        std::slice::from_ref(expr),
+                        offset,
+                    )?;
+                    return Ok(Statement::Expression(call));
+                }
+            }
+        }
+        let field = match candidates.as_slice() {
+            [field] => field,
+            [] => return Err(Diagnostic::new(offset, "Unresolved Java field")),
+            _ => {
+                return Err(Diagnostic::new(offset, "Ambiguous inherited Java field")
+                    .with_kind(crate::DiagnosticKind::InvalidKotlin, "AMBIGUOUS_JAVA_FIELD"));
+            }
+        };
         if field.access & 0x10 != 0 {
             return Err(Diagnostic::new(offset, "Cannot assign a final Java field"));
         }
@@ -2251,7 +2315,7 @@ impl Checker<'_> {
         let value = self.value(expr)?;
         let value = self.coerce(value, ty.clone(), offset)?;
         Ok(Statement::JavaFieldStore {
-            owner: field.owner.clone(),
+            owner,
             name: name.into(),
             ty,
             receiver,
@@ -2271,11 +2335,15 @@ impl Checker<'_> {
             .get(owner)
             .or(loaded.as_ref())
             .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java class"))?;
-        let field = class
-            .fields
-            .iter()
-            .find(|f| f.name == name)
-            .ok_or_else(|| Diagnostic::new(offset, "Unresolved Java field"))?;
+        let candidates = self.classpath.field_candidates(&class.name, name)?;
+        let field = match candidates.as_slice() {
+            [field] => field,
+            [] => return Err(Diagnostic::new(offset, "Unresolved Java field")),
+            _ => {
+                return Err(Diagnostic::new(offset, "Ambiguous inherited Java field")
+                    .with_kind(crate::DiagnosticKind::InvalidKotlin, "AMBIGUOUS_JAVA_FIELD"));
+            }
+        };
         if field.access & 1 == 0
             || field.unsupported
             || (field.access & 8 != 0) != receiver.is_none()
@@ -2317,7 +2385,7 @@ impl Checker<'_> {
         Ok(Value {
             ty,
             kind: ValueKind::JavaField {
-                owner: field.owner.clone(),
+                owner: owner.into(),
                 name: name.into(),
                 receiver: receiver.map(Box::new),
             },
@@ -2613,6 +2681,31 @@ impl Checker<'_> {
                             };
                             body.push(Statement::Expression(value));
                             continue;
+                        }
+                        if !self.fields.contains_key(name)
+                            && !self.captured.contains_key(name)
+                            && !self.constants.contains_key(name)
+                        {
+                            if let Some((owner, member)) = self
+                                .imports
+                                .get(name)
+                                .and_then(|binding| binding.rsplit_once("::"))
+                                .map(|(owner, member)| (owner.to_owned(), member.to_owned()))
+                            {
+                                if self
+                                    .classpath
+                                    .field_candidates(&owner, &member)?
+                                    .iter()
+                                    .any(|field| field.access & 8 != 0)
+                                {
+                                    body.push(
+                                        self.assign_java_member(
+                                            owner, None, &member, expr, offset,
+                                        )?,
+                                    );
+                                    continue;
+                                }
+                            }
                         }
                         if let Some((owner, ty)) = self.object_fields.get(name) {
                             if !self.mutable_fields.contains(name) {
@@ -3321,12 +3414,12 @@ impl Checker<'_> {
                         .get(name)
                         .and_then(|binding| binding.rsplit_once("::"))
                     {
-                        if self.classes.get(owner).is_some_and(|class| {
-                            class
-                                .fields
-                                .iter()
-                                .any(|field| field.name == member && field.access & 8 != 0)
-                        }) {
+                        if self
+                            .classpath
+                            .field_candidates(owner, member)?
+                            .iter()
+                            .any(|field| field.access & 8 != 0)
+                        {
                             return self.java_field(owner, member, None, offset);
                         }
                     }
@@ -3519,22 +3612,28 @@ impl Checker<'_> {
                 if matches!(op.as_str(), "==" | "!=" | "===" | "!==") {
                     return self.check_equality(op, a, b, offset);
                 }
+                if op == "+" && a.ty.base() == &Type::String {
+                    if b.ty.base() == &Type::Unit {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "String concatenation with Unit operands is unsupported",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::UnsupportedLanguage,
+                            "STRING_UNIT_CONCAT_UNSUPPORTED",
+                        ));
+                    }
+                    return Ok(Value {
+                        ty: Type::String,
+                        kind: ValueKind::StringConcat(Box::new(a), Box::new(b)),
+                    });
+                }
                 if a.ty == Type::Float
                     || b.ty == Type::Float
                     || a.ty == Type::Double
                     || b.ty == Type::Double
                 {
                     return self.check_float_binary(op, a, b, offset);
-                }
-                if op == "+"
-                    && a.ty == Type::String
-                    && (b.ty == Type::Null
-                        || matches!(&b.ty,Type::Nullable(inner) if inner.as_ref() == &Type::String))
-                {
-                    return Ok(Value {
-                        ty: Type::String,
-                        kind: ValueKind::StringConcat(Box::new(a), Box::new(b)),
-                    });
                 }
                 if a.ty.is_nullable() || b.ty.is_nullable() {
                     return Err(Diagnostic::new(
@@ -3556,18 +3655,6 @@ impl Checker<'_> {
                     || matches!(b.ty, Type::Platform(_)) && b.ty.base() == &Type::String
                 {
                     return Err(Diagnostic::new(offset, "Unsupported value operand type"));
-                }
-                if op == "+" && a.ty == Type::String {
-                    if !matches!(b.ty, Type::String | Type::Int | Type::Long | Type::Boolean) {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "String concatenation supports only String, Int, and Boolean operands",
-                        ));
-                    }
-                    return Ok(Value {
-                        ty: Type::String,
-                        kind: ValueKind::StringConcat(Box::new(a), Box::new(b)),
-                    });
                 }
                 let ty = if op == "&&" || op == "||" {
                     self.require(&a, Type::Boolean, offset)?;
@@ -3791,7 +3878,12 @@ impl Checker<'_> {
                             {
                                 return self.member_call(method, receiver, &[], offset);
                             }
-                            if class.fields.iter().any(|f| f.name == *name) {
+                            if self
+                                .classpath
+                                .field_candidates(&owner, name)?
+                                .iter()
+                                .any(|field| field.access & 1 != 0)
+                            {
                                 return self.java_field(
                                     &owner.clone(),
                                     name,
@@ -3800,6 +3892,9 @@ impl Checker<'_> {
                                 );
                             }
                         }
+                    }
+                    if let Some(method) = self.java_property_getter(&receiver.ty, name, offset)? {
+                        return self.member_call(method, receiver, &[], offset);
                     }
                     if let Some(value) = enums::property(self, &receiver, name, offset)? {
                         return Ok(value);
@@ -4972,25 +5067,12 @@ pub fn check_with_owner(
         }
         if classpath.load(name).is_err() {
             if let Some((parent, member)) = name.rsplit_once('/') {
-                if let Ok(class) = classpath.load(parent) {
-                    if class
-                        .fields
-                        .iter()
-                        .any(|field| field.name == member && field.access & 8 != 0)
-                        || class.methods.iter().any(|method| {
-                            method.access & 8 != 0
-                                && (method.name == member
-                                    || method.source_property.as_deref() == Some(member)
-                                    || method
-                                        .library
-                                        .as_ref()
-                                        .is_some_and(|library| library.source_name == member))
-                        })
-                    {
-                        imports.insert(alias.clone(), format!("{parent}::{member}"));
-                        classes.insert(parent.into(), class);
-                        continue;
-                    }
+                if let Some(class) =
+                    library::static_import_owner(classpath, parent, member, *offset)?
+                {
+                    imports.insert(alias.clone(), format!("{parent}::{member}"));
+                    classes.insert(parent.into(), class);
+                    continue;
                 }
             }
             if let Some((package, member)) = name.rsplit_once('/') {

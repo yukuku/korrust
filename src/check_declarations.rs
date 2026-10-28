@@ -1772,7 +1772,7 @@ fn infer_source_results_impl(
 
     let mut imports = HashMap::new();
     let mut classes = HashMap::new();
-    for (alias, path, _) in &source.imports {
+    for (alias, path, import_offset) in &source.imports {
         if let Some((package, member)) = path.rsplit_once('/') {
             if classpath.type_alias(package, member)?.is_some() {
                 imports.insert(alias.clone(), path.clone());
@@ -1793,25 +1793,12 @@ fn infer_source_results_impl(
             imports.insert(alias.clone(), path.clone());
             classes.insert(path.clone(), class);
         } else if let Some((package, member)) = path.rsplit_once('/') {
-            if let Ok(class) = classpath.load(package) {
-                if class
-                    .fields
-                    .iter()
-                    .any(|field| field.name == member && field.access & 8 != 0)
-                    || class.methods.iter().any(|method| {
-                        method.access & 8 != 0
-                            && (method.name == member
-                                || method.source_property.as_deref() == Some(member)
-                                || method
-                                    .library
-                                    .as_ref()
-                                    .is_some_and(|library| library.source_name == member))
-                    })
-                {
-                    imports.insert(alias.clone(), format!("{package}::{member}"));
-                    classes.insert(package.into(), class);
-                    continue;
-                }
+            if let Some(class) =
+                library::static_import_owner(classpath, package, member, *import_offset)?
+            {
+                imports.insert(alias.clone(), format!("{package}::{member}"));
+                classes.insert(package.into(), class);
+                continue;
             }
             for class in classpath.package_classes(package)? {
                 if class.methods.iter().any(|m| {

@@ -159,6 +159,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 119. Raw multiline string templates and Kotlin newline handling for supported expressions and qualified continuations.
 120. JVM overload generation for supported defaulted top-level, class, object, and companion functions.
 121. Generic source type aliases in supported type positions, with substitution and exported Kotlin metadata.
+122. Explicit Java static imports, bounded synthetic Java properties, and inherited-member access through accessible qualifiers.
 
 ## Project contract
 

@@ -3,6 +3,116 @@ use super::*;
 
 pub(super) use crate::classpath::DEFAULT_KOTLIN_PACKAGES as DEFAULT_PACKAGES;
 
+pub(super) fn ordinary_member_methods(
+    classpath: &Classpath,
+    owner: &str,
+    name: &str,
+    argument_count: usize,
+) -> Result<Vec<JavaMethod>> {
+    let methods = classpath
+        .ordinary_methods(owner)?
+        .into_iter()
+        .map(|method| {
+            if method.access & 0x40 != 0 && method.access & 9 == 1 {
+                if let Some(declaration) = java_properties::accessibility_bridge(
+                    classpath,
+                    owner,
+                    &method,
+                    &mut HashSet::new(),
+                )? {
+                    return Ok(declaration);
+                }
+            }
+            Ok(method)
+        })
+        .collect::<Result<Vec<_>>>()?;
+    let declarations = if methods.iter().any(|method| {
+        method.owner == "java/lang/Object"
+            && method.source_name() == name
+            && method.access & 9 == 1
+            && class_method_types(method)
+                .is_ok_and(|(parameters, _)| parameters.len() == argument_count)
+    }) {
+        classpath.builtin_class_declarations("kotlin/Any")?
+    } else {
+        Vec::new()
+    };
+    Ok(methods
+        .into_iter()
+        .filter_map(|mut method| {
+            if method.owner == "java/lang/Object" {
+                let declaration = declarations.iter().find(|declaration| {
+                    declaration.name == method.source_name()
+                        && declaration.descriptor == method.descriptor
+                })?;
+                method.library = declaration.library.clone();
+                method.kotlin_params = declaration.kotlin_params.clone();
+                method.kotlin_result = declaration.kotlin_result.clone();
+            }
+            Some(method)
+        })
+        .collect())
+}
+
+pub(super) fn static_import_owner(
+    classpath: &Classpath,
+    owner: &str,
+    member: &str,
+    offset: usize,
+) -> Result<Option<JavaClass>> {
+    let Ok(mut class) = classpath.load(owner) else {
+        return Ok(None);
+    };
+    if class.access & 1 == 0 || class.unsupported {
+        return Ok(None);
+    }
+    let methods = classpath.methods(owner)?;
+    let matching_method = methods.iter().any(|method| {
+        method.access & 9 == 9
+            && (method.source_name() == member || method.source_property.as_deref() == Some(member))
+            && (method.owner == owner
+                || classpath
+                    .load(&method.owner)
+                    .is_ok_and(|declaring| declaring.access & 0x0200 == 0))
+    });
+    let matching_field = classpath
+        .field_candidates(owner, member)?
+        .iter()
+        .any(|field| field.access & 9 == 9);
+    if !matching_method && !matching_field {
+        return Ok(None);
+    }
+    if matching_method && class.access & 0x0200 != 0 {
+        return Err(
+            Diagnostic::new(offset, "Static interface method imports are unsupported").with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "STATIC_INTERFACE_IMPORT_UNSUPPORTED",
+            ),
+        );
+    }
+    class.methods = methods
+        .into_iter()
+        .filter(|method| {
+            method.access & 8 == 0
+                || method.owner == owner
+                || classpath
+                    .load(&method.owner)
+                    .is_ok_and(|declaring| declaring.access & 0x0200 == 0)
+        })
+        .map(|mut method| {
+            if method.access & 8 != 0
+                && classpath
+                    .load(&method.owner)
+                    .is_ok_and(|declaring| !declaring.kotlin_class && declaring.access & 1 == 0)
+            {
+                method.owner = owner.into();
+            }
+            method
+        })
+        .collect();
+    Ok(Some(class))
+}
+
 impl Checker<'_> {
     fn lexical_method_visible(&self, method: &JavaMethod) -> bool {
         (!method.kotlin_internal || self.classpath.internal_visible(&method.owner))
@@ -39,7 +149,8 @@ impl Checker<'_> {
             .as_ref()
             .and_then(|receiver| type_owner(&receiver.ty))
         {
-            if let Ok(inherited) = self.classpath.methods(owner) {
+            if let Ok(inherited) = ordinary_member_methods(self.classpath, owner, name, args.len())
+            {
                 methods.extend(
                     inherited
                         .into_iter()
@@ -252,9 +363,7 @@ impl Checker<'_> {
                             .as_ref()
                             .is_some_and(|library| library.inline && library.kotlin_public))
                     && (m.source_property.as_deref() == Some(source_name)
-                        || m.library
-                            .as_ref()
-                            .is_some_and(|l| l.source_name == source_name))
+                        || m.source_name() == source_name)
             })
             .cloned()
             .collect()

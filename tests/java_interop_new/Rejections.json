@@ -1,0 +1,84 @@
+[
+  {
+    "id": "java_named_argument",
+    "source": "import newinterop.Bean.choose\nfun f(): String = choose(value = 1)",
+    "official": "reject",
+    "diagnostic": ""
+  },
+  {
+    "id": "missing_member",
+    "source": "import newinterop.Bean.missing\nfun f(): Int = 1",
+    "official": "reject",
+    "diagnostic": "",
+    "category": "missing_dependency",
+    "code": "CLASS_NOT_FOUND"
+  },
+  {
+    "id": "instance_import",
+    "source": "import newinterop.Bean.getTitle\nfun f(): Int = 1",
+    "official": "reject",
+    "diagnostic": ""
+  },
+  {
+    "id": "readonly_property",
+    "source": "import newinterop.Bean\nfun f(value: Bean) { value.readOnly = \"changed\" }",
+    "official": "reject",
+    "diagnostic": ""
+  },
+  {
+    "id": "writeonly_property",
+    "source": "import newinterop.Bean\nfun f(value: Bean): String = value.only",
+    "official": "reject",
+    "diagnostic": ""
+  },
+  {
+    "id": "ambiguous_property",
+    "source": "import newinterop.AmbiguousBean\nfun f(value: AmbiguousBean): Any = value.isReady",
+    "official": "reject",
+    "diagnostic": "Ambiguous Java synthetic property getter",
+    "code": "AMBIGUOUS_JAVA_PROPERTY",
+    "category": "invalid_kotlin"
+  },
+  {
+    "id": "object_getclass_hidden",
+    "source": "import newinterop.Bean\nfun f(value: Bean): Any = value.getClass()",
+    "official": "reject",
+    "diagnostic": ""
+  },
+  {
+    "id": "object_notify_hidden",
+    "source": "import newinterop.Bean\nfun f(value: Bean) { value.notify() }",
+    "official": "reject",
+    "diagnostic": ""
+  },
+  {
+    "id": "object_class_property_hidden",
+    "source": "import newinterop.Bean\nfun f(value: Bean): Any = value.`class`",
+    "official": "reject",
+    "diagnostic": ""
+  },
+  {
+    "id": "static_wildcard_boundary",
+    "source": "import newinterop.Bean.*\nfun f(): Int = CONSTANT",
+    "official": "accept",
+    "diagnostic": "Static-member wildcard imports are unsupported",
+    "code": "STATIC_MEMBER_WILDCARD_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "static_interface_boundary",
+    "source": "import newinterop.StaticInterface.value\nfun f(): Int = value()",
+    "official": "accept",
+    "diagnostic": "Static interface method imports are unsupported",
+    "code": "STATIC_INTERFACE_IMPORT_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "interface_property_boundary",
+    "source": "import newinterop.InterfaceBean\nfun f(value: InterfaceBean): String = value.title",
+    "official": "accept",
+    "diagnostic": "Synthetic properties on mapped, interface, enum, or Kotlin receiver classes are unsupported",
+    "code": "JAVA_SYNTHETIC_RECEIVER_UNSUPPORTED",
+    "category": "unsupported_language"
+  }
+]

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "kind": "features",
-  "created_at": "2026-10-28T11:05:00+00:00",
+  "created_at": "2026-10-28T12:26:12.296266+00:00",
   "status": "in_progress",
   "selection": "Approximately twenty genuinely new families; current live execution matrix. Bounded acceptance does not establish unrestricted conformance. Infrastructure and existing support excluded.",
-  "validated_new_families": 3,
+  "validated_new_families": 4,
   "features": [
     {
       "id": "family-01",
@@ -22,7 +22,8 @@
       "number": 2,
       "name": "Source generic classifiers, parameterized inheritance and erased override bridges",
       "status": "unassessed",
-      "acceptance_boundary": "AlphanumComparator; bounds, substitution, variance, Java dispatch, signatures and Kotlin metadata. Existing generic functions do not count."
+      "acceptance_boundary": "AlphanumComparator; bounds, substitution, variance, Java dispatch, signatures and Kotlin metadata. Existing generic functions do not count.",
+      "execution": "Implementation and validation in isolated source copy; not counted as accepted."
     },
     {
       "id": "family-03",
@@ -47,7 +48,8 @@
       "number": 5,
       "name": "Remaining signed primitive/array representations",
       "status": "unassessed",
-      "acceptance_boundary": "Short and Long/Boolean/Float/Double arrays; allocation, indexed read/write, iteration, vararg/spread, boxing and Java ABI. AudioHighlightColor needs real Android dependencies."
+      "acceptance_boundary": "Short and Long/Boolean/Float/Double arrays; allocation, indexed read/write, iteration, vararg/spread, boxing and Java ABI. AudioHighlightColor needs real Android dependencies.",
+      "execution": "Implementation and validation in isolated source copy; not counted as accepted."
     },
     {
       "id": "family-06",
@@ -128,9 +130,12 @@
       "id": "family-16",
       "number": 16,
       "name": "Remaining Java member resolution rules",
-      "status": "unassessed",
+      "status": "supported",
       "acceptance_boundary": "Static imports, inherited Object members and ordinary bean properties; visibility, ambiguity, nullability and annotation metadata. Existing direct fields/methods excluded.",
-      "execution": "Implementation and validation in progress; not counted as accepted."
+      "correctness_report": "reports/correctness/2026-10-28T121821034547Z-new-java-interop.json",
+      "restrictions": [
+        "Bounded concrete Java synthetic properties and explicit static imports; mapped/interface/enum/Kotlin property and static wildcard/interface import boundaries remain explicit; Random app import fails."
+      ]
     },
     {
       "id": "family-17",
@@ -164,7 +169,8 @@
   "evidence": [
     "reports/correctness/2026-10-28T102639408771Z-new-strings.json",
     "reports/correctness/2026-10-28T104259884676Z-new-jvm-overloads.json",
-    "reports/correctness/2026-10-28T105615Z-source-generic-aliases.json"
+    "reports/correctness/2026-10-28T105615Z-source-generic-aliases.json",
+    "reports/correctness/2026-10-28T121821034547Z-new-java-interop.json"
   ],
   "limitations": [
     "The approximately twenty-family request is not complete. Unassessed entries are not implemented-feature claims.",
