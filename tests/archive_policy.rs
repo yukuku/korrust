@@ -270,7 +270,7 @@ fn genuine_multi_release_overrides_reject_before_dependency_resolution() {
         let error = compile_all_with_classpath(
             "import dep.Shared\nfun probe(): Int = Shared(7).value",
             "Consumer.kt",
-            &[path.to_path_buf()],
+            std::slice::from_ref(path),
         )
         .err()
         .unwrap();

@@ -1,0 +1,406 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T10:23:27.298404+00:00",
+  "status": "pass",
+  "selection": "Pre-feature Rust/Python and three existing AndroidBible library module regression baseline; no new family count.",
+  "compiler": {
+    "revision": "59c4502f8c9a691400c758e687dcaf035eb28b81",
+    "binary_sha256": "e5efeaa7df7ea4ab6392b4ada5fd6558ca79b1bef2d7271e49785a66eb3002ee",
+    "rust": "1.99.1"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "cases": [
+    {
+      "id": "rust-baseline",
+      "outcome": "pass",
+      "passed": 349,
+      "failed": 0,
+      "ignored": 0,
+      "scope": "Immutable pre-feature sources, configured JDK21 and 16MiB test thread stack."
+    },
+    {
+      "id": "python-baseline",
+      "outcome": "pass",
+      "tests": 166
+    },
+    {
+      "id": "official/AlkitabModel",
+      "outcome": "pass",
+      "scope": "Real Gradle module release AAR and available original test task; no complete-app/device/incremental claim. Candidate selected production Kotlin uses frozen Korrust, no fallback.",
+      "junit_cases": []
+    },
+    {
+      "id": "official/AlkitabIo",
+      "outcome": "pass",
+      "scope": "Real Gradle module release AAR and available original test task; no complete-app/device/incremental claim. Candidate selected production Kotlin uses frozen Korrust, no fallback.",
+      "junit_cases": [
+        {
+          "name": "yuku.alkitab.io.OptionalGzipInputStreamTest/testAll",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/invalidSequencesCannotEmitSurrogatesOrConsumeFollowingAscii",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/truncatedLengthPrefixedVerseCannotReadStaleBufferBytes",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/supplementarySequencesRespectSliceBoundaries",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/everyUnicodeScalarDecodesAndLowercasesWithoutExpansion",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/lengthPrefixedVersesHandleEmojiCasingAndBufferGrowth",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/slicesOutsideTheInputAreRejected",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/concurrentReadersKeepTheirScratchBuffersIndependent",
+          "outcome": "pass"
+        }
+      ]
+    },
+    {
+      "id": "official/AlkitabYes2",
+      "outcome": "pass",
+      "scope": "Real Gradle module release AAR and available original test task; no complete-app/device/incremental claim. Candidate selected production Kotlin uses frozen Korrust, no fallback.",
+      "junit_cases": [
+        {
+          "name": "yuku.alkitab.yes2.SnappyStreamRoundTripTest/seek into a middle block returns bytes from that offset onward",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.SnappyStreamRoundTripTest/compresses and decompresses a payload that spans exactly one block",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.SnappyStreamRoundTripTest/highly repetitive input compresses to substantially smaller blocks than the raw size",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.SnappyStreamRoundTripTest/compresses and decompresses a payload that spans multiple blocks",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.util.UnsignedBinarySearchKtTest/unsignedBinarySearch",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/round-trips UTF-8 text including supplementary code points",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/getXrefEntry and getFootnoteEntry return null when the sections are not present",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/a compressed file is strictly smaller than its uncompressed equivalent for highly repetitive text",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/loadVerseText returns null for out-of-range chapter",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/snappy-compressed text section reads back identical verses",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/round-trips pericopes and returns them by book-chapter",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/writes a single-book Bible uncompressed and reads every verse back exactly",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/unknown encodings fall back to ASCII for display and search text",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/loadVerseText with lowercase flag lowercases UTF-8 text in-place",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/loadPericope returns zero when the file has no pericope section",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/loadPericope returns zero when the chapter has no pericopes",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/ASCII encoded versions preserve display text and lowercase search text",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/round-trips a multi-book Bible preserving book ordering and chapter offsets",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/loadVerseText with dontSeparateVerses joins every verse into one newline-delimited string",
+          "outcome": "pass"
+        }
+      ]
+    },
+    {
+      "id": "candidate/AlkitabModel",
+      "outcome": "pass",
+      "scope": "Real Gradle module release AAR and available original test task; no complete-app/device/incremental claim. Candidate selected production Kotlin uses frozen Korrust, no fallback.",
+      "junit_cases": []
+    },
+    {
+      "id": "candidate/AlkitabIo",
+      "outcome": "pass",
+      "scope": "Real Gradle module release AAR and available original test task; no complete-app/device/incremental claim. Candidate selected production Kotlin uses frozen Korrust, no fallback.",
+      "junit_cases": [
+        {
+          "name": "yuku.alkitab.io.OptionalGzipInputStreamTest/testAll",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/invalidSequencesCannotEmitSurrogatesOrConsumeFollowingAscii",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/truncatedLengthPrefixedVerseCannotReadStaleBufferBytes",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/supplementarySequencesRespectSliceBoundaries",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/everyUnicodeScalarDecodesAndLowercasesWithoutExpansion",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/lengthPrefixedVersesHandleEmojiCasingAndBufferGrowth",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/slicesOutsideTheInputAreRejected",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.io.Utf8DecoderTest/concurrentReadersKeepTheirScratchBuffersIndependent",
+          "outcome": "pass"
+        }
+      ]
+    },
+    {
+      "id": "candidate/AlkitabYes2",
+      "outcome": "pass",
+      "scope": "Real Gradle module release AAR and available original test task; no complete-app/device/incremental claim. Candidate selected production Kotlin uses frozen Korrust, no fallback.",
+      "junit_cases": [
+        {
+          "name": "yuku.alkitab.yes2.SnappyStreamRoundTripTest/seek into a middle block returns bytes from that offset onward",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.SnappyStreamRoundTripTest/compresses and decompresses a payload that spans exactly one block",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.SnappyStreamRoundTripTest/highly repetitive input compresses to substantially smaller blocks than the raw size",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.SnappyStreamRoundTripTest/compresses and decompresses a payload that spans multiple blocks",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.util.UnsignedBinarySearchKtTest/unsignedBinarySearch",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/round-trips UTF-8 text including supplementary code points",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/getXrefEntry and getFootnoteEntry return null when the sections are not present",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/a compressed file is strictly smaller than its uncompressed equivalent for highly repetitive text",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/loadVerseText returns null for out-of-range chapter",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/snappy-compressed text section reads back identical verses",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/round-trips pericopes and returns them by book-chapter",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/writes a single-book Bible uncompressed and reads every verse back exactly",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/unknown encodings fall back to ASCII for display and search text",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/loadVerseText with lowercase flag lowercases UTF-8 text in-place",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/loadPericope returns zero when the file has no pericope section",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/loadPericope returns zero when the chapter has no pericopes",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/ASCII encoded versions preserve display text and lowercase search text",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/round-trips a multi-book Bible preserving book ordering and chapter offsets",
+          "outcome": "pass"
+        },
+        {
+          "name": "yuku.alkitab.yes2.Yes2RoundTripTest/loadVerseText with dontSeparateVerses joins every verse into one newline-delimited string",
+          "outcome": "pass"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/baseline-inputs.tar",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabIo-compileDebugKotlin-request.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabIo-compileDebugKotlin.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabIo-compileReleaseKotlin-request.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabIo-compileReleaseKotlin.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabIo-gradle-model.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabIo-junit-0.xml",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabIo-junit-1.xml",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabModel-compileDebugKotlin-request.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabModel-compileDebugKotlin.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabModel-compileReleaseKotlin-request.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabModel-compileReleaseKotlin.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabModel-gradle-model.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabYes2-compileDebugKotlin-request.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabYes2-compileDebugKotlin.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabYes2-compileReleaseKotlin-request.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabYes2-compileReleaseKotlin.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabYes2-gradle-model.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabYes2-junit-0.xml",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabYes2-junit-1.xml",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-AlkitabYes2-junit-2.xml",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-build.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/candidate-gradle.log",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/official-AlkitabIo-gradle-model.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/official-AlkitabIo-junit-0.xml",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/official-AlkitabIo-junit-1.xml",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/official-AlkitabModel-gradle-model.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/official-AlkitabYes2-gradle-model.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/official-AlkitabYes2-junit-0.xml",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/official-AlkitabYes2-junit-1.xml",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/official-AlkitabYes2-junit-2.xml",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/official-build.json",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/official-gradle.log",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/python-tests.log",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/rust-tests-configured-v2.log",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/rust-tests-configured-v3.log",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/rust-tests-configured.log",
+    "reports/correctness/2026-10-28T102327274964Z-new-families-baseline-checks/rust-tests.log"
+  ],
+  "setup_failures": "Earlier raw logs preserve unset JAVA_HOME/stack failure and disposable snapshot dependency-link setup mistakes. Configured v3 uses unchanged archived source and passes; no assertions were weakened.",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "target/new-families-baseline/source/Cargo.toml",
+        "--locked",
+        "--offline"
+      ],
+      "environment": {
+        "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+        "RUST_MIN_STACK": "16777216"
+      },
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "inputs": {
+    "baseline_archive_sha256": "344428d9b5236cc793c88f99222604b2ef571b48488cee6c3b9be6c588689868",
+    "evidence_sha256": {
+      "candidate-AlkitabYes2-junit-2.xml": "0842e6e2851f0eb74ebef2fb7f9c9e4a4cc7629191e1826377e0adfc01173669",
+      "candidate-build.json": "4e7ecd0ec270755bcb99379e08de5ae8370af8984dbb8217d2455d655ae300a4",
+      "candidate-AlkitabYes2-junit-0.xml": "6cd34a7cada539f630f3ec8420ef78c5027dd99e43162e69262f2341e1e09a57",
+      "candidate-AlkitabYes2-junit-1.xml": "2701cc7bec185f6784c45801fdda523f99eeaae23b76f5cffbaaae3bd0828da7",
+      "candidate-AlkitabIo-junit-1.xml": "a84e37c8146c8b808a682b0e96b00501826496bf810f9cf5184a67ba828ed349",
+      "candidate-AlkitabIo-junit-0.xml": "e23790f070a0b44aaf988dc866811d183b5a714f8d3b3985f8c6eb757600b2ca",
+      "candidate-AlkitabModel-compileDebugKotlin.json": "f1809f8ac14d0d3a94846918b7e022079a1e15e05e176a1f042273d72589bb24",
+      "candidate-AlkitabModel-compileReleaseKotlin.json": "a1efc5d450074f0f2494d4131a63e121eed71a394046df418afa494bba8453ed",
+      "rust-tests-configured.log": "65291edc02cde3ab2e23c3214d100f20f4c02c9acd42f07d9427b768e98c8eb9",
+      "candidate-AlkitabIo-compileDebugKotlin.json": "c5b9ca03ff0f73c1edf8beb1ed08fe9a0e6fb42db5ddf951ac6bd437ad1b4c53",
+      "candidate-AlkitabIo-compileReleaseKotlin.json": "2ba469bbc340aca630c56c70f481a09d7b59e5222c6e718915f271095a762d6a",
+      "official-AlkitabModel-gradle-model.json": "b72034d97129b88bb6fdd94c2b3fd9593c858c9c078f2bc8ab0b0f82e6da38c8",
+      "official-AlkitabIo-gradle-model.json": "b1147fba7394a075749289b17d850802c1ead5297f9b27edcc95425506b9d0af",
+      "official-AlkitabYes2-gradle-model.json": "84c5a2a745c402028515808d5346a123d3e755ae51790a89c9f73f32dc6d3c95",
+      "baseline-inputs.tar": "344428d9b5236cc793c88f99222604b2ef571b48488cee6c3b9be6c588689868",
+      "official-build.json": "503dec8b1aaaf36a5e22697bebffb6b1c593f5745dba656f3bc4b5a7d08b9fa8",
+      "rust-tests.log": "db9fda516abecd8714e99ec3a19e3e78d52812feaea5176271f6ffd2cd148eb7",
+      "candidate-AlkitabYes2-gradle-model.json": "84c5a2a745c402028515808d5346a123d3e755ae51790a89c9f73f32dc6d3c95",
+      "candidate-AlkitabYes2-compileReleaseKotlin.json": "4a40eb413cb3508b14768e8b157246f8dc4c6175d755ebeac01697a204090720",
+      "official-AlkitabIo-junit-0.xml": "b57adc197960cccebd20b987bd4fba72ec0a723c34340b9a432f18a00581b564",
+      "official-AlkitabIo-junit-1.xml": "f6ad2ae607dde4f4e7076a79d29d0182e0953a8728551dd1ff9443c5b4a65af9",
+      "candidate-AlkitabYes2-compileDebugKotlin-request.json": "e6f6c1b7c7aee85ff8609e1d0fd8667cf5e58797cbdac45ad662e101e6e245bb",
+      "candidate-AlkitabYes2-compileDebugKotlin.json": "0651943ef7a63a7ff55d117ec19b8361bbe5336c9609b6898b61c88ce0a8ece4",
+      "official-AlkitabYes2-junit-2.xml": "cdd39028cd8cf7aab761b6aec2f767c9aee0fa7ce3958ea78897aa5f22308f91",
+      "official-AlkitabYes2-junit-0.xml": "96b354b2e296d5f97f9ade91f89f4a58763216d8a16dd6e18a002f67d65a1140",
+      "python-tests.log": "5f10b8429a3a068585a67e3783f18736325baca123f9d9c5b0dbd8736a32d849",
+      "official-AlkitabYes2-junit-1.xml": "8b35d5a7cb995ac58bf290c783ddb37cc092d8b3e2d0e314da06947c0613737a",
+      "candidate-AlkitabIo-compileDebugKotlin-request.json": "161af5892074ba6d8b67b949948ad5b90aec83320ef977dde94ff48f7aa5cbac",
+      "candidate-AlkitabModel-compileReleaseKotlin-request.json": "426a22e200d5b9520353e64d924b1adbcabb87d2a9eef4862cfd538dc7790edd",
+      "candidate-AlkitabIo-compileReleaseKotlin-request.json": "7f047f05d38cad590c8be8e584b5cdefdf04d05399755481dc11bf1c7d69a807",
+      "candidate-gradle.log": "7046035229ff08ea68cf27beae276266a12eb32a3f58074b7c6071a002a78de8",
+      "candidate-AlkitabYes2-compileReleaseKotlin-request.json": "2e6c2a010185eedec26344b0e519314b129cfc9be2e2b9e77649de9b4b76283e",
+      "candidate-AlkitabModel-compileDebugKotlin-request.json": "b2c1df38b4ca7e11ab9bc3db025bf1251a06aaa20c166af38053cfd12e84f464",
+      "rust-tests-configured-v2.log": "012bdb5c41d01a73f67c8a3e78a15ff4934cf477b2cf8124a35ef7c145901df1",
+      "rust-tests-configured-v3.log": "0697e6034502ae2ca0c0cce235cb4fe29b0e16c81085ec33c75fb02965ace193",
+      "official-gradle.log": "8303e06eb936153554745324caf627701f6765c72d090e1362cd37851a5f3b8f",
+      "candidate-AlkitabIo-gradle-model.json": "b1147fba7394a075749289b17d850802c1ead5297f9b27edcc95425506b9d0af",
+      "candidate-AlkitabModel-gradle-model.json": "b72034d97129b88bb6fdd94c2b3fd9593c858c9c078f2bc8ab0b0f82e6da38c8"
+    }
+  }
+}

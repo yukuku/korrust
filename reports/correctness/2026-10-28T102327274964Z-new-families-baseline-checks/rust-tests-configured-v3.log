@@ -1,0 +1,460 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running unittests src/lib.rs (target/new-families-baseline/source/target/debug/deps/korrust-f58e2056262cfb0c)
+
+running 231 tests
+test bytecode::annotations::tests::nested_array_enum_class_and_primitive_existing_values_are_preserved ... ok
+test bytecode::annotations::tests::malformed_and_misaligned_existing_attributes_leave_member_unchanged ... ok
+test bytecode::annotations::tests::parameter_merge_keeps_indices_and_nullability_for_unannotated_parameters ... ok
+test bytecode::annotations::tests::parameter_merge_preserves_nested_annotations_and_array_values ... ok
+test bytecode::annotations::tests::scalar_elements_have_jvm_tags_and_utf8_string_constants ... ok
+test bytecode::annotation_files::tests::duplicate_utf8_attribute_name_still_merges_existing_metadata ... ok
+test bytecode::annotations::tests::member_merge_coalesces_both_retentions_and_preserves_other_attributes ... ok
+test bytecode::annotation_files::tests::missing_member_and_incorrect_descriptor_parameter_count_reject ... ok
+test bytecode::annotation_files::tests::malformed_pool_and_classfile_boundaries_reject_without_panics ... ok
+test bytecode::annotation_files::tests::original_constant_tags_and_two_slot_positions_survive ... ok
+test check::annotations::tests::compiler_annotation_guards_use_canonical_identity ... ok
+test check::annotations::tests::compiler_semantics_are_rejected_before_loading_annotation_definitions ... ok
+test bytecode::annotation_files::tests::rewrite_preserves_old_pool_metadata_unknown_attributes_and_member_placement ... ok
+test check::control::tests::array_initializer_expressions_require_stable_function_values ... ok
+test check::control::tests::array_constructor_and_receiver_lambda_keep_semantic_element_types ... ok
+test check::control::tests::explicitly_labeled_returns_are_local_to_the_lambda ... ok
+test check::control::tests::local_function_self_cells_keep_declaration_immutability ... ok
+test check::control::tests::local_functions_capture_mutable_cells_and_recursive_self ... ok
+test check::control::tests::loop_labels_cannot_cross_lambda_boundaries ... ok
+test check::function_values::shadowing_tests::captured_local_shadows_an_imported_property_getter ... ok
+test check::control::tests::when_bindings_do_not_escape_their_branch_scope ... ok
+test check::function_values::tests::mutable_captures_share_cells_and_keep_parameter_slots ... ok
+test check::function_values::tests::lambda_captures_only_free_initialized_names ... ok
+test check::function_values::tests::nonlocal_returns_require_inline_context ... ok
+test check::control::tests::mutable_destructured_values_share_capture_cells ... ok
+test check::control::java_lang_tests::imported_java_lang_noarg_constructors_resolve ... ok
+test check::control::tests::throwable_values_and_catch_bindings_can_be_rethrown ... ok
+test check::interfaces::tests::if_expressions_join_mixed_platform_branches_in_either_order ... ok
+test check::function_values::tests::same_source_classifiers_validate_recursively_without_classpath_outputs ... ok
+test check::interfaces::tests::inherited_reference_defaults_share_the_supported_signatures ... ok
+test check::interfaces::tests::mutable_properties_emit_both_accessors_and_reads_select_the_getter ... ok
+test check::interfaces::tests::source_default_reference_parameters_share_regular_body_checking ... ok
+test check::function_values::tests::ordinary_methods_retain_lambdas_and_capture_receivers ... ok
+test check::interfaces::tests::source_interface_overrides_and_conflicts_are_rejected ... ok
+test check::interfaces::tests::source_interface_scope_and_cycles_are_checked ... ok
+test bytecode::lambdas::tests::generated_bridges_execute_with_jvm_verification ... ok
+test check::interfaces::tests::source_interface_member_access_uses_getters_and_argument_types ... ok
+test check::ir_walk::tests::declarations_report_the_class_that_emits_each_value ... ok
+test check::ir_walk::tests::statement_visitors_can_replace_stores_after_visiting_their_children ... ok
+test check::ir_walk::tests::values_are_mutable_and_visited_after_their_children_including_abrupt_paths ... ok
+test check::function_values::tests::source_generic_calls_substitute_explicit_and_inferred_parameters ... ok
+test check::interfaces::tests::builtin_resolution_rejects_member_and_classifier_shadowing ... ok
+test check::interfaces::tests::source_interfaces_share_expression_checks_and_preserve_nested_inherited_defaults ... ok
+test check::interfaces::tests::unsupported_interface_bodies_and_companion_shapes_fail_closed ... ok
+test check::objects::tests::inferred_thread_local_buffers_support_structural_reference_equality ... ok
+test check::control::tests::local_expression_functions_infer_returns_and_literals_keep_context ... ok
+test check::interfaces::tests::source_interface_implementations_require_exact_property_and_function_identity ... ok
+test check::function_values::sam_object_tests::only_exact_object_methods_are_excluded_from_sam_abstract_members ... ok
+test bytecode::lambdas::tests::nullable_type_arguments_survive_official_kotlin_consumers ... ok
+test check::objects::tests::loop_control_and_indices_keep_types_and_scope ... ok
+test check::objects::tests::throws_class_literals_cannot_resolve_to_values_or_the_declared_object ... ok
+test bytecode::lambdas::tests::compiled_inline_methods_verify_in_classes_objects_and_interfaces ... ok
+test check::objects::tests::uninitialized_locals_require_assignment_on_every_reachable_branch ... ok
+test check::overloads::tests::crossed_parameter_specificity_is_ambiguous ... ok
+test check::overloads::tests::declared_generic_bounds_precede_specialized_argument_types ... ok
+test check::objects::tests::implicit_thread_local_get_assertions_preserve_the_expression_name ... ok
+test check::references::tests::reference_arity_mismatch_rejects ... ok
+test check::references::tests::top_level_reference_uses_expected_parameter_types ... ok
+test check::overloads::tests::narrower_nullable_parameter_precedes_default_argument_tiebreak ... ok
+test check::relations::tests::generic_variance_nullability_and_function_subtyping_are_checked ... ok
+test check::objects::tests::standalone_range_bounds_precede_subject_but_when_subject_is_cached_first ... ok
+test check::operations::infix_tests::source_member_views_preserve_distinct_infix_overloads ... ok
+test check::singletons::tests::annotation_and_singleton_extensions_fail_closed ... ok
+test check::singletons::tests::marker_hierarchies_preserve_shared_parents_and_reject_behavior_cycles_and_limits ... ok
+test classpath::aliases::tests::expands_alias_arguments_and_nullability_and_detects_cycles ... ok
+test classpath::archive::tests::corrupt_entry_payload_is_diagnosed_when_read ... ok
+test classpath::archive::tests::directories_reject_multi_release_class_overrides_like_archives ... ok
+test classpath::archive::tests::duplicate_zip_names_are_diagnosed ... ok
+test classpath::archive::tests::malformed_archive_names_are_diagnosed ... ok
+test classpath::archive::tests::metadata_and_module_descriptors_follow_the_same_directory_and_archive_policy ... ok
+test classpath::archive::tests::multi_release_class_overrides_are_diagnosed ... ok
+test classpath::archive::tests::stored_and_deflated_archives_use_classpath_reader ... ok
+test classpath::archive::tests::truncated_and_oversized_archives_are_diagnosed ... ok
+test classpath::metadata::tests::builtin_array_declarations_are_selected_by_shape_and_not_name ... ok
+test classpath::metadata::tests::builtin_metadata_headers_and_resources_are_checked ... ok
+test classpath::metadata::tests::cyclic_type_tables_are_bounded ... ok
+test classpath::metadata::tests::metadata_decodes_functional_interface_identity_and_abstract_member_modality ... ok
+test classpath::metadata::tests::metadata_exposes_public_aliases_and_keeps_private_aliases_out_of_library_index ... ok
+test classpath::metadata::tests::module_package_remapping_preserves_source_and_jvm_packages ... ok
+test classpath::metadata::tests::ordinary_metadata_still_rejects_reified_type_parameters ... ok
+test classpath::metadata::tests::pinned_builtin_resource_exposes_supported_array_declarations ... ok
+test classpath::metadata::tests::qualified_builtin_names_distinguish_packages_classes_and_cycles ... ok
+test classpath::signature::tests::generic_method_preserves_variables_and_variance ... ok
+test classpath::signature::tests::generic_truncations_are_diagnostics ... ok
+test classpath::signature::tests::implementation_annotation_preserves_platform_and_explicit_nullability ... ok
+test classpath::signature::tests::nullability_rejects_unknown_and_conflicting_markers ... ok
+test classpath::signature::tests::wildcard_signatures_preserve_projection_and_platform_arguments ... ok
+test classpath::source::enums::tests::enum_header_preserves_user_members_private_constructor_and_companion ... ok
+test classpath::source::enums::tests::generated_enum_members_preserve_named_parameters_and_generic_results ... ok
+test classpath::tests::actual_junit_test_annotation_retains_runtime_target_and_unsupported_defaulted_parameters ... ok
+test classpath::tests::annotation_defaults_validate_boolean_constants_and_full_attribute_payloads ... ok
+test classpath::tests::array_property_metadata_accepts_only_exact_nonnullable_string_elements ... ok
+test classpath::tests::classpath_order_selects_the_first_class ... ok
+test classpath::tests::constant_fields_preserve_wide_values_float_bits_and_utf16_units ... ok
+test classpath::tests::emitted_kotlin_metadata_retains_typed_constructor_names_defaults_and_properties ... ok
+test classpath::tests::empty_class_annotation_tables_are_supported ... ok
+test classpath::tests::general_metadata_retains_internal_setter_visibility ... ok
+test classpath::tests::invalid_identity_and_trailing_data_are_rejected ... ok
+test check::relations::tests::inference_preserves_explicit_constraints_and_nullable_candidates ... ok
+test classpath::tests::javac_annotation_definitions_preserve_retention_targets_and_member_defaults ... ok
+test classpath::tests::jdk_implementation_annotations_do_not_hide_public_constructors ... ok
+test classpath::tests::kotlin_interface_binary_mismatches_and_extra_annotations_are_rejected ... ok
+test classpath::tests::kotlin_interface_metadata_preserves_property_identity_and_default_methods ... ok
+test classpath::tests::kotlin_interface_module_names_are_validated_without_changing_member_contracts ... ok
+test classpath::tests::kotlin_interface_nullable_generic_extension_suspend_and_default_arguments_are_rejected ... ok
+test classpath::tests::kotlin_legacy_markers_validate_version_requirements_without_accepting_members ... ok
+test classpath::tests::kotlin_collection_markers_preserve_source_supertypes_and_infix_flags ... ok
+test classpath::tests::kotlin_metadata_keeps_internal_class_and_member_visibility_restricted ... ok
+test classpath::tests::kotlin_metadata_version_and_truncated_protobuf_are_rejected ... ok
+test classpath::tests::malformed_annotation_retention_is_rejected_without_unhiding_ordinary_classes ... ok
+test classpath::tests::metadata_predefined_names_and_descriptor_operations_are_bounded ... ok
+test classpath::tests::metadata_visibility_distinguishes_private_and_public_callables ... ok
+test classpath::tests::modified_utf8_and_double_slots_are_bounded ... ok
+test classpath::tests::mutable_property_metadata_names_reject_non_ascii_and_empty_without_panicking ... ok
+test classpath::tests::mutable_property_metadata_requires_matching_public_abstract_setters ... ok
+test classpath::tests::oversized_attributes_and_invalid_pool_indices_are_rejected ... ok
+test classpath::tests::package_lookup_indexes_follow_replaced_source_headers ... ok
+test classpath::tests::package_metadata_exposes_top_level_names_and_defaults ... ok
+test classpath::tests::truncations_are_diagnostics ... ok
+test classpath::tests::typed_kotlin_metadata_rejects_mismatched_generic_jvm_signatures ... ok
+test classpath::tests::unsafe_names_are_rejected ... ok
+test classpath::tests::unsupported_kotlin_parameters_retain_callable_identity ... ok
+test classpath::tests::volatile_java_fields_retain_access_flags_and_remain_available ... ok
+test compiled_inline::tests::accepts_kotlin_parameter_null_check_without_hiding_lambda_uses ... ok
+test compiled_inline::tests::checks_category_two_local_bounds_and_constant_kinds ... ok
+test compiled_inline::tests::decodes_backward_branches_and_compact_and_wide_locals ... ok
+test compiled_inline::tests::decodes_external_construction_and_tracks_lambdas_across_constructor_arguments ... ok
+test compiled_inline::tests::identifies_erased_lambda_receiver_across_argument_evaluation ... ok
+test compiled_inline::tests::preserves_lambda_identity_at_branch_merge_and_multiple_calls ... ok
+test compiled_inline::tests::rejects_allocations_without_a_class_constant ... ok
+test compiled_inline::tests::rejects_branches_into_operands_and_truncated_instructions ... ok
+test compiled_inline::tests::rejects_exception_regions_and_unsupported_stack_operations ... ok
+test compiled_inline::tests::rejects_inline_owner_nested_allocations_requiring_generated_classes ... ok
+test compiled_inline::tests::rejects_lambda_aliasing_and_forwarding ... ok
+test diagnostic::tests::json_escapes_paths_messages_and_identities ... ok
+test diagnostic::tests::rendering_clamps_offsets_to_utf8_boundaries ... ok
+test diagnostic::tests::unclassified_errors_do_not_guess_categories_from_messages ... ok
+test metadata::tests::annotated_internal_function_metadata_keeps_source_and_physical_names ... ok
+test metadata::tests::byte_encoding_preserves_all_bytes_and_modified_utf8_limits ... ok
+test check::relations::tests::inherited_generic_receiver_arguments_reach_declaring_methods ... ok
+test metadata::tests::delegated_setters_have_typed_implicit_parameters_only_for_mutable_properties ... ok
+test metadata::tests::functional_interface_metadata_uses_the_pinned_fun_flag ... ok
+test metadata::tests::inferred_platform_metadata_preserves_flexible_lower_and_nullable_upper_bounds ... ok
+test metadata::tests::metadata_keeps_projections_type_parameters_and_nullable_functions ... ok
+test metadata::tests::module_mapping_groups_sorts_and_deduplicates_facades ... ok
+test metadata::tests::nested_interface_headers_use_the_enclosing_scope ... ok
+test metadata::tests::ordinary_annotation_flags_preserve_class_parameter_and_accessor_discovery ... ok
+test metadata::tests::package_metadata_uses_checked_class_names_for_unimported_source_types ... ok
+test metadata::tests::property_annotation_sites_match_oracle_accessor_overrides ... ok
+test metadata::tests::property_metadata_preserves_lateinit_and_delegated_flags ... ok
+test metadata::tests::type_alias_metadata_preserves_name_visibility_and_expanded_function_types ... ok
+test metadata::tests::custom_setters_preserve_named_typed_parameters_in_every_declaration_scope ... ok
+test check::relations::tests::source_generic_classifiers_reject_invalid_arity_raw_types_and_bounds ... ok
+test module_tests::resolves_cyclic_type_signatures_and_emits_the_package_facade_first ... ok
+test syntax::tests::annotation_fixture_preserves_class_constructor_property_and_method_targets ... ok
+test syntax::tests::arrays_receiver_types_and_operators_retain_callable_contracts ... ok
+test syntax::tests::bodyless_class_companions_keep_empty_state ... ok
+test syntax::tests::bodyless_superclass_headers_preserve_following_declarations ... ok
+test syntax::tests::class_literal_guard_preserves_callable_references_and_specialized_throws ... ok
+test syntax::tests::compound_assignments_and_decrements_keep_operators_and_positions ... ok
+test syntax::tests::concrete_and_function_aliases_preserve_visibility_offsets_and_chains ... ok
+test syntax::tests::constructor_parameters_distinguish_properties_and_initializers ... ok
+test syntax::tests::control_bodies_local_functions_destructuring_and_labels_keep_scope ... ok
+test syntax::tests::declaration_annotations_survive_object_interface_enum_and_companion_wrappers ... ok
+test syntax::tests::declaration_fixture_sources_parse_without_rewriting ... ok
+test syntax::tests::declaration_order_initializers_and_secondary_constructors_are_preserved ... ok
+test syntax::tests::discard_fixture_parses_without_rewriting ... ok
+test syntax::tests::dollar_classifier_names_are_explicitly_unsupported_without_restricting_members ... ok
+test syntax::tests::enum_entries_keep_empty_semicolon_forms_and_explicit_unsupported_boundaries ... ok
+test syntax::tests::enum_model_reuses_constructor_members_and_companion_shapes ... ok
+test syntax::tests::escaped_identifiers_preserve_names_and_original_offsets ... ok
+test syntax::tests::escaped_identifiers_reject_invalid_jvm_names_with_source_locations ... ok
+test syntax::tests::escaped_method_declarations_and_references_parse_in_classes ... ok
+test syntax::tests::escaped_names_in_braced_templates_do_not_close_interpolation ... ok
+test syntax::tests::escaped_names_preserve_existing_unsupported_boundaries ... ok
+test syntax::tests::escaped_unbraced_templates_use_identifier_rules_and_actual_token_offsets ... ok
+test syntax::tests::excessive_statement_nesting_is_rejected_on_the_default_thread_stack ... ok
+test syntax::tests::expression_bodies_reject_explicit_returns ... ok
+test syntax::tests::foreach_ranges_and_do_while_preserve_structure ... ok
+test syntax::tests::function_annotations_keep_targets_arguments_and_method_locations ... ok
+test syntax::tests::functional_interface_identity_is_separate_from_ordinary_interfaces ... ok
+test syntax::tests::functional_interfaces_aliases_and_annotated_backticks_parse_unchanged ... ok
+test syntax::tests::generic_function_types_and_projections_preserve_structure ... ok
+test syntax::tests::implicit_lambda_labels_follow_the_resolved_callee_name ... ok
+test syntax::tests::infix_calls_accept_identifiers_and_use_kotlin_precedence ... ok
+test syntax::tests::infix_declarations_preserve_modifiers_and_reject_invalid_signatures ... ok
+test syntax::tests::inherited_and_nested_declarations_keep_virtual_and_visibility_information ... ok
+test syntax::tests::integer_radices_and_separators_preserve_signed_magnitudes ... ok
+test syntax::tests::internal_properties_are_rejected_at_the_modifier_without_erasing_visibility ... ok
+test syntax::tests::lambdas_callable_references_and_comparisons_remain_distinct ... ok
+test syntax::tests::malformed_escaped_templates_keep_source_offsets_through_public_compilation ... ok
+test syntax::tests::named_types_record_their_actual_tokens_including_nested_and_qualified_types ... ok
+test syntax::tests::new_class_forms_preserve_unsupported_boundaries ... ok
+test syntax::tests::new_expression_offsets_shift_inside_string_templates ... ok
+test syntax::tests::nullable_primitives_use_reference_descriptors_and_slots ... ok
+test syntax::tests::override_members_are_open_unless_explicitly_final ... ok
+test syntax::tests::parameter_annotation_vectors_preserve_empty_positions_and_unknown_target_names ... ok
+test syntax::tests::property_assignments_preserve_receiver_expressions ... ok
+test syntax::tests::raw_discards_and_escaped_underscore_bindings_remain_distinct ... ok
+test syntax::tests::repeated_enum_entry_terminators_are_rejected_at_the_second_semicolon ... ok
+test syntax::tests::scalar_constants_and_float_exponents_preserve_values ... ok
+test syntax::tests::spread_arguments_keep_locations_and_named_argument_structure ... ok
+test syntax::tests::state_and_accessor_shapes_are_uniform_in_classes_objects_and_companions ... ok
+test syntax::tests::terminal_elvis_named_defaults_and_generic_factory_parse ... ok
+test syntax::tests::type_operations_identity_and_when_type_conditions_keep_types ... ok
+test syntax::tests::typed_destructuring_entries_distinguish_discard_and_named_types ... ok
+test syntax::tests::typed_when_subjects_and_setters_preserve_type_checks ... ok
+test syntax::tests::unchanged_goto_tab_preserves_enum_arguments_and_function_alias ... ok
+test syntax::tests::unsupported_constructs_have_stable_codes_and_source_offsets ... ok
+test syntax::tests::unsupported_generic_modifiers_and_function_arities_are_diagnosed ... ok
+test syntax::tests::unsupported_syntax_guards_preserve_supported_neighbors ... ok
+test syntax::tests::vararg_parameters_record_physical_arrays_and_reject_unsupported_forms ... ok
+test visibility::tests::a_custom_private_getter_uses_a_method_bridge ... ok
+test visibility::tests::a_required_private_bridge_cannot_overwrite_a_source_method ... ok
+test module_tests::rejects_duplicate_owners_and_cyclic_inferred_signatures ... ok
+test visibility::tests::default_methods_cannot_overwrite_a_source_method ... ok
+test visibility::tests::internal_member_names_and_default_calls_share_the_module_suffix ... ok
+test visibility::tests::private_facade_bridges_follow_actual_lambda_uses ... ok
+test visibility::tests::private_field_bridges_are_requested_for_reads_and_writes_separately ... ok
+test visibility::tests::top_level_internal_functions_keep_their_source_names ... ok
+test visibility::tests::unrelated_lambdas_do_not_create_private_bridges ... ok
+test visibility::tests::wide_default_descriptors_keep_every_value_parameter_mask ... ok
+test visibility::tests::mangled_internal_names_cannot_overwrite_a_source_method ... ok
+test module_tests::nested_simple_names_follow_the_containing_declaration ... ok
+test check::objects::tests::explicit_receivers_of_static_object_methods_are_evaluated ... ok
+test classpath::tests::kotlin_metadata_preserves_generic_type_alias_expansions ... ok
+test check::objects::tests::exceptions_conversions_and_range_expressions_have_bounded_types has been running for over 60 seconds
+test check::objects::tests::object_and_class_overloads_do_not_override_unrelated_inherited_signatures ... ok
+test check::objects::tests::object_reference_equality_and_instance_calls_keep_the_actual_receiver ... ok
+test check::objects::tests::object_buffers_and_exact_overloads_share_regular_expression_checking has been running for over 60 seconds
+test check::objects::tests::exceptions_conversions_and_range_expressions_have_bounded_types ... ok
+test check::objects::tests::suppliers_and_builtin_annotation_shadowing_fail_closed has been running for over 60 seconds
+test check::objects::tests::object_buffers_and_exact_overloads_share_regular_expression_checking ... ok
+test check::objects::tests::suppliers_and_builtin_annotation_shadowing_fail_closed ... ok
+
+test result: ok. 231 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 101.85s
+
+     Running unittests src/main.rs (target/new-families-baseline/source/target/debug/deps/korrust-3e4b1e27c234f736)
+
+running 2 tests
+test output::tests::unsafe_batch_artifact_paths_reject_before_filesystem_access ... ok
+test output::tests::duplicate_batch_outputs_reject_before_destination_creation ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/archive_policy.rs (target/new-families-baseline/source/target/debug/deps/archive_policy-bee67ba66ea15601)
+
+running 3 tests
+test genuine_multi_release_overrides_reject_before_dependency_resolution ... ok
+test duplicate_classes_preserve_first_classpath_entry_precedence ... ok
+test official_kotlin_library_is_equivalent_in_directories_and_ordinary_jars ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.31s
+
+     Running tests/batch_frontend.rs (target/new-families-baseline/source/target/debug/deps/batch_frontend-b858fc35a6c28927)
+
+running 5 tests
+test source_classifiers_and_generated_helpers_cannot_silently_replace_each_other ... ok
+test batch_scopes_names_by_package_and_reports_the_original_source ... ok
+test module_identity_is_stored_and_input_validation_keeps_provenance ... ok
+test batch_rejects_duplicate_owners_and_cyclic_inferred_signatures ... ok
+test batch_discovers_forward_signatures_and_infers_across_files_independent_of_order ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.89s
+
+     Running tests/call_frontend.rs (target/new-families-baseline/source/target/debug/deps/call_frontend-3e0cd3c55ee93e70)
+
+running 4 tests
+test same_package_compiled_classes_resolve_from_directories_and_jars ... ok
+test projected_builtin_collections_resolve_their_jvm_classifier ... ok
+test builtin_array_metadata_resolves_identically_from_jar_and_directory ... ok
+test source_and_library_varargs_preserve_array_contracts has been running for over 60 seconds
+test source_and_library_varargs_preserve_array_contracts ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 76.82s
+
+     Running tests/call_resolution.rs (target/new-families-baseline/source/target/debug/deps/call_resolution-f1fb0c45d61a6aaa)
+
+running 1 test
+test lexical_members_shadow_explicit_generic_imports_without_changing_top_level_priority ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 22.92s
+
+     Running tests/d_sam_frontend.rs (target/new-families-baseline/source/target/debug/deps/d_sam_frontend-8b01cbbb2947c0ab)
+
+running 2 tests
+test function_value_and_callable_reference_sam_adapters_reject_explicitly ... ok
+test inherited_sam_defaults_preserve_captures_for_java_and_kotlin_consumers ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.14s
+
+     Running tests/declarations_frontend.rs (target/new-families-baseline/source/target/debug/deps/declarations_frontend-d2e84ba7fb2f1175)
+
+running 5 tests
+test operator_syntax_requires_operator_declarations ... ok
+test labels_and_backing_fields_obey_their_scope ... ok
+test lateinit_restrictions_and_subject_scopes ... ok
+test declaration_visibility_and_inheritance_boundaries ... ok
+test declaration_forms_compile_to_real_class_outputs ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.09s
+
+     Running tests/declarations_syntax.rs (target/new-families-baseline/source/target/debug/deps/declarations_syntax-f7eaefdb22dd3565)
+
+running 10 tests
+test local_functions_destructuring_and_scoped_when_subjects_compile ... ok
+test source_operator_calls_and_inheritance_preserve_declarations ... ok
+test when_subject_annotations_are_checked_before_binding ... ok
+test mixed_declarations_resolve_forward_references_and_inferred_results ... ok
+test custom_accessors_lateinit_and_secondary_constructors_compile ... ok
+test initialized_state_and_nested_declarations_use_uniform_bodies ... ok
+test labels_and_try_finally_compile_with_structured_blocks ... ok
+test delegated_read_only_properties_do_not_require_provide_delegate ... ok
+test delegated_properties_resolve_source_operator_protocols ... ok
+test invalid_delegate_operator_contracts_are_rejected ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 37.32s
+
+     Running tests/enum_frontend.rs (target/new-families-baseline/source/target/debug/deps/enum_frontend-e2ed8a53602ed44e)
+
+running 3 tests
+test enum_constructors_members_and_companions_use_ordinary_types ... ok
+test enum_members_cannot_hide_the_final_core_contract ... ok
+test enum_initialization_dependencies_and_argument_types_reject_at_original_source ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 36.40s
+
+     Running tests/frontend.rs (target/new-families-baseline/source/target/debug/deps/frontend-83cf33eb91de89b7)
+
+running 58 tests
+test accepts_nested_comments_shadowing_and_minimum_int ... ok
+test accepts_abstract_mutable_interface_properties ... ok
+test accepts_objects_with_typed_and_inferred_literal_constants ... ok
+test accepts_statement_when_and_checks_return_paths_and_scopes ... ok
+test accepts_abstract_and_default_interface_declarations ... ok
+test accepts_unit_allocation_and_explicit_copy_ranges ... ok
+test accepts_chars_arrays_comparisons_and_extension_receivers ... ok
+test checks_modified_utf8_constant_limit ... ok
+test accepts_string_literals_calls_and_internal_functions ... ok
+test classes_require_valid_imports_even_when_unused ... ok
+test compound_addition_requires_supported_mutable_locals ... ok
+test extension_functions_require_receiver_syntax ... ok
+test accepts_ordinary_final_classes_with_constructor_fields_and_instance_members ... ok
+test bounds_enum_entry_counts ... ok
+test limits_interface_nesting_and_template_complexity ... ok
+test compiles_all_nested_object_classes_without_a_facade ... ok
+test module_mapping_filenames_stay_bounded_for_long_packages ... ok
+test accepts_ten_bounded_androidbible_language_additions ... ok
+test newly_supported_operations_replace_previous_rejection_boundaries ... ok
+test object_imports_remain_fail_closed ... ok
+test object_member_names_share_one_namespace_and_preserve_locations ... ok
+test object_string_constants_obey_modified_utf8_limits ... ok
+test long_parameters_and_locals_enforce_jvm_slot_widths ... ok
+test preserves_abstract_member_and_bodyless_nested_interface_boundaries ... ok
+test object_depth_class_and_constant_counts_obey_limits ... ok
+test accepts_twenty_bounded_language_additions ... ok
+test rejects_declared_classifiers_shadowing_builtin_types ... ok
+test rejects_duplicate_enum_entries_at_the_second_declaration ... ok
+test output_artifacts_include_module_mapping_only_for_function_facades ... ok
+test preserves_statement_boundaries_and_rejects_unsupported_syntax ... ok
+test rejects_invalid_loop_membership_increment_and_when_boundaries ... ok
+test rejects_invalid_bindings_and_types ... ok
+test accepts_annotated_overloaded_object_methods_and_lazy_array_fields ... ok
+test rejects_reserved_names_and_excessive_nesting_without_panicking ... ok
+test rejects_unsupported_class_surface_and_mixed_declarations ... ok
+test rejects_unsupported_interface_and_companion_forms ... ok
+test checks_constructor_fields_array_operations_and_getter_returns ... ok
+test rejects_unsupported_object_and_constant_forms ... ok
+test rejects_unsupported_or_invalid_ten_feature_boundaries ... ok
+test rejects_invalid_strings_and_string_operations ... ok
+test requires_classpath_for_imported_java_classes ... ok
+test rejects_unsupported_object_annotations_initializers_and_overloads ... ok
+test requires_legal_output_names_and_keeps_locations ... ok
+test rejects_invalid_or_still_unsupported_enum_forms ... ok
+test resolves_declared_extensions_before_implicit_library_extensions ... ok
+test requires_definite_assignment_before_every_local_read ... ok
+test accepts_byte_arrays_char_array_construction_and_hexadecimal_ints ... ok
+test validates_even_unused_enum_imports ... ok
+test when_generated_locals_and_nesting_obey_limits ... ok
+test interfaces_emit_generic_nested_companion_and_anonymous_classes ... ok
+test requires_valid_overrides_of_inherited_any_and_object_members ... ok
+test rejects_unsupported_when_forms_and_malformed_entries ... ok
+test supports_ranges_when_expressions_loops_and_incremented_array_indices ... ok
+test accepts_bare_enums_and_uses_the_declaration_name has been running for over 60 seconds
+test promoted_enum_interface_and_internal_member_forms_remain_supported ... ok
+test rejects_malformed_chars_and_implicit_char_conversions ... ok
+test formerly_rejected_declaration_forms_compile_through_shared_rules has been running for over 60 seconds
+test accepts_bare_enums_and_uses_the_declaration_name ... ok
+test supports_if_expressions_integer_strings_templates_and_explicit_throws ... ok
+test formerly_rejected_declaration_forms_compile_through_shared_rules ... ok
+
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 104.05s
+
+     Running tests/next_frontend.rs (target/new-families-baseline/source/target/debug/deps/next_frontend-42440a7e267d43fa)
+
+running 10 tests
+test loop_scopes_and_continue_initialization_are_checked ... ok
+test generic_iterable_element_types_follow_the_declared_signature ... ok
+test numeric_operations_preserve_assignment_and_comparison_types ... ok
+test type_smartcasts_require_stable_locals_and_correct_branches ... ok
+test rejects_erased_type_tests_and_casts ... ok
+test nullable_and_boxed_type_operations_compile ... ok
+test imported_generic_results_use_constructor_and_function_expected_types ... ok
+test member_extension_fallback_preserves_diagnostics_and_selects_source_extensions ... ok
+test generic_infix_calls_and_runtime_iteration_use_resolved_declarations has been running for over 60 seconds
+test renamed_imports_hide_original_names_and_keep_explicit_original_imports has been running for over 60 seconds
+test generic_infix_calls_and_runtime_iteration_use_resolved_declarations ... ok
+test renamed_imports_hide_original_names_and_keep_explicit_original_imports ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 144.73s
+
+     Running tests/next_syntax.rs (target/new-families-baseline/source/target/debug/deps/next_syntax-0d5cbcba98c17bb3)
+
+running 6 tests
+test rejects_unsupported_update_targets_and_invalid_type_tokens ... ok
+test accepts_numeric_updates_and_do_while ... ok
+test source_infix_calls_follow_the_declaration_modifier ... ok
+test accepts_identity_casts_and_type_conditions ... ok
+test accepts_iteration_over_supported_values ... ok
+test accepts_stdlib_progressions_with_an_explicit_classpath ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.31s
+
+     Running tests/protected_bridges.rs (target/new-families-baseline/source/target/debug/deps/protected_bridges-4c3cdb57aa9bbc0c)
+
+running 1 test
+test protected_helpers_follow_deferred_calls_and_do_not_change_unused_enum_abi ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.79s
+
+     Running tests/static_import_diagnostics.rs (target/new-families-baseline/source/target/debug/deps/static_import_diagnostics-d503e066ce56ce2c)
+
+running 1 test
+test existing_static_members_are_unsupported_and_missing_members_remain_dependencies ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.44s
+
+     Running tests/unsupported_syntax_diagnostics.rs (target/new-families-baseline/source/target/debug/deps/unsupported_syntax_diagnostics-02f0f58dc0c8f771)
+
+running 7 tests
+test newline_qualified_expressions_report_the_navigation_token ... ok
+test accessor_visibility_reports_the_accessor_modifier ... ok
+test parameterized_supertypes_report_the_type_argument_opening ... ok
+test ordinary_class_literals_report_the_keyword_at_the_original_source ... ok
+test unchanged_androidbible_sources_report_the_first_unsupported_construct ... ok
+test unsigned_test_cli_reports_the_first_line_class_literal_without_outputs ... ok
+test pinned_official_compiler_accepts_reductions_and_unchanged_sources ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.63s
+
+   Doc-tests korrust
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
