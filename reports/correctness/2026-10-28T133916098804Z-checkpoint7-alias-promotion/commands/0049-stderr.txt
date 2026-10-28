@@ -1,0 +1,6 @@
+target/checks/2026-10-28T133916098804Z-checkpoint7-alias-promotion/Boundary_mutual_recursive.kt:1:21: error: recursive type alias in expansion.
+typealias Left<T> = List<Right<T>>
+                    ^^^^^^^^^^^^^^
+target/checks/2026-10-28T133916098804Z-checkpoint7-alias-promotion/Boundary_mutual_recursive.kt:2:22: error: recursive type alias in expansion.
+typealias Right<T> = List<Left<T>>
+                     ^^^^^^^^^^^^^

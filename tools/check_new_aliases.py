@@ -190,6 +190,25 @@ def main():
             actual = compile('candidate', [source], work / ('boundary-candidate-' + source.stem), [dependencies])
             assert oracle.returncode == 0
             outcome = classify_candidate(actual)
+            if actual.returncode == 0 and name == 'UnsupportedGenericGetter.kt':
+                getter_outputs = {provider: work / ('boundary-' + provider + '-' + source.stem) for provider in ['official', 'candidate']}
+                getter_callers = work / 'getter-callers'
+                require('Compile fixed generic getter assertions against official output', [jdk / 'javac', '-cp', cp(getter_outputs['official'], dependencies, stdlib), '-d', getter_callers, FIXTURES / 'GetterCheck.java'])
+                getter_hashes = {str(path.relative_to(getter_callers)): sha(path) for path in getter_callers.rglob('*.class')}
+                getter_signatures = {}
+                for provider, output in getter_outputs.items():
+                    observed = require('Verify promoted generic getter ' + provider, [jdk / 'java', '-Xverify:all', '-cp', cp(getter_callers, output, dependencies, stdlib), 'aliasverification.GetterCheck'])
+                    assert observed.stdout == 'checks=14\n', observed.stdout
+                    assert getter_hashes == {str(path.relative_to(getter_callers)): sha(path) for path in getter_callers.rglob('*.class')}
+                    inspected = require('Inspect promoted generic getter signatures ' + provider, [jdk / 'javap', '-protected', '-s', '-classpath', output, 'aliasboundaries.UnsupportedGenericGetterKt'])
+                    getter_signatures[provider] = normalize_signature(inspected.stdout)
+                    consumer = work / ('getter-consumer-' + provider)
+                    require('Compile promoted generic getter Kotlin consumer ' + provider, [kotlinc, FIXTURES / 'GetterConsumer.kt', *options, '-cp', cp(output, dependencies, stdlib), '-d', consumer])
+                    observed = require('Run promoted generic getter Kotlin consumer ' + provider, [jdk / 'java', '-Xverify:all', '-cp', cp(consumer, output, dependencies, stdlib), 'aliasgetterconsumer.GetterConsumerKt'])
+                    assert observed.stdout == 'OK\n'
+                assert getter_signatures['official'] == getter_signatures['candidate'], str(getter_signatures)
+                record('promoted/' + source.stem, source=relative(source), sha256=sha(source), independent_java_assertions_per_provider=14, fixed_official_java_caller_sha256=getter_hashes, jvm_verification='all', signatures='matching', kotlin_consumers='compiled and executed against both providers', relation_to_scope='General generic classifier member substitution now supports this former boundary; not another counted feature family')
+                continue
             assert actual.returncode, 'Boundary unexpectedly compiles; requires runtime assertions before claim'
             record('boundary/' + source.stem, outcome=outcome, source=relative(source), sha256=sha(source), diagnostics=actual.stderr, relation_to_scope='Existing constructor/getter resolution boundary; not accepted generic alias behavior')
         for source in upstream_files:
@@ -245,7 +264,8 @@ def main():
             published['reproduction_command'] = ['python3', 'tools/check_new_aliases.py', '--compiler', report['compiler']['path'], '--source-snapshot', report['compiler']['source_snapshot'], '--output', 'target/source-generic-aliases-fresh']
             destination.write_text(json.dumps(published, indent=2) + '\n')
         print(relative(report_path), report['status'], json.dumps(report['counts'], sort_keys=True))
+    return 0 if report['status'] == 'complete_with_recorded_boundaries' else 1
 
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())

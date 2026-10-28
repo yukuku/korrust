@@ -1,0 +1,1313 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T13:22:58.624325+00:00",
+  "status": "pass",
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 43,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 43,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "public_signatures",
+      "outcome": "pass",
+      "scope": "Public Java signatures and descriptors; does not establish unrestricted Kotlin metadata compatibility"
+    },
+    {
+      "id": "kotlin_consumer/official",
+      "outcome": "pass",
+      "official_compiler": true,
+      "fixed_java_launcher": true,
+      "jvm_verification": "all",
+      "scope": "Selected public functions, nullable Int/String results and nonnull String parameters/results"
+    },
+    {
+      "id": "kotlin_consumer/candidate",
+      "outcome": "pass",
+      "official_compiler": true,
+      "fixed_java_launcher": true,
+      "jvm_verification": "all",
+      "scope": "Selected public functions, nullable Int/String results and nonnull String parameters/results"
+    },
+    {
+      "id": "boundary/bare_name_newline_lambda",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/ordinary_escape",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/ordinary_newline",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/raw_unterminated",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/template_unterminated",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/unresolved_template_name",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/newline_multiply",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/parenthesized_missing_operator",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/annotated_trailing_lambda",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/multi_dollar",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/nothing_template",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_rejects": true
+    },
+    {
+      "id": "boundary/unicode_template_name",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_rejects": true
+    },
+    {
+      "id": "upstream/rawStrings",
+      "outcome": "pass",
+      "source": "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt",
+      "source_sha256": "5ee1ac4401a57d6c6251af419bcdeb34114fde450c219990aec95a279013b28e",
+      "unchanged_upstream": true,
+      "fixed_java_caller": true,
+      "jvm_verification": "all",
+      "directives_preserved": true
+    },
+    {
+      "id": "upstream/multilineStringsWithTemplates",
+      "outcome": "pass",
+      "source": "references/kotlin/compiler/testData/codegen/box/strings/multilineStringsWithTemplates.kt",
+      "source_sha256": "8ea5629c4f48c7ac4ec8aa7f7e5945b89ec351e609ea4eac977c3693b89b7288",
+      "unchanged_upstream": true,
+      "fixed_java_caller": true,
+      "jvm_verification": "all",
+      "directives_preserved": true
+    },
+    {
+      "id": "upstream/rawStringsWithManyQuotes",
+      "outcome": "unsupported_language",
+      "source": "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+      "source_sha256": "7d6202a5d197351e2a716222b819d51b67fdba120b59935b952ed91f86556f26",
+      "diagnostic": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt:2:1: error: Source reference vararg declarations require unsupported Array<out T> projections\n",
+      "directives_preserved": true
+    },
+    {
+      "id": "androidbible/AudioHttpErrorBody",
+      "outcome": "unclassified_compilation_failure",
+      "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+      "source_sha256": "0f8bd02878e33edeca3d9e08a65b6ed96a44e6266c11053696816d69ca51db55",
+      "official_accepts": true,
+      "candidate_diagnostic": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt:23:20: error: String array constructor requires CharArray, offset, and count\n",
+      "scope": "Unchanged source assessment with real pinned stdlib; source compilation alone is not a compatibility pass"
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass"
+    }
+  ],
+  "commands": [
+    {
+      "label": "Pinned official compiler identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/000-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/000-stderr.txt"
+    },
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/001-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/001-stderr.txt"
+    },
+    {
+      "label": "Candidate identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/002-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/002-stderr.txt"
+    },
+    {
+      "label": "Compile official official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/fixtures/new_families/strings/RawStrings.kt",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/fixtures/new_families/strings/RawLineEndings.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/003-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/003-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/fixtures/new_families/strings/RawStrings.kt",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/fixtures/new_families/strings/RawLineEndings.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/004-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/004-stderr.txt"
+    },
+    {
+      "label": "Compile Java driver once against official output",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/driver",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/fixtures/new_families/strings/StringsCheck.java"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/005-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/005-stderr.txt"
+    },
+    {
+      "label": "Run fixed Java driver official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/driver:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.strings.StringsCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/006-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/006-stderr.txt"
+    },
+    {
+      "label": "Run fixed Java driver candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/driver:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "newfamilies.strings.StringsCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/007-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/007-stderr.txt"
+    },
+    {
+      "label": "Inspect official newfamilies.strings.RawStringsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official",
+        "newfamilies.strings.RawStringsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/008-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/008-stderr.txt"
+    },
+    {
+      "label": "Inspect official newfamilies.strings.RawLineEndingsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official",
+        "newfamilies.strings.RawLineEndingsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/009-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/009-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate newfamilies.strings.RawStringsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate",
+        "newfamilies.strings.RawStringsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/010-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/010-stderr.txt"
+    },
+    {
+      "label": "Inspect candidate newfamilies.strings.RawLineEndingsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate",
+        "newfamilies.strings.RawLineEndingsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/011-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/011-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin metadata consumer official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/fixtures/new_families/strings/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/consumer-official"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/012-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/012-stderr.txt"
+    },
+    {
+      "label": "Compile official Kotlin metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/fixtures/new_families/strings/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/consumer-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/013-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/013-stderr.txt"
+    },
+    {
+      "label": "Compile fixed metadata consumer launcher",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/consumer-official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/consumer-driver",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/fixtures/new_families/strings/ConsumerLauncher.java"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/014-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/014-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin metadata consumer official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/consumer-driver:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/consumer-official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerLauncher"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/015-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/015-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/consumer-driver:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/consumer-candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerLauncher"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/016-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/016-stderr.txt"
+    },
+    {
+      "label": "Compile official official-bare_name_newline_lambda",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/bare_name_newline_lambda.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-bare_name_newline_lambda"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/017-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/017-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-bare_name_newline_lambda",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/bare_name_newline_lambda.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-bare_name_newline_lambda"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/018-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/018-stderr.txt"
+    },
+    {
+      "label": "Compile official official-ordinary_escape",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/ordinary_escape.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-ordinary_escape"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/019-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/019-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-ordinary_escape",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/ordinary_escape.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-ordinary_escape"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/020-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/020-stderr.txt"
+    },
+    {
+      "label": "Compile official official-ordinary_newline",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/ordinary_newline.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-ordinary_newline"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/021-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/021-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-ordinary_newline",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/ordinary_newline.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-ordinary_newline"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/022-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/022-stderr.txt"
+    },
+    {
+      "label": "Compile official official-raw_unterminated",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/raw_unterminated.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-raw_unterminated"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/023-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/023-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-raw_unterminated",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/raw_unterminated.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-raw_unterminated"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/024-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/024-stderr.txt"
+    },
+    {
+      "label": "Compile official official-template_unterminated",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/template_unterminated.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-template_unterminated"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/025-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/025-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-template_unterminated",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/template_unterminated.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-template_unterminated"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/026-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/026-stderr.txt"
+    },
+    {
+      "label": "Compile official official-unresolved_template_name",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/unresolved_template_name.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-unresolved_template_name"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/027-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/027-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-unresolved_template_name",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/unresolved_template_name.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-unresolved_template_name"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/028-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/028-stderr.txt"
+    },
+    {
+      "label": "Compile official official-newline_multiply",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/newline_multiply.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-newline_multiply"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/029-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/029-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-newline_multiply",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/newline_multiply.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-newline_multiply"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/030-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/030-stderr.txt"
+    },
+    {
+      "label": "Compile official official-parenthesized_missing_operator",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/parenthesized_missing_operator.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-parenthesized_missing_operator"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/031-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/031-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-parenthesized_missing_operator",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/parenthesized_missing_operator.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-parenthesized_missing_operator"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/032-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/032-stderr.txt"
+    },
+    {
+      "label": "Compile official official-annotated_trailing_lambda",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/annotated_trailing_lambda.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-annotated_trailing_lambda"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/033-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/033-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-annotated_trailing_lambda",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/annotated_trailing_lambda.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-annotated_trailing_lambda"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/034-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/034-stderr.txt"
+    },
+    {
+      "label": "Compile official official-multi_dollar",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/multi_dollar.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-multi_dollar"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/035-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/035-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-multi_dollar",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/multi_dollar.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-multi_dollar"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/036-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/036-stderr.txt"
+    },
+    {
+      "label": "Compile official official-nothing_template",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/nothing_template.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-nothing_template"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/037-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/037-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-nothing_template",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/nothing_template.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-nothing_template"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/038-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/038-stderr.txt"
+    },
+    {
+      "label": "Compile official official-unicode_template_name",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/unicode_template_name.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/official-unicode_template_name"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/039-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/039-stderr.txt"
+    },
+    {
+      "label": "Compile candidate candidate-unicode_template_name",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/unicode_template_name.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/candidate-unicode_template_name"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/040-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/040-stderr.txt"
+    },
+    {
+      "label": "Compile official upstream-official-rawStrings",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-official-rawStrings"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/041-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/041-stderr.txt"
+    },
+    {
+      "label": "Compile candidate upstream-candidate-rawStrings",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-candidate-rawStrings"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/042-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/042-stderr.txt"
+    },
+    {
+      "label": "Compile fixed upstream caller rawStrings",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-official-rawStrings:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-driver-rawStrings",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/UpstreamrawStrings.java"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/043-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/043-stderr.txt"
+    },
+    {
+      "label": "Run upstream rawStrings official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-driver-rawStrings:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-official-rawStrings:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "UpstreamrawStrings"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/044-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/044-stderr.txt"
+    },
+    {
+      "label": "Run upstream rawStrings candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-driver-rawStrings:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-candidate-rawStrings:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "UpstreamrawStrings"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/045-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/045-stderr.txt"
+    },
+    {
+      "label": "Compile official upstream-official-multilineStringsWithTemplates",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/strings/multilineStringsWithTemplates.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-official-multilineStringsWithTemplates"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/046-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/046-stderr.txt"
+    },
+    {
+      "label": "Compile candidate upstream-candidate-multilineStringsWithTemplates",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/strings/multilineStringsWithTemplates.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-candidate-multilineStringsWithTemplates"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/047-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/047-stderr.txt"
+    },
+    {
+      "label": "Compile fixed upstream caller multilineStringsWithTemplates",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-official-multilineStringsWithTemplates:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-driver-multilineStringsWithTemplates",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/UpstreammultilineStringsWithTemplates.java"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/048-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/048-stderr.txt"
+    },
+    {
+      "label": "Run upstream multilineStringsWithTemplates official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-driver-multilineStringsWithTemplates:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-official-multilineStringsWithTemplates:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "UpstreammultilineStringsWithTemplates"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/049-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/049-stderr.txt"
+    },
+    {
+      "label": "Run upstream multilineStringsWithTemplates candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-driver-multilineStringsWithTemplates:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-candidate-multilineStringsWithTemplates:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "UpstreammultilineStringsWithTemplates"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/050-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/050-stderr.txt"
+    },
+    {
+      "label": "Compile official upstream-official-rawStringsWithManyQuotes",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-official-rawStringsWithManyQuotes"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/051-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/051-stderr.txt"
+    },
+    {
+      "label": "Compile candidate upstream-candidate-rawStringsWithManyQuotes",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/upstream-candidate-rawStringsWithManyQuotes"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/052-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/052-stderr.txt"
+    },
+    {
+      "label": "Compile official app-official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/app-official"
+      ],
+      "exit_code": 0,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/053-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/053-stderr.txt"
+    },
+    {
+      "label": "Compile candidate app-candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+        "--module-name",
+        "new_strings",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T132258554648Z-checkpoint7-strings/app-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/054-stdout.txt",
+      "stderr": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/054-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "files_sha256": {
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "eed837a2e015b1a8a36eff3838b994c2612216e77d2902b007b1b2092668be21",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "fda47f001e4457653cf50ebe4fb7e72db43399f33461d8f4ad20df3f1e6124a2",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "3a9a8415c4b4b3eb95dfa2a4fbf3e1f069a0381743b4bcff3cfb77212473bce0",
+      "src/bytecode/lambdas.rs": "7b628142b176fab6c45c8a1bca10ea47ba83ea808c108c58fd7892a71ea2da4f",
+      "src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "src/bytecode.rs": "0e0317bc8321dc7a5f369588af3ce83009fd4148886b9fc890afc78f1c6c8663",
+      "src/check.rs": "8c2dae475401285f5c653eafd2cce7232cda499d7d396b110e2a83392b151e63",
+      "src/check_annotation_placements.rs": "7e54592cbf5d6b2e112d879a1888731d02b8953cf39940b6a740c1ccf046476b",
+      "src/check_annotations.rs": "5bd835e0bcf16899053b879adb98a1e4d01f6219bb82c200db82b424da03edcc",
+      "src/check_captures.rs": "4415213c7aec5542f2a03c5a217da9d7976d062b1b3762578dde32b1d133ae10",
+      "src/check_control.rs": "666bdce98c045ae2a02444a0737c1fdc8ceba93b9e9720e8157d9306b182e291",
+      "src/check_declarations.rs": "f5dd8a9eecd85b5b34a67e97387a29170c3094420f16273f1dd1e3a53b06fbf1",
+      "src/check_delegates.rs": "954ec455179174b9f5d1ee1ce6fd25ae0031e8be82dab757ed2796a1fa9812dc",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "63c7efe9d50109d7c475f26e6e4aa2211b8c5cec265c3b70cb398be2a585bc0d",
+      "src/check_interfaces.rs": "e6660feeec839a84aa7b3e3307c2b4b83a4b961b7a1e7329b7cc7769e47c3c79",
+      "src/check_ir_walk.rs": "e1310ed336b95f5228378f3f20f7afbd5a2feecdfaa49ad29fe61383dfdedd2b",
+      "src/check_java_properties.rs": "8218c0f0811bda1de65ea1598fd4097735fb2138fae9b14b8141dfbb4bd0f22e",
+      "src/check_library.rs": "f3e4c28170db16469a3817703383b536fa71ca353697cf591d57d6ce4142a58b",
+      "src/check_objects.rs": "eebadc1c38015ce681b4dd1f435d46e55c80ae510530b8663d7a3aa97e1d11bd",
+      "src/check_operations.rs": "f7ff693febcef415f988d6921b0e3ebce6ad02eb35b40d1c267628527db97573",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/classpath/aliases.rs": "1ba2d3730c704c3fbfb27b3056a046c8782981a9f312c91865939cacd4fef73e",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "38bb4b81d86b7dbd73be782816cb6280ce25b283d0805ad5080fd96fae0eab78",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "6be30946aee4df492486d6e7ed389cefe0408df7750e2f7c8dc1034aab94d02e",
+      "src/classpath/source.rs": "0207cf0eaafb4d0c0be00f21146fa341451f1bdcc5bdd8e32c3cfff82abbaaa2",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "a40344cc1ab513b1bb0fef3cdab00508f6fb2552c729525efdd90fd73e771bb9",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/const_eval.rs": "ceb7afd240b6294bd7c2e71225bc0092d78887a179e81084347bc20fee5cb32f",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "f356371c4d1c1f5f2fd5c0ff96b4aa367e02793cdf4308eba4125efd0e7ba226",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "fdb8421455409678b3526983ade209fc711dbdd870411db5637649e006dfd869",
+      "src/metadata.rs": "d7cbb1af54e84a42ea522a18a6825137904340ee180ebc2508f6d54d00e2d5be",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "4b9283c297942abbe7f4be66b752a7827dac424b166eab084a43f43b117a8e57",
+      "src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa",
+      "tests/unsupported_syntax_diagnostics.rs": "41c9bcf99bbc7a44541e1798fbc2d9f9d764c003c9064a0fee55a9e488557e53",
+      "tools/check_new_strings.py": "2090e5fcfffa082a7968254a01de56e0184c9658343b2059e2f4c55dc61ee8b3",
+      "tests/fixtures/new_families/strings/Consumer.kt": "f5d56f577acf575bb760bb1d1f15fb97d6ded021ca0038f22652b2af6ab82a72",
+      "tests/fixtures/new_families/strings/ConsumerLauncher.java": "c40ababecf0f16266d8276239cd6bf29659a8054cbaf6bf1a47fb72bdfffc521",
+      "tests/fixtures/new_families/strings/RawLineEndings.kt": "14f996ba040dbcf71ce45682e1baac71dbeafd66ada42b72d2b88f281a4de9a2",
+      "tests/fixtures/new_families/strings/RawStrings.kt": "f0b4f7705f8a2955f3d715cd263f66faea8abceaef4684dd6f57b97c5924d0a6",
+      "tests/fixtures/new_families/strings/StringsCheck.java": "e58a34974efc1bdfac78cd01f5e01ca1fa6aad4dd60b7626279c452d8a0ed441",
+      "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt": "5ee1ac4401a57d6c6251af419bcdeb34114fde450c219990aec95a279013b28e",
+      "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt": "7d6202a5d197351e2a716222b819d51b67fdba120b59935b952ed91f86556f26",
+      "references/kotlin/compiler/testData/codegen/box/strings/multilineStringsWithTemplates.kt": "8ea5629c4f48c7ac4ec8aa7f7e5945b89ec351e609ea4eac977c3693b89b7288"
+    },
+    "fixed_java_classes_sha256": {
+      "newfamilies/strings/StringsCheck.class": "7989a286dd89ab77e62786ec47782df863876aea65ce2d37e534d247446be530"
+    },
+    "fixed_consumer_launcher_classes_sha256": {
+      "ConsumerLauncher.class": "30412a97eed93c65f01e70dac0bbc21a90327bd2054499cf37ee16d4e6c6517a"
+    }
+  },
+  "compiler": {
+    "path": "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/korrust-frozen",
+    "original_path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+    "binary_sha256": "8a9133cc8c5eb08211650081e84e910609b47fc15eae71f08db60df27e16d9c6"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "new_strings"
+    ],
+    "compiler_pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "evidence": [
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/000-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/000-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/001-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/001-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/002-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/002-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/003-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/003-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/004-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/004-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/005-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/005-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/006-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/006-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/007-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/007-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/008-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/008-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/009-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/009-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/010-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/010-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/011-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/011-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/012-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/012-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/013-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/013-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/014-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/014-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/015-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/015-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/016-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/016-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/017-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/017-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/018-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/018-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/019-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/019-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/020-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/020-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/021-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/021-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/022-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/022-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/023-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/023-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/024-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/024-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/025-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/025-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/026-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/026-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/027-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/027-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/028-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/028-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/029-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/029-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/030-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/030-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/031-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/031-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/032-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/032-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/033-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/033-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/034-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/034-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/035-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/035-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/036-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/036-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/037-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/037-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/038-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/038-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/039-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/039-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/040-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/040-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/041-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/041-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/042-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/042-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/043-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/043-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/044-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/044-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/045-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/045-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/046-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/046-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/047-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/047-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/048-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/048-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/049-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/049-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/050-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/050-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/051-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/051-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/052-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/052-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/053-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/053-stderr.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/054-stdout.txt",
+    "target/checks/2026-10-28T132258554648Z-checkpoint7-strings/054-stderr.txt"
+  ],
+  "selection": "Bounded raw/multiline string templates and Kotlin lexical newline continuation; fixed Java bytecodes compiled only against official output and reused against both providers, independent expected values, JVM verification, public signatures, unchanged pinned raw-string fixtures, invalid Kotlin versus valid unsupported boundaries. No app/module/Android compatibility or performance claim.",
+  "summary": {
+    "pass": 10,
+    "invalid_kotlin": 8,
+    "unsupported_language": 5,
+    "unclassified_compilation_failure": 1
+  }
+}

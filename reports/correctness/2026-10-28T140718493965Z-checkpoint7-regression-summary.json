@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T14:07:18.493965+00:00",
+  "status": "completed_with_explicit_boundaries",
+  "selection": "Seven-family integration regressions; existing feature and module behavior revalidation, with actual previously known failures kept separate. No additional counted family, full-app or performance claim.",
+  "source_revision": "18d421660",
+  "compiler": {
+    "binary": "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+    "binary_sha256": "8a9133cc8c5eb08211650081e84e910609b47fc15eae71f08db60df27e16d9c6",
+    "frozen_source_root": "."
+  },
+  "reports": [
+    {
+      "path": "reports/correctness/2026-10-28T132258554648Z-checkpoint7-strings.json",
+      "sha256": "10cf42599ad81dedd39d5e07fa8d287d00b40986575fb1b26704d54b1ff38e99",
+      "status": "pass",
+      "counts": {
+        "pass": 10,
+        "invalid_kotlin": 8,
+        "unsupported_language": 5,
+        "unclassified_compilation_failure": 1
+      }
+    },
+    {
+      "path": "reports/correctness/2026-10-28T132422122579Z-new-jvm-overloads.json",
+      "sha256": "0f3c7913a1689086681102ce5c240d1132c367d37098be6d10386087ce8a6bae",
+      "status": "completed",
+      "counts": {
+        "pass": 21,
+        "invalid_rejected": 13,
+        "unsupported_language": 3,
+        "unclassified_compilation_failure": 1,
+        "correctness_failure": 1
+      }
+    },
+    {
+      "path": "reports/correctness/2026-10-28T133916098804Z-checkpoint7-alias-promotion.json",
+      "sha256": "3ad64ba9dc8e4a824e579f2159faafeadf3bf059134fb5e7683166781c1ac10a",
+      "status": "complete_with_recorded_boundaries",
+      "counts": {
+        "correctness_failure": 3,
+        "invalid_kotlin": 20,
+        "pass": 17,
+        "unsupported_language": 1
+      }
+    },
+    {
+      "path": "reports/correctness/2026-10-28T132730311965Z-new-java-interop.json",
+      "sha256": "f41f32e9cb34c2ecb5a563a0f95489bd15973386a735c9802270bfd5ae71f457",
+      "status": "completed",
+      "counts": {
+        "pass": 9,
+        "invalid_rejected": 9,
+        "unsupported_language": 3,
+        "unclassified_compilation_failure": 1
+      }
+    },
+    {
+      "path": "reports/correctness/2026-10-28T132844732293Z-new-constants.json",
+      "sha256": "3558c4a4bea7a2ec4ee44b58d605188b77269a8e38c02ecce73dc5a422d5810c",
+      "status": "pass",
+      "counts": {
+        "pass": 9,
+        "invalid_kotlin": 36,
+        "unsupported_language": 6
+      }
+    },
+    {
+      "path": "reports/correctness/2026-10-28T133943579061Z-androidbible-model-io-yes2.json",
+      "sha256": "8d6a67157bd6fdaf1ddf6504f445f1385979983230991221471c62403b059a08",
+      "status": "completed",
+      "counts": {
+        "pass": 127
+      }
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-28T132258554648Z-checkpoint7-strings.json",
+    "reports/correctness/2026-10-28T132422122579Z-new-jvm-overloads.json",
+    "reports/correctness/2026-10-28T133916098804Z-checkpoint7-alias-promotion.json",
+    "reports/correctness/2026-10-28T132730311965Z-new-java-interop.json",
+    "reports/correctness/2026-10-28T132844732293Z-new-constants.json",
+    "reports/correctness/2026-10-28T133943579061Z-androidbible-model-io-yes2.json"
+  ],
+  "limitations": [
+    "Raw process exit codes are not acceptance counts: the preserved older alias harness returned zero even on its stopped status. The fresh alias harness fixes this and supplies actual runtime/ABI/consumer evidence for the newly compiling boundary.",
+    "Known larger upstream/interop/app failures remain in their individual reports; this checkpoint is not an all-tests-pass claim."
+  ]
+}

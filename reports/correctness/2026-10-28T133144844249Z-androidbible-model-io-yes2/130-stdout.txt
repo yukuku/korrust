@@ -1,0 +1,27 @@
+Compiled from "PericopesSection.java"
+public class yuku.alkitab.yes2.section.PericopesSection extends yuku.alkitab.yes2.section.base.SectionContent implements yuku.alkitab.yes2.section.base.SectionContent$Writer {
+  public static final java.lang.String SECTION_NAME;
+    descriptor: Ljava/lang/String;
+  yuku.alkitab.yes2.model.PericopeData data_;
+    descriptor: Lyuku/alkitab/yes2/model/PericopeData;
+  yuku.alkitab.yes2.io.RandomInputStream input_;
+    descriptor: Lyuku/alkitab/yes2/io/RandomInputStream;
+  int data_offset_;
+    descriptor: I
+  yuku.alkitab.model.PericopeIndex index_;
+    descriptor: Lyuku/alkitab/model/PericopeIndex;
+  private yuku.alkitab.yes2.section.PericopesSection();
+    descriptor: ()V
+
+  public yuku.alkitab.yes2.section.PericopesSection(yuku.alkitab.yes2.model.PericopeData);
+    descriptor: (Lyuku/alkitab/yes2/model/PericopeData;)V
+
+  public yuku.alkitab.yes2.model.Yes2PericopeBlock readBlock(int) throws java.io.IOException;
+    descriptor: (I)Lyuku/alkitab/yes2/model/Yes2PericopeBlock;
+
+  public void write(yuku.alkitab.yes2.io.RandomOutputStream) throws java.io.IOException;
+    descriptor: (Lyuku/alkitab/yes2/io/RandomOutputStream;)V
+
+  public int getPericopesForChapter(int, int, yuku.alkitab.util.IntArrayList, java.util.List<yuku.alkitab.model.PericopeBlock>) throws java.io.IOException;
+    descriptor: (IILyuku/alkitab/util/IntArrayList;Ljava/util/List;)I
+}

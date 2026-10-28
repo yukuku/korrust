@@ -30,7 +30,7 @@
       "id": "baseline_typealias",
       "family": "existing_nongeneric_alias",
       "root": "box",
-      "path": "references/kotlin/compiler/testData/codegen/box/typeAlias/typeAliasConstructor.kt",
+      "path": "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasConstructor.kt",
       "kind": "box",
       "tier": "regression",
       "sha256": "f39bee49f74aa332cb68082c019de03502305a067c5e20927007d6b7cc6d0fe6"
@@ -331,6 +331,192 @@
       "kind": "incremental",
       "tier": "interaction",
       "sha256": "9ae77b24c8265351afdff0305c053b79740b4e567e26457dd32c289f6ef41f60"
+    }
+  ],
+  "canonical_path_corrections": [
+    {
+      "id": "baseline_typealias",
+      "previous_path": "references/kotlin/compiler/testData/codegen/box/typeAlias/typeAliasConstructor.kt",
+      "canonical_tracked_path": "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasConstructor.kt"
+    }
+  ],
+  "validated_family_evidence": [
+    {
+      "family_number": 1,
+      "family": "Raw/multiline string templates and standard multiline expression/navigation parsing",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T102639408771Z-new-strings.json",
+      "unchanged_upstream_originals": [
+        {
+          "case": "upstream/rawStrings",
+          "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt",
+          "sha256": "5ee1ac4401a57d6c6251af419bcdeb34114fde450c219990aec95a279013b28e",
+          "outcome": "pass"
+        },
+        {
+          "case": "upstream/multilineStringsWithTemplates",
+          "path": "references/kotlin/compiler/testData/codegen/box/strings/multilineStringsWithTemplates.kt",
+          "sha256": "8ea5629c4f48c7ac4ec8aa7f7e5945b89ec351e609ea4eac977c3693b89b7288",
+          "outcome": "pass"
+        },
+        {
+          "case": "upstream/rawStringsWithManyQuotes",
+          "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+          "sha256": "7d6202a5d197351e2a716222b819d51b67fdba120b59935b952ed91f86556f26",
+          "outcome": "unsupported_language"
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 2,
+      "family": "Source generic classifiers, parameterized inheritance and erased override bridges",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T125926394540Z-new-source-generics.json",
+      "unchanged_upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/bridges/simpleReturnType.kt",
+          "sha256": "7b326733d823b5a63ee28931fe5429a687146f2613ffaee07a8bcbb2b593930b",
+          "outcome": "pass",
+          "provider_case_ids": [
+            "upstream/simpleReturnType/official",
+            "upstream/simpleReturnType/candidate"
+          ]
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/bridges/kt2920.kt",
+          "sha256": "78e30d1e7457a295992f09c34e43e60948fe441c9ceb8c0864f06acc570a388a",
+          "outcome": "pass",
+          "provider_case_ids": [
+            "upstream/kt2920/official",
+            "upstream/kt2920/candidate"
+          ]
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 4,
+      "family": "JVM overload generation for default arguments",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T104259884676Z-new-jvm-overloads.json",
+      "unchanged_upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/jvmOverloads/simpleJavaCall.kt",
+          "sha256": "b7b945fbdb56799796edffb06dfd2c9bdd563cb2dee3ef28e7f13ff2b1147092",
+          "outcome": "pass",
+          "provider_case_ids": [
+            "upstream/simpleJavaCall/official",
+            "upstream/simpleJavaCall/candidate"
+          ]
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 5,
+      "family": "Remaining signed primitive/array representations",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T125502173178Z-new-primitive-arrays-integrated.json",
+      "unchanged_upstream_originals": [
+        {
+          "case": "original/forEachLongArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachLongArray.kt",
+          "sha256": "b7c27c4727e4868d1afd73e589e12b3638b31782f09b5a64e38f5ebc122570fa",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachBooleanArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachBooleanArray.kt",
+          "sha256": "f366521bca05cbd66e51c5478c006234510fe458a87e39a36c282f41280f1f36",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachFloatArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachFloatArray.kt",
+          "sha256": "6a996ed20a85ce47bfa2b9963d82276c6b4d6f94933143e6d7eb8602a44c4fce",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachDoubleArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachDoubleArray.kt",
+          "sha256": "af2afd457cbdda96fd7cd580fb5a0251760d984c54ebe33955dad44030ba4474",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachIntArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachIntArray.kt",
+          "sha256": "428b491fbe0b8a68cced0cf689986be13399fe555912b0fcfb79fc444c186d9f",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachByteArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachByteArray.kt",
+          "sha256": "f7ab1297d213710becaefb33e6a108b74dcd7db4cd6c8bb1be603dbfb4f9eca4",
+          "outcome": "pass"
+        },
+        {
+          "case": "original/forEachCharArray",
+          "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachCharArray.kt",
+          "sha256": "b133277aff099c81b77196492bf3bb9d8c5685343fa7d49cda929c806fd4a3a6",
+          "outcome": "pass"
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 13,
+      "family": "Generic source aliases",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T133916098804Z-checkpoint7-alias-promotion.json",
+      "unchanged_upstream_originals": [
+        {
+          "case": "upstream/typeAliasFunction",
+          "path": "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasFunction.kt",
+          "sha256": "acf53d485f3305118dd2f10d923705911337ff12ab4b79e475451a301ebc91f8",
+          "outcome": "pass"
+        },
+        {
+          "case": "upstream/simple",
+          "path": "references/kotlin/compiler/testData/codegen/box/typealias/simple.kt",
+          "sha256": "f09fe20925e38b1830b19602163dd09fc9609f13f3e165a6ddabfca65edfe190",
+          "outcome": "correctness_failure"
+        },
+        {
+          "case": "upstream/genericTypeAliasConstructor2",
+          "path": "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt",
+          "sha256": "a416c2b8cd2592f0674b9b4b6c2974cb23ba14a5861db6857e36dee05db4fe5b",
+          "outcome": "correctness_failure"
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages.",
+      "initial_acceptance_report": "reports/correctness/2026-10-28T105615Z-source-generic-aliases.json"
+    },
+    {
+      "family_number": 15,
+      "family": "Compile-time constant expressions and references",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T124400446784Z-new-constants.json",
+      "unchanged_upstream_originals": [
+        {
+          "case": "upstream/literalToLongConversion",
+          "path": "references/kotlin/compiler/testData/codegen/box/constants/literalToLongConversion.kt",
+          "sha256": "e86948394f476209c220e201fc296e57592bb10b12ca5f0e73d2863537907038",
+          "outcome": "pass"
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
+    },
+    {
+      "family_number": 16,
+      "family": "Remaining Java member resolution rules",
+      "bounded_acceptance_report": "reports/correctness/2026-10-28T121821034547Z-new-java-interop.json",
+      "unchanged_upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/javaVisibility/package/inheritedPackageStaticFunction.kt",
+          "sha256": "5f49513980ea74e053eef07b62257eaddf37dfdcc7aa7e5f2fa4f2510012770b",
+          "outcome": "pass",
+          "provider_case_ids": [
+            "upstream/official",
+            "upstream/candidate"
+          ]
+        }
+      ],
+      "additional_acceptance": "See report for independent runtime, invalid/unsupported, signatures/metadata and actual app assertions. Original source-file inventories do not count as independent tests or compatibility percentages."
     }
   ]
 }

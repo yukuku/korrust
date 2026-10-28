@@ -1,0 +1,66 @@
+Compiled from "Yes2Reader.java"
+public class yuku.alkitab.yes2.Yes2Reader implements yuku.alkitab.io.BibleReader {
+  private static final java.lang.String TAG;
+    descriptor: Ljava/lang/String;
+  private final yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream file_;
+    descriptor: Lyuku/alkitab/yes2/io/RandomAccessFileRandomInputStream;
+  private yuku.alkitab.yes2.model.SectionIndex sectionIndex_;
+    descriptor: Lyuku/alkitab/yes2/model/SectionIndex;
+  private yuku.alkitab.yes2.section.VersionInfoSection versionInfo_;
+    descriptor: Lyuku/alkitab/yes2/section/VersionInfoSection;
+  private yuku.alkitab.yes2.section.PericopesSection pericopesSection_;
+    descriptor: Lyuku/alkitab/yes2/section/PericopesSection;
+  private yuku.alkitab.yes2.Yes2Reader$TextSectionReader textSectionReader_;
+    descriptor: Lyuku/alkitab/yes2/Yes2Reader$TextSectionReader;
+  private yuku.alkitab.yes2.section.XrefsSection xrefsSection_;
+    descriptor: Lyuku/alkitab/yes2/section/XrefsSection;
+  private yuku.alkitab.yes2.section.FootnotesSection footnotesSection_;
+    descriptor: Lyuku/alkitab/yes2/section/FootnotesSection;
+  public yuku.alkitab.yes2.Yes2Reader(yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream);
+    descriptor: (Lyuku/alkitab/yes2/io/RandomAccessFileRandomInputStream;)V
+
+  private synchronized void loadSectionIndex() throws java.io.IOException;
+    descriptor: ()V
+
+  private synchronized void loadVersionInfo() throws java.lang.Exception;
+    descriptor: ()V
+
+  private synchronized boolean seekToSection(java.lang.String) throws java.io.IOException;
+    descriptor: (Ljava/lang/String;)Z
+
+  public java.lang.String getLocale();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String getShortName();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String getLongName();
+    descriptor: ()Ljava/lang/String;
+
+  public java.lang.String getDescription();
+    descriptor: ()Ljava/lang/String;
+
+  public yuku.alkitab.model.Book[] loadBooks();
+    descriptor: ()[Lyuku/alkitab/model/Book;
+
+  public yuku.alkitab.yes2.Yes2SingleChapterVerses loadVerseText(yuku.alkitab.model.Book, int, boolean, boolean);
+    descriptor: (Lyuku/alkitab/model/Book;IZZ)Lyuku/alkitab/yes2/Yes2SingleChapterVerses;
+
+  public int loadPericope(int, int, yuku.alkitab.util.IntArrayList, java.util.List<yuku.alkitab.model.PericopeBlock>);
+    descriptor: (IILyuku/alkitab/util/IntArrayList;Ljava/util/List;)I
+
+  public yuku.alkitab.model.XrefEntry getXrefEntry(int);
+    descriptor: (I)Lyuku/alkitab/model/XrefEntry;
+
+  public yuku.alkitab.model.FootnoteEntry getFootnoteEntry(int);
+    descriptor: (I)Lyuku/alkitab/model/FootnoteEntry;
+
+  yuku.alkitab.yes2.io.RandomInputStream prepareLoadSection(java.lang.String) throws java.io.IOException;
+    descriptor: (Ljava/lang/String;)Lyuku/alkitab/yes2/io/RandomInputStream;
+
+  public yuku.alkitab.model.SingleChapterVerses loadVerseText(yuku.alkitab.model.Book, int, boolean, boolean);
+    descriptor: (Lyuku/alkitab/model/Book;IZZ)Lyuku/alkitab/model/SingleChapterVerses;
+
+  static {};
+    descriptor: ()V
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "kind": "features",
-  "created_at": "2026-10-28T13:15:11.382898+00:00",
+  "created_at": "2026-10-28T14:07:18.486557+00:00",
   "status": "in_progress",
   "selection": "Approximately twenty genuinely new families; current live execution matrix. Bounded acceptance does not establish unrestricted conformance. Infrastructure and existing support excluded.",
   "validated_new_families": 7,
@@ -118,9 +118,11 @@
       "status": "supported",
       "acceptance_boundary": "Substitution, bounds, visibility, cycles and exported metadata/Kotlin consumers. Existing nongeneric aliases excluded.",
       "restrictions": [
-        "Generic aliases in type positions; generic imported getter/alias constructors and two larger originals remain actual failing boundary rows, not passes."
+        "Generic aliases in supported type positions and imported generic getters with fixed Java/runtime/signature/Kotlin-consumer assertions.",
+        "Alias constructor resolution and two larger originals retain three actual failing boundary rows; projected nested arguments remain unsupported."
       ],
-      "correctness_report": "reports/correctness/2026-10-28T105615Z-source-generic-aliases.json"
+      "correctness_report": "reports/correctness/2026-10-28T133916098804Z-checkpoint7-alias-promotion.json",
+      "initial_acceptance_report": "reports/correctness/2026-10-28T105615Z-source-generic-aliases.json"
     },
     {
       "id": "family-14",
@@ -213,5 +215,6 @@
       "reasoning": "high",
       "owns": "target/new-sealed-implementation only; family8"
     }
-  }
+  },
+  "module_regression_report": "reports/correctness/2026-10-28T133943579061Z-androidbible-model-io-yes2.json"
 }
