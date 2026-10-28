@@ -316,6 +316,8 @@ mod tests {
 
     fn function_with(number: i32) -> Function {
         Function {
+            class_type_params: Vec::new(),
+            jvm_result: None,
             jvm_name: None,
             annotations: Vec::new(),
             vararg: false,
@@ -473,6 +475,9 @@ mod tests {
                 interface: None,
             }],
             class_decl: Some(ClassDecl {
+                type_params: Vec::new(),
+                super_types: Vec::new(),
+                generic_bridges: Vec::new(),
                 exposed_fields: HashMap::new(),
                 delegated_properties: vec![("delegate".into(), int(5))],
                 primary_constructor: true,
@@ -503,6 +508,8 @@ mod tests {
                 bridges: Vec::new(),
             }),
             interface_decl: Some(InterfaceDecl {
+                type_params: Vec::new(),
+                super_types: Vec::new(),
                 owner: "Contract".into(),
                 interfaces: Vec::new(),
                 methods: vec![InterfaceMethod {

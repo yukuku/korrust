@@ -6,15 +6,43 @@ impl Checker<'_> {
         statements: &[syntax::Statement],
         _offset: usize,
     ) -> Result<(Vec<Statement>, Value)> {
-        let (prefix, tail) = match statements.split_last() {
-            Some((
-                syntax::Statement {
-                    kind: StatementKind::Expression(expr),
-                    ..
-                },
-                prefix,
-            )) => (prefix, Some(expr)),
-            _ => (statements, None),
+        let tail = statements.last().and_then(|statement| {
+            let block = |body: &[syntax::Statement]| Expr {
+                offset: statement.offset,
+                kind: ExprKind::Block(body.to_vec()),
+            };
+            let kind = match &statement.kind {
+                StatementKind::Expression(expr) => return Some(expr.clone()),
+                StatementKind::When(subject, branches, Some(otherwise)) => ExprKind::When(
+                    Box::new(subject.clone()),
+                    branches
+                        .iter()
+                        .map(|(conditions, body)| (conditions.clone(), block(body)))
+                        .collect(),
+                    Box::new(block(otherwise)),
+                ),
+                StatementKind::WhenBinding(name, subject, branches, Some(otherwise)) => {
+                    ExprKind::WhenBinding(
+                        name.clone(),
+                        Box::new(subject.clone()),
+                        branches
+                            .iter()
+                            .map(|(conditions, body)| (conditions.clone(), block(body)))
+                            .collect(),
+                        Box::new(block(otherwise)),
+                    )
+                }
+                _ => return None,
+            };
+            Some(Expr {
+                offset: statement.offset,
+                kind,
+            })
+        });
+        let prefix = if tail.is_some() {
+            &statements[..statements.len() - 1]
+        } else {
+            statements
         };
         let (body, abrupt) = self.block_scoped(prefix, false)?;
         let result = if abrupt {
@@ -23,7 +51,7 @@ impl Checker<'_> {
                 kind: ValueKind::Abrupt(Vec::new()),
             }
         } else if let Some(expr) = tail {
-            self.value(expr)?
+            self.value(&expr)?
         } else {
             Value {
                 ty: Type::Unit,

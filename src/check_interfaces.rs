@@ -8,6 +8,26 @@ pub(super) fn check(
     mut classes: HashMap<String, JavaClass>,
     owner_override: Option<&str>,
 ) -> Result<Module> {
+    declarations::validate_classifier_generics(
+        &source.type_params,
+        &source.super_types,
+        classpath,
+        &imports,
+        &classes,
+        source.offset,
+    )?;
+    if !source.type_params.is_empty()
+        && (source
+            .methods
+            .iter()
+            .any(|m| m.has_body || !m.function.type_params.is_empty())
+            || source.properties.iter().any(|p| p.body.is_some())
+            || source.companion.is_some()
+            || !source.nested.is_empty()
+            || !source.declarations.is_empty())
+    {
+        return Err(Diagnostic::new(source.offset,"Generic interface defaults, generic members, companions, and nested declarations are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage,"GENERIC_INTERFACE_BODY_UNSUPPORTED"));
+    }
     let owner = if let Some(owner) = owner_override {
         owner.into()
     } else if package.is_empty() {
@@ -334,7 +354,31 @@ fn register_classes(
             JavaClass {
                 annotation_definition: None,
                 kotlin_fun_interface: false,
-                library: None,
+                library: Some(crate::classpath::LibraryClass {
+                    type_aliases: Vec::new(),
+                    type_parameters: source
+                        .type_params
+                        .iter()
+                        .map(|p| {
+                            Ok(syntax::TypeParameter {
+                                name: p.name.clone(),
+                                variance: p.variance,
+                                bounds: p
+                                    .bounds
+                                    .iter()
+                                    .map(|t| resolve_type(t, &imports, source.offset))
+                                    .collect::<Result<Vec<_>>>()?,
+                            })
+                        })
+                        .collect::<Result<Vec<_>>>()?,
+                    supertypes: source
+                        .super_types
+                        .iter()
+                        .map(|t| resolve_type(t, &imports, source.offset))
+                        .collect::<Result<Vec<_>>>()?,
+                    package: None,
+                    multifile_facade: None,
+                }),
                 fields: Vec::new(),
                 kotlin_class: false,
                 name: owner.into(),
@@ -418,6 +462,38 @@ pub(super) fn interface_methods(
                 )
             })?;
             for (name, method) in collect(parent, classes, visiting, offset)? {
+                let parent_type = class.library.as_ref().and_then(|l| {
+                    l.supertypes
+                        .iter()
+                        .find(|t| library::type_owner(t) == Some(parent.name.as_str()))
+                });
+                let method = if let Some(Type::Parameterized { arguments, .. }) = parent_type {
+                    let substitutions = parent
+                        .library
+                        .as_ref()
+                        .map(|l| {
+                            l.type_parameters
+                                .iter()
+                                .zip(arguments)
+                                .filter_map(|(p, a)| {
+                                    a.ty.as_ref().map(|t| (p.name.clone(), t.clone()))
+                                })
+                                .collect::<HashMap<_, _>>()
+                        })
+                        .unwrap_or_default();
+                    let mut method = method;
+                    if let Some(params) = &mut method.kotlin_params {
+                        for p in params {
+                            p.1 = relations::substitute(&p.1, &substitutions);
+                        }
+                    }
+                    if let Some(result) = &mut method.kotlin_result {
+                        *result = relations::substitute(result, &substitutions);
+                    }
+                    method
+                } else {
+                    method
+                };
                 if let Some(previous) = methods.get(&name) {
                     if previous.owner != method.owner
                         && (previous.descriptor != method.descriptor
@@ -436,6 +512,9 @@ pub(super) fn interface_methods(
             }
         }
         for method in &class.methods {
+            if !class.kotlin_class && !class.kotlin_interface && method.access & 0x400 == 0 {
+                continue;
+            }
             if method.access & 8 != 0 || method.name == "<clinit>" {
                 continue;
             }
@@ -693,6 +772,10 @@ fn check_interface(
             lambdas,
         )?);
     }
+    for method in &mut methods {
+        method.function.class_type_params =
+            source.type_params.iter().map(|p| p.name.clone()).collect();
+    }
     let mut defaults: Vec<_> = members
         .values()
         .filter(|method| method.owner != owner && method.access & 0x0400 == 0)
@@ -708,6 +791,12 @@ fn check_interface(
         )?;
     }
     Ok(InterfaceDecl {
+        type_params: source.type_params.clone(),
+        super_types: source
+            .super_types
+            .iter()
+            .map(|t| resolve_type(t, &imports, source.offset))
+            .collect::<Result<Vec<_>>>()?,
         owner: owner.into(),
         interfaces: class.interfaces.clone(),
         methods,
@@ -830,6 +919,8 @@ fn check_function(
         Vec::new()
     };
     Ok(Function {
+        class_type_params: Vec::new(),
+        jvm_result: None,
         jvm_name: None,
         annotations: Vec::new(),
         vararg: false,

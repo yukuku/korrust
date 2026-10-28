@@ -162,6 +162,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 122. Explicit Java static imports, bounded synthetic Java properties, and inherited-member access through accessible qualifiers.
 123. Typed scalar compile-time expressions, source constant references, and checked Java constant dependencies.
 124. Long, Boolean, Float, and Double primitive arrays with construction, indexing, iteration, varargs, and spread.
+125. Invariant source generic classes and interfaces, parameterized inheritance, and erased override bridges.
 
 ## Project contract
 

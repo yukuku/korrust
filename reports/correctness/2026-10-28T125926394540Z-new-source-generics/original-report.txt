@@ -1,0 +1,2684 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T12:59:26.394540+00:00",
+  "status": "completed",
+  "compiler": {
+    "binary": "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+    "binary_sha256": "8a9133cc8c5eb08211650081e84e910609b47fc15eae71f08db60df27e16d9c6",
+    "frozen_source_root": "."
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "new_source_generics"
+    ]
+  },
+  "inputs": {
+    "files_sha256": {
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt": "56326e90eba0626a340aaf73c3f4f539e7000c5b6b2242b45a81beb0319fcd33",
+      "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlphanumComparatorTest.kt": "187f9992953558c59e089dab942d738b7e5aa2bcb26735c1c63e11c81a31dea4",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/bridges/kt2920.kt": "78e30d1e7457a295992f09c34e43e60948fe441c9ceb8c0864f06acc570a388a",
+      "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/bridges/simpleReturnType.kt": "7b326733d823b5a63ee28931fe5429a687146f2613ffaee07a8bcbb2b593930b",
+      "src/bytecode/annotation_files.rs": "567850439e4f18454eaa84ddea414a75aee98d13d08a79f11179fc3b42b13448",
+      "src/bytecode/annotations.rs": "f6826ae7b0b5b0cab275d94dbc21c841f36895f86d5aa86e9cfe98562c4359ff",
+      "src/bytecode/class_companion.rs": "eed837a2e015b1a8a36eff3838b994c2612216e77d2902b007b1b2092668be21",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "fda47f001e4457653cf50ebe4fb7e72db43399f33461d8f4ad20df3f1e6124a2",
+      "src/bytecode/enums.rs": "cd1ed4ff339ff49afcff90e8f6cba76459950ba64f15cba4d2d5bdd965391448",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "3a9a8415c4b4b3eb95dfa2a4fbf3e1f069a0381743b4bcff3cfb77212473bce0",
+      "src/bytecode/lambdas.rs": "7b628142b176fab6c45c8a1bca10ea47ba83ea808c108c58fd7892a71ea2da4f",
+      "src/bytecode/objects.rs": "9fb8e705b875a92acd78935a6d0b1854b055c152b3f4cc89491e5790747feb15",
+      "src/bytecode.rs": "0e0317bc8321dc7a5f369588af3ce83009fd4148886b9fc890afc78f1c6c8663",
+      "src/check.rs": "8c2dae475401285f5c653eafd2cce7232cda499d7d396b110e2a83392b151e63",
+      "src/check_annotation_placements.rs": "7e54592cbf5d6b2e112d879a1888731d02b8953cf39940b6a740c1ccf046476b",
+      "src/check_annotations.rs": "5bd835e0bcf16899053b879adb98a1e4d01f6219bb82c200db82b424da03edcc",
+      "src/check_captures.rs": "4415213c7aec5542f2a03c5a217da9d7976d062b1b3762578dde32b1d133ae10",
+      "src/check_control.rs": "666bdce98c045ae2a02444a0737c1fdc8ceba93b9e9720e8157d9306b182e291",
+      "src/check_declarations.rs": "f5dd8a9eecd85b5b34a67e97387a29170c3094420f16273f1dd1e3a53b06fbf1",
+      "src/check_delegates.rs": "954ec455179174b9f5d1ee1ce6fd25ae0031e8be82dab757ed2796a1fa9812dc",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "63c7efe9d50109d7c475f26e6e4aa2211b8c5cec265c3b70cb398be2a585bc0d",
+      "src/check_interfaces.rs": "e6660feeec839a84aa7b3e3307c2b4b83a4b961b7a1e7329b7cc7769e47c3c79",
+      "src/check_ir_walk.rs": "e1310ed336b95f5228378f3f20f7afbd5a2feecdfaa49ad29fe61383dfdedd2b",
+      "src/check_java_properties.rs": "8218c0f0811bda1de65ea1598fd4097735fb2138fae9b14b8141dfbb4bd0f22e",
+      "src/check_library.rs": "f3e4c28170db16469a3817703383b536fa71ca353697cf591d57d6ce4142a58b",
+      "src/check_objects.rs": "eebadc1c38015ce681b4dd1f435d46e55c80ae510530b8663d7a3aa97e1d11bd",
+      "src/check_operations.rs": "f7ff693febcef415f988d6921b0e3ebce6ad02eb35b40d1c267628527db97573",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "636aba898ea65a6208bb5e195453730a18420143ef2d33168b649ee678347a76",
+      "src/check_singletons.rs": "ea00f6088de5f70e6ce5116d989364b4b58f581822be64eae86505a40c3e451d",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/classpath/aliases.rs": "1ba2d3730c704c3fbfb27b3056a046c8782981a9f312c91865939cacd4fef73e",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "38bb4b81d86b7dbd73be782816cb6280ce25b283d0805ad5080fd96fae0eab78",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/signature.rs": "6be30946aee4df492486d6e7ed389cefe0408df7750e2f7c8dc1034aab94d02e",
+      "src/classpath/source.rs": "0207cf0eaafb4d0c0be00f21146fa341451f1bdcc5bdd8e32c3cfff82abbaaa2",
+      "src/classpath/source_enums.rs": "2ba7acc201c1a4892a9f377bd3d41701b4774729fe85bdbd756105de6bd12a77",
+      "src/classpath.rs": "a40344cc1ab513b1bb0fef3cdab00508f6fb2552c729525efdd90fd73e771bb9",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/const_eval.rs": "ceb7afd240b6294bd7c2e71225bc0092d78887a179e81084347bc20fee5cb32f",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "f356371c4d1c1f5f2fd5c0ff96b4aa367e02793cdf4308eba4125efd0e7ba226",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "fdb8421455409678b3526983ade209fc711dbdd870411db5637649e006dfd869",
+      "src/metadata.rs": "d7cbb1af54e84a42ea522a18a6825137904340ee180ebc2508f6d54d00e2d5be",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "4b9283c297942abbe7f4be66b752a7827dac424b166eab084a43f43b117a8e57",
+      "src/visibility.rs": "ec6f5eaabd1b93a63538a7be76ab747901c234bdf9718de991edc4ab81bc1dfa",
+      "tests/source_generics_new/AppCalls.java": "8e62c15138da75894c209968f13d82fed0e30d1d19d72292b09cd7816794cd0c",
+      "tests/source_generics_new/AppConsumer.kt": "eb3d7f6e7a9149bd19e1051f439dc1921dde7b216d4d8f6ee6607a1e76439736",
+      "tests/source_generics_new/Calls.java": "33a7ad88a85a68d5fc42a6f53e20ea85b7c272974ad66f469be50c9046d6f858",
+      "tests/source_generics_new/Consumer.kt": "d4ad124a742802d5b55b2045f43179dded3cd9a128179b02711f58ac3e1ca749",
+      "tests/source_generics_new/ConsumerCalls.java": "ba7e3c75a49e9fb09e1086e7d9f19729b95c7bafa9bea619522bb2c68a57607d",
+      "tests/source_generics_new/Probe.java": "e330d561b226d464cd2fb7e07d79d790ec0f5a09958a2fb9c33a2e7e56ba5de0",
+      "tests/source_generics_new/Rejections.json": "eedf796a5680f555f6fb85d220c0240f89ff0794f0b17a70d3fac8996bafb2e6",
+      "tests/source_generics_new/Use.kt": "9cc1966d0279ae3fdeca14bdf7a7a2385aa9c67823e03ac90cba3ad0fcccd83a",
+      "tools/check_new_source_generics.py": "c05793293dd4b397fea98c06a291bfcf3704a8ea6cea1ec55342057136555073"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "junit_sha256": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "hamcrest_sha256": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9"
+  },
+  "commands": [
+    {
+      "label": "Compile independent effects dependency",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/Probe.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/000-stderr.txt"
+    },
+    {
+      "label": "Official source generic declarations",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/Use.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/001-stderr.txt"
+    },
+    {
+      "label": "Candidate source generic declarations",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/Use.kt",
+        "--module-name",
+        "new_source_generics",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/002-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java assertions once against official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/callers",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/Calls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/003-stderr.txt"
+    },
+    {
+      "label": "Compile identical Java source against candidate generic signatures",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate-java-signature-consumer",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/Calls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/004-stderr.txt"
+    },
+    {
+      "label": "Execute identical fixed Java assertions official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/callers:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/005-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/006-stderr.txt"
+    },
+    {
+      "label": "Metadata consumer launcher official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official-consumer:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official-consumer-launcher",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/ConsumerCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/007-stderr.txt"
+    },
+    {
+      "label": "Execute official Kotlin consumer official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official-consumer-launcher:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official-consumer:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/008-stderr.txt"
+    },
+    {
+      "label": "Execute identical fixed Java assertions candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/callers:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/009-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/010-stderr.txt"
+    },
+    {
+      "label": "Metadata consumer launcher candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate-consumer:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate-consumer-launcher",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/ConsumerCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/011-stderr.txt"
+    },
+    {
+      "label": "Execute official Kotlin consumer candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate-consumer-launcher:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate-consumer:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/dependency:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/012-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.BooleanEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.BooleanEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/013-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.BooleanEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.BooleanEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/014-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.Bounded",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.Bounded"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/015-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.Bounded",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.Bounded"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/016-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.Box",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.Box"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/017-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.Box",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.Box"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/018-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.CharEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.CharEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/019-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.CharEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.CharEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/020-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.Echo",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.Echo"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/021-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.Echo",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.Echo"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/022-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.GenericEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.GenericEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/023-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.GenericEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.GenericEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/024-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.IntEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.IntEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/025-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.IntEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.IntEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/026-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.IntSlot",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.IntSlot"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/027-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.IntSlot",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.IntSlot"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/028-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.LongEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.LongEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/029-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.LongEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.LongEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/030-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.Parent",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.Parent"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/031-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.Parent",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.Parent"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/032-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.Relay",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.Relay"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/033-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.Relay",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.Relay"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/034-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.Slot",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.Slot"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/035-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.Slot",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.Slot"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/036-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.StringEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.StringEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/037-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.StringEcho",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.StringEcho"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/038-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.StringParent",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.StringParent"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/039-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.StringParent",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.StringParent"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/040-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.StringSlot",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.StringSlot"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/041-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.StringSlot",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.StringSlot"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/042-stderr.txt"
+    },
+    {
+      "label": "Official generic signatures sourcegeneric.UseKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/official",
+        "sourcegeneric.UseKt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/043-stderr.txt"
+    },
+    {
+      "label": "Candidate generic signatures sourcegeneric.UseKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/candidate",
+        "sourcegeneric.UseKt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/044-stderr.txt"
+    },
+    {
+      "label": "Official boundary bound",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/045-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary bound",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/046-stderr.txt"
+    },
+    {
+      "label": "Official boundary arity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/arity/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/arity/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/047-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary arity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/arity/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/arity/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/048-stderr.txt"
+    },
+    {
+      "label": "Official boundary raw_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/raw_type/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/raw_type/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/049-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary raw_type",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/raw_type/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/raw_type/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/050-stderr.txt"
+    },
+    {
+      "label": "Official boundary override",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/override/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/override/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/051-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary override",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/override/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/override/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/052-stderr.txt"
+    },
+    {
+      "label": "Official boundary missing",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/missing/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/missing/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/053-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary missing",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/missing/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/missing/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/054-stderr.txt"
+    },
+    {
+      "label": "Official boundary projection_super",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/projection_super/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/projection_super/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/055-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary projection_super",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/projection_super/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/projection_super/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/056-stderr.txt"
+    },
+    {
+      "label": "Official boundary enum_parameters",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/enum_parameters/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/enum_parameters/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/057-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary enum_parameters",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/enum_parameters/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/enum_parameters/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/058-stderr.txt"
+    },
+    {
+      "label": "Official boundary nonexhaustive_tail",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nonexhaustive_tail/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nonexhaustive_tail/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/059-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary nonexhaustive_tail",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nonexhaustive_tail/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nonexhaustive_tail/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/060-stderr.txt"
+    },
+    {
+      "label": "Official boundary inference",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/inference/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/inference/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/061-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary inference",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/inference/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/inference/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/062-stderr.txt"
+    },
+    {
+      "label": "Official boundary variance",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/variance/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/variance/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/063-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary variance",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/variance/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/variance/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/064-stderr.txt"
+    },
+    {
+      "label": "Official boundary f_bound",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/f_bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/f_bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/065-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary f_bound",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/f_bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/f_bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/066-stderr.txt"
+    },
+    {
+      "label": "Official boundary interface_bound",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/067-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary interface_bound",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/068-stderr.txt"
+    },
+    {
+      "label": "Official boundary generic_method",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/generic_method/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/generic_method/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/069-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/069-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary generic_method",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/generic_method/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/generic_method/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/070-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/070-stderr.txt"
+    },
+    {
+      "label": "Official boundary shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/shadow/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/shadow/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/071-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/071-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary shadow",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/shadow/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/shadow/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/072-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/072-stderr.txt"
+    },
+    {
+      "label": "Official boundary interface_default",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_default/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_default/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/073-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/073-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary interface_default",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_default/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_default/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/074-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/074-stderr.txt"
+    },
+    {
+      "label": "Official boundary nested",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nested/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nested/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/075-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/075-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary nested",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nested/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nested/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/076-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/076-stderr.txt"
+    },
+    {
+      "label": "Official boundary lambda_capture",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/lambda_capture/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/lambda_capture/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/077-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/077-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary lambda_capture",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/lambda_capture/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/lambda_capture/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/078-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/078-stderr.txt"
+    },
+    {
+      "label": "Unchanged upstream official simpleReturnType",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/bridges/simpleReturnType.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-simpleReturnType-official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/079-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/079-stderr.txt"
+    },
+    {
+      "label": "Unchanged upstream candidate simpleReturnType",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/bridges/simpleReturnType.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-simpleReturnType-candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/080-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/080-stderr.txt"
+    },
+    {
+      "label": "Compile fixed upstream caller simpleReturnType",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-simpleReturnType-official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-simpleReturnType/callers",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-simpleReturnType/UpstreamCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/081-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/081-stderr.txt"
+    },
+    {
+      "label": "Execute unchanged upstream simpleReturnType official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-simpleReturnType/callers:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-simpleReturnType-official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "UpstreamCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/082-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/082-stderr.txt"
+    },
+    {
+      "label": "Execute unchanged upstream simpleReturnType candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-simpleReturnType/callers:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-simpleReturnType-candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "UpstreamCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/083-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/083-stderr.txt"
+    },
+    {
+      "label": "Unchanged upstream official kt2920",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/bridges/kt2920.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-kt2920-official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/084-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/084-stderr.txt"
+    },
+    {
+      "label": "Unchanged upstream candidate kt2920",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlin/compiler/testData/codegen/box/bridges/kt2920.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-kt2920-candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/085-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/085-stderr.txt"
+    },
+    {
+      "label": "Compile fixed upstream caller kt2920",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-kt2920-official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-kt2920/callers",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-kt2920/UpstreamCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/086-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/086-stderr.txt"
+    },
+    {
+      "label": "Execute unchanged upstream kt2920 official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-kt2920/callers:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-kt2920-official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "UpstreamCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/087-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/087-stderr.txt"
+    },
+    {
+      "label": "Execute unchanged upstream kt2920 candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-kt2920/callers:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/upstream-kt2920-candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "UpstreamCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/088-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/088-stderr.txt"
+    },
+    {
+      "label": "Compile unchanged AndroidBible oracle",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/089-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/089-stderr.txt"
+    },
+    {
+      "label": "Compile unchanged AndroidBible candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/090-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/090-stderr.txt"
+    },
+    {
+      "label": "Compile fixed independent app Java assertions once",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-callers",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/AppCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/091-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/091-stderr.txt"
+    },
+    {
+      "label": "Compile unchanged original AndroidBible JUnit test once",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlphanumComparatorTest.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-official:/Users/yuku/.gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-original-tests"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/092-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/092-stderr.txt"
+    },
+    {
+      "label": "Execute fixed app Java assertions official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-callers:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-official:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "AppCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/093-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/093-stderr.txt"
+    },
+    {
+      "label": "Execute unchanged original app tests official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-original-tests:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-official:/Users/yuku/.gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "org.junit.runner.JUnitCore",
+        "yuku.alkitab.base.util.AlphanumComparatorTest"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/094-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/094-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin app metadata consumer official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/AppConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-official",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-consumer-official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/095-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/095-stderr.txt"
+    },
+    {
+      "label": "Execute fixed app Java assertions candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-callers:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-candidate:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "AppCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/096-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/096-stderr.txt"
+    },
+    {
+      "label": "Execute unchanged original app tests candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-original-tests:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-candidate:/Users/yuku/.gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/lib/kotlin-stdlib.jar",
+        "org.junit.runner.JUnitCore",
+        "yuku.alkitab.base.util.AlphanumComparatorTest"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/097-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/097-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin app metadata consumer candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/tests/source_generics_new/AppConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "new_source_generics",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-candidate",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/app-consumer-candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/098-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T125926394540Z-new-source-generics/098-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "java/official",
+      "outcome": "pass",
+      "scope": "Generic source fields/construction/bounds; primitive/ref/null/UTF16; erased interfaces/superclasses; wide slots; bridge casts; evaluation effects; tail when prerequisite"
+    },
+    {
+      "id": "metadata/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "java/candidate",
+      "outcome": "pass",
+      "scope": "Generic source fields/construction/bounds; primitive/ref/null/UTF16; erased interfaces/superclasses; wide slots; bridge casts; evaluation effects; tail when prerequisite"
+    },
+    {
+      "id": "metadata/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/sourcegeneric.BooleanEcho",
+      "outcome": "pass",
+      "expected": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Echo<Ljava/lang/Boolean;>;",
+        "descriptor: ()V",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "descriptor: (Z)Ljava/lang/Boolean;",
+        "public java.lang.Boolean echo(boolean);",
+        "public java.lang.Object echo(java.lang.Object);",
+        "public sourcegeneric.BooleanEcho();"
+      ],
+      "actual": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Echo<Ljava/lang/Boolean;>;",
+        "descriptor: ()V",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "descriptor: (Z)Ljava/lang/Boolean;",
+        "public java.lang.Boolean echo(boolean);",
+        "public java.lang.Object echo(java.lang.Object);",
+        "public sourcegeneric.BooleanEcho();"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.Bounded",
+      "outcome": "pass",
+      "expected": [
+        "Signature: ()TT;",
+        "Signature: (TT;)V",
+        "Signature: <T:Ljava/lang/Number;>Ljava/lang/Object;",
+        "Signature: TT;",
+        "descriptor: ()Ljava/lang/Number;",
+        "descriptor: (Ljava/lang/Number;)V",
+        "descriptor: Ljava/lang/Number;",
+        "private final T value;",
+        "public final T getValue();",
+        "public sourcegeneric.Bounded(T);"
+      ],
+      "actual": [
+        "Signature: ()TT;",
+        "Signature: (TT;)V",
+        "Signature: <T:Ljava/lang/Number;>Ljava/lang/Object;",
+        "Signature: TT;",
+        "descriptor: ()Ljava/lang/Number;",
+        "descriptor: (Ljava/lang/Number;)V",
+        "descriptor: Ljava/lang/Number;",
+        "private final T value;",
+        "public final T getValue();",
+        "public sourcegeneric.Bounded(T);"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.Box",
+      "outcome": "pass",
+      "expected": [
+        "Signature: ()TT;",
+        "Signature: (TT;)TT;",
+        "Signature: (TT;)V",
+        "Signature: (TT;)V",
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;",
+        "Signature: TT;",
+        "descriptor: ()Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)V",
+        "descriptor: (Ljava/lang/Object;)V",
+        "descriptor: Ljava/lang/Object;",
+        "private T value;",
+        "public final T getValue();",
+        "public final T identity(T);",
+        "public final void setValue(T);",
+        "public sourcegeneric.Box(T);"
+      ],
+      "actual": [
+        "Signature: ()TT;",
+        "Signature: (TT;)TT;",
+        "Signature: (TT;)V",
+        "Signature: (TT;)V",
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;",
+        "Signature: TT;",
+        "descriptor: ()Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)V",
+        "descriptor: (Ljava/lang/Object;)V",
+        "descriptor: Ljava/lang/Object;",
+        "private T value;",
+        "public final T getValue();",
+        "public final T identity(T);",
+        "public final void setValue(T);",
+        "public sourcegeneric.Box(T);"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.CharEcho",
+      "outcome": "pass",
+      "expected": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Echo<Ljava/lang/Character;>;",
+        "descriptor: ()V",
+        "descriptor: (C)Ljava/lang/Character;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "public java.lang.Character echo(char);",
+        "public java.lang.Object echo(java.lang.Object);",
+        "public sourcegeneric.CharEcho();"
+      ],
+      "actual": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Echo<Ljava/lang/Character;>;",
+        "descriptor: ()V",
+        "descriptor: (C)Ljava/lang/Character;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "public java.lang.Character echo(char);",
+        "public java.lang.Object echo(java.lang.Object);",
+        "public sourcegeneric.CharEcho();"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.Echo",
+      "outcome": "pass",
+      "expected": [
+        "Signature: (TT;)TT;",
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "public abstract T echo(T);"
+      ],
+      "actual": [
+        "Signature: (TT;)TT;",
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "public abstract T echo(T);"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.GenericEcho",
+      "outcome": "pass",
+      "expected": [
+        "Signature: (TT;)TT;",
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;Lsourcegeneric/Echo<TT;>;",
+        "descriptor: ()V",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "public T echo(T);",
+        "public sourcegeneric.GenericEcho();"
+      ],
+      "actual": [
+        "Signature: (TT;)TT;",
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;Lsourcegeneric/Echo<TT;>;",
+        "descriptor: ()V",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "public T echo(T);",
+        "public sourcegeneric.GenericEcho();"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.IntEcho",
+      "outcome": "pass",
+      "expected": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Relay<Ljava/lang/Integer;>;",
+        "descriptor: ()V",
+        "descriptor: (I)Ljava/lang/Integer;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "public java.lang.Integer echo(int);",
+        "public java.lang.Object echo(java.lang.Object);",
+        "public sourcegeneric.IntEcho();"
+      ],
+      "actual": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Relay<Ljava/lang/Integer;>;",
+        "descriptor: ()V",
+        "descriptor: (I)Ljava/lang/Integer;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "public java.lang.Integer echo(int);",
+        "public java.lang.Object echo(java.lang.Object);",
+        "public sourcegeneric.IntEcho();"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.IntSlot",
+      "outcome": "pass",
+      "expected": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Slot<Ljava/lang/Integer;>;",
+        "descriptor: ()Ljava/lang/Integer;",
+        "descriptor: ()Ljava/lang/Object;",
+        "descriptor: (I)V",
+        "descriptor: (I)V",
+        "descriptor: (Ljava/lang/Object;)V",
+        "descriptor: I",
+        "private int value;",
+        "public java.lang.Integer getValue();",
+        "public java.lang.Object getValue();",
+        "public sourcegeneric.IntSlot(int);",
+        "public void setValue(int);",
+        "public void setValue(java.lang.Object);"
+      ],
+      "actual": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Slot<Ljava/lang/Integer;>;",
+        "descriptor: ()Ljava/lang/Integer;",
+        "descriptor: ()Ljava/lang/Object;",
+        "descriptor: (I)V",
+        "descriptor: (I)V",
+        "descriptor: (Ljava/lang/Object;)V",
+        "descriptor: I",
+        "private int value;",
+        "public java.lang.Integer getValue();",
+        "public java.lang.Object getValue();",
+        "public sourcegeneric.IntSlot(int);",
+        "public void setValue(int);",
+        "public void setValue(java.lang.Object);"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.LongEcho",
+      "outcome": "pass",
+      "expected": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Echo<Ljava/lang/Long;>;",
+        "descriptor: ()V",
+        "descriptor: (J)Ljava/lang/Long;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "public java.lang.Long echo(long);",
+        "public java.lang.Object echo(java.lang.Object);",
+        "public sourcegeneric.LongEcho();"
+      ],
+      "actual": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Echo<Ljava/lang/Long;>;",
+        "descriptor: ()V",
+        "descriptor: (J)Ljava/lang/Long;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "public java.lang.Long echo(long);",
+        "public java.lang.Object echo(java.lang.Object);",
+        "public sourcegeneric.LongEcho();"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.Parent",
+      "outcome": "pass",
+      "expected": [
+        "Signature: ()TT;",
+        "Signature: (TT;)TT;",
+        "Signature: (TT;)V",
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;",
+        "Signature: TT;",
+        "descriptor: ()Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)V",
+        "descriptor: Ljava/lang/Object;",
+        "private final T original;",
+        "public T replace(T);",
+        "public final T getOriginal();",
+        "public sourcegeneric.Parent(T);"
+      ],
+      "actual": [
+        "Signature: ()TT;",
+        "Signature: (TT;)TT;",
+        "Signature: (TT;)V",
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;",
+        "Signature: TT;",
+        "descriptor: ()Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)V",
+        "descriptor: Ljava/lang/Object;",
+        "private final T original;",
+        "public T replace(T);",
+        "public final T getOriginal();",
+        "public sourcegeneric.Parent(T);"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.Relay",
+      "outcome": "pass",
+      "expected": [
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;Lsourcegeneric/Echo<TT;>;"
+      ],
+      "actual": [
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;Lsourcegeneric/Echo<TT;>;"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.Slot",
+      "outcome": "pass",
+      "expected": [
+        "Signature: ()TT;",
+        "Signature: (TT;)V",
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;",
+        "descriptor: ()Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)V",
+        "public abstract T getValue();",
+        "public abstract void setValue(T);"
+      ],
+      "actual": [
+        "Signature: ()TT;",
+        "Signature: (TT;)V",
+        "Signature: <T:Ljava/lang/Object;>Ljava/lang/Object;",
+        "descriptor: ()Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/Object;)V",
+        "public abstract T getValue();",
+        "public abstract void setValue(T);"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.StringEcho",
+      "outcome": "pass",
+      "expected": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Echo<Ljava/lang/String;>;",
+        "descriptor: ()V",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/String;)Ljava/lang/String;",
+        "public java.lang.Object echo(java.lang.Object);",
+        "public java.lang.String echo(java.lang.String);",
+        "public sourcegeneric.StringEcho();"
+      ],
+      "actual": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Echo<Ljava/lang/String;>;",
+        "descriptor: ()V",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/String;)Ljava/lang/String;",
+        "public java.lang.Object echo(java.lang.Object);",
+        "public java.lang.String echo(java.lang.String);",
+        "public sourcegeneric.StringEcho();"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.StringParent",
+      "outcome": "pass",
+      "expected": [
+        "Signature: Lsourcegeneric/Parent<Ljava/lang/String;>;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/String;)Ljava/lang/String;",
+        "descriptor: (Ljava/lang/String;)V",
+        "public java.lang.Object replace(java.lang.Object);",
+        "public java.lang.String replace(java.lang.String);",
+        "public sourcegeneric.StringParent(java.lang.String);"
+      ],
+      "actual": [
+        "Signature: Lsourcegeneric/Parent<Ljava/lang/String;>;",
+        "descriptor: (Ljava/lang/Object;)Ljava/lang/Object;",
+        "descriptor: (Ljava/lang/String;)Ljava/lang/String;",
+        "descriptor: (Ljava/lang/String;)V",
+        "public java.lang.Object replace(java.lang.Object);",
+        "public java.lang.String replace(java.lang.String);",
+        "public sourcegeneric.StringParent(java.lang.String);"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.StringSlot",
+      "outcome": "pass",
+      "expected": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Slot<Ljava/lang/String;>;",
+        "descriptor: ()Ljava/lang/Object;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: (Ljava/lang/Object;)V",
+        "descriptor: (Ljava/lang/String;)V",
+        "descriptor: (Ljava/lang/String;)V",
+        "descriptor: Ljava/lang/String;",
+        "private java.lang.String value;",
+        "public java.lang.Object getValue();",
+        "public java.lang.String getValue();",
+        "public sourcegeneric.StringSlot(java.lang.String);",
+        "public void setValue(java.lang.Object);",
+        "public void setValue(java.lang.String);"
+      ],
+      "actual": [
+        "Signature: Ljava/lang/Object;Lsourcegeneric/Slot<Ljava/lang/String;>;",
+        "descriptor: ()Ljava/lang/Object;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: (Ljava/lang/Object;)V",
+        "descriptor: (Ljava/lang/String;)V",
+        "descriptor: (Ljava/lang/String;)V",
+        "descriptor: Ljava/lang/String;",
+        "private java.lang.String value;",
+        "public java.lang.Object getValue();",
+        "public java.lang.String getValue();",
+        "public sourcegeneric.StringSlot(java.lang.String);",
+        "public void setValue(java.lang.Object);",
+        "public void setValue(java.lang.String);"
+      ]
+    },
+    {
+      "id": "abi/sourcegeneric.UseKt",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: (I)I",
+        "public static final int boxedEffects();",
+        "public static final int intEcho();",
+        "public static final int numberBox();",
+        "public static final int tailWhen(int);",
+        "public static final java.lang.String box();",
+        "public static final java.lang.String genericEcho();",
+        "public static final java.lang.String inherited();",
+        "public static final java.lang.String inheritedProperty();",
+        "public static final java.lang.String nullableBox();"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: (I)I",
+        "public static final int boxedEffects();",
+        "public static final int intEcho();",
+        "public static final int numberBox();",
+        "public static final int tailWhen(int);",
+        "public static final java.lang.String box();",
+        "public static final java.lang.String genericEcho();",
+        "public static final java.lang.String inherited();",
+        "public static final java.lang.String inheritedProperty();",
+        "public static final java.lang.String nullableBox();"
+      ]
+    },
+    {
+      "id": "boundary/bound",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/bound/Boundary.kt",
+          "offset": 34,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Type argument violates upper bound of T",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/bound/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "source_sha256": "f9683d3cdfc9f4b27e4cca5a88ec4277c04aea1c3f255b68ea53d7218cae67da"
+    },
+    {
+      "id": "boundary/arity",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/arity/Boundary.kt",
+          "offset": 25,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Wrong number of type arguments for B: expected 1, found 2",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/arity/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "source_sha256": "4a45cfa55f88b9f8c9c93439d539e94a44af089cbc7bde36c4f76bed0e8a1de4"
+    },
+    {
+      "id": "boundary/raw_type",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/raw_type/Boundary.kt",
+          "offset": 25,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Source generic classifiers require explicit type arguments",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/raw_type/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "source_sha256": "0af48b594415cf9037b3956dc538ceb5336a2a8c1b73673e8f8429f1a6edbabf"
+    },
+    {
+      "id": "boundary/override",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/override/Boundary.kt",
+          "offset": 65,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Member overrides no supported interface declaration",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/override/Boundary.kt",
+          "line": 2,
+          "column": 25
+        }
+      ],
+      "official_accepted": false,
+      "source_sha256": "a52ea6a339080cf2116a05aa48d1ac1dcebfe1d5ebea0c03d02298ee7a43d201"
+    },
+    {
+      "id": "boundary/missing",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/missing/Boundary.kt",
+          "offset": 41,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Missing interface implementation: echo",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/missing/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "source_sha256": "ab5712d4e7f0c4ff36aaa55cb53c04482bea5b86c2b5bc990d7e245ccdc9596a"
+    },
+    {
+      "id": "boundary/projection_super",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/projection_super/Boundary.kt",
+          "offset": 15,
+          "category": "invalid_kotlin",
+          "code": "SUPERTYPE_PROJECTION_INVALID",
+          "message": "Projections are not allowed in immediate supertypes",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/projection_super/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "source_sha256": "1670cf4c246a730aecae6bef381b554a986f7775c084a22656339b4f8a775c7e"
+    },
+    {
+      "id": "boundary/enum_parameters",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/enum_parameters/Boundary.kt",
+          "offset": 16,
+          "category": "invalid_kotlin",
+          "code": "ENUM_TYPE_PARAMETERS_INVALID",
+          "message": "Enum classes cannot declare type parameters",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/enum_parameters/Boundary.kt",
+          "line": 1,
+          "column": 17
+        }
+      ],
+      "official_accepted": false,
+      "source_sha256": "47f4ff3ecbb2044f6f47c638092fca581dbf8374f795998c9ae08f1856689c7a"
+    },
+    {
+      "id": "boundary/nonexhaustive_tail",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nonexhaustive_tail/Boundary.kt",
+          "offset": 35,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unit if expressions are not supported",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nonexhaustive_tail/Boundary.kt",
+          "line": 1,
+          "column": 36
+        }
+      ],
+      "official_accepted": false,
+      "source_sha256": "aea281b3407a5d2dbf2c8853148b6a30b61a33dbd22f8034adeb060101398152"
+    },
+    {
+      "id": "boundary/inference",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/inference/Boundary.kt",
+          "offset": 50,
+          "category": "unsupported_language",
+          "code": "GENERIC_CONSTRUCTOR_INFERENCE_UNSUPPORTED",
+          "message": "Source generic construction requires explicit type arguments",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/inference/Boundary.kt",
+          "line": 2,
+          "column": 26
+        }
+      ],
+      "official_accepted": true,
+      "source_sha256": "60c1530253f80d1f7503c5ad428ca09bc59153cac896d81630e2a97b9eea4d4c"
+    },
+    {
+      "id": "boundary/variance",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/variance/Boundary.kt",
+          "offset": 8,
+          "category": "unsupported_language",
+          "code": "TYPE_PARAMETER_MODIFIER_UNSUPPORTED",
+          "message": "Variance and reified modifiers on function type parameters are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/variance/Boundary.kt",
+          "line": 1,
+          "column": 9
+        }
+      ],
+      "official_accepted": true,
+      "source_sha256": "332aac22169dbcdc4b42f432253a8644863cab9b974cdb475fa0aff007bacd82"
+    },
+    {
+      "id": "boundary/f_bound",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/f_bound/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "DEPENDENT_GENERIC_BOUND_UNSUPPORTED",
+          "message": "Dependent and recursive classifier bounds are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/f_bound/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "source_sha256": "362a42e03e7002cef6193f7094d849bf7527d3c8d385299a1d4ebc057032cc6a"
+    },
+    {
+      "id": "boundary/interface_bound",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_bound/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "CLASSIFIER_INTERFACE_BOUND_UNSUPPORTED",
+          "message": "Interface bounds on source classifiers are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_bound/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "source_sha256": "b7534f79f97ca3bc0a456a20edb05d1b463e55a8dd3455e64e2132d2275f5338"
+    },
+    {
+      "id": "boundary/generic_method",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/generic_method/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "GENERIC_CLASS_MEMBER_TYPE_PARAMETERS_UNSUPPORTED",
+          "message": "Generic members inside source generic classes are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/generic_method/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "source_sha256": "8b3f873cec675c0d10a0cb1aa84259f7fe26206357c30ad21522f737bd26216d"
+    },
+    {
+      "id": "boundary/shadow",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/shadow/Boundary.kt",
+          "offset": 33,
+          "category": "unsupported_language",
+          "code": "TYPE_PARAMETER_SHADOW_UNSUPPORTED",
+          "message": "Shadowing an enclosing type parameter is unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/shadow/Boundary.kt",
+          "line": 1,
+          "column": 34
+        }
+      ],
+      "official_accepted": true,
+      "source_sha256": "155ba0c24bcc9ab532858e45b66b531279fd77b6e909bfb046920d84be9ca563"
+    },
+    {
+      "id": "boundary/interface_default",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_default/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "GENERIC_INTERFACE_BODY_UNSUPPORTED",
+          "message": "Generic interface defaults, generic members, companions, and nested declarations are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/interface_default/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "source_sha256": "cdab64b90d0e4649b7009e23ad1235f0264a7f6afb508c326bead22b4c9e3782"
+    },
+    {
+      "id": "boundary/nested",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nested/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "GENERIC_CLASS_NESTED_UNSUPPORTED",
+          "message": "Generic data classes, companions, and nested declarations are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/nested/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "source_sha256": "a11cb7e50975863f3eff6896b95d90fc25789c7bc39c3f0641a793c7b68c0ef7"
+    },
+    {
+      "id": "boundary/lambda_capture",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/lambda_capture/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "GENERIC_CLASS_LAMBDA_UNSUPPORTED",
+          "message": "Lambdas capturing generic source classifier scopes are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/new-generics-integrated-v1/target/checks/2026-10-28T125926394540Z-new-source-generics/boundaries/lambda_capture/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "source_sha256": "991ebaaa464847993687b325d398c3bf2fbef35012a051fa65613407d935675a"
+    },
+    {
+      "id": "upstream/simpleReturnType/official",
+      "outcome": "pass",
+      "original": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/bridges/simpleReturnType.kt",
+      "source_sha256": "7b326733d823b5a63ee28931fe5429a687146f2613ffaee07a8bcbb2b593930b"
+    },
+    {
+      "id": "upstream/simpleReturnType/candidate",
+      "outcome": "pass",
+      "original": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/bridges/simpleReturnType.kt",
+      "source_sha256": "7b326733d823b5a63ee28931fe5429a687146f2613ffaee07a8bcbb2b593930b"
+    },
+    {
+      "id": "upstream/kt2920/official",
+      "outcome": "pass",
+      "original": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/bridges/kt2920.kt",
+      "source_sha256": "78e30d1e7457a295992f09c34e43e60948fe441c9ceb8c0864f06acc570a388a"
+    },
+    {
+      "id": "upstream/kt2920/candidate",
+      "outcome": "pass",
+      "original": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/bridges/kt2920.kt",
+      "source_sha256": "78e30d1e7457a295992f09c34e43e60948fe441c9ceb8c0864f06acc570a388a"
+    },
+    {
+      "id": "app/official",
+      "outcome": "pass",
+      "original": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt",
+      "source_sha256": "56326e90eba0626a340aaf73c3f4f539e7000c5b6b2242b45a81beb0319fcd33"
+    },
+    {
+      "id": "app_original_tests/official",
+      "outcome": "pass",
+      "original": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlphanumComparatorTest.kt",
+      "source_sha256": "187f9992953558c59e089dab942d738b7e5aa2bcb26735c1c63e11c81a31dea4",
+      "reused_assertion_bytecodes": true
+    },
+    {
+      "id": "app_metadata/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "app/candidate",
+      "outcome": "pass",
+      "original": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt",
+      "source_sha256": "56326e90eba0626a340aaf73c3f4f539e7000c5b6b2242b45a81beb0319fcd33"
+    },
+    {
+      "id": "app_original_tests/candidate",
+      "outcome": "pass",
+      "original": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlphanumComparatorTest.kt",
+      "source_sha256": "187f9992953558c59e089dab942d738b7e5aa2bcb26735c1c63e11c81a31dea4",
+      "reused_assertion_bytecodes": true
+    },
+    {
+      "id": "app_metadata/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_new_source_generics.py",
+      "--compiler",
+      "/Users/yuku/f/git/korrust/target/new-generics-integrated-build/release/korrust",
+      "--source-root",
+      ".",
+      "--junit-jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar",
+      "--hamcrest-jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar"
+    ]
+  ],
+  "limitations": [
+    "Invariant source generic classes/interfaces with explicit construction, class bounds, typed fields/members, transitive parameterized inheritance and required erased bridges. Existing generic functions/imported generic classes are prerequisites and excluded as new support.",
+    "Declaration-site variance, dependent/F-bounds, interface bounds, classifier generic member functions, generic interface defaults, nested generic classifiers/companions, generic classifier lambda capture and type-parameter shadowing remain explicit unsupported boundaries. Constructor type inference requires explicit arguments.",
+    "One actual unchanged AndroidBible source and two unchanged pinned upstream originals; fixed Java bytecodes, class verification, generic JVM signatures and official Kotlin metadata consumers. No full-app, device, performance or exhaustive-language claim."
+  ],
+  "emitted_classes_sha256": {
+    "official": {
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/LongEcho.class": "751651a0ed8a2c14953fb86f82a10571c201d24360966ef000e029b9687b5d40",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/IntSlot.class": "f833260c13ac18eda0f1bd9f5ecb03eacaa84f9d70e1bf44f66a6bda87dc43fa",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/Slot.class": "622eb95b30235969e40ce74336dd105cdb9c34c3c475c5f352b3f743c99aae84",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/CharEcho.class": "6f59db900cac13fd6178ff396b577a191b8c96e44a6530f77bd4eb437dedaf6c",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/GenericEcho.class": "6f1dcc1e66e771c7bdc030ea87ab72389ab44e3f90a0d7dd1271c49785fa8fa1",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/Bounded.class": "76c86683e6f5e493493e7780f8988d36b33b45d37f2d1fe7a562f125568bfe48",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/StringParent.class": "94431f3a11fb63b4375b444c6f7dd200ee6770b462721458023253b63097cb01",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/StringSlot.class": "d221005b65a033822e442be22c93851718218ccf4ef9d1e82a6808aee3f6efc9",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/Parent.class": "7c943005e9185d12002788ed934a2b64c629c9fc56de2f9251ef97bbdf73e10d",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/BooleanEcho.class": "2622411e573068eac9e4b68588b64e5de61e097930f285cf9f58cf06450d26dc",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/Box.class": "43926a9c4a1fbacc1e69445ea3722b3bec9311087065ad933987254ded1d3cc2",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/StringEcho.class": "8d3fadd772788d8774614dc65ec8b09e1598a61f0a0cdc269878b137b497b7f6",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/Echo.class": "d518f513cbb4e92339b7f8cbb43e4ae0ed840bc8ba2855d01f5f97122c4732e6",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/UseKt.class": "a99490d694e7f6bd26e80a3a3d09f28ccf0eb52e08c6b9eb46d192b43649035d",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/IntEcho.class": "8a5ae8c0327bcde34b066936dbaddaa94e64af298d3c970885f33d202191557c",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/official/sourcegeneric/Relay.class": "9c35972001ddbfe92ba4ee5ce86a7eefd473be40a80e5f933c336f0cfbfa56af"
+    },
+    "candidate": {
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/LongEcho.class": "7da4f0e6c0a217dbeb57b124ecb639c5775ef47884168cbb30dde5f8a1e27841",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/IntSlot.class": "ee8802b29b56fb54d6b2075685230b0f7b10b422f13e5cc456e0b50bd1582a90",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/Slot.class": "cc518e04eb87f9c48f49b6d3baa231b8158d8da343663a53a2354d178bdffb98",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/CharEcho.class": "a5d744c009c1f39322efc28bbd56d606802df6b5585371bcecde98f6251eab8d",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/GenericEcho.class": "e5d421a3ac79b77ad238e05f694c0c0fc8e57794659d256f4b8c74f7ff541a41",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/Bounded.class": "713398bda3274314fe24d9333fd076fc38534e1a68345b2d88eeb88759481a7b",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/StringParent.class": "c9e443ff5c3c1146e5a571d2e8d2e21d599ebc634edfd25e4d70f009b88eb016",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/StringSlot.class": "fff33f6af27cd03aa04c866272bc81d402163a108a117f184243741340748061",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/Parent.class": "9506c98679305f640f01ccd9afc1dccb2b0469d6b10139a2a8e1b6ecac08ab48",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/BooleanEcho.class": "8a793d9803ac1514f38234e731259462c04d2029f78914f3b9b43160e06b688e",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/Box.class": "e941cec39d8ee26527475a84513f9105a3aad3fc864ce8c2cb70d83a58918792",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/StringEcho.class": "957af1190cba692959e47166f74eeedded67c622fd04c1c2b2faa1fa46bef0ad",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/Echo.class": "2a8b6efc2aaacabd06de610e640d894e85015cebab9948414b59d19b6323ad69",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/UseKt.class": "81411f33390b8568578f8c87d5182972c3b632f66c14e74eada7990927af48ec",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/IntEcho.class": "35286f81a54cae8631965297e6986937b8e5ff5535a92bd200e0c1915659e266",
+      "target/checks/2026-10-28T125926394540Z-new-source-generics/candidate/sourcegeneric/Relay.class": "22734f6c081197fa52b1b192cc518a10e004999fdadfd02c3206a6982b4e162a"
+    }
+  },
+  "counts": {
+    "pass": 31,
+    "invalid_rejected": 8,
+    "unsupported_language": 9
+  },
+  "feature_acceptance": {
+    "family": "source_generic_classifiers_and_parameterized_supertypes",
+    "status": "passed",
+    "derived_counts": {
+      "pass": 31,
+      "invalid_rejected": 8,
+      "unsupported_language": 9
+    },
+    "excluded_assessment_cases": []
+  }
+}

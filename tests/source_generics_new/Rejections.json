@@ -1,0 +1,122 @@
+[
+  {
+    "id": "bound",
+    "source": "class B<T : Number>(val value: T)\nfun bad(): B<String> = B<String>(\"x\")",
+    "official": "reject",
+    "diagnostic": "bound"
+  },
+  {
+    "id": "arity",
+    "source": "class B<T>(val value: T)\nfun bad(): B<String, Int> = B<String, Int>(\"x\")",
+    "official": "reject",
+    "diagnostic": "number"
+  },
+  {
+    "id": "raw_type",
+    "source": "class B<T>(val value: T)\nfun bad(value: B): Int = 0",
+    "official": "reject",
+    "diagnostic": "explicit type arguments"
+  },
+  {
+    "id": "override",
+    "source": "interface E<T> { fun echo(value: T): T }\nclass Bad : E<String> { override fun echo(value: Int): Int = value }",
+    "official": "reject",
+    "diagnostic": "overrides no"
+  },
+  {
+    "id": "missing",
+    "source": "interface E<T> { fun echo(value: T): T }\nclass Bad : E<String>",
+    "official": "reject",
+    "diagnostic": "Missing interface"
+  },
+  {
+    "id": "projection_super",
+    "source": "interface E<T>\nclass Bad : E<out String>",
+    "official": "reject",
+    "diagnostic": "Projections"
+  },
+  {
+    "id": "enum_parameters",
+    "source": "enum class E<T> { A }",
+    "official": "reject",
+    "diagnostic": "cannot declare"
+  },
+  {
+    "id": "nonexhaustive_tail",
+    "source": "fun invalid(x: Int): Int { val y = if(x>0) { when { x>1 -> 2 } } else { 0 }; return y }",
+    "official": "reject",
+    "diagnostic": "Unit if"
+  },
+  {
+    "id": "inference",
+    "source": "class B<T>(val value: T)\nfun valid(): B<String> = B(\"x\")",
+    "official": "accept",
+    "diagnostic": "explicit type arguments",
+    "code": "GENERIC_CONSTRUCTOR_INFERENCE_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "variance",
+    "source": "class B<out T>(val value: T)",
+    "official": "accept",
+    "diagnostic": "Variance",
+    "code": "TYPE_PARAMETER_MODIFIER_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "f_bound",
+    "source": "class B<T : Comparable<T>>(val value: T)",
+    "official": "accept",
+    "diagnostic": "recursive classifier bounds",
+    "code": "DEPENDENT_GENERIC_BOUND_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "interface_bound",
+    "source": "class B<T : CharSequence>(val value: T)",
+    "official": "accept",
+    "diagnostic": "Interface bounds",
+    "code": "CLASSIFIER_INTERFACE_BOUND_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "generic_method",
+    "source": "class B<T>(val value: T) { fun <U> other(value: U): U = value }",
+    "official": "accept",
+    "diagnostic": "Generic members",
+    "code": "GENERIC_CLASS_MEMBER_TYPE_PARAMETERS_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "shadow",
+    "source": "class B<T>(val value: T) { fun <T> other(value: T): T = value }",
+    "official": "accept",
+    "diagnostic": "Shadowing",
+    "code": "TYPE_PARAMETER_SHADOW_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "interface_default",
+    "source": "interface E<T> { fun echo(value: T): T = value }",
+    "official": "accept",
+    "diagnostic": "Generic interface defaults",
+    "code": "GENERIC_INTERFACE_BODY_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "nested",
+    "source": "class B<T>(val value: T) { class Nested }",
+    "official": "accept",
+    "diagnostic": "nested declarations",
+    "code": "GENERIC_CLASS_NESTED_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "lambda_capture",
+    "source": "class B<T>(val value: T) { fun callback(): () -> T = { value } }",
+    "official": "accept",
+    "diagnostic": "Lambdas capturing",
+    "code": "GENERIC_CLASS_LAMBDA_UNSUPPORTED",
+    "category": "unsupported_language"
+  }
+]

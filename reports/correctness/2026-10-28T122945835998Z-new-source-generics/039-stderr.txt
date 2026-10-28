@@ -1,0 +1,9 @@
+target/checks/2026-10-28T122945835998Z-new-source-generics/boundaries/bound/Boundary.kt:2:14: error: type argument is not within its bounds: must be subtype of 'Number'.
+fun bad(): B<String> = B<String>("x")
+             ^^^^^^
+target/checks/2026-10-28T122945835998Z-new-source-generics/boundaries/bound/Boundary.kt:2:24: error: inapplicable candidate(s): constructor<T : Number>(value: T): B<T>
+fun bad(): B<String> = B<String>("x")
+                       ^
+target/checks/2026-10-28T122945835998Z-new-source-generics/boundaries/bound/Boundary.kt:2:26: error: type argument is not within its bounds: must be subtype of 'Number'.
+fun bad(): B<String> = B<String>("x")
+                         ^^^^^^

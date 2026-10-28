@@ -293,6 +293,8 @@ struct Strings {
     values: Vec<String>,
     indices: BTreeMap<String, u32>,
     local_names: Vec<u32>,
+    parameters: BTreeMap<String, u32>,
+    jvm_descriptors: BTreeMap<(String, String), String>,
 }
 
 impl Strings {
@@ -462,7 +464,12 @@ fn metadata_classifier<'a>(name: &'a str, imports: Imports<'a>) -> Result<&'a st
         "ThreadLocal" => Ok("java/lang/ThreadLocal"),
         "java/lang/Object" => Ok("kotlin/Any"),
         "java/lang/CharSequence" => Ok("kotlin/CharSequence"),
-        _ => imported_name(name, imports),
+        _ => match imported_name(name, imports)? {
+            "java/lang/Number" => Ok("kotlin/Number"),
+            "java/lang/Object" => Ok("kotlin/Any"),
+            "java/lang/CharSequence" => Ok("kotlin/CharSequence"),
+            resolved => Ok(resolved),
+        },
     }
 }
 
@@ -552,7 +559,11 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
             return Ok(proto);
         }
         Type::Parameter { name, .. } => {
-            proto.number(9, strings.id(name)?);
+            if let Some(id) = strings.parameters.get(name) {
+                proto.number(7, *id);
+            } else {
+                proto.number(9, strings.id(name)?);
+            }
             return Ok(proto);
         }
         Type::ReceiverFunction {
@@ -613,7 +624,12 @@ fn parameter(name: &str, ty: &Type, imports: Imports<'_>, strings: &mut Strings)
 fn method_signature(name: &str, desc: &str, strings: &mut Strings) -> Result<Proto> {
     let mut signature = Proto::default();
     signature.number(1, strings.id(name)?);
-    signature.number(2, strings.id(desc)?);
+    let desc = strings
+        .jvm_descriptors
+        .get(&(name.into(), desc.into()))
+        .cloned()
+        .unwrap_or(desc.into());
+    signature.number(2, strings.id(&desc)?);
     Ok(signature)
 }
 
@@ -660,6 +676,13 @@ fn function_with_jvm_name(
     imports: Imports<'_>,
     strings: &mut Strings,
 ) -> Result<Proto> {
+    let scope = strings.parameters.clone();
+    let base = scope.values().max().map_or(0, |id| id + 1);
+    for (index, p) in function.type_params.iter().enumerate() {
+        strings
+            .parameters
+            .insert(p.name.clone(), base + index as u32);
+    }
     let mut proto = Proto::default();
     let visibility = if function.protected {
         4
@@ -686,7 +709,7 @@ fn function_with_jvm_name(
     proto.number(2, strings.id(&function.name)?);
     for (index, parameter) in function.type_params.iter().enumerate() {
         let mut declaration = Proto::default();
-        declaration.number(1, index as u32);
+        declaration.number(1, base + index as u32);
         declaration.number(2, strings.id(&parameter.name)?);
         declaration.number(
             4,
@@ -736,7 +759,13 @@ fn function_with_jvm_name(
     }
     desc.push(')');
     desc.push_str(&descriptor(&function.result, imports)?);
+    let desc = strings
+        .jvm_descriptors
+        .get(&(jvm_name.into(), desc.clone()))
+        .cloned()
+        .unwrap_or(desc);
     proto.message(100, &method_signature(jvm_name, &desc, strings)?);
+    strings.parameters = scope;
     Ok(proto)
 }
 
@@ -748,6 +777,25 @@ fn class_metadata(
     checked: Option<&crate::check::ClassDecl>,
 ) -> Result<Metadata> {
     let mut strings = Strings::default();
+    if let Some(class) = checked {
+        for method in &class.methods {
+            if method.jvm_result.is_some() {
+                let logical = format!(
+                    "({}){}",
+                    method
+                        .params
+                        .iter()
+                        .map(|p| p.1.descriptor())
+                        .collect::<String>(),
+                    method.result.descriptor()
+                );
+                strings
+                    .jvm_descriptors
+                    .insert((method.jvm_name().into(), logical), method.descriptor());
+            }
+        }
+    }
+
     let mut proto = Proto::default();
     proto.number(
         1,
@@ -777,27 +825,32 @@ fn class_metadata(
         strings.local_names.push(name);
     }
     proto.number(3, name);
+    classifier_parameters(&mut proto, &class.type_params, imports, &mut strings)?;
     for nested in &class.nested {
         proto.number(7, strings.id(crate::declaration_name(nested))?);
     }
-    if let Some((name, _)) = &class.super_class {
-        let mut supertype = Proto::default();
-        supertype.number(
-            6,
-            strings.id(&imported_name(name, imports)?.replace('$', "."))?,
-        );
-        proto.message(6, &supertype);
-    }
-    if class.interfaces.is_empty() && class.super_class.is_none() {
-        let mut supertype = Proto::default();
-        supertype.number(6, strings.id("kotlin/Any")?);
-        proto.message(6, &supertype);
+    if class.super_types.is_empty() {
+        if class.super_class.is_none() && class.interfaces.is_empty() {
+            proto.message(
+                6,
+                &type_proto(&Type::Java("kotlin/Any".into()), imports, &mut strings)?,
+            );
+        } else {
+            for name in class
+                .super_class
+                .iter()
+                .map(|(name, _)| name)
+                .chain(&class.interfaces)
+            {
+                proto.message(
+                    6,
+                    &type_proto(&Type::Java(name.clone()), imports, &mut strings)?,
+                );
+            }
+        }
     } else {
-        for interface in &class.interfaces {
-            let mut supertype = Proto::default();
-            let name = imported_name(interface, imports)?.replace('$', ".");
-            supertype.number(6, strings.id(&name)?);
-            proto.message(6, &supertype);
+        for ty in &class.super_types {
+            proto.message(6, &type_proto(ty, imports, &mut strings)?);
         }
     }
     if class.companion.is_some() {
@@ -1313,6 +1366,14 @@ pub(crate) fn for_checked_class(
             _ => {}
         }
     }
+    for (source, checked) in source.super_types.iter().zip(&checked.super_types) {
+        bind(source, checked, &mut bindings);
+    }
+    for (source, checked) in source.type_params.iter().zip(&checked.type_params) {
+        for (source, checked) in source.bounds.iter().zip(&checked.bounds) {
+            bind(source, checked, &mut bindings);
+        }
+    }
     for ((_, source), (_, checked)) in source.params.iter().zip(&checked.params) {
         bind(source, checked, &mut bindings);
     }
@@ -1480,6 +1541,28 @@ pub(crate) fn for_class_companion(
     strings.finish(1, proto)
 }
 
+fn classifier_parameters(
+    proto: &mut Proto,
+    parameters: &[crate::syntax::TypeParameter],
+    imports: Imports<'_>,
+    strings: &mut Strings,
+) -> Result<()> {
+    for (index, p) in parameters.iter().enumerate() {
+        strings.parameters.insert(p.name.clone(), index as u32);
+    }
+    for (index, parameter) in parameters.iter().enumerate() {
+        let mut declaration = Proto::default();
+        declaration.number(1, index as u32);
+        declaration.number(2, strings.id(&parameter.name)?);
+        declaration.number(4, 2);
+        for bound in &parameter.bounds {
+            declaration.message(5, &type_proto(bound, imports, strings)?);
+        }
+        proto.message(5, &declaration);
+    }
+    Ok(())
+}
+
 fn interface_metadata(
     interface: &InterfaceDecl,
     owner: &str,
@@ -1496,16 +1579,14 @@ fn interface_metadata(
             | if interface.fun_interface { 16384 } else { 0 },
     );
     proto.number(3, strings.id(&owner.replace('$', "."))?);
+    classifier_parameters(&mut proto, &interface.type_params, imports, &mut strings)?;
     if interface.interfaces.is_empty() {
         let mut supertype = Proto::default();
         supertype.number(6, strings.id("kotlin/Any")?);
         proto.message(6, &supertype);
     } else {
-        for name in &interface.interfaces {
-            proto.message(
-                6,
-                &type_proto(&Type::Java(name.clone()), header_imports, &mut strings)?,
-            );
+        for ty in &interface.super_types {
+            proto.message(6, &type_proto(ty, header_imports, &mut strings)?);
         }
     }
     for nested in &interface.nested {
@@ -2781,7 +2862,7 @@ mod tests {
                 .unwrap()
                 .2,
         );
-        assert!(result.iter().any(|(number, _, _)| *number == 9));
+        assert!(result.iter().any(|(number, _, _)| *number == 7));
         assert!(!result.iter().any(|(number, _, _)| *number == 6));
         let projected = type_proto(&function.params[0].1, &module.imports, &mut strings).unwrap();
         let projected_fields = fields(&projected.0);
@@ -2924,6 +3005,8 @@ mod tests {
             lambdas: Vec::new(),
             constants: Vec::new(),
             functions: vec![crate::check::Function {
+                class_type_params: Vec::new(),
+                jvm_result: None,
                 annotations: Vec::new(),
                 vararg: false,
                 type_params: Vec::new(),

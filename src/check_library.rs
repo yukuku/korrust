@@ -54,6 +54,38 @@ pub(super) fn ordinary_member_methods(
         .collect())
 }
 
+pub(super) fn remove_overridden(
+    methods: Vec<JavaMethod>,
+    classpath: &Classpath,
+) -> Vec<JavaMethod> {
+    methods
+        .iter()
+        .filter(|method| {
+            !methods.iter().any(|other| {
+                other.owner != method.owner
+                    && other.source_name() == method.source_name()
+                    && other.access & 8 == 0
+                    && method.access & 8 == 0
+                    && relations::as_supertype(
+                        classpath,
+                        &Type::Java(other.owner.clone()),
+                        &method.owner,
+                    )
+                    .is_some()
+                    && class_method_types(other)
+                        .ok()
+                        .zip(class_method_types(method).ok())
+                        .is_some_and(|((a, _), (b, _))| {
+                            a.iter()
+                                .map(Type::descriptor)
+                                .eq(b.iter().map(Type::descriptor))
+                        })
+            })
+        })
+        .cloned()
+        .collect()
+}
+
 pub(super) fn static_import_owner(
     classpath: &Classpath,
     owner: &str,

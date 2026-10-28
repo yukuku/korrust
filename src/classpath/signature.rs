@@ -385,7 +385,13 @@ pub(super) fn attach(
             }
         }
     }
-    if !attrs.unsupported && attrs.annotations.is_empty() {
+    if !attrs.unsupported
+        && attrs.annotations.iter().all(|annotation| {
+            class.access & 0x0200 != 0
+                && annotation.name == "Ljava/lang/FunctionalInterface;"
+                && annotation.values.is_empty()
+        })
+    {
         class.unsupported = false;
     }
     class.library = Some(LibraryClass {

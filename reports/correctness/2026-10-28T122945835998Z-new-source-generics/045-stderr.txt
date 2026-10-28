@@ -1,0 +1,8 @@
+target/checks/2026-10-28T122945835998Z-new-source-generics/boundaries/override/Boundary.kt:2:1: error: class 'Bad' is not abstract and does not implement abstract member:
+fun echo(value: T): T
+class Bad : E<String> { override fun echo(value: Int): Int = value }
+^^^^^^^^^
+target/checks/2026-10-28T122945835998Z-new-source-generics/boundaries/override/Boundary.kt:2:25: error: 'echo' overrides nothing. Potential signatures for overriding:
+fun echo(value: String): String
+class Bad : E<String> { override fun echo(value: Int): Int = value }
+                        ^^^^^^^^

@@ -273,6 +273,8 @@ pub(super) fn overloads(
         }
         omitted.insert(index);
         let reduced = crate::check::Function {
+            class_type_params: Vec::new(),
+            jvm_result: None,
             jvm_name: function.jvm_name.clone(),
             annotations: function.annotations.clone(),
             vararg: function.vararg && !omitted.contains(&(function.params.len() - 1)),

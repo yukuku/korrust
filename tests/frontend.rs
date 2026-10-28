@@ -764,6 +764,7 @@ internal class Texts(private val texts: Array<String>, private val tag: Int) {
 
 #[test]
 fn rejects_unsupported_class_surface_and_mixed_declarations() {
+    assert!(compile_all("class E<T>()", "Generic.kt").is_ok());
     for source in [
         "private class E()",
         "protected class E()",
@@ -771,7 +772,6 @@ fn rejects_unsupported_class_surface_and_mixed_declarations() {
         "sealed class E()",
         "public internal class E()",
         "final final class E()",
-        "class E<T>()",
         "class E private constructor()",
         "class E(private val x: Int, private val x: Int)",
         "class E() { constructor(x: Int) {} }",
@@ -1054,11 +1054,11 @@ fn accepts_abstract_mutable_interface_properties() {
 
 #[test]
 fn rejects_unsupported_interface_and_companion_forms() {
+    assert!(compile_all("interface E<T>", "Generic.kt").is_ok());
     for source in [
         "private interface E",
         "protected interface E",
         "sealed interface E",
-        "interface E<T>",
         "interface E()",
         "interface E { var x: Int get() = 1 }",
         "interface E { val x: Int = 1 }",

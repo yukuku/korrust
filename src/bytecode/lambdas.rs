@@ -276,6 +276,8 @@ mod tests {
         locals: u16,
     ) -> crate::check::Function {
         crate::check::Function {
+            class_type_params: Vec::new(),
+            jvm_result: None,
             jvm_name: None,
             annotations: Vec::new(),
             vararg: false,

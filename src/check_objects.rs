@@ -392,6 +392,8 @@ fn legacy_check(
         }
         methods.push(ObjectMethod {
             function: Function {
+                class_type_params: Vec::new(),
+                jvm_result: None,
                 jvm_name: None,
                 annotations: Vec::new(),
                 vararg: false,
@@ -1029,6 +1031,8 @@ pub(super) fn check(
         };
         let function = if field.body.is_empty() {
             Function {
+                class_type_params: Vec::new(),
+                jvm_result: None,
                 jvm_name: None,
                 annotations: Vec::new(),
                 vararg: false,
@@ -1084,6 +1088,8 @@ pub(super) fn check(
             }
             methods.push(ObjectMethod {
                 function: Function {
+                    class_type_params: Vec::new(),
+                    jvm_result: None,
                     jvm_name: None,
                     annotations: Vec::new(),
                     vararg: false,

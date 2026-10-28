@@ -69,6 +69,8 @@ pub(crate) fn for_enum(
             .collect(),
         values: ordinary.data2,
         local_names: Vec::new(),
+        parameters: BTreeMap::new(),
+        jvm_descriptors: BTreeMap::new(),
     };
     payload.number(1, class_flags | 128 | 32768);
     payload.message(

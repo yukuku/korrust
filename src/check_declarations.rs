@@ -36,6 +36,15 @@ pub(super) fn check_class_with_constants(
     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
     constants: &HashMap<String, (Type, Expr)>,
 ) -> Result<ClassDecl> {
+    validate_classifier_generics(
+        &source.type_params,
+        &source.super_types,
+        classpath,
+        imports,
+        classes,
+        source.offset,
+    )?;
+    let initial_lambda_count = lambdas.borrow().len();
     validate_constructor_assignments(source)?;
     for method in &source.methods {
         validate_operator(&method.function, true)?;
@@ -72,6 +81,54 @@ pub(super) fn check_class_with_constants(
     } else {
         format!("{}/{}", package.replace('.', "/"), source.name)
     };
+    let type_params = source
+        .type_params
+        .iter()
+        .map(|parameter| {
+            Ok(syntax::TypeParameter {
+                name: parameter.name.clone(),
+                variance: parameter.variance,
+                bounds: parameter
+                    .bounds
+                    .iter()
+                    .map(|t| resolve_type_checked(t, imports, source.offset, classpath, classes))
+                    .collect::<Result<Vec<_>>>()?,
+            })
+        })
+        .collect::<Result<Vec<_>>>()?;
+    let self_type = classifier_type(&owner, &type_params);
+    let super_types = source
+        .super_types
+        .iter()
+        .map(|t| resolve_type_checked(t, imports, source.offset, classpath, classes))
+        .collect::<Result<Vec<_>>>()?;
+    if !source.type_params.is_empty()
+        && source
+            .methods
+            .iter()
+            .any(|m| !m.function.type_params.is_empty())
+    {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Generic members inside source generic classes are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "GENERIC_CLASS_MEMBER_TYPE_PARAMETERS_UNSUPPORTED",
+        ));
+    }
+    if !source.type_params.is_empty()
+        && (source.data || source.companion.is_some() || !source.nested.is_empty())
+    {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Generic data classes, companions, and nested declarations are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "GENERIC_CLASS_NESTED_UNSUPPORTED",
+        ));
+    }
     fn data_type(ty: &Type) -> bool {
         match ty {
             Type::Int
@@ -151,7 +208,7 @@ pub(super) fn check_class_with_constants(
                 .any(|m| m.function.name == method.name)
                 && method.access & 8 == 0
             {
-                required.insert(member_key(&method.name, &method.descriptor), method);
+                required.insert(logical_member_key(&method)?, method);
             }
         }
     }
@@ -163,13 +220,19 @@ pub(super) fn check_class_with_constants(
                 "Superclass must be an accessible non-final class",
             ));
         }
+        let parent_type = super_types
+            .iter()
+            .find(|t| library::type_owner(t) == Some(super_class.as_str()))
+            .cloned()
+            .unwrap_or(Type::Java(super_class.clone()));
         for method in classpath.methods(&super_class)? {
+            let method = library::specialize_receiver(method, &parent_type, &parent, classpath);
             if !method.name.starts_with('<')
                 && method.access & 8 == 0
                 && method.access & 5 != 0
                 && method.owner != "java/lang/Object"
             {
-                required.insert(member_key(&method.name, &method.descriptor), method);
+                required.insert(logical_member_key(&method)?, method);
             }
         }
     }
@@ -182,11 +245,26 @@ pub(super) fn check_class_with_constants(
             return Err(Diagnostic::new(source.offset, "Duplicate interface"));
         }
         interfaces.push(name.clone());
+        let parent_type = super_types
+            .iter()
+            .find(|t| library::type_owner(t) == Some(name.as_str()))
+            .cloned()
+            .unwrap_or(Type::Java(name.clone()));
         for method in
             interfaces::interface_methods(interface, classes, source.offset)?.into_values()
         {
+            let method = library::specialize_receiver(method, &parent_type, interface, classpath);
+            if classpath.load("java/lang/Object").is_ok_and(|object| {
+                object.methods.iter().any(|candidate| {
+                    candidate.access & 9 == 1
+                        && candidate.name == method.name
+                        && candidate.descriptor == method.descriptor
+                })
+            }) {
+                continue;
+            }
             if required
-                .insert(member_key(&method.name, &method.descriptor), method)
+                .insert(logical_member_key(&method)?, method)
                 .is_some()
             {
                 return Err(Diagnostic::new(
@@ -239,7 +317,7 @@ pub(super) fn check_class_with_constants(
         signatures: &signatures,
         receiver: Some(Local {
             slot: 0,
-            ty: Type::Java(owner.clone()),
+            ty: self_type.clone(),
             mutable: false,
         }),
         fields: &fields,
@@ -276,11 +354,17 @@ pub(super) fn check_class_with_constants(
     if let Some((_, arguments)) = &source.super_class {
         initializer_checker.receiver = None;
         let parent = classpath.load(&super_class)?;
+        let parent_type = super_types
+            .iter()
+            .find(|t| library::type_owner(t) == Some(super_class.as_str()))
+            .cloned()
+            .unwrap_or(Type::Java(super_class.clone()));
         let constructors = parent
             .methods
             .iter()
             .filter(|m| m.name == "<init>" && m.access & 5 != 0)
             .cloned()
+            .map(|method| library::specialize_receiver(method, &parent_type, &parent, classpath))
             .collect::<Vec<_>>();
         let method = initializer_checker.select_method(&constructors, arguments, source.offset)?;
         let (types, _) = class_method_types(&method)?;
@@ -312,7 +396,15 @@ pub(super) fn check_class_with_constants(
                 "Reordered and default superclass constructor arguments are unsupported",
             ));
         }
-        super_args = args;
+        let mut raw = method.clone();
+        raw.kotlin_params = None;
+        raw.kotlin_result = None;
+        let (storage, _) = class_method_types(&raw)?;
+        super_args = args
+            .into_iter()
+            .zip(storage)
+            .map(|(value, ty)| initializer_checker.coerce(value, java_parameter(ty), source.offset))
+            .collect::<Result<Vec<_>>>()?;
     }
     let mut constructor_locals = initializer_checker.next;
     drop(initializer_checker);
@@ -386,7 +478,7 @@ pub(super) fn check_class_with_constants(
                 source_operator: &HashSet::new(),
                 receiver: Some(Local {
                     slot: 0,
-                    ty: Type::Java(owner.clone()),
+                    ty: self_type.clone(),
                     mutable: false,
                 }),
                 fields: &fields,
@@ -688,6 +780,17 @@ pub(super) fn check_class_with_constants(
             },
         );
     }
+    for method in members.values_mut() {
+        if method.owner == owner && !method.name.starts_with('<') && method.access & 8 == 0 {
+            if let Some(result) = source_jvm_result(classpath, &super_types, method)? {
+                method.descriptor = format!(
+                    "{}){}",
+                    method.descriptor.split(')').next().unwrap(),
+                    result.descriptor()
+                );
+            }
+        }
+    }
     for function in &delegated_methods {
         let property = source
             .properties
@@ -811,7 +914,7 @@ pub(super) fn check_class_with_constants(
             source_operator: &HashSet::new(),
             receiver: Some(Local {
                 slot: 0,
-                ty: Type::Java(owner.clone()),
+                ty: self_type.clone(),
                 mutable: false,
             }),
             fields: &fields,
@@ -908,6 +1011,8 @@ pub(super) fn check_class_with_constants(
             .iter()
             .find(|method| method.function.offset == offset);
         let method = Function {
+            class_type_params: Vec::new(),
+            jvm_result: None,
             jvm_name: None,
             annotations: annotations::declaration_annotations(
                 source_method.map_or(&[], |method| method.function.annotations.as_slice()),
@@ -954,7 +1059,6 @@ pub(super) fn check_class_with_constants(
                 }
                 if !is_override
                     || private
-                    || method.descriptor() != required.descriptor
                     || !override_signature(
                         required,
                         &method
@@ -1028,7 +1132,7 @@ pub(super) fn check_class_with_constants(
                 .any(|p| p.name == field.name && p.lateinit)
         {
             let receiver = || Value {
-                ty: Type::Java(owner.clone()),
+                ty: self_type.clone(),
                 kind: ValueKind::Local(0),
             };
             if !methods
@@ -1036,6 +1140,8 @@ pub(super) fn check_class_with_constants(
                 .any(|m| m.name == getter && m.params.is_empty())
             {
                 methods.push(Function {
+                    class_type_params: Vec::new(),
+                    jvm_result: None,
                     jvm_name: None,
                     annotations: Vec::new(),
                     vararg: false,
@@ -1070,6 +1176,8 @@ pub(super) fn check_class_with_constants(
                     .any(|m| m.name == setter_name(&field.name) && m.params.len() == 1)
             {
                 methods.push(Function {
+                    class_type_params: Vec::new(),
+                    jvm_result: None,
                     jvm_name: None,
                     annotations: Vec::new(),
                     vararg: false,
@@ -1099,6 +1207,39 @@ pub(super) fn check_class_with_constants(
             }
         }
     }
+    if !type_params.is_empty() && lambdas.borrow().len() > initial_lambda_count {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Lambdas capturing generic source classifier scopes are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "GENERIC_CLASS_LAMBDA_UNSUPPORTED",
+        ));
+    }
+    for method in &mut methods {
+        method.class_type_params = type_params.iter().map(|p| p.name.clone()).collect();
+        let probe = function_method(method, &owner, 0, None);
+        method.jvm_result = source_jvm_result(classpath, &super_types, &probe)?;
+        if let Some(storage) = method.jvm_result.clone() {
+            struct Returns(Type);
+            impl ir_walk::Visitor for Returns {
+                fn value(&mut self, _: &mut Value, _: &str) {}
+                fn statement(&mut self, statement: &mut Statement, _: &str) {
+                    if let Statement::Return(value) = statement {
+                        if !value.ty.is_reference() && value.ty != Type::Unit {
+                            *value = Value {
+                                ty: self.0.clone(),
+                                kind: ValueKind::Box(Box::new(value.clone())),
+                            };
+                        }
+                    }
+                }
+            }
+            ir_walk::statements(&mut method.body, &owner, &mut Returns(storage));
+        }
+    }
+    let mut generic_bridges = Vec::new();
     let mut bridges = members
         .values()
         .filter(|m| m.owner == owner && m.access & 4 != 0 && !m.name.starts_with('<'))
@@ -1112,10 +1253,22 @@ pub(super) fn check_class_with_constants(
         if method.access & 4 != 0 {
             bridges.push(method.clone());
         }
-        if methods
-            .iter()
-            .any(|m| m.name == method.name && m.descriptor() == method.descriptor)
-        {
+        if let Some(target) = methods.iter().find(|m| {
+            m.name == method.name
+                && override_signature(
+                    &method,
+                    &m.params.iter().map(|p| p.1.clone()).collect::<Vec<_>>(),
+                    &m.result,
+                )
+                .unwrap_or(false)
+        }) {
+            if target.descriptor() != method.descriptor {
+                generic_bridges.push(GenericBridge {
+                    erased: method.clone(),
+                    target_params: target.params.iter().map(|p| p.1.clone()).collect(),
+                    target_result: target.physical_result().clone(),
+                });
+            }
             continue;
         }
         if method.access & 0x0400 != 0 && !source.abstract_ {
@@ -1173,7 +1326,7 @@ pub(super) fn check_class_with_constants(
             constructor_body.push(Statement::FieldStore {
                 name,
                 receiver: Value {
-                    ty: Type::Java(owner.clone()),
+                    ty: self_type.clone(),
                     kind: ValueKind::Local(0),
                 },
                 value,
@@ -1290,7 +1443,7 @@ pub(super) fn check_class_with_constants(
         }
         checker.receiver = Some(Local {
             slot: 0,
-            ty: Type::Java(owner.clone()),
+            ty: self_type.clone(),
             mutable: false,
         });
         let defaults =
@@ -1320,6 +1473,8 @@ pub(super) fn check_class_with_constants(
             },
             initializer_local_base,
             function: Function {
+                class_type_params: Vec::new(),
+                jvm_result: None,
                 jvm_name: None,
                 annotations: Vec::new(),
                 vararg: false,
@@ -1426,6 +1581,9 @@ pub(super) fn check_class_with_constants(
     }
     let abstract_methods = method_keys(|m| !m.has_body);
     Ok(ClassDecl {
+        type_params,
+        super_types,
+        generic_bridges,
         exposed_fields: source
             .properties
             .iter()
@@ -1618,6 +1776,8 @@ impl<'a> DeclarationContext<'a> {
             }));
         }
         Ok(Function {
+            class_type_params: Vec::new(),
+            jvm_result: None,
             jvm_name: None,
             annotations: annotations::declaration_annotations(
                 &source.annotations,
@@ -2645,6 +2805,8 @@ pub(super) fn check_static_state(
         };
         let mut getter = if property.body.is_empty() {
             Function {
+                class_type_params: Vec::new(),
+                jvm_result: None,
                 jvm_name: None,
                 annotations: Vec::new(),
                 vararg: false,
@@ -2715,6 +2877,8 @@ pub(super) fn check_static_state(
                     }
                 };
                 Function {
+                    class_type_params: Vec::new(),
+                    jvm_result: None,
                     jvm_name: None,
                     annotations: Vec::new(),
                     vararg: false,
@@ -3401,4 +3565,112 @@ pub(super) fn member_key(name: &str, descriptor: &str) -> String {
         name,
         descriptor.split(')').next().unwrap_or(descriptor)
     )
+}
+
+pub(super) fn classifier_type(owner: &str, parameters: &[syntax::TypeParameter]) -> Type {
+    if parameters.is_empty() {
+        return Type::Java(owner.into());
+    }
+    Type::Parameterized {
+        name: owner.into(),
+        arguments: parameters
+            .iter()
+            .map(|p| syntax::TypeArgument {
+                variance: syntax::Variance::Invariant,
+                ty: Some(Type::Parameter {
+                    name: p.name.clone(),
+                    upper_bound: Box::new(p.bounds.first().cloned().unwrap_or(Type::Nullable(
+                        Box::new(Type::Java("java/lang/Object".into())),
+                    ))),
+                }),
+            })
+            .collect(),
+    }
+}
+fn logical_member_key(method: &JavaMethod) -> Result<String> {
+    let (parameters, result) = class_method_types(method)?;
+    Ok(member_key(
+        &method.name,
+        &format!(
+            "({}){}",
+            parameters.iter().map(Type::descriptor).collect::<String>(),
+            result.descriptor()
+        ),
+    ))
+}
+
+pub(super) fn validate_classifier_generics(
+    parameters: &[syntax::TypeParameter],
+    supertypes: &[Type],
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+    classes: &HashMap<String, JavaClass>,
+    offset: usize,
+) -> Result<()> {
+    for ty in supertypes {
+        if matches!(ty, Type::Parameterized { arguments,.. } if arguments.iter().any(|a| a.ty.is_none() || a.variance != syntax::Variance::Invariant))
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Projections are not allowed in immediate supertypes",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "SUPERTYPE_PROJECTION_INVALID",
+            ));
+        }
+    }
+    for parameter in parameters {
+        if parameter.bounds.len() > 1 {
+            return Err(Diagnostic::new(
+                offset,
+                "Multiple source classifier bounds are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "CLASSIFIER_MULTIPLE_BOUNDS_UNSUPPORTED",
+            ));
+        }
+        for bound in &parameter.bounds {
+            fn dependent(ty: &Type) -> bool {
+                match ty {
+                    Type::Parameter { .. } => true,
+                    Type::Nullable(t)
+                    | Type::Platform(t)
+                    | Type::Array(t)
+                    | Type::List(t)
+                    | Type::MutableList(t) => dependent(t),
+                    Type::Parameterized { arguments, .. } => arguments
+                        .iter()
+                        .any(|a| a.ty.as_ref().is_some_and(dependent)),
+                    _ => false,
+                }
+            }
+            if dependent(bound) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Dependent and recursive classifier bounds are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "DEPENDENT_GENERIC_BOUND_UNSUPPORTED",
+                ));
+            }
+            let bound = resolve_type_checked(bound, imports, offset, classpath, classes)?;
+            if library::type_owner(&bound)
+                .and_then(|owner| classpath.load(owner).ok())
+                .is_some_and(|class| class.access & 0x200 != 0)
+            {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Interface bounds on source classifiers are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "CLASSIFIER_INTERFACE_BOUND_UNSUPPORTED",
+                ));
+            }
+        }
+    }
+    Ok(())
 }

@@ -110,6 +110,7 @@ fn nullability_annotation(ty: &Type) -> Option<&'static str> {
 
 fn generic_type(ty: &Type) -> String {
     match ty {
+        Type::Parameter { name, .. } => format!("T{name};"),
         Type::ReceiverFunction {
             receiver,
             params,
@@ -286,9 +287,51 @@ fn generic_method(params: &[(String, Type)], result: &Type) -> Option<String> {
     (signature != descriptor).then_some(signature)
 }
 
+fn erase_generic_variables(ty: &Type) -> Type {
+    match ty {
+        Type::Parameter { upper_bound, .. } => erase_generic_variables(upper_bound),
+        Type::Nullable(t) => Type::Nullable(Box::new(erase_generic_variables(t))),
+        Type::Platform(t) => Type::Platform(Box::new(erase_generic_variables(t))),
+        Type::Array(t) => Type::Array(Box::new(erase_generic_variables(t))),
+        Type::List(t) => Type::List(Box::new(erase_generic_variables(t))),
+        Type::MutableList(t) => Type::MutableList(Box::new(erase_generic_variables(t))),
+        Type::Parameterized { name, arguments } => Type::Parameterized {
+            name: name.clone(),
+            arguments: arguments
+                .iter()
+                .map(|a| crate::syntax::TypeArgument {
+                    variance: a.variance,
+                    ty: a.ty.as_ref().map(erase_generic_variables),
+                })
+                .collect(),
+        },
+        Type::Function { params, result } => Type::Function {
+            params: params.iter().map(erase_generic_variables).collect(),
+            result: Box::new(erase_generic_variables(result)),
+        },
+        Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::ReceiverFunction {
+            receiver: Box::new(erase_generic_variables(receiver)),
+            params: params.iter().map(erase_generic_variables).collect(),
+            result: Box::new(erase_generic_variables(result)),
+        },
+        _ => ty.clone(),
+    }
+}
+
 fn generic_function(function: &crate::check::Function) -> Option<String> {
-    if function.type_params.is_empty() {
-        return generic_method(&function.params, &function.result);
+    if function.type_params.is_empty() && function.class_type_params.is_empty() {
+        return generic_method(
+            &function
+                .params
+                .iter()
+                .map(|(n, t)| (n.clone(), erase_generic_variables(t)))
+                .collect::<Vec<_>>(),
+            &erase_generic_variables(&function.result),
+        );
     }
     fn scoped(ty: &Type, names: &[&str], argument: bool) -> String {
         match ty {
@@ -350,9 +393,10 @@ fn generic_function(function: &crate::check::Function) -> Option<String> {
         }
     }
     let names: Vec<_> = function
-        .type_params
+        .class_type_params
         .iter()
-        .map(|t| t.name.as_str())
+        .map(String::as_str)
+        .chain(function.type_params.iter().map(|t| t.name.as_str()))
         .collect();
     let declarations = function
         .type_params
@@ -406,15 +450,21 @@ fn generic_function(function: &crate::check::Function) -> Option<String> {
             _ => scoped(ty, names, false),
         }
     }
-    Some(format!(
-        "<{declarations}>({}){}",
+    let declarations = if declarations.is_empty() {
+        String::new()
+    } else {
+        format!("<{declarations}>")
+    };
+    let signature = format!(
+        "{declarations}({}){}",
         function
             .params
             .iter()
             .map(|(_, t)| parameter(t, &names))
             .collect::<String>(),
         scoped(&function.result, &names, false)
-    ))
+    );
+    (signature != function.descriptor()).then_some(signature)
 }
 
 fn add_method_attribute(method: &mut Vec<u8>, attribute: Vec<u8>) {
@@ -2763,11 +2813,11 @@ pub(crate) fn emit_with_bridges(
             &function.descriptor(),
             completed,
             generic_function(function).as_deref(),
-            nonnull(&function.result),
+            nonnull(function.physical_result()),
         )?;
         parameter_annotations(&mut pool, &mut method, &function.params)?;
         annotations::append_annotations(&mut pool, &mut method, &function.annotations)?;
-        nullable_result(&mut pool, &mut method, &function.result)?;
+        nullable_result(&mut pool, &mut method, function.physical_result())?;
         methods.push(method);
         if let Some(default) = defaults::function(
             &mut pool,
@@ -3019,10 +3069,10 @@ fn checked_method(
         &function.descriptor(),
         code,
         generic_function(function).as_deref(),
-        nonnull(&function.result),
+        nonnull(function.physical_result()),
     )?;
     parameter_annotations(pool, &mut method, &function.params)?;
-    nullable_result(pool, &mut method, &function.result)?;
+    nullable_result(pool, &mut method, function.physical_result())?;
     frames::attach(
         pool,
         &mut method,
@@ -3109,6 +3159,130 @@ fn private_method_bridge(
         } else {
             format!("(L{owner};{}", &function.descriptor()[1..])
         },
+        code,
+        None,
+        false,
+    )
+}
+
+fn classifier_signature(
+    parameters: &[crate::syntax::TypeParameter],
+    supertypes: &[Type],
+    parent: &str,
+    interfaces: &[String],
+) -> Option<String> {
+    if parameters.is_empty()
+        && !supertypes
+            .iter()
+            .any(|t| matches!(t, Type::Parameterized { .. }))
+    {
+        return None;
+    }
+    let mut signature = String::new();
+    if !parameters.is_empty() {
+        signature.push('<');
+        for parameter in parameters {
+            signature.push_str(&parameter.name);
+            signature.push(':');
+            signature.push_str(
+                &parameter
+                    .bounds
+                    .first()
+                    .map(generic_type)
+                    .unwrap_or("Ljava/lang/Object;".into()),
+            );
+        }
+        signature.push('>');
+    }
+    for owner in std::iter::once(parent).chain(interfaces.iter().map(String::as_str)) {
+        signature.push_str(&supertypes.iter().find(|t| matches!(t.base(), Type::Java(name) | Type::Parameterized { name, .. } if name == owner)).map(generic_type).unwrap_or_else(|| format!("L{owner};")));
+    }
+    Some(signature)
+}
+fn signature_attribute(pool: &mut Pool, signature: &str) -> Result<Vec<u8>> {
+    let mut attribute = Vec::new();
+    u2(&mut attribute, pool.utf8("Signature")?);
+    u4(&mut attribute, 2);
+    u2(&mut attribute, pool.utf8(signature)?);
+    Ok(attribute)
+}
+fn generic_override_bridge(
+    pool: &mut Pool,
+    owner: &str,
+    bridge: &crate::check::GenericBridge,
+) -> Result<Vec<u8>> {
+    fn adapt(pool: &mut Pool, code: &mut SimpleCode, from: &Type, to: &Type) -> Result<()> {
+        if from.descriptor() == to.descriptor() {
+            return Ok(());
+        }
+        if from.is_reference() && to.is_reference() {
+            code.reference(0xc0, pool.class(&reference_class(to)?)?);
+        } else if from.is_reference() {
+            let numeric = matches!(
+                to,
+                Type::Int | Type::Long | Type::Float | Type::Double | Type::Byte
+            );
+            let cast = if numeric {
+                "java/lang/Number"
+            } else {
+                boxed_owner(to)
+            };
+            code.reference(0xc0, pool.class(cast)?);
+            let name = match to {
+                Type::Int => "intValue",
+                Type::Long => "longValue",
+                Type::Float => "floatValue",
+                Type::Double => "doubleValue",
+                Type::Byte => "byteValue",
+                Type::Char => "charValue",
+                Type::Boolean => "booleanValue",
+                _ => return Err(failure("Unsupported generic bridge conversion")),
+            };
+            code.reference(
+                0xb6,
+                pool.method(cast, name, &format!("(){}", to.descriptor()))?,
+            );
+        } else if to.is_reference() {
+            code.reference(
+                0xb8,
+                pool.method(
+                    boxed_owner(from),
+                    "valueOf",
+                    &format!("({}){}", from.descriptor(), boxed_descriptor(from)),
+                )?,
+            );
+        } else {
+            return Err(failure("Unsupported generic bridge primitive conversion"));
+        }
+        Ok(())
+    }
+    let (parameters, result) = invocation_types(&bridge.erased.descriptor)?;
+    let slots = 1 + parameters.iter().map(Type::slots).sum::<usize>();
+    let mut code = SimpleCode::new((slots + 8) as u16, slots as u16);
+    code.bytes.push(0x2a);
+    let mut slot = 1;
+    for (from, to) in parameters.iter().zip(&bridge.target_params) {
+        code.bytes.extend([load_opcode(from), slot as u8]);
+        slot += from.slots();
+        adapt(pool, &mut code, from, to)?;
+    }
+    let target = format!(
+        "({}){}",
+        bridge
+            .target_params
+            .iter()
+            .map(Type::descriptor)
+            .collect::<String>(),
+        bridge.target_result.descriptor()
+    );
+    code.reference(0xb6, pool.method(owner, &bridge.erased.name, &target)?);
+    adapt(pool, &mut code, &bridge.target_result, &result)?;
+    code.bytes.push(return_opcode(&result));
+    simple_method(
+        pool,
+        0x1041,
+        &bridge.erased.name,
+        &bridge.erased.descriptor,
         code,
         None,
         false,
@@ -3810,11 +3984,28 @@ pub fn emit_class_files(
 }
 
 fn class_field(pool: &mut Pool, name: &str, ty: &Type, flags: u16) -> Result<Vec<u8>> {
+    class_field_with_signature(
+        pool,
+        name,
+        ty,
+        flags,
+        generic_type(&erase_generic_variables(ty)),
+    )
+}
+fn class_field_scoped(pool: &mut Pool, name: &str, ty: &Type, flags: u16) -> Result<Vec<u8>> {
+    class_field_with_signature(pool, name, ty, flags, generic_type(ty))
+}
+fn class_field_with_signature(
+    pool: &mut Pool,
+    name: &str,
+    ty: &Type,
+    flags: u16,
+    generic: String,
+) -> Result<Vec<u8>> {
     let mut field = Vec::new();
     u2(&mut field, flags);
     u2(&mut field, pool.utf8(name)?);
     u2(&mut field, pool.utf8(&ty.descriptor())?);
-    let generic = generic_type(ty);
     let has_signature = generic != ty.descriptor();
     let annotation = nullability_annotation(ty);
     u2(
@@ -3856,7 +4047,7 @@ fn emit_class_with(
     }
     let mut fields = Vec::new();
     for field in &class.fields {
-        fields.extend(class_field(
+        fields.extend(class_field_scoped(
             &mut pool,
             &field.name,
             &field.ty,
@@ -4147,7 +4338,7 @@ fn emit_class_with(
             }
             parameter_annotations(&mut pool, &mut method, &function.params)?;
             annotations::append_annotations(&mut pool, &mut method, &function.annotations)?;
-            nullable_result(&mut pool, &mut method, &function.result)?;
+            nullable_result(&mut pool, &mut method, function.physical_result())?;
             methods.push(method);
             continue;
         }
@@ -4214,11 +4405,11 @@ fn emit_class_with(
             &function.descriptor(),
             code,
             generic_function(function).as_deref(),
-            nonnull(&function.result),
+            nonnull(function.physical_result()),
         )?;
         parameter_annotations(&mut pool, &mut method, &function.params)?;
         annotations::append_annotations(&mut pool, &mut method, &function.annotations)?;
-        nullable_result(&mut pool, &mut method, &function.result)?;
+        nullable_result(&mut pool, &mut method, function.physical_result())?;
         frames::attach(
             &mut pool,
             &mut method,
@@ -4250,7 +4441,19 @@ fn emit_class_with(
         }
         methods.push(interface_bridge(&mut pool, bridge)?);
     }
+    for bridge in &class.generic_bridges {
+        methods.push(generic_override_bridge(&mut pool, owner, bridge)?);
+    }
     let mut additional_attributes = additional_attributes(&mut pool)?;
+    if let Some(signature) = classifier_signature(
+        &class.type_params,
+        &class.super_types,
+        &class.super_class,
+        &class.interfaces,
+    ) {
+        additional_attributes.push(signature_attribute(&mut pool, &signature)?);
+    }
+
     let mut extra_field_count = 0;
     if let Some(enumeration) = enum_data {
         let generated = enums::members(&mut pool, owner, enumeration)?;

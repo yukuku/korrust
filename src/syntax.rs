@@ -292,6 +292,8 @@ pub struct CatchClause {
 }
 #[derive(Clone, Debug)]
 pub struct InterfaceDecl {
+    pub type_params: Vec<TypeParameter>,
+    pub super_types: Vec<Type>,
     pub annotations: Vec<AnnotationUse>,
     pub fun_interface: bool,
     pub name: String,
@@ -413,6 +415,8 @@ pub enum ConstValue {
 }
 #[derive(Clone, Debug)]
 pub struct ClassDecl {
+    pub type_params: Vec<TypeParameter>,
+    pub super_types: Vec<Type>,
     pub param_annotations: Vec<Vec<AnnotationUse>>,
     pub annotations: Vec<AnnotationUse>,
     pub primary_constructor: bool,
@@ -1816,7 +1820,7 @@ impl Parser {
             if matches!(self.token().text.as_str(), "in" | "out" | "reified") {
                 return Err(self.error(
                     "Variance and reified modifiers on function type parameters are unsupported",
-                ));
+                ).with_kind(DiagnosticKind::UnsupportedLanguage, "TYPE_PARAMETER_MODIFIER_UNSUPPORTED"));
             }
             let name = self.name()?;
             if parameters
@@ -1824,6 +1828,18 @@ impl Parser {
                 .any(|parameter: &TypeParameter| parameter.name == name)
             {
                 return Err(self.error("Duplicate type parameter"));
+            }
+            if self
+                .type_parameters
+                .iter()
+                .any(|parameter| parameter.name == name)
+            {
+                return Err(self
+                    .error("Shadowing an enclosing type parameter is unsupported")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "TYPE_PARAMETER_SHADOW_UNSUPPORTED",
+                    ));
             }
             let mut parameter = TypeParameter {
                 name,
@@ -2136,6 +2152,14 @@ impl Parser {
             after_header,
             ..
         } = self.class_header()?;
+        if !body.type_params.is_empty() {
+            return Err(self
+                .error("Enum classes cannot declare type parameters")
+                .with_kind(
+                    DiagnosticKind::InvalidKotlin,
+                    "ENUM_TYPE_PARAMETERS_INVALID",
+                ));
+        }
         body.offset = offset;
         body.annotations = annotations.clone();
         body.internal = visibility.as_deref() == Some("internal");
@@ -2836,6 +2860,7 @@ impl Parser {
         })
     }
     fn class_decl(&mut self) -> Result<ClassDecl> {
+        let scope = self.type_parameters.len();
         let ClassHeader {
             mut declaration,
             mut property_names,
@@ -2845,6 +2870,7 @@ impl Parser {
         if !self.take("{") {
             self.pos = after_header;
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
+                self.type_parameters.truncate(scope);
                 return Ok(declaration);
             }
             return Err(self.error("Expected a class body or declaration separator"));
@@ -2852,6 +2878,7 @@ impl Parser {
         self.class_members(&mut declaration, &mut property_names)?;
         declaration.primary_constructor =
             has_constructor || declaration.secondary_constructors.is_empty();
+        self.type_parameters.truncate(scope);
         Ok(declaration)
     }
     fn class_header(&mut self) -> Result<ClassHeader> {
@@ -2908,6 +2935,7 @@ impl Parser {
         }
         self.lines();
         let name = self.classifier_name()?;
+        let type_params = self.type_parameters()?;
         let after_name = self.pos;
         self.lines();
         if self.at("@") {
@@ -3020,19 +3048,17 @@ impl Parser {
         let mut after_header = after_params;
         self.lines();
         let mut interfaces = Vec::new();
+        let mut super_types = Vec::new();
         let mut super_class = None;
         if self.take(":") {
             self.lines();
             loop {
-                self.reject_type_annotations()?;
-                let type_offset = self.token().offset;
-                let mut name = self.declaration_name()?;
-                while self.take(".") {
-                    name.push('/');
-                    name.push_str(&self.declaration_name()?);
-                }
-                self.record_type(&name, type_offset);
-                self.reject_parameterized_supertype()?;
+                let ty = self.ty()?;
+                let name = match &ty {
+                    Type::Java(name) | Type::Parameterized { name, .. } => name.clone(),
+                    _ => return Err(self.error("A supertype must name a class or interface")),
+                };
+                super_types.push(ty);
                 if self.at("(") {
                     if super_class.is_some() {
                         return Err(self.error("Only one superclass constructor is allowed"));
@@ -3052,7 +3078,17 @@ impl Parser {
                 self.lines();
             }
         }
+        if self.at("where") {
+            return Err(self
+                .error("Multiple source classifier bounds in where clauses are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "CLASSIFIER_MULTIPLE_BOUNDS_UNSUPPORTED",
+                ));
+        }
         let declaration = ClassDecl {
+            type_params,
+            super_types,
             annotations,
             param_annotations,
             primary_constructor: true,
@@ -3488,6 +3524,8 @@ impl Parser {
             return Err(self.error("Only unnamed companion objects are supported"));
         }
         let mut declaration = ClassDecl {
+            type_params: Vec::new(),
+            super_types: Vec::new(),
             annotations: Vec::new(),
             param_annotations: Vec::new(),
             primary_constructor: true,
@@ -3540,6 +3578,7 @@ impl Parser {
         })
     }
     fn interface_decl(&mut self, depth: usize, count: &mut usize) -> Result<InterfaceDecl> {
+        let scope = self.type_parameters.len();
         let offset = self.token().offset;
         let mut annotations = self.annotations()?;
         if depth > 16 {
@@ -3571,17 +3610,20 @@ impl Parser {
         }
         self.lines();
         let name = self.classifier_name()?;
+        let type_params = self.type_parameters()?;
         let mut after_header = self.pos;
         self.lines();
         let mut interfaces = Vec::new();
+        let mut super_types = Vec::new();
         if self.take(":") {
             self.lines();
             loop {
-                self.reject_type_annotations()?;
-                let type_offset = self.token().offset;
-                let name = self.declaration_name()?;
-                self.record_type(&name, type_offset);
-                self.reject_parameterized_supertype()?;
+                let ty = self.ty()?;
+                let name = match &ty {
+                    Type::Java(name) | Type::Parameterized { name, .. } => name.clone(),
+                    _ => return Err(self.error("An interface supertype must name an interface")),
+                };
+                super_types.push(ty);
                 interfaces.push(name);
                 if interfaces.len() > 32 {
                     return Err(self.error("Interfaces exceed the current 32-superinterface limit"));
@@ -3594,7 +3636,17 @@ impl Parser {
                 self.lines();
             }
         }
+        if self.at("where") {
+            return Err(self
+                .error("Multiple source classifier bounds in where clauses are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "CLASSIFIER_MULTIPLE_BOUNDS_UNSUPPORTED",
+                ));
+        }
         let mut declaration = InterfaceDecl {
+            type_params,
+            super_types,
             annotations,
             fun_interface,
             name,
@@ -3610,6 +3662,7 @@ impl Parser {
         if !self.take("{") {
             self.pos = after_header;
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
+                self.type_parameters.truncate(scope);
                 return Ok(declaration);
             }
             return Err(self.error(
@@ -3738,6 +3791,7 @@ impl Parser {
             self.end()?;
         }
         self.expect("}")?;
+        self.type_parameters.truncate(scope);
         Ok(declaration)
     }
     fn getter_body(&mut self) -> Result<Vec<Statement>> {
@@ -3941,6 +3995,8 @@ impl Parser {
                 self.lines();
                 self.expect("{")?;
                 let mut object = ClassDecl {
+                    type_params: Vec::new(),
+                    super_types: Vec::new(),
                     annotations: Vec::new(),
                     param_annotations: Vec::new(),
                     primary_constructor: true,
@@ -6161,8 +6217,8 @@ mod tests {
         );
         let invalid_constant = parse("const val INVALID = .").err().unwrap();
         assert_ne!(invalid_constant.message, "Invalid Double literal");
-        let generic_class = parse("class Generic<T>").err().unwrap();
-        assert_ne!(generic_class.code, "PARAMETERIZED_SUPERTYPE_UNSUPPORTED");
+        let generic_class = parse("class Generic<T>").unwrap();
+        assert_eq!(generic_class.class_decl.unwrap().type_params[0].name, "T");
     }
 
     #[test]

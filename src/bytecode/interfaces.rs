@@ -944,6 +944,16 @@ fn interface_classes(
 ) -> Result<()> {
     let (file, all, lambdas) = (context.file, context.all, context.lambdas);
     let mut builder = Builder::new(&interface.owner, 52, 0x0601, &interface.interfaces)?;
+    if let Some(signature) = classifier_signature(
+        &interface.type_params,
+        &interface.super_types,
+        "java/lang/Object",
+        &interface.interfaces,
+    ) {
+        builder
+            .attributes
+            .push(signature_attribute(&mut builder.pool, &signature)?);
+    }
     if let Some(companion) = &interface.companion {
         builder.field("Companion", &format!("L{};", companion.owner), 0x0019, true)?;
     }

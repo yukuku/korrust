@@ -214,6 +214,79 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
     }
     let module = &context;
     let mut class = empty(owner);
+    let imports = module
+        .imports
+        .iter()
+        .map(|(a, b, _)| (a.clone(), b.clone()))
+        .collect::<std::collections::HashMap<_, _>>();
+    let source_supertypes = module
+        .class_decl
+        .as_ref()
+        .map(|d| d.super_types.as_slice())
+        .or_else(|| {
+            module
+                .interface_decl
+                .as_ref()
+                .map(|d| d.super_types.as_slice())
+        })
+        .unwrap_or(&[]);
+    let resolved_supertypes = source_supertypes
+        .iter()
+        .map(|ty| {
+            let expanded = cp.expand_type_alias(ty, &imports, DEFAULT_KOTLIN_PACKAGES)?;
+            let name = match ty {
+                Type::Java(n) | Type::Parameterized { name: n, .. } => n.clone(),
+                _ => return Err(invalid()),
+            };
+            Ok((name, resolve(&expanded, module, cp)))
+        })
+        .collect::<Result<Vec<_>>>()?;
+    let super_owner = |name: &str| -> String {
+        resolved_supertypes
+            .iter()
+            .find(|(n, _)| n == name)
+            .map(|(_, t)| {
+                t.descriptor()
+                    .trim_start_matches('L')
+                    .trim_end_matches(';')
+                    .into()
+            })
+            .unwrap_or_else(|| {
+                resolve(&Type::Java(name.into()), module, cp)
+                    .descriptor()
+                    .trim_start_matches('L')
+                    .trim_end_matches(';')
+                    .into()
+            })
+    };
+
+    let generic = module
+        .class_decl
+        .as_ref()
+        .map(|d| (&d.type_params, &d.super_types))
+        .or_else(|| {
+            module
+                .interface_decl
+                .as_ref()
+                .map(|d| (&d.type_params, &d.super_types))
+        });
+    if let Some((parameters, _)) = generic {
+        class.library = Some(LibraryClass {
+            type_aliases: Vec::new(),
+            type_parameters: parameters
+                .iter()
+                .map(|p| crate::syntax::TypeParameter {
+                    name: p.name.clone(),
+                    variance: p.variance,
+                    bounds: p.bounds.iter().map(|t| resolve(t, module, cp)).collect(),
+                })
+                .collect(),
+            supertypes: resolved_supertypes.iter().map(|(_, t)| t.clone()).collect(),
+            package: None,
+            multifile_facade: None,
+        });
+    }
+
     if let Some(source) = &module.class_decl {
         class.access = if source.abstract_ {
             0x401
@@ -222,25 +295,14 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         } else {
             0x11
         };
-        class.super_name = source
-            .super_class
-            .as_ref()
-            .map(|(n, _)| {
-                resolve(&Type::Java(n.clone()), module, cp)
-                    .descriptor()
-                    .trim_start_matches('L')
-                    .trim_end_matches(';')
-                    .into()
-            })
-            .or_else(|| Some("java/lang/Object".into()));
-        class.interfaces = source
-            .interfaces
-            .iter()
-            .map(|n| match resolve(&Type::Java(n.clone()), module, cp) {
-                Type::Java(n) => n,
-                _ => unreachable!(),
-            })
-            .collect();
+        class.super_name = Some(
+            source
+                .super_class
+                .as_ref()
+                .map(|(n, _)| super_owner(n))
+                .unwrap_or("java/lang/Object".into()),
+        );
+        class.interfaces = source.interfaces.iter().map(|n| super_owner(n)).collect();
         let params = source
             .params
             .iter()
@@ -455,14 +517,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         class.kotlin_fun_interface = source.fun_interface;
         class.access = 0x601;
         class.kotlin_interface = true;
-        class.interfaces = source
-            .interfaces
-            .iter()
-            .map(|n| match resolve(&Type::Java(n.clone()), module, cp) {
-                Type::Java(n) => n,
-                _ => unreachable!(),
-            })
-            .collect();
+        class.interfaces = source.interfaces.iter().map(|n| super_owner(n)).collect();
         for p in &source.properties {
             let mut methods =
                 accessor(owner, &p.name, resolve(&p.ty, module, cp), p.mutable, false);
@@ -632,6 +687,31 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         }
         constants(&mut class, &module.constants)?;
     }
+    if module.class_decl.is_some() {
+        let supertypes = class
+            .library
+            .as_ref()
+            .map(|l| l.supertypes.clone())
+            .unwrap_or_default();
+        for method in &mut class.methods {
+            if !method.name.starts_with('<') && method.access & 8 == 0 {
+                if let Some(result) = crate::check::source_jvm_result(cp, &supertypes, method)? {
+                    let prefix = method.descriptor.split(')').next().unwrap();
+                    method.descriptor = format!("{prefix}){}", result.descriptor());
+                }
+            }
+        }
+    }
+    if let Some(library) = &mut class.library {
+        if library.supertypes.is_empty() {
+            library.supertypes = class
+                .super_name
+                .iter()
+                .chain(&class.interfaces)
+                .map(|name| Type::Java(name.clone()))
+                .collect();
+        }
+    }
     Ok(class)
 }
 
@@ -758,6 +838,14 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
     ) {
         match value {
             crate::syntax::Declaration::Class(value) => {
+                for parameter in &value.type_params {
+                    for bound in &parameter.bounds {
+                        ty(bound, names);
+                    }
+                }
+                for supertype in &value.super_types {
+                    ty(supertype, names);
+                }
                 annotations(&value.annotations, names);
                 for parameter in &value.param_annotations {
                     annotations(parameter, names);
@@ -817,6 +905,14 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
                 }
             }
             crate::syntax::Declaration::Interface(value) => {
+                for parameter in &value.type_params {
+                    for bound in &parameter.bounds {
+                        ty(bound, names);
+                    }
+                }
+                for supertype in &value.super_types {
+                    ty(supertype, names);
+                }
                 annotations(&value.annotations, names);
                 for name in &value.interfaces {
                     ty(&Type::Java(name.clone()), names);

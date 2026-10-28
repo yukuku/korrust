@@ -459,6 +459,8 @@ impl Checker<'_> {
             owner: owner.clone(),
             captures: fields,
             function: Function {
+                class_type_params: Vec::new(),
+                jvm_result: None,
                 jvm_name: None,
                 annotations: Vec::new(),
                 vararg: false,

@@ -1,0 +1,129 @@
+Classfile /Users/yuku/f/git/korrust/target/new-source-generics-implementation/target/checks/2026-10-28T124142094590Z-new-source-generics/official/sourcegeneric/Bounded.class
+  Last modified Oct 28, 2026; size 1122 bytes
+  SHA-256 checksum 76c86683e6f5e493493e7780f8988d36b33b45d37f2d1fe7a562f125568bfe48
+  Compiled from "Use.kt"
+public final class sourcegeneric.Bounded<T extends java.lang.Number> extends java.lang.Object
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // sourcegeneric/Bounded
+  super_class: #5                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 2, attributes: 3
+Constant pool:
+   #1 = Utf8               sourcegeneric/Bounded
+   #2 = Class              #1             // sourcegeneric/Bounded
+   #3 = Utf8               <T:Ljava/lang/Number;>Ljava/lang/Object;
+   #4 = Utf8               java/lang/Object
+   #5 = Class              #4             // java/lang/Object
+   #6 = Utf8               <init>
+   #7 = Utf8               (Ljava/lang/Number;)V
+   #8 = Utf8               (TT;)V
+   #9 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #10 = Utf8               value
+  #11 = String             #10            // value
+  #12 = Utf8               kotlin/jvm/internal/Intrinsics
+  #13 = Class              #12            // kotlin/jvm/internal/Intrinsics
+  #14 = Utf8               checkNotNullParameter
+  #15 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #16 = NameAndType        #14:#15        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #17 = Methodref          #13.#16        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #18 = Utf8               ()V
+  #19 = NameAndType        #6:#18         // "<init>":()V
+  #20 = Methodref          #5.#19         // java/lang/Object."<init>":()V
+  #21 = Utf8               Ljava/lang/Number;
+  #22 = NameAndType        #10:#21        // value:Ljava/lang/Number;
+  #23 = Fieldref           #2.#22         // sourcegeneric/Bounded.value:Ljava/lang/Number;
+  #24 = Utf8               this
+  #25 = Utf8               Lsourcegeneric/Bounded;
+  #26 = Utf8               getValue
+  #27 = Utf8               ()Ljava/lang/Number;
+  #28 = Utf8               ()TT;
+  #29 = Utf8               TT;
+  #30 = Utf8               Lkotlin/Metadata;
+  #31 = Utf8               mv
+  #32 = Integer            2
+  #33 = Integer            3
+  #34 = Integer            0
+  #35 = Utf8               k
+  #36 = Integer            1
+  #37 = Utf8               xi
+  #38 = Integer            48
+  #39 = Utf8               d1
+  #40 = Utf8               \u0000\u0012\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0004\n\u0002\u0010\u0000\n\u0002\b\u0007\u0018\u0000*\b\b\u0000\u0010\u0001*\u00020\u00022\u00020\u0003B\u000f\u0012\u0006\u0010\u0004\u001a\u00028\u0000¢\u0006\u0004\b\u0005\u0010\u0006R\u0013\u0010\u0004\u001a\u00028\u0000¢\u0006\n\n\u0002\u0010\t\u001a\u0004\b\u0007\u0010\b¨\u0006\n
+  #41 = Utf8               d2
+  #42 = Utf8               T
+  #43 = Utf8
+  #44 = Utf8               new_source_generics
+  #45 = Utf8               Use.kt
+  #46 = Utf8               Signature
+  #47 = Utf8               RuntimeInvisibleAnnotations
+  #48 = Utf8               Code
+  #49 = Utf8               LineNumberTable
+  #50 = Utf8               LocalVariableTable
+  #51 = Utf8               RuntimeInvisibleParameterAnnotations
+  #52 = Utf8               SourceFile
+  #53 = Utf8               RuntimeVisibleAnnotations
+{
+  private final T value;
+    descriptor: Ljava/lang/Number;
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+    Signature: #29                          // TT;
+    RuntimeInvisibleAnnotations:
+      0: #9()
+        org.jetbrains.annotations.NotNull
+
+  public sourcegeneric.Bounded(T);
+    descriptor: (Ljava/lang/Number;)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_1
+         1: ldc           #11                 // String value
+         3: invokestatic  #17                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokespecial #20                 // Method java/lang/Object."<init>":()V
+        10: aload_0
+        11: aload_1
+        12: putfield      #23                 // Field value:Ljava/lang/Number;
+        15: return
+      LineNumberTable:
+        line 30: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      16     0  this   Lsourcegeneric/Bounded;
+            0      16     1 value   Ljava/lang/Number;
+    Signature: #8                           // (TT;)V
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #9()
+          org.jetbrains.annotations.NotNull
+
+  public final T getValue();
+    descriptor: ()Ljava/lang/Number;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #23                 // Field value:Ljava/lang/Number;
+         4: areturn
+      LineNumberTable:
+        line 30: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lsourcegeneric/Bounded;
+    Signature: #28                          // ()TT;
+    RuntimeInvisibleAnnotations:
+      0: #9()
+        org.jetbrains.annotations.NotNull
+}
+Signature: #3                           // <T:Ljava/lang/Number;>Ljava/lang/Object;
+SourceFile: "Use.kt"
+RuntimeVisibleAnnotations:
+  0: #30(#31=[I#32,I#33,I#34],#35=I#36,#37=I#38,#39=[s#40],#41=[s#25,s#42,s#43,s#43,s#10,s#6,s#7,s#26,s#27,s#21,s#44])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\u0012\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0004\n\u0002\u0010\u0000\n\u0002\b\u0007\u0018\u0000*\b\b\u0000\u0010\u0001*\u00020\u00022\u00020\u0003B\u000f\u0012\u0006\u0010\u0004\u001a\u00028\u0000¢\u0006\u0004\b\u0005\u0010\u0006R\u0013\u0010\u0004\u001a\u00028\u0000¢\u0006\n\n\u0002\u0010\t\u001a\u0004\b\u0007\u0010\b¨\u0006\n"]
+      d2=["Lsourcegeneric/Bounded;","T","","","value","<init>","(Ljava/lang/Number;)V","getValue","()Ljava/lang/Number;","Ljava/lang/Number;","new_source_generics"]
+    )

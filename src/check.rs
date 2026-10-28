@@ -122,6 +122,8 @@ pub struct ObjectMethod {
     pub inline: bool,
 }
 pub struct InterfaceDecl {
+    pub type_params: Vec<syntax::TypeParameter>,
+    pub super_types: Vec<Type>,
     pub owner: String,
     pub interfaces: Vec<String>,
     pub methods: Vec<InterfaceMethod>,
@@ -184,7 +186,15 @@ pub struct SecondaryConstructor {
     pub delegation_args: Vec<Value>,
     pub delegates_to_this: bool,
 }
+pub struct GenericBridge {
+    pub erased: JavaMethod,
+    pub target_params: Vec<Type>,
+    pub target_result: Type,
+}
 pub struct ClassDecl {
+    pub type_params: Vec<syntax::TypeParameter>,
+    pub super_types: Vec<Type>,
+    pub generic_bridges: Vec<GenericBridge>,
     pub exposed_fields: HashMap<String, u16>,
     pub delegated_properties: Vec<(String, Value)>,
     pub primary_constructor: bool,
@@ -208,6 +218,8 @@ pub struct ClassDecl {
     pub bridges: Vec<JavaMethod>,
 }
 pub struct Function {
+    pub class_type_params: Vec<String>,
+    pub jvm_result: Option<Type>,
     pub jvm_name: Option<String>,
     pub annotations: Vec<DeclarationAnnotation>,
     pub vararg: bool,
@@ -225,6 +237,9 @@ impl Function {
     pub fn jvm_name(&self) -> &str {
         self.jvm_name.as_deref().unwrap_or(&self.name)
     }
+    pub fn physical_result(&self) -> &Type {
+        self.jvm_result.as_ref().unwrap_or(&self.result)
+    }
     pub fn descriptor(&self) -> String {
         format!(
             "({}){}",
@@ -232,7 +247,7 @@ impl Function {
                 .iter()
                 .map(|p| p.1.descriptor())
                 .collect::<String>(),
-            self.result.descriptor()
+            self.physical_result().descriptor()
         )
     }
 }
@@ -1658,6 +1673,22 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        let method = if let Some(class) = library::type_owner(&receiver.ty).and_then(|owner| {
+            self.classes
+                .get(owner)
+                .cloned()
+                .or_else(|| self.classpath.load(owner).ok())
+        }) {
+            if relations::projected_input(&method, &receiver.ty, &class, self.classpath) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Cannot write through an out or star type projection",
+                ));
+            }
+            library::specialize_receiver(method, &receiver.ty, &class, self.classpath)
+        } else {
+            method
+        };
         if method.access & 1 == 0 {
             let private_allowed = self
                 .classpath
@@ -2056,9 +2087,7 @@ impl Checker<'_> {
         let inherited =
             match library::ordinary_member_methods(self.classpath, owner, name, args.len()) {
                 Ok(methods) => methods,
-                Err(_) if class.library.is_none() && self.classes.contains_key(owner) => {
-                    class.methods.clone()
-                }
+                Err(_) if self.classes.contains_key(owner) => class.methods.clone(),
                 Err(error) => return Err(error),
             };
         let singleton = class
@@ -2100,6 +2129,7 @@ impl Checker<'_> {
             .filter(|m| !relations::projected_input(m, &receiver.ty, &class, self.classpath))
             .map(|m| library::specialize_receiver(m, &receiver.ty, &class, self.classpath))
             .collect::<Vec<_>>();
+        let methods = library::remove_overridden(methods, self.classpath);
         if projected && methods.is_empty() {
             return Err(Diagnostic::new(
                 offset,
@@ -3891,14 +3921,15 @@ impl Checker<'_> {
                     if let Some(owner) = library::type_owner(&receiver.ty).map(str::to_owned) {
                         let loaded = self.classpath.load(&owner).ok();
                         if let Some(class) = self.classes.get(&owner).or(loaded.as_ref()) {
-                            if let Some(method) = class
-                                .methods
-                                .iter()
+                            if let Some(method) = self
+                                .classpath
+                                .methods(&owner)
+                                .unwrap_or_else(|_| class.methods.clone())
+                                .into_iter()
                                 .find(|m| {
                                     m.source_property.as_deref() == Some(name)
                                         && m.kotlin_params.as_ref().is_some_and(Vec::is_empty)
                                 })
-                                .cloned()
                             {
                                 return self.member_call(method, receiver, &[], offset);
                             }
@@ -4123,6 +4154,20 @@ impl Checker<'_> {
                                     ));
                                 }
                                 return self.expected_value(&args[0], &Type::Java(owner.clone()));
+                            }
+                            if class
+                                .library
+                                .as_ref()
+                                .is_some_and(|l| !l.type_parameters.is_empty())
+                            {
+                                return Err(Diagnostic::new(
+                                    offset,
+                                    "Source generic construction requires explicit type arguments",
+                                )
+                                .with_kind(
+                                    crate::DiagnosticKind::UnsupportedLanguage,
+                                    "GENERIC_CONSTRUCTOR_INFERENCE_UNSUPPORTED",
+                                ));
                             }
                             let constructors: Vec<_> = class
                                 .methods
@@ -5324,6 +5369,31 @@ pub fn check_with_owner(
             own.extend(i.nested.iter());
         }
     }
+    let super_types = source
+        .class_decl
+        .as_ref()
+        .map(|d| d.super_types.as_slice())
+        .or_else(|| {
+            source
+                .interface_decl
+                .as_ref()
+                .map(|d| d.super_types.as_slice())
+        })
+        .unwrap_or(&[]);
+    for ty in super_types {
+        if !matches!(ty, Type::Parameterized { .. }) {
+            continue;
+        }
+        let resolved = resolve_type_checked(ty, &imports, 0, classpath, &classes)?;
+        let raw = match ty {
+            Type::Java(n) | Type::Parameterized { name: n, .. } => n,
+            _ => continue,
+        };
+        if let Some(owner) = library::type_owner(&resolved) {
+            imports.insert(raw.clone(), owner.into());
+            classes.insert(owner.into(), classpath.load(owner)?);
+        }
+    }
     let mut referenced = referenced.into_iter().collect::<Vec<_>>();
     referenced.sort_by_key(|name| {
         (
@@ -5765,6 +5835,8 @@ pub fn check_with_owner(
             params[0].0 = "<this>".into();
         }
         result.push(Function {
+            class_type_params: Vec::new(),
+            jvm_result: None,
             jvm_name: None,
             annotations: annotations::declaration_annotations(
                 &function.annotations,
@@ -5826,6 +5898,51 @@ pub(crate) fn setter_name(name: &str) -> String {
         name
     };
     format!("set{}{}", suffix[..1].to_ascii_uppercase(), &suffix[1..])
+}
+
+pub(crate) fn source_jvm_result(
+    classpath: &Classpath,
+    supertypes: &[Type],
+    method: &JavaMethod,
+) -> Result<Option<Type>> {
+    let (parameters, result) = class_method_types(method)?;
+    if result.is_reference() || result == Type::Unit {
+        return Ok(None);
+    }
+    for parent in supertypes {
+        let Some(owner) = library::type_owner(parent) else {
+            continue;
+        };
+        let class = classpath.load(owner)?;
+        for inherited in classpath.methods(owner)? {
+            if inherited.name != method.name || inherited.access & 8 != 0 {
+                continue;
+            }
+            let specialized =
+                library::specialize_receiver(inherited.clone(), parent, &class, classpath);
+            let (args, returns) = class_method_types(&specialized)?;
+            if args
+                .iter()
+                .map(Type::descriptor)
+                .eq(parameters.iter().map(Type::descriptor))
+                && returns.base() == result.base()
+            {
+                let mut erased = inherited;
+                erased.kotlin_params = None;
+                erased.kotlin_result = None;
+                if class_method_types(&erased)?.1.is_reference() {
+                    let descriptor = Type::Nullable(Box::new(result.clone())).descriptor();
+                    return Ok(Some(Type::Java(
+                        descriptor
+                            .trim_start_matches('L')
+                            .trim_end_matches(';')
+                            .into(),
+                    )));
+                }
+            }
+        }
+    }
+    Ok(None)
 }
 
 pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type)> {
