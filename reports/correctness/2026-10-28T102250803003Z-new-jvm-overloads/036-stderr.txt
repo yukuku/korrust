@@ -1,0 +1,10 @@
+target/checks/2026-10-28T102250803003Z-new-jvm-overloads/rejections/generated_collision/Rejected.kt:2:15: error: platform declaration clash: The following declarations have the same JVM signature (collide()I):
+    fun collide(): Int defined in rejected
+    fun collide(): Int defined in rejected
+@JvmOverloads fun collide(value: Int = 1): Int = value
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-10-28T102250803003Z-new-jvm-overloads/rejections/generated_collision/Rejected.kt:3:15: error: platform declaration clash: The following declarations have the same JVM signature (collide()I):
+    fun collide(): Int defined in rejected
+    fun collide(): Int defined in rejected
+@JvmOverloads fun collide(value: Long = 2L): Int = 2
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
