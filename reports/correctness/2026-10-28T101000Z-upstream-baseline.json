@@ -1,0 +1,3572 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-28T10:07:58.128356+00:00",
+  "status": "failed",
+  "selection": "Purposive bounded upstream originals: six existing-language runtime regressions, twenty candidate family representatives and interaction/root checks. This matrix is an execution sample, not exhaustive coverage or a feature acceptance tally.",
+  "matrix_sha256": "814c1e415747bdf8b7551cdd55f1e9ae47282193f43542026c88baf491b92436",
+  "limitations": [
+    "Unknown directives, unimplemented helpers, diagnostic equivalence, unsupported compiler settings, mixed cyclic Java/Kotlin compilation, and incremental edit scenarios are harness_unsupported.",
+    "Compilation/signature-only cases are scoped explicitly and do not establish runtime behavior or Kotlin metadata compatibility.",
+    "Incremental input is inventoried only; no speedup or rebuild-correctness claim.",
+    "Primitive array, sealed, value, generic, suspend and other family representatives do not establish every family dimension. Family acceptance requires additional independent assertions, invalid cases and official consumers."
+  ],
+  "cases": [
+    {
+      "id": "baseline_int_when",
+      "family": "existing_control_flow",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/branching/when2.kt",
+        "sha256": "fab72714f7c99ebbe8a93947b0b372e3bfe025fb89453a370679b47a7afaca28"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/baseline_int_when/sources/main/when2.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/upstream-baseline-frozen/baseline_int_when/caller/UpstreamBox.class": "51ca1fc00446648f15f342ef0bb17468140fa663724865b248089b7e6c9246d0"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "baseline_arrays",
+      "family": "existing_primitive_arrays",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachIntArray.kt",
+        "sha256": "428b491fbe0b8a68cced0cf689986be13399fe555912b0fcfb79fc444c186d9f"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/baseline_arrays/sources/main/forEachIntArray.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/upstream-baseline-frozen/baseline_arrays/caller/UpstreamBox.class": "b18af038da664f42994533f696d61ae7febde818edb0d3fe007047a7fcdcc988"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "baseline_typealias",
+      "family": "existing_nongeneric_alias",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/typeAlias/typeAliasConstructor.kt",
+        "sha256": "f39bee49f74aa332cb68082c019de03502305a067c5e20927007d6b7cc6d0fe6"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/baseline_typealias/sources/main/typeAliasConstructor.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_typealias/sources/main/typeAliasConstructor.kt",
+          "offset": 65,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "No applicable function overload or wrong argument count",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_typealias/sources/main/typeAliasConstructor.kt",
+          "line": 5,
+          "column": 21,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/typeAlias/typeAliasConstructor.kt",
+            "char_offset": 65,
+            "byte_offset": 65,
+            "line": 5,
+            "column": 21
+          }
+        }
+      ]
+    },
+    {
+      "id": "baseline_default_arguments",
+      "family": "existing_default_arguments",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/simpleFromOtherFile.kt",
+        "sha256": "75775f742707ff5aad7c66a819ae785102f52eb48831a1706b109f8ac3d5e578"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/baseline_default_arguments/sources/main/1.kt.source-map.json",
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/baseline_default_arguments/sources/main/2.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_default_arguments/sources/main/1.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_default_arguments/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/simpleFromOtherFile.kt",
+            "char_offset": 14,
+            "byte_offset": 14,
+            "line": 2,
+            "column": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "baseline_enum",
+      "family": "existing_enum",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/enum/inner.kt",
+        "sha256": "625c283ebbe4787e01570b1efafb8308b5671767bb886c03e93697f1e021bcc6"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/baseline_enum/sources/main/inner.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_enum/sources/main/inner.kt",
+          "offset": 61,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unresolved Java field",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_enum/sources/main/inner.kt",
+          "line": 7,
+          "column": 13,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/enum/inner.kt",
+            "char_offset": 61,
+            "byte_offset": 61,
+            "line": 7,
+            "column": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": "baseline_fun_interface",
+      "family": "existing_fun_interface",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/funInterface/basicFunInterfaceConversion.kt",
+        "sha256": "43d8f4479302c25d02941b4f30847efaea36a89c3661ae397f0a15c978f5829a"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/baseline_fun_interface/sources/main/basicFunInterfaceConversion.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/upstream-baseline-frozen/baseline_fun_interface/caller/UpstreamBox.class": "b1c940779e749aed71b2458d541026d5a07438f737a8abd49f7363779239ec84"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "raw_strings",
+      "family": "raw_strings",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt",
+        "sha256": "5ee1ac4401a57d6c6251af419bcdeb34114fde450c219990aec95a279013b28e"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/raw_strings/sources/main/rawStrings.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings/sources/main/rawStrings.kt",
+          "offset": 31,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Raw triple-quoted strings are not supported",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings/sources/main/rawStrings.kt",
+          "line": 2,
+          "column": 11,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt",
+            "char_offset": 31,
+            "byte_offset": 31,
+            "line": 2,
+            "column": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": "raw_strings_quotes",
+      "family": "raw_strings",
+      "root": "box",
+      "tier": "complex",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+        "sha256": "7d6202a5d197351e2a716222b819d51b67fdba120b59935b952ed91f86556f26"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt",
+          "offset": 125,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Raw triple-quoted strings are not supported",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt",
+          "line": 6,
+          "column": 7,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+            "char_offset": 125,
+            "byte_offset": 125,
+            "line": 6,
+            "column": 7
+          }
+        }
+      ]
+    },
+    {
+      "id": "generic_classifiers",
+      "family": "generic_classifiers",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/dataClasses/genericParam.kt",
+        "sha256": "4d90d91655040e777f064a5ee5afa789618aa28d59cadfc5ea50bfe5925e1b98"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/generic_classifiers/sources/main/genericParam.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_classifiers/sources/main/genericParam.kt",
+          "offset": 12,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected a class body or declaration separator",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_classifiers/sources/main/genericParam.kt",
+          "line": 1,
+          "column": 13,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/dataClasses/genericParam.kt",
+            "char_offset": 12,
+            "byte_offset": 12,
+            "line": 1,
+            "column": 13
+          }
+        }
+      ]
+    },
+    {
+      "id": "accessor_visibility",
+      "family": "accessor_visibility",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/properties/accessToPrivateSetter.kt",
+        "sha256": "bca47d89d65097ec1d3f4726f6f7cf3c19c96c1ac0a735907e87be1d6dcfe9d8"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/accessor_visibility/sources/main/accessToPrivateSetter.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/accessor_visibility/sources/main/accessToPrivateSetter.kt",
+          "offset": 35,
+          "category": "unsupported_language",
+          "code": "ACCESSOR_VISIBILITY_UNSUPPORTED",
+          "message": "Property accessor visibility requires unsupported independent JVM accessor visibility",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/accessor_visibility/sources/main/accessToPrivateSetter.kt",
+          "line": 4,
+          "column": 9,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/properties/accessToPrivateSetter.kt",
+            "char_offset": 35,
+            "byte_offset": 35,
+            "line": 4,
+            "column": 9
+          }
+        }
+      ]
+    },
+    {
+      "id": "jvm_overloads",
+      "family": "jvm_overloads",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/jvmOverloads/constructorWithTypeParams.kt",
+        "sha256": "f61fe2f5494ef3304f18a71aa1452a5cfdbf70bd60879a88d90f2bf916045298"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/jvm_overloads/sources/main/constructorWithTypeParams.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/jvm_overloads/sources/main/constructorWithTypeParams.kt",
+          "offset": 46,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected a class body or declaration separator",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/jvm_overloads/sources/main/constructorWithTypeParams.kt",
+          "line": 4,
+          "column": 8,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/jvmOverloads/constructorWithTypeParams.kt",
+            "char_offset": 46,
+            "byte_offset": 46,
+            "line": 4,
+            "column": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "primitive_arrays",
+      "family": "primitive_arrays",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachLongArray.kt",
+        "sha256": "b7c27c4727e4868d1afd73e589e12b3638b31782f09b5a64e38f5ebc122570fa"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/primitive_arrays/sources/main/forEachLongArray.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/primitive_arrays/sources/main/forEachLongArray.kt",
+          "offset": 34,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "No applicable function overload or wrong argument count",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/primitive_arrays/sources/main/forEachLongArray.kt",
+          "line": 2,
+          "column": 15,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachLongArray.kt",
+            "char_offset": 34,
+            "byte_offset": 34,
+            "line": 2,
+            "column": 15
+          }
+        }
+      ]
+    },
+    {
+      "id": "class_references",
+      "family": "class_references",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/simple.kt",
+        "sha256": "269a232f26fef4e3a87351e181857044612b480246be4286dff26c6a5b598774"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/class_references/sources/main/simple.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/class_references/sources/main/simple.kt",
+          "offset": 69,
+          "category": "unsupported_language",
+          "code": "CLASS_LITERAL_UNSUPPORTED",
+          "message": "Class literals require unsupported Kotlin class-reference semantics",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/class_references/sources/main/simple.kt",
+          "line": 4,
+          "column": 20,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/simple.kt",
+            "char_offset": 69,
+            "byte_offset": 69,
+            "line": 4,
+            "column": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "value_classes",
+      "family": "value_classes",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt",
+        "sha256": "ee9a31ea5400aa67b9d11ef0494cdf80ebac7be427a3e9015293557a487cdb70"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/value_classes/sources/main/topLevel.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/value_classes/sources/main/topLevel.kt",
+          "offset": 0,
+          "category": "missing_dependency",
+          "code": "CLASS_NOT_FOUND",
+          "message": "Java class java.io.Serializable was not found on the classpath",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/value_classes/sources/main/topLevel.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt",
+            "char_offset": 0,
+            "byte_offset": 0,
+            "line": 1,
+            "column": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "sealed_hierarchies",
+      "family": "sealed_hierarchies",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/sealed/delegatingConstructor.kt",
+        "sha256": "2ee9221dc82708c99a62f22474e1ec3ee8ecfe3f47874c8a11b5855f940424b5"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/sealed_hierarchies/sources/main/delegatingConstructor.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/sealed_hierarchies/sources/main/delegatingConstructor.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Only ordinary final classes are supported",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/sealed_hierarchies/sources/main/delegatingConstructor.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/sealed/delegatingConstructor.kt",
+            "char_offset": 0,
+            "byte_offset": 0,
+            "line": 1,
+            "column": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "inner_classes",
+      "family": "inner_classes",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/innerClass/simple.kt",
+        "sha256": "750757723f3b66fc2a88e2e87dcd1b4f49f49d5f67621a527b687ab7aea9fa84"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/inner_classes/sources/main/simple.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inner_classes/sources/main/simple.kt",
+          "offset": 56,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected a class member declaration",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inner_classes/sources/main/simple.kt",
+          "line": 6,
+          "column": 5,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/innerClass/simple.kt",
+            "char_offset": 56,
+            "byte_offset": 56,
+            "line": 6,
+            "column": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "interface_delegation",
+      "family": "interface_delegation",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt",
+        "sha256": "87e1f420a50df2fe2bc6917ba193b52a9070249b5cf16a5c35470918cb7b81a8"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/interface_delegation/sources/main/genericProperty.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/interface_delegation/sources/main/genericProperty.kt",
+          "offset": 23,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected an identifier",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/interface_delegation/sources/main/genericProperty.kt",
+          "line": 3,
+          "column": 9,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt",
+            "char_offset": 23,
+            "byte_offset": 23,
+            "line": 3,
+            "column": 9
+          }
+        }
+      ]
+    },
+    {
+      "id": "data_objects",
+      "family": "expanded_objects",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/dataObjects/equals.kt",
+        "sha256": "2f6061be9250e73090fb56bb1a5b2fef8edcf0e9fc385dd36aa3b7b7e4b3ec59"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "LANGUAGE",
+              "value": "+DataObjects",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/data_objects/sources/main/equals.kt.source-map.json"
+      ],
+      "reasons": [
+        "Candidate CLI cannot match requested language/JVM settings"
+      ],
+      "settings": [
+        {
+          "name": "LANGUAGE",
+          "value": "+DataObjects",
+          "original_line": 1
+        }
+      ]
+    },
+    {
+      "id": "enum_subclasses",
+      "family": "expanded_enums",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt",
+        "sha256": "f557b70100036251bfc54c081c3eff2dd86a99c3cca3567a875fbc38b1d838ce"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/enum_subclasses/sources/main/interfaceCallWithEntryClass.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/enum_subclasses/sources/main/interfaceCallWithEntryClass.kt",
+          "offset": 102,
+          "category": "unsupported_language",
+          "code": "ENUM_ENTRY_BODY_UNSUPPORTED",
+          "message": "Enum entry-specific class bodies are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/enum_subclasses/sources/main/interfaceCallWithEntryClass.kt",
+          "line": 10,
+          "column": 8,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt",
+            "char_offset": 102,
+            "byte_offset": 102,
+            "line": 10,
+            "column": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "generic_aliases",
+      "family": "generic_aliases",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt",
+        "sha256": "a416c2b8cd2592f0674b9b4b6c2974cb23ba14a5861db6857e36dee05db4fe5b"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/generic_aliases/sources/main/genericTypeAliasConstructor2.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_aliases/sources/main/genericTypeAliasConstructor2.kt",
+          "offset": 10,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected a class body or declaration separator",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_aliases/sources/main/genericTypeAliasConstructor2.kt",
+          "line": 1,
+          "column": 11,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt",
+            "char_offset": 10,
+            "byte_offset": 10,
+            "line": 1,
+            "column": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": "unsigned",
+      "family": "unsigned",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt",
+        "sha256": "abeddd4b29c3024780bc06179bc7f83823c83c7499bd97ced7db3026182a3af2"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/unsigned/sources/main/unsignedLiteralsWithSignedOverflow.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/unsigned/sources/main/unsignedLiteralsWithSignedOverflow.kt",
+          "offset": 56,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Integer literals require valid digits with separators between digits",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/unsigned/sources/main/unsignedLiteralsWithSignedOverflow.kt",
+          "line": 4,
+          "column": 21,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt",
+            "char_offset": 56,
+            "byte_offset": 56,
+            "line": 4,
+            "column": 21
+          }
+        }
+      ]
+    },
+    {
+      "id": "constant_expressions",
+      "family": "constant_expressions",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/properties/initializerOfConstValWithConstExpr.kt",
+        "sha256": "52f8b0aa5a21ea146fb4dda1286ceaf6b5fe79565d6ae3230697c2ccd51c1ffb"
+      },
+      "modules": [
+        {
+          "name": "lib",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        },
+        {
+          "name": "main",
+          "dependencies": [
+            "lib"
+          ],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/constant_expressions/sources/lib/lib.kt.source-map.json",
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/constant_expressions/sources/main/main.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constant_expressions/sources/lib/lib.kt",
+          "offset": 19,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Const initializers support only literals; expressions are not supported",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constant_expressions/sources/lib/lib.kt",
+          "line": 1,
+          "column": 20,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/properties/initializerOfConstValWithConstExpr.kt",
+            "char_offset": 50,
+            "byte_offset": 50,
+            "line": 3,
+            "column": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "java_static_imports",
+      "family": "java_member_resolution",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/enum/simpleJavaEnumWithStaticImport.kt",
+        "sha256": "4c92d1773b91145f002b8ec85b268a01f2bab43b96fa1820d5f0e849afe2b1f1"
+      },
+      "modules": [
+        {
+          "name": "lib",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            }
+          ]
+        },
+        {
+          "name": "main",
+          "dependencies": [
+            "lib"
+          ],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/java_static_imports/sources/lib/test/En.java.source-map.json",
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/java_static_imports/sources/main/1.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_static_imports/sources/main/1.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_static_imports/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/enum/simpleJavaEnumWithStaticImport.kt",
+            "char_offset": 138,
+            "byte_offset": 138,
+            "line": 13,
+            "column": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "rich_annotations",
+      "family": "rich_annotations",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt",
+        "sha256": "cc2a6d8fbfa40c2a3c699e95f1ea632f7b934ed36303dfb80d21cf74a0ea8268"
+      },
+      "modules": [
+        {
+          "name": "lib",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        },
+        {
+          "name": "main",
+          "dependencies": [
+            "lib"
+          ],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/rich_annotations/sources/lib/JavaAnn.java.source-map.json",
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/rich_annotations/sources/main/1.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/rich_annotations/sources/main/1.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/rich_annotations/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt",
+            "char_offset": 279,
+            "byte_offset": 279,
+            "line": 16,
+            "column": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "member_extensions",
+      "family": "member_extensions",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt",
+        "sha256": "a6ead4a04087fc0097e79c3128b11378bfeed42be48845a02b53ba0f8aca5273"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/member_extensions/sources/main/memberExtensionFunction.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/member_extensions/sources/main/memberExtensionFunction.kt",
+          "offset": 75,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected a class member declaration",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/member_extensions/sources/main/memberExtensionFunction.kt",
+          "line": 4,
+          "column": 5,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt",
+            "char_offset": 75,
+            "byte_offset": 75,
+            "line": 4,
+            "column": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "source_reified",
+      "family": "source_inline_reified",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt",
+        "sha256": "f500737df116ecdd44fa50403bf941dde82da05f55f7e092d75375d79b4d58ea"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/source_reified/sources/main/lib.kt.source-map.json",
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/source_reified/sources/main/main.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/source_reified/sources/main/lib.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected fun, found inline",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/source_reified/sources/main/lib.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt",
+            "char_offset": 32,
+            "byte_offset": 32,
+            "line": 4,
+            "column": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "suspension",
+      "family": "suspension",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/coroutines/async.kt",
+        "sha256": "fcc28400bf3f28b1e7bcb5c0aeda12891e29b99752e01aecd6f7b3d8913844d9"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "SKIP_JDK6",
+              "value": "",
+              "original_line": 1
+            },
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 2
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 3
+            },
+            {
+              "name": "FULL_JDK",
+              "value": "",
+              "original_line": 4
+            },
+            {
+              "name": "WITH_COROUTINES",
+              "value": "",
+              "original_line": 5
+            }
+          ]
+        }
+      ],
+      "reasons": [
+        "Unsupported directive SKIP_JDK6",
+        "Unsupported directive WITH_COROUTINES"
+      ]
+    },
+    {
+      "id": "inline_generics",
+      "family": "source_inline_reified",
+      "root": "boxInline",
+      "tier": "interaction",
+      "kind": "inline",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/boxInline/typeParameters/basic.kt",
+        "sha256": "5dc0a84c78cdc5ab1dea24a02e9d60ed1d497141a458e0e8413708f917fd014c"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/inline_generics/sources/main/1.kt.source-map.json",
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/inline_generics/sources/main/2.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_generics/sources/main/1.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_generics/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/boxInline/typeParameters/basic.kt",
+            "char_offset": 14,
+            "byte_offset": 14,
+            "line": 2,
+            "column": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "inline_nonlocal",
+      "family": "source_inline_reified",
+      "root": "boxInline",
+      "tier": "complex",
+      "kind": "inline",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt",
+        "sha256": "b10a8ee1323b6d69ea400193c9088222fb3f6a4c0ac6f6bea98118b0d81d68a0"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/inline_nonlocal/sources/main/1.kt.source-map.json",
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/inline_nonlocal/sources/main/2.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_nonlocal/sources/main/1.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_nonlocal/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt",
+            "char_offset": 14,
+            "byte_offset": 14,
+            "line": 2,
+            "column": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "diagnostics_markers",
+      "family": "diagnostic_mapping",
+      "root": "diagnostics",
+      "tier": "invalid",
+      "kind": "diagnostics",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/diagnostics/tests/controlFlowAnalysis/unresolvedReference.kt",
+        "sha256": "be51b2d72a2b6f000d4ef2a441bf69f5c64c19f2512ac40a94b5b9b32a41a7ca"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "RUN_PIPELINE_TILL",
+              "value": "FRONTEND",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/diagnostics_markers/sources/main/unresolvedReference.kt.source-map.json"
+      ],
+      "reasons": [
+        "Diagnostic sources and marker ranges mapped; diagnostic category/range equivalence is not implemented"
+      ]
+    },
+    {
+      "id": "diagnostics_options",
+      "family": "diagnostic_mapping",
+      "root": "diagnostics",
+      "tier": "interaction",
+      "kind": "diagnostics",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/diagnostics/tests/integerLiterals/typealiasOnLong.kt",
+        "sha256": "7b273a1dc0b12de5ea581e69f2a40fc60be4c2c637edeb17ce96527a517a055b"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "RUN_PIPELINE_TILL",
+              "value": "BACKEND",
+              "original_line": 1
+            },
+            {
+              "name": "FIR_IDENTICAL",
+              "value": "",
+              "original_line": 2
+            },
+            {
+              "name": "ISSUE",
+              "value": "KT-52825",
+              "original_line": 3
+            }
+          ]
+        }
+      ],
+      "reasons": [
+        "Unsupported directive ISSUE: KT-52825"
+      ]
+    },
+    {
+      "id": "java_consumes_void",
+      "family": "java_consumer_contract",
+      "root": "compileJavaAgainstKotlin",
+      "tier": "regression",
+      "kind": "java_consumer",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/compileJavaAgainstKotlin/method/Void.kt",
+        "sha256": "b5e0af55af5ad7839fc2eb107430fe63757fb07fca584bfc4f776ec2fc9bd06a"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/java_consumes_void/sources/main/Void.kt.source-map.json"
+      ],
+      "paired_java": {
+        "path": "references/kotlin/compiler/testData/compileJavaAgainstKotlin/method/Void.java",
+        "sha256": "93deecd2e0d8ec3269ca363387a1256fccaff4e1961da2c2637e737da2f91dbf"
+      },
+      "java_caller_class_hashes": {
+        "target/upstream-baseline-frozen/java_consumes_void/java-consumer/test/Void.class": "2ef945df067bf54b07f9b5a23a944e1636d544fef60e6f9993083d963073c25b"
+      },
+      "reasons": [
+        "Original Java caller compiled once against official output and JVM signatures compared; no upstream executable assertion entry point"
+      ]
+    },
+    {
+      "id": "kotlin_consumes_nested_java",
+      "family": "java_member_resolution",
+      "root": "compileKotlinAgainstJava",
+      "tier": "interaction",
+      "kind": "kotlin_consumer",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.kt",
+        "sha256": "88d18006d69378e006963848192da5215116f0dbc39d0204244bd62cf9a7b21e"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt.source-map.json"
+      ],
+      "paired_java": {
+        "path": "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.java",
+        "sha256": "ce8e7fa18cda41c361878a7cbaeffa844a6c71a5f3bc33e653a7da610312a9ca"
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt",
+          "offset": 29,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unresolved local: StaticNestedClass",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt",
+          "line": 3,
+          "column": 16,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.kt",
+            "char_offset": 29,
+            "byte_offset": 29,
+            "line": 3,
+            "column": 16
+          }
+        }
+      ]
+    },
+    {
+      "id": "constructor_signature",
+      "family": "constructor_signature",
+      "root": "writeSignature",
+      "tier": "regression",
+      "kind": "signature",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/writeSignature/constructor/Constructor0.kt",
+        "sha256": "84702e728eaa840f4c7ba4de80fb5749d7b82844b50e76a68a1a11eb8e4286a4"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/constructor_signature/sources/main/Constructor0.kt.source-map.json"
+      ],
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Compilation and top-level JVM descriptors only; no runtime assertion"
+    },
+    {
+      "id": "spec_receiver_priority",
+      "family": "member_extensions",
+      "root": "tests-spec",
+      "tier": "interaction",
+      "kind": "spec_box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/tests-spec/testData/codegen/box/linked/overload-resolution/receivers/p-6/pos/2.2.kt",
+        "sha256": "bce6ca16199272336a29190b21984e7ed365e28342fb6d592f25d7e088252161"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T101000Z-upstream-baseline/spec_receiver_priority/sources/main/2.2.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/spec_receiver_priority/sources/main/2.2.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/spec_receiver_priority/sources/main/2.2.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/tests-spec/testData/codegen/box/linked/overload-resolution/receivers/p-6/pos/2.2.kt",
+            "char_offset": 0,
+            "byte_offset": 0,
+            "line": 1,
+            "column": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "incremental_classpath_snapshot",
+      "family": "incremental_dependency_semantics",
+      "root": "incremental",
+      "tier": "interaction",
+      "kind": "incremental",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/incremental-compilation-impl/testData/org/jetbrains/kotlin/incremental/classpathDiff/ClasspathSnapshotterTest/kotlin/testSimpleClass/src/com/example/SimpleClass.kt",
+        "sha256": "9ae77b24c8265351afdff0305c053b79740b4e567e26457dd32c289f6ef41f60"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "reasons": [
+        "Incremental scenario dependency snapshots/edit scripts are not implemented"
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "label": "Official compiler identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0000-stderr.txt"
+    },
+    {
+      "label": "baseline_int_when/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/sources/main/when2.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0001-stderr.txt"
+    },
+    {
+      "label": "baseline_int_when/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/sources/main/when2.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0002-stderr.txt"
+    },
+    {
+      "label": "baseline_int_when/compile-box-caller-against-official",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/caller",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0003-stderr.txt"
+    },
+    {
+      "label": "baseline_int_when/verify-box/official",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/caller:/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0004-stderr.txt"
+    },
+    {
+      "label": "baseline_int_when/verify-box/candidate",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/caller:/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0005-stderr.txt"
+    },
+    {
+      "label": "baseline_int_when/signatures/official/When2Kt",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "When2Kt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0006-stderr.txt"
+    },
+    {
+      "label": "baseline_int_when/signatures/candidate/When2Kt",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_int_when/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "When2Kt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0007-stderr.txt"
+    },
+    {
+      "label": "baseline_arrays/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/sources/main/forEachIntArray.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0008-stderr.txt"
+    },
+    {
+      "label": "baseline_arrays/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/sources/main/forEachIntArray.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0009-stderr.txt"
+    },
+    {
+      "label": "baseline_arrays/compile-box-caller-against-official",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/caller",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0010-stderr.txt"
+    },
+    {
+      "label": "baseline_arrays/verify-box/official",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/caller:/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0011-stderr.txt"
+    },
+    {
+      "label": "baseline_arrays/verify-box/candidate",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/caller:/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0012-stderr.txt"
+    },
+    {
+      "label": "baseline_arrays/signatures/official/ForEachIntArrayKt",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachIntArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0013-stderr.txt"
+    },
+    {
+      "label": "baseline_arrays/signatures/candidate/ForEachIntArrayKt",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_arrays/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "ForEachIntArrayKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0014-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_typealias/sources/main/typeAliasConstructor.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_typealias/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0015-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_typealias/sources/main/typeAliasConstructor.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_typealias/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0016-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_default_arguments/sources/main/1.kt",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_default_arguments/sources/main/2.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_default_arguments/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0017-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_default_arguments/sources/main/1.kt",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_default_arguments/sources/main/2.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_default_arguments/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0018-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_enum/sources/main/inner.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_enum/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0019-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_enum/sources/main/inner.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_enum/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0020-stderr.txt"
+    },
+    {
+      "label": "baseline_fun_interface/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/sources/main/basicFunInterfaceConversion.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0021-stderr.txt"
+    },
+    {
+      "label": "baseline_fun_interface/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/sources/main/basicFunInterfaceConversion.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0022-stderr.txt"
+    },
+    {
+      "label": "baseline_fun_interface/compile-box-caller-against-official",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/caller",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0023-stderr.txt"
+    },
+    {
+      "label": "baseline_fun_interface/verify-box/official",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/caller:/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0024-stderr.txt"
+    },
+    {
+      "label": "baseline_fun_interface/verify-box/candidate",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/caller:/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0025-stderr.txt"
+    },
+    {
+      "label": "baseline_fun_interface/signatures/official/BasicFunInterfaceConversionKt",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "BasicFunInterfaceConversionKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0026-stderr.txt"
+    },
+    {
+      "label": "baseline_fun_interface/signatures/candidate/BasicFunInterfaceConversionKt",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "BasicFunInterfaceConversionKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0027-stderr.txt"
+    },
+    {
+      "label": "baseline_fun_interface/signatures/official/Foo",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "Foo"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0028-stderr.txt"
+    },
+    {
+      "label": "baseline_fun_interface/signatures/candidate/Foo",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/baseline_fun_interface/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "Foo"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0029-stderr.txt"
+    },
+    {
+      "label": "raw_strings/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings/sources/main/rawStrings.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0030-stderr.txt"
+    },
+    {
+      "label": "raw_strings/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings/sources/main/rawStrings.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0031-stderr.txt"
+    },
+    {
+      "label": "raw_strings_quotes/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings_quotes/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0032-stderr.txt"
+    },
+    {
+      "label": "raw_strings_quotes/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/raw_strings_quotes/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0033-stderr.txt"
+    },
+    {
+      "label": "generic_classifiers/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_classifiers/sources/main/genericParam.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_classifiers/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0034-stderr.txt"
+    },
+    {
+      "label": "generic_classifiers/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_classifiers/sources/main/genericParam.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_classifiers/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0035-stderr.txt"
+    },
+    {
+      "label": "accessor_visibility/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/accessor_visibility/sources/main/accessToPrivateSetter.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/accessor_visibility/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0036-stderr.txt"
+    },
+    {
+      "label": "accessor_visibility/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/accessor_visibility/sources/main/accessToPrivateSetter.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/accessor_visibility/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0037-stderr.txt"
+    },
+    {
+      "label": "jvm_overloads/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/jvm_overloads/sources/main/constructorWithTypeParams.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/jvm_overloads/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0038-stderr.txt"
+    },
+    {
+      "label": "jvm_overloads/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/jvm_overloads/sources/main/constructorWithTypeParams.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/jvm_overloads/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0039-stderr.txt"
+    },
+    {
+      "label": "primitive_arrays/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/primitive_arrays/sources/main/forEachLongArray.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/primitive_arrays/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0040-stderr.txt"
+    },
+    {
+      "label": "primitive_arrays/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/primitive_arrays/sources/main/forEachLongArray.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/primitive_arrays/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0041-stderr.txt"
+    },
+    {
+      "label": "class_references/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/class_references/sources/main/simple.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/class_references/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0042-stderr.txt"
+    },
+    {
+      "label": "class_references/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/class_references/sources/main/simple.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/class_references/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0043-stderr.txt"
+    },
+    {
+      "label": "value_classes/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/value_classes/sources/main/topLevel.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/value_classes/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0044-stderr.txt"
+    },
+    {
+      "label": "value_classes/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/value_classes/sources/main/topLevel.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/value_classes/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0045-stderr.txt"
+    },
+    {
+      "label": "sealed_hierarchies/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/sealed_hierarchies/sources/main/delegatingConstructor.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/sealed_hierarchies/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0046-stderr.txt"
+    },
+    {
+      "label": "sealed_hierarchies/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/sealed_hierarchies/sources/main/delegatingConstructor.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/sealed_hierarchies/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0047-stderr.txt"
+    },
+    {
+      "label": "inner_classes/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inner_classes/sources/main/simple.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inner_classes/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0048-stderr.txt"
+    },
+    {
+      "label": "inner_classes/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inner_classes/sources/main/simple.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inner_classes/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0049-stderr.txt"
+    },
+    {
+      "label": "interface_delegation/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/interface_delegation/sources/main/genericProperty.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/interface_delegation/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0050-stderr.txt"
+    },
+    {
+      "label": "interface_delegation/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/interface_delegation/sources/main/genericProperty.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/interface_delegation/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0051-stderr.txt"
+    },
+    {
+      "label": "data_objects/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/data_objects/sources/main/equals.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/data_objects/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-XXLanguage:+DataObjects",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0052-stderr.txt"
+    },
+    {
+      "label": "enum_subclasses/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/enum_subclasses/sources/main/interfaceCallWithEntryClass.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/enum_subclasses/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0053-stderr.txt"
+    },
+    {
+      "label": "enum_subclasses/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/enum_subclasses/sources/main/interfaceCallWithEntryClass.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/enum_subclasses/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0054-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_aliases/sources/main/genericTypeAliasConstructor2.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_aliases/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0055-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_aliases/sources/main/genericTypeAliasConstructor2.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/generic_aliases/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0056-stderr.txt"
+    },
+    {
+      "label": "unsigned/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/unsigned/sources/main/unsignedLiteralsWithSignedOverflow.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/unsigned/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0057-stderr.txt"
+    },
+    {
+      "label": "unsigned/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/unsigned/sources/main/unsignedLiteralsWithSignedOverflow.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/unsigned/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0058-stderr.txt"
+    },
+    {
+      "label": "constant_expressions/official/lib",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constant_expressions/sources/lib/lib.kt",
+        "-module-name",
+        "lib",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constant_expressions/official/lib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0059-stderr.txt"
+    },
+    {
+      "label": "constant_expressions/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constant_expressions/sources/main/main.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constant_expressions/official/lib:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constant_expressions/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0060-stderr.txt"
+    },
+    {
+      "label": "constant_expressions/candidate/lib",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constant_expressions/sources/lib/lib.kt",
+        "--module-name",
+        "lib",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constant_expressions/candidate/lib",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0061-stderr.txt"
+    },
+    {
+      "label": "java_static_imports/javac-dependency",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_static_imports/java-dependencies/lib",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_static_imports/sources/lib/test/En.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0062-stderr.txt"
+    },
+    {
+      "label": "java_static_imports/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_static_imports/sources/main/1.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_static_imports/java-dependencies/lib:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_static_imports/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0063-stderr.txt"
+    },
+    {
+      "label": "java_static_imports/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_static_imports/sources/main/1.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_static_imports/java-dependencies/lib:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_static_imports/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0064-stderr.txt"
+    },
+    {
+      "label": "rich_annotations/javac-dependency",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/rich_annotations/java-dependencies/lib",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/rich_annotations/sources/lib/JavaAnn.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0065-stderr.txt"
+    },
+    {
+      "label": "rich_annotations/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/rich_annotations/sources/main/1.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/rich_annotations/java-dependencies/lib:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/rich_annotations/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0066-stderr.txt"
+    },
+    {
+      "label": "rich_annotations/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/rich_annotations/sources/main/1.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/rich_annotations/java-dependencies/lib:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/rich_annotations/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0067-stderr.txt"
+    },
+    {
+      "label": "member_extensions/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/member_extensions/sources/main/memberExtensionFunction.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/member_extensions/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0068-stderr.txt"
+    },
+    {
+      "label": "member_extensions/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/member_extensions/sources/main/memberExtensionFunction.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/member_extensions/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0069-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0069-stderr.txt"
+    },
+    {
+      "label": "source_reified/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/source_reified/sources/main/lib.kt",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/source_reified/sources/main/main.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/source_reified/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0070-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0070-stderr.txt"
+    },
+    {
+      "label": "source_reified/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/source_reified/sources/main/lib.kt",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/source_reified/sources/main/main.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/source_reified/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0071-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0071-stderr.txt"
+    },
+    {
+      "label": "inline_generics/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_generics/sources/main/1.kt",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_generics/sources/main/2.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_generics/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0072-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0072-stderr.txt"
+    },
+    {
+      "label": "inline_generics/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_generics/sources/main/1.kt",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_generics/sources/main/2.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_generics/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0073-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0073-stderr.txt"
+    },
+    {
+      "label": "inline_nonlocal/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_nonlocal/sources/main/1.kt",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_nonlocal/sources/main/2.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_nonlocal/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0074-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0074-stderr.txt"
+    },
+    {
+      "label": "inline_nonlocal/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_nonlocal/sources/main/1.kt",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_nonlocal/sources/main/2.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/inline_nonlocal/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0075-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0075-stderr.txt"
+    },
+    {
+      "label": "diagnostics_markers/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/diagnostics_markers/sources/main/unresolvedReference.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/diagnostics_markers/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0076-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0076-stderr.txt"
+    },
+    {
+      "label": "java_consumes_void/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_consumes_void/sources/main/Void.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_consumes_void/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0077-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0077-stderr.txt"
+    },
+    {
+      "label": "java_consumes_void/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_consumes_void/sources/main/Void.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_consumes_void/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0078-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0078-stderr.txt"
+    },
+    {
+      "label": "java_consumes_void/compile-upstream-java-against-official",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_consumes_void/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_consumes_void/java-consumer",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_consumes_void/sources/Void.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0079-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0079-stderr.txt"
+    },
+    {
+      "label": "java_consumes_void/signatures/official/test.VoidKt",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_consumes_void/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "test.VoidKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0080-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0080-stderr.txt"
+    },
+    {
+      "label": "java_consumes_void/signatures/candidate/test.VoidKt",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/java_consumes_void/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "test.VoidKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0081-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0081-stderr.txt"
+    },
+    {
+      "label": "kotlin_consumes_nested_java/javac-dependency",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/kotlin_consumes_nested_java/java-dependencies/main",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/kotlin_consumes_nested_java/sources/StaticNestedClass.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0082-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0082-stderr.txt"
+    },
+    {
+      "label": "kotlin_consumes_nested_java/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar:/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/kotlin_consumes_nested_java/java-dependencies/main",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/kotlin_consumes_nested_java/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0083-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0083-stderr.txt"
+    },
+    {
+      "label": "kotlin_consumes_nested_java/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar:/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/kotlin_consumes_nested_java/java-dependencies/main",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/kotlin_consumes_nested_java/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0084-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0084-stderr.txt"
+    },
+    {
+      "label": "constructor_signature/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constructor_signature/sources/main/Constructor0.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constructor_signature/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0085-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0085-stderr.txt"
+    },
+    {
+      "label": "constructor_signature/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constructor_signature/sources/main/Constructor0.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constructor_signature/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0086-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0086-stderr.txt"
+    },
+    {
+      "label": "constructor_signature/signatures/official/Constructor0",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constructor_signature/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "Constructor0"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0087-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0087-stderr.txt"
+    },
+    {
+      "label": "constructor_signature/signatures/candidate/Constructor0",
+      "argv": [
+        "/opt/homebrew/opt/openjdk@21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/constructor_signature/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "Constructor0"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0088-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0088-stderr.txt"
+    },
+    {
+      "label": "spec_receiver_priority/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/spec_receiver_priority/sources/main/2.2.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/spec_receiver_priority/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0089-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0089-stderr.txt"
+    },
+    {
+      "label": "spec_receiver_priority/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/new-families-baseline/korrust",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/spec_receiver_priority/sources/main/2.2.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/upstream-baseline-frozen/spec_receiver_priority/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0090-stdout.txt",
+      "stderr": "reports/correctness/2026-10-28T101000Z-upstream-baseline/commands/0090-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "reference_source_manifest_sha256": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "compiler_pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "adapter_sha256": "63641daf0add9099cd75eb0fb5bf332a65807d790b0ddbfe26e46afbb64ac3c3",
+    "matrix_sha256": "814c1e415747bdf8b7551cdd55f1e9ae47282193f43542026c88baf491b92436"
+  },
+  "compiler": {
+    "path": "target/new-families-baseline/korrust",
+    "sha256": "e5efeaa7df7ea4ab6392b4ada5fd6558ca79b1bef2d7271e49785a66eb3002ee"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "kotlin_test_sha256": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7"
+  },
+  "frozen_input_hashes": {
+    "references/kotlin/compiler/incremental-compilation-impl/testData/org/jetbrains/kotlin/incremental/classpathDiff/ClasspathSnapshotterTest/kotlin/testSimpleClass/src/com/example/SimpleClass.kt": "9ae77b24c8265351afdff0305c053b79740b4e567e26457dd32c289f6ef41f60",
+    "references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt": "cc2a6d8fbfa40c2a3c699e95f1ea632f7b934ed36303dfb80d21cf74a0ea8268",
+    "references/kotlin/compiler/testData/codegen/box/arrays/forEachIntArray.kt": "428b491fbe0b8a68cced0cf689986be13399fe555912b0fcfb79fc444c186d9f",
+    "references/kotlin/compiler/testData/codegen/box/arrays/forEachLongArray.kt": "b7c27c4727e4868d1afd73e589e12b3638b31782f09b5a64e38f5ebc122570fa",
+    "references/kotlin/compiler/testData/codegen/box/branching/when2.kt": "fab72714f7c99ebbe8a93947b0b372e3bfe025fb89453a370679b47a7afaca28",
+    "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/simple.kt": "269a232f26fef4e3a87351e181857044612b480246be4286dff26c6a5b598774",
+    "references/kotlin/compiler/testData/codegen/box/coroutines/async.kt": "fcc28400bf3f28b1e7bcb5c0aeda12891e29b99752e01aecd6f7b3d8913844d9",
+    "references/kotlin/compiler/testData/codegen/box/dataClasses/genericParam.kt": "4d90d91655040e777f064a5ee5afa789618aa28d59cadfc5ea50bfe5925e1b98",
+    "references/kotlin/compiler/testData/codegen/box/dataObjects/equals.kt": "2f6061be9250e73090fb56bb1a5b2fef8edcf0e9fc385dd36aa3b7b7e4b3ec59",
+    "references/kotlin/compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt": "a6ead4a04087fc0097e79c3128b11378bfeed42be48845a02b53ba0f8aca5273",
+    "references/kotlin/compiler/testData/codegen/box/defaultArguments/simpleFromOtherFile.kt": "75775f742707ff5aad7c66a819ae785102f52eb48831a1706b109f8ac3d5e578",
+    "references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt": "87e1f420a50df2fe2bc6917ba193b52a9070249b5cf16a5c35470918cb7b81a8",
+    "references/kotlin/compiler/testData/codegen/box/enum/inner.kt": "625c283ebbe4787e01570b1efafb8308b5671767bb886c03e93697f1e021bcc6",
+    "references/kotlin/compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt": "f557b70100036251bfc54c081c3eff2dd86a99c3cca3567a875fbc38b1d838ce",
+    "references/kotlin/compiler/testData/codegen/box/enum/simpleJavaEnumWithStaticImport.kt": "4c92d1773b91145f002b8ec85b268a01f2bab43b96fa1820d5f0e849afe2b1f1",
+    "references/kotlin/compiler/testData/codegen/box/funInterface/basicFunInterfaceConversion.kt": "43d8f4479302c25d02941b4f30847efaea36a89c3661ae397f0a15c978f5829a",
+    "references/kotlin/compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt": "ee9a31ea5400aa67b9d11ef0494cdf80ebac7be427a3e9015293557a487cdb70",
+    "references/kotlin/compiler/testData/codegen/box/innerClass/simple.kt": "750757723f3b66fc2a88e2e87dcd1b4f49f49d5f67621a527b687ab7aea9fa84",
+    "references/kotlin/compiler/testData/codegen/box/jvmOverloads/constructorWithTypeParams.kt": "f61fe2f5494ef3304f18a71aa1452a5cfdbf70bd60879a88d90f2bf916045298",
+    "references/kotlin/compiler/testData/codegen/box/properties/accessToPrivateSetter.kt": "bca47d89d65097ec1d3f4726f6f7cf3c19c96c1ac0a735907e87be1d6dcfe9d8",
+    "references/kotlin/compiler/testData/codegen/box/properties/initializerOfConstValWithConstExpr.kt": "52f8b0aa5a21ea146fb4dda1286ceaf6b5fe79565d6ae3230697c2ccd51c1ffb",
+    "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt": "f500737df116ecdd44fa50403bf941dde82da05f55f7e092d75375d79b4d58ea",
+    "references/kotlin/compiler/testData/codegen/box/sealed/delegatingConstructor.kt": "2ee9221dc82708c99a62f22474e1ec3ee8ecfe3f47874c8a11b5855f940424b5",
+    "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt": "5ee1ac4401a57d6c6251af419bcdeb34114fde450c219990aec95a279013b28e",
+    "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt": "7d6202a5d197351e2a716222b819d51b67fdba120b59935b952ed91f86556f26",
+    "references/kotlin/compiler/testData/codegen/box/typeAlias/typeAliasConstructor.kt": "f39bee49f74aa332cb68082c019de03502305a067c5e20927007d6b7cc6d0fe6",
+    "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt": "a416c2b8cd2592f0674b9b4b6c2974cb23ba14a5861db6857e36dee05db4fe5b",
+    "references/kotlin/compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt": "abeddd4b29c3024780bc06179bc7f83823c83c7499bd97ced7db3026182a3af2",
+    "references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt": "b10a8ee1323b6d69ea400193c9088222fb3f6a4c0ac6f6bea98118b0d81d68a0",
+    "references/kotlin/compiler/testData/codegen/boxInline/typeParameters/basic.kt": "5dc0a84c78cdc5ab1dea24a02e9d60ed1d497141a458e0e8413708f917fd014c",
+    "references/kotlin/compiler/testData/compileJavaAgainstKotlin/method/Void.java": "93deecd2e0d8ec3269ca363387a1256fccaff4e1961da2c2637e737da2f91dbf",
+    "references/kotlin/compiler/testData/compileJavaAgainstKotlin/method/Void.kt": "b5e0af55af5ad7839fc2eb107430fe63757fb07fca584bfc4f776ec2fc9bd06a",
+    "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.java": "ce8e7fa18cda41c361878a7cbaeffa844a6c71a5f3bc33e653a7da610312a9ca",
+    "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.kt": "88d18006d69378e006963848192da5215116f0dbc39d0204244bd62cf9a7b21e",
+    "references/kotlin/compiler/testData/diagnostics/tests/controlFlowAnalysis/unresolvedReference.kt": "be51b2d72a2b6f000d4ef2a441bf69f5c64c19f2512ac40a94b5b9b32a41a7ca",
+    "references/kotlin/compiler/testData/diagnostics/tests/integerLiterals/typealiasOnLong.kt": "7b273a1dc0b12de5ea581e69f2a40fc60be4c2c637edeb17ce96527a517a055b",
+    "references/kotlin/compiler/testData/writeSignature/constructor/Constructor0.kt": "84702e728eaa840f4c7ba4de80fb5749d7b82844b50e76a68a1a11eb8e4286a4",
+    "references/kotlin/compiler/tests-spec/testData/codegen/box/linked/overload-resolution/receivers/p-6/pos/2.2.kt": "bce6ca16199272336a29190b21984e7ed365e28342fb6d592f25d7e088252161",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+    "target/new-families-baseline/korrust": "e5efeaa7df7ea4ab6392b4ada5fd6558ca79b1bef2d7271e49785a66eb3002ee",
+    "tools/upstream_feature_matrix.json": "814c1e415747bdf8b7551cdd55f1e9ae47282193f43542026c88baf491b92436",
+    "tools/upstream_jvm.py": "63641daf0add9099cd75eb0fb5bf332a65807d790b0ddbfe26e46afbb64ac3c3"
+  },
+  "counts": {
+    "correctness_failure": 23,
+    "harness_unsupported": 6,
+    "pass": 4,
+    "unsupported_language": 3
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "claims": "Selected upstream fixture outcomes only; no compatibility percentage, full-suite, Android, or performance claim",
+  "archived_from": "target/upstream-baseline-frozen",
+  "reproduction_command": [
+    "python3",
+    "tools/upstream_jvm.py",
+    "--candidate",
+    "target/new-families-baseline/korrust",
+    "--output",
+    "target/upstream-fresh-run"
+  ]
+}
