@@ -1052,6 +1052,7 @@ fn interface_classes(
         output.push(builder.finish(
             file,
             &Metadata {
+                raw_data2: Default::default(),
                 kind: 3,
                 data1: Vec::new(),
                 data2: Vec::new(),

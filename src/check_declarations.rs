@@ -1194,6 +1194,7 @@ pub(super) fn check_class_with_constants(
                 imports,
                 "METHOD",
                 None,
+                Some(&owner),
             )?,
             vararg: source_method.is_some_and(|method| method.function.vararg),
             type_params: resolve_parameters(
@@ -2016,6 +2017,7 @@ impl<'a> DeclarationContext<'a> {
                 self.imports,
                 "METHOD",
                 None,
+                Some(&self.owner),
             )?,
             vararg: source.vararg,
             type_params: resolve_parameters(

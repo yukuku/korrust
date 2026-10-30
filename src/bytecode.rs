@@ -1,3 +1,4 @@
+pub(crate) mod annotation_classes;
 pub(crate) mod annotation_files;
 mod annotations;
 use crate::jvm_descriptor::method_types as invocation_types;
@@ -3846,9 +3847,15 @@ fn metadata_attribute_with_annotations(
             u16::try_from(metadata.data2.len())
                 .map_err(|_| failure("Metadata array exceeds the JVM limit"))?,
         );
-        for value in &metadata.data2 {
+        for (index, value) in metadata.data2.iter().enumerate() {
             annotation.push(b's');
-            u2(&mut annotation, pool.utf8(value)?);
+            u2(
+                &mut annotation,
+                match metadata.raw_data2.get(&(index as u32)) {
+                    Some(units) => pool.utf16(units)?,
+                    None => pool.utf8(value)?,
+                },
+            );
         }
     }
     let mut attribute = Vec::new();
@@ -4656,6 +4663,7 @@ mod representation_tests {
             .finish(
                 "Value.kt",
                 &crate::metadata::Metadata {
+                    raw_data2: std::collections::BTreeMap::new(),
                     kind: 1,
                     data1: Vec::new(),
                     data2: Vec::new(),

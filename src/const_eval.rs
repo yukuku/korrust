@@ -332,6 +332,9 @@ fn evaluate_inner(
                 "Class literals cannot be compile-time scalar constants",
             ));
         }
+        ExprKind::AnnotationConstant { value, .. } => {
+            return evaluate(value, resolve, enabled, depth);
+        }
         ExprKind::Int(value) => numeric_literal(i128::from(*value), false, offset)?,
         ExprKind::Long(value) => numeric_literal(*value, true, offset)?,
         ExprKind::Float(value) => ConstValue::Float(*value),
@@ -505,8 +508,11 @@ fn fold_with_budget(
     }
 }
 
-fn integer_literal_expression(expression: &Expr) -> bool {
+pub(crate) fn integer_literal_expression(expression: &Expr) -> bool {
     match &expression.kind {
+        ExprKind::AnnotationConstant {
+            integer_literal, ..
+        } => *integer_literal,
         ExprKind::Int(_) => true,
         ExprKind::Unary(operator, value) if matches!(operator.as_str(), "+" | "-") => {
             integer_literal_expression(value)
@@ -618,6 +624,7 @@ struct LookupContext<'a> {
 struct ModuleContext {
     package: String,
     imports: Vec<(String, String, usize)>,
+    functions: HashSet<String>,
 }
 
 struct Resolver<'a> {
@@ -884,6 +891,25 @@ fn collect_enum(
     }
 }
 
+fn collect_annotation(
+    annotation: &crate::syntax::AnnotationDecl,
+    scope: &str,
+    module: usize,
+    bindings: &mut Bindings,
+) {
+    let scope = qualified(scope, &annotation.name);
+    for parameter in &annotation.parameters {
+        bind(
+            bindings,
+            module,
+            &scope,
+            &parameter.name,
+            false,
+            BindingKind::Value,
+        );
+    }
+}
+
 fn collect_declaration(
     declaration: &Declaration,
     scope: &str,
@@ -893,6 +919,7 @@ fn collect_declaration(
     inherited_scopes: &mut HashSet<String>,
 ) {
     match declaration {
+        Declaration::Annotation(value) => collect_annotation(value, scope, module, bindings),
         Declaration::Object(value) => {
             collect_object(value, scope, module, entries, bindings, inherited_scopes)
         }
@@ -1089,32 +1116,6 @@ impl Resolver<'_> {
             [field] => self.library_field(field, offset).map(Some),
             _ => Err(invalid(offset, "Ambiguous imported constant field")),
         }
-    }
-
-    fn nested_annotation(&self, module: usize, expression: &Expr) -> bool {
-        let ExprKind::Call(target, _) = &expression.kind else {
-            return false;
-        };
-        let Some(path) = name_path(target) else {
-            return false;
-        };
-        let name = path.join(".");
-        let mut names = vec![name.replace('.', "/")];
-        for (alias, import, _) in &self.modules[module].imports {
-            if alias == &path[0] {
-                let suffix = path[1..].join("/");
-                names.push(if suffix.is_empty() {
-                    import.clone()
-                } else {
-                    format!("{import}/{suffix}")
-                });
-            }
-        }
-        names.into_iter().any(|name| {
-            self.classpath
-                .load(&name)
-                .is_ok_and(|class| class.annotation_definition.is_some())
-        })
     }
 
     fn source_path(
@@ -1338,6 +1339,7 @@ fn update_interface(interface: &mut InterfaceDecl, values: &HashMap<usize, Const
 
 fn update_declaration(declaration: &mut Declaration, values: &HashMap<usize, ConstValue>) {
     match declaration {
+        Declaration::Annotation(_) => {}
         Declaration::Object(value) => update_object(value, values),
         Declaration::Class(value) => update_class(value, values),
         Declaration::Enum(value) => update_class(&mut value.body, values),
@@ -1369,6 +1371,9 @@ pub(crate) fn resolve(
                 scope: source.package.clone(),
                 declaration: declaration.clone(),
             });
+        }
+        if let Some(value) = &source.annotation_decl {
+            collect_annotation(value, &source.package, module, &mut bindings);
         }
         if let Some(value) = &source.object_decl {
             collect_object(
@@ -1434,6 +1439,11 @@ pub(crate) fn resolve(
             .map(|module| ModuleContext {
                 package: module.package.clone(),
                 imports: module.imports.clone(),
+                functions: module
+                    .functions
+                    .iter()
+                    .map(|function| function.name.clone())
+                    .collect(),
             })
             .collect(),
         classpath,
@@ -1494,33 +1504,131 @@ pub(crate) fn resolve(
         let package = source.package.clone();
         visit_module_annotations(source, &package, &mut |scope, annotation| {
             for (_, expression) in &mut annotation.arguments {
-                if !scalar_annotation_shape(expression)
-                    || resolver.nested_annotation(module, expression)
-                {
-                    continue;
-                }
-                let value = match fold_expression(expression, &mut |path, offset| {
-                    resolver.reference(module, scope, path, offset, false)
-                }) {
-                    Ok(value) => value,
-                    Err(error)
-                        if error.kind == DiagnosticKind::UnsupportedLanguage
-                            && matches!(
-                                expression.kind,
-                                ExprKind::Name(_) | ExprKind::Property(_, _)
-                            )
-                            && error.code != "COMPILED_KOTLIN_CONSTANT_UNSUPPORTED" =>
-                    {
-                        continue;
-                    }
-                    Err(error) => return Err(error),
-                };
-                expression.kind = literal_kind(value, expression.offset)?;
+                fold_annotation_expression(expression, module, scope, &mut resolver)?;
             }
             Ok(())
         })
         .map_err(|error| (module, error))?;
+        let mut defaults = |declaration: &mut crate::syntax::AnnotationDecl| -> Result<()> {
+            let scope = qualified(&package, &declaration.name);
+            for parameter in &mut declaration.parameters {
+                if let Some(expression) = &mut parameter.default {
+                    fold_annotation_expression(expression, module, &scope, &mut resolver)?;
+                }
+            }
+            Ok(())
+        };
+        if let Some(declaration) = &mut source.annotation_decl {
+            defaults(declaration).map_err(|error| (module, error))?;
+        }
+        for declaration in &mut source.declarations {
+            if let Declaration::Annotation(declaration) = declaration {
+                defaults(declaration).map_err(|error| (module, error))?;
+            }
+        }
     }
+    Ok(())
+}
+
+fn imported_enum_annotation(expression: &Expr, module: usize, resolver: &Resolver<'_>) -> bool {
+    let Some(path) = crate::annotation_declarations::path(expression) else {
+        return false;
+    };
+    let (head, rest) = path
+        .split_once('/')
+        .map_or((path.as_str(), None), |(head, rest)| (head, Some(rest)));
+    let path = if let Some((_, imported, _)) = resolver.modules[module]
+        .imports
+        .iter()
+        .find(|(alias, _, _)| alias == head)
+    {
+        rest.map_or_else(|| imported.clone(), |rest| format!("{imported}/{rest}"))
+    } else {
+        path
+    };
+    let Some((owner, entry)) = path.rsplit_once('/') else {
+        return false;
+    };
+    resolver.classpath.load(owner).is_ok_and(|class| {
+        !class.unsupported
+            && class.access & 0x4001 == 0x4001
+            && class.fields.iter().any(|field| {
+                field.name == entry
+                    && field.access & 0x4019 == 0x4019
+                    && field.descriptor == format!("L{owner};")
+                    && !field.unsupported
+            })
+    })
+}
+
+fn fold_annotation_expression(
+    expression: &mut Expr,
+    module: usize,
+    scope: &str,
+    resolver: &mut Resolver<'_>,
+) -> Result<()> {
+    match &mut expression.kind {
+        ExprKind::Call(target, _) if matches!(&target.kind, ExprKind::Name(name) if resolver.modules[module].functions.contains(name)) =>
+        {
+            return Err(invalid(
+                expression.offset,
+                "Source function calls are not annotation constants",
+            ));
+        }
+        ExprKind::AnnotationArray(values) | ExprKind::Call(_, values) => {
+            for value in values {
+                fold_annotation_expression(value, module, scope, resolver)?;
+            }
+            return Ok(());
+        }
+        ExprKind::NamedArgument(_, value) => {
+            return fold_annotation_expression(value, module, scope, resolver);
+        }
+        ExprKind::Unary(operator, value) if operator == "*" => {
+            return fold_annotation_expression(value, module, scope, resolver);
+        }
+        ExprKind::AnnotationConstant { .. } => return Ok(()),
+        _ => {}
+    }
+    if !scalar_annotation_shape(expression) {
+        return Ok(());
+    }
+    let integer_literal = integer_literal_expression(expression);
+    let value = match fold_expression(expression, &mut |path, offset| {
+        resolver.reference(module, scope, path, offset, false)
+    }) {
+        Ok(value) => value,
+        Err(error)
+            if error.kind == DiagnosticKind::UnsupportedLanguage
+                && matches!(
+                    expression.kind,
+                    ExprKind::Name(_) | ExprKind::Property(_, _)
+                )
+                && error.code != "COMPILED_KOTLIN_CONSTANT_UNSUPPORTED" =>
+        {
+            return Ok(());
+        }
+        Err(error)
+            if error.code == "COMPILED_KOTLIN_CONSTANT_UNSUPPORTED"
+                && imported_enum_annotation(expression, module, resolver) =>
+        {
+            return Ok(());
+        }
+        Err(error) => return Err(error),
+    };
+    let typed_integer = matches!(value, ConstValue::Int(_)) && !integer_literal;
+    let kind = literal_kind(value, expression.offset)?;
+    expression.kind = if typed_integer {
+        ExprKind::AnnotationConstant {
+            value: Box::new(Expr {
+                offset: expression.offset,
+                kind,
+            }),
+            integer_literal,
+        }
+    } else {
+        kind
+    };
     Ok(())
 }
 
@@ -1554,8 +1662,7 @@ fn scalar_annotation_shape(expression: &Expr) -> bool {
         | ExprKind::Boolean(_)
         | ExprKind::String(_)
         | ExprKind::Null
-        | ExprKind::Name(_)
-        | ExprKind::Call(_, _) => true,
+        | ExprKind::Name(_) => true,
         ExprKind::Property(_, _) => name_path(expression).is_some(),
         ExprKind::Unary(_, value) => scalar_annotation_shape(value),
         ExprKind::Binary(_, left, right) => {
@@ -1691,6 +1798,7 @@ fn visit_declaration_annotations(
     visit: &mut AnnotationVisitor<'_>,
 ) -> Result<()> {
     match declaration {
+        Declaration::Annotation(value) => visit_annotations(&mut value.annotations, scope, visit),
         Declaration::Object(value) => visit_object_annotations(value, scope, visit),
         Declaration::Class(value) => visit_class_annotations(value, scope, visit),
         Declaration::Interface(value) => visit_interface_annotations(value, scope, visit),
@@ -1706,6 +1814,9 @@ fn visit_module_annotations(
     scope: &str,
     visit: &mut AnnotationVisitor<'_>,
 ) -> Result<()> {
+    if let Some(value) = &mut module.annotation_decl {
+        visit_annotations(&mut value.annotations, scope, visit)?;
+    }
     for function in &mut module.functions {
         visit_function_annotations(function, scope, visit)?;
     }

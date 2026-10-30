@@ -259,6 +259,9 @@ fn empty(owner: &str) -> JavaClass {
 }
 
 pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<JavaClass> {
+    if module.annotation_decl.is_some() {
+        return crate::annotation_declarations::header(module, owner, cp);
+    }
     if module.enum_decl.is_some() {
         return enums::header(module, owner, cp);
     }
@@ -1157,7 +1160,7 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
                     declaration(&crate::syntax::Declaration::Interface(value.clone()), names);
                 }
             }
-            crate::syntax::Declaration::Enum(_) => {}
+            crate::syntax::Declaration::Annotation(_) | crate::syntax::Declaration::Enum(_) => {}
         }
     }
     let mut names = std::collections::BTreeSet::new();
@@ -1340,7 +1343,7 @@ pub(super) fn expand_aliases(module: &mut Module, cp: &Classpath) -> Result<()> 
                     declaration(child, expand)?;
                 }
             }
-            crate::syntax::Declaration::Enum(_) => {}
+            crate::syntax::Declaration::Annotation(_) | crate::syntax::Declaration::Enum(_) => {}
         }
         Ok(())
     }

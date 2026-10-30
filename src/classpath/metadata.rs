@@ -160,8 +160,8 @@ impl<'a> Context<'a> {
                 let projection = a.integer(1)?.unwrap_or(2);
                 let variance = match projection {
                     0 => Variance::In,
-                    1 | 3 => Variance::Out,
-                    2 => Variance::Invariant,
+                    1 => Variance::Out,
+                    2 | 3 => Variance::Invariant,
                     _ => return Err(invalid()),
                 };
                 let inner = if projection == 3 {
@@ -266,6 +266,8 @@ impl<'a> Context<'a> {
                             "kotlin/Number" => "java/lang/Number",
                             "kotlin/CharSequence" => "java/lang/CharSequence",
                             "kotlin/Throwable" => "java/lang/Throwable",
+                            "kotlin/Annotation" => "java/lang/annotation/Annotation",
+                            "kotlin/Enum" => "java/lang/Enum",
                             "kotlin/Comparable" => "java/lang/Comparable",
                             "kotlin/Cloneable" => "java/lang/Cloneable",
                             "kotlin/collections/Iterable"
@@ -1159,7 +1161,10 @@ pub(super) fn attach(
     class.unsupported = kind == 1
         && (class_flags & 14 == 0
             || class_flags & (512 | 2048 | 4096 | 8192) != 0
-            || !matches!((class_flags >> 6) & 7, 0 | 1 | 5 | 6));
+            || !matches!((class_flags >> 6) & 7, 0 | 1 | 2 | 5 | 6)
+            || (class_flags >> 6) & 7 == 2
+                && (class.access & 0x4000 == 0
+                    || class.super_name.as_deref() != Some("java/lang/Enum")));
     for method in &mut class.methods {
         method.unsupported = true;
     }
@@ -1319,6 +1324,79 @@ pub(super) fn attach(
         }
     }
     Ok(())
+}
+
+pub(super) fn annotation_parameters(
+    annotation: &Annotation,
+    expected: &str,
+) -> Result<(Vec<String>, Vec<Type>, Option<String>)> {
+    if integer(annotation, "k")?.unwrap_or(1) != 1 {
+        return Err(invalid());
+    }
+    let version = annotation
+        .values
+        .iter()
+        .find(|(key, _)| key == "mv")
+        .map(|(_, value)| value);
+    let Some(AnnotationValue::Array(version)) = version else {
+        return Err(invalid());
+    };
+    let version = version
+        .iter()
+        .map(|value| match value {
+            AnnotationValue::Integer(value) => Ok(*value),
+            _ => Err(invalid()),
+        })
+        .collect::<Result<Vec<_>>>()?;
+    if version.first() != Some(&2) || version.get(1).copied().unwrap_or(0) > 3 {
+        return Err(invalid());
+    }
+    let bytes = decode(&strings(annotation, "d1")?)?;
+    let mut reader = Reader {
+        bytes: &bytes,
+        offset: 0,
+    };
+    let length = usize::try_from(varint(&mut reader)?).map_err(|_| invalid())?;
+    let names = metadata_strings(reader.take(length)?, &strings(annotation, "d2")?)?;
+    let proto = Proto::parse(reader.take(bytes.len() - reader.offset)?)?;
+    if (proto.integer(1)?.unwrap_or(6) >> 6) & 7 != 4
+        || metadata_name(&names, proto.integer(3)?)?.replace('.', "$") != expected
+    {
+        return Err(invalid());
+    }
+    if !proto.messages(5)?.is_empty() {
+        return Err(
+            Diagnostic::new(0, "Generic annotation metadata is unsupported").with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "GENERIC_ANNOTATION_UNSUPPORTED",
+            ),
+        );
+    }
+    let context = Context::new(&names, &proto)?;
+    let constructors = proto.messages(8)?;
+    let [constructor] = constructors.as_slice() else {
+        return Err(invalid());
+    };
+    let constructor = Proto::parse(constructor)?;
+    let mut parameters = Vec::new();
+    let mut types = Vec::new();
+    let mut vararg = None;
+    for value in constructor.messages(2)? {
+        let value = Proto::parse(value)?;
+        let name = metadata_name(&names, value.integer(2)?)?.to_owned();
+        if parameters.contains(&name) {
+            return Err(invalid());
+        }
+        if value.bytes(4)?.is_some() || value.integer(6)?.is_some() {
+            if vararg.is_some() {
+                return Err(invalid());
+            }
+            vararg = Some(name.clone());
+        }
+        types.push(context.field(&value, 3, 5)?);
+        parameters.push(name);
+    }
+    Ok((parameters, types, vararg))
 }
 
 #[cfg(test)]

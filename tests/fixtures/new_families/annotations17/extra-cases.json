@@ -1,0 +1,89 @@
+[
+  {
+    "id": "factory_wrong_primitive",
+    "source": "@Rich(numbers = intArrayOf(1, 2)) class Bad",
+    "oracle": "reject"
+  },
+  {
+    "id": "factory_reference_for_primitive",
+    "source": "@Rich(numbers = arrayOf(1L)) class Bad",
+    "oracle": "reject"
+  },
+  {
+    "id": "factory_wrong_generic_empty",
+    "source": "@Rich(names = arrayOf<Int>()) class Bad",
+    "oracle": "reject"
+  },
+  {
+    "id": "duplicate_empty_vararg",
+    "source": "@Pack(*arrayOf(), entries = [Nested()]) class Bad",
+    "oracle": "reject"
+  },
+  {
+    "id": "int_constant_long_use",
+    "source": "const val INT_VALUE: Int = 1\n@Rich(number = INT_VALUE) class Bad",
+    "oracle": "reject"
+  },
+  {
+    "id": "int_constant_long_default",
+    "source": "const val INT_VALUE: Int = 1\nannotation class Bad(val value: Long = INT_VALUE)",
+    "oracle": "reject"
+  },
+  {
+    "id": "literal_arithmetic_long",
+    "source": "@Rich(number = -(1 + 2)) class Good",
+    "oracle": "accept"
+  },
+  {
+    "id": "top_value_class_shadow",
+    "source": "val Token: Int = 1\n@Rich(type = Token::class) class Bad",
+    "oracle": "reject"
+  },
+  {
+    "id": "member_value_class_shadow",
+    "source": "class Bad { val Token: Int = 1\n@Rich(type = Token::class) fun bad(): Int = 1 }",
+    "oracle": "reject"
+  },
+  {
+    "id": "constructor_value_class_shadow",
+    "source": "class Bad(Token: Int) { @Rich(type = Token::class) fun bad(): Int = 1 }",
+    "oracle": "accept"
+  },
+  {
+    "id": "annotation_parameter_class_shadow",
+    "source": "annotation class Bad(val Token: Int, val type: kotlin.reflect.KClass<*> = Token::class)",
+    "oracle": "reject"
+  },
+  {
+    "id": "qualified_classifier_with_alias",
+    "source": "@Rich(type = annotation17.Token::class) class Good",
+    "oracle": "accept",
+    "imports": "import annotation17.Token as Other\n"
+  },
+  {
+    "id": "aliased_classifier",
+    "source": "@Rich(type = Other::class) class Good",
+    "oracle": "accept",
+    "imports": "import annotation17.Token as Other\n"
+  },
+  {
+    "id": "property_default_target",
+    "source": "@Target(AnnotationTarget.PROPERTY) annotation class PropertyMark(val value: Long = 1L)\nclass Good { @PropertyMark val value: Int = 1 }",
+    "oracle": "accept"
+  },
+  {
+    "id": "reserved_hashcode",
+    "source": "annotation class Bad(val hashCode: Int)",
+    "oracle": "reject"
+  },
+  {
+    "id": "reserved_tostring",
+    "source": "annotation class Bad(val toString: String)",
+    "oracle": "reject"
+  },
+  {
+    "id": "enum_import_shadow",
+    "source": "class Bad(val PICK: Int) { @Rich(mode = PICK) fun value(): Int = 1 }",
+    "oracle": "reject"
+  }
+]

@@ -1,0 +1,6 @@
+tests/fixtures/new_families/annotations17/invalid/mutual_cycle.kt:3:23: error: cycle formed by one or more annotations and their parameter types.
+annotation class Left(val right: Right)
+                      ^^^^^^^^^^^^^^^^
+tests/fixtures/new_families/annotations17/invalid/mutual_cycle.kt:4:24: error: cycle formed by one or more annotations and their parameter types.
+annotation class Right(val left: Left)
+                       ^^^^^^^^^^^^^^

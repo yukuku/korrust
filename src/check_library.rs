@@ -864,6 +864,16 @@ impl Checker<'_> {
         let Some(class) = class else {
             return Ok(None);
         };
+        if class.access & 0x2000 != 0 {
+            return Err(Diagnostic::new(
+                offset,
+                "Runtime annotation instance construction is unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
+            ));
+        }
         if class.access & 1 == 0 {
             return Err(
                 Diagnostic::new(offset, "Constructor classifier is inaccessible").with_kind(
@@ -1000,6 +1010,16 @@ impl Checker<'_> {
             ));
         }
         relations::validate_type_arguments_with_classes(&ty, self.classpath, self.classes, offset)?;
+        if class.access & 0x2000 != 0 {
+            return Err(Diagnostic::new(
+                offset,
+                "Runtime annotation instance construction is unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
+            ));
+        }
         if class.access & (0x200 | 0x400) != 0 {
             return Err(Diagnostic::new(
                 offset,
@@ -1131,6 +1151,16 @@ impl Checker<'_> {
             .any(|f| f.name == "INSTANCE" && f.descriptor == format!("L{};", class.name))
         {
             return Ok(None);
+        }
+        if class.access & 0x2000 != 0 {
+            return Err(Diagnostic::new(
+                offset,
+                "Runtime annotation instance construction is unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
+            ));
         }
         if class.access & (0x200 | 0x400) != 0 {
             return Err(Diagnostic::new(

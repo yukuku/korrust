@@ -241,6 +241,7 @@ fn register_classes(
                 &imports,
                 "METHOD",
                 None,
+                Some(owner),
             )?
             .iter()
             .any(|annotation| annotation.descriptor == "Lkotlin/jvm/JvmStatic;")
@@ -1034,7 +1035,7 @@ interface Catalog {
             ),
             (
                 "interface Root { var count: Int; fun write() { count += 1 } }",
-                "Property assignments",
+                "No supported compound operator",
             ),
         ] {
             rejects(source, diagnostic);

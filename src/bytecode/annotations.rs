@@ -12,18 +12,74 @@ fn annotation(pool: &mut Pool, value: &DeclarationAnnotation) -> Result<Vec<u8>>
     u2(&mut out, count(value.values.len())?);
     for (name, value) in &value.values {
         u2(&mut out, pool.utf8(name)?);
-        match value {
-            DeclarationAnnotationValue::Int(value) => {
-                out.push(b'I');
-                u2(&mut out, pool.add(Constant::Integer(*value))?);
+        out.extend(element(pool, value, 0)?);
+    }
+    Ok(out)
+}
+
+pub(super) fn element(
+    pool: &mut Pool,
+    value: &DeclarationAnnotationValue,
+    depth: usize,
+) -> Result<Vec<u8>> {
+    if depth > 32 {
+        return Err(failure(
+            "Annotation value nesting exceeds the current limit",
+        ));
+    }
+    let mut out = Vec::new();
+    match value {
+        DeclarationAnnotationValue::Int(value) => {
+            out.push(b'I');
+            u2(&mut out, pool.add(Constant::Integer(*value))?);
+        }
+        DeclarationAnnotationValue::Long(value) => {
+            out.push(b'J');
+            u2(&mut out, pool.add(Constant::Long(*value))?);
+        }
+        DeclarationAnnotationValue::Float(value) => {
+            out.push(b'F');
+            u2(&mut out, pool.add(Constant::Float(*value))?);
+        }
+        DeclarationAnnotationValue::Double(value) => {
+            out.push(b'D');
+            u2(&mut out, pool.add(Constant::Double(*value))?);
+        }
+        DeclarationAnnotationValue::Char(value) => {
+            out.push(b'C');
+            u2(&mut out, pool.add(Constant::Integer(i32::from(*value)))?);
+        }
+        DeclarationAnnotationValue::Boolean(value) => {
+            out.push(b'Z');
+            u2(&mut out, pool.add(Constant::Integer(i32::from(*value)))?);
+        }
+        DeclarationAnnotationValue::String(value) => {
+            out.push(b's');
+            u2(&mut out, pool.utf16(value)?);
+        }
+        DeclarationAnnotationValue::Enum { descriptor, entry } => {
+            out.push(b'e');
+            u2(&mut out, pool.utf8(descriptor)?);
+            u2(&mut out, pool.utf8(entry)?);
+        }
+        DeclarationAnnotationValue::Class { descriptor, .. } => {
+            out.push(b'c');
+            u2(&mut out, pool.utf8(descriptor)?);
+        }
+        DeclarationAnnotationValue::Array(values) => {
+            out.push(b'[');
+            u2(&mut out, count(values.len())?);
+            for value in values {
+                out.extend(element(pool, value, depth + 1)?);
             }
-            DeclarationAnnotationValue::Boolean(value) => {
-                out.push(b'Z');
-                u2(&mut out, pool.add(Constant::Integer(i32::from(*value)))?);
-            }
-            DeclarationAnnotationValue::String(value) => {
-                out.push(b's');
-                u2(&mut out, pool.utf8(value)?);
+        }
+        DeclarationAnnotationValue::Nested(value) => {
+            out.push(b'@');
+            u2(&mut out, pool.utf8(&value.descriptor)?);
+            u2(&mut out, count(value.values.len())?);
+            for (name, value) in &value.values {
+                u2(&mut out, pool.utf8(name)?);
+                out.extend(element(pool, value, depth + 1)?);
             }
         }
     }
@@ -374,7 +430,7 @@ mod tests {
                 ("enabled".into(), DeclarationAnnotationValue::Boolean(true)),
                 (
                     "text".into(),
-                    DeclarationAnnotationValue::String("a\0💩".into()),
+                    DeclarationAnnotationValue::String("a\0💩".encode_utf16().collect()),
                 ),
             ],
         }];
@@ -399,6 +455,7 @@ mod tests {
         let first = super::super::metadata_attribute_with_annotations(
             &mut pool,
             &crate::metadata::Metadata {
+                raw_data2: Default::default(),
                 kind: 1,
                 data1: vec![vec![0, 1, 0x1234]],
                 data2: vec!["sample/Owner".into(), "value".into()],

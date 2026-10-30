@@ -38,19 +38,7 @@ pub(super) fn annotation_owner(
     classpath: &Classpath,
     imports: &HashMap<String, String>,
 ) -> String {
-    if let Some(owner) = imports.get(name) {
-        return owner.clone();
-    }
-    if name.contains('/') || classpath.load(name).is_ok() {
-        return name.into();
-    }
-    for package in ["kotlin", "kotlin/annotation", "kotlin/jvm"] {
-        let owner = format!("{package}/{name}");
-        if classpath.load(&owner).is_ok() {
-            return owner;
-        }
-    }
-    name.into()
+    crate::annotation_declarations::owner(name, imports, classpath)
 }
 
 pub(super) fn declaration_annotations(
@@ -59,6 +47,7 @@ pub(super) fn declaration_annotations(
     imports: &HashMap<String, String>,
     target: &str,
     use_site: Option<&str>,
+    scope: Option<&str>,
 ) -> Result<Vec<DeclarationAnnotation>> {
     let mut result = Vec::new();
     let mut seen = HashSet::new();
@@ -117,111 +106,59 @@ pub(super) fn declaration_annotations(
                 annotation.offset,
                 format!("Unsupported annotation definition: {}", annotation.name),
             )
+            .with_kind(
+                if class.access & 0x2000 != 0 {
+                    crate::DiagnosticKind::UnsupportedLanguage
+                } else {
+                    crate::DiagnosticKind::InvalidKotlin
+                },
+                if class.access & 0x2000 != 0 {
+                    "ANNOTATION_DEFINITION_UNSUPPORTED"
+                } else {
+                    "NOT_AN_ANNOTATION"
+                },
+            )
         })?;
-        if !definition.targets.iter().any(|allowed| allowed == target) {
+        let allowed = if let Some(targets) = &definition.kotlin_targets {
+            let logical = match (target, use_site) {
+                ("PROPERTY", _) => "PROPERTY",
+                ("FIELD", _) => "FIELD",
+                ("PARAMETER", _) => "VALUE_PARAMETER",
+                ("TYPE", _) => "CLASS",
+                ("METHOD", Some("get")) => "PROPERTY_GETTER",
+                ("METHOD", Some("set")) => "PROPERTY_SETTER",
+                ("METHOD", _) => "FUNCTION",
+                ("CONSTRUCTOR", _) => "CONSTRUCTOR",
+                _ => target,
+            };
+            targets.iter().any(|allowed| allowed == logical)
+        } else {
+            definition.targets.iter().any(|allowed| allowed == target)
+        };
+        if !allowed {
             return Err(Diagnostic::new(
                 annotation.offset,
                 format!("Annotation {} cannot target {target}", annotation.name),
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "ANNOTATION_TARGET_INVALID",
             ));
         }
         if !seen.insert(owner.clone()) {
             return Err(Diagnostic::new(
                 annotation.offset,
                 "Repeated annotations require a repeatable declaration",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "REPEATED_ANNOTATION_INVALID",
             ));
         }
-        let mut supplied = HashSet::new();
-        let mut values = Vec::new();
-        for (position, (name, expression)) in annotation.arguments.iter().enumerate() {
-            let name = match name {
-                Some(name) => name.as_str(),
-                None if position == 0 => "value",
-                None => {
-                    return Err(Diagnostic::new(
-                        expression.offset,
-                        "Java annotation arguments after value must be named",
-                    ));
-                }
-            };
-            let (_, descriptor, _) = definition
-                .parameters
-                .iter()
-                .find(|(parameter, _, _)| parameter == name)
-                .ok_or_else(|| {
-                    Diagnostic::new(
-                        expression.offset,
-                        format!("Unknown annotation argument: {name}"),
-                    )
-                })?;
-            if !supplied.insert(name.to_owned()) {
-                return Err(Diagnostic::new(
-                    expression.offset,
-                    "Duplicate annotation argument",
-                ));
-            }
-            let value = match (&expression.kind, descriptor.as_str()) {
-                (ExprKind::ClassLiteral { .. }, "Ljava/lang/Class;") => {
-                    return Err(Diagnostic::new(expression.offset, "Class literal annotation arguments require unsupported class-descriptor annotation emission")
-                        .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "CLASS_LITERAL_ANNOTATION_UNSUPPORTED"));
-                }
-                (ExprKind::Int(value), "I") => {
-                    DeclarationAnnotationValue::Int(i32::try_from(*value).map_err(|_| {
-                        Diagnostic::new(
-                            expression.offset,
-                            "Annotation integer argument is out of range",
-                        )
-                    })?)
-                }
-                (ExprKind::Unary(operator, value), "I") if operator == "-" => match value.kind {
-                    ExprKind::Int(value) => {
-                        DeclarationAnnotationValue::Int(i32::try_from(-value).map_err(|_| {
-                            Diagnostic::new(
-                                expression.offset,
-                                "Annotation integer argument is out of range",
-                            )
-                        })?)
-                    }
-                    _ => {
-                        return Err(Diagnostic::new(
-                            expression.offset,
-                            "Unsupported annotation constant expression",
-                        ));
-                    }
-                },
-                (ExprKind::Boolean(value), "Z") => DeclarationAnnotationValue::Boolean(*value),
-                (ExprKind::String(value), "Ljava/lang/String;") => {
-                    DeclarationAnnotationValue::String(String::from_utf16(value).map_err(|_| {
-                        Diagnostic::new(
-                            expression.offset,
-                            "Unsupported unpaired UTF-16 annotation string",
-                        )
-                    })?)
-                }
-                (_, "I" | "Z" | "Ljava/lang/String;") => {
-                    return Err(Diagnostic::new(
-                        expression.offset,
-                        format!("Annotation argument type mismatch for {name}"),
-                    ));
-                }
-                _ => {
-                    return Err(Diagnostic::new(
-                        expression.offset,
-                        "Unsupported annotation array, class, enum, or numeric argument type",
-                    ));
-                }
-            };
-            values.push((name.to_owned(), value));
-        }
-        if let Some((name, _, _)) = definition
-            .parameters
-            .iter()
-            .find(|(name, _, default)| !default && !supplied.contains(name))
-        {
-            return Err(Diagnostic::new(
-                annotation.offset,
-                format!("Missing required annotation argument: {name}"),
-            ));
-        }
+        let checked =
+            crate::annotation_declarations::checked_use(annotation, classpath, imports, scope)?;
+        let values = checked.values;
+
         if definition.retention != AnnotationRetention::Source {
             result.push(DeclarationAnnotation {
                 descriptor: format!("L{owner};"),
@@ -320,6 +257,7 @@ mod tests {
                 &classpath,
                 &HashMap::from([("Alias".into(), name.into())]),
                 "METHOD",
+                None,
                 None,
             )
             .err()

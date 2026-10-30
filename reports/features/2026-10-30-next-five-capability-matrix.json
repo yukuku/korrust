@@ -4,12 +4,19 @@
   "baseline_commit": "39e87a38ae59075ce14cd110c88efbab46858131",
   "prior_completed_families": 10,
   "requested_new_families": 5,
-  "new_validated_families": 1,
+  "new_validated_families": 2,
   "families": [
     {
       "id": "rich_annotations",
-      "status": "isolated_validation",
-      "scope": "Scalar/enum/class/array/nested annotation values and defaults, supported source declarations, retention, placement, classfile metadata and consumers."
+      "status": "validated",
+      "scope": "Scalar/enum/class/array/nested annotation values and defaults, supported source declarations, retention, placement, classfile metadata and consumers.",
+      "report": "reports/correctness/2026-10-30-next-five-rich-annotations.json",
+      "upstream_report": "reports/correctness/2026-10-30-next-five-annotation-upstream.json",
+      "limitations": [
+        "Byte/Short/unsigned annotation elements, non-star KClass bounds, repeatable/container emission and annotation construction expressions remain bounded or unsupported.",
+        "Larger kt10136 upstream original still fails at ordinary assertion/lambda resolution; defaultParameterValues retains an unsupported interpolation boundary. Neither is claimed to pass.",
+        "Unchanged NIA NiaDispatchers passes with real javax.inject; no new AndroidBible full-file or full-app claim."
+      ]
     },
     {
       "id": "class_header_delegation",

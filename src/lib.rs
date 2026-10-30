@@ -1,3 +1,4 @@
+mod annotation_declarations;
 mod bytecode;
 mod check;
 mod classpath;
@@ -223,6 +224,7 @@ pub fn compile_batch_with_options(
             || !module.type_aliases.is_empty()
         {
             let mut package = module.clone();
+            package.annotation_decl = None;
             package.class_decl = None;
             package.object_decl = None;
             package.interface_decl = None;
@@ -231,6 +233,12 @@ pub fn compile_batch_with_options(
             units.push((qualify(&facade), package));
         }
         let mut declarations = module.declarations.clone();
+        declarations.extend(
+            module
+                .annotation_decl
+                .clone()
+                .map(syntax::Declaration::Annotation),
+        );
         declarations.extend(module.class_decl.clone().map(syntax::Declaration::Class));
         declarations.extend(module.object_decl.clone().map(syntax::Declaration::Object));
         declarations.extend(
@@ -287,9 +295,19 @@ pub fn compile_batch_with_options(
             kotlin_fun_interface: false,
             library: None,
             name: owner.clone(),
-            access: 1,
+            access: if unit.annotation_decl.is_some() {
+                0x2601
+            } else if unit.enum_decl.is_some() {
+                0x4001
+            } else {
+                1
+            },
             super_name: Some("java/lang/Object".into()),
-            interfaces: Vec::new(),
+            interfaces: if unit.annotation_decl.is_some() {
+                vec!["java/lang/annotation/Annotation".into()]
+            } else {
+                Vec::new()
+            },
             methods: Vec::new(),
             fields: Vec::new(),
             kotlin_class: true,
@@ -306,6 +324,7 @@ pub fn compile_batch_with_options(
                 .or_else(|| unit.object_decl.as_ref().map(|d| d.name.clone()))
                 .or_else(|| unit.interface_decl.as_ref().map(|d| d.name.clone()))
                 .or_else(|| unit.enum_decl.as_ref().map(|d| d.name.clone()))
+                .or_else(|| unit.annotation_decl.as_ref().map(|d| d.name.clone()))
                 .map(|name| (name, owner.clone()))
         })
         .collect::<Vec<_>>();
@@ -316,7 +335,8 @@ pub fn compile_batch_with_options(
             unit.class_decl.is_none()
                 && unit.object_decl.is_none()
                 && unit.interface_decl.is_none()
-                && unit.enum_decl.is_none(),
+                && unit.enum_decl.is_none()
+                && unit.annotation_decl.is_none(),
         );
     }
     for (owner, unit) in &mut units {
@@ -676,6 +696,7 @@ pub fn compile_batch_with_options(
             || unit.object_decl.is_some()
             || unit.interface_decl.is_some()
             || unit.enum_decl.is_some()
+            || unit.annotation_decl.is_some()
         {
             continue;
         }
@@ -883,6 +904,7 @@ fn validate_batch_declarations(
 
 fn declaration_name(declaration: &syntax::Declaration) -> &str {
     match declaration {
+        syntax::Declaration::Annotation(d) => &d.name,
         syntax::Declaration::Class(d) => &d.name,
         syntax::Declaration::Object(d) => &d.name,
         syntax::Declaration::Interface(d) => &d.name,
@@ -892,6 +914,7 @@ fn declaration_name(declaration: &syntax::Declaration) -> &str {
 
 fn declaration_offset(declaration: &syntax::Declaration) -> usize {
     match declaration {
+        syntax::Declaration::Annotation(d) => d.offset,
         syntax::Declaration::Class(d) => d.offset,
         syntax::Declaration::Object(d) => d.offset,
         syntax::Declaration::Interface(d) => d.offset,
@@ -915,6 +938,7 @@ fn declaration_units(
         );
     }
     let mut unit = syntax::Module {
+        annotation_decl: None,
         type_locations: context.type_locations.clone(),
         type_aliases: context.type_aliases.clone(),
         package: context.package.clone(),
@@ -929,6 +953,10 @@ fn declaration_units(
         declarations: Vec::new(),
     };
     let nested = match declaration {
+        syntax::Declaration::Annotation(d) => {
+            unit.annotation_decl = Some(d);
+            Vec::new()
+        }
         syntax::Declaration::Class(d) => {
             let nested = d.nested.clone();
             unit.class_decl = Some(d);
@@ -997,6 +1025,17 @@ fn emit_unit(
     module_name: &str,
     declared_owners: &std::collections::HashSet<String>,
 ) -> Result<Vec<ClassFile>> {
+    if module.annotation_decl.is_some() {
+        let annotation = annotation_declarations::check(module, internal_name, classpath)?;
+        let metadata =
+            metadata::for_annotation(&annotation, internal_name)?.in_module(module_name)?;
+        return Ok(vec![bytecode::annotation_classes::emit(
+            &annotation,
+            internal_name,
+            file_name,
+            &metadata,
+        )?]);
+    }
     let placements = check::annotation_placements(module, classpath, internal_name)?;
     let metadata_source = metadata::annotation_source(module, classpath)?;
     let mut files = emit_unit_without_annotations(
@@ -1356,6 +1395,12 @@ fn synchronize_nested_units(units: &mut [(String, syntax::Module)]) {
                         .map(syntax::Declaration::Interface)
                 })
                 .or_else(|| module.enum_decl.clone().map(syntax::Declaration::Enum))
+                .or_else(|| {
+                    module
+                        .annotation_decl
+                        .clone()
+                        .map(syntax::Declaration::Annotation)
+                })
                 .map(|declaration| (owner.clone(), declaration))
         })
         .collect::<std::collections::HashMap<_, _>>();
@@ -1392,7 +1437,7 @@ fn synchronize_nested_units(units: &mut [(String, syntax::Module)]) {
                     }
                 }
             }
-            syntax::Declaration::Enum(_) => {}
+            syntax::Declaration::Annotation(_) | syntax::Declaration::Enum(_) => {}
         }
         source
     }
@@ -1404,6 +1449,7 @@ fn synchronize_nested_units(units: &mut [(String, syntax::Module)]) {
             syntax::Declaration::Class(source) => module.class_decl = Some(source),
             syntax::Declaration::Object(source) => module.object_decl = Some(source),
             syntax::Declaration::Interface(source) => module.interface_decl = Some(source),
+            syntax::Declaration::Annotation(source) => module.annotation_decl = Some(source),
             syntax::Declaration::Enum(source) => module.enum_decl = Some(source),
         }
     }
@@ -1450,6 +1496,7 @@ fn validate_source_imports(
                         syntax::Declaration::Object(_) => "object",
                         syntax::Declaration::Interface(_) => "interface",
                         syntax::Declaration::Enum(_) => "enum",
+                        syntax::Declaration::Annotation(_) => "annotation",
                     })
             });
         if let Some(kind) = own {

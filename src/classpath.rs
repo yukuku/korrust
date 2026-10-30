@@ -96,6 +96,10 @@ pub(crate) enum AnnotationRetention {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) struct AnnotationDefinition {
+    pub kotlin_parameters: Option<Vec<String>>,
+    pub kotlin_types: Vec<Type>,
+    pub kotlin_targets: Option<Vec<String>>,
+    pub vararg: Option<String>,
     pub retention: AnnotationRetention,
     pub targets: Vec<String>,
     pub parameters: Vec<(String, String, bool)>,
@@ -1046,6 +1050,7 @@ struct Attributes {
     constant: Option<u16>,
     code: Option<JavaCode>,
     annotation_default: bool,
+    annotation_default_payload: Option<Vec<u8>>,
 }
 
 fn annotation_value(
@@ -1082,9 +1087,15 @@ fn annotation_value(
             utf8(pool, reader.u2()?)?;
             AnnotationValue::Other
         }
-        b'B' | b'C' | b'D' | b'F' | b'J' | b'S' => {
-            let index = usize::from(reader.u2()?);
-            if index == 0 || index >= pool.len() {
+        tag @ (b'B' | b'C' | b'D' | b'F' | b'J' | b'S') => {
+            let constant = pool.get(usize::from(reader.u2()?));
+            if !matches!(
+                (tag, constant),
+                (b'B' | b'C' | b'S', Some(Constant::Integer(_)))
+                    | (b'D', Some(Constant::Double(_)))
+                    | (b'F', Some(Constant::Float(_)))
+                    | (b'J', Some(Constant::Long(_)))
+            ) {
                 return Err(invalid());
             }
             AnnotationValue::Other
@@ -1278,6 +1289,7 @@ fn attributes(
                 if result.annotation_default {
                     return Err(invalid());
                 }
+                result.annotation_default_payload = Some(data.bytes.to_vec());
                 annotation_value(&mut data, pool, 0)?;
                 result.annotation_default = true;
             }
@@ -2267,10 +2279,56 @@ fn kotlin_typed_class(
     Ok((methods, flags & 14 == 0))
 }
 
+fn validate_annotation_default(descriptor: &str, payload: &[u8], pool: &[Constant]) -> Result<()> {
+    fn value(
+        descriptor: &str,
+        reader: &mut Reader<'_>,
+        pool: &[Constant],
+        depth: usize,
+    ) -> Result<()> {
+        if depth > 32 {
+            return Err(invalid());
+        }
+        let start = reader.offset;
+        let tag = reader.u1()?;
+        if let Some(component) = descriptor.strip_prefix('[') {
+            if tag != b'[' {
+                return Err(invalid());
+            }
+            for _ in 0..reader.u2()? {
+                value(component, reader, pool, depth + 1)?;
+            }
+            return Ok(());
+        }
+        let valid = match descriptor {
+            "Ljava/lang/String;" => tag == b's',
+            "Ljava/lang/Class;" => tag == b'c',
+            "B" | "C" | "D" | "F" | "I" | "J" | "S" | "Z" => descriptor.as_bytes()[0] == tag,
+            _ => matches!(tag, b'e' | b'@') && utf8(pool, reader.u2()?)? == descriptor,
+        };
+        if !valid {
+            return Err(invalid());
+        }
+        reader.offset = start;
+        annotation_value(reader, pool, depth)?;
+        Ok(())
+    }
+    let mut reader = Reader {
+        bytes: payload,
+        offset: 0,
+    };
+    value(descriptor, &mut reader, pool, 0)?;
+    if reader.offset != payload.len() {
+        return Err(invalid());
+    }
+    Ok(())
+}
+
 fn annotation_definition(
     class: &JavaClass,
     attrs: &Attributes,
     methods: &[Attributes],
+    pool: &[Constant],
 ) -> Result<Option<AnnotationDefinition>> {
     if class.access & 0x2000 == 0 {
         return Ok(None);
@@ -2302,11 +2360,43 @@ fn annotation_definition(
     .collect::<Vec<_>>();
     let mut seen = std::collections::BTreeSet::new();
     let mut supported = true;
+    let mut kotlin_parameters = None;
+    let mut kotlin_types = Vec::new();
+    let mut kotlin_targets = None;
+    let mut vararg = None;
     for annotation in &attrs.annotations {
         if !seen.insert(&annotation.name) {
             return Err(invalid());
         }
         match annotation.name.as_str() {
+            "Lkotlin/Metadata;" => {
+                let (parameters, types, variadic) =
+                    metadata::annotation_parameters(annotation, &class.name)?;
+                kotlin_parameters = Some(parameters);
+                kotlin_types = types;
+                vararg = variadic;
+            }
+            "Lkotlin/annotation/Retention;" => {}
+            "Lkotlin/annotation/Target;" => {
+                let [(name, AnnotationValue::Array(values))] = annotation.values.as_slice() else {
+                    return Err(invalid());
+                };
+                if name != "allowedTargets" {
+                    return Err(invalid());
+                }
+                let mut targets = Vec::new();
+                for value in values {
+                    let AnnotationValue::Enum { descriptor, name } = value else {
+                        return Err(invalid());
+                    };
+                    if descriptor != "Lkotlin/annotation/AnnotationTarget;" {
+                        return Err(invalid());
+                    }
+                    targets.push(name.clone());
+                }
+                kotlin_targets = Some(targets);
+            }
+            "Lkotlin/annotation/MustBeDocumented;" => {}
             "Ljava/lang/annotation/Retention;" => {
                 let [(key, AnnotationValue::Enum { descriptor, name })] =
                     annotation.values.as_slice()
@@ -2363,7 +2453,11 @@ fn annotation_definition(
                     return Err(invalid());
                 }
             }
-            _ => supported = false,
+            "Lkotlin/RequiresOptIn;"
+            | "Lkotlin/DslMarker;"
+            | "Lkotlin/annotation/Repeatable;"
+            | "Lkotlin/jvm/JvmRepeatable;" => supported = false,
+            _ => {}
         }
     }
     if !supported {
@@ -2373,6 +2467,12 @@ fn annotation_definition(
     for (method, attrs) in class.methods.iter().zip(methods) {
         if method.name.starts_with('<') {
             continue;
+        }
+        if matches!(
+            method.name.as_str(),
+            "hashCode" | "toString" | "annotationType"
+        ) {
+            return Ok(None);
         }
         let Some(result) = method.descriptor.strip_prefix("()") else {
             return Err(invalid());
@@ -2390,9 +2490,66 @@ fn annotation_definition(
         if attrs.unsupported || attrs.annotated {
             return Ok(None);
         }
+        if let Some(signature) = &attrs.signature {
+            fn supported_annotation_signature(ty: &Type) -> bool {
+                match ty {
+                    Type::Parameterized { name, arguments } => {
+                        name == "java/lang/Class"
+                            && arguments.len() == 1
+                            && arguments[0].ty.is_none()
+                    }
+                    Type::Array(inner) => supported_annotation_signature(inner),
+                    _ => true,
+                }
+            }
+            let (parameters, args, result) = signature::method(signature, &[])?;
+            if !parameters.is_empty()
+                || !args.is_empty()
+                || !supported_annotation_signature(&result)
+            {
+                return Ok(None);
+            }
+        }
+        if let Some(payload) = &attrs.annotation_default_payload {
+            validate_annotation_default(result, payload, pool)?;
+        }
         parameters.push((method.name.clone(), result.into(), attrs.annotation_default));
     }
+    if let Some(order) = &kotlin_parameters {
+        if order.len() != parameters.len()
+            || order
+                .iter()
+                .any(|name| !parameters.iter().any(|(p, _, _)| p == name))
+        {
+            return Err(invalid());
+        }
+        parameters.sort_by_key(|(name, _, _)| order.iter().position(|p| p == name).unwrap());
+        if kotlin_targets.is_none() {
+            kotlin_targets = Some(
+                [
+                    "CLASS",
+                    "ANNOTATION_CLASS",
+                    "PROPERTY",
+                    "FIELD",
+                    "VALUE_PARAMETER",
+                    "CONSTRUCTOR",
+                    "FUNCTION",
+                    "PROPERTY_GETTER",
+                    "PROPERTY_SETTER",
+                    "LOCAL_VARIABLE",
+                    "TYPEALIAS",
+                ]
+                .into_iter()
+                .map(str::to_owned)
+                .collect(),
+            );
+        }
+    }
     Ok(Some(AnnotationDefinition {
+        kotlin_parameters,
+        kotlin_types,
+        kotlin_targets,
+        vararg,
         retention,
         targets,
         parameters,
@@ -2638,7 +2795,51 @@ fn parse_details(bytes: &[u8], expected: &str) -> Result<(JavaClass, Attributes,
         let _ = signature::attach(&mut class, &attrs, &method_attributes);
     }
     if class.access & 0x2000 != 0 {
-        class.annotation_definition = annotation_definition(&class, &attrs, &method_attributes)?;
+        class.annotation_definition =
+            annotation_definition(&class, &attrs, &method_attributes, &pool)?;
+        if let Some(definition) = &class.annotation_definition {
+            if definition.kotlin_parameters.is_some() {
+                class.kotlin_class = true;
+            }
+            for (name, _, _) in &definition.parameters {
+                if let Some(method) = class.methods.iter_mut().find(|method| &method.name == name) {
+                    let logical = if let Some(names) = &definition.kotlin_parameters {
+                        names
+                            .iter()
+                            .position(|parameter| parameter == name)
+                            .and_then(|index| definition.kotlin_types.get(index))
+                            .cloned()
+                    } else {
+                        fn annotation_type(ty: Type) -> Type {
+                            match ty {
+                                Type::Java(name) | Type::Parameterized { name, .. }
+                                    if name == "java/lang/Class" =>
+                                {
+                                    Type::Parameterized {
+                                        name: "kotlin/reflect/KClass".into(),
+                                        arguments: vec![crate::syntax::TypeArgument {
+                                            variance: crate::syntax::Variance::Invariant,
+                                            ty: None,
+                                        }],
+                                    }
+                                }
+                                Type::Array(inner) => {
+                                    Type::Array(Box::new(annotation_type(*inner)))
+                                }
+                                other => other,
+                            }
+                        }
+                        Some(annotation_type(
+                            signature::method(&method.descriptor, &[])?.2,
+                        ))
+                    };
+                    method.source_property = Some(name.clone());
+                    method.kotlin_params = Some(Vec::new());
+                    method.kotlin_result = logical;
+                    method.unsupported = false;
+                }
+            }
+        }
         class.unsupported = class.annotation_definition.is_none();
     }
     Ok((class, attrs, method_attributes))
@@ -2838,12 +3039,86 @@ mod tests {
                 .targets
                 .is_empty()
         );
-        for name in ["Unsupported", "Ordinary"] {
-            let class = read(name);
-            assert!(class.unsupported);
-            assert!(class.annotation_definition.is_none());
-        }
+        let passive = read("Unsupported");
+        assert!(!passive.unsupported);
+        assert!(passive.annotation_definition.is_some());
+        let ordinary = read("Ordinary");
+        assert!(ordinary.unsupported);
+        assert!(ordinary.annotation_definition.is_none());
         std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn kotlin_enum_imports_retain_class_visibility_and_entry_identity() {
+        let standard = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("references/kotlinc/lib/kotlin-stdlib.jar");
+        let classpath = Classpath::new(&[standard]).unwrap();
+        let class = classpath
+            .load("kotlin/annotation/AnnotationRetention")
+            .unwrap();
+        assert!(!class.unsupported);
+        assert_eq!(class.library.unwrap().kotlin_visibility, Some(3));
+        assert!(class.fields.iter().any(|field| field.name == "RUNTIME"
+            && field.access & 0x4019 == 0x4019
+            && field.descriptor == "Lkotlin/annotation/AnnotationRetention;"
+            && !field.unsupported));
+    }
+
+    #[test]
+    fn annotation_numeric_tags_require_matching_pool_constants() {
+        let pool = vec![
+            Constant::Empty,
+            Constant::Integer(1),
+            Constant::Long(2),
+            Constant::Float(0),
+            Constant::Double(0),
+            Constant::Utf8("text".into(), Vec::new()),
+        ];
+        for (tag, valid_index) in [
+            (b'B', 1),
+            (b'C', 1),
+            (b'S', 1),
+            (b'I', 1),
+            (b'Z', 1),
+            (b'J', 2),
+            (b'F', 3),
+            (b'D', 4),
+        ] {
+            for index in 0..pool.len() {
+                let bytes = [tag, 0, index as u8];
+                let result = annotation_value(
+                    &mut Reader {
+                        bytes: &bytes,
+                        offset: 0,
+                    },
+                    &pool,
+                    0,
+                );
+                assert_eq!(result.is_ok(), index == valid_index, "{tag} {index}");
+            }
+        }
+    }
+
+    #[test]
+    fn annotation_defaults_match_declared_scalar_array_and_classifier_types() {
+        let pool = vec![
+            Constant::Empty,
+            Constant::Integer(1),
+            Constant::Long(2),
+            Constant::Utf8("Lsample/Mode;".into(), Vec::new()),
+            Constant::Utf8("FIRST".into(), Vec::new()),
+            Constant::Utf8("Lsample/Nested;".into(), Vec::new()),
+        ];
+        assert!(validate_annotation_default("I", &[b'I', 0, 1], &pool).is_ok());
+        assert!(validate_annotation_default("J", &[b'J', 0, 2], &pool).is_ok());
+        assert!(validate_annotation_default("I", &[b'J', 0, 2], &pool).is_err());
+        assert!(validate_annotation_default("[I", &[b'[', 0, 1, b'I', 0, 1], &pool).is_ok());
+        assert!(validate_annotation_default("[J", &[b'[', 0, 1, b'I', 0, 1], &pool).is_err());
+        assert!(validate_annotation_default("Lsample/Mode;", &[b'e', 0, 3, 0, 4], &pool).is_ok());
+        assert!(validate_annotation_default("Lsample/Other;", &[b'e', 0, 3, 0, 4], &pool).is_err());
+        assert!(validate_annotation_default("Lsample/Nested;", &[b'@', 0, 5, 0, 0], &pool).is_ok());
+        assert!(validate_annotation_default("Lsample/Other;", &[b'@', 0, 5, 0, 0], &pool).is_err());
+        assert!(validate_annotation_default("I", &[b'I', 0, 1, 0], &pool).is_err());
     }
 
     #[test]
@@ -2943,7 +3218,7 @@ mod tests {
                 }],
                 ..Attributes::default()
             };
-            assert!(annotation_definition(&class, &attrs, &[]).is_err());
+            assert!(annotation_definition(&class, &attrs, &[], &[]).is_err());
         }
     }
 

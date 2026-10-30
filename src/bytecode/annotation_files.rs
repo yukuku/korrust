@@ -5,6 +5,7 @@ use std::collections::HashMap;
 
 #[derive(Default)]
 pub(crate) struct MemberAnnotations {
+    pub synthetic_property: bool,
     pub name: String,
     pub descriptor: String,
     pub annotations: Vec<DeclarationAnnotation>,
@@ -261,6 +262,11 @@ fn members(
         reader.attributes()?;
         let mut member = reader.bytes[start..reader.offset].to_vec();
         if let Some(addition) = requested.remove(&(name, descriptor)) {
+            if addition.synthetic_property {
+                return Err(failure(
+                    "Synthetic property annotation method conflicts with an existing declaration",
+                ));
+            }
             if !addition.annotations.is_empty() || !addition.parameters.is_empty() {
                 normalize_annotation_names(pool, strings, &mut member)?;
                 annotations::append_annotations(pool, &mut member, &addition.annotations)?;
@@ -275,8 +281,37 @@ fn members(
         }
         out.extend(member);
     }
-    if !requested.is_empty() {
-        return Err(failure("Requested JVM annotation member was not found"));
+    let mut synthetic = requested.into_iter().collect::<Vec<_>>();
+    synthetic.sort_by_key(|((name, descriptor), _)| (*name, *descriptor));
+    for ((name, descriptor), addition) in synthetic {
+        if !is_method
+            || !addition.synthetic_property
+            || addition.descriptor != "()V"
+            || !addition.parameters.is_empty()
+        {
+            return Err(failure("Requested JVM annotation member was not found"));
+        }
+        let mut method = Vec::new();
+        u2(&mut method, 0x1009);
+        u2(&mut method, name);
+        u2(&mut method, descriptor);
+        u2(&mut method, 2);
+        u2(&mut method, pool.utf8("Code")?);
+        super::u4(&mut method, 13);
+        u2(&mut method, 0);
+        u2(&mut method, 0);
+        super::u4(&mut method, 1);
+        method.push(0xb1);
+        u2(&mut method, 0);
+        u2(&mut method, 0);
+        u2(&mut method, pool.utf8("Deprecated")?);
+        super::u4(&mut method, 0);
+        annotations::append_annotations(pool, &mut method, &addition.annotations)?;
+        out.extend(method);
+        let total = u16::from_be_bytes([out[0], out[1]])
+            .checked_add(1)
+            .ok_or_else(|| failure("Too many JVM annotation methods"))?;
+        out[..2].copy_from_slice(&total.to_be_bytes());
     }
     Ok(out)
 }
@@ -387,6 +422,7 @@ mod tests {
         let metadata = super::super::metadata_attribute_with_annotations(
             &mut pool,
             &crate::metadata::Metadata {
+                raw_data2: Default::default(),
                 kind: 1,
                 data1: vec![vec![0, 1, 2]],
                 data2: vec!["sample/Owner".into()],
@@ -446,12 +482,14 @@ mod tests {
             &ClassAnnotations {
                 annotations: vec![mark(true)],
                 fields: vec![MemberAnnotations {
+                    synthetic_property: false,
                     name: "value".into(),
                     descriptor: "Ljava/lang/String;".into(),
                     annotations: vec![mark(false)],
                     parameters: Vec::new(),
                 }],
                 methods: vec![MemberAnnotations {
+                    synthetic_property: false,
                     name: "echo".into(),
                     descriptor: "(Ljava/lang/String;JD)Ljava/lang/String;".into(),
                     annotations: vec![mark(true)],
@@ -488,11 +526,13 @@ mod tests {
         let (original, _, _, _) = fixture();
         for member in [
             MemberAnnotations {
+                synthetic_property: false,
                 name: "absent".into(),
                 descriptor: "()V".into(),
                 ..MemberAnnotations::default()
             },
             MemberAnnotations {
+                synthetic_property: false,
                 name: "echo".into(),
                 descriptor: "(Ljava/lang/String;JD)Ljava/lang/String;".into(),
                 parameters: vec![vec![mark(true)]],

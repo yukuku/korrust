@@ -51,17 +51,13 @@ pub(crate) fn annotation_placements(
     classpath: &Classpath,
     owner: &str,
 ) -> Result<std::collections::BTreeMap<String, ClassAnnotations>> {
-    let mut imports = module
-        .imports
-        .iter()
-        .map(|(name, path, _)| (name.clone(), path.clone()))
-        .collect::<HashMap<_, _>>();
+    let mut imports = crate::annotation_declarations::imports(module, classpath)?;
     let mut result = std::collections::BTreeMap::new();
     let mut output = ClassAnnotations::default();
     if let Some(class) = &module.class_decl {
         imports.insert(class.name.clone(), owner.into());
-        output.annotations = checked(&class.annotations, classpath, &imports, "TYPE", None)?;
-        constructor_parameters(class, false, classpath, &imports, &mut output)?;
+        output.annotations = checked(owner, &class.annotations, classpath, &imports, "TYPE", None)?;
+        constructor_parameters(owner, class, false, classpath, &imports, &mut output)?;
         for property in &class.properties {
             property_visibility_annotations(
                 &property.annotations,
@@ -76,12 +72,15 @@ pub(crate) fn annotation_placements(
                 &imports,
             )?;
             property_annotations(
+                owner,
                 &property.annotations,
                 &property.name,
                 &property.ty,
                 property.mutable,
                 property.private,
-                false,
+                property.initializer.is_some()
+                    || property.lateinit
+                    || property.body.is_empty() && property.delegate.is_none(),
                 classpath,
                 &imports,
                 &mut output,
@@ -102,6 +101,7 @@ pub(crate) fn annotation_placements(
                     &mut companion_output,
                 )?;
                 if checked(
+                    owner,
                     &method.function.annotations,
                     classpath,
                     &imports,
@@ -131,7 +131,7 @@ pub(crate) fn annotation_placements(
                     return Err(Diagnostic::new(
                         property.offset,
                         "Annotations on companion properties require unsupported split backing-field placement",
-                    ));
+                    ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "ANNOTATION_COMPANION_PROPERTY_UNSUPPORTED"));
                 }
             }
             result.insert(companion_owner, companion_output);
@@ -161,7 +161,7 @@ pub(crate) fn annotation_placements(
             })
             .cloned()
             .collect::<Vec<_>>();
-        output.annotations = checked(&ordinary, classpath, &imports, "TYPE", None)?;
+        output.annotations = checked(owner, &ordinary, classpath, &imports, "TYPE", None)?;
         for property in &object.fields {
             property_visibility_annotations(
                 &property.annotations,
@@ -177,12 +177,13 @@ pub(crate) fn annotation_placements(
             )?;
             if let Some(ty) = &property.ty {
                 property_annotations(
+                    owner,
                     &property.annotations,
                     &property.name,
                     ty,
                     property.mutable,
                     property.private,
-                    false,
+                    true,
                     classpath,
                     &imports,
                     &mut output,
@@ -191,6 +192,10 @@ pub(crate) fn annotation_placements(
                 return Err(Diagnostic::new(
                     property.offset,
                     "Cannot place annotations on unresolved property",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "ANNOTATION_PROPERTY_TYPE_UNSUPPORTED",
                 ));
             }
         }
@@ -199,12 +204,23 @@ pub(crate) fn annotation_placements(
         }
     } else if let Some(interface) = &module.interface_decl {
         imports.insert(interface.name.clone(), owner.into());
-        output.annotations = checked(&interface.annotations, classpath, &imports, "TYPE", None)?;
+        output.annotations = checked(
+            owner,
+            &interface.annotations,
+            classpath,
+            &imports,
+            "TYPE",
+            None,
+        )?;
         for property in &interface.properties {
             if !property.annotations.is_empty() {
                 return Err(Diagnostic::new(
                     property.offset,
                     "Annotations on interface properties are not supported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "ANNOTATION_INTERFACE_PROPERTY_UNSUPPORTED",
                 ));
             }
         }
@@ -238,24 +254,45 @@ pub(crate) fn annotation_placements(
                 return Err(Diagnostic::new(
                     interface.offset,
                     "Annotations on interface companion properties are not supported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "ANNOTATION_INTERFACE_COMPANION_PROPERTY_UNSUPPORTED",
                 ));
             }
         }
     } else if let Some(enumeration) = &module.enum_decl {
         imports.insert(enumeration.name.clone(), owner.into());
-        output.annotations = checked(&enumeration.annotations, classpath, &imports, "TYPE", None)?;
-        constructor_parameters(&enumeration.body, true, classpath, &imports, &mut output)?;
+        output.annotations = checked(
+            owner,
+            &enumeration.annotations,
+            classpath,
+            &imports,
+            "TYPE",
+            None,
+        )?;
+        constructor_parameters(
+            owner,
+            &enumeration.body,
+            true,
+            classpath,
+            &imports,
+            &mut output,
+        )?;
         for method in &enumeration.body.methods {
             function_parameters(&method.function, classpath, &imports, owner, &mut output)?;
         }
         for property in &enumeration.body.properties {
             property_annotations(
+                owner,
                 &property.annotations,
                 &property.name,
                 &property.ty,
                 property.mutable,
                 property.private,
-                false,
+                property.initializer.is_some()
+                    || property.lateinit
+                    || property.body.is_empty() && property.delegate.is_none(),
                 classpath,
                 &imports,
                 &mut output,
@@ -276,12 +313,15 @@ pub(crate) fn annotation_placements(
                 &imports,
             )?;
             property_annotations(
+                owner,
                 &property.annotations,
                 &property.name,
                 &property.ty,
                 property.mutable,
                 property.private,
-                true,
+                property.initializer.is_some()
+                    || property.lateinit
+                    || property.body.is_empty() && property.delegate.is_none(),
                 classpath,
                 &imports,
                 &mut output,
@@ -292,7 +332,14 @@ pub(crate) fn annotation_placements(
         }
     }
     for constant in &module.constants {
-        let annotations = checked(&constant.annotations, classpath, &imports, "FIELD", None)?;
+        let annotations = checked(
+            owner,
+            &constant.annotations,
+            classpath,
+            &imports,
+            "FIELD",
+            None,
+        )?;
         if !annotations.is_empty() {
             let (ty, _) = constant_expr(&constant.value)?;
             member(&mut output.fields, &constant.name, &ty.descriptor())
@@ -349,13 +396,21 @@ fn property_visibility_annotations(
 }
 
 fn checked(
+    owner: &str,
     annotations: &[syntax::AnnotationUse],
     classpath: &Classpath,
     imports: &HashMap<String, String>,
     target: &str,
     use_site: Option<&str>,
 ) -> Result<Vec<DeclarationAnnotation>> {
-    annotations::declaration_annotations(annotations, classpath, imports, target, use_site)
+    annotations::declaration_annotations(
+        annotations,
+        classpath,
+        imports,
+        target,
+        use_site,
+        Some(owner),
+    )
 }
 
 fn member<'a>(
@@ -368,6 +423,7 @@ fn member<'a>(
         .position(|member| member.name == name && member.descriptor == descriptor)
         .unwrap_or_else(|| {
             members.push(MemberAnnotations {
+                synthetic_property: false,
                 name: name.into(),
                 descriptor: descriptor.into(),
                 annotations: Vec::new(),
@@ -379,6 +435,7 @@ fn member<'a>(
 }
 
 fn constructor_parameters(
+    owner: &str,
     class: &syntax::ClassDecl,
     enumeration: bool,
     classpath: &Classpath,
@@ -404,6 +461,10 @@ fn constructor_parameters(
                     return Err(Diagnostic::new(
                         annotation.offset,
                         "Annotation use-site target requires a constructor property",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ANNOTATION_CONSTRUCTOR_PROPERTY_REQUIRED",
                     ));
                 }
                 None => {
@@ -430,6 +491,10 @@ fn constructor_parameters(
                         return Err(Diagnostic::new(
                             annotation.offset,
                             "Annotation cannot target a constructor parameter",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "ANNOTATION_TARGET_INVALID",
                         ));
                     }
                 }
@@ -443,10 +508,15 @@ fn constructor_parameters(
                 return Err(Diagnostic::new(
                     annotation.offset,
                     "Repeated parameter annotations require a repeatable declaration",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "REPEATED_ANNOTATION_INVALID",
                 ));
             }
             let site = annotation.use_site.clone();
             checked_parameter.extend(checked(
+                owner,
                 &[annotation],
                 classpath,
                 imports,
@@ -457,12 +527,13 @@ fn constructor_parameters(
         parameters[index + if enumeration { 2 } else { 0 }] = checked_parameter;
         if is_property {
             property_annotations(
+                owner,
                 &property,
                 name,
                 ty,
                 mutable,
                 !class.public_params.contains(name),
-                false,
+                true,
                 classpath,
                 imports,
                 output,
@@ -491,12 +562,13 @@ fn constructor_parameters(
 
 #[allow(clippy::too_many_arguments)]
 fn property_annotations(
+    owner: &str,
     annotations: &[syntax::AnnotationUse],
     name: &str,
     ty: &Type,
     mutable: bool,
     private: bool,
-    _static_: bool,
+    has_backing_field: bool,
     classpath: &Classpath,
     imports: &HashMap<String, String>,
     output: &mut ClassAnnotations,
@@ -509,7 +581,23 @@ fn property_annotations(
             .map_or(0, |annotation| annotation.offset),
     )?;
     let mut seen = HashSet::new();
-    for annotation in annotations {
+    for original in annotations {
+        let mut placed = original.clone();
+        if placed.use_site.is_none() {
+            let canonical = crate::annotation_declarations::owner(&placed.name, imports, classpath);
+            if classpath
+                .load(&canonical)?
+                .annotation_definition
+                .is_some_and(|definition| {
+                    definition
+                        .kotlin_targets
+                        .is_some_and(|targets| targets.iter().any(|target| target == "PROPERTY"))
+                })
+            {
+                placed.use_site = Some("property".into());
+            }
+        }
+        let annotation = &placed;
         let site = annotation.use_site.clone();
         let target = site.as_deref().unwrap_or("field");
         let identity = imports.get(&annotation.name).unwrap_or(&annotation.name);
@@ -517,21 +605,45 @@ fn property_annotations(
             return Err(Diagnostic::new(
                 annotation.offset,
                 "Repeated property annotations require a repeatable declaration",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "REPEATED_ANNOTATION_INVALID",
             ));
         }
         match site.as_deref() {
             Some("property") => {
-                return Err(Diagnostic::new(
-                    annotation.offset,
-                    "Kotlin property-target annotations are not supported",
-                )
-                .with_kind(
-                    crate::DiagnosticKind::UnsupportedLanguage,
-                    "ANNOTATION_PROPERTY_TARGET_UNSUPPORTED",
-                ));
+                let values = checked(
+                    owner,
+                    std::slice::from_ref(annotation),
+                    classpath,
+                    imports,
+                    "PROPERTY",
+                    site.as_deref(),
+                )?;
+                if !values.is_empty() {
+                    let method = member(
+                        &mut output.methods,
+                        &format!("{}$annotations", getter_name(name)),
+                        "()V",
+                    );
+                    method.synthetic_property = true;
+                    method.annotations.extend(values);
+                }
             }
             Some("field") | None => {
+                if !has_backing_field {
+                    return Err(Diagnostic::new(
+                        annotation.offset,
+                        "Field annotation requires a property backing field",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ANNOTATION_BACKING_FIELD_REQUIRED",
+                    ));
+                }
                 let values = checked(
+                    owner,
                     std::slice::from_ref(annotation),
                     classpath,
                     imports,
@@ -549,12 +661,20 @@ fn property_annotations(
                     return Err(Diagnostic::new(
                         annotation.offset,
                         "Annotations on private property accessors are not supported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "ANNOTATION_PRIVATE_ACCESSOR_UNSUPPORTED",
                     ));
                 }
                 if site.as_deref() != Some("get") && !mutable {
                     return Err(Diagnostic::new(
                         annotation.offset,
                         "Setter annotation requires a mutable property",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ANNOTATION_SETTER_REQUIRES_VAR",
                     ));
                 }
                 let getter = site.as_deref() == Some("get");
@@ -570,6 +690,7 @@ fn property_annotations(
                 };
                 let parameter = site.as_deref() == Some("setparam");
                 let values = checked(
+                    owner,
                     std::slice::from_ref(annotation),
                     classpath,
                     imports,
@@ -592,6 +713,10 @@ fn property_annotations(
                 return Err(Diagnostic::new(
                     annotation.offset,
                     "Invalid annotation use-site target for property",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "ANNOTATION_USE_SITE_INVALID",
                 ));
             }
         }
@@ -617,7 +742,14 @@ fn function_parameters(
     }
     for ((_, ty), annotations) in function.params.iter().zip(&function.param_annotations) {
         descriptor.push_str(&resolve_type(ty, imports, function.offset)?.descriptor());
-        params.push(checked(annotations, classpath, imports, "PARAMETER", None)?);
+        params.push(checked(
+            owner,
+            annotations,
+            classpath,
+            imports,
+            "PARAMETER",
+            None,
+        )?);
     }
     descriptor.push(')');
     descriptor.push_str(&resolve_type(&function.result, imports, function.offset)?.descriptor());
@@ -636,9 +768,16 @@ fn function_parameters(
         .map(|method| method.name.clone())
         .unwrap_or_else(|| function.name.clone());
     member(&mut output.methods, &name, &descriptor).parameters = params;
-    if checked(&function.annotations, classpath, imports, "METHOD", None)?
-        .iter()
-        .any(|annotation| annotation.descriptor == "Lkotlin/jvm/JvmOverloads;")
+    if checked(
+        owner,
+        &function.annotations,
+        classpath,
+        imports,
+        "METHOD",
+        None,
+    )?
+    .iter()
+    .any(|annotation| annotation.descriptor == "Lkotlin/jvm/JvmOverloads;")
     {
         let mut omitted = HashSet::new();
         for index in (0..function.params.len()).rev() {
@@ -663,7 +802,14 @@ fn function_parameters(
                     continue;
                 }
                 descriptor.push_str(&resolve_type(ty, imports, function.offset)?.descriptor());
-                parameters.push(checked(annotations, classpath, imports, "PARAMETER", None)?);
+                parameters.push(checked(
+                    owner,
+                    annotations,
+                    classpath,
+                    imports,
+                    "PARAMETER",
+                    None,
+                )?);
             }
             descriptor.push(')');
             descriptor

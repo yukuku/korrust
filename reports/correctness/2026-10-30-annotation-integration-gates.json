@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "status": "passed",
+  "scope": "Annotation integration and focused regressions; final milestone freeze/regression still required.",
+  "cases": [
+    {
+      "id": "library-rust-resumed",
+      "outcome": "pass",
+      "tests": 269,
+      "provenance": "268 initial successful cases, one stale unsupported compound-assignment diagnostic string corrected and that test rerun; failed historical log retained."
+    },
+    {
+      "id": "delegation-regression",
+      "outcome": "pass",
+      "tests": 4
+    },
+    {
+      "id": "clippy-all-targets",
+      "outcome": "pass"
+    },
+    {
+      "id": "format",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": {
+    "reports/correctness/2026-10-30-annotation-integration-gates/annotations-root-rust.log": "2ab952e4d4290a458cbb6621b2ca081ed214788c70367b930a14716e714748ac",
+    "reports/correctness/2026-10-30-annotation-integration-gates/annotations-root-rust-repair.log": "00a0608dd09cb638e618fcb462bd1c83f4e59cba4c48966881e5b8d647277c26",
+    "reports/correctness/2026-10-30-annotation-integration-gates/annotations-delegation-regression.log": "35fee5fe90a3c0b03faa70acd47fd6071485457f2c6342507c106917e68b6b61",
+    "reports/correctness/2026-10-30-annotation-integration-gates/annotations-root-clippy.log": "3c99c332b24fd324515b68a1a3bf380ec0ccd2c69b75639dbebc9a103072d2e1",
+    "reports/correctness/2026-10-30-annotation-integration-gates/annotations-root-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/correctness/2026-10-30-annotation-integration-gates/annotation-root-build.log": "58ebf79cdfe34a90be659f6e16752c9bb7e109fb3d960be5462debcfef2b2573"
+  },
+  "oracle_discrepancies": "reports/correctness/2026-10-30-annotation-integration-gates/oracle-discrepancies.json",
+  "frozen_release_note": "The only change after the frozen annotation run is a cfg(test) expected diagnostic string. Source/fixture hashes inside the frozen report remain the exact original run inputs."
+}

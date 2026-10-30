@@ -240,6 +240,7 @@ impl Type {
 
 #[derive(Clone, Debug)]
 pub struct Module {
+    pub annotation_decl: Option<AnnotationDecl>,
     pub type_locations: Vec<(String, usize)>,
     pub type_aliases: Vec<TypeAliasDecl>,
     pub package: String,
@@ -269,7 +270,23 @@ pub struct AnnotationUse {
     pub arguments: Vec<(Option<String>, Expr)>,
 }
 #[derive(Clone, Debug)]
+pub struct AnnotationDecl {
+    pub name: String,
+    pub offset: usize,
+    pub annotations: Vec<AnnotationUse>,
+    pub parameters: Vec<AnnotationParameter>,
+}
+#[derive(Clone, Debug)]
+pub struct AnnotationParameter {
+    pub name: String,
+    pub offset: usize,
+    pub ty: Type,
+    pub default: Option<Expr>,
+    pub vararg: bool,
+}
+#[derive(Clone, Debug)]
 pub enum Declaration {
+    Annotation(AnnotationDecl),
     Class(ClassDecl),
     Object(ObjectDecl),
     Interface(InterfaceDecl),
@@ -718,6 +735,11 @@ pub(crate) fn normalize_result_tail(body: &mut [Statement]) {
 
 #[derive(Clone, Debug)]
 pub enum ExprKind {
+    AnnotationConstant {
+        value: Box<Expr>,
+        integer_literal: bool,
+    },
+    AnnotationArray(Vec<Expr>),
     MissingWhenElse,
     WhenSubjectless,
     VarargArray {
@@ -1183,6 +1205,7 @@ fn string_parts_depth(
                 }
                 let mut parser = Parser {
                     in_delegation_expression: false,
+                    annotation_context: false,
                     tokens,
                     pos: 0,
                     depth: depth + 1,
@@ -1545,6 +1568,7 @@ struct ClassHeader {
 
 struct Parser {
     in_delegation_expression: bool,
+    annotation_context: bool,
     tokens: Vec<Token>,
     pos: usize,
     depth: usize,
@@ -2145,36 +2169,11 @@ impl Parser {
         }
         let mut arguments = Vec::new();
         if self.at("(") {
-            let mut index = self.pos + 1;
-            let mut depth = 1;
-            while let Some(token) = self.tokens.get(index) {
-                match token.text.as_str() {
-                    "(" => depth += 1,
-                    ")" => {
-                        depth -= 1;
-                        if depth == 0 {
-                            break;
-                        }
-                    }
-                    "[" if self.tokens[..index]
-                        .iter()
-                        .rev()
-                        .find(|previous| previous.text != "\n")
-                        .is_some_and(|previous| {
-                            matches!(previous.text.as_str(), "(" | "," | "=")
-                        }) =>
-                    {
-                        return Err(Diagnostic::new(
-                            token.offset,
-                            "Annotation array literals require unsupported array-valued annotation arguments",
-                        ).with_kind(DiagnosticKind::UnsupportedLanguage, "ANNOTATION_ARRAY_LITERAL_UNSUPPORTED"));
-                    }
-                    "<eof>" => break,
-                    _ => {}
-                }
-                index += 1;
-            }
-            for argument in self.arguments()? {
+            let previous = self.annotation_context;
+            self.annotation_context = true;
+            let parsed = self.arguments();
+            self.annotation_context = previous;
+            for argument in parsed? {
                 if let ExprKind::NamedArgument(name, value) = argument.kind {
                     arguments.push((Some(name), *value));
                 } else {
@@ -2187,6 +2186,128 @@ impl Parser {
             offset,
             use_site,
             arguments,
+        })
+    }
+    fn annotation_declaration(&mut self) -> Result<AnnotationDecl> {
+        let offset = self.token().offset;
+        let annotations = self.annotations()?;
+        if self.take("public") {
+            self.lines();
+        }
+        if matches!(self.token().text.as_str(), "internal" | "private") {
+            return Err(self
+                .error("Nonpublic source annotation declarations are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "ANNOTATION_VISIBILITY_UNSUPPORTED",
+                ));
+        }
+        self.expect("annotation")?;
+        self.expect("class")?;
+        let name = self.declaration_name()?;
+        if self.at("<") {
+            return Err(self
+                .error("Generic annotation declarations are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "GENERIC_ANNOTATION_UNSUPPORTED",
+                ));
+        }
+        let mut parameters = Vec::new();
+        if self.take("(") {
+            self.lines();
+            while !self.at(")") {
+                let offset = self.token().offset;
+                let vararg = self.take("vararg");
+                self.expect("val").map_err(|error| {
+                    error.with_kind(
+                        DiagnosticKind::InvalidKotlin,
+                        "INVALID_ANNOTATION_PARAMETER",
+                    )
+                })?;
+                let name = self.declaration_name()?;
+                if parameters
+                    .iter()
+                    .any(|value: &AnnotationParameter| value.name == name)
+                {
+                    return Err(self.error("Duplicate annotation parameter").with_kind(
+                        DiagnosticKind::InvalidKotlin,
+                        "DUPLICATE_ANNOTATION_PARAMETER",
+                    ));
+                }
+                self.expect(":")?;
+                let ty = self.ty()?;
+                let default = if self.take("=") {
+                    self.lines();
+                    let previous = self.annotation_context;
+                    self.annotation_context = true;
+                    let value = self.expr(0);
+                    self.annotation_context = previous;
+                    Some(value?)
+                } else {
+                    None
+                };
+                parameters.push(AnnotationParameter {
+                    name,
+                    offset,
+                    ty,
+                    default,
+                    vararg,
+                });
+                self.lines();
+                if !self.take(",") {
+                    break;
+                }
+                self.lines();
+            }
+            self.expect(")")?;
+        }
+        if parameters
+            .iter()
+            .enumerate()
+            .any(|(index, parameter)| parameter.vararg && index + 1 != parameters.len())
+        {
+            return Err(self
+                .error("Nonfinal annotation varargs are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "ANNOTATION_VARARG_POSITION_UNSUPPORTED",
+                ));
+        }
+        if self.at(":") {
+            return Err(self
+                .error("Annotation declarations cannot declare supertypes")
+                .with_kind(
+                    DiagnosticKind::InvalidKotlin,
+                    "ANNOTATION_SUPERTYPE_INVALID",
+                ));
+        }
+        let saved = self.pos;
+        self.lines();
+        if self.take("{") {
+            self.lines();
+            if self.at("annotation") {
+                return Err(self
+                    .error("Nested annotation declarations are unsupported")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "NESTED_ANNOTATION_DECLARATION_UNSUPPORTED",
+                    ));
+            }
+            self.expect("}").map_err(|error| {
+                error.with_kind(
+                    DiagnosticKind::InvalidKotlin,
+                    "ANNOTATION_BODY_MEMBER_INVALID",
+                )
+            })?;
+        } else {
+            self.pos = saved;
+        }
+        Ok(AnnotationDecl {
+            name,
+            offset,
+            annotations,
+            parameters,
         })
     }
     fn annotations(&mut self) -> Result<Vec<AnnotationUse>> {
@@ -3509,7 +3630,14 @@ impl Parser {
         if self.depth > 16 {
             return Err(self.error("Declaration nesting exceeds the current limit"));
         }
-        let result = if self.starts_enum() {
+        let result = if self.starts_declaration("annotation") {
+            return Err(self
+                .error("Nested annotation declarations require unsupported declaration contexts")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "NESTED_ANNOTATION_DECLARATION_UNSUPPORTED",
+                ));
+        } else if self.starts_enum() {
             Ok(Declaration::Enum(self.enum_decl()?))
         } else if self.starts_class() {
             Ok(Declaration::Class(self.class_decl()?))
@@ -5164,6 +5292,23 @@ impl Parser {
     }
     fn prefix(&mut self) -> Result<Expr> {
         let offset = self.token().offset;
+        if self.annotation_context && self.take("[") {
+            let mut values = Vec::new();
+            self.lines();
+            while !self.at("]") {
+                values.push(self.expr(0)?);
+                self.lines();
+                if !self.take(",") {
+                    break;
+                }
+                self.lines();
+            }
+            self.expect("]")?;
+            return Self::bounded(Expr {
+                offset,
+                kind: ExprKind::AnnotationArray(values),
+            });
+        }
         if self.at("++") || self.at("--") {
             let increment = self.take("++");
             if !increment {
@@ -6509,6 +6654,7 @@ pub fn parse(source: &str) -> Result<Module> {
         depth: 0,
         type_parameters: Vec::new(),
         type_locations: Vec::new(),
+        annotation_context: false,
     };
     p.separators();
     if p.at("@")
@@ -6561,13 +6707,21 @@ pub fn parse(source: &str) -> Result<Module> {
     let mut functions = Vec::new();
     let mut constants = Vec::new();
     let mut properties = Vec::new();
+    let mut annotation_decl = None;
     let mut enum_decl = None;
     let mut object_decl = None;
     let mut class_decl = None;
     let mut interface_decl = None;
     let mut declarations = Vec::new();
     while !p.at("<eof>") {
-        if p.starts_declaration("typealias") {
+        if p.starts_declaration("annotation") {
+            let declaration = p.annotation_declaration()?;
+            if annotation_decl.is_none() {
+                annotation_decl = Some(declaration);
+            } else {
+                declarations.push(Declaration::Annotation(declaration));
+            }
+        } else if p.starts_declaration("typealias") {
             type_aliases.push(p.type_alias()?);
         } else if p.starts_declaration("const") {
             constants.push(p.constant()?);
@@ -6626,10 +6780,12 @@ pub fn parse(source: &str) -> Result<Module> {
         && object_decl.is_none()
         && class_decl.is_none()
         && interface_decl.is_none()
+        && annotation_decl.is_none()
     {
         return Err(p.error("Expected at least one function, enum class, object, or class"));
     }
     Ok(Module {
+        annotation_decl,
         type_locations: p.type_locations,
         type_aliases,
         package,
@@ -6987,6 +7143,17 @@ mod tests {
     }
 
     #[test]
+    fn annotation_array_values_have_distinct_literal_nodes() {
+        for source in ["@Mark([1, 2]) class C", "@Mark(values =\n [1, 2]) class C"] {
+            let module = parse(source).unwrap();
+            let annotation = &module.class_decl.unwrap().annotations[0];
+            assert!(
+                matches!(&annotation.arguments[0].1.kind, ExprKind::AnnotationArray(values) if values.len() == 2)
+            );
+        }
+    }
+
+    #[test]
     fn unsupported_constructs_have_stable_codes_and_source_offsets() {
         for (source, marker, code) in [
             (
@@ -7003,16 +7170,6 @@ mod tests {
                 "enum class E { A { fun answer() = 1 } }",
                 "{ fun",
                 "ENUM_ENTRY_BODY_UNSUPPORTED",
-            ),
-            (
-                "@Mark([1, 2]) class C",
-                "[",
-                "ANNOTATION_ARRAY_LITERAL_UNSUPPORTED",
-            ),
-            (
-                "@Mark(values =\n [1, 2]) class C",
-                "[",
-                "ANNOTATION_ARRAY_LITERAL_UNSUPPORTED",
             ),
             (
                 "fun f(input: @Mark String) {}",

@@ -11,6 +11,7 @@ use crate::{
 };
 
 pub(crate) struct Metadata {
+    pub raw_data2: BTreeMap<u32, Vec<u16>>,
     pub kind: i32,
     pub data1: Vec<Vec<u16>>,
     pub data2: Vec<String>,
@@ -127,6 +128,10 @@ pub(crate) fn annotation_source(
                             .any(|target| target == "PARAMETER")
                         {
                             "param"
+                        } else if definition.kotlin_targets.as_ref().is_some_and(|targets| {
+                            targets.iter().any(|target| target == "PROPERTY")
+                        }) {
+                            "property"
                         } else {
                             "field"
                         }
@@ -138,6 +143,20 @@ pub(crate) fn annotation_source(
             *annotations = retained;
             Ok(())
         }
+        fn property_uses(&self, annotations: &mut Vec<AnnotationUse>) -> Result<()> {
+            self.uses(annotations, false)?;
+            for annotation in annotations {
+                if annotation.use_site.is_none()
+                    && self
+                        .definition(annotation)?
+                        .kotlin_targets
+                        .is_some_and(|targets| targets.iter().any(|target| target == "PROPERTY"))
+                {
+                    annotation.use_site = Some("property".into());
+                }
+            }
+            Ok(())
+        }
         fn function(&self, function: &mut Function) -> Result<()> {
             self.uses(&mut function.annotations, false)?;
             for annotations in &mut function.param_annotations {
@@ -147,7 +166,7 @@ pub(crate) fn annotation_source(
         }
         fn class_companion(&self, companion: &mut crate::syntax::ClassCompanion) -> Result<()> {
             for property in &mut companion.properties {
-                self.uses(&mut property.annotations, false)?;
+                self.property_uses(&mut property.annotations)?;
             }
             for method in &mut companion.methods {
                 self.function(&mut method.function)?;
@@ -160,7 +179,7 @@ pub(crate) fn annotation_source(
                 self.uses(annotations, true)?;
             }
             for property in &mut class.properties {
-                self.uses(&mut property.annotations, false)?;
+                self.property_uses(&mut property.annotations)?;
             }
             for method in &mut class.methods {
                 self.function(&mut method.function)?;
@@ -176,7 +195,7 @@ pub(crate) fn annotation_source(
                 self.uses(&mut constant.annotations, false)?;
             }
             for property in &mut object.fields {
-                self.uses(&mut property.annotations, false)?;
+                self.property_uses(&mut property.annotations)?;
             }
             for method in &mut object.methods {
                 self.function(&mut method.function)?;
@@ -189,7 +208,7 @@ pub(crate) fn annotation_source(
         fn interface(&self, interface: &mut InterfaceDecl) -> Result<()> {
             self.uses(&mut interface.annotations, false)?;
             for property in &mut interface.properties {
-                self.uses(&mut property.annotations, false)?;
+                self.property_uses(&mut property.annotations)?;
             }
             for method in &mut interface.methods {
                 self.function(&mut method.function)?;
@@ -199,13 +218,13 @@ pub(crate) fn annotation_source(
             }
             if let Some(companion) = &mut interface.companion {
                 for property in &mut companion.properties {
-                    self.uses(&mut property.annotations, false)?;
+                    self.property_uses(&mut property.annotations)?;
                     if let CompanionValue::Object(class) = &mut property.value {
                         self.class(class)?;
                     }
                 }
                 for field in &mut companion.fields {
-                    self.uses(&mut field.annotations, false)?;
+                    self.property_uses(&mut field.annotations)?;
                 }
                 for method in &mut companion.methods {
                     self.function(&mut method.function)?;
@@ -224,15 +243,22 @@ pub(crate) fn annotation_source(
                     Declaration::Object(object) => self.object(object)?,
                     Declaration::Interface(interface) => self.interface(interface)?,
                     Declaration::Enum(enumeration) => self.enumeration(enumeration)?,
+                    Declaration::Annotation(annotation) => {
+                        self.uses(&mut annotation.annotations, false)?
+                    }
                 }
             }
             Ok(())
         }
     }
     let mut source = module.clone();
+    source.imports = crate::annotation_declarations::imports(module, classpath)?
+        .into_iter()
+        .map(|(name, path)| (name, path, 0))
+        .collect();
     let filter = Filter {
         classpath,
-        imports: &module.imports,
+        imports: &source.imports,
         package: module.package.replace('.', "/"),
     };
     for function in &mut source.functions {
@@ -242,7 +268,7 @@ pub(crate) fn annotation_source(
         filter.uses(&mut constant.annotations, false)?;
     }
     for property in &mut source.properties {
-        filter.uses(&mut property.annotations, false)?;
+        filter.property_uses(&mut property.annotations)?;
     }
     if let Some(class) = &mut source.class_decl {
         filter.class(class)?;
@@ -290,6 +316,7 @@ impl Proto {
 
 #[derive(Default)]
 struct Strings {
+    raw_values: BTreeMap<u32, Vec<u16>>,
     values: Vec<String>,
     indices: BTreeMap<String, u32>,
     local_names: Vec<u32>,
@@ -358,6 +385,29 @@ impl Strings {
         Ok(id)
     }
 
+    fn id_units(&mut self, units: &[u16]) -> Result<u32> {
+        if let Ok(value) = String::from_utf16(units) {
+            return self.id(&value);
+        }
+        if let Some((index, _)) = self
+            .raw_values
+            .iter()
+            .find(|(_, value)| value.as_slice() == units)
+        {
+            return Ok(*index);
+        }
+        if self.values.len() >= u16::MAX as usize {
+            return Err(Diagnostic::new(
+                0,
+                "Kotlin metadata string table exceeds JVM limits",
+            ));
+        }
+        let index = self.values.len() as u32;
+        self.values.push(String::new());
+        self.raw_values.insert(index, units.into());
+        Ok(index)
+    }
+
     fn finish(self, kind: i32, proto: Proto) -> Result<Metadata> {
         let mut record = Proto::default();
         record.number(1, self.values.len() as u32);
@@ -387,6 +437,7 @@ impl Strings {
             kind,
             data1,
             data2: self.values,
+            raw_data2: self.raw_values,
         })
     }
 }
@@ -1020,6 +1071,15 @@ fn class_metadata(
                 )?,
             );
         }
+        property_annotation_signature(
+            &mut signature,
+            class
+                .param_annotations
+                .get(index)
+                .map_or(&[], Vec::as_slice),
+            name,
+            &mut strings,
+        )?;
         accessor_annotation_flags(
             &mut property,
             class
@@ -1180,6 +1240,12 @@ fn class_metadata(
                 )?,
             );
         }
+        property_annotation_signature(
+            &mut signature,
+            &property.annotations,
+            &property.name,
+            &mut strings,
+        )?;
         accessor_annotation_flags(
             &mut declaration,
             &property.annotations,
@@ -1295,6 +1361,28 @@ fn interface_delegation_members(
         }
         property.message(100, &signature);
         proto.message(10, &property);
+    }
+    Ok(())
+}
+
+fn property_annotation_signature(
+    signature: &mut Proto,
+    annotations: &[crate::syntax::AnnotationUse],
+    name: &str,
+    strings: &mut Strings,
+) -> Result<()> {
+    if annotations
+        .iter()
+        .any(|a| a.use_site.as_deref() == Some("property"))
+    {
+        signature.message(
+            2,
+            &method_signature(
+                &format!("{}$annotations", crate::check::getter_name(name)),
+                "()V",
+                strings,
+            )?,
+        );
     }
     Ok(())
 }
@@ -1648,6 +1736,12 @@ pub(crate) fn for_class_companion(
                 );
             }
         }
+        property_annotation_signature(
+            &mut signature,
+            &property.annotations,
+            &property.name,
+            &mut strings,
+        )?;
         accessor_annotation_flags(
             &mut declaration,
             &property.annotations,
@@ -1936,6 +2030,12 @@ fn companion_metadata(
                 );
             }
         }
+        property_annotation_signature(
+            &mut signature,
+            &property.annotations,
+            &property.name,
+            &mut strings,
+        )?;
         accessor_annotation_flags(
             &mut declaration,
             &property.annotations,
@@ -2307,6 +2407,12 @@ fn object_metadata(
                 );
             }
         }
+        property_annotation_signature(
+            &mut signature,
+            &field.annotations,
+            &field.name,
+            &mut strings,
+        )?;
         accessor_annotation_flags(
             &mut declaration,
             &field.annotations,
@@ -2595,6 +2701,12 @@ pub(crate) fn for_checked_package(
                 )?,
             );
         }
+        property_annotation_signature(
+            &mut signature,
+            &property.annotations,
+            &property.name,
+            &mut strings,
+        )?;
         accessor_annotation_flags(
             &mut declaration,
             &property.annotations,
@@ -2642,6 +2754,192 @@ pub(crate) fn module_mapping(facades: &[String]) -> Vec<u8> {
     }
     bytes.extend(module.0);
     bytes
+}
+
+fn annotation_value_proto(
+    value: &crate::check::DeclarationAnnotationValue,
+    strings: &mut Strings,
+) -> Result<Proto> {
+    use crate::check::DeclarationAnnotationValue as Value;
+    let mut proto = Proto::default();
+    let (kind, integer) = match value {
+        Value::Int(value) => (3, Some(i64::from(*value))),
+        Value::Long(value) => (4, Some(*value)),
+        Value::Char(value) => (1, Some(i64::from(*value))),
+        Value::Boolean(value) => (7, Some(i64::from(*value))),
+        Value::Float(_) => (5, None),
+        Value::Double(_) => (6, None),
+        Value::String(_) => (8, None),
+        Value::Class { .. } => (9, None),
+        Value::Enum { .. } => (10, None),
+        Value::Nested(_) => (11, None),
+        Value::Array(_) => (12, None),
+    };
+    proto.number(1, kind);
+    if let Some(value) = integer {
+        proto.varint(2 << 3);
+        proto.varint(((value as u64) << 1) ^ ((value >> 63) as u64));
+    }
+    match value {
+        Value::Float(bits) => {
+            proto.varint((3 << 3) | 5);
+            proto.0.extend(bits.to_le_bytes());
+        }
+        Value::Double(bits) => {
+            proto.varint((4 << 3) | 1);
+            proto.0.extend(bits.to_le_bytes());
+        }
+        Value::String(units) => proto.number(5, strings.id_units(units)?),
+        Value::Enum { descriptor, entry } => {
+            proto.number(
+                6,
+                strings.id(&descriptor[1..descriptor.len() - 1].replace('$', "."))?,
+            );
+            proto.number(7, strings.id(entry)?);
+        }
+        Value::Class { logical, .. } => {
+            fn classifier(ty: &Type) -> Result<(String, u32)> {
+                Ok(match ty {
+                    Type::Array(inner) | Type::Nullable(inner) => {
+                        let (name, dimensions) = classifier(inner)?;
+                        (name, dimensions + u32::from(matches!(ty, Type::Array(_))))
+                    }
+                    Type::StringArray => ("kotlin/String".into(), 1),
+                    Type::Java(name) | Type::Parameterized { name, .. } => {
+                        (name.replace('$', "."), 0)
+                    }
+                    other => (
+                        match other {
+                            Type::Int => "kotlin/Int",
+                            Type::Long => "kotlin/Long",
+                            Type::Byte => "kotlin/Byte",
+                            Type::Char => "kotlin/Char",
+                            Type::Boolean => "kotlin/Boolean",
+                            Type::Float => "kotlin/Float",
+                            Type::Double => "kotlin/Double",
+                            Type::String => "kotlin/String",
+                            Type::Unit => "kotlin/Unit",
+                            Type::IntArray => "kotlin/IntArray",
+                            Type::ByteArray => "kotlin/ByteArray",
+                            Type::CharArray => "kotlin/CharArray",
+                            Type::LongArray => "kotlin/LongArray",
+                            Type::FloatArray => "kotlin/FloatArray",
+                            Type::DoubleArray => "kotlin/DoubleArray",
+                            Type::BooleanArray => "kotlin/BooleanArray",
+                            _ => {
+                                return Err(Diagnostic::new(
+                                    0,
+                                    "Unsupported annotation class literal metadata classifier",
+                                ));
+                            }
+                        }
+                        .into(),
+                        0,
+                    ),
+                })
+            }
+            let (name, dimensions) = classifier(logical)?;
+            proto.number(6, strings.id(&name)?);
+            if dimensions != 0 {
+                proto.number(11, dimensions);
+            }
+        }
+        Value::Nested(annotation) => {
+            let mut nested = Proto::default();
+            nested.number(
+                1,
+                strings
+                    .id(&annotation.descriptor[1..annotation.descriptor.len() - 1]
+                        .replace('$', "."))?,
+            );
+            for (name, value) in &annotation.values {
+                let mut argument = Proto::default();
+                argument.number(1, strings.id(name)?);
+                argument.message(2, &annotation_value_proto(value, strings)?);
+                nested.message(2, &argument);
+            }
+            proto.message(8, &nested);
+        }
+        Value::Array(values) => {
+            for value in values {
+                proto.message(9, &annotation_value_proto(value, strings)?);
+            }
+        }
+        _ => {}
+    }
+    Ok(proto)
+}
+
+pub(crate) fn for_annotation(
+    annotation: &crate::annotation_declarations::CheckedAnnotation,
+    owner: &str,
+) -> Result<Metadata> {
+    let mut strings = Strings::default();
+    let mut proto = Proto::default();
+    proto.number(1, 262 | u32::from(annotation.has_annotations));
+    proto.number(3, strings.id(&owner.replace('$', "."))?);
+    proto.message(
+        6,
+        &type_proto(&Type::Java("kotlin/Annotation".into()), &[], &mut strings)?,
+    );
+    let mut constructor = Proto::default();
+    constructor.number(1, 6);
+    for parameter in &annotation.parameters {
+        let ty = if parameter.vararg {
+            match &parameter.ty {
+                Type::Array(inner) => Type::Parameterized {
+                    name: "kotlin/Array".into(),
+                    arguments: vec![crate::syntax::TypeArgument {
+                        variance: Variance::Out,
+                        ty: Some(inner.as_ref().clone()),
+                    }],
+                },
+                Type::StringArray => Type::Parameterized {
+                    name: "kotlin/Array".into(),
+                    arguments: vec![crate::syntax::TypeArgument {
+                        variance: Variance::Out,
+                        ty: Some(Type::String),
+                    }],
+                },
+                other => other.clone(),
+            }
+        } else {
+            parameter.ty.clone()
+        };
+        let mut value = Proto::default();
+        value.number(1, if parameter.default.is_some() { 2 } else { 0 });
+        value.number(2, strings.id(&parameter.name)?);
+        value.message(3, &type_proto(&ty, &[], &mut strings)?);
+        if parameter.vararg {
+            value.message(
+                4,
+                &type_proto(
+                    &parameter.ty.array_element().ok_or_else(|| {
+                        Diagnostic::new(0, "Missing annotation vararg element type")
+                    })?,
+                    &[],
+                    &mut strings,
+                )?,
+            );
+        }
+        if let Some(default) = &parameter.default {
+            value.message(8, &annotation_value_proto(default, &mut strings)?);
+        }
+        constructor.message(2, &value);
+        let mut property = Proto::default();
+        property.number(11, 518);
+        property.number(2, strings.id(&parameter.name)?);
+        property.message(3, &type_proto(&ty, &[], &mut strings)?);
+        let mut signature = Proto::default();
+        let mut getter = Proto::default();
+        getter.number(1, strings.id(&parameter.name)?);
+        getter.number(2, strings.id(&format!("(){}", parameter.descriptor))?);
+        signature.message(3, &getter);
+        property.message(100, &signature);
+        proto.message(10, &property);
+    }
+    proto.message(8, &constructor);
+    strings.finish(1, proto)
 }
 
 #[cfg(test)]

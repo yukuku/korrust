@@ -291,6 +291,7 @@ fn supplier(owner: &str, field: &ObjectField, file: &str) -> Result<crate::Class
     builder.finish(
         file,
         &Metadata {
+            raw_data2: Default::default(),
             kind: 3,
             data1: Vec::new(),
             data2: Vec::new(),
@@ -734,6 +735,7 @@ fn serializer_supplier(owner: &str, file: &str) -> Result<crate::ClassFile> {
     builder.finish(
         file,
         &Metadata {
+            raw_data2: Default::default(),
             kind: 3,
             data1: Vec::new(),
             data2: Vec::new(),

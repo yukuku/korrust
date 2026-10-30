@@ -1,0 +1,525 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T05:33:07.316137+00:00",
+  "status": "failed",
+  "selection": "Bounded source annotation declarations, recursive JVM defaults and values, class mapping, retention and placement; fixed official Java callers, signatures, pinned metadata decoding, official Kotlin consumers, invalid versus unsupported cases. No compiler plugin, Android runtime, full-app or performance claim.",
+  "compiler": {
+    "binary_sha256": "b17679efad8b02b4e496394c6ebeec7454d13ea9588404e82df61290d9a2bc11"
+  },
+  "reference_compiler": {
+    "pin": {
+      "schema_version": 1,
+      "installed_at": "2026-10-23T02:43:55.924832+00:00",
+      "version": "2.3.21",
+      "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+      "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+      "path": "references/kotlinc",
+      "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+    }
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/annotation_declarations.rs": "6b86bf1657be825404bf45cf3ecc27733a71bfdd2536639c7d9bd30fef68bb01",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "8a245914527e0c6f69e4ac8b158f6d8ad4c72ae327596664417a1b95c25fbd31",
+      "src/bytecode/annotations.rs": "3a8a701cfbcd205509c6e41d3893c370d6dbe957b340aec70bc8295f0b576075",
+      "src/bytecode/class_companion.rs": "4364ec9fd9033c06eb0b802121b7d0f42fec6260dfba171ccdc7aae63fbc556d",
+      "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "src/bytecode/defaults.rs": "fda47f001e4457653cf50ebe4fb7e72db43399f33461d8f4ad20df3f1e6124a2",
+      "src/bytecode/enums.rs": "1c2d8aca0d2ac22092fea8d587879d74dd0e1956e8577a50bbdc994118abd8ef",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "src/bytecode/interfaces.rs": "cab80cc21ea6efc19b8dd15cab54ef7a8be1387a8588a6ed8fc278ebff4145d4",
+      "src/bytecode/lambdas.rs": "7b628142b176fab6c45c8a1bca10ea47ba83ea808c108c58fd7892a71ea2da4f",
+      "src/bytecode/objects.rs": "c4bfee42d5d0839ec66d5192688a8b9922e26474e11ca242b055a1f13e0f6139",
+      "src/bytecode.rs": "1d87bbd8176dabd6224cda7a320e5a13589e9ef57b855121f13c961e7968bebe",
+      "src/check.rs": "d9eedf0955fdb7f6712955ee96cc278113db89fdcac6f23de328fe5f8dcf77bb",
+      "src/check_annotation_placements.rs": "0225b392165accccf4ea584d938ef574100ef5b1264c9b8999c54944d1f26917",
+      "src/check_annotations.rs": "67a3e7c666e5709a5d2295e5a3b6cf0cbfd304c7088cff00de13925ca3fd9c5b",
+      "src/check_captures.rs": "64d5a014b9ad74b43c8115ea0c2289f9023bed0c390094d119d2cad3873b5536",
+      "src/check_classes.rs": "67a05f9cd963aa55e45ca6cfb1ea854d538c4bccf997e3ed4f8a545c88edb07f",
+      "src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+      "src/check_declarations.rs": "a3e50963f10141fb3a4a1505d962882b5233d6d2f86397b40228a8c87f31ff95",
+      "src/check_delegates.rs": "954ec455179174b9f5d1ee1ce6fd25ae0031e8be82dab757ed2796a1fa9812dc",
+      "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "src/check_functions.rs": "d6def636ea9bf62874f3392f5d89f420d1acf74af75086ec8de94390db7c2463",
+      "src/check_interfaces.rs": "e5fe7d6eb2ff00104328ae493081c03645c6f03f3c7615bb1f4de0d0be6b4ffc",
+      "src/check_ir_walk.rs": "cf667a71acc65700de5aa6da84448bd38dd5a3f41e5ff742b8800f8f6c382e69",
+      "src/check_java_properties.rs": "80f8d65c671b6bbbeed96848ba1dd243be0ebc4f49b5a68c51500f2a4b1dc1ae",
+      "src/check_library.rs": "219547713e097149e52917dffb9de628ce170368e33c62f9f1631e987a9582fb",
+      "src/check_objects.rs": "67d25ec90423fd010709fcfc20f21937256e71ea5faf5f226773d8510a947d85",
+      "src/check_operations.rs": "8dc3f7226a0b692f7ca4fea267820b07b940cf1c653b3bbed7b155b7bfa4a06e",
+      "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+      "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "src/check_relations.rs": "ced04b46b63a2897bbf37e84c8fb076a66e3bb8135093929232ced84ff353e1f",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "75c725bb4e7c361d52e0099d498093c479c4a876b6a923818885eda32c5e2086",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/classpath/aliases.rs": "3d272042c0e88cc2b5b8bceee27c678939ec9ad9445bf2f814ece9fed280d4f0",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/metadata.rs": "8f226c759b5d9840bbbc07b66046df49d76902a3a954a1391c2a0acde47cea35",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "76ee5d6828fdfa88da1468dd73a68f4bf3598f61e4ba9cedb3e3ed4314994476",
+      "src/classpath/source.rs": "328e6ed28c8866014ef80847b7baff398b09e02efce782fa35f9fb2971cf355e",
+      "src/classpath/source_enums.rs": "6614b2a483066aef492a7e4cad4af69312f911991723b180bb0e52a59efcefbb",
+      "src/classpath.rs": "049e1206b0223b2aa37c2197d5facc211c9f1eaaec9f4002079ef5c2bfe7501a",
+      "src/compiled_inline.rs": "72651021d6af04150918716afdad22590a2afcc951a159d1e8924f21da1e08a7",
+      "src/const_eval.rs": "5ece2e5b5498bad467cf7d461ccbf521fe5c4bea173d264076569646ed91c1da",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/lib.rs": "98ba3a9e23dda23008399926c8fdfd84cb24f6d03c31ae85471bb524f0d9061f",
+      "src/main.rs": "585853a69e34d28df29cb2dc120aa10937a637b1d1eacbe2b47c5e5568452e00",
+      "src/metadata/enums.rs": "386887db6ac81fe6b1d9b6258783793d7abd0c913725a85f237a61943d914cad",
+      "src/metadata.rs": "4bc86f2b33ef5a6d925dc7ac6b1716eef152350e2181cee8256679f0e1111fb7",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/syntax.rs": "a7303022f92fac26d89e89bb50ca4f6c55a6c7d0b48dc561eec9d9cbe78d70b2",
+      "src/visibility.rs": "5a6b553bdcd2f37ffea7633809066b334e7bbd4075ea441ecfc29c4a9e7600f4",
+      "tests/fixtures/new_families/annotations17/Definitions.kt": "50895c817d83e42d0dbfc60d132fe6b54bdccc42fae24d187449d5a4b4bf008d",
+      "tests/fixtures/new_families/annotations17/JavaNested.java": "f68ca743c6808af0696d648aa3ad8ee5ab33b6fa0b2e31cb000407b485db3287",
+      "tests/fixtures/new_families/annotations17/JavaRich.java": "a4187c478fd169568baa74ca6ad372ea014d88c53e67aec30273331b3944f200",
+      "tests/fixtures/new_families/annotations17/JavaUses.kt": "a634fe4906f3ba0babf119881b1a66a6a4762d5a69ffe112555e835012327967",
+      "tests/fixtures/new_families/annotations17/KotlinConsumer.kt": "aea2a1cbda954d4eda5432047c0a82ede6798ffee4c06e755965880e07f0aa27",
+      "tests/fixtures/new_families/annotations17/MetadataCheck.java": "a1f7ae9dd957e94d81c0363e725a67317567f7c01e0e6b0561c17bcd8289442f",
+      "tests/fixtures/new_families/annotations17/ReadCheck.java": "65bdedecec5306dd884de04f676a8491b5341d3aaf94ae0b09bdc7d29817e1ab",
+      "tests/fixtures/new_families/annotations17/Reads.kt": "48437a498000a7188dcaf47a59855f2aa4f49bb6861afff6f6caaa56dcc3c376",
+      "tests/fixtures/new_families/annotations17/ReflectionCheck.java": "7d25faec31fac45a506d856241770779facc53143ec567603bcddb0997a51647",
+      "tests/fixtures/new_families/annotations17/Shadow.kt": "a9cc94fb1286ee95903760d79fed717b7d08d6fcd5472099e6bb4689249ac36f",
+      "tests/fixtures/new_families/annotations17/Uses.kt": "e09cd142e08839921c004dc1e0f524606374a880ef2d55524fe21af4f26e3ca9",
+      "tests/fixtures/new_families/annotations17/boundary/array_cycle.kt": "9c1859b782191f148aade203b418f808220c99915066afbd3e063206495966bf",
+      "tests/fixtures/new_families/annotations17/boundary/byte_array.kt": "3647b704d6dc19702ace1c2c29ac9c0de15548cc5d08e7616ec1d80c82307572",
+      "tests/fixtures/new_families/annotations17/boundary/byte_element.kt": "e648180a85e7432bdfb18fb5bc744571d5f4ad04852f5a3947689f9ffaf9e6b5",
+      "tests/fixtures/new_families/annotations17/boundary/complex_kclass.kt": "a5913fb13d0cbdf8387e06fffb71dd98f68b1c56a19d8c25d8fd513b8fa9a77c",
+      "tests/fixtures/new_families/annotations17/boundary/generic_declaration.kt": "21d27e75af6b8f6fbc0d2026f38d86e92589e354a37f7eaf7a69bfe2ce1f62c5",
+      "tests/fixtures/new_families/annotations17/boundary/nested_declaration.kt": "6eeceec8d651c0104a6818bfe69d031909bccdcddc3e305c31861112146e81f7",
+      "tests/fixtures/new_families/annotations17/boundary/nonfinal_vararg.kt": "cd7b4ea464599c79323db6bf0111e93df909adbce7b60dc87306443c560ca888",
+      "tests/fixtures/new_families/annotations17/boundary/repeatable.kt": "410e69dec912e42acd99e7e4be2e281473113a0bb894d03bcac6a81a2f9c76fb",
+      "tests/fixtures/new_families/annotations17/boundary/runtime_instantiation.kt": "d4fc9e8a69b00ff92e1d272f1347d60319e9908c173a044d33e26f8aafc25612",
+      "tests/fixtures/new_families/annotations17/boundary/short_array.kt": "dc7d1bc388ae6d3fdb234a48f61bd0d393afa0c3ded2d679fa718f5b62fa64ee",
+      "tests/fixtures/new_families/annotations17/boundary/short_element.kt": "7f861885cabd8eded4a89113f44cdd301589f0fcbd0143913eaaa479ea85d48e",
+      "tests/fixtures/new_families/annotations17/boundary/type_use.kt": "a9f1b57e51fd79d817618d804d94beec40bdfa7b401510032a0a5fbb8380b582",
+      "tests/fixtures/new_families/annotations17/boundary/unsigned_element.kt": "8d72873f71bbef07992ddf587bdda01c24e1f18b588411bd239e17e22cec1faf",
+      "tests/fixtures/new_families/annotations17/cases.json": "2db2e1c1712d7f48513a01e08a2d9a5b173589255c5c4dfa25c2c66d3437077f",
+      "tests/fixtures/new_families/annotations17/extra/aliased_classifier.kt": "0a62195eafa796e4ea46a4fd9dc14530802f1ccdf582ca46340f49e8c2c7f5cf",
+      "tests/fixtures/new_families/annotations17/extra/annotation_parameter_class_shadow.kt": "591f889a763f2b280f23286c4b3b568a8d5297e4610e098657448c84b00a52e3",
+      "tests/fixtures/new_families/annotations17/extra/constructor_value_class_shadow.kt": "935cf39c59774615804a9e95515f2e13a1e10eee405628b6a27f949db3aa2a9f",
+      "tests/fixtures/new_families/annotations17/extra/duplicate_empty_vararg.kt": "af9826ecc51103f563303902d7b1e42c7b1502310253d62f1e248e353692d250",
+      "tests/fixtures/new_families/annotations17/extra/factory_reference_for_primitive.kt": "7f3c8bf48d5fa1fc98bc30db26f7586903db6b7655a86270dafc454270024c7c",
+      "tests/fixtures/new_families/annotations17/extra/factory_wrong_generic_empty.kt": "ecae8b1a37a5a2853654652b1de5a03ad4878c0850cc7d963b6cb44a913b2e6d",
+      "tests/fixtures/new_families/annotations17/extra/factory_wrong_primitive.kt": "6cdb88dfe8df899d20ae4035ab67535e775fd5ab3853aec0b5f6239710322b58",
+      "tests/fixtures/new_families/annotations17/extra/int_constant_long_default.kt": "f81938dc279c2202811804448811cebecbe861d3e11b4c652dfeb0e7b8a3e28c",
+      "tests/fixtures/new_families/annotations17/extra/int_constant_long_use.kt": "ea9c3255ac1a7237fd6eca9a0bc6c18c53d3cae2c2154f77e15c4f623918e676",
+      "tests/fixtures/new_families/annotations17/extra/literal_arithmetic_long.kt": "a534309d809f77dcb0c9ec724738573441e69efa5d57844fbc9481f63d90d95a",
+      "tests/fixtures/new_families/annotations17/extra/member_value_class_shadow.kt": "09f685fe041b1db72dd5b9856ad1e49f11b3b360d7977d7856560ff6fd98687e",
+      "tests/fixtures/new_families/annotations17/extra/property_default_target.kt": "39136f314d5d354f1412336cea4c47c52606e98e2da5c97b458ba4a6ee233489",
+      "tests/fixtures/new_families/annotations17/extra/qualified_classifier_with_alias.kt": "256c1fe0317086b9386bf66c004e17fe2f902b215ac151660a3bd981358b1df9",
+      "tests/fixtures/new_families/annotations17/extra/reserved_annotation_type.kt": "d6f9fe3d9d00e06f1990b55236499a6b21cde320566a64d8982877b8e1c04c13",
+      "tests/fixtures/new_families/annotations17/extra/reserved_hashcode.kt": "14e63cc6f816723fb2fd5a19beb9532cfb2d9a7ebf57fb2aed4e217deacdba3c",
+      "tests/fixtures/new_families/annotations17/extra/reserved_tostring.kt": "721e2bb7a54a748396778ee2cf64e7fed5ed8e5db3e68e8cc98d85dd0976158a",
+      "tests/fixtures/new_families/annotations17/extra/top_value_class_shadow.kt": "59b0648c89123a7b791daad64941b3e95ec7a8f5cf6129b8a2ce01eddd6b2c12",
+      "tests/fixtures/new_families/annotations17/extra-cases.json": "cf3e94f707fa9a06b8881e7e78a74c07cc5abcc38c5201351dfeee4931c7ddde",
+      "tests/fixtures/new_families/annotations17/invalid/absent_backing_field.kt": "1cf2185f7f080fd23368fbc49c60d0e3fd1ca8c1f8dc7206a9077e3ef841252a",
+      "tests/fixtures/new_families/annotations17/invalid/body_property.kt": "7eb8b0c44a59d50886da6b1ae08535dcf80ac073490c99fca871c117b8556f17",
+      "tests/fixtures/new_families/annotations17/invalid/collection_parameter.kt": "13b2a0d4d2d2287ed1ebc0680c63c205d5ce8c7931a10fb6624e22b7f5b9c023",
+      "tests/fixtures/new_families/annotations17/invalid/direct_cycle.kt": "aec5d9315a61ddaa9d3b9f6ab578a5b913bc30d5aa02a032558c5bbe4ab15d5d",
+      "tests/fixtures/new_families/annotations17/invalid/duplicate_argument.kt": "d74ceaff9ec80f99073de9cc3b14f23844234821df9f1665781a2f03b2e0d656",
+      "tests/fixtures/new_families/annotations17/invalid/explicit_supertype.kt": "e8ed5222cb9a80519a555921349f5c81d3dff36abce625a112824d0ab0cfcf55",
+      "tests/fixtures/new_families/annotations17/invalid/expression_class_value.kt": "b5efe4867ebd47fc951084cbe661adc9faccedeefc78eb15142b204c8cc9c4a7",
+      "tests/fixtures/new_families/annotations17/invalid/function_call_value.kt": "1e7d877ed14c6faf8a607d240a654bac876f09a2a4191a030248ea88bddb4bae",
+      "tests/fixtures/new_families/annotations17/invalid/function_parameter.kt": "6e6d7e9ffea4e8cd37962e6fa876a3f517ab7aa9e800d95d5fcf554d5a5b39fa",
+      "tests/fixtures/new_families/annotations17/invalid/illegal_retention_target.kt": "ee232ba09b928614d406bccc4daada707446d1088a3e14736ea0cdd1a125429b",
+      "tests/fixtures/new_families/annotations17/invalid/illegal_target.kt": "7cb4d5df86dbec1f15b38a365bff5fb3502af6c85e0168a2ab237bf2fbc7b42c",
+      "tests/fixtures/new_families/annotations17/invalid/java_nonvalue_positional.kt": "74ab625b389e2283563ca57fd26bbd3545e502511e6f94eb732ac524478ad529",
+      "tests/fixtures/new_families/annotations17/invalid/member_function.kt": "af1ee67cfcaff8b2bae0182f4c6bd6cbc19f099de73d5b4d198981a955516083",
+      "tests/fixtures/new_families/annotations17/invalid/missing_argument.kt": "ae1943b50f6e9c6f2b6becf94f11e7d2653c1253818a98eec663522ec38612f6",
+      "tests/fixtures/new_families/annotations17/invalid/missing_val.kt": "21b03f564cdf5441b99acd1b7a9344c70d6a7dcf83bef9e11a856c788a108f4a",
+      "tests/fixtures/new_families/annotations17/invalid/mutable_parameter.kt": "c0acfb217c3b511cfdcbeea208a32142e8b743562433aa00f918977a8bb33232",
+      "tests/fixtures/new_families/annotations17/invalid/mutual_cycle.kt": "064dcb97aa067a7ac3855bfba6dc5441139c639223e587615e0f5bfb4b2a7a14",
+      "tests/fixtures/new_families/annotations17/invalid/nested_array_parameter.kt": "8874e0798faaabf7bda748a281bf960fff1e6dc7611f50a308f016c10d796d7a",
+      "tests/fixtures/new_families/annotations17/invalid/nonconstant_value.kt": "f1a17b17c3db997d828b4ae126d326de6a733bb08300b3b61e2a8888a3f46694",
+      "tests/fixtures/new_families/annotations17/invalid/null_array.kt": "3e7877435196cc04ffc59ac4f701010cc43db3ad9d76b3085c4d0885d088b203",
+      "tests/fixtures/new_families/annotations17/invalid/null_array_element.kt": "8b7d01cfe2cdfb316ef92045bc961327664e9469dc68c302a3858b36f2c40fa1",
+      "tests/fixtures/new_families/annotations17/invalid/null_default.kt": "324e437297d1678d53c799ed47cff36c2a6eacc1d053425b18ac40a13e91a228",
+      "tests/fixtures/new_families/annotations17/invalid/null_nested.kt": "a0083b6394c735decf5ea3baa669008df5fd6bf4eed06b300a64830e9ac79807",
+      "tests/fixtures/new_families/annotations17/invalid/nullable_parameter.kt": "2658b8ad5204ce09f2877238f216ff1bc2b67b5beeb7e4924bc14bcf6c917451",
+      "tests/fixtures/new_families/annotations17/invalid/private_parameter.kt": "239a56dea907b155383fa37713b35f673771cd5c7e786ed176e4cfeb57992133",
+      "tests/fixtures/new_families/annotations17/invalid/repeated_nonrepeatable.kt": "b2a8dff9e54b0d519fcf2179cf2bbc91f87e6d396649b6d957e658142c83a31f",
+      "tests/fixtures/new_families/annotations17/invalid/secondary_constructor.kt": "fb9eab6ef081685b7c2403f73ddd6f7d668d807217b6d284c6a95a4fd90477ba",
+      "tests/fixtures/new_families/annotations17/invalid/unknown_argument.kt": "2d2f1d941eb068c23669c40bd1a4f53039e440e62d4abb8b01adc978a5a9cfc4",
+      "tests/fixtures/new_families/annotations17/invalid/wrong_array_element.kt": "a443cfcb10df3dce97b4948d044b272f9479c80d8d213fbc5a3cfd8eef652db6",
+      "tests/fixtures/new_families/annotations17/invalid/wrong_class_value.kt": "62dcfe332f0a9e708c2fdfd95132c1479aa3571de878914106a42b1f733ab5c7",
+      "tests/fixtures/new_families/annotations17/invalid/wrong_default.kt": "fac93e0b080adf961b36728261686255a89b3afcfb71e2e15fa8fa7fecf5fe27",
+      "tests/fixtures/new_families/annotations17/invalid/wrong_enum.kt": "c23fe688fd4df46faba432cb70b797ee94aa45a5c59dd315d64a1c84bfaecc39",
+      "tests/fixtures/new_families/annotations17/invalid/wrong_nested.kt": "8104c785552d9c860d6498843660488e0ac194de0b4e7bd4762ab78af2189b74",
+      "tools/check_new_annotations.py": "5c662fa2d237f1746d1090ad75a48d397b56cb0f5c62b51ea1c412b0b30c1034",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d"
+    }
+  },
+  "commands": [
+    {
+      "id": "java-library",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "--release",
+        "8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/JavaRich.java",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/JavaNested.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0000-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/Definitions.kt",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/Uses.kt",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/Shadow.kt",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/JavaUses.kt",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/Reads.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0001-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/korrust-frozen",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/Definitions.kt",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/Uses.kt",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/Shadow.kt",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/JavaUses.kt",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/Reads.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotations17",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0002-stderr.txt"
+    },
+    {
+      "id": "fixed-java-callers",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "--release",
+        "8",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-compiler.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/caller",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/ReflectionCheck.java",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/MetadataCheck.java",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/ReadCheck.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0003-stderr.txt"
+    },
+    {
+      "id": "official/ReflectionCheck",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/caller:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-compiler.jar",
+        "annotation17check.ReflectionCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0004-stderr.txt"
+    },
+    {
+      "id": "official/MetadataCheck",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/caller:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-compiler.jar",
+        "annotation17check.MetadataCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0005-stderr.txt"
+    },
+    {
+      "id": "official/ReadCheck",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/caller:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-compiler.jar",
+        "annotation17check.ReadCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0006-stderr.txt"
+    },
+    {
+      "id": "official/official-consumer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/KotlinConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-reflect.jar:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official-consumer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0007-stderr.txt"
+    },
+    {
+      "id": "official/kotlin-consumer-run",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official-consumer:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-reflect.jar",
+        "annotation17consumer.KotlinConsumerKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0008-stderr.txt"
+    },
+    {
+      "id": "official/official-imported-reads",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/tests/fixtures/new_families/annotations17/Reads.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official-imported-reads"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0009-stderr.txt"
+    },
+    {
+      "id": "official/imported-annotation-reads-run",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/caller:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official-imported-reads:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java:/Users/yuku/f/git/korrust/target/next5-rich-annotations/references/kotlinc/lib/kotlin-stdlib.jar",
+        "annotation17check.ReadCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0010-stderr.txt"
+    },
+    {
+      "id": "official/signature/annotation17.Rich",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java",
+        "annotation17.Rich"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0011-stderr.txt"
+    },
+    {
+      "id": "official/signature/annotation17.Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java",
+        "annotation17.Nested"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0012-stderr.txt"
+    },
+    {
+      "id": "official/signature/annotation17.Meta",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java",
+        "annotation17.Meta"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0013-stderr.txt"
+    },
+    {
+      "id": "official/signature/annotation17.Pack",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java",
+        "annotation17.Pack"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0014-stderr.txt"
+    },
+    {
+      "id": "official/signature/annotation17.Placed",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java",
+        "annotation17.Placed"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0015-stderr.txt"
+    },
+    {
+      "id": "official/signature/annotation17reads.ReadsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/official:/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations/java",
+        "annotation17reads.ReadsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30T053307316137Z-rich-annotations-historical/0016-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "setup/java",
+      "outcome": "pass"
+    },
+    {
+      "id": "provider/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "provider/candidate",
+      "outcome": "correctness_failure"
+    },
+    {
+      "id": "callers/compile-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/ReflectionCheck",
+      "outcome": "pass",
+      "observed": "OK:121"
+    },
+    {
+      "id": "official/MetadataCheck",
+      "outcome": "pass",
+      "observed": "OK:161"
+    },
+    {
+      "id": "official/ReadCheck",
+      "outcome": "pass",
+      "observed": "OK:23"
+    },
+    {
+      "id": "official/kotlin-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/kotlin-consumer-run",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/imported-annotation-reads-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/imported-annotation-reads-run",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/annotation17.Rich",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/annotation17.Nested",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/annotation17.Meta",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/annotation17.Pack",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/annotation17.Placed",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/annotation17reads.ReadsKt",
+      "outcome": "pass"
+    }
+  ],
+  "fixed_java_caller_hashes": {
+    "annotation17check/ReflectionCheck.class": "2027e1195e444dc9b6cd86a21f187464e021a7c4b7fca0402a6bb60b1faebd69",
+    "annotation17check/ReadCheck.class": "9100b8328ddd23fdd616e0c49d1cc7563c1bf868977636962f4cd87a1ba620cc",
+    "annotation17check/MetadataCheck.class": "355067ee487bdd9bd22e5ca2186d37f2b234d4cbc36c3f34c0f672d7e937861e"
+  },
+  "official_signatures": {
+    "annotation17.Rich": "public interface annotation17.Rich extends java.lang.annotation.Annotation {\n  public abstract long number();\n    descriptor: ()J\n\n  public abstract float ratio();\n    descriptor: ()F\n\n  public abstract double measure();\n    descriptor: ()D\n\n  public abstract char letter();\n    descriptor: ()C\n\n  public abstract annotation17.Mode mode();\n    descriptor: ()Lannotation17/Mode;\n\n  public abstract java.lang.Class<?> type();\n    descriptor: ()Ljava/lang/Class;\n\n  public abstract long[] numbers();\n    descriptor: ()[J\n\n  public abstract boolean[] flags();\n    descriptor: ()[Z\n\n  public abstract char[] letters();\n    descriptor: ()[C\n\n  public abstract float[] ratios();\n    descriptor: ()[F\n\n  public abstract double[] measures();\n    descriptor: ()[D\n\n  public abstract java.lang.String[] names();\n    descriptor: ()[Ljava/lang/String;\n\n  public abstract annotation17.Mode[] modes();\n    descriptor: ()[Lannotation17/Mode;\n\n  public abstract java.lang.Class<?>[] types();\n    descriptor: ()[Ljava/lang/Class;\n\n  public abstract annotation17.Nested nested();\n    descriptor: ()Lannotation17/Nested;\n\n  public abstract annotation17.Nested[] children();\n    descriptor: ()[Lannotation17/Nested;\n}",
+    "annotation17.Nested": "public interface annotation17.Nested extends java.lang.annotation.Annotation {\n  public abstract java.lang.String text();\n    descriptor: ()Ljava/lang/String;\n\n  public abstract long amount();\n    descriptor: ()J\n\n  public abstract annotation17.Mode mode();\n    descriptor: ()Lannotation17/Mode;\n}",
+    "annotation17.Meta": "public interface annotation17.Meta extends java.lang.annotation.Annotation {\n  public abstract java.lang.String id();\n    descriptor: ()Ljava/lang/String;\n}",
+    "annotation17.Pack": "public interface annotation17.Pack extends java.lang.annotation.Annotation {\n  public abstract annotation17.Nested[] entries();\n    descriptor: ()[Lannotation17/Nested;\n}",
+    "annotation17.Placed": "public final class annotation17.Placed {\n  public annotation17.Placed(int);\n    descriptor: (I)V\n\n  public final int getInput();\n    descriptor: ()I\n\n  public final int getValue();\n    descriptor: ()I\n\n  public final void setValue(int);\n    descriptor: (I)V\n\n  public final int getProperty();\n    descriptor: ()I\n\n  public static void getProperty$annotations();\n    descriptor: ()V\n\n  public final int method(int);\n    descriptor: (I)I\n}",
+    "annotation17reads.ReadsKt": "public final class annotation17reads.ReadsKt {\n  public static final kotlin.reflect.KClass<?> scalar(annotation17.Rich);\n    descriptor: (Lannotation17/Rich;)Lkotlin/reflect/KClass;\n\n  public static final kotlin.reflect.KClass<?>[] array(annotation17.Rich);\n    descriptor: (Lannotation17/Rich;)[Lkotlin/reflect/KClass;\n\n  public static final kotlin.reflect.KClass<?> javaScalar(annotation17java.JavaRich);\n    descriptor: (Lannotation17java/JavaRich;)Lkotlin/reflect/KClass;\n\n  public static final kotlin.reflect.KClass<?>[] javaArray(annotation17java.JavaRich);\n    descriptor: (Lannotation17java/JavaRich;)[Lkotlin/reflect/KClass;\n\n  public static final long nested(annotation17.Rich);\n    descriptor: (Lannotation17/Rich;)J\n\n  public static final int elements(annotation17.Rich);\n    descriptor: (Lannotation17/Rich;)I\n\n  public static final kotlin.reflect.KClass<?> supplied(kotlin.jvm.functions.Function0<? extends annotation17.Rich>);\n    descriptor: (Lkotlin/jvm/functions/Function0;)Lkotlin/reflect/KClass;\n\n  public static final kotlin.reflect.KClass<?>[] suppliedArray(kotlin.jvm.functions.Function0<? extends annotation17.Rich>);\n    descriptor: (Lkotlin/jvm/functions/Function0;)[Lkotlin/reflect/KClass;\n}"
+  },
+  "negative_matrix_scope": "not_run",
+  "input_integrity": {
+    "status": "changed"
+  },
+  "counts": {
+    "pass": 16,
+    "correctness_failure": 1
+  },
+  "archived_from": "/Users/yuku/f/git/korrust/target/next5-rich-annotations/target/checks/2026-10-30T053307316137Z-rich-annotations",
+  "archival_scope": "Original frozen source archives, text command evidence and source fixtures retained; compiler binaries and generated class/index files remain ignored."
+}

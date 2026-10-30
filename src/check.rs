@@ -59,11 +59,21 @@ mod objects;
 #[path = "check_singletons.rs"]
 mod singletons;
 
+pub(crate) use annotations::unsupported_lowering as annotation_unsupported_lowering;
+
 #[derive(Clone, Debug)]
 pub enum DeclarationAnnotationValue {
+    Long(i64),
+    Float(u32),
+    Double(u64),
+    Char(u16),
+    Enum { descriptor: String, entry: String },
+    Class { descriptor: String, logical: Type },
+    Array(Vec<DeclarationAnnotationValue>),
+    Nested(Box<DeclarationAnnotation>),
     Int(i32),
     Boolean(bool),
-    String(String),
+    String(Vec<u16>),
 }
 
 #[derive(Clone, Debug)]
@@ -1921,6 +1931,34 @@ impl Checker<'_> {
                 .classpath
                 .load(&method.owner)
                 .is_ok_and(|c| c.access & 0x0200 != 0);
+        let annotation_mapping = if mask == 0
+            && self
+                .classpath
+                .load(&method.owner)
+                .is_ok_and(|class| class.access & 0x2000 != 0)
+        {
+            match (method.descriptor.as_str(), result.base()) {
+                ("()Ljava/lang/Class;", Type::Parameterized { name, .. })
+                    if name == "kotlin/reflect/KClass" =>
+                {
+                    Some((
+                        "getOrCreateKotlinClass",
+                        "(Ljava/lang/Class;)Lkotlin/reflect/KClass;",
+                        Type::Java("java/lang/Class".into()),
+                    ))
+                }
+                ("()[Ljava/lang/Class;", Type::Array(inner)) if matches!(inner.base(), Type::Parameterized { name, .. } if name == "kotlin/reflect/KClass") => {
+                    Some((
+                        "getOrCreateKotlinClasses",
+                        "([Ljava/lang/Class;)[Lkotlin/reflect/KClass;",
+                        Type::Array(Box::new(Type::Java("java/lang/Class".into()))),
+                    ))
+                }
+                _ => None,
+            }
+        } else {
+            None
+        };
         let kind = if mask == 0 {
             if interface {
                 ValueKind::MemberCall {
@@ -1959,7 +1997,40 @@ impl Checker<'_> {
                 args: values,
             }
         };
-        Ok(Self::wrap_lets(Value { ty: result, kind }, lets))
+        let value = if let Some((name, descriptor, physical)) = annotation_mapping {
+            let method = self
+                .classpath
+                .methods("kotlin/jvm/internal/Reflection")?
+                .into_iter()
+                .find(|method| {
+                    method.name == name
+                        && method.descriptor == descriptor
+                        && method.access & 9 == 9
+                        && !method.unsupported
+                })
+                .ok_or_else(|| {
+                    Diagnostic::new(
+                        offset,
+                        "Annotation class conversion runtime declaration is unavailable",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "ANNOTATION_KCLASS_RUNTIME_UNSUPPORTED",
+                    )
+                })?;
+            Value {
+                ty: result,
+                kind: ValueKind::StaticCall {
+                    owner: method.owner,
+                    name: method.name,
+                    descriptor: method.descriptor,
+                    args: vec![Value { ty: physical, kind }],
+                },
+            }
+        } else {
+            Value { ty: result, kind }
+        };
+        Ok(Self::wrap_lets(value, lets))
     }
     fn resolve(&self, ty: &Type, offset: usize) -> Result<Type> {
         let expanded =
@@ -3322,6 +3393,16 @@ impl Checker<'_> {
         }
 
         let (ty, kind) = match &expr.kind {
+            ExprKind::AnnotationConstant { .. } | ExprKind::AnnotationArray(_) => {
+                return Err(Diagnostic::new(
+                    expr.offset,
+                    "Annotation array literals cannot be evaluated as ordinary expressions",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "ANNOTATION_ARRAY_EXPRESSION_INVALID",
+                ));
+            }
             ExprKind::WhenSubjectless => (Type::Boolean, ValueKind::Boolean(true)),
             ExprKind::MissingWhenElse => {
                 return Err(Diagnostic::new(
@@ -4504,6 +4585,16 @@ impl Checker<'_> {
                     }
                     if let Some(owner) = self.imports.get(name) {
                         if let Some(class) = self.classes.get(owner) {
+                            if class.access & 0x2000 != 0 {
+                                return Err(Diagnostic::new(
+                                    offset,
+                                    "Runtime annotation instance construction is unsupported",
+                                )
+                                .with_kind(
+                                    crate::DiagnosticKind::UnsupportedLanguage,
+                                    "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
+                                ));
+                            }
                             if class.access & (0x200 | 0x400) != 0 && !class.kotlin_fun_interface {
                                 return Err(Diagnostic::new(
                                     offset,
@@ -5231,7 +5322,8 @@ fn loses_member_type(_ty: &Type) -> bool {
 }
 fn call_names(expr: &Expr, names: &mut HashSet<String>) {
     match &expr.kind {
-        ExprKind::VarargArray { elements, .. } => {
+        ExprKind::AnnotationConstant { value, .. } => call_names(value, names),
+        ExprKind::AnnotationArray(elements) | ExprKind::VarargArray { elements, .. } => {
             for element in elements {
                 call_names(element, names);
             }
@@ -5647,6 +5739,10 @@ pub fn check_with_owner(
             return Err(Diagnostic::new(
                 *offset,
                 format!("Unsupported annotation definition or required compiler plugin: {name}"),
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "ANNOTATION_DEFINITION_UNSUPPORTED",
             ));
         }
         if class.access & 1 == 0 || (class.unsupported && !supported_jvm_marker) {
@@ -6255,6 +6351,7 @@ pub fn check_with_owner(
                 &imports,
                 "METHOD",
                 None,
+                Some(owner),
             )?,
             vararg: function.vararg,
             type_params: resolve_parameters(

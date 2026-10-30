@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-10-30T05:53:07.422084+00:00",
+  "spec_annotation_rule": "references/kotlin-spec/docs/src/md/kotlin.core/declarations.md:650-673",
+  "observations": [
+    {
+      "case": "inherited_return_descriptors",
+      "evidence": "target/checks/2026-10-30T054307409556Z-rich-annotations/report.json",
+      "observed": "Pinned Kotlin accepts hashCode:Long and toString:Int and vararg hashCode:Int annotation parameters. Official and candidate runtime getAnnotation throw java.lang.annotation.AnnotationFormatError caused by incompatible inherited method return types. Source and fixtures frozen unchanged.",
+      "resolution": "Exact Any-descriptor collisions reject invalid; other inherited method names are explicit unsupported ABI. No runtime support claimed."
+    },
+    {
+      "case": "annotationType",
+      "evidence": "target/annotation-type-oracle/report.json",
+      "observed": "Pinned Kotlin accepts annotationType:KClass<*> default String::class, but property read returns Mark::class while reflected AnnotationDefault is String.class.",
+      "resolution": "Explicit unsupported inherited annotation ABI; preserve compile-versus-runtime distinction."
+    }
+  ]
+}
