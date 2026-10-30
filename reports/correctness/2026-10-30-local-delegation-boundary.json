@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T07:05:08.427841+00:00",
+  "status": "passed",
+  "scope": "Diagnostic repair only; no added language family. Valid local delegates are rejected explicitly.",
+  "compiler": {
+    "binary_sha256": "80ee0cfe7b0c9fc56b911f1223ec9a96665cedac6f384de1b722eed46431fc68"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "inputs": {
+    "src/check_declarations.rs": "6884cb449961b45e40ff54d977ac6898d58ed3b69cc58878f6af6c4ae8091cc7",
+    "src/check_captures.rs": "64d5a014b9ad74b43c8115ea0c2289f9023bed0c390094d119d2cad3873b5536",
+    "src/object_lowering.rs": "05d9f6aa471a70d905c80f7a84ebe4ac03091ab5d01d1ddb1da12fe5a12847b5",
+    "src/const_eval.rs": "d188e75a217fbf582a901a153548ccd290070051a277ec55c96eae93ac637fad",
+    "src/check_class_delegation.rs": "ad7cf527433c5c23eb87371910f4cf947c80ee0c32097743a3185a153f3d0830",
+    "src/check_interfaces.rs": "a81ff025394e4818f35c6e5c2cc6d1b254264dec35fb70d66aec3f148e50ef43",
+    "src/check_relations.rs": "83d106b945fab0f13c1448100ac9f2244cb3fe26c869505d5a420c8aa393606f",
+    "src/check_objects.rs": "62b5f016807b91a136085ecebdb56184809bb72e9811e9b614e867e894b9d3ca",
+    "src/classpath.rs": "e0d072a3aea3d94cf95c72be2c8f36b03a2cc933c3df2f03563bf83cb9649d72",
+    "src/annotation_declarations.rs": "7c68fd4a7b1b42aa78a823ee9df36ba8dcb46c9482b1de000583da66fcc9532e",
+    "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+    "src/compiled_inline.rs": "5cbec3e54865f8d74a525c583f9da5a2dfb5c45b2a57d62c847626da50002781",
+    "src/check_classes.rs": "0d4e4172f764093de006169070566db3a2f81d2a9649c4f899617c21edfd7471",
+    "src/check.rs": "dbe6c2741ee7271834b8df7e540d6e52ca96da4fdd8b53e26c12340456d0539e",
+    "src/check_enums.rs": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+    "src/check_functions.rs": "f5948cc55a4bc4ef69272eb656d1456eb32d5dc4df67fe46011d4d48accc013b",
+    "src/metadata.rs": "cc453577d4d93174f84fe408bf80f679b6ea9c29aaee501e8ba2d1dbda77f680",
+    "src/check_annotations.rs": "6f3509f695ac6283a0db471b4811b7ee8c851e3a53564cadfe134431144efa8b",
+    "src/lib.rs": "43573e26ac82fc3e09a44992f43782b3a18ef8769fd2dde5202802ec7f7c06fc",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "75c725bb4e7c361d52e0099d498093c479c4a876b6a923818885eda32c5e2086",
+    "src/jvm_descriptor.rs": "112c4806e4ccf46135ea8fb2a41725faea0bc49503b5026cb9efe6093730225a",
+    "src/check_operations.rs": "1047cde239bdfdcff5e07161743bccbfff57ecbd8b4e2b4a5452c5ac9d9d7cd4",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/bytecode.rs": "1c488411372d6ed36d09666755cb5432aadf48dcf5576b612fb07c02c262f021",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/visibility.rs": "5a6b553bdcd2f37ffea7633809066b334e7bbd4075ea441ecfc29c4a9e7600f4",
+    "src/syntax.rs": "0243e332514feac84881b9a459efb6afa6e269cd556e00cdae93a79cb83aa6db",
+    "src/check_annotation_placements.rs": "003f33a33ee64b2fc939e07f6c54f3e1e0acee4138582c186de258499698c840",
+    "src/check_library.rs": "beb82f5f675d8acf6bbd39e92ce87b91c3b5b9b4ceb9446b1e711d9290e41c00",
+    "src/check_ir_walk.rs": "e366b7def05870648d179d558ffa489197a9d5c584ede576b66fc8eb397c0421",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/check_overloads.rs": "efb9f0e305813d39628e2883b4432e003a9e59b5f47ce001156985d73070e05a",
+    "src/check_delegates.rs": "954ec455179174b9f5d1ee1ce6fd25ae0031e8be82dab757ed2796a1fa9812dc",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/metadata.rs": "bcc7b8c4829de643f90927f132614dab0ed9a1926f28f935d6ae4ebcad2b3269",
+    "src/classpath/source.rs": "f642f795640bbd7e57fadc96bd1bc7165c3022188ba35d102eb6241e1c89e45b",
+    "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+    "src/classpath/signature.rs": "ce399daffa604b5cebb7c66ae1f5c46b9bd88398fa3753203cacbe65fcb0dad0",
+    "src/classpath/source_enums.rs": "cffdcb1f31d970dfd9a68a32b9aa0e288b4ef25468bf4a30ad18a90b82a0fd83",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/aliases.rs": "04fc5d7f9e51d423ddd9f83ee644b7f4410e09fb29d502609d08ec7d3488fb91",
+    "src/classpath/jvm_builtins.rs": "f5c03f8f022fc1cb7bd2fe9cc38c22c60305a8c5482ccaa7c9d6e06efccda7a0",
+    "src/bytecode/class_companion.rs": "4364ec9fd9033c06eb0b802121b7d0f42fec6260dfba171ccdc7aae63fbc556d",
+    "src/bytecode/interfaces.rs": "cab80cc21ea6efc19b8dd15cab54ef7a8be1387a8588a6ed8fc278ebff4145d4",
+    "src/bytecode/enums.rs": "1c2d8aca0d2ac22092fea8d587879d74dd0e1956e8577a50bbdc994118abd8ef",
+    "src/bytecode/inline.rs": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+    "src/bytecode/lambdas.rs": "7b628142b176fab6c45c8a1bca10ea47ba83ea808c108c58fd7892a71ea2da4f",
+    "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+    "src/bytecode/annotation_files.rs": "8a245914527e0c6f69e4ac8b158f6d8ad4c72ae327596664417a1b95c25fbd31",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotations.rs": "3a8a701cfbcd205509c6e41d3893c370d6dbe957b340aec70bc8295f0b576075",
+    "src/bytecode/objects.rs": "c4bfee42d5d0839ec66d5192688a8b9922e26474e11ca242b055a1f13e0f6139",
+    "src/bytecode/defaults.rs": "fda47f001e4457653cf50ebe4fb7e72db43399f33461d8f4ad20df3f1e6124a2",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/metadata/enums.rs": "386887db6ac81fe6b1d9b6258783793d7abd0c913725a85f237a61943d914cad",
+    "tests/local_delegation_boundary.rs": "d979cbc4428a9472b670e180d7169217b70ef8df72b99da3f4458ac72a6c2649"
+  },
+  "capture": {
+    "path": "target/new-families-full-app-prerequisite-artifacts/capture/build.json",
+    "sha256": "a99f93782a2f34549596802539fe3893d23f5455983954f43bab3ebb96756bdc",
+    "options": {
+      "jvmTarget": "JVM_21",
+      "languageVersion": null,
+      "apiVersion": null,
+      "freeCompilerArgs": [
+        "-Xuse-inline-scopes-numbers",
+        "-Xallow-unstable-dependencies"
+      ],
+      "javaParameters": "false",
+      "allWarningsAsErrors": "false",
+      "suppressWarnings": "false",
+      "progressiveMode": "false",
+      "optIn": [],
+      "jvmDefault": null,
+      "module_name": "Alkitab"
+    },
+    "missing_classpath": [
+      "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/generated/ksp/plainDebug/classes"
+    ]
+  },
+  "cases": [
+    {
+      "id": "local-0",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "source": "reports/correctness/2026-10-30-local-delegation-boundary/Local0.kt",
+      "source_sha256": "c64f051f498acb0db9013996bb9a001bc5b0e46d1b4233b61e56c7b91becdd08",
+      "diagnostic": {
+        "source_identity": "reports/correctness/2026-10-30-local-delegation-boundary/Local0.kt",
+        "offset": 25,
+        "category": "unsupported_language",
+        "code": "LOCAL_DELEGATED_PROPERTY_UNSUPPORTED",
+        "message": "Local delegated properties are unsupported",
+        "path": "reports/correctness/2026-10-30-local-delegation-boundary/Local0.kt",
+        "line": 1,
+        "column": 26
+      }
+    },
+    {
+      "id": "local-1",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "source": "reports/correctness/2026-10-30-local-delegation-boundary/Local1.kt",
+      "source_sha256": "d2cb714ace0978c4f8e1c49876f15625dbe5fd326402418b6aef29963d4d20f0",
+      "diagnostic": {
+        "source_identity": "reports/correctness/2026-10-30-local-delegation-boundary/Local1.kt",
+        "offset": 30,
+        "category": "unsupported_language",
+        "code": "LOCAL_DELEGATED_PROPERTY_UNSUPPORTED",
+        "message": "Local delegated properties are unsupported",
+        "path": "reports/correctness/2026-10-30-local-delegation-boundary/Local1.kt",
+        "line": 1,
+        "column": 31
+      }
+    },
+    {
+      "id": "local-2",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "source": "reports/correctness/2026-10-30-local-delegation-boundary/Local2.kt",
+      "source_sha256": "1639a5ff03f0b9b7f22f103e3f02e037fe309e70f5511fe84268d3c945dd9f16",
+      "diagnostic": {
+        "source_identity": "reports/correctness/2026-10-30-local-delegation-boundary/Local2.kt",
+        "offset": 25,
+        "category": "unsupported_language",
+        "code": "LOCAL_DELEGATED_PROPERTY_UNSUPPORTED",
+        "message": "Local delegated properties are unsupported",
+        "path": "reports/correctness/2026-10-30-local-delegation-boundary/Local2.kt",
+        "line": 1,
+        "column": 26
+      }
+    },
+    {
+      "id": "unchanged-AudioBar",
+      "outcome": "unsupported_language",
+      "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt",
+      "source_sha256": "725aa743c8b56b9a69dcdbfdc0bc9341885760366d0dba3c71c3fc679cbe8d62",
+      "diagnostic": {
+        "source_identity": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt",
+        "offset": 8310,
+        "category": "unsupported_language",
+        "code": "LOCAL_DELEGATED_PROPERTY_UNSUPPORTED",
+        "message": "Local delegated properties are unsupported",
+        "path": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt",
+        "line": 210,
+        "column": 31
+      },
+      "scope": "Parser-stage boundary using captured real dependencies; no whole-file pass or new counted feature."
+    }
+  ],
+  "commands": [
+    {
+      "id": "oracle-0",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/Local0.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/official-0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "returncode": 0,
+      "log": "reports/correctness/2026-10-30-local-delegation-boundary/oracle-0.txt"
+    },
+    {
+      "id": "candidate-0",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/Local0.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/candidate-0",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "log": "reports/correctness/2026-10-30-local-delegation-boundary/candidate-0.txt"
+    },
+    {
+      "id": "oracle-1",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/Local1.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/official-1",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "returncode": 0,
+      "log": "reports/correctness/2026-10-30-local-delegation-boundary/oracle-1.txt"
+    },
+    {
+      "id": "candidate-1",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/Local1.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/candidate-1",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "log": "reports/correctness/2026-10-30-local-delegation-boundary/candidate-1.txt"
+    },
+    {
+      "id": "oracle-2",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/Local2.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/official-2",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "returncode": 0,
+      "log": "reports/correctness/2026-10-30-local-delegation-boundary/oracle-2.txt"
+    },
+    {
+      "id": "candidate-2",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/Local2.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/candidate-2",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "log": "reports/correctness/2026-10-30-local-delegation-boundary/candidate-2.txt"
+    },
+    {
+      "id": "AudioBar",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt",
+        "-cp",
+        "/Users/yuku/Library/Android/sdk/platforms/android-36/android.jar:/Users/yuku/Library/Android/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/intermediates/compile_r_class_jar/plainDebug/generatePlainDebugRFile/R.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIntegration/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabIo/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabYes2/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Bintex/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/a9ed68492ca585fc10cc3f9876aeee22/transformed/preference-ktx-1.2.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/edf0b359b0872023c4bf841c6fc1b072/transformed/material-1.13.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ea32da85060e63b612cb8501bd1d3b70/transformed/appcompat-resources-1.7.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/46ffc9f5fd0faeb48c77d2579ac0b344/transformed/preference-1.2.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ed68d937b65ed8bc7608ba0e0e1d6648/transformed/appcompat-1.7.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7dab49e3729134bd0eb1048476d9da39/transformed/viewpager2-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3564239ded549fc983cfce2838ff19df/transformed/firebase-crashlytics-20.0.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f59ead5bee89ae59c395cf82ba9560d4/transformed/firebase-messaging-25.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0090133f3c89ce380c09766c4c256d54/transformed/firebase-sessions-3.0.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/e30facc6a648da6aae92a7067d277d6e/transformed/firebase-installations-19.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/b42b9b137999b3ec457d1a80aec590c3/transformed/firebase-installations-interop-17.2.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/00e1522f16ab693eeb98f2a25878d40a/transformed/firebase-iid-interop-17.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c1ab6272e1e3cc54a9f4ab96045c33d0/transformed/firebase-common-22.0.0-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.room/room-common-jvm/2.7.0/46a9845444d0b849131baeb85bfe4051828261ad/room-common-jvm-2.7.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/892e545d2aa2914687d616e4bbed3487/transformed/room-runtime-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/aad6e4bf2856cc09fd5e4bf37bec4c68/transformed/room-ktx-2.7.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0645bfcd96e7d2bd0c09ac58aac600e3/transformed/work-runtime-ktx-2.10.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/9156cdbb1f234c88470dd450386a6efb/transformed/work-runtime-2.10.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/e4f97e2c091b625b838cfe5db8b4bcd4/transformed/coil-2.7.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/05e9858c90aefb541a499cd2999f38db/transformed/coil-base-2.7.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/5c03fff715078af0eb7f9746f802419f/transformed/material3-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/af76055845755772c58a69b5efa238a3/transformed/animation-core-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0d0fbe27da544673d615f993a646207f/transformed/animation-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/6c99ab36c49eb52cf604a8575773cbdb/transformed/foundation-layout-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/08b49689b988d8ac692addee2b2d663b/transformed/material-ripple-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/55356a5ba4677d2d89a930a54470f7a7/transformed/foundation-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/75f9eaa88e02368d048e40abc6bbe91e/transformed/ui-tooling-data-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c00a11f77155c75d0dd8a0f48c02bdf1/transformed/ui-util-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ec5d9e2846467c20d248fa245996adfb/transformed/ui-unit-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ff583e8ce42e52285e0309cbc87342d6/transformed/ui-geometry-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ee70e136249d39e8cce6af5b62d5b9e6/transformed/ui-text-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/591448e7ed8f86467452b8c5717b6eb1/transformed/ui-tooling-preview-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/96f9cdd6d19ca5252879e1dce38f0509/transformed/ui-graphics-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3ec19c357184c94232be732c284c9724/transformed/material-icons-extended-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3fa78f071fe33050fb02d4f9c7c936f0/transformed/material-icons-core-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/6e0889122490d072c87bb5689f928caa/transformed/activity-1.13.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3174bb428a2dc373db6ea9e8fe5d9679/transformed/loader-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/2b5dcd62c469c3fc7df70ca5d45e554e/transformed/media3-session-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/b7d7a807bfa31df95520656fa4446aa1/transformed/percentlayout-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/28cd8eb79b1fa54fe416fb142ec092c6/transformed/recyclerview-1.4.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7f7cd57a3d224b57bf8489fbf2689064/transformed/swiperefreshlayout-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/dd5e4f6448c5675a81701e29e42d994a/transformed/lifecycle-runtime-ktx-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/dd28c008482e07f4dd8c5abbaffd9055/transformed/lifecycle-runtime-compose-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/df28c65a127826e8fccbb67e82c10249/transformed/lifecycle-runtime-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3103f3748bfbe10539bff45555b1988f/transformed/lifecycle-viewmodel-savedstate-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/cc0165ce2585cdff5362f425ef7fde51/transformed/core-ktx-1.18.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f68a179d39ebe551aa5901b0dc39bb81/transformed/drawerlayout-1.1.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/adaf93e511adc7cd785ba16ebf908764/transformed/coordinatorlayout-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/88bf78ded7849b0b74d6edbd0cab0626/transformed/dynamicanimation-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/d3dfd8cdda745f1b8cf67beba77b836b/transformed/transition-1.5.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/2ea812b5d9f555497b803a6a3e621f3a/transformed/vectordrawable-animated-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0cc20a8b797074538c42451a746ca638/transformed/vectordrawable-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7cfe2b8d59d1aa7374ae0919f4871611/transformed/viewpager-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/631f89cb9fba3b0742d26635d2424eaf/transformed/slidingpanelayout-1.2.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/2acec95fd498348ebdc905b2e9265b39/transformed/customview-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/623dc510c8a8b524e50df4f30c15baf9/transformed/core-1.18.0-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common-jvm/2.9.4/ab739bccdb3541983385af169565c7c035d897e7/lifecycle-common-jvm-2.9.4.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/af354d8ca6ce3e5fdc097cce7de8663a/transformed/lifecycle-viewmodel-ktx-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3992b8bdde160d8844a4c8dface67db9/transformed/lifecycle-service-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f2bf963aff4a8feea1e275a642a022f4/transformed/lifecycle-livedata-core-ktx-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0c56473f457124aec0b979f83252973e/transformed/lifecycle-livedata-core-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/38c07936870f6c26ef578c5c692fd56c/transformed/lifecycle-livedata-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3ef2958d3810d2b691b0769d3a7bb4c2/transformed/lifecycle-viewmodel-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c1733171cfd9347725571079b5b21b9a/transformed/lifecycle-viewmodel-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/5e7ba575d327c1c51f83465e5ca5cb2e/transformed/lifecycle-viewmodel-compose-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/54e93c26190f1f80d3346c7f724c42fd/transformed/ui-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f8772389ac6124f5ea7e9f09d6ee47d4/transformed/ui-tooling-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/cf5ba46bd19e035dd3fbd114c3129118/transformed/navigationevent-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/18108d505677a9296cafbbd8f7e3eefd/transformed/navigationevent-compose-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3b89c8140c6795188ac2f8d128d1286a/transformed/runtime-retain-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ef64ffdc4dbf2810f4da14b9c7501c2e/transformed/runtime-annotation-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/777f8873815ac7ab8e2258270dd71644/transformed/runtime-saveable-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7b4981831f6235e9c2abd519791faa01/transformed/savedstate-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/da27e6fa37c3e81e66919be32910eb24/transformed/savedstate-ktx-1.3.2-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/4bf6719ecd7915d00cc1e56cbd35cade/transformed/savedstate-compose-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/29ef014947a3b2b649a061e7ed9e2905/transformed/runtime-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-android/1.9.0/6cf3b8df5a2ce8c6b0dffe55657a827c405ee2fe/kotlinx-coroutines-android-1.9.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.9.0/9beade4c1c1569e4f36cbd2c37e02e3e41502601/kotlinx-coroutines-core-jvm-1.9.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-play-services/1.9.0/9d715295c29dddf8c381565c513fb2d9923f9f41/kotlinx-coroutines-play-services-1.9.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/b440518a4e460e85d50558c710a925a6/transformed/play-services-tasks-18.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3a458da4c83d7d701f3904192eec4b92/transformed/firebase-measurement-connector-20.0.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/8f882bfee3a753db9ef9af08f8aae306/transformed/play-services-basement-18.3.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f1341e0039585558025be5d145e64d36/transformed/fragment-1.8.9-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/64fb97c9f2f4649b2d91d07332ca47f2/transformed/fragment-ktx-1.8.9-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/5723e22997d06277a3ad3848480fcfcb/transformed/activity-ktx-1.13.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/9a0539f2561e189bf7489d93b6ff3c16/transformed/activity-compose-1.13.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7755c2451e35d17a05052ba38d24d5e1/transformed/core-splashscreen-1.2.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c9e6c15e097b54d15ded3b21703a74c8/transformed/media3-exoplayer-midi-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/df135483f10b29895829224260cce9ea/transformed/media3-exoplayer-1.10.1-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-parcelize-runtime/2.3.21/5eeb7fbd98f9b6a762d45a93636b87f31fc6dd17/kotlin-parcelize-runtime-2.3.21.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/8ba9ddb7176d6122092c37c935898f2f/transformed/leakcanary-android-2.14-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/e3a37dd53632c77ed15c7e35b8227183/transformed/leakcanary-object-watcher-android-2.14-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3a5b2c602c8a779314ddb16c74348652/transformed/media3-datasource-okhttp-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/eb9468ad9e44baa970438c43b4949ec9/transformed/okhttp-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c766b83d0bcfb02aaa10495cc1172be3/transformed/core-viewtree-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/35b9dac2582c58c34436a908bfe9d5de/transformed/media3-extractor-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/5afaa7ccd06472e5b024ce6531bb2274/transformed/media3-container-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/89e99dc47c6888b4609e89c55e23afa4/transformed/media3-datasource-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/51da9df0b620fa34c77cb731ef7e2aa1/transformed/media3-decoder-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0b3df73ebbb63f2b4928217a98deaa3a/transformed/media3-database-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/d134777f6e8ff6dfe66b352e54ae9b7d/transformed/media3-common-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c7c5676f4101ca3766fdbecf9bfa42f7/transformed/annotation-experimental-1.4.1-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.15.0/cb3c285187640f543150fcac1ae012bdd778c0e1/okio-jvm-3.15.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/70ddf1be339f5356eb32b6690e326227/transformed/versionedparcelable-1.1.1-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-ktx/1.5.0/27c78a926a16a1bf792b2285cf2834e8caae4a07/collection-ktx-1.5.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.5.0/7ba2c69414d46ebc2dd76598bdd0a75c54281a57/collection-jvm-1.5.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/6203c1c04698ffa88eb6296e2ae5c063/transformed/cursoradapter-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f03f78e0833a1a50dd3362f07598f7d8/transformed/interpolator-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/353f57181bab40e0e9904504bb8a17d1/transformed/cardview-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/d891afb4156966970623df3be1ddde1a/transformed/firebase-config-interop-16.0.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/99da32edda83f0a8b286d55b7cc47881/transformed/firebase-datatransport-18.2.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/d1b1fedecfdd258d0ff63fb8dc350634/transformed/transport-backend-cct-3.1.9-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/86125809f9cf44985b7fc0a4916ab89f/transformed/firebase-encoders-json-18.0.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/deaef11fb710996de94bce7c0a7bbf77/transformed/transport-runtime-3.1.9-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders-proto/16.0.0/a42d5fd83b96ae7b73a8617d29c94703e18c9992/firebase-encoders-proto-16.0.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders/17.0.0/26f52dc549c42575b155f8c720e84059ee600a85/firebase-encoders-17.0.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f9faf517679aac55e925ba8fd20f1b0e/transformed/sqlite-framework-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/57feac86df3b957150f118d70b1dff4c/transformed/sqlite-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f1fe02a9cc0f616a469a9f014037a4f8/transformed/transport-api-3.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/4ea0cd1c405a9e097163ea404346c3fc/transformed/core-runtime-2.2.0-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.2.0/5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3/core-common-2.2.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.9.1/b17951747e38bf3986a24431b9ba0d039958aa5f/annotation-jvm-1.9.1.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.8.0/ed04f49e186a116753ad70d34f0ac2925d1d8020/kotlin-stdlib-jdk8-1.8.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.8.0/3c91271347f678c239607abb676d4032a7898427/kotlin-stdlib-jdk7-1.8.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.7.3/6701e8c68d9e82387ce72ee96e8ddf058208d58f/kotlinx-serialization-json-jvm-1.7.3.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.7.3/1f226780b845ff9206474c05159245d861556249/kotlinx-serialization-core-jvm-1.7.3.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/d8db848666c32ca4cb2b585c617e687d/transformed/constraintlayout-2.2.1-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.12.1/4e773a317740b83b43cfc3d652962856041697cb/gson-2.12.1.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c32d87dc0f4bed9cb89732751ceceffb/transformed/library-1.3.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/574747cbefbefaed326fab998bd4dc10/transformed/FancyShowCaseView-1.4.0-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/16ebcf8a81c437a1a5f30af5e7cb84fc/transformed/leakcanary-android-core-2.14-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.resourceinspection/resourceinspection-annotation/1.0.1/8c21f8ff5d96d5d52c948707f7e4d6ca6773feef/resourceinspection-annotation-1.0.1.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.36.0/227d4d4957ccc3dc5761bd897e3a0ee587e750a7/error_prone_annotations-2.36.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-android/2.14/6fb0b4ab27c085678a3d26ce2b9350fb77c32407/shark-android-2.14.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0e904cbd2566cb658ab936fd429c0023/transformed/leakcanary-object-watcher-android-androidx-2.14-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/9a41bde09e2f0c9b6d39e5dd918086dc/transformed/leakcanary-object-watcher-android-support-fragments-2.14-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7abfc44fd274b2ec61dee42981f6a2b5/transformed/leakcanary-object-watcher-android-core-2.14-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/388cd814d28282086642b1d9bb0b69d7/transformed/startup-runtime-1.1.1-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/33.3.1-android/36162b3b4e9df67dae90db62a2c54616ca42c1bd/guava-33.3.1-android.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3a5a55f609d1cbad2f3e765b09564458/transformed/graphics-shapes-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7f0838d27a7b16f6a062b5d1cf423bba/transformed/firebase-components-19.0.0-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-annotations/17.0.0/fd04a6accd970e0fcf9baf2424abe2926e00d0e2/firebase-annotations-17.0.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark/2.14/768be00911a64d2314345115687fe0d14924bd87/shark-2.14.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/leakcanary-object-watcher/2.14/4e9e9ea14da4e86321b1369c7aea6528f0ef2/leakcanary-object-watcher-2.14.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/6f86fd3bfea59b45aa267dc023f0ff9c/transformed/leakcanary-android-utils-2.14-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.2/c4a06a64e650562f30b7bf9aaec1bfed43aca12b/failureaccess-1.0.2.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-graph/2.14/ed8d34d03693373e1e9e1bcdcd52e2a63391e6d9/shark-graph-2.14.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-hprof/2.14/561aba011e38279be7e068f6760f816baab0ccb9/shark-hprof-2.14.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-log/2.14/25574b6474a61c3d0a5df80272ecfa51c560bd7e/shark-log-2.14.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/local-delegation-evidence/AudioBar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "log": "reports/correctness/2026-10-30-local-delegation-boundary/AudioBar.txt"
+    }
+  ],
+  "archived_from": "/Users/yuku/f/git/korrust/target/local-delegation-evidence",
+  "archival_scope": "Original frozen source archives, text command evidence and source fixtures retained; compiler binaries and generated class/index files remain ignored."
+}

@@ -4830,6 +4830,14 @@ impl Parser {
             } else {
                 None
             };
+            if self.at("by") {
+                return Err(self
+                    .error("Local delegated properties are unsupported")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "LOCAL_DELEGATED_PROPERTY_UNSUPPORTED",
+                    ));
+            }
             if self.take("=") {
                 self.lines();
                 StatementKind::Let(name, mutable, ty, self.expr(0)?)
