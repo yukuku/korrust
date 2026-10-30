@@ -169,6 +169,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 129. Class-header interface delegation with saved receivers, property forwarding, explicit overrides, and bounded generic bridges and metadata.
 130. Source annotation declarations with recursive scalar, enum, class, array, and nested values/defaults, supported retention and placement, and JVM/Kotlin metadata.
 131. Data objects with Kotlin-compatible equality, hash codes, string representation, initialization, nested interface implementations, and metadata.
+132. Bounded source inline functions with reified type tests, casts and class literals, inline parameter modes, and non-local returns.
 
 ## Project contract
 

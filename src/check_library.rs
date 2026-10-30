@@ -473,7 +473,8 @@ impl Checker<'_> {
         let inline = method
             .library
             .as_ref()
-            .is_some_and(|m| m.inline && !m.builtin_array);
+            .is_some_and(|m| m.inline && !m.builtin_array)
+            && !self.inline_analysis;
         if inline {
             crate::compiled_inline::validate(&method)?;
         }
@@ -487,8 +488,17 @@ impl Checker<'_> {
         } else {
             None
         };
+        let old_modes = std::mem::replace(
+            &mut self.inline_argument_modes,
+            method
+                .library
+                .as_ref()
+                .map(|library| library.parameter_modes.clone())
+                .unwrap_or_default(),
+        );
         let checked = self.arguments(&params, &defaults, args, named, offset);
         self.inline_result = old_inline;
+        self.inline_argument_modes = old_modes;
         let (mut values, lets, mut mask) = checked?;
         if method
             .library
@@ -521,7 +531,10 @@ impl Checker<'_> {
                 "Private JVM inline declaration requires complete inline expansion",
             ));
         }
-        if mask == 0 && self.classpath.default_source_accessor(&method).is_some() {
+        if mask == 0
+            && !self.public_inline_body
+            && self.classpath.default_source_accessor(&method).is_some()
+        {
             return Ok(Self::wrap_lets(
                 self.source_backing_accessor(&method, values, offset)?
                     .unwrap(),
@@ -535,12 +548,6 @@ impl Checker<'_> {
         {
             mask >>= 1;
         }
-        if inline && !lets.is_empty() {
-            return Err(Diagnostic::new(
-                offset,
-                "Reordered named arguments in compiled inline calls are unsupported",
-            ));
-        }
         let kind = if inline && mask == 0 {
             let code = method
                 .library
@@ -553,13 +560,31 @@ impl Checker<'_> {
                 .checked_add(code.max_locals)
                 .ok_or_else(|| Diagnostic::new(offset, "Inline locals overflow"))?;
             let mut lambda_bases = Vec::new();
-            for value in &values {
-                if let ValueKind::Lambda { owner, .. } = &value.kind {
+            for (index, value) in values.iter().enumerate() {
+                if method.library.as_ref().is_some_and(|library| {
+                    library.parameter_modes.get(index)
+                        == Some(&syntax::InlineParameterMode::Noinline)
+                }) {
+                    lambda_bases.push(None);
+                    continue;
+                }
+                let owner = match &value.kind {
+                    ValueKind::Lambda { owner, .. } => Some(owner),
+                    ValueKind::Local(slot) => {
+                        lets.iter()
+                            .find_map(|(saved, initializer)| match &initializer.kind {
+                                ValueKind::Lambda { owner, .. } if saved == slot => Some(owner),
+                                _ => None,
+                            })
+                    }
+                    _ => None,
+                };
+                if let Some(owner) = owner {
                     let lambdas = self.lambdas.borrow();
                     let lambda = lambdas.iter().find(|l| l.owner == *owner).ok_or_else(|| {
                         Diagnostic::new(offset, "Inline lambda declaration missing")
                     })?;
-                    lambda_bases.push(Some(self.next));
+                    lambda_bases.push(Some((owner.clone(), self.next)));
                     self.next = self
                         .next
                         .checked_add(lambda.function.locals)
@@ -574,11 +599,33 @@ impl Checker<'_> {
                     "Compiled inline locals exceed current limit",
                 ));
             }
+            let reified_temp = if method
+                .library
+                .as_ref()
+                .is_some_and(|library| !library.reified_arguments.is_empty())
+            {
+                if self.next >= 256 {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Reified inline locals exceed the current JVM slot limit",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "COMPILED_INLINE_LOCALS_UNSUPPORTED",
+                    ));
+                }
+                let slot = self.next;
+                self.next += 1;
+                Some(slot)
+            } else {
+                None
+            };
             ValueKind::CompiledInline {
                 method,
                 args: values,
                 local_base,
                 lambda_bases,
+                reified_temp,
             }
         } else if mask == 0 {
             ValueKind::JavaCall {
@@ -664,12 +711,54 @@ impl Checker<'_> {
         offset: usize,
     ) -> Result<Value> {
         if let Ok(class) = self.classpath.load(&self.lambda_owner) {
+            let inline = class
+                .methods
+                .iter()
+                .filter(|method| {
+                    method.source_name() == name
+                        && method
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| library.inline && library.code.is_some())
+                })
+                .cloned()
+                .collect::<Vec<_>>();
+            if !inline.is_empty() {
+                let method = self.select_method_types(&inline, args, explicit, offset)?;
+                return self.library_static_call(method, args, offset);
+            }
+            if !self.inline_analysis
+                && class.methods.iter().any(|method| {
+                    method.source_name() == name
+                        && method
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| library.inline)
+                })
+            {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Source inline dependency was not staged; unsupported call dependency",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "SOURCE_INLINE_DEPENDENCY_UNSUPPORTED",
+                ));
+            }
+        }
+        if let Ok(class) = self.classpath.load(&self.lambda_owner) {
             let methods = class
                 .methods
                 .into_iter()
                 .filter(|method| method.source_name() == name)
                 .collect::<Vec<_>>();
-            if methods.iter().any(|method| method.access & 0x80 != 0) {
+            if methods.iter().any(|method| method.access & 0x80 != 0)
+                || !self
+                    .function_names
+                    .iter()
+                    .any(|candidate| candidate == name)
+                    && !methods.is_empty()
+            {
                 let method = self.select_method_types(&methods, args, explicit, offset)?;
                 return self.library_static_call(method, args, offset);
             }

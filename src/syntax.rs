@@ -5,6 +5,7 @@ pub enum Type {
     Int,
     Long,
     Byte,
+    Short,
     Char,
     Boolean,
     Float,
@@ -62,6 +63,7 @@ pub struct TypeArgument {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct TypeParameter {
     pub only_input_types: bool,
+    pub reified: bool,
     pub name: String,
     pub variance: Variance,
     pub bounds: Vec<Type>,
@@ -123,6 +125,7 @@ impl Type {
         match self.primitive_array_element()? {
             Self::Int => Some("Int"),
             Self::Byte => Some("Byte"),
+            Self::Short => Some("Short"),
             Self::Char => Some("Char"),
             Self::Long => Some("Long"),
             Self::Boolean => Some("Boolean"),
@@ -181,6 +184,7 @@ impl Type {
             Self::Int => "I".into(),
             Self::Long => "J".into(),
             Self::Byte => "B".into(),
+            Self::Short => "S".into(),
             Self::Char => "C".into(),
             Self::Boolean => "Z".into(),
             Self::Float => "F".into(),
@@ -228,6 +232,7 @@ impl Type {
                 Self::Int => "Ljava/lang/Integer;".into(),
                 Self::Long => "Ljava/lang/Long;".into(),
                 Self::Byte => "Ljava/lang/Byte;".into(),
+                Self::Short => "Ljava/lang/Short;".into(),
                 Self::Char => "Ljava/lang/Character;".into(),
                 Self::Boolean => "Ljava/lang/Boolean;".into(),
                 Self::Float => "Ljava/lang/Float;".into(),
@@ -612,8 +617,17 @@ pub struct ClassMethod {
     pub open: bool,
     pub has_body: bool,
 }
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum InlineParameterMode {
+    Ordinary,
+    Noinline,
+    Crossinline,
+}
+
 #[derive(Clone, Debug)]
 pub struct Function {
+    pub inline: bool,
+    pub parameter_modes: Vec<InlineParameterMode>,
     pub param_annotations: Vec<Vec<AnnotationUse>>,
     pub annotations: Vec<AnnotationUse>,
     pub name: String,
@@ -1962,13 +1976,15 @@ impl Parser {
             "Int" => Type::Int,
             "Long" => Type::Long,
             "Byte" => Type::Byte,
+            "Short" => Type::Short,
             "Char" => Type::Char,
             "Boolean" => Type::Boolean,
             "Float" => Type::Float,
             "Double" => Type::Double,
-            "Short" | "ShortArray" | "kotlin/Short" | "kotlin/ShortArray" => {
+            "kotlin/Short" => Type::Short,
+            "ShortArray" | "kotlin/ShortArray" => {
                 return Err(self
-                    .error("Short and ShortArray semantics are unsupported")
+                    .error("ShortArray semantics are unsupported")
                     .with_kind(DiagnosticKind::UnsupportedLanguage, "SHORT_UNSUPPORTED"));
             }
             "String" => Type::String,
@@ -1978,17 +1994,21 @@ impl Parser {
             _ => Type::Java(name),
         })
     }
-    fn type_parameters(&mut self) -> Result<Vec<TypeParameter>> {
+    fn type_parameters(&mut self, reified_allowed: bool) -> Result<Vec<TypeParameter>> {
         if !self.take("<") {
             return Ok(Vec::new());
         }
         self.lines();
         let mut parameters = Vec::new();
         loop {
+            if !reified_allowed && self.at("reified") {
+                return Err(self
+                    .error("Reified type parameters require an inline function")
+                    .with_kind(DiagnosticKind::InvalidKotlin, "REIFIED_OUTSIDE_INLINE"));
+            }
+            let reified = reified_allowed && self.take("reified");
             if matches!(self.token().text.as_str(), "in" | "out" | "reified") {
-                return Err(self.error(
-                    "Variance and reified modifiers on function type parameters are unsupported",
-                ).with_kind(DiagnosticKind::UnsupportedLanguage, "TYPE_PARAMETER_MODIFIER_UNSUPPORTED"));
+                return Err(self.error("Variance and reified modifiers on function type parameters are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "TYPE_PARAMETER_MODIFIER_UNSUPPORTED"));
             }
             let name = self.name()?;
             if parameters
@@ -2011,6 +2031,7 @@ impl Parser {
             }
             let mut parameter = TypeParameter {
                 only_input_types: false,
+                reified,
                 name,
                 variance: Variance::Invariant,
                 bounds: Vec::new(),
@@ -2028,6 +2049,7 @@ impl Parser {
                     Type::Int
                         | Type::Long
                         | Type::Byte
+                        | Type::Short
                         | Type::Char
                         | Type::Boolean
                         | Type::Float
@@ -2333,7 +2355,7 @@ impl Parser {
         let name = self.declaration_name()?;
         let scope = self.type_parameters.len();
         let result = (|| {
-            let type_params = self.type_parameters().map_err(|error| {
+            let type_params = self.type_parameters(false).map_err(|error| {
                 if error.message.contains("Variance and reified") {
                     error.with_kind(
                         DiagnosticKind::InvalidKotlin,
@@ -2560,6 +2582,7 @@ impl Parser {
                 | "MutableList"
                 | "Char"
                 | "Byte"
+                | "Short"
                 | "Boolean"
                 | "Float"
                 | "Double"
@@ -2949,7 +2972,12 @@ impl Parser {
             self.lines();
         }
         if inline && visibility.as_deref() != Some("private") {
-            return Err(self.error("Only private inline object methods are supported"));
+            return Err(self
+                .error("Only private inline object methods are supported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+                ));
         }
         let mut function = self.function()?;
         function.annotations.splice(0..0, annotations);
@@ -3247,7 +3275,7 @@ impl Parser {
         }
         self.lines();
         let name = self.classifier_name()?;
-        let type_params = self.type_parameters()?;
+        let type_params = self.type_parameters(false)?;
         if sealed_ && !type_params.is_empty() {
             return Err(self
                 .error("Source generic sealed classifiers are unsupported")
@@ -3584,6 +3612,14 @@ impl Parser {
                     return Err(self.error("Conflicting open/abstract and final modifiers"));
                 }
                 open = !final_ && (open || is_override);
+                if self.at("inline") {
+                    return Err(self
+                        .error("Source member inline functions are unsupported")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+                        ));
+                }
                 if self.at("fun") {
                     if lateinit {
                         return Err(self.error("The lateinit modifier applies only to properties"));
@@ -4130,7 +4166,7 @@ impl Parser {
         }
         self.lines();
         let name = self.classifier_name()?;
-        let type_params = self.type_parameters()?;
+        let type_params = self.type_parameters(false)?;
         if sealed_ && !type_params.is_empty() {
             return Err(self
                 .error("Source generic sealed classifiers are unsupported")
@@ -4264,6 +4300,14 @@ impl Parser {
                 }
                 if infix && !self.at("fun") {
                     return Err(self.error("The infix modifier applies only to functions"));
+                }
+                if self.at("inline") {
+                    return Err(self
+                        .error("Source member inline functions are unsupported")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+                        ));
                 }
                 if self.at("fun") {
                     let (mut function, has_body) = self.function_body(true)?;
@@ -4612,6 +4656,7 @@ impl Parser {
         let mut visibility = None;
         let mut infix = false;
         let mut operator = false;
+        let mut inline = false;
         loop {
             if self.at("@") {
                 annotations.extend(self.annotations()?);
@@ -4624,6 +4669,13 @@ impl Parser {
                 }
                 visibility = Some(self.token().text.clone());
                 self.pos += 1;
+            } else if self.take("inline") {
+                if inline {
+                    return Err(self
+                        .error("Repeated inline modifier")
+                        .with_kind(DiagnosticKind::InvalidKotlin, "REPEATED_INLINE_MODIFIER"));
+                }
+                inline = true;
             } else if self.take("operator") {
                 if operator {
                     return Err(self.error("Repeated operator modifier"));
@@ -4643,7 +4695,7 @@ impl Parser {
         let internal = visibility.as_deref() == Some("internal");
         self.expect("fun")?;
         let type_parameter_count = self.type_parameters.len();
-        let type_params = self.type_parameters()?;
+        let type_params = self.type_parameters(inline)?;
         let type_offset = self.token().offset;
         let first = self.name()?;
         let (receiver, name) = if self.at("<") || self.at("?") || self.at(".") {
@@ -4662,11 +4714,35 @@ impl Parser {
         self.lines();
         let mut params = Vec::new();
         let mut param_annotations = Vec::new();
+        let mut parameter_modes = Vec::new();
         let mut defaults = Vec::new();
         let mut vararg = false;
         if !self.at(")") {
             loop {
                 let mut annotations = self.annotations()?;
+                let mode = if self.take("noinline") {
+                    InlineParameterMode::Noinline
+                } else if self.take("crossinline") {
+                    InlineParameterMode::Crossinline
+                } else {
+                    InlineParameterMode::Ordinary
+                };
+                if mode != InlineParameterMode::Ordinary && !inline {
+                    return Err(self
+                        .error("Inline parameter modifiers require an inline function")
+                        .with_kind(
+                            DiagnosticKind::InvalidKotlin,
+                            "INLINE_PARAMETER_OUTSIDE_INLINE",
+                        ));
+                }
+                if self.at("noinline") || self.at("crossinline") {
+                    return Err(self
+                        .error("Conflicting or repeated inline parameter modifiers")
+                        .with_kind(
+                            DiagnosticKind::InvalidKotlin,
+                            "INLINE_PARAMETER_MODIFIERS_CONFLICT",
+                        ));
+                }
                 let parameter_vararg = self.take("vararg");
                 if vararg {
                     return Err(self.error(if parameter_vararg {
@@ -4681,12 +4757,34 @@ impl Parser {
                 self.expect(":")?;
                 self.lines();
                 let ty = self.ty()?;
+                if parameter_vararg && ty == Type::Short {
+                    return Err(self.error("ShortArray varargs are unsupported").with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "SHORT_ARRAY_UNSUPPORTED",
+                    ));
+                }
                 let ty = if parameter_vararg {
                     Type::primitive_array_for(&ty).unwrap_or_else(|| Type::Array(Box::new(ty)))
                 } else {
                     ty
                 };
+                let function_type = match ty.base() {
+                    Type::Nullable(inner) => matches!(
+                        inner.base(),
+                        Type::Function { .. } | Type::ReceiverFunction { .. }
+                    ),
+                    ty => matches!(ty, Type::Function { .. } | Type::ReceiverFunction { .. }),
+                };
+                if mode != InlineParameterMode::Ordinary && !function_type {
+                    return Err(self
+                        .error("Inline parameter modifiers require a function type")
+                        .with_kind(
+                            DiagnosticKind::InvalidKotlin,
+                            "INLINE_PARAMETER_TYPE_INVALID",
+                        ));
+                }
                 params.push((name, ty));
+                parameter_modes.push(mode);
                 param_annotations.push(annotations);
                 self.lines();
                 defaults.push(if self.take("=") {
@@ -4751,6 +4849,8 @@ impl Parser {
         self.type_parameters.truncate(type_parameter_count);
         Ok((
             Function {
+                inline,
+                parameter_modes,
                 param_annotations,
                 annotations,
                 name,

@@ -315,6 +315,8 @@ fn register_classes(
                 library: (function.infix || function.operator).then(|| {
                     crate::classpath::LibraryMethod {
                         has_annotations: false,
+                        parameter_modes: Vec::new(),
+                        reified_arguments: Vec::new(),
                         abstract_: false,
                         builtin_array: false,
                         source_name: function.name.clone(),
@@ -374,6 +376,7 @@ fn register_classes(
                         .map(|p| {
                             Ok(syntax::TypeParameter {
                                 only_input_types: p.only_input_types,
+                                reified: p.reified,
                                 name: p.name.clone(),
                                 variance: p.variance,
                                 bounds: p
@@ -868,6 +871,10 @@ fn check_function(
     let signatures = Vec::new();
     let extensions = HashSet::new();
     let mut checker = Checker {
+        inline_argument_modes: Vec::new(),
+        inline_analysis: false,
+        public_inline_body: false,
+        reified_parameters: Vec::new(),
         exhaustiveness_flow: false,
         lambdas: lambdas.clone(),
         captured: HashMap::new(),
@@ -1228,6 +1235,10 @@ interface Catalog {
                 panic!()
             };
             let mut checker = Checker {
+                inline_argument_modes: Vec::new(),
+                inline_analysis: false,
+                public_inline_body: false,
+                reified_parameters: Vec::new(),
                 exhaustiveness_flow: false,
                 lambdas: Rc::new(RefCell::new(Vec::new())),
                 captured: HashMap::new(),

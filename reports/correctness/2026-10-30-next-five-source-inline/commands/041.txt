@@ -1,0 +1,6 @@
+tests/fixtures/new_families/source_inline19/invalid/mutual_cycle.kt:1:31: error: the 'two' invocation is a part of inline cycle
+inline fun one(x: Int): Int = two(x)
+                              ^^^^^^
+tests/fixtures/new_families/source_inline19/invalid/mutual_cycle.kt:2:31: error: the 'one' invocation is a part of inline cycle
+inline fun two(x: Int): Int = one(x)
+                              ^^^^^^

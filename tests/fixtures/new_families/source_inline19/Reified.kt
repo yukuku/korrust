@@ -1,0 +1,19 @@
+package probe
+inline fun twice(x: Int): Int = x + x
+inline fun <reified T> test(x: Any?): Boolean = x is T
+inline fun <reified T> cast(x: Any?): T = x as T
+inline fun <reified T> safe(x: Any?): T? = x as? T
+inline fun <reified T> token(): kotlin.reflect.KClass<*> = T::class
+fun result(): Int = twice(9)
+fun yes(x: Any?): Boolean = test<String>(x)
+fun intYes(x: Any?): Boolean = test<Int>(x)
+fun nullable(x: Any?): Boolean = test<String?>(x)
+fun str(x: Any?): String = cast<String>(x)
+fun strSafe(x: Any?): String? = safe<String>(x)
+fun cls(): kotlin.reflect.KClass<*> = token<Int>()
+inline fun <reified T> physical(): Class<*> = T::class.java
+fun physicalInt(): Class<*> = physical<Int>()
+fun physicalNullable(): Class<*> = physical<Int?>()
+fun shortYes(value: Any?): Boolean = test<Short>(value)
+fun shortCast(value: Any?): Short = cast<Short>(value)
+fun shortSafe(value: Any?): Short? = safe<Short>(value)

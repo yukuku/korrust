@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T08:10:50.964765+00:00",
+  "status": "passed",
+  "selection": "Source-inline integration against accepted String and value-resolution repairs, before fifth family.",
+  "cases": [
+    {
+      "id": "cargo_check_all_targets",
+      "outcome": "pass"
+    },
+    {
+      "id": "cargo_clippy_all_targets",
+      "outcome": "pass"
+    },
+    {
+      "id": "cargo_fmt",
+      "outcome": "pass"
+    },
+    {
+      "id": "batch_frontend",
+      "outcome": "pass",
+      "rust_tests": 5
+    },
+    {
+      "id": "primitive_arrays",
+      "outcome": "pass",
+      "rust_tests": 3
+    },
+    {
+      "id": "string_factory_contract",
+      "outcome": "pass",
+      "rust_tests": 1
+    },
+    {
+      "id": "value_resolution_contract",
+      "outcome": "pass",
+      "rust_tests": 1
+    }
+  ],
+  "counts": {
+    "pass": 7
+  },
+  "commands": [
+    [
+      "cargo",
+      "check",
+      "--all-targets"
+    ],
+    [
+      "cargo",
+      "build",
+      "--release"
+    ],
+    [
+      "cargo",
+      "test",
+      "--test",
+      "string_factories",
+      "--test",
+      "value_resolution",
+      "--test",
+      "primitive_arrays",
+      "--test",
+      "batch_frontend",
+      "--",
+      "--test-threads=2"
+    ],
+    [
+      "cargo",
+      "clippy",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    [
+      "cargo",
+      "fmt",
+      "--check"
+    ]
+  ],
+  "environment": {
+    "RUST_MIN_STACK": "16777216",
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "CARGO_TARGET_DIR": "target/next5-root-build"
+  },
+  "evidence": [
+    "reports/correctness/2026-10-30-source-inline-integration-gates/merge-manifest.json",
+    "reports/correctness/2026-10-30-source-inline-integration-gates/source-inline-root-check.log",
+    "reports/correctness/2026-10-30-source-inline-integration-gates/source-inline-root-clippy.log",
+    "reports/correctness/2026-10-30-source-inline-integration-gates/source-inline-root-fmt.log",
+    "reports/correctness/2026-10-30-source-inline-integration-gates/source-inline-root-regressions.log",
+    "reports/correctness/2026-10-30-source-inline-integration-gates/source-inline-root-release.log",
+    "reports/correctness/2026-10-30-next-five-source-inline.json",
+    "reports/correctness/2026-10-30-source-inline-integration-gates/HISTORICAL_REPORTS.json",
+    "reports/correctness/2026-10-30-source-inline-integration-gates/historical-failure-evidence.zip"
+  ],
+  "limitations": [
+    "Full final milestone regression is separate; historical failed source-inline and class-literal attempts remain unaltered."
+  ]
+}

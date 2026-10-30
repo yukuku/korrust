@@ -40,10 +40,10 @@ fn primitive_arrays_are_distinct_from_boxed_arrays_and_each_other() {
 }
 
 #[test]
-fn short_and_effectful_initializer_boundaries_are_explicit() {
+fn short_arrays_and_effectful_initializer_boundaries_are_explicit() {
     for source in [
         "fun make() = ShortArray(1)",
-        "fun pass(value: Short): Int = 1",
+        "fun pass(value: ShortArray): Int = 1",
     ] {
         let error = compile_all_with_classpath(source, "ShortBoundary.kt", &classpath())
             .err()

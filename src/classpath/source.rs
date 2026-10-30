@@ -118,6 +118,8 @@ fn method(
         library: Some(LibraryMethod {
             has_annotations: !function.annotations.is_empty()
                 || function.param_annotations.iter().any(|a| !a.is_empty()),
+            parameter_modes: function.parameter_modes.clone(),
+            reified_arguments: Vec::new(),
             abstract_: access & 0x400 != 0,
             builtin_array: false,
             kotlin_public: !function.private && !function.protected && !function.internal,
@@ -127,6 +129,7 @@ fn method(
                 .iter()
                 .map(|parameter| crate::syntax::TypeParameter {
                     only_input_types: parameter.only_input_types,
+                    reified: parameter.reified,
                     name: parameter.name.clone(),
                     variance: parameter.variance,
                     bounds: parameter
@@ -139,7 +142,7 @@ fn method(
             receiver,
             infix: function.infix,
             operator: function.operator,
-            inline: false,
+            inline: function.inline,
             code: None,
         }),
         owner: owner.into(),
@@ -345,6 +348,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 .iter()
                 .map(|p| crate::syntax::TypeParameter {
                     only_input_types: p.only_input_types,
+                    reified: p.reified,
                     name: p.name.clone(),
                     variance: p.variance,
                     bounds: p.bounds.iter().map(|t| resolve(t, module, cp)).collect(),
@@ -518,6 +522,8 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 class.methods.push(JavaMethod {
                     library: Some(LibraryMethod {
                         has_annotations: false,
+                        parameter_modes: Vec::new(),
+                        reified_arguments: Vec::new(),
                         abstract_: false,
                         builtin_array: false,
                         kotlin_public: true,
@@ -620,6 +626,8 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             if !p.annotations.is_empty() {
                 for method in &mut methods {
                     method.library = Some(LibraryMethod {
+                        parameter_modes: Vec::new(),
+                        reified_arguments: Vec::new(),
                         has_annotations: true,
                         abstract_: method.access & 0x400 != 0,
                         builtin_array: false,
@@ -778,6 +786,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                         .iter()
                         .map(|parameter| crate::syntax::TypeParameter {
                             only_input_types: parameter.only_input_types,
+                            reified: parameter.reified,
                             name: parameter.name.clone(),
                             variance: parameter.variance,
                             bounds: parameter
@@ -862,6 +871,8 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     library.code = None;
                 } else {
                     method.library = Some(LibraryMethod {
+                        parameter_modes: Vec::new(),
+                        reified_arguments: Vec::new(),
                         has_annotations: false,
                         abstract_: false,
                         builtin_array: false,

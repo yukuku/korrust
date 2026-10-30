@@ -276,6 +276,7 @@ mod tests {
                 name: "Names".into(),
                 type_parameters: vec![TypeParameter {
                     only_input_types: false,
+                    reified: false,
                     name: "T".into(),
                     variance: Variance::Invariant,
                     bounds: vec![Type::Nullable(Box::new(Type::Java(

@@ -31,12 +31,7 @@ fn source_type_supported(ty: &Type) -> bool {
     match ty {
         Type::Java(name) => !matches!(
             name.as_str(),
-            "Short"
-                | "kotlin/Short"
-                | "Nothing"
-                | "kotlin/Nothing"
-                | "ShortArray"
-                | "kotlin/ShortArray"
+            "Nothing" | "kotlin/Nothing" | "ShortArray" | "kotlin/ShortArray"
         ),
         Type::Array(inner) | Type::Nullable(inner) => source_type_supported(inner),
         _ => true,
@@ -45,7 +40,7 @@ fn source_type_supported(ty: &Type) -> bool {
 
 fn bound_type_supported(ty: &Type) -> bool {
     match ty.base() {
-        Type::Java(name) => name != "java/lang/Short",
+        Type::Java(name) => !matches!(name.as_str(), "ShortArray" | "kotlin/ShortArray" | "[S"),
         Type::Array(inner) | Type::Nullable(inner) => bound_type_supported(inner),
         _ => true,
     }
@@ -76,6 +71,7 @@ fn normalized_literal_type(ty: &Type) -> Type {
             "kotlin/Int" => Type::Int,
             "kotlin/Long" => Type::Long,
             "kotlin/Byte" => Type::Byte,
+            "kotlin/Short" => Type::Short,
             "kotlin/Char" => Type::Char,
             "kotlin/Boolean" => Type::Boolean,
             "kotlin/Float" => Type::Float,
@@ -167,6 +163,23 @@ fn array_literal_shape(ty: &Type, offset: usize, depth: usize) -> Result<()> {
 
 impl Checker<'_> {
     fn class_literal_type(&self, source: &Type, offset: usize) -> Result<Type> {
+        if let Type::Array(inner) = source
+            && matches!(inner.base(), Type::Parameter { name, .. } if self.reified_parameters.iter().any(|parameter| parameter.name == *name && parameter.reified))
+        {
+            return Err(literal_error(
+                offset,
+                "Nested reified array class literals are unsupported",
+                false,
+            ));
+        }
+        if let Type::Parameter { name, .. } = source
+            && self
+                .reified_parameters
+                .iter()
+                .any(|parameter| parameter.name == *name && parameter.reified)
+        {
+            return Ok(source.clone());
+        }
         if !source_type_supported(source) {
             return Err(literal_error(
                 offset,
@@ -637,6 +650,7 @@ impl Checker<'_> {
                         "Int" => Type::Int,
                         "Long" => Type::Long,
                         "Byte" => Type::Byte,
+                        "Short" => Type::Short,
                         "Char" => Type::Char,
                         "Boolean" => Type::Boolean,
                         "Float" => Type::Float,
@@ -712,7 +726,11 @@ impl Checker<'_> {
             if matches!(value.ty, Type::Parameter { .. }) {
                 match nullable_parameter_bound(&value.ty, &mut HashSet::new(), 0) {
                     Some(false) => {},
-                    Some(true) => return Err(literal_error(offset, "Expression in a class literal has a possibly nullable type parameter", true)),
+                    Some(true) => {
+                        let refined = matches!(&receiver.kind, ExprKind::Name(name) if self.local(name).is_some_and(|local| self.refinements.contains_key(&local.slot)));
+                        let unsupported = refined || matches!(receiver.kind, ExprKind::NonNull(_));
+                        return Err(literal_error(offset, if unsupported { "Class literals require unsupported definitely non-null type-parameter semantics" } else { "Expression in a class literal has a possibly nullable type parameter" }, !unsupported));
+                    },
                     None => return Err(literal_error(offset, "Class literal type-parameter bound lookup exceeds the supported depth or cycle boundary", false)
                         .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "CLASS_LITERAL_BOUND_DEPTH_UNSUPPORTED")),
                 }

@@ -10,6 +10,7 @@ mod object_lowering;
 mod visibility;
 
 use std::path::PathBuf;
+mod source_inline;
 mod syntax;
 
 mod diagnostic;
@@ -545,6 +546,8 @@ pub fn compile_batch_with_options(
             .map_err(|error| error.for_source(&sources[index].identity))?;
     }
     validate_batch_declarations(&units, &owner_sources, &sources)?;
+    source_inline::stage(&units, &classpath, module_name)
+        .map_err(|(owner, error)| locate(error, &owner))?;
     synchronize_nested_units(&mut units);
     validate_source_inheritance(&classpath, &owners)?;
     classpath

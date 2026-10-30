@@ -199,6 +199,7 @@ impl<'a> Context<'a> {
                 "kotlin/Int" => Type::Int,
                 "kotlin/Long" => Type::Long,
                 "kotlin/Byte" => Type::Byte,
+                "kotlin/Short" => Type::Short,
                 "kotlin/Char" => Type::Char,
                 "kotlin/Boolean" => Type::Boolean,
                 "kotlin/Float" => Type::Float,
@@ -386,6 +387,7 @@ impl<'a> Context<'a> {
             );
             result.push(TypeParameter {
                 only_input_types,
+                reified: reified != 0,
                 name,
                 variance,
                 bounds,
@@ -397,7 +399,7 @@ impl<'a> Context<'a> {
         let p = Proto::parse(bytes)?;
         p.allowed(&[1, 2, 3, 4, 5, 6])?;
         let flags = p.integer(1)?.unwrap_or(0);
-        if flags & !3 != 0 {
+        if flags & !15 != 0 || flags & 12 == 12 {
             return Err(invalid());
         }
         Ok((
@@ -577,6 +579,8 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             kotlin_internal: false,
             library: Some(LibraryMethod {
                 has_annotations: false,
+                parameter_modes: Vec::new(),
+                reified_arguments: Vec::new(),
                 builtin_array: true,
                 abstract_: false,
                 kotlin_public: true,
@@ -766,6 +770,8 @@ fn builtin_declarations(
             kotlin_result: Some(returned),
             kotlin_internal: false,
             library: requested_name.map(|_| LibraryMethod {
+                parameter_modes: Vec::new(),
+                reified_arguments: Vec::new(),
                 has_annotations: false,
                 abstract_: true,
                 builtin_array: false,
@@ -866,6 +872,7 @@ pub(super) fn module_parts(bytes: &[u8], package: &str) -> Result<Vec<String>> {
 }
 
 struct MemberTypes {
+    parameter_modes: Vec<crate::syntax::InlineParameterMode>,
     params: Vec<(String, Type, bool)>,
     result: Type,
     receiver: Option<Type>,
@@ -883,6 +890,7 @@ fn attach_member(
     property: Option<String>,
 ) -> Result<()> {
     let MemberTypes {
+        mut parameter_modes,
         params,
         result,
         receiver,
@@ -1009,8 +1017,13 @@ fn attach_member(
     method.kotlin_internal = flags & 14 == 0;
     method.source_property = property;
     method.unsupported = false;
+    if receiver.is_some() {
+        parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
+    }
     method.library = Some(LibraryMethod {
         has_annotations: flags & 1 != 0,
+        parameter_modes,
+        reified_arguments: Vec::new(),
         builtin_array: false,
         abstract_: flags & 0x30 == 32,
         kotlin_public: flags & 14 == 6,
@@ -1054,6 +1067,8 @@ fn remember_callable(
         {
             method.library = Some(LibraryMethod {
                 has_annotations: false,
+                parameter_modes: Vec::new(),
+                reified_arguments: Vec::new(),
                 builtin_array: false,
                 abstract_: member
                     .integer(if name == "<init>" { 1 } else { 9 })?
@@ -1266,11 +1281,34 @@ pub(super) fn attach(
             remember_callable(class, source_name, &member, &strings)?;
             let parsed = (|| -> Result<()> {
                 context.set_table(&member)?;
+                let flags = member
+                    .integer(if constructor { 1 } else { 9 })?
+                    .unwrap_or(6);
                 let tps = if constructor {
                     Vec::new()
                 } else {
-                    context.type_parameters(&member, 4)?
+                    context.type_parameters_with_reified(&member, 4, flags & 1024 != 0)?
                 };
+                let parameter_modes = member
+                    .messages(if constructor { 2 } else { 6 })?
+                    .into_iter()
+                    .map(|bytes| {
+                        let flags = Proto::parse(bytes)?.integer(1)?.unwrap_or(0);
+                        match flags & 12 {
+                            0 => Ok(crate::syntax::InlineParameterMode::Ordinary),
+                            4 => Ok(crate::syntax::InlineParameterMode::Crossinline),
+                            8 => Ok(crate::syntax::InlineParameterMode::Noinline),
+                            _ => Err(invalid()),
+                        }
+                    })
+                    .collect::<Result<Vec<_>>>()?;
+                if flags & 1024 == 0
+                    && parameter_modes
+                        .iter()
+                        .any(|mode| *mode != crate::syntax::InlineParameterMode::Ordinary)
+                {
+                    return Err(invalid());
+                }
                 if !member.messages(10)?.is_empty() || !member.messages(13)?.is_empty() {
                     return Err(invalid());
                 }
@@ -1309,6 +1347,7 @@ pub(super) fn attach(
                     attributes,
                     name,
                     MemberTypes {
+                        parameter_modes,
                         params,
                         result,
                         receiver,
@@ -1418,6 +1457,7 @@ pub(super) fn attach(
                     attributes,
                     &crate::check::getter_name(name),
                     MemberTypes {
+                        parameter_modes: Vec::new(),
                         params: Vec::new(),
                         result: ty.clone(),
                         receiver: receiver.clone(),
@@ -1435,6 +1475,7 @@ pub(super) fn attach(
                     attributes,
                     &crate::check::setter_name(name),
                     MemberTypes {
+                        parameter_modes: Vec::new(),
                         params: vec![("value".into(), ty, false)],
                         result: Type::Unit,
                         receiver,

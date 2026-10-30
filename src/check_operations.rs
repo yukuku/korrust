@@ -455,6 +455,7 @@ impl Checker<'_> {
                 Type::Int
                 | Type::Long
                 | Type::Byte
+                | Type::Short
                 | Type::Char
                 | Type::Boolean
                 | Type::Float
@@ -472,11 +473,21 @@ impl Checker<'_> {
                 _ => false,
             }
         }
-        if !supported(&target) {
+        let reified = match target.base() {
+            Type::Parameter { name, .. } => self
+                .reified_parameters
+                .iter()
+                .any(|parameter| parameter.name == *name && parameter.reified),
+            Type::Nullable(inner) => {
+                matches!(inner.base(), Type::Parameter { name, .. } if self.reified_parameters.iter().any(|parameter| parameter.name == *name && parameter.reified))
+            }
+            _ => false,
+        };
+        if !supported(&target) && !reified {
             return Err(Diagnostic::new(
                 offset,
                 "Type tests and casts require a supported runtime type; erased generic types are unsupported",
-            ));
+            ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "RUNTIME_TYPE_UNSUPPORTED"));
         }
         Ok(target)
     }
@@ -516,9 +527,10 @@ impl Checker<'_> {
             };
             let source = nonnull(&value.ty);
             let tested = nonnull(&target);
-            if !(self.subtype(&source, &tested)
-                || self.subtype(&tested, &source)
-                || value.ty.is_nullable() && target.is_nullable())
+            if !matches!(tested, Type::Parameter { .. })
+                && !(self.subtype(&source, &tested)
+                    || self.subtype(&tested, &source)
+                    || value.ty.is_nullable() && target.is_nullable())
             {
                 return Err(Diagnostic::new(
                     offset,
@@ -622,7 +634,10 @@ impl Checker<'_> {
             if value.ty == numeric {
                 return Ok(value);
             }
-            if !matches!(value.ty, Type::Int | Type::Long | Type::Byte | Type::Float) {
+            if !matches!(
+                value.ty,
+                Type::Int | Type::Long | Type::Byte | Type::Short | Type::Float
+            ) {
                 return Err(Diagnostic::new(
                     offset,
                     "Float operations require numeric operands",
@@ -663,6 +678,7 @@ impl Checker<'_> {
         }
         let compatible = left.ty == Type::Null
             || right.ty == Type::Null
+            || matches!((relations::type_owner(nonnull(&left.ty)), relations::type_owner(nonnull(&right.ty))), (Some(left), Some(right)) if left == right && self.classpath.load(left).is_ok_and(|class| class.access & 0x200 != 0))
             || self.subtype(nonnull(&left.ty), nonnull(&right.ty))
             || self.subtype(nonnull(&right.ty), nonnull(&left.ty));
         if op == "===" || op == "!==" {

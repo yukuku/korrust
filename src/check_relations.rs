@@ -15,6 +15,7 @@ fn relation_owner(ty: &Type) -> Option<&str> {
         Type::Int => Some("java/lang/Integer"),
         Type::Long => Some("java/lang/Long"),
         Type::Byte => Some("java/lang/Byte"),
+        Type::Short => Some("java/lang/Short"),
         Type::Char => Some("java/lang/Character"),
         Type::Boolean => Some("java/lang/Boolean"),
         Type::Float => Some("java/lang/Float"),
@@ -443,6 +444,9 @@ fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> b
         };
         return subtype_at(cp, actual, inner, depth + 1);
     }
+    if let Type::Parameter { upper_bound, .. } = actual {
+        return subtype_at(cp, upper_bound, expected, depth + 1);
+    }
     if let Type::Nullable(inner) = expected {
         let actual = if let Type::Nullable(inner) = actual {
             inner.as_ref()
@@ -453,9 +457,6 @@ fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> b
     }
     if matches!(actual, Type::Nullable(_)) {
         return false;
-    }
-    if let Type::Parameter { upper_bound, .. } = actual {
-        return subtype_at(cp, upper_bound, expected, depth + 1);
     }
     if matches!(expected, Type::Java(name) if name == "java/lang/Object") {
         return actual != &Type::Unit;
@@ -1131,6 +1132,8 @@ impl Checker<'_> {
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
                 has_annotations: false,
+                parameter_modes: Vec::new(),
+                reified_arguments: Vec::new(),
                 abstract_: false,
                 builtin_array: false,
                 source_name: String::new(),
@@ -1405,6 +1408,92 @@ impl Checker<'_> {
             }
         }
         let mut specialized = substitute_method(method.clone(), &substitutions);
+        if let Some(metadata) = &mut specialized.library {
+            metadata.reified_arguments = library
+                .type_parameters
+                .iter()
+                .filter(|parameter| parameter.reified)
+                .map(|parameter| {
+                    (
+                        parameter.name.clone(),
+                        substitutions[&parameter.name].clone(),
+                    )
+                })
+                .collect();
+            for (_, ty) in &metadata.reified_arguments {
+                fn nested_parameter(ty: &Type, nested: bool) -> Option<&str> {
+                    match ty.base() {
+                        Type::Parameter { name, .. } if nested => Some(name),
+                        Type::Nullable(inner) => nested_parameter(inner, nested),
+                        Type::Array(inner) => nested_parameter(inner, true),
+                        _ => None,
+                    }
+                }
+                if let Some(name) = nested_parameter(ty, false) {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Nested type parameters require unsupported array reification",
+                    )
+                    .with_kind(
+                        if self
+                            .reified_parameters
+                            .iter()
+                            .any(|parameter| parameter.name == name && parameter.reified)
+                        {
+                            crate::DiagnosticKind::UnsupportedLanguage
+                        } else {
+                            crate::DiagnosticKind::InvalidKotlin
+                        },
+                        "NESTED_REIFIED_ARGUMENT_UNSUPPORTED",
+                    ));
+                }
+                let actual = if let Type::Nullable(inner) = ty.base() {
+                    inner.base()
+                } else {
+                    ty.base()
+                };
+                fn unsupported_classifier(ty: &Type) -> bool {
+                    match ty {
+                        Type::Nullable(inner) | Type::Array(inner) => unsupported_classifier(inner),
+                        Type::Platform(_)
+                        | Type::Parameterized { .. }
+                        | Type::List(_)
+                        | Type::MutableList(_)
+                        | Type::Function { .. }
+                        | Type::ReceiverFunction { .. }
+                        | Type::Unit
+                        | Type::Null => true,
+                        _ => false,
+                    }
+                }
+                if unsupported_classifier(ty) {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "This reified argument classifier is unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "REIFIED_ARGUMENT_CLASSIFIER_UNSUPPORTED",
+                    ));
+                }
+                if let Type::Parameter { name, .. } = actual
+                    && !self
+                        .reified_parameters
+                        .iter()
+                        .any(|parameter| parameter.name == *name && parameter.reified)
+                {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Cannot use an erased type parameter as a reified argument",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ERASED_REIFIED_ARGUMENT",
+                    ));
+                }
+            }
+        }
+
         if !captures.is_empty() {
             if method.kotlin_result.as_ref().is_some_and(|result| {
                 if !captures.keys().any(|name| mentions(result, name)) {
@@ -1449,6 +1538,10 @@ mod tests {
 
     fn with_checker(cp: &Classpath, action: impl FnOnce(&mut Checker<'_>)) {
         let mut checker = Checker {
+            inline_argument_modes: Vec::new(),
+            inline_analysis: false,
+            public_inline_body: false,
+            reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
             lambdas: Rc::new(RefCell::new(Vec::new())),
             captured: HashMap::new(),

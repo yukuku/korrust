@@ -12,7 +12,11 @@ public final class ClassesCheck {
     private static void token(KClass<?> actual, Class<?> expected) {
         equal(JvmClassMappingKt.getJavaClass(actual), expected);
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        equal(ClassesKt.class.getMethod("classMarked").getAnnotation(newfamilies.dependency.ClassMark.class).value(), String.class);
+        token(ClassesKt.shortType(), short.class);
+        equal(ClassesKt.class.getMethod("shortClassMarked").getAnnotation(newfamilies.dependency.ClassMark.class).value(), short.class);
+        token(ClassesKt.shortBoxedArrayType(), Short[].class);
         token(ClassesKt.initializationType(), newfamilies.dependency.InitializationProbe.class);
         equal(newfamilies.dependency.InitializationTrace.initializations, 0);
         equal(ClassesKt.initializationJava(), newfamilies.dependency.InitializationProbe.class);

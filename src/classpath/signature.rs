@@ -99,6 +99,7 @@ impl<'a> Signature<'a> {
             );
             result.push(TypeParameter {
                 only_input_types: false,
+                reified: false,
                 name,
                 variance: Variance::Invariant,
                 bounds,
@@ -119,6 +120,7 @@ impl<'a> Signature<'a> {
             b'I' => Type::Int,
             b'J' => Type::Long,
             b'B' => Type::Byte,
+            b'S' => Type::Short,
             b'C' => Type::Char,
             b'Z' => Type::Boolean,
             b'F' => Type::Float,
@@ -463,6 +465,8 @@ pub(super) fn attach_with_declarations(
                     method.kotlin_result = Some(result);
                     method.library = Some(LibraryMethod {
                         has_annotations: false,
+                        parameter_modes: Vec::new(),
+                        reified_arguments: Vec::new(),
                         abstract_: method.access & 0x400 != 0,
                         builtin_array: false,
                         kotlin_public: method.access & 1 != 0,

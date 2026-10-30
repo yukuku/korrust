@@ -10,6 +10,8 @@ fun check(): String {
     val genericChain: KClass<out String> = genericBoundChain("chain")
     if (boundedClass != kotlin.String::class || genericChain != kotlin.String::class) return "generic-bound"
     if (escapedBound(`value$slot` = "named") != kotlin.String::class) return "escaped"
+    val short: KClass<Short> = shortType()
+    if (short.java != Short::class.java) return "short"
     val integer: KClass<Int> = intType()
     val strings: KClass<Array<String>> = stringArrayType()
     val generic: KClass<List<*>> = listType()

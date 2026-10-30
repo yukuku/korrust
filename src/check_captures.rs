@@ -365,6 +365,7 @@ impl Checker<'_> {
             Type::Float => "Float",
             Type::Double => "Double",
             Type::Byte => "Byte",
+            Type::Short => "Short",
             Type::Char => "Char",
             Type::Boolean => "Boolean",
             _ => "Object",

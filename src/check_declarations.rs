@@ -106,6 +106,7 @@ pub(super) fn check_class_with_constants(
         .map(|parameter| {
             Ok(syntax::TypeParameter {
                 only_input_types: parameter.only_input_types,
+                reified: parameter.reified,
                 name: parameter.name.clone(),
                 variance: parameter.variance,
                 bounds: parameter
@@ -154,6 +155,7 @@ pub(super) fn check_class_with_constants(
             Type::Int
             | Type::Long
             | Type::Byte
+            | Type::Short
             | Type::Char
             | Type::Boolean
             | Type::Float
@@ -454,6 +456,10 @@ pub(super) fn check_class_with_constants(
     }
     let mut mutable_fields: HashSet<_> = source.mutable_params.iter().cloned().collect();
     let mut initializer_checker = Checker {
+        inline_argument_modes: Vec::new(),
+        inline_analysis: false,
+        public_inline_body: false,
+        reified_parameters: Vec::new(),
         exhaustiveness_flow: false,
         source_type_params: &[],
         source_infix: &HashSet::new(),
@@ -627,6 +633,10 @@ pub(super) fn check_class_with_constants(
         }
         if let Some(expr) = &property.initializer {
             let mut checker = Checker {
+                inline_argument_modes: Vec::new(),
+                inline_analysis: false,
+                public_inline_body: false,
+                reified_parameters: Vec::new(),
                 exhaustiveness_flow: false,
                 lambdas: lambdas.clone(),
                 captured: HashMap::new(),
@@ -894,6 +904,8 @@ pub(super) fn check_class_with_constants(
                     .find(|m| m.function.name == *name && m.function.params == *source_params)
                     .map(|m| crate::classpath::LibraryMethod {
                         has_annotations: false,
+                parameter_modes: Vec::new(),
+                reified_arguments: Vec::new(),
                         abstract_: false,
                         builtin_array: false,
                         source_name: m.function.name.clone(),
@@ -1065,6 +1077,10 @@ pub(super) fn check_class_with_constants(
             }
         }
         let mut checker = Checker {
+            inline_argument_modes: Vec::new(),
+            inline_analysis: false,
+            public_inline_body: false,
+            reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
@@ -1906,6 +1922,10 @@ impl<'a> DeclarationContext<'a> {
     }
     pub fn checker(&self, receiver: bool, next: u16, result: Type) -> Checker<'_> {
         Checker {
+            inline_argument_modes: Vec::new(),
+            inline_analysis: false,
+            public_inline_body: false,
+            reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
             lambdas: self.lambdas.clone(),
             captured: HashMap::new(),
@@ -2680,6 +2700,8 @@ fn infer_function(
         ));
     };
     let mut checker = context.checker(receiver, u16::from(receiver), Type::Unit);
+    checker.reified_parameters = function.type_params.clone();
+    checker.inline_analysis = true;
     if let Some(ty) = &function.receiver {
         let ty = resolve_type_checked(
             ty,
@@ -2730,6 +2752,8 @@ pub(super) fn accessor_source(
         property.setter_visibility()
     };
     syntax::Function {
+        inline: false,
+        parameter_modes: Vec::new(),
         param_annotations: vec![Vec::new(); params.len()],
         annotations: Vec::new(),
         vararg: false,

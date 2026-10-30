@@ -303,17 +303,14 @@ mod tests {
     #[test]
     fn annotation_and_singleton_extensions_fail_closed() {
         for source in [
-            "@Serializable data object Example",
             "object Example : Base()",
             "object Example : Base<String>",
             "object Example : Base by delegate",
-            "object Outer { object Inner : Base }",
         ] {
             assert!(syntax::parse(source).is_err(), "{source}");
         }
-        // Ordinary annotation grammar is valid independently of whether its
-        // declaration/dependencies and selected lowering are supported.
         for source in [
+            "@Serializable data object Example",
             "@Serializable() object Example",
             "@Serializable(with = Custom::class) object Example",
             "@Serializable class Example",
@@ -331,6 +328,7 @@ mod tests {
             "@Serializable object Example { const val answer = 42 }",
             "object Example : Base { fun answer(): Int = 42 }",
             "object Example : Base { object Inner }",
+            "object Outer { object Inner : Base }",
         ] {
             assert!(
                 check(&syntax::parse(source).unwrap(), &classpath).is_err(),

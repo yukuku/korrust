@@ -54,6 +54,8 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         class.methods.push(JavaMethod {
             library: Some(LibraryMethod {
                 has_annotations: false,
+                parameter_modes: Vec::new(),
+                reified_arguments: Vec::new(),
                 abstract_: false,
                 builtin_array: false,
                 kotlin_public: true,

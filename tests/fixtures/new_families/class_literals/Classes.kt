@@ -1,6 +1,7 @@
 package newfamilies.classes
 
 import kotlin.reflect.KClass
+import newfamilies.dependency.ClassMark
 import newfamilies.dependency.relay
 import newfamilies.dependency.head
 import newfamilies.dependency.identity
@@ -13,6 +14,7 @@ val String: Any = 7
 
 fun booleanType(): KClass<Boolean> = Boolean::class
 fun byteType(): KClass<Byte> = Byte::class
+fun shortType(): KClass<Short> = Short::class
 fun charType(): KClass<Char> = Char::class
 fun intType(): KClass<Int> = Int::class
 fun longType(): KClass<Long> = Long::class
@@ -89,3 +91,9 @@ fun <U: Any, T: U> genericBoundChain(value: T): KClass<out T> = value::class
 
 fun qualifiedArray(): KClass<Array<String>> = kotlin.Array<kotlin.String>::class
 fun escapedBound(`value$slot`: Any): KClass<out Any> = `value$slot`::class
+
+@ClassMark(kotlin.String::class)
+fun classMarked() {}
+@ClassMark(Short::class)
+fun shortClassMarked() {}
+fun shortBoxedArrayType(): KClass<Array<Short>> = Array<Short>::class

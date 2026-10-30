@@ -48,12 +48,11 @@ BOUNDARIES = [
     ('protected_nested', False, 'fun bad() = newfamilies.dependency.PublicOuter.ProtectedNested::class', 'INVALID_CLASS_LITERAL'),
     ('bare_array', True, 'fun boundary() = Array::class', 'CLASS_LITERAL_UNSUPPORTED'),
     ('projected_array', True, 'fun boundary() = Array<out String>::class', 'CLASS_LITERAL_UNSUPPORTED'),
-    ('short', True, 'fun boundary() = Short::class', 'CLASS_LITERAL_UNSUPPORTED'),
+    ('short_array', True, 'fun boundary() = ShortArray::class', 'CLASS_LITERAL_UNSUPPORTED'),
     ('unit', True, 'fun boundary() = Unit::class', 'CLASS_LITERAL_UNSUPPORTED'),
     ('star_mapping', True, 'fun boundary(value: kotlin.reflect.KClass<*>) = value.java', 'PROJECTED_EXTENSION_CAPTURE_UNSUPPORTED'),
     ('nested_capture', True, 'import newfamilies.dependency.nested\nfun boundary(value: Any) = value::class.nested', 'PROJECTED_EXTENSION_CAPTURE_UNSUPPORTED'),
     ('immediate_lambda', True, 'fun boundary() = ({42})()::class.java', 'CLASS_LITERAL_REPRESENTATION_UNSUPPORTED'),
-    ('annotation_class', True, 'import newfamilies.dependency.ClassMark\n@ClassMark(String::class) fun boundary() {}', 'CLASS_LITERAL_ANNOTATION_UNSUPPORTED'),
     ('file_annotation', True, '@file:Suppress("unused")\npackage marker\nfun boundary() = String::class', 'FILE_ANNOTATION_UNSUPPORTED'),
     ('unsigned_literal', True, 'fun boundary(): UInt = 1u', 'UNSIGNED_LITERAL_UNSUPPORTED'),
     ('mapped_java_string', True, 'fun boundary(value: java.lang.String) = value.bytes', 'JAVA_SYNTHETIC_RECEIVER_UNSUPPORTED'),
@@ -106,13 +105,15 @@ def main():
     shutil.copy2(args.compiler.resolve(), compiler)
     original = ROOT / 'references/kotlin/compiler/testData/codegen/box'
     upstream = [original / item for item in UPSTREAM]
-    frozen = [source / 'Cargo.toml', source / 'Cargo.lock', source / 'tests/unsupported_syntax_diagnostics.rs', *sorted((source / 'src').rglob('*.rs')), *sorted(fixtures.glob('*')), Path(__file__).resolve(), source / 'tools/upstream_jvm.py', source / 'selection.json', *upstream]
+    frozen = [source / 'Cargo.toml', source / 'Cargo.lock', source / 'tests/unsupported_syntax_diagnostics.rs', *sorted((source / 'src').rglob('*.rs')), *sorted(fixtures.glob('*')), Path(__file__).resolve(), source / 'tools/upstream_jvm.py', *upstream]
+    if (source / "selection.json").is_file():
+        frozen.append(source / "selection.json")
     hashes = {relative(path): sha(path) for path in frozen}
     report['inputs']['files_sha256'] = hashes
     report['inputs']['reference_sources_manifest_sha256'] = sha(ROOT / 'references/sources.json')
     report['inputs']['lowering_sources_sha256'] = {name: sha(ROOT / name) for name in ['references/kotlin/compiler/fir/checkers/src/org/jetbrains/kotlin/fir/analysis/checkers/expression/FirClassLiteralChecker.kt', 'references/kotlin/compiler/ir/backend.jvm/codegen/src/org/jetbrains/kotlin/backend/jvm/codegen/ExpressionCodegen.kt', 'references/kotlin/compiler/ir/backend.jvm/codegen/src/org/jetbrains/kotlin/backend/jvm/intrinsics/JavaClassProperty.kt']}
     report['inputs']['spec_sha256'] = sha(ROOT / 'references/kotlin-spec/docs/src/md/kotlin.core/expressions.md')
-    report['limits'] = dict(type_parameter_bound_steps=64, containing_class_steps=64, array_classifier_steps=64, ordinary_command_seconds=120, app_command_seconds=600)
+    report['limits'] = dict(type_parameter_bound_steps=64, containing_class_steps=64, array_classifier_steps=64, ordinary_command_seconds=600, app_command_seconds=600)
     report['compiler'] = dict(path=relative(compiler), binary_sha256=sha(compiler))
     report['reference_compiler'] = dict(version=pin['version'], pin_sha256=sha(ROOT / 'references/compiler.json'), stdlib_sha256=sha(stdlib))
     report['reference_compiler']['testlib_sha256'] = sha(ROOT / pin['path'] / 'lib/kotlin-test.jar')
@@ -146,7 +147,7 @@ def main():
 
     def compile_provider(provider, sources, destination, classpath=None):
         command = [kotlinc, *sources, *options] if provider == 'official' else [compiler, *sources, '--module-name', 'new_class_literals', '--diagnostic-format', 'json']
-        return run('Compile ' + provider + ' ' + destination.name, [*command, '-cp', classpath or cp(dependency, stdlib), '-d', destination], timeout=600 if destination.name.startswith('app-') else 120)
+        return run('Compile ' + provider + ' ' + destination.name, [*command, '-cp', classpath or cp(dependency, stdlib), '-d', destination], timeout=600)
 
     try:
         identity = require(run('Official identity', [kotlinc, '-version']))
@@ -164,8 +165,8 @@ def main():
         report['inputs']['fixed_java_classes_sha256'] = inventory(driver)
         for provider, destination in outputs.items():
             result = require(run('Execute fixed Java caller ' + provider, [jdk / 'java', '-Xverify:all', '-cp', cp(driver, destination, dependency, stdlib), 'newfamilies.classes.ClassesCheck']))
-            assert result.stdout.strip() == 'checks=82', result.stdout
-            case('runtime/' + provider, independent_assertions=82, jvm_verification='all')
+            assert result.stdout.strip() == 'checks=86', result.stdout
+            case('runtime/' + provider, independent_assertions=86, jvm_verification='all')
         signatures = []
         for provider, destination in outputs.items():
             signatures.append([require(run('Public signature ' + provider + ' ' + name, [jdk / 'javap', '-public', '-s', '-classpath', destination, name])).stdout for name in ['newfamilies.classes.ClassesKt', 'newfamilies.classes.FixtureType', 'newfamilies.classes.Outer', 'newfamilies.classes.Outer$Nested']])

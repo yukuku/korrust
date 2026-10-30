@@ -48,6 +48,10 @@ fn unsupported(message: impl AsRef<str>) -> Diagnostic {
         0,
         format!("Unsupported compiled inline body: {}", message.as_ref()),
     )
+    .with_kind(
+        crate::DiagnosticKind::UnsupportedLanguage,
+        "COMPILED_INLINE_BODY_UNSUPPORTED",
+    )
 }
 
 pub(crate) fn validate(method: &JavaMethod) -> Result<()> {
@@ -135,6 +139,7 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
                     InlineConstant::Integer(_)
                     | InlineConstant::Float(_)
                     | InlineConstant::String(_)
+                    | InlineConstant::Class(_)
                         if opcode != 0x14 => {}
                     InlineConstant::Long(_) | InlineConstant::Double(_) if opcode == 0x14 => {}
                     _ => return Err(unsupported("ldc constant kind")),
@@ -630,6 +635,8 @@ mod tests {
         JavaMethod {
             library: Some(crate::classpath::LibraryMethod {
                 has_annotations: false,
+                parameter_modes: Vec::new(),
+                reified_arguments: Vec::new(),
                 abstract_: false,
                 builtin_array: false,
                 kotlin_public: true,

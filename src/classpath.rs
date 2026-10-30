@@ -189,6 +189,8 @@ pub(crate) struct LibraryTypeAlias {
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryMethod {
     pub has_annotations: bool,
+    pub parameter_modes: Vec<crate::syntax::InlineParameterMode>,
+    pub reified_arguments: Vec<(String, Type)>,
     pub abstract_: bool,
     pub builtin_array: bool,
     pub kotlin_public: bool,
@@ -626,6 +628,104 @@ impl Classpath {
         })
     }
 
+    pub(crate) fn register_inline_source_output(
+        &self,
+        output: &crate::ClassFile,
+        function: &crate::syntax::Function,
+    ) -> Result<()> {
+        let emitted = parse(&output.bytes, &output.internal_name)?;
+        let mut original = self.load(&output.internal_name)?;
+        for method in emitted.methods.into_iter().filter(|method| {
+            method
+                .library
+                .as_ref()
+                .is_some_and(|library| library.inline)
+        }) {
+            crate::compiled_inline::validate(&method)?;
+            let code = method
+                .library
+                .as_ref()
+                .and_then(|library| library.code.as_ref())
+                .ok_or_else(invalid)?;
+            let body = crate::compiled_inline::decode(code)?;
+            let mut slots = std::collections::BTreeSet::new();
+            let mut slot = 0u16;
+            for ((_, ty), mode) in function.params.iter().zip(&function.parameter_modes) {
+                if matches!(ty, Type::Function { .. } | Type::ReceiverFunction { .. })
+                    && *mode != crate::syntax::InlineParameterMode::Noinline
+                {
+                    slots.insert(slot);
+                }
+                slot += ty.slots() as u16;
+            }
+            crate::compiled_inline::lambda_calls(&body, &slots).map_err(|error| if error.message.contains("inline lambda escapes") { Diagnostic::new(function.offset, "Inline function parameters may only be invoked directly or forwarded to an inline parameter").with_kind(crate::DiagnosticKind::InvalidKotlin, "INLINE_PARAMETER_ESCAPES") } else { error })?;
+            if !function.private && !function.internal {
+                for instruction in &body.instructions {
+                    let crate::compiled_inline::InlineOp::Reference { constant, .. } =
+                        &instruction.kind
+                    else {
+                        continue;
+                    };
+                    let inaccessible = match constant {
+                        InlineConstant::Method {
+                            owner,
+                            name,
+                            descriptor,
+                            ..
+                        } => self.load(owner)?.methods.iter().any(|method| {
+                            method.name == *name
+                                && method.descriptor == *descriptor
+                                && (method.access & 1 == 0 || method.kotlin_internal)
+                        }),
+                        InlineConstant::Field {
+                            owner,
+                            name,
+                            descriptor,
+                        } => self.load(owner)?.fields.iter().any(|field| {
+                            field.name == *name
+                                && field.descriptor == *descriptor
+                                && field.access & 1 == 0
+                        }),
+                        InlineConstant::Class(owner) if !owner.starts_with('[') => {
+                            self.load(owner)?.access & 1 == 0
+                        }
+                        _ => false,
+                    };
+                    if inaccessible {
+                        return Err(Diagnostic::new(
+                            function.offset,
+                            "Public inline functions cannot access non-public declarations",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "PUBLIC_INLINE_NON_PUBLIC_ACCESS",
+                        ));
+                    }
+                }
+            }
+            let existing = original
+                .methods
+                .iter_mut()
+                .find(|candidate| {
+                    candidate.name == method.name && candidate.descriptor == method.descriptor
+                })
+                .ok_or_else(|| {
+                    Diagnostic::new(0, "Staged inline method does not match its source header")
+                })?;
+            let mut method = method;
+            method.access = existing.access;
+            method.kotlin_internal = existing.kotlin_internal;
+            if let (Some(staged), Some(source)) = (&mut method.library, &existing.library) {
+                staged.kotlin_public = source.kotlin_public;
+            }
+            *existing = method;
+        }
+        self.cache
+            .borrow_mut()
+            .insert(original.name.clone(), original);
+        self.package_index.borrow_mut().clear();
+        Ok(())
+    }
     pub fn load(&self, internal_name: &str) -> Result<JavaClass> {
         if let Some(class) = self.cache.borrow().get(internal_name) {
             return Ok(class.clone());
@@ -1938,6 +2038,7 @@ fn typed_metadata_type(bytes: &[u8], strings: &[String]) -> Result<Type> {
                 "kotlin/Long" => Type::Long,
                 "kotlin/Boolean" => Type::Boolean,
                 "kotlin/Byte" => Type::Byte,
+                "kotlin/Short" => Type::Short,
                 "kotlin/Char" => Type::Char,
                 "kotlin/Float" => Type::Float,
                 "kotlin/Double" => Type::Double,

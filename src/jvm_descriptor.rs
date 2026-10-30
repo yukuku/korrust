@@ -51,12 +51,7 @@ pub(crate) fn method_types(descriptor: &str) -> Result<(Vec<Type>, Type)> {
                     _ => return Err(invalid()),
                 }
             }
-            b'S' => {
-                return Err(Diagnostic::new(
-                    0,
-                    "Short JVM descriptor types are unsupported",
-                ));
-            }
+            b'S' => Type::Short,
             _ => return Err(invalid()),
         })
     }
@@ -135,7 +130,11 @@ mod tests {
             assert!(method_types(descriptor).is_err(), "{descriptor}");
         }
         assert!(method_types("()V").is_ok());
-        assert!(method_types("()S").is_err());
+        assert_eq!(
+            method_types("(S)S").unwrap(),
+            (vec![Type::Short], Type::Short)
+        );
+        assert!(method_types("()[S").is_err());
     }
 
     #[test]

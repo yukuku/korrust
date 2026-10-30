@@ -72,6 +72,8 @@ pub(crate) fn lower(object: &mut ObjectDecl, owner: &str) -> Result<()> {
             inline: false,
             suppress: Vec::new(),
             function: Function {
+                inline: false,
+                parameter_modes: Vec::new(),
                 param_annotations: vec![Vec::new(); count],
                 annotations: Vec::new(),
                 name: name.into(),

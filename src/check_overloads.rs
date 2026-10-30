@@ -87,8 +87,8 @@ impl Checker<'_> {
                 |(argument_index, (first_parameter, second_parameter))| {
                     let first = &parameters[first][*first_parameter];
                     let second = &parameters[second][*second_parameter];
-                    if matches!(first, Type::Int | Type::Byte | Type::Long)
-                        && matches!(second, Type::Int | Type::Byte | Type::Long)
+                    if matches!(first, Type::Int | Type::Byte | Type::Short | Type::Long)
+                        && matches!(second, Type::Int | Type::Byte | Type::Short | Type::Long)
                     {
                         first == second || first == &Type::Int
                     } else if self.subtype(first, second) {

@@ -135,9 +135,9 @@ pub(crate) fn element_descriptor(ty: &Type, cp: &Classpath, offset: usize) -> Re
         | Type::Boolean
         | Type::Char
         | Type::String => Ok(ty.descriptor()),
-        Type::Byte | Type::ByteArray => Err(unsupported(
+        Type::Byte | Type::Short | Type::ByteArray => Err(unsupported(
             offset,
-            "Byte annotation elements are unsupported",
+            "Byte and Short annotation elements are unsupported",
             "ANNOTATION_BYTE_SHORT_UNSUPPORTED",
         )),
         Type::IntArray
@@ -629,6 +629,7 @@ fn class_literal_value(
                 "kotlin/Int" => Some(Type::Int),
                 "kotlin/Long" => Some(Type::Long),
                 "kotlin/Byte" => Some(Type::Byte),
+                "kotlin/Short" => Some(Type::Short),
                 "kotlin/Char" => Some(Type::Char),
                 "kotlin/Boolean" => Some(Type::Boolean),
                 "kotlin/Float" => Some(Type::Float),
@@ -636,7 +637,8 @@ fn class_literal_value(
                 "kotlin/String" => Some(Type::String),
                 "kotlin/Unit" => Some(Type::Unit),
                 "Any" | "kotlin/Any" => Some(Type::Java("java/lang/Object".into())),
-                "Short" | "kotlin/Short" | "ShortArray" | "kotlin/ShortArray" => {
+                "Short" => Some(Type::Short),
+                "ShortArray" | "kotlin/ShortArray" => {
                     return Err(unsupported(
                         offset,
                         "Short class literals require unsupported primitive distinctions",
@@ -1110,6 +1112,8 @@ pub(crate) fn header(
                 kotlin_result: Some(logical),
                 kotlin_internal: false,
                 library: Some(LibraryMethod {
+                    parameter_modes: Vec::new(),
+                    reified_arguments: Vec::new(),
                     has_annotations: false,
                     abstract_: true,
                     builtin_array: false,

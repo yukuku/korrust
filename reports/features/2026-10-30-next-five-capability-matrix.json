@@ -4,7 +4,7 @@
   "baseline_commit": "39e87a38ae59075ce14cd110c88efbab46858131",
   "prior_completed_families": 10,
   "requested_new_families": 5,
-  "new_validated_families": 3,
+  "new_validated_families": 4,
   "families": [
     {
       "id": "rich_annotations",
@@ -47,8 +47,14 @@
     },
     {
       "id": "source_inline_reified",
-      "status": "implementation",
-      "scope": "Real source inline expansion, bounded reification and inline parameter/return rules."
+      "status": "validated",
+      "scope": "Real source inline expansion, bounded reification and inline parameter/return rules.",
+      "report": "reports/correctness/2026-10-30-next-five-source-inline.json",
+      "limitations": [
+        "Top-level static bodies only; member/receiver inline functions, default/vararg inline parameters, body exception tables and generated inline closures remain explicitly unsupported.",
+        "Bounded reified tests/casts/class literals; nested generic reification, generic classifier operations, array creation and PublishedApi semantics remain explicit boundaries.",
+        "Scalar Short is a prerequisite within this family, not an extra feature count; ShortArray remains unsupported. No new unchanged AndroidBible whole-file pass is claimed."
+      ]
     }
   ],
   "repairs": [

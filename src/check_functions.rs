@@ -287,6 +287,10 @@ impl Checker<'_> {
         let receiver_fields = HashMap::new();
         let receiver_members = HashMap::new();
         let mut checker = Checker {
+            inline_argument_modes: Vec::new(),
+            inline_analysis: false,
+            public_inline_body: false,
+            reified_parameters: self.reified_parameters.clone(),
             exhaustiveness_flow: false,
             lambdas: self.lambdas.clone(),
             captured,
@@ -764,6 +768,8 @@ mod shadowing_tests {
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
                         has_annotations: false,
+                        parameter_modes: Vec::new(),
+                        reified_arguments: Vec::new(),
                         abstract_: false,
                         builtin_array: false,
                         source_name: "getLibraryNumber".into(),
@@ -788,6 +794,10 @@ mod shadowing_tests {
             },
         )]);
         let mut checker = Checker {
+            inline_argument_modes: Vec::new(),
+            inline_analysis: false,
+            public_inline_body: false,
+            reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
             lambdas: Rc::new(RefCell::new(Vec::new())),
             captured: HashMap::new(),

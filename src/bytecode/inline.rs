@@ -4,6 +4,13 @@ use super::*;
 use crate::classpath::{InlineConstant, JavaMethod};
 use crate::compiled_inline::{InlineOp, decode, lambda_calls};
 
+fn reified_unsupported(message: &str) -> Diagnostic {
+    Diagnostic::new(0, message).with_kind(
+        crate::DiagnosticKind::UnsupportedLanguage,
+        "REIFIED_BYTECODE_UNSUPPORTED",
+    )
+}
+
 impl Code<'_> {
     pub(super) fn local_slot(&self, slot: u8) -> Result<u8> {
         self.inline_slot(u16::from(slot))
@@ -38,7 +45,8 @@ impl Code<'_> {
         method: &JavaMethod,
         args: &[Value],
         local_base: u16,
-        lambda_bases: &[Option<u16>],
+        lambda_bases: &[Option<(String, u16)>],
+        reified_temp: Option<u16>,
         result: &Type,
     ) -> Result<()> {
         crate::compiled_inline::validate(method)?;
@@ -57,10 +65,7 @@ impl Code<'_> {
         let mut lambda_arguments = BTreeMap::new();
         for (index, param) in params.iter().enumerate() {
             slots.push(slot);
-            if let Some(base) = lambda_bases[index] {
-                let ValueKind::Lambda { owner, .. } = &args[index].kind else {
-                    return Err(failure("Compiled inline lambda argument was not a literal"));
-                };
+            if let Some((owner, base)) = &lambda_bases[index] {
                 let declaration = self
                     .lambdas
                     .iter()
@@ -68,7 +73,7 @@ impl Code<'_> {
                     .ok_or_else(|| {
                         failure("Compiled inline lambda body unavailable in this declaration")
                     })?;
-                lambda_arguments.insert(slot, (declaration, base));
+                lambda_arguments.insert(slot, (declaration, *base));
             }
             slot = slot
                 .checked_add(param.slots() as u16)
@@ -77,6 +82,87 @@ impl Code<'_> {
         if slot > body.max_locals {
             return Err(failure("Compiled inline parameters exceed max_locals"));
         }
+        let mut reified = BTreeMap::new();
+        let mut skipped = BTreeSet::new();
+        for (index, instruction) in body.instructions.iter().enumerate() {
+            if !matches!(&instruction.kind, InlineOp::Reference { constant: InlineConstant::Method { owner, name, descriptor, .. }, .. } if owner == "kotlin/jvm/internal/Intrinsics" && name == "reifiedOperationMarker" && descriptor == "(ILjava/lang/String;)V")
+            {
+                continue;
+            }
+            if index < 2 || index + 1 >= body.instructions.len() {
+                return Err(reified_unsupported("Malformed reified operation marker"));
+            }
+            let operation = match &body.instructions[index - 2].kind {
+                InlineOp::Raw { opcode, operands }
+                    if operands.is_empty() && (0x03..=0x08).contains(opcode) =>
+                {
+                    i32::from(*opcode - 0x03)
+                }
+                InlineOp::Constant(InlineConstant::Integer(value)) => *value,
+                _ => {
+                    return Err(reified_unsupported(
+                        "Unsupported reified operation identifier",
+                    ));
+                }
+            };
+            let InlineOp::Constant(InlineConstant::String(parameter)) =
+                &body.instructions[index - 1].kind
+            else {
+                return Err(reified_unsupported(
+                    "Reified operation has no constant type parameter",
+                ));
+            };
+            let parameter = String::from_utf16(parameter)
+                .map_err(|_| reified_unsupported("Malformed reified type parameter name"))?;
+            let (name, nullable) = parameter
+                .strip_suffix('?')
+                .map_or((parameter.as_str(), false), |name| (name, true));
+            let mut ty = method
+                .library
+                .as_ref()
+                .and_then(|library| {
+                    library
+                        .reified_arguments
+                        .iter()
+                        .find(|(parameter, _)| parameter == name)
+                })
+                .map(|(_, ty)| ty.clone())
+                .ok_or_else(|| reified_unsupported("Reified type substitution is unavailable"))?;
+            if nullable && !ty.is_nullable() {
+                ty = Type::Nullable(Box::new(ty));
+            }
+            let following = &body.instructions[index + 1].kind;
+            let shape = match operation {
+                1 | 2 => matches!(
+                    following,
+                    InlineOp::Reference {
+                        opcode: 0xc0,
+                        constant: InlineConstant::Class(_),
+                        ..
+                    }
+                ),
+                3 => matches!(
+                    following,
+                    InlineOp::Reference {
+                        opcode: 0xc1,
+                        constant: InlineConstant::Class(_),
+                        ..
+                    }
+                ),
+                4 => matches!(following, InlineOp::Constant(InlineConstant::Class(_))),
+                _ => false,
+            };
+            if !shape {
+                return Err(reified_unsupported(
+                    "Unsupported reified operation bytecode shape",
+                ));
+            }
+            reified.insert(body.instructions[index - 2].offset, (operation, ty));
+            for instruction in &body.instructions[index - 1..=index + 1] {
+                skipped.insert(instruction.offset);
+            }
+        }
+        if body.instructions.iter().any(|instruction| matches!(&instruction.kind, InlineOp::Branch { target, .. } if skipped.contains(target))) { return Err(reified_unsupported("A branch enters a reified operation sequence")); }
         let calls = lambda_calls(
             &body,
             &lambda_arguments.keys().copied().collect::<BTreeSet<_>>(),
@@ -99,6 +185,13 @@ impl Code<'_> {
         }
         for instruction in &body.instructions {
             self.mark(labels[&instruction.offset]);
+            if skipped.contains(&instruction.offset) {
+                continue;
+            }
+            if let Some((operation, ty)) = reified.get(&instruction.offset) {
+                self.materialize_reified_operation(*operation, ty, reified_temp)?;
+                continue;
+            }
             if let Some(slot) = calls.get(&instruction.offset) {
                 let (lambda, base) = lambda_arguments[slot];
                 self.inline_lambda(lambda, base)?;
@@ -145,6 +238,64 @@ impl Code<'_> {
         }
         self.mark(end);
         self.adapt_value(&erased_result, result)
+    }
+
+    fn materialize_reified_operation(
+        &mut self,
+        operation: i32,
+        ty: &Type,
+        temporary: Option<u16>,
+    ) -> Result<()> {
+        if self.reified_marker(ty, operation)? {
+            if operation == 4 {
+                self.class_reference(0x13, "java/lang/Object")?;
+            } else {
+                self.class_reference(if operation == 3 { 0xc1 } else { 0xc0 }, "java/lang/Object")?;
+            }
+            return Ok(());
+        }
+        if operation == 4 {
+            if !ty.is_reference() {
+                return self.class_reference(0x13, boxed_owner(ty));
+            }
+            return self.value(&Value {
+                ty: Type::Java("java/lang/Class".into()),
+                kind: ValueKind::ClassLiteral(ty.clone()),
+            });
+        }
+        let slot = temporary.ok_or_else(|| failure("Reified operation local is unavailable"))?;
+        self.bytes.extend([0x3a, self.inline_slot(slot)?]);
+        let operand = Box::new(Value {
+            ty: Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))),
+            kind: ValueKind::Local(
+                u8::try_from(slot).map_err(|_| failure("Reified operation local overflow"))?,
+            ),
+        });
+        if operation == 3 {
+            self.value(&Value {
+                ty: Type::Boolean,
+                kind: ValueKind::TypeTest {
+                    value: operand,
+                    target: ty.clone(),
+                    negated: false,
+                },
+            })
+        } else {
+            let result = if operation == 2 && !ty.is_nullable() {
+                Type::Nullable(Box::new(ty.clone()))
+            } else {
+                ty.clone()
+            };
+            self.value(&Value {
+                ty: result.clone(),
+                kind: ValueKind::Cast {
+                    value: operand,
+                    target: ty.clone(),
+                    safe: operation == 2,
+                },
+            })?;
+            self.adapt_value(&result, &Type::Java("java/lang/Object".into()))
+        }
     }
 
     fn inline_lambda(&mut self, lambda: &crate::check::LambdaDecl, base: u16) -> Result<()> {
@@ -210,6 +361,7 @@ impl Code<'_> {
                 self.reference(0x14, index);
                 Ok(())
             }
+            InlineConstant::Class(value) => self.class_reference(0x13, value),
             InlineConstant::String(value) => {
                 let index = self.pool.string_units(value)?;
                 self.reference(0x13, index);

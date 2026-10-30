@@ -51,6 +51,7 @@ mod varargs;
 
 #[path = "check_annotations.rs"]
 mod annotations;
+pub(crate) use annotations::unsupported_lowering as unsupported_annotation_lowering;
 
 #[path = "check_interfaces.rs"]
 mod interfaces;
@@ -393,7 +394,8 @@ pub enum ValueKind {
         method: JavaMethod,
         args: Vec<Value>,
         local_base: u16,
-        lambda_bases: Vec<Option<u16>>,
+        lambda_bases: Vec<Option<(String, u16)>>,
+        reified_temp: Option<u16>,
     },
     Lambda {
         owner: String,
@@ -635,6 +637,10 @@ type ConstructorSignature<'a> = (&'a str, &'a Vec<(String, Type)>, &'a Vec<Optio
 type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u64);
 type CallableParameters = (Vec<(String, Type)>, Vec<bool>);
 struct Checker<'a> {
+    inline_argument_modes: Vec<syntax::InlineParameterMode>,
+    inline_analysis: bool,
+    public_inline_body: bool,
+    reified_parameters: Vec<syntax::TypeParameter>,
     exhaustiveness_flow: bool,
     lambdas: Rc<RefCell<Vec<LambdaDecl>>>,
     captured: HashMap<String, (String, Type)>,
@@ -888,8 +894,14 @@ impl Checker<'_> {
                 {
                     if let Some(local) = self.local(name) {
                         if !local.mutable {
-                            if let Type::Nullable(inner) = local.ty {
-                                self.refinements.insert(local.slot, *inner);
+                            match local.ty {
+                                Type::Nullable(inner) => {
+                                    self.refinements.insert(local.slot, *inner);
+                                }
+                                ty @ Type::Parameter { .. } => {
+                                    self.refinements.insert(local.slot, ty);
+                                }
+                                _ => {}
                             }
                         }
                     }
@@ -918,7 +930,7 @@ impl Checker<'_> {
                 } else {
                     arg
                 };
-                let value = self.argument_value(arg, &params[i].1)?;
+                let value = self.inline_argument_value(arg, &params[i].1, i)?;
                 if value.ty != params[i].1 {
                     score += if value.ty == Type::Null { 4 } else { 1 };
                 }
@@ -1097,6 +1109,14 @@ impl Checker<'_> {
             } else {
                 None
             };
+            let previous_modes = std::mem::replace(
+                &mut self.inline_argument_modes,
+                method
+                    .library
+                    .as_ref()
+                    .map(|library| library.parameter_modes.clone())
+                    .unwrap_or_default(),
+            );
             let score = self.applicability_result(
                 &params,
                 &defaults,
@@ -1105,6 +1125,7 @@ impl Checker<'_> {
                 offset,
             );
             self.inline_result = previous;
+            self.inline_argument_modes = previous_modes;
             match score {
                 Ok(_) => applicable.push((method, original.clone())),
                 Err(error) => failures.push(error),
@@ -1375,6 +1396,24 @@ impl Checker<'_> {
         }
         Ok(mapping)
     }
+    fn inline_argument_value(
+        &mut self,
+        expression: &Expr,
+        ty: &Type,
+        index: usize,
+    ) -> Result<Value> {
+        let old = self.inline_result.clone();
+        if self
+            .inline_argument_modes
+            .get(index)
+            .is_some_and(|mode| *mode != syntax::InlineParameterMode::Ordinary)
+        {
+            self.inline_result = None;
+        }
+        let result = self.argument_value(expression, ty);
+        self.inline_result = old;
+        result
+    }
     fn arguments(
         &mut self,
         params: &[(String, Type)],
@@ -1399,7 +1438,7 @@ impl Checker<'_> {
             } else {
                 arg
             };
-            let value = self.argument_value(expr, &params[index].1)?;
+            let value = self.inline_argument_value(expr, &params[index].1, index)?;
             ordered[index] = Some(if reordered {
                 let slot = self.allocate_typed_slot(&value.ty, offset)?;
                 let ty = value.ty.clone();
@@ -1898,7 +1937,10 @@ impl Checker<'_> {
             receiver
         };
         values.insert(0, receiver);
-        if mask == 0 && self.classpath.default_source_accessor(&method).is_some() {
+        if mask == 0
+            && !self.public_inline_body
+            && self.classpath.default_source_accessor(&method).is_some()
+        {
             return Ok(Self::wrap_lets(
                 self.source_backing_accessor(&method, values, offset)?
                     .unwrap(),
@@ -2175,6 +2217,15 @@ impl Checker<'_> {
                 });
             }
         }
+        if expected == Type::Short
+            && value.ty == Type::Int
+            && matches!(value.kind, ValueKind::Int(n) if (-32768..=32767).contains(&n))
+        {
+            return Ok(Value {
+                ty: Type::Short,
+                kind: value.kind,
+            });
+        }
         if expected == Type::Byte
             && value.ty == Type::Int
             && matches!(value.kind, ValueKind::Int(n) if (-128..=127).contains(&n))
@@ -2228,6 +2279,7 @@ impl Checker<'_> {
             Some(b'F') => Type::Float,
             Some(b'D') => Type::Double,
             Some(b'B') => Type::Byte,
+            Some(b'S') => Type::Short,
             Some(b'C') => Type::Char,
             Some(b'Z') => Type::Boolean,
             Some(b'V') => Type::Unit,
@@ -3303,6 +3355,10 @@ impl Checker<'_> {
                         return Err(Diagnostic::new(
                             offset,
                             "Non-local return requires an inline lambda",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "NON_LOCAL_RETURN_NOT_ALLOWED",
                         ));
                     }
                     let expected = self
@@ -3464,6 +3520,10 @@ impl Checker<'_> {
                     return Err(Diagnostic::new(
                         offset,
                         "Return expressions require an enclosing function or inline lambda",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "NON_LOCAL_RETURN_NOT_ALLOWED",
                     ));
                 }
                 let value = match expr {
@@ -3775,12 +3835,13 @@ impl Checker<'_> {
                             | Type::Int
                             | Type::Long
                             | Type::Byte
+                            | Type::Short
                             | Type::Float
                             | Type::Double
                             | Type::Boolean
                             | Type::Char
                             | Type::Null
-                    ) && !matches!(value.ty.base(), Type::Nullable(inner) if matches!(inner.as_ref(), Type::String | Type::Int | Type::Long | Type::Byte | Type::Float | Type::Double | Type::Boolean | Type::Char))
+                    ) && !matches!(value.ty.base(), Type::Nullable(inner) if matches!(inner.as_ref(), Type::String | Type::Int | Type::Long | Type::Byte | Type::Short | Type::Float | Type::Double | Type::Boolean | Type::Char))
                     {
                         return Err(Diagnostic::new(
                             part.offset,
@@ -4473,7 +4534,14 @@ impl Checker<'_> {
                         }
                     }
                     if let ExprKind::Name(name) = &target.kind {
-                        if self.function_names.iter().any(|n| n == name) {
+                        if self.function_names.iter().any(|n| n == name)
+                            || self.classpath.load(&self.lambda_owner).is_ok_and(|class| {
+                                class
+                                    .methods
+                                    .iter()
+                                    .any(|method| method.source_name() == name)
+                            })
+                        {
                             return self.source_call(name, args, types, offset);
                         }
                     }
@@ -4911,6 +4979,7 @@ impl Checker<'_> {
                         receiver.ty,
                         Type::Int
                             | Type::Byte
+                            | Type::Short
                             | Type::Char
                             | Type::Long
                             | Type::Float
@@ -4918,9 +4987,18 @@ impl Checker<'_> {
                     ) && args.is_empty()
                         && matches!(
                             name.as_str(),
-                            "toInt" | "toByte" | "toChar" | "toLong" | "toFloat" | "toDouble"
+                            "toInt"
+                                | "toByte"
+                                | "toShort"
+                                | "toChar"
+                                | "toLong"
+                                | "toFloat"
+                                | "toDouble"
                         )
                     {
+                        if matches!(receiver.ty, Type::Float | Type::Double) && name == "toShort" {
+                            return Err(Diagnostic::new(offset, "Direct floating-point conversions to Short are deprecated; convert to Int first").with_kind(crate::DiagnosticKind::InvalidKotlin, "DEPRECATED_FLOATING_SHORT_CONVERSION"));
+                        }
                         if matches!(receiver.ty, Type::Float | Type::Double | Type::Long)
                             && name == "toChar"
                         {
@@ -4931,6 +5009,7 @@ impl Checker<'_> {
                         }
                         let target = match name.as_str() {
                             "toByte" => Type::Byte,
+                            "toShort" => Type::Short,
                             "toChar" => Type::Char,
                             "toLong" => Type::Long,
                             "toFloat" => Type::Float,
@@ -5284,6 +5363,7 @@ fn resolve_parameters(
         .map(|parameter| {
             Ok(syntax::TypeParameter {
                 only_input_types: parameter.only_input_types,
+                reified: parameter.reified,
                 name: parameter.name.clone(),
                 variance: parameter.variance,
                 bounds: parameter
@@ -5352,6 +5432,11 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
         | ExprKind::Char(_)
         | ExprKind::Null => {}
         ExprKind::Call(target, args) => {
+            let target = if let ExprKind::Generic(target, _) = &target.kind {
+                target.as_ref()
+            } else {
+                target.as_ref()
+            };
             if let ExprKind::Name(name) = &target.kind {
                 names.insert(name.clone());
             }
@@ -5413,7 +5498,13 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
         }
     }
 }
-fn body_call_names(body: &[syntax::Statement], names: &mut HashSet<String>) {
+pub(crate) fn body_free_names(
+    body: &[syntax::Statement],
+    parameters: &[String],
+) -> HashSet<String> {
+    captures::free_names(body, parameters)
+}
+pub(crate) fn body_call_names(body: &[syntax::Statement], names: &mut HashSet<String>) {
     for statement in body {
         match &statement.kind {
             StatementKind::Block(body) => body_call_names(body, names),
@@ -6267,6 +6358,10 @@ pub fn check_with_owner(
     for (id, function) in source.functions.iter().enumerate() {
         let (params, return_type) = signatures[id].clone();
         let mut checker = Checker {
+            inline_argument_modes: Vec::new(),
+            inline_analysis: false,
+            public_inline_body: function.inline && !function.private && !function.internal,
+            reified_parameters: function.type_params.clone(),
             exhaustiveness_flow: false,
             lambdas: lambdas.clone(),
             captured: HashMap::new(),

@@ -589,6 +589,7 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
             }
         }
         Type::Byte => "kotlin/Byte",
+        Type::Short => "kotlin/Short",
         Type::Char => "kotlin/Char",
         Type::Boolean => "kotlin/Boolean",
         Type::Float => "kotlin/Float",
@@ -799,13 +800,17 @@ fn function_with_jvm_name(
                 1
             }
             | if function.infix { 512 } else { 0 }
-            | if function.operator { 256 } else { 0 },
+            | if function.operator { 256 } else { 0 }
+            | if function.inline { 1024 } else { 0 },
     );
     proto.number(2, strings.id(&function.name)?);
     for (index, parameter) in function.type_params.iter().enumerate() {
         let mut declaration = Proto::default();
         declaration.number(1, base + index as u32);
         declaration.number(2, strings.id(&parameter.name)?);
+        if parameter.reified {
+            declaration.number(3, 1);
+        }
         declaration.number(
             4,
             match parameter.variance {
@@ -840,6 +845,11 @@ fn function_with_jvm_name(
             param.message(4, &type_proto(&element, imports, strings)?);
         }
         let flags = (u32::from(function.defaults.get(index).is_some_and(Option::is_some)) * 2)
+            | match function.parameter_modes.get(index) {
+                Some(crate::syntax::InlineParameterMode::Crossinline) => 4,
+                Some(crate::syntax::InlineParameterMode::Noinline) => 8,
+                _ => 0,
+            }
             | u32::from(
                 function
                     .param_annotations

@@ -1,0 +1,30 @@
+tests/fixtures/new_families/source_inline19/Effects.kt:4:1: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+inline fun returnNo(noinline block: () -> Int): () -> Int = block
+^^^^^^
+tests/fixtures/new_families/source_inline19/Effects.kt:16:9: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+private inline fun privateTwice(value: Int): Int = value * 2
+        ^^^^^^
+tests/fixtures/new_families/source_inline19/Effects.kt:20:1: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+inline fun publicOverload(value: Int): Int = helperOverload(value)
+^^^^^^
+tests/fixtures/new_families/source_inline19/Forward.kt:4:1: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+inline fun outer(x: Int): Int = inner(x) + inner(x + 1)
+^^^^^^
+tests/fixtures/new_families/source_inline19/Forward.kt:5:1: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+inline fun inner(x: Int): Int = x * 3
+^^^^^^
+tests/fixtures/new_families/source_inline19/Ordering.kt:6:1: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+inline fun divide(value: Int): Int = 100 / value
+^^^^^^
+tests/fixtures/new_families/source_inline19/Ordering.kt:8:1: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+inline fun fail(value: Int): Int { if (value == 0) throw IllegalArgumentException("zero"); return value }
+^^^^^^
+tests/fixtures/new_families/source_inline19/Ordering.kt:10:1: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+inline fun publicProperty(): Int = trace
+^^^^^^
+tests/fixtures/new_families/source_inline19/Ordering.kt:11:1: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+inline fun setPublicProperty(value: Int): Int { trace = value; return trace }
+^^^^^^
+tests/fixtures/new_families/source_inline19/Reified.kt:2:1: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+inline fun twice(x: Int): Int = x + x
+^^^^^^

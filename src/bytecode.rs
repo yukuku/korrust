@@ -172,6 +172,7 @@ fn boxed_owner(ty: &Type) -> &'static str {
         Type::Float => "java/lang/Float",
         Type::Double => "java/lang/Double",
         Type::Byte => "java/lang/Byte",
+        Type::Short => "java/lang/Short",
         Type::Char => "java/lang/Character",
         Type::Boolean => "java/lang/Boolean",
         _ => "java/lang/Object",
@@ -184,6 +185,7 @@ fn boxed_descriptor(ty: &Type) -> &'static str {
         Type::Float => "Ljava/lang/Float;",
         Type::Double => "Ljava/lang/Double;",
         Type::Byte => "Ljava/lang/Byte;",
+        Type::Short => "Ljava/lang/Short;",
         Type::Char => "Ljava/lang/Character;",
         Type::Boolean => "Ljava/lang/Boolean;",
         _ => "Ljava/lang/Object;",
@@ -207,6 +209,7 @@ fn covariant_wildcard(ty: &Type) -> &'static str {
         | Type::Float
         | Type::Double
         | Type::Byte
+        | Type::Short
         | Type::Char
         | Type::Boolean
         | Type::String
@@ -517,6 +520,7 @@ fn cast_type_name(ty: &Type) -> String {
         Type::Float => "kotlin.Float".into(),
         Type::Double => "kotlin.Double".into(),
         Type::Byte => "kotlin.Byte".into(),
+        Type::Short => "kotlin.Short".into(),
         Type::Char => "kotlin.Char".into(),
         Type::Boolean => "kotlin.Boolean".into(),
         Type::String => "kotlin.String".into(),
@@ -555,7 +559,7 @@ fn array_load_opcode(array: &Type) -> Result<u8> {
         Some(Type::Long) => Ok(0x2f),
         Some(Type::Float) => Ok(0x30),
         Some(Type::Double) => Ok(0x31),
-        Some(Type::Byte | Type::Boolean) => Ok(0x33),
+        Some(Type::Byte | Type::Short | Type::Boolean) => Ok(0x33),
         Some(Type::Char) => Ok(0x34),
         _ if matches!(array.base(), Type::Array(_) | Type::StringArray) => Ok(0x32),
         _ => Err(failure("Unsupported array component")),
@@ -1027,6 +1031,7 @@ impl Code<'_> {
             Type::Float => "floatValue",
             Type::Double => "doubleValue",
             Type::Byte => "byteValue",
+            Type::Short => "shortValue",
             Type::Char => "charValue",
             Type::Boolean => "booleanValue",
             _ => return Err(failure("Unsupported primitive unboxing")),
@@ -1044,7 +1049,7 @@ impl Code<'_> {
         }
         let numeric = matches!(
             ty,
-            Type::Int | Type::Long | Type::Float | Type::Double | Type::Byte
+            Type::Int | Type::Long | Type::Float | Type::Double | Type::Byte | Type::Short
         );
         let owner = if numeric {
             "java/lang/Number"
@@ -1059,6 +1064,7 @@ impl Code<'_> {
                 Type::Float => "floatValue",
                 Type::Double => "doubleValue",
                 Type::Byte => "byteValue",
+                Type::Short => "shortValue",
                 _ => unreachable!(),
             };
             self.method_reference(0xb6, owner, name, &format!("(){}", ty.descriptor()))
@@ -1352,11 +1358,39 @@ impl Code<'_> {
         self.bytes.push(0x04);
         self.mark(end);
     }
+    fn reified_marker(&mut self, ty: &Type, operation: i32) -> Result<bool> {
+        let (parameter, nullable) = match ty.base() {
+            Type::Parameter { name, .. } => (name, false),
+            Type::Nullable(inner) => match inner.base() {
+                Type::Parameter { name, .. } => (name, true),
+                _ => return Ok(false),
+            },
+            _ => return Ok(false),
+        };
+        self.integer(operation)?;
+        let name = if nullable {
+            format!("{parameter}?")
+        } else {
+            parameter.clone()
+        };
+        let constant = self.pool.string(&name)?;
+        self.reference(0x13, constant);
+        self.method_reference(
+            0xb8,
+            "kotlin/jvm/internal/Intrinsics",
+            "reifiedOperationMarker",
+            "(ILjava/lang/String;)V",
+        )?;
+        self.max_stack = self.max_stack.max(4);
+        Ok(true)
+    }
     fn value(&mut self, value: &Value) -> Result<()> {
         self.max_stack = self.max_stack.max(value.stack());
         match &value.kind {
             ValueKind::ClassLiteral(ty) => {
-                if ty.is_reference() || ty.base() == &Type::Unit {
+                if self.reified_marker(ty, 4)? {
+                    self.class_reference(0x13, "java/lang/Object")?;
+                } else if ty.is_reference() || ty.base() == &Type::Unit {
                     let class = self.pool.class(&if ty.base() == &Type::Unit {
                         "kotlin/Unit".into()
                     } else {
@@ -1437,8 +1471,16 @@ impl Code<'_> {
                 args,
                 local_base,
                 lambda_bases,
+                reified_temp,
             } => {
-                self.compiled_inline(method, args, *local_base, lambda_bases, &value.ty)?;
+                self.compiled_inline(
+                    method,
+                    args,
+                    *local_base,
+                    lambda_bases,
+                    *reified_temp,
+                    &value.ty,
+                )?;
             }
             ValueKind::Lambda { owner, captures } => {
                 self.class_reference(0xbb, owner)?;
@@ -1647,7 +1689,7 @@ impl Code<'_> {
                             Type::Double => "(D)Ljava/lang/StringBuilder;",
                             Type::Char => "(C)Ljava/lang/StringBuilder;",
                             Type::Boolean => "(Z)Ljava/lang/StringBuilder;",
-                            Type::Int | Type::Byte => "(I)Ljava/lang/StringBuilder;",
+                            Type::Int | Type::Byte | Type::Short => "(I)Ljava/lang/StringBuilder;",
                             _ => return Err(failure("Unsupported string concatenation operand")),
                         }
                     };
@@ -1771,24 +1813,40 @@ impl Code<'_> {
             ValueKind::Convert(target, value) => {
                 self.value(value)?;
                 match (value.ty.base(), target.base()) {
-                    (Type::Int | Type::Byte | Type::Char, Type::Double) => self.bytes.push(0x87),
+                    (Type::Int | Type::Byte | Type::Short | Type::Char, Type::Double) => {
+                        self.bytes.push(0x87)
+                    }
                     (Type::Long, Type::Double) => self.bytes.push(0x8a),
                     (Type::Float, Type::Double) => self.bytes.push(0x8d),
-                    (Type::Double, Type::Int | Type::Byte | Type::Char) => self.bytes.push(0x8e),
+                    (Type::Double, Type::Int | Type::Byte | Type::Short | Type::Char) => {
+                        self.bytes.push(0x8e)
+                    }
                     (Type::Double, Type::Long) => self.bytes.push(0x8f),
                     (Type::Double, Type::Float) => self.bytes.push(0x90),
                     (Type::Long, Type::Float) => self.bytes.push(0x89),
-                    (Type::Long, Type::Int | Type::Byte | Type::Char) => self.bytes.push(0x88),
+                    (Type::Long, Type::Int | Type::Byte | Type::Short | Type::Char) => {
+                        self.bytes.push(0x88)
+                    }
                     (Type::Float, Type::Long) => self.bytes.push(0x8c),
-                    (Type::Float, Type::Int | Type::Byte | Type::Char) => self.bytes.push(0x8b),
-                    (Type::Int | Type::Byte | Type::Char, Type::Long) => self.bytes.push(0x85),
-                    (Type::Int | Type::Byte | Type::Char, Type::Float) => self.bytes.push(0x86),
+                    (Type::Float, Type::Int | Type::Byte | Type::Short | Type::Char) => {
+                        self.bytes.push(0x8b)
+                    }
+                    (Type::Int | Type::Byte | Type::Short | Type::Char, Type::Long) => {
+                        self.bytes.push(0x85)
+                    }
+                    (Type::Int | Type::Byte | Type::Short | Type::Char, Type::Float) => {
+                        self.bytes.push(0x86)
+                    }
                     (from, to) if from == to => {}
-                    (Type::Int | Type::Byte | Type::Char, Type::Int | Type::Byte | Type::Char) => {}
+                    (
+                        Type::Int | Type::Byte | Type::Short | Type::Char,
+                        Type::Int | Type::Byte | Type::Short | Type::Char,
+                    ) => {}
                     _ => return Err(failure("Unsupported primitive conversion")),
                 }
                 match target.base() {
                     Type::Byte => self.bytes.push(0x91),
+                    Type::Short => self.bytes.push(0x93),
                     Type::Char => self.bytes.push(0x92),
                     _ => {}
                 }
@@ -1881,7 +1939,9 @@ impl Code<'_> {
                 negated,
             } => {
                 self.boxed_value(operand)?;
-                if target.is_nullable() {
+                if self.reified_marker(target, 3)? {
+                    self.class_reference(0xc1, "java/lang/Object")?;
+                } else if target.is_nullable() {
                     let null = self.label();
                     let done = self.label();
                     self.bytes.push(0x59);
@@ -1904,6 +1964,10 @@ impl Code<'_> {
                 safe,
             } => {
                 self.boxed_value(operand)?;
+                if self.reified_marker(target, if *safe { 2 } else { 1 })? {
+                    self.class_reference(0xc0, "java/lang/Object")?;
+                    return Ok(());
+                }
                 let class = cast_class(target)?;
                 if *safe {
                     let success = self.label();
@@ -2934,6 +2998,16 @@ fn checked_method(
     lambdas: &[crate::check::LambdaDecl],
     flags: u16,
 ) -> Result<Vec<u8>> {
+    let flags = flags
+        | if function
+            .type_params
+            .iter()
+            .any(|parameter| parameter.reified)
+        {
+            0x1000
+        } else {
+            0
+        };
     let is_static = flags & 8 != 0;
     let mut code = Code {
         pool,
@@ -3135,7 +3209,7 @@ fn generic_override_bridge(
         } else if from.is_reference() {
             let numeric = matches!(
                 to,
-                Type::Int | Type::Long | Type::Float | Type::Double | Type::Byte
+                Type::Int | Type::Long | Type::Float | Type::Double | Type::Byte | Type::Short
             );
             let cast = if numeric {
                 "java/lang/Number"
@@ -3149,6 +3223,7 @@ fn generic_override_bridge(
                 Type::Float => "floatValue",
                 Type::Double => "doubleValue",
                 Type::Byte => "byteValue",
+                Type::Short => "shortValue",
                 Type::Char => "charValue",
                 Type::Boolean => "booleanValue",
                 _ => return Err(failure("Unsupported generic bridge conversion")),
