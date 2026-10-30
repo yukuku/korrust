@@ -62,7 +62,7 @@ fn accepts_identity_casts_and_type_conditions() {
     accepts("fun f(a: Any?): String = a as String");
     accepts("fun f(a: Any?): Int = when (a) { is String -> a.length; !is Int -> 2; else -> 3 }");
     accepts("fun f(a: Any?): Int = when { a is String -> a.length; else -> 0 }");
-    accepts("fun f(a: Any?): Int = when (true) { a is String -> 1; else -> 0 }");
+    accepts("fun f(a: Any?): Int = when (true) { (a is String) -> 1; else -> 0 }");
 }
 
 #[test]

@@ -4055,6 +4055,16 @@ impl Checker<'_> {
                 (ty, ValueKind::Binary(op.clone(), Box::new(a), Box::new(b)))
             }
             ExprKind::Property(receiver, name) => {
+                if let Some(class) = self.qualified_classifier(receiver) {
+                    if class.access & 0x4000 != 0
+                        && class
+                            .fields
+                            .iter()
+                            .any(|field| field.name == *name && field.access & 0x4009 == 0x4009)
+                    {
+                        return self.java_field(&class.name, name, None, offset);
+                    }
+                }
                 if let Some(class) = self.qualified_classifier(expr) {
                     if class.fields.iter().any(|f| {
                         f.name == "INSTANCE" && f.descriptor == format!("L{};", class.name)
@@ -4611,6 +4621,18 @@ impl Checker<'_> {
                     }
                     if let Some(value) = self.default_constructor(name, args, offset)? {
                         return Ok(value);
+                    }
+                    if !self.functions.contains_key(name)
+                        && (self.fields.contains_key(name)
+                            || self.object_fields.contains_key(name)
+                            || self.companion_fields.contains_key(name)
+                            || self
+                                .library_candidates(name)
+                                .iter()
+                                .any(|method| method.source_property.as_deref() == Some(name)))
+                    {
+                        let function = self.value(target)?;
+                        return self.function_invoke(function, args, offset);
                     }
                     if self.receiver.is_some() && !self.functions.contains_key(name) {
                         if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
@@ -6311,68 +6333,14 @@ pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type
     if let (Some(params), Some(result)) = (&method.kotlin_params, &method.kotlin_result) {
         return Ok((params.iter().map(|p| p.1.clone()).collect(), result.clone()));
     }
-    fn ty(descriptor: &str, cursor: &mut usize) -> Result<Type> {
-        let rest = descriptor
-            .get(*cursor..)
-            .ok_or_else(|| Diagnostic::new(0, "Invalid interface method descriptor"))?;
-        for (prefix, ty) in [
-            ("[Ljava/lang/String;", Type::StringArray),
-            ("Ljava/lang/String;", Type::String),
-            ("[I", Type::IntArray),
-            ("[B", Type::ByteArray),
-            ("[C", Type::CharArray),
-            ("[J", Type::LongArray),
-            ("[Z", Type::BooleanArray),
-            ("[F", Type::FloatArray),
-            ("[D", Type::DoubleArray),
-            ("I", Type::Int),
-            ("J", Type::Long),
-            ("B", Type::Byte),
-            ("C", Type::Char),
-            ("Z", Type::Boolean),
-            ("F", Type::Float),
-            ("D", Type::Double),
-            ("V", Type::Unit),
-        ] {
-            if rest.starts_with(prefix) {
-                *cursor += prefix.len();
-                return Ok(ty);
-            }
-        }
-        if rest.starts_with('L') {
-            if let Some(end) = rest.find(';') {
-                *cursor += end + 1;
-                return Ok(Type::Java(rest[1..end].into()));
-            }
-        }
-        Err(Diagnostic::new(
+    let (parameters, result) = crate::jvm_descriptor::method_types(&method.descriptor)?;
+    if parameters.iter().map(Type::slots).sum::<usize>() > 254 {
+        return Err(Diagnostic::new(
             0,
-            "Unsupported interface method descriptor",
-        ))
+            "Unsupported interface method parameters",
+        ));
     }
-    if !method.descriptor.starts_with('(') {
-        return Err(Diagnostic::new(0, "Invalid interface method descriptor"));
-    }
-    let mut cursor = 1;
-    let mut params = Vec::new();
-    while method.descriptor.as_bytes().get(cursor) != Some(&b')') {
-        let param = ty(&method.descriptor, &mut cursor)?;
-        if param == Type::Unit
-            || params.iter().map(Type::slots).sum::<usize>() + param.slots() > 254
-        {
-            return Err(Diagnostic::new(
-                0,
-                "Unsupported interface method parameters",
-            ));
-        }
-        params.push(param);
-    }
-    cursor += 1;
-    let result = ty(&method.descriptor, &mut cursor)?;
-    if cursor != method.descriptor.len() {
-        return Err(Diagnostic::new(0, "Invalid interface method descriptor"));
-    }
-    Ok((params, result))
+    Ok((parameters, result))
 }
 
 fn inherited_object_method(name: &str) -> bool {

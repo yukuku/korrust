@@ -1,0 +1,37 @@
+{
+  "kind": "targeted_repair_handoff",
+  "created_at": "2026-10-30T05:29:32.332226+00:00",
+  "base_revision": "39e87a38ae59075ce14cd110c88efbab46858131",
+  "ownership": [
+    "src/lib.rs filename facade mapping and private alias facade scope key",
+    "src/check_library.rs default_constructor and generic_constructor only",
+    "tests/source_filenames.rs",
+    "tests/alias_constructors.rs"
+  ],
+  "test_counts": {
+    "source_filenames": 4,
+    "alias_constructors": 4
+  },
+  "validation_log": "target/alias-filename-validation.log",
+  "clippy_log": "target/alias-filename-clippy.log",
+  "limitations": [
+    "Targeted live-tree tests; root must freeze whole compiler before final acceptance/publication.",
+    "Non-ASCII filenames explicitly unsupported; exact ASCII sanitizer only.",
+    "Generic alias constructor calls without explicit alias type arguments remain unsupported inference, not invalid Kotlin.",
+    "Top-level function-valued property invocation remains separate known failure."
+  ],
+  "files_sha256": {
+    "src/lib.rs": "10b85671cf4067908d85df87c13d0f2acd5704b747b7e8a2f37d1e9afa9cadb6",
+    "src/check_library.rs": "959aaab2719b4682720325b92aa2f57390ac4cf3a3449d8b4336643d22d8252e",
+    "tests/source_filenames.rs": "e2be9fee21b0f0c4a6f338a92540fdf43eb0153712fb97d46c25714248920d92",
+    "tests/alias_constructors.rs": "a73ff25480cf8f58840eac9662215531fe07ed6a266094648a144dd4452f15d0",
+    "target/alias-filename-validation.log": "f434d083ef4070d58c48697a03d06e2642777f60d7626bd6ffcb442f5c850242",
+    "target/alias-filename-clippy.log": "20a76ff8c502f82355a2612eeeb9cefd2f62f9cdab5c5556131c679e4b1a1386",
+    "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasConstructor.kt": "f39bee49f74aa332cb68082c019de03502305a067c5e20927007d6b7cc6d0fe6",
+    "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt": "a416c2b8cd2592f0674b9b4b6c2974cb23ba14a5861db6857e36dee05db4fe5b",
+    "references/kotlin/core/compiler.common/src/org/jetbrains/kotlin/name/NameUtils.kt": "b56092f52474facaefdf05ee3a28f21803880ba7ac7d06afce5cbf96818143be",
+    "references/kotlin/compiler/frontend.common.jvm/src/org/jetbrains/kotlin/load/kotlin/PackagePartClassUtils.kt": "17e223637fab126e514bf7cf8810ee3c74a05929a9ca354c849ac37e83ae6b0f"
+  },
+  "clippy_status": "passed",
+  "format_status": "passed"
+}

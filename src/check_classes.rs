@@ -712,7 +712,7 @@ impl Checker<'_> {
             if matches!(value.ty, Type::Parameter { .. }) {
                 match nullable_parameter_bound(&value.ty, &mut HashSet::new(), 0) {
                     Some(false) => {},
-                    Some(true) => return Err(literal_error(offset, "Possibly nullable type-parameter class literals require unsupported definitely-non-null type semantics", false)),
+                    Some(true) => return Err(literal_error(offset, "Expression in a class literal has a possibly nullable type parameter", true)),
                     None => return Err(literal_error(offset, "Class literal type-parameter bound lookup exceeds the supported depth or cycle boundary", false)
                         .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "CLASS_LITERAL_BOUND_DEPTH_UNSUPPORTED")),
                 }

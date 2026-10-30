@@ -3,6 +3,7 @@ mod check;
 mod classpath;
 mod compiled_inline;
 mod const_eval;
+mod jvm_descriptor;
 mod metadata;
 mod visibility;
 
@@ -129,6 +130,43 @@ pub fn compile_batch_with_classpath(
     )
 }
 
+fn source_facade_name(file_name: &str) -> Result<String> {
+    if file_name.contains(['/', '\\', '\0']) {
+        return Err(
+            Diagnostic::new(0, "Source filename must be a single path component")
+                .with_kind(DiagnosticKind::Setup, "INVALID_SOURCE_FILENAME"),
+        );
+    }
+    let stem = file_name
+        .strip_suffix(".kt")
+        .ok_or_else(|| Diagnostic::new(0, "Expected a .kt filename"))?;
+    if !stem.is_ascii() {
+        return Err(
+            Diagnostic::new(0, "Non-ASCII source filename facade mapping is unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "SOURCE_FILENAME_UNSUPPORTED",
+                ),
+        );
+    }
+    let mut prefix = stem
+        .chars()
+        .map(|character| {
+            if character.is_ascii_alphanumeric() {
+                character
+            } else {
+                '_'
+            }
+        })
+        .collect::<String>();
+    if prefix.is_empty() || prefix.as_bytes()[0].is_ascii_digit() {
+        prefix.insert(0, '_');
+    } else {
+        prefix[..1].make_ascii_uppercase();
+    }
+    Ok(format!("{prefix}Kt"))
+}
+
 pub fn compile_batch_with_options(
     inputs: &[SourceInput],
     paths: &[PathBuf],
@@ -158,21 +196,7 @@ pub fn compile_batch_with_options(
     for input in &sources {
         let source = input.source.as_str();
         let file_name = input.file_name.as_str();
-        let stem = file_name.strip_suffix(".kt").ok_or_else(|| {
-            Diagnostic::new(0, "Expected a .kt filename").for_source(&input.identity)
-        })?;
-        if stem.is_empty()
-            || !stem
-                .bytes()
-                .enumerate()
-                .all(|(i, b)| b.is_ascii_alphabetic() || b == b'_' || (i > 0 && b.is_ascii_digit()))
-        {
-            return Err(Diagnostic::new(
-                0,
-                "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
-            )
-            .for_source(&input.identity));
-        }
+        source_facade_name(file_name).map_err(|error| error.for_source(&input.identity))?;
         if source.len() > 1_048_576 {
             return Err(Diagnostic::new(0, "Source exceeds the current 1 MiB limit")
                 .for_source(&input.identity));
@@ -183,9 +207,9 @@ pub fn compile_batch_with_options(
     const_eval::resolve(&mut modules, &classpath)
         .map_err(|(index, error)| error.for_source(&sources[index].identity))?;
     for (source_index, (input, module)) in sources.iter().zip(&modules).enumerate() {
-        let stem = input.file_name.strip_suffix(".kt").unwrap();
         let first_unit = units.len();
-        let facade = format!("{}{}Kt", stem[..1].to_ascii_uppercase(), &stem[1..]);
+        let facade = source_facade_name(&input.file_name)
+            .map_err(|error| error.for_source(&input.identity))?;
         let qualify = |name: &str| {
             if module.package.is_empty() {
                 name.into()
@@ -387,11 +411,10 @@ pub fn compile_batch_with_options(
                     continue;
                 }
                 let key = if alias.private {
-                    let stem = sources[index].file_name.strip_suffix(".kt").unwrap();
                     format!(
-                        "{}{}Kt#{}",
-                        stem[..1].to_ascii_uppercase(),
-                        &stem[1..],
+                        "{}#{}",
+                        source_facade_name(&sources[index].file_name)
+                            .map_err(|error| error.for_source(&sources[index].identity))?,
                         alias.name
                     )
                 } else {

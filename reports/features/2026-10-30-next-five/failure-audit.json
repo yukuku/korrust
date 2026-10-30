@@ -1,0 +1,1146 @@
+{
+  "kind": "read_only_known_failure_audit",
+  "created_at": "2026-10-30T05:19:59.016605+00:00",
+  "root": "/Users/yuku/f/git/korrust",
+  "verification_scope": "Read current source and recorded final/family evidence only; no compiler reruns, no edits outside this inventory. No historical fail declared fixed without later matching evidence.",
+  "upstream_report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+  "upstream_counts": {
+    "correctness_failure": 17,
+    "harness_unsupported": 6,
+    "pass": 7,
+    "unsupported_language": 6
+  },
+  "upstream_cases": [
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "baseline_int_when",
+      "reported_outcome": "pass",
+      "source": "references/kotlin/compiler/testData/codegen/box/branching/when2.kt",
+      "diagnostics": [],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "baseline_arrays",
+      "reported_outcome": "pass",
+      "source": "references/kotlin/compiler/testData/codegen/box/arrays/forEachIntArray.kt",
+      "diagnostics": [],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "baseline_typealias",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasConstructor.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/baseline_typealias/sources/main/typeAliasConstructor.kt",
+          "offset": 65,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "No applicable function overload or wrong argument count",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/baseline_typealias/sources/main/typeAliasConstructor.kt",
+          "line": 5,
+          "column": 21,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasConstructor.kt",
+            "char_offset": 65,
+            "byte_offset": 65,
+            "line": 5,
+            "column": 21
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "alias_constructor_expansion"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "baseline_default_arguments",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/defaultArguments/simpleFromOtherFile.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/baseline_default_arguments/sources/main/1.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/baseline_default_arguments/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/simpleFromOtherFile.kt",
+            "char_offset": 14,
+            "byte_offset": 14,
+            "line": 2,
+            "column": 1
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "legal_filename_facade"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "baseline_enum",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/enum/inner.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/baseline_enum/sources/main/inner.kt",
+          "offset": 61,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unresolved Java field",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/baseline_enum/sources/main/inner.kt",
+          "line": 7,
+          "column": 13,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/enum/inner.kt",
+            "char_offset": 61,
+            "byte_offset": 61,
+            "line": 7,
+            "column": 13
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "qualified_nested_classifier"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "baseline_fun_interface",
+      "reported_outcome": "pass",
+      "source": "references/kotlin/compiler/testData/codegen/box/funInterface/basicFunInterfaceConversion.kt",
+      "diagnostics": [],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "raw_strings",
+      "reported_outcome": "pass",
+      "source": "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt",
+      "diagnostics": [],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "raw_strings_quotes",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt",
+          "offset": 50,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Source reference vararg declarations require unsupported Array<out T> projections",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt",
+          "line": 2,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+            "char_offset": 50,
+            "byte_offset": 50,
+            "line": 2,
+            "column": 1
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "reference_vararg_projection"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "generic_classifiers",
+      "reported_outcome": "unsupported_language",
+      "source": "references/kotlin/compiler/testData/codegen/box/dataClasses/genericParam.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/generic_classifiers/sources/main/genericParam.kt",
+          "offset": 59,
+          "category": "unsupported_language",
+          "code": "GENERIC_CONSTRUCTOR_INFERENCE_UNSUPPORTED",
+          "message": "Source generic construction requires explicit type arguments",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/generic_classifiers/sources/main/genericParam.kt",
+          "line": 4,
+          "column": 13,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/dataClasses/genericParam.kt",
+            "char_offset": 59,
+            "byte_offset": 59,
+            "line": 4,
+            "column": 13
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "accessor_visibility",
+      "reported_outcome": "pass",
+      "source": "references/kotlin/compiler/testData/codegen/box/properties/accessToPrivateSetter.kt",
+      "diagnostics": [],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "jvm_overloads",
+      "reported_outcome": "unsupported_language",
+      "source": "references/kotlin/compiler/testData/codegen/box/jvmOverloads/constructorWithTypeParams.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/jvm_overloads/sources/main/constructorWithTypeParams.kt",
+          "offset": 50,
+          "category": "unsupported_language",
+          "code": "CONSTRUCTOR_ANNOTATION_UNSUPPORTED",
+          "message": "Primary constructor annotations are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/jvm_overloads/sources/main/constructorWithTypeParams.kt",
+          "line": 4,
+          "column": 12,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/jvmOverloads/constructorWithTypeParams.kt",
+            "char_offset": 50,
+            "byte_offset": 50,
+            "line": 4,
+            "column": 12
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "primitive_arrays",
+      "reported_outcome": "pass",
+      "source": "references/kotlin/compiler/testData/codegen/box/arrays/forEachLongArray.kt",
+      "diagnostics": [],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "class_references",
+      "reported_outcome": "unsupported_language",
+      "source": "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/simple.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/class_references/sources/main/simple.kt",
+          "offset": 132,
+          "category": "unsupported_language",
+          "code": "STRING_TEMPLATE_VALUE_UNSUPPORTED",
+          "message": "String templates support only String, supported primitives, their nullable forms, and null",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/class_references/sources/main/simple.kt",
+          "line": 5,
+          "column": 58,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/simple.kt",
+            "char_offset": 132,
+            "byte_offset": 132,
+            "line": 5,
+            "column": 58
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "value_classes",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/value_classes/sources/main/topLevel.kt",
+          "offset": 78,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unresolved member or imported extension: getOrThrow",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/value_classes/sources/main/topLevel.kt",
+          "line": 5,
+          "column": 13,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt",
+            "char_offset": 78,
+            "byte_offset": 78,
+            "line": 5,
+            "column": 13
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "compiled_value_class_call_boundary"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "sealed_hierarchies",
+      "reported_outcome": "unsupported_language",
+      "source": "references/kotlin/compiler/testData/codegen/box/sealed/delegatingConstructor.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/sealed_hierarchies/sources/main/delegatingConstructor.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SEALED_CONSTRUCTOR_DEFAULTS_UNSUPPORTED",
+          "message": "Sealed secondary constructors and default constructor parameters are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/sealed_hierarchies/sources/main/delegatingConstructor.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/sealed/delegatingConstructor.kt",
+            "char_offset": 0,
+            "byte_offset": 0,
+            "line": 1,
+            "column": 1
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "inner_classes",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/innerClass/simple.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/inner_classes/sources/main/simple.kt",
+          "offset": 56,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected a class member declaration",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/inner_classes/sources/main/simple.kt",
+          "line": 6,
+          "column": 5,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/innerClass/simple.kt",
+            "char_offset": 56,
+            "byte_offset": 56,
+            "line": 6,
+            "column": 5
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "source_inner_class_boundary"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "interface_delegation",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/interface_delegation/sources/main/genericProperty.kt",
+          "offset": 23,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected an identifier",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/interface_delegation/sources/main/genericProperty.kt",
+          "line": 3,
+          "column": 9,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt",
+            "char_offset": 23,
+            "byte_offset": 23,
+            "line": 3,
+            "column": 9
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "source_member_extension_property_boundary"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "data_objects",
+      "reported_outcome": "harness_unsupported",
+      "source": "references/kotlin/compiler/testData/codegen/box/dataObjects/equals.kt",
+      "diagnostics": [],
+      "reasons": [
+        "Candidate CLI cannot match requested language/JVM settings"
+      ],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "enum_subclasses",
+      "reported_outcome": "unsupported_language",
+      "source": "references/kotlin/compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/enum_subclasses/sources/main/interfaceCallWithEntryClass.kt",
+          "offset": 102,
+          "category": "unsupported_language",
+          "code": "ENUM_ENTRY_BODY_UNSUPPORTED",
+          "message": "Enum entry-specific class bodies are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/enum_subclasses/sources/main/interfaceCallWithEntryClass.kt",
+          "line": 10,
+          "column": 8,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt",
+            "char_offset": 102,
+            "byte_offset": 102,
+            "line": 10,
+            "column": 8
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "generic_aliases",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/generic_aliases/sources/main/genericTypeAliasConstructor2.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Invalid Java class internal name",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/generic_aliases/sources/main/genericTypeAliasConstructor2.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt",
+            "char_offset": 0,
+            "byte_offset": 0,
+            "line": 1,
+            "column": 1
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "alias_constructor_expansion"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "unsigned",
+      "reported_outcome": "unsupported_language",
+      "source": "references/kotlin/compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/unsigned/sources/main/unsignedLiteralsWithSignedOverflow.kt",
+          "offset": 56,
+          "category": "unsupported_language",
+          "code": "UNSIGNED_LITERAL_UNSUPPORTED",
+          "message": "Unsigned numeric literals are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/unsigned/sources/main/unsignedLiteralsWithSignedOverflow.kt",
+          "line": 4,
+          "column": 21,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt",
+            "char_offset": 56,
+            "byte_offset": 56,
+            "line": 4,
+            "column": 21
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "constant_expressions",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/properties/initializerOfConstValWithConstExpr.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/constant_expressions/sources/main/main.kt",
+          "offset": 28,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unresolved local: four",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/constant_expressions/sources/main/main.kt",
+          "line": 2,
+          "column": 9,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/properties/initializerOfConstValWithConstExpr.kt",
+            "char_offset": 121,
+            "byte_offset": 121,
+            "line": 8,
+            "column": 9
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "implicit_package_const_resolution"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "java_static_imports",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/enum/simpleJavaEnumWithStaticImport.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/java_static_imports/sources/main/1.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/java_static_imports/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/enum/simpleJavaEnumWithStaticImport.kt",
+            "char_offset": 138,
+            "byte_offset": 138,
+            "line": 13,
+            "column": 1
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "legal_filename_facade"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "rich_annotations",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/rich_annotations/sources/main/1.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/rich_annotations/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt",
+            "char_offset": 279,
+            "byte_offset": 279,
+            "line": 16,
+            "column": 1
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "legal_filename_facade"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "member_extensions",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/member_extensions/sources/main/memberExtensionFunction.kt",
+          "offset": 75,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected a class member declaration",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/member_extensions/sources/main/memberExtensionFunction.kt",
+          "line": 4,
+          "column": 5,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt",
+            "char_offset": 75,
+            "byte_offset": 75,
+            "line": 4,
+            "column": 5
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "source_inner_class_boundary"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "source_reified",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/source_reified/sources/main/lib.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected fun, found inline",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/source_reified/sources/main/lib.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt",
+            "char_offset": 32,
+            "byte_offset": 32,
+            "line": 4,
+            "column": 1
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "source_inline_reified_boundary"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "suspension",
+      "reported_outcome": "harness_unsupported",
+      "source": "references/kotlin/compiler/testData/codegen/box/coroutines/async.kt",
+      "diagnostics": [],
+      "reasons": [
+        "Unsupported directive SKIP_JDK6",
+        "Unsupported directive WITH_COROUTINES"
+      ],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "inline_generics",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/boxInline/typeParameters/basic.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/inline_generics/sources/main/1.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/inline_generics/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/boxInline/typeParameters/basic.kt",
+            "char_offset": 14,
+            "byte_offset": 14,
+            "line": 2,
+            "column": 1
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "legal_filename_facade"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "inline_nonlocal",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/inline_nonlocal/sources/main/1.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/inline_nonlocal/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt",
+            "char_offset": 14,
+            "byte_offset": 14,
+            "line": 2,
+            "column": 1
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "legal_filename_facade"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "diagnostics_markers",
+      "reported_outcome": "harness_unsupported",
+      "source": "references/kotlin/compiler/testData/diagnostics/tests/controlFlowAnalysis/unresolvedReference.kt",
+      "diagnostics": [],
+      "reasons": [
+        "Diagnostic sources and marker ranges mapped; diagnostic category/range equivalence is not implemented"
+      ],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "diagnostics_options",
+      "reported_outcome": "harness_unsupported",
+      "source": "references/kotlin/compiler/testData/diagnostics/tests/integerLiterals/typealiasOnLong.kt",
+      "diagnostics": [],
+      "reasons": [
+        "Unsupported directive ISSUE: KT-52825"
+      ],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "java_consumes_void",
+      "reported_outcome": "harness_unsupported",
+      "source": "references/kotlin/compiler/testData/compileJavaAgainstKotlin/method/Void.kt",
+      "diagnostics": [],
+      "reasons": [
+        "Original Java caller compiled once against official output and JVM signatures compared; no upstream executable assertion entry point"
+      ],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "kotlin_consumes_nested_java",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt",
+          "offset": 29,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unresolved local: StaticNestedClass",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt",
+          "line": 3,
+          "column": 16,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.kt",
+            "char_offset": 29,
+            "byte_offset": 29,
+            "line": 3,
+            "column": 16
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "qualified_nested_classifier"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "constructor_signature",
+      "reported_outcome": "pass",
+      "source": "references/kotlin/compiler/testData/writeSignature/constructor/Constructor0.kt",
+      "diagnostics": [],
+      "reasons": [],
+      "cluster": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "spec_receiver_priority",
+      "reported_outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/tests-spec/testData/codegen/box/linked/overload-resolution/receivers/p-6/pos/2.2.kt",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/spec_receiver_priority/sources/main/2.2.kt",
+          "offset": 0,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported filename: use an ASCII Kotlin identifier followed by .kt",
+          "path": "/Users/yuku/f/git/korrust/target/checks/2026-10-28T170101237877Z-final10-upstream/spec_receiver_priority/sources/main/2.2.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/tests-spec/testData/codegen/box/linked/overload-resolution/receivers/p-6/pos/2.2.kt",
+            "char_offset": 0,
+            "byte_offset": 0,
+            "line": 1,
+            "column": 1
+          }
+        }
+      ],
+      "reasons": [],
+      "cluster": "legal_filename_facade"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "id": "incremental_classpath_snapshot",
+      "reported_outcome": "harness_unsupported",
+      "source": "references/kotlin/compiler/incremental-compilation-impl/testData/org/jetbrains/kotlin/incremental/classpathDiff/ClasspathSnapshotterTest/kotlin/testSimpleClass/src/com/example/SimpleClass.kt",
+      "diagnostics": [],
+      "reasons": [
+        "Incremental scenario dependency snapshots/edit scripts are not implemented"
+      ],
+      "cluster": null
+    }
+  ],
+  "supplemental_known_failure_cases": [
+    {
+      "report": "reports/correctness/2026-10-28T165643787905Z-new-class-literals-integrated-final.json",
+      "id": "existing_assessment/confusing_boolean_when",
+      "outcome": "correctness_failure",
+      "scope": "existing_behavior_assessment",
+      "official_accepts": false,
+      "candidate_accepts": true,
+      "note": "Existing unparenthesized logical branch syntax acceptance; outside the class-literal feature claims. Valid regression fixtures retain required parentheses.",
+      "source": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T165643787905Z-new-class-literals-integrated-final.json",
+      "id": "boundary/jvm_binary_name",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_category": "unsupported_language",
+      "candidate_code": "CLASSIFIER_DOLLAR_NAME_UNSUPPORTED",
+      "classification_gap": true,
+      "source": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T165643787905Z-new-class-literals-integrated-final.json",
+      "id": "boundary/nullable_parameter",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_category": "unsupported_language",
+      "candidate_code": "CLASS_LITERAL_UNSUPPORTED",
+      "classification_gap": true,
+      "source": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T165643787905Z-new-class-literals-integrated-final.json",
+      "id": "boundary/indirect_nullable_parameter",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_category": "unsupported_language",
+      "candidate_code": "CLASS_LITERAL_UNSUPPORTED",
+      "classification_gap": true,
+      "source": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T165643787905Z-new-class-literals-integrated-final.json",
+      "id": "upstream/classLiteral__primitiveClassEquality.kt",
+      "family": "class_literals",
+      "root": "box",
+      "tier": "original",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt",
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "IGNORE_BACKEND",
+              "value": "JS_IR, JS_IR_ES6",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-28T165643787905Z-new-class-literals-integrated-final/upstream-originals/upstream/classLiteral__primitiveClassEquality.kt/sources/main/lib.kt.source-map.json",
+        "reports/correctness/2026-10-28T165643787905Z-new-class-literals-integrated-final/upstream-originals/upstream/classLiteral__primitiveClassEquality.kt/sources/main/main.kt.source-map.json"
+      ],
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T165643787905Z-new-class-literals/upstream-originals/upstream/classLiteral__primitiveClassEquality.kt/sources/main/lib.kt",
+          "offset": 438,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Expected fun, found inline",
+          "path": "/Users/yuku/f/git/korrust/target/new-class-literals-integrated-v1/target/checks/2026-10-28T165643787905Z-new-class-literals/upstream-originals/upstream/classLiteral__primitiveClassEquality.kt/sources/main/lib.kt",
+          "line": 12,
+          "column": 1,
+          "upstream_location": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt",
+            "char_offset": 491,
+            "byte_offset": 491,
+            "line": 15,
+            "column": 1
+          }
+        }
+      ],
+      "original_fixture": "classLiteral/primitiveClassEquality.kt"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T102639408771Z-new-strings.json",
+      "id": "androidbible/AudioHttpErrorBody",
+      "outcome": "unclassified_compilation_failure",
+      "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+      "source_sha256": "0f8bd02878e33edeca3d9e08a65b6ed96a44e6266c11053696816d69ca51db55",
+      "official_accepts": true,
+      "candidate_diagnostic": "/Users/yuku/f/git/korrust/target/new-strings-final-snapshot-v3/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt:23:20: error: String array constructor requires CharArray, offset, and count\n",
+      "scope": "Unchanged source assessment with real pinned stdlib; source compilation alone is not a compatibility pass"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T154702796897Z-new-properties-final.json",
+      "id": "app/candidate",
+      "outcome": "correctness_failure",
+      "scope": "application_assessment",
+      "diagnostic": "{\"source_identity\":\"/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt\",\"offset\":2111,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: removeAt\",\"path\":\"/Users/yuku/f/git/korrust/target/new-properties-integrated-v1/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt\",\"line\":76,\"column\":13}\n",
+      "source_sha256": "bfce6040eacbff475ddeabd04f33503361e1be9fea03aaf68a6fddb9698de684",
+      "unchanged_original": true,
+      "source": null
+    },
+    {
+      "report": "reports/correctness/2026-10-28T104259884676Z-new-jvm-overloads.json",
+      "id": "app/candidate",
+      "outcome": "unclassified_compilation_failure",
+      "acceptance_scope": "external_app_assessment",
+      "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt",
+      "source_sha256": "c0bd140e97d28b74a41d28af81e49a955564dc13df469c7a3e0c1058cc3888a2",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt",
+          "offset": 1498,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "No applicable member overload",
+          "path": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt",
+          "line": 42,
+          "column": 49
+        }
+      ],
+      "reason": "App progress probe, outside positive family acceptance. JvmOverloads annotation no longer blocks the unchanged source; StringBuilder indexing is independently reduced, without assigning a stronger diagnostic category."
+    },
+    {
+      "report": "reports/correctness/2026-10-28T104259884676Z-new-jvm-overloads.json",
+      "id": "app/indexing_reduction",
+      "outcome": "correctness_failure",
+      "acceptance_scope": "external_app_assessment",
+      "source": "tests/jvm_overloads/IndexingBoundary.kt",
+      "source_sha256": "530b436c907c49de87f6442b09f1b09a17fdb92a57b330394cbe94c84b7a3188",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/tests/jvm_overloads/IndexingBoundary.kt",
+          "offset": 51,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected Java(\"kotlin/text/MatchGroupCollection\"), found Java(\"java/lang/StringBuilder\")",
+          "path": "/Users/yuku/f/git/korrust/tests/jvm_overloads/IndexingBoundary.kt",
+          "line": 1,
+          "column": 52
+        }
+      ],
+      "reason": "App progress probe, outside positive family acceptance. JvmOverloads annotation no longer blocks the unchanged source; StringBuilder indexing is independently reduced, without assigning a stronger diagnostic category."
+    },
+    {
+      "report": "reports/correctness/2026-10-28T133916098804Z-checkpoint7-alias-promotion.json",
+      "id": "boundary/UnsupportedAliasConstructor",
+      "outcome": "correctness_failure",
+      "source": "tests/fixtures/new_families/aliases/UnsupportedAliasConstructor.kt",
+      "sha256": "977c63db09e4e67456d652dd38c514e676db5c721a7f566886d846283fecd2a6",
+      "diagnostics": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/checkpoint7-alias-promotion-v2/tests/fixtures/new_families/aliases/UnsupportedAliasConstructor.kt\",\"offset\":111,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"No applicable function overload or wrong argument count\",\"path\":\"/Users/yuku/f/git/korrust/target/checkpoint7-alias-promotion-v2/tests/fixtures/new_families/aliases/UnsupportedAliasConstructor.kt\",\"line\":7,\"column\":34}\n",
+      "relation_to_scope": "Existing constructor/getter resolution boundary; not accepted generic alias behavior"
+    },
+    {
+      "report": "reports/correctness/2026-10-28T133916098804Z-checkpoint7-alias-promotion.json",
+      "id": "upstream/simple",
+      "outcome": "correctness_failure",
+      "source": "references/kotlin/compiler/testData/codegen/box/typealias/simple.kt",
+      "sha256": "f09fe20925e38b1830b19602163dd09fc9609f13f3e165a6ddabfca65edfe190",
+      "diagnostics": "{\"source_identity\":\"/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/typealias/simple.kt\",\"offset\":134,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"No applicable function overload or wrong argument count\",\"path\":\"/Users/yuku/f/git/korrust/target/checkpoint7-alias-promotion-v2/references/kotlin/compiler/testData/codegen/box/typealias/simple.kt\",\"line\":9,\"column\":16}\n",
+      "directives_preserved": true
+    },
+    {
+      "report": "reports/correctness/2026-10-28T121821034547Z-new-java-interop.json",
+      "id": "app/candidate",
+      "outcome": "unclassified_compilation_failure",
+      "acceptance_scope": "external_app_assessment",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/SnappyStreamRoundTripTest.kt",
+          "offset": 430,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Imported class is inaccessible or unsupported",
+          "path": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/SnappyStreamRoundTripTest.kt",
+          "line": 13,
+          "column": 8
+        }
+      ],
+      "source_sha256": "f05e4c9574f4bb85279631b3e72c4705a277e8fa0df66132b9e9896ce37d8c3f",
+      "scope": "Matched original real dependency closure; first diagnostic probe, no full app compatibility claim",
+      "source": null
+    }
+  ],
+  "repair_clusters": [
+    {
+      "id": "legal_filename_facade",
+      "kind": "implementation_gap",
+      "locations": [
+        "src/lib.rs:160",
+        "src/lib.rs:186"
+      ],
+      "cases": [
+        "baseline_default_arguments",
+        "java_static_imports",
+        "rich_annotations",
+        "inline_generics",
+        "inline_nonlocal",
+        "spec_receiver_priority"
+      ],
+      "note": "Seven reported cases stop before parsing because 1.kt, 2.kt, 2.2.kt are legal Kotlin filenames. Implement official-compatible facade naming; then rerun originals. Expected later boundaries include source inline/reified, rich annotations, constructor inference, named companions. Do not rename upstream fixtures to make passes."
+    },
+    {
+      "id": "invalid_subjectful_when",
+      "kind": "invalid_kotlin_accepted",
+      "locations": [
+        "src/syntax.rs:5614",
+        "tools/check_new_class_literals.py:213"
+      ],
+      "note": "Known fixture: fun existing(value: Any?): Int = when (false) { value !is String -> value.length; else -> 0 }. Official CONFUSING_BRANCH_CONDITION; Korrust accepts. Preserve parentheses distinction and subjectless valid conditions."
+    },
+    {
+      "id": "alias_constructor_expansion",
+      "kind": "implementation_gap",
+      "locations": [
+        "src/check_library.rs:757",
+        "src/check_library.rs:830",
+        "src/lib.rs:369",
+        "src/check_declarations.rs:1999"
+      ],
+      "cases": [
+        "baseline_typealias",
+        "generic_aliases"
+      ],
+      "note": "default_constructor does not expand aliases; generic_constructor attempts imports[name] load before expanded owner, so alias facade binding can reach invalid class internal name. Extra imported generic BoxAlias constructor needs inference or explicit unsupported classification; upstream typealias/simple is a distinct top-level function-valued property invocation gap."
+    },
+    {
+      "id": "qualified_nested_classifier",
+      "kind": "implementation_gap",
+      "locations": [
+        "src/check.rs:2543",
+        "src/check.rs:3890",
+        "src/check_java_properties.rs",
+        "src/lib.rs"
+      ],
+      "cases": [
+        "baseline_enum",
+        "kotlin_consumes_nested_java"
+      ],
+      "note": "Recognize nested classifier chains before reading an outer field. Java example has package-private nested class accessible in same package, so blanket public-only class guard is insufficient."
+    },
+    {
+      "id": "implicit_package_const_resolution",
+      "kind": "implementation_gap",
+      "locations": [
+        "src/check.rs:3088",
+        "src/classpath.rs:360",
+        "src/const_eval.rs:1086"
+      ],
+      "cases": [
+        "constant_expressions"
+      ],
+      "note": "Compiled sibling module default-package const four is unresolved at ordinary expression use; initial source const evaluator already loads package constants separately."
+    },
+    {
+      "id": "reference_vararg_projection",
+      "kind": "unclassified_supported_subset_boundary",
+      "locations": [
+        "src/check_declarations.rs:3025"
+      ],
+      "cases": [
+        "raw_strings_quotes"
+      ],
+      "note": "Source vararg of class P is explicitly described unsupported Array<out T> but diagnostic is unclassified. Actual raw quote semantics not reached."
+    },
+    {
+      "id": "source_inline_reified_boundary",
+      "kind": "unclassified_unsupported_language",
+      "locations": [
+        "src/syntax.rs:4408",
+        "src/syntax.rs:1940"
+      ],
+      "cases": [
+        "source_reified",
+        "inline_generics",
+        "inline_nonlocal",
+        "upstream/classLiteral__primitiveClassEquality.kt"
+      ],
+      "note": "Current ordinary top-level parser rejects inline before function body; reified parameter is independently unsupported. primitiveClassEquality also requires Short support. Reclassifying these boundaries accurately does not constitute implementing them or passing original fixtures."
+    },
+    {
+      "id": "source_inner_class_boundary",
+      "kind": "unclassified_unsupported_language",
+      "locations": [
+        "src/syntax.rs:3316"
+      ],
+      "cases": [
+        "inner_classes",
+        "member_extensions"
+      ],
+      "note": "Outer-capturing inner JVM semantics plus member extension/default dispatch are distinct missing dimensions."
+    },
+    {
+      "id": "source_member_extension_property_boundary",
+      "kind": "unclassified_unsupported_language",
+      "locations": [
+        "src/syntax.rs:3316"
+      ],
+      "cases": [
+        "interface_delegation"
+      ],
+      "note": "First rejection is val <T> T.id extension property, before class delegation by i. Fixing delegation alone cannot pass original."
+    },
+    {
+      "id": "compiled_value_class_call_boundary",
+      "kind": "unclassified_unsupported_language",
+      "locations": [
+        "src/check_operations.rs:737",
+        "src/check_library.rs:606"
+      ],
+      "cases": [
+        "value_classes"
+      ],
+      "note": "Original uses compiled kotlin.Result getOrThrow with value-class unboxing/mangling; no source value class declaration. Must resolve via generic metadata, not API-name substitution."
+    },
+    {
+      "id": "name_independent_library_resolution",
+      "kind": "implementation_gaps_or_unclassified_boundaries",
+      "locations": [
+        "src/check_operations.rs:663",
+        "src/check_operations.rs:737",
+        "src/check_overloads.rs",
+        "src/check.rs:4423",
+        "src/check.rs:5606"
+      ],
+      "cases": [
+        "app/indexing_reduction",
+        "app/candidate",
+        "androidbible/AudioHttpErrorBody"
+      ],
+      "note": "Distinct probes: StringBuilder indexing picks MatchGroupCollection candidate and reports invalid TYPE_MISMATCH; BackForwardList MutableList.removeAt unresolved; String(ByteArray, Charset) forced into special CharArray constructor route; Snappy test java.util.Random import rejected as unsupported class. Each needs matched closure repro and general semantics."
+    },
+    {
+      "id": "invalid_class_literal_classification",
+      "kind": "diagnostic_classification_gap",
+      "locations": [
+        "src/check_classes.rs",
+        "tools/check_new_class_literals.py:233"
+      ],
+      "cases": [
+        "boundary/jvm_binary_name",
+        "boundary/nullable_parameter",
+        "boundary/indirect_nullable_parameter"
+      ],
+      "note": "These invalid sources already reject but runner explicitly requires unsupported_language; correct classification then adjust assertions, preserve historical reports."
+    }
+  ],
+  "valid_boundaries": {
+    "upstream_unsupported_language": [
+      "generic_classifiers",
+      "jvm_overloads",
+      "class_references",
+      "sealed_hierarchies",
+      "enum_subclasses",
+      "unsigned"
+    ],
+    "upstream_harness_unsupported": [
+      "data_objects",
+      "suspension",
+      "diagnostics_markers",
+      "diagnostics_options",
+      "java_consumes_void",
+      "incremental_classpath_snapshot"
+    ],
+    "notes": [
+      "The six explicit language and six harness boundaries are not correctness passes or runtime failures.",
+      "No missing-dependency outcome occurs in final10 report; Snappy and app probes used recorded real closures.",
+      "Final module suite compiles original TEST Kotlin officially, so original JUnit runtime success does not supersede Korrust test-source compile rejection.",
+      "All 17 upstream correctness failures are unclassified compile rejections, not observed wrong-runtime output. Unsupported classification repairs must retain recorded unsupported cases, not turn them into passes.",
+      "Failed interim reports are superseded only by matching later successful cases. UnsupportedGenericGetter is promoted to passing by checkpoint7 alias report; failed final10 Rust snapshot is superseded by successful frozen Rust report."
+    ]
+  }
+}

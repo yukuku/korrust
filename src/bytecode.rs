@@ -1,5 +1,6 @@
 pub(crate) mod annotation_files;
 mod annotations;
+use crate::jvm_descriptor::method_types as invocation_types;
 use crate::{
     Diagnostic, Result,
     check::{Module, Statement, StringMethod, Value, ValueKind},
@@ -532,77 +533,6 @@ fn cast_type_name(ty: &Type) -> String {
         Type::MutableList(_) => "kotlin.collections.MutableList".into(),
         _ => format!("{ty:?}"),
     }
-}
-
-fn invocation_types(descriptor: &str) -> Result<(Vec<Type>, Type)> {
-    fn ty(bytes: &[u8], cursor: &mut usize) -> Result<Type> {
-        let start = *cursor;
-        let tag = *bytes
-            .get(*cursor)
-            .ok_or_else(|| failure("Invalid JVM invocation descriptor"))?;
-        *cursor += 1;
-        Ok(match tag {
-            b'I' => Type::Int,
-            b'J' => Type::Long,
-            b'F' => Type::Float,
-            b'D' => Type::Double,
-            b'B' => Type::Byte,
-            b'C' => Type::Char,
-            b'Z' => Type::Boolean,
-            b'V' => Type::Unit,
-            b'L' => {
-                let end = bytes[*cursor..]
-                    .iter()
-                    .position(|b| *b == b';')
-                    .ok_or_else(|| failure("Invalid JVM invocation reference"))?
-                    + *cursor;
-                let name = String::from_utf8(bytes[*cursor..end].to_vec())
-                    .map_err(|_| failure("Invalid JVM invocation reference"))?;
-                *cursor = end + 1;
-                if name == "java/lang/String" {
-                    Type::String
-                } else {
-                    Type::Java(name)
-                }
-            }
-            b'[' => {
-                let element = ty(bytes, cursor)?;
-                match &bytes[start..*cursor] {
-                    b"[I" => Type::IntArray,
-                    b"[B" => Type::ByteArray,
-                    b"[C" => Type::CharArray,
-                    b"[J" => Type::LongArray,
-                    b"[Z" => Type::BooleanArray,
-                    b"[F" => Type::FloatArray,
-                    b"[D" => Type::DoubleArray,
-
-                    b"[Ljava/lang/String;" => Type::StringArray,
-                    _ if element.is_reference() => Type::Array(Box::new(element)),
-                    _ => return Err(failure("Unsupported JVM invocation array type")),
-                }
-            }
-            _ => return Err(failure("Unsupported JVM invocation descriptor")),
-        })
-    }
-    let bytes = descriptor.as_bytes();
-    if bytes.first() != Some(&b'(') {
-        return Err(failure("Invalid JVM invocation descriptor"));
-    }
-    let mut cursor = 1;
-    let mut params = Vec::new();
-    while bytes.get(cursor) != Some(&b')') {
-        let param = ty(bytes, &mut cursor)?;
-        if param == Type::Unit {
-            return Err(failure("Invalid void JVM parameter"));
-        }
-        params.push(param);
-    }
-    cursor += 1;
-    let result = ty(bytes, &mut cursor)?;
-    if cursor != bytes.len() {
-        return Err(failure("Invalid JVM invocation descriptor"));
-    }
-    Ok((params, result))
 }
 
 fn primitive_array_type(ty: &Type) -> Result<u8> {
@@ -3290,7 +3220,7 @@ fn generic_override_bridge(
 }
 
 fn interface_bridge(pool: &mut Pool, bridge: &crate::classpath::JavaMethod) -> Result<Vec<u8>> {
-    let (params, result) = crate::check::class_method_types(bridge)?;
+    let (params, result) = invocation_types(&bridge.descriptor)?;
     let count = 1 + params.iter().map(Type::slots).sum::<usize>();
     let mut code = SimpleCode::new(count.max(result.slots()) as u16, count as u16);
     code.bytes.push(0x2a);
@@ -3304,6 +3234,7 @@ fn interface_bridge(pool: &mut Pool, bridge: &crate::classpath::JavaMethod) -> R
         pool.interface_method(&bridge.owner, &bridge.name, &bridge.descriptor)?,
     );
     code.bytes.push(return_opcode(&result));
+    let (params, result) = crate::check::class_method_types(bridge)?;
     let mut method = simple_method(
         pool,
         0x0041,
@@ -4603,4 +4534,122 @@ fn emit_class_with(
     u2(&mut out, source_file);
     out.extend(metadata);
     Ok(out)
+}
+
+#[cfg(test)]
+mod representation_tests {
+    use super::*;
+    use std::process::Command;
+
+    fn run(command: &mut Command) {
+        let output = command.output().unwrap();
+        assert!(
+            output.status.success(),
+            "{command:?}\n{}\n{}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+
+    #[test]
+    fn default_bridge_uses_descriptor_when_metadata_has_primitive_types() {
+        let root = std::env::temp_dir().join(format!(
+            "korrust-physical-bridge-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(&root).unwrap();
+        let contract = root.join("Contract.java");
+        std::fs::write(
+            &contract,
+            "public interface Contract { default Long value(Long input, double delta) { return input + (long) delta; } }",
+        )
+        .unwrap();
+        let value = root.join("Value.java");
+        std::fs::write(&value, "public class Value implements Contract {}").unwrap();
+        let caller = root.join("Caller.java");
+        std::fs::write(
+            &caller,
+            "public class Caller { public static void main(String[] args) { Value value = new Value(); if (value.value(9000000001L, 3.5) != 9000000004L) throw new AssertionError(); if (((Contract) value).value(9000000001L, -1.5) != 9000000000L) throw new AssertionError(); } }",
+        )
+        .unwrap();
+        run(Command::new("javac")
+            .arg("-d")
+            .arg(&root)
+            .arg(&contract)
+            .arg(&value)
+            .arg(&caller));
+        run(Command::new("java")
+            .arg("-Xverify:all")
+            .arg("-cp")
+            .arg(&root)
+            .arg("Caller"));
+        let mut builder =
+            interfaces::Builder::new("Value", 52, 0x0021, &["Contract".into()]).unwrap();
+        let mut constructor = SimpleCode::new(1, 1);
+        constructor.bytes.push(0x2a);
+        constructor.reference(
+            0xb7,
+            builder
+                .pool
+                .method("java/lang/Object", "<init>", "()V")
+                .unwrap(),
+        );
+        constructor.bytes.push(0xb1);
+        builder.methods.push(
+            simple_method(
+                &mut builder.pool,
+                1,
+                "<init>",
+                "()V",
+                constructor,
+                None,
+                false,
+            )
+            .unwrap(),
+        );
+        let method = crate::classpath::JavaMethod {
+            library: None,
+            owner: "Contract".into(),
+            name: "value".into(),
+            descriptor: "(Ljava/lang/Long;D)Ljava/lang/Long;".into(),
+            access: 1,
+            unsupported: false,
+            source_property: None,
+            kotlin_params: Some(vec![
+                ("input".into(), Type::Long, false),
+                ("delta".into(), Type::Double, false),
+            ]),
+            kotlin_result: Some(Type::Long),
+            kotlin_internal: false,
+        };
+        assert_eq!(
+            crate::check::class_method_types(&method).unwrap().1,
+            Type::Long
+        );
+        builder
+            .methods
+            .push(interface_bridge(&mut builder.pool, &method).unwrap());
+        let class = builder
+            .finish(
+                "Value.kt",
+                &crate::metadata::Metadata {
+                    kind: 1,
+                    data1: Vec::new(),
+                    data2: Vec::new(),
+                },
+                &[],
+            )
+            .unwrap();
+        std::fs::write(root.join("Value.class"), class.bytes).unwrap();
+        run(Command::new("java")
+            .arg("-Xverify:all")
+            .arg("-cp")
+            .arg(&root)
+            .arg("Caller"));
+        std::fs::remove_dir_all(root).unwrap();
+    }
 }

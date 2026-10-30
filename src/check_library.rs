@@ -760,8 +760,7 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Option<Value>> {
-        if self.imports.contains_key(name)
-            || self.functions.contains_key(name)
+        if self.functions.contains_key(name)
             || self.local(name).is_some()
             || self.captured.contains_key(name)
             || self.object_methods.contains_key(name)
@@ -775,6 +774,35 @@ impl Checker<'_> {
         {
             return Ok(None);
         }
+        let requested = Type::Java(name.into());
+        let expanded = self
+            .classpath
+            .expand_type_alias(&requested, self.imports, DEFAULT_PACKAGES)
+            .map_err(|error| {
+                if error.code == "TYPE_ALIAS_ARITY" {
+                    Diagnostic::new(
+                        offset,
+                        "Generic alias construction requires explicit type arguments",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "GENERIC_CONSTRUCTOR_INFERENCE_UNSUPPORTED",
+                    )
+                } else {
+                    error
+                }
+            })?;
+        let alias = expanded != requested;
+        let mut expanded = expanded;
+        while let Type::Nullable(inner) = expanded {
+            expanded = *inner;
+        }
+        if alias && matches!(expanded, Type::Parameterized { .. }) {
+            return self.generic_constructor(name, &[], args, offset);
+        }
+        if !alias && self.imports.contains_key(name) {
+            return Ok(None);
+        }
         let source_package = self
             .lambda_owner
             .rsplit_once('/')
@@ -784,15 +812,33 @@ impl Checker<'_> {
         } else {
             format!("{source_package}/{name}")
         };
-        let Some(class) = self
-            .classpath
-            .load(&source_name)
-            .ok()
-            .filter(|class| class.access & 1 != 0)
-            .or_else(|| default_class(self.classpath, name))
-        else {
+        let class = if alias {
+            let ty = self.resolve(&expanded, offset)?;
+            let owner = library::type_owner(&ty).ok_or_else(|| {
+                Diagnostic::new(offset, "Type alias does not name a constructible class").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "TYPE_ALIAS_CONSTRUCTOR_INVALID",
+                )
+            })?;
+            Some(self.classpath.load(owner)?)
+        } else {
+            self.classpath
+                .load(&source_name)
+                .ok()
+                .filter(|class| class.access & 1 != 0)
+                .or_else(|| default_class(self.classpath, name))
+        };
+        let Some(class) = class else {
             return Ok(None);
         };
+        if class.access & 1 == 0 {
+            return Err(
+                Diagnostic::new(offset, "Constructor classifier is inaccessible").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "INACCESSIBLE_CONSTRUCTOR",
+                ),
+            );
+        }
         if class.access & (0x200 | 0x400) != 0 {
             return Err(Diagnostic::new(
                 offset,
@@ -853,26 +899,44 @@ impl Checker<'_> {
                 })
                 .collect::<Result<Vec<_>>>()?,
         };
-        let expanded =
+        let mut expanded =
             self.classpath
                 .expand_type_alias(&requested, self.imports, DEFAULT_PACKAGES)?;
         let alias = expanded != requested;
-        let class = if let Some(owner) = self.imports.get(name) {
+        while let Type::Nullable(inner) = expanded {
+            expanded = *inner;
+        }
+        let class = if alias {
+            let owner = library::type_owner(&expanded).ok_or_else(|| {
+                Diagnostic::new(offset, "Type alias does not name a constructible class").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "TYPE_ALIAS_CONSTRUCTOR_INVALID",
+                )
+            })?;
             self.classes
                 .get(owner)
                 .cloned()
                 .map(Ok)
                 .unwrap_or_else(|| self.classpath.load(owner))?
-        } else if alias {
-            let owner = library::type_owner(&expanded).ok_or_else(|| {
-                Diagnostic::new(offset, "Type alias does not name a constructible class")
-            })?;
-            self.classpath.load(owner)?
+        } else if let Some(owner) = self.imports.get(name) {
+            self.classes
+                .get(owner)
+                .cloned()
+                .map(Ok)
+                .unwrap_or_else(|| self.classpath.load(owner))?
         } else if let Some(class) = default_class(self.classpath, name) {
             class
         } else {
             return Ok(None);
         };
+        if class.access & 1 == 0 {
+            return Err(
+                Diagnostic::new(offset, "Constructor classifier is inaccessible").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "INACCESSIBLE_CONSTRUCTOR",
+                ),
+            );
+        }
         let ty = if alias {
             self.resolve(&expanded, offset)?
         } else {

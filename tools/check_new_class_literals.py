@@ -33,8 +33,8 @@ BOUNDARIES = [
     ('star_array', False, 'fun bad() = Array<*>::class', 'INVALID_CLASS_LITERAL'),
     ('unreified_type', False, 'fun <T: Any> bad() = T::class', 'INVALID_CLASS_LITERAL'),
     ('unreified_array', False, 'fun <T: Any> bad() = Array<T>::class', 'INVALID_CLASS_LITERAL'),
-    ('nullable_parameter', False, 'fun <T> bad(value: T) = value::class', 'CLASS_LITERAL_UNSUPPORTED'),
-    ('indirect_nullable_parameter', False, 'fun <U, T: U> bad(value: T): kotlin.reflect.KClass<*> = value::class', 'CLASS_LITERAL_UNSUPPORTED'),
+    ('nullable_parameter', False, 'fun <T> bad(value: T) = value::class', 'INVALID_CLASS_LITERAL'),
+    ('indirect_nullable_parameter', False, 'fun <U, T: U> bad(value: T): kotlin.reflect.KClass<*> = value::class', 'INVALID_CLASS_LITERAL'),
     ('definitely_nonnull_parameter', True, 'fun <T> boundary(value: T): kotlin.reflect.KClass<*> = value!!::class', 'CLASS_LITERAL_UNSUPPORTED'),
     ('smartcast_parameter', True, 'fun <T> boundary(value: T): kotlin.reflect.KClass<*> { if (value != null) return value::class; return String::class }', 'CLASS_LITERAL_UNSUPPORTED'),
     ('internal_library', False, 'fun bad() = newfamilies.dependency.InternalKotlinType::class', 'INVALID_CLASS_LITERAL'),
@@ -230,7 +230,7 @@ def main():
             assert bool(oracle.returncode) != valid, name + ': oracle classification changed'
             assert actual.returncode and not list(destination.rglob('*.class')), name + ': must reject without classes'
             assert code in actual.stderr, name + ': ' + actual.stderr
-            category = 'unsupported_language' if valid or name in {'nullable_parameter', 'indirect_nullable_parameter', 'jvm_binary_name'} else 'invalid_kotlin'
+            category = 'unsupported_language' if valid or name == 'jvm_binary_name' else 'invalid_kotlin'
             assert category in actual.stderr, name + ': ' + actual.stderr
             case('boundary/' + name, outcome='unsupported_language' if valid else 'invalid_kotlin', official_accepts=valid, candidate_category=category, candidate_code=code, classification_gap=not valid and category == 'unsupported_language')
         report['inputs']['generated_sources_sha256'] = generated

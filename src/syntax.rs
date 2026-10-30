@@ -5669,11 +5669,49 @@ impl Parser {
             self.lines();
             Ok(Expr {
                 offset,
-                kind: ExprKind::Unary(operator.into(), Box::new(self.expr(0)?)),
+                kind: ExprKind::Unary(operator.into(), Box::new(self.when_condition_expression()?)),
             })
-        } else {
+        } else if subjectless {
             self.expr(0)
+        } else {
+            self.when_condition_expression()
         }
+    }
+    fn when_condition_expression(&mut self) -> Result<Expr> {
+        let start = self.pos;
+        let expression = self.expr(0)?;
+        let mut nesting = 0;
+        let parenthesized = self.tokens[start].text == "("
+            && self.tokens[start..self.pos]
+                .iter()
+                .enumerate()
+                .all(|(index, token)| {
+                    match token.text.as_str() {
+                        "(" => nesting += 1,
+                        ")" => nesting -= 1,
+                        _ => {}
+                    }
+                    nesting > 0 || index + 1 == self.pos - start
+                });
+        let confusing = match &expression.kind {
+            ExprKind::TypeOperation(operator, _, _) => matches!(operator.as_str(), "is" | "!is"),
+            ExprKind::Binary(operator, _, _) => matches!(
+                operator.as_str(),
+                "in" | "!in" | "<" | "<=" | ">" | ">=" | "==" | "!=" | "===" | "!==" | "&&" | "||"
+            ),
+            _ => false,
+        };
+        if confusing && !parenthesized {
+            return Err(Diagnostic::new(
+                expression.offset,
+                "Boolean operators in a when branch condition with a subject require parentheses",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "CONFUSING_BRANCH_CONDITION_ERROR",
+            ));
+        }
+        Ok(expression)
     }
     fn when_expression(&mut self, offset: usize) -> Result<Expr> {
         let subjectless = !self.at("(");
@@ -8281,5 +8319,44 @@ mod tests {
         assert!(class.methods[0].open && !class.methods[1].open);
         assert!(class.properties[0].open && !class.properties[1].open);
         assert!(parse("class C { final open fun f() {} }").is_err());
+    }
+    #[test]
+    fn subject_when_conditions_require_parenthesized_boolean_operations() {
+        for condition in [
+            "a == b",
+            "a != b",
+            "a === b",
+            "a !== b",
+            "a < b",
+            "a <= b",
+            "a > b",
+            "a >= b",
+            "a && b",
+            "a || b",
+            "a in b",
+            "a !in b",
+            "a is String",
+            "a !is String",
+            "(a) == b",
+        ] {
+            for body in [
+                format!("fun f() = when (true) {{ {condition} -> 1; else -> 0 }}"),
+                format!("fun f() {{ when (true) {{ {condition} -> 1; else -> 0 }} }}"),
+            ] {
+                let error = match parse(&body) {
+                    Ok(_) => panic!("invalid subject condition"),
+                    Err(error) => error,
+                };
+                assert_eq!(error.kind, crate::DiagnosticKind::InvalidKotlin, "{body}");
+                assert_eq!(error.code, "CONFUSING_BRANCH_CONDITION_ERROR");
+            }
+            parse(&format!(
+                "fun f() = when (true) {{ ({condition}) -> 1; else -> 0 }}"
+            ))
+            .unwrap();
+            parse(&format!("fun f() = when {{ {condition} -> 1; else -> 0 }}")).unwrap();
+        }
+        parse("fun f(a: Any) = when(a) { is String -> 1; !is Int -> 2; else -> 0 }").unwrap();
+        parse("fun f(a: Int) = when(a) { in 1..3 -> 1; else -> 0 }").unwrap();
     }
 }
