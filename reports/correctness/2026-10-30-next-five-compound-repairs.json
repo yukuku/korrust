@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "status": "passed",
+  "scope": "Compound assignment repair, not an additional counted family",
+  "baseline": "67342790d96d8483946fb72d3f6fefb3107fe573",
+  "evidence": {
+    "reports/correctness/2026-10-30-next-five-compound-repairs/compound-operator-source-checkpoint.zip": "3414a84a8b9a3e3ba4841447e79af6cfdd6a8e5d0c155970ed83a2c55575cca8",
+    "reports/correctness/2026-10-30-next-five-compound-repairs/compound-operator-source-sha256.json": "06461767937e1c8e14075d47ba9c7eed4cb14ba6e17278dabbbada155dcac4ee",
+    "reports/correctness/2026-10-30-next-five-compound-repairs/compound-operators-final.log": "86193d3799353669478fd6055c0aef64419585289890304b015fae1e017bb700",
+    "reports/correctness/2026-10-30-next-five-compound-repairs/compound-operator-unified-regressions.log": "8bc017ebd90ced3dfcc65d92069d1b537f33571155da78457ca8117529fb783b",
+    "reports/correctness/2026-10-30-next-five-compound-repairs/compound-operators-clippy-final.log": "1a68f78438adff541bd71b5d2fba4b144617eb82b3a4ce5b50b640eb208ba072",
+    "reports/correctness/2026-10-30-next-five-compound-repairs/compound-operators-v3.log": "41b944dfbd700d617874fb972e05029f22c99a6935dc70d7cd13f5763d5ca9f5",
+    "reports/correctness/2026-10-30-next-five-compound-repairs/compound-operators-v2.log": "75e0d2e3e918d3cbedc91300befc547b5cc9d7a343bcf179a559ed47ba37a8d2"
+  },
+  "cases": [
+    {
+      "id": "compound-differential",
+      "outcome": "pass",
+      "tests": 2,
+      "checks": "All five operator conventions; assignment/binary ambiguity and mutability; source and compiled primitive/String extensions; evaluation order, exceptions, captured target rebinding; fixed official Java caller with JVM verification; ABI and official Kotlin consumers."
+    },
+    {
+      "id": "frontend-regression",
+      "outcome": "pass",
+      "tests": 15
+    },
+    {
+      "id": "clippy-all-targets",
+      "outcome": "pass"
+    },
+    {
+      "id": "format",
+      "outcome": "pass"
+    }
+  ],
+  "androidbible": {
+    "target": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt",
+    "scope": "Complete unchanged source compiled and exercised by fixed official Java runtime caller against both providers with real stdlib; no full-app claim."
+  },
+  "limitations": [
+    "Qualified and indexed compound assignment targets remain outside this bounded repair.",
+    "Receiver-only top-level extension overload identity remains separate pending extension-family work."
+  ],
+  "historical_failures": "Preserved v1/v2 development failures and v3 earlier passing selector; final log validates the additional shadowing and target-rebinding checks."
+}

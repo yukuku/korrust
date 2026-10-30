@@ -147,113 +147,251 @@ impl Checker<'_> {
         right: &Expr,
         offset: usize,
     ) -> Result<Statement> {
-        let local = self.local(name);
-        let cell = self.cell_binding(name);
-        if local.is_none() && cell.is_none() {
-            let expression = Expr {
-                offset,
-                kind: ExprKind::Binary(
-                    op.trim_end_matches('=').into(),
-                    Box::new(Expr {
-                        offset,
-                        kind: ExprKind::Name(name.into()),
-                    }),
-                    Box::new(right.clone()),
-                ),
-            };
-            let (mut statements, _) = self.block(&[syntax::Statement {
-                offset,
-                kind: StatementKind::Assign(name.into(), expression),
-            }])?;
-            return if statements.len() == 1 {
-                Ok(statements.remove(0))
-            } else {
-                Ok(Statement::Expression(Value {
-                    ty: Type::Unit,
-                    kind: ValueKind::Block(
-                        statements,
-                        Box::new(Value {
-                            ty: Type::Unit,
-                            kind: ValueKind::Unit,
-                        }),
+        let receiver = self.value(&Expr {
+            offset,
+            kind: ExprKind::Name(name.into()),
+        })?;
+        self.check_compound_operator(name, op, receiver, right, offset)
+    }
+
+    fn check_compound_operator(
+        &mut self,
+        target: &str,
+        op: &str,
+        receiver: Value,
+        right: &Expr,
+        offset: usize,
+    ) -> Result<Statement> {
+        let (assignment, binary) = match op {
+            "+=" => ("plusAssign", "plus"),
+            "-=" => ("minusAssign", "minus"),
+            "*=" => ("timesAssign", "times"),
+            "/=" => ("divAssign", "div"),
+            "%=" => ("remAssign", "rem"),
+            _ => {
+                return Err(
+                    Diagnostic::new(offset, "Unsupported compound operator").with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "COMPOUND_OPERATOR_UNSUPPORTED",
                     ),
-                }))
-            };
-        }
-        let ty = if let Some(local) = &local {
-            if !local.mutable {
-                return Err(Diagnostic::new(
-                    offset,
-                    format!("Cannot reassign val or parameter: {name}"),
-                ));
+                );
             }
-            if !self.initialized.contains(&local.slot) {
-                return Err(Diagnostic::new(
-                    offset,
-                    "Variable must be initialized before use",
-                ));
-            }
-            local.ty.clone()
-        } else if let Some((_, ty)) = &cell {
-            ty.clone()
-        } else {
-            if self
-                .members
-                .values()
-                .any(|m| m.source_property.as_deref() == Some(name))
-            {
-                return Err(Diagnostic::new(
-                    offset,
-                    "Property assignments in method bodies are not supported",
-                ));
-            }
-            return Err(Diagnostic::new(offset, format!("Unresolved local: {name}")));
         };
-        if ty == Type::String && op == "+=" {
-            let expression = Expr {
-                offset,
-                kind: ExprKind::Binary(
-                    "+".into(),
-                    Box::new(Expr {
-                        offset,
-                        kind: ExprKind::Name(name.into()),
-                    }),
-                    Box::new(right.clone()),
+        let assigning =
+            self.compound_operator_candidate(receiver.clone(), assignment, right, None, offset);
+        if assigning.as_ref().is_ok_and(|ty| *ty != Type::Unit) {
+            return Err(
+                Diagnostic::new(offset, "Assignment operators must return Unit").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "ASSIGN_OPERATOR_RETURN_TYPE",
                 ),
-            };
-            let value = self.expected_value(&expression, &Type::String)?;
-            return if let Some((cell, _)) = cell {
-                self.cell_store(cell, Type::String, value, offset)
-            } else {
-                Ok(Statement::Store(local.unwrap().slot, value))
-            };
+            );
         }
-        if !matches!(ty, Type::Int | Type::Long | Type::Float | Type::Double) {
+        let replacing =
+            self.compound_operator_candidate(receiver.clone(), binary, right, Some(target), offset);
+        if assigning.is_ok() && replacing.is_ok() {
             return Err(Diagnostic::new(
                 offset,
-                "Numeric compound assignment supports only mutable Int, Long, Float, and Double locals",
+                "Both assignment and binary operators are applicable",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "ASSIGN_OPERATOR_AMBIGUITY",
             ));
         }
-        let binary = Expr {
+        if assigning.is_ok() {
+            if let Err(error) = &replacing {
+                if error.kind == crate::DiagnosticKind::UnsupportedLanguage
+                    || error.message.contains("Ambiguous")
+                {
+                    return Err(error.clone());
+                }
+            }
+            return Ok(Statement::Expression(self.operator_call(
+                receiver,
+                assignment,
+                std::slice::from_ref(right),
+                offset,
+            )?));
+        }
+        if replacing.is_ok() {
+            if let Err(error) = &assigning {
+                if error.kind == crate::DiagnosticKind::UnsupportedLanguage
+                    || error.message.contains("Ambiguous")
+                {
+                    return Err(error.clone());
+                }
+            }
+            let value = self.compound_binary_value(receiver, binary, right, offset)?;
+            return self.compound_operator_store(target, value, offset);
+        }
+        let assigning = assigning.unwrap_err();
+        let replacing = replacing.unwrap_err();
+        if assigning.message.contains("Ambiguous") || replacing.message.contains("Ambiguous") {
+            return Err(
+                Diagnostic::new(offset, "Ambiguous compound operator").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "ASSIGN_OPERATOR_AMBIGUITY",
+                ),
+            );
+        }
+        if assigning.kind == crate::DiagnosticKind::UnsupportedLanguage {
+            return Err(assigning);
+        }
+        if assigning.message.contains("operator modifier")
+            || replacing.message.contains("operator modifier")
+        {
+            return Err(
+                Diagnostic::new(offset, "The operator modifier is required").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "OPERATOR_MODIFIER_REQUIRED",
+                ),
+            );
+        }
+        if replacing.message.contains("Cannot reassign") {
+            return Err(
+                replacing.with_kind(crate::DiagnosticKind::InvalidKotlin, "VAL_REASSIGNMENT")
+            );
+        }
+        if replacing.kind == crate::DiagnosticKind::InvalidKotlin
+            || replacing.kind == crate::DiagnosticKind::UnsupportedLanguage
+        {
+            return Err(replacing);
+        }
+        Err(
+            Diagnostic::new(offset, "No supported compound operator is applicable").with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "COMPOUND_OPERATOR_UNSUPPORTED",
+            ),
+        )
+    }
+
+    fn compound_operator_candidate(
+        &mut self,
+        receiver: Value,
+        method: &str,
+        right: &Expr,
+        target: Option<&str>,
+        offset: usize,
+    ) -> Result<Type> {
+        let next = self.next;
+        let initialized = self.initialized.clone();
+        let refinements = self.refinements.clone();
+        let lambdas = self.lambdas.borrow().len();
+        let result = (|| {
+            let value = if target.is_some() {
+                self.compound_binary_value(receiver, method, right, offset)?
+            } else {
+                self.operator_call(receiver, method, std::slice::from_ref(right), offset)?
+            };
+            let ty = value.ty.clone();
+            if let Some(target) = target {
+                self.compound_operator_store(target, value, offset)?;
+            }
+            Ok(ty)
+        })();
+        self.next = next;
+        self.initialized = initialized;
+        self.refinements = refinements;
+        self.lambdas.borrow_mut().truncate(lambdas);
+        result
+    }
+
+    fn compound_binary_value(
+        &mut self,
+        receiver: Value,
+        method: &str,
+        right: &Expr,
+        offset: usize,
+    ) -> Result<Value> {
+        if !matches!(
+            receiver.ty,
+            Type::Int | Type::Long | Type::Float | Type::Double | Type::String
+        ) {
+            return self.operator_call(receiver, method, std::slice::from_ref(right), offset);
+        }
+        let symbol = match method {
+            "plus" => "+",
+            "minus" => "-",
+            "times" => "*",
+            "div" => "/",
+            "rem" => "%",
+            _ => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Unsupported binary operator convention",
+                ));
+            }
+        };
+        let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
+        let temporary = format!("<compoundReceiver{slot}>");
+        self.scopes.push(HashMap::from([(
+            temporary.clone(),
+            Local {
+                slot,
+                ty: receiver.ty.clone(),
+                mutable: false,
+            },
+        )]));
+        self.initialized.insert(slot);
+        let result = self.value(&Expr {
             offset,
             kind: ExprKind::Binary(
-                op.trim_end_matches('=').into(),
+                symbol.into(),
                 Box::new(Expr {
                     offset,
-                    kind: ExprKind::Name(name.into()),
+                    kind: ExprKind::Name(temporary),
                 }),
                 Box::new(right.clone()),
             ),
-        };
-        let value = self.value(&binary)?;
-        let value = self.coerce(value, ty.clone(), offset)?;
-        if let Some((cell, _)) = cell {
-            self.cell_store(cell, ty, value, offset)
-        } else {
-            let slot = local.unwrap().slot;
-            self.refinements.remove(&slot);
-            Ok(Statement::Store(slot, value))
+        });
+        self.scopes.pop();
+        result.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
+    }
+
+    fn compound_operator_store(
+        &mut self,
+        target: &str,
+        value: Value,
+        offset: usize,
+    ) -> Result<Statement> {
+        let slot = self.allocate_typed_slot(&value.ty, offset)?;
+        let temporary = format!("<compound{slot}>");
+        self.scopes.push(HashMap::from([(
+            temporary.clone(),
+            Local {
+                slot,
+                ty: value.ty.clone(),
+                mutable: false,
+            },
+        )]));
+        self.initialized.insert(slot);
+        let checked = self.block(&[syntax::Statement {
+            offset,
+            kind: StatementKind::Assign(
+                target.into(),
+                Expr {
+                    offset,
+                    kind: ExprKind::Name(temporary),
+                },
+            ),
+        }]);
+        self.scopes.pop();
+        let (mut body, _) = checked?;
+        if let Some(local) = self.local(target) {
+            self.refinements.remove(&local.slot);
         }
+        body.insert(0, Statement::Store(slot, value));
+        Ok(Statement::Expression(Value {
+            ty: Type::Unit,
+            kind: ValueKind::Block(
+                body,
+                Box::new(Value {
+                    ty: Type::Unit,
+                    kind: ValueKind::Unit,
+                }),
+            ),
+        }))
     }
 
     pub(super) fn check_decrement(

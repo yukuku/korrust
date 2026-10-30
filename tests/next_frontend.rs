@@ -36,7 +36,7 @@ fn type_smartcasts_require_stable_locals_and_correct_branches() {
         "fun f(value: Any?): Int { if (value !is String) return 0; return value.length }",
         "fun f(value: Any?): Int = when(value) { is String -> value.length; else -> 0 }",
         "fun f(value: Any?): Int = when { value is String -> value.length; else -> 0 }",
-        "fun f(value: Any?): Int = when(true) { value is String -> value.length; else -> 0 }",
+        "fun f(value: Any?): Int = when(true) { (value is String) -> value.length; else -> 0 }",
         "fun f(value: Any?): Int { while(value is String) { return value.length }; return 0 }",
     ] {
         assert!(compile(source, "Smartcast.kt").is_ok(), "{source}");

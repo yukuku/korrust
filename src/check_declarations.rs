@@ -3053,6 +3053,10 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         "set" => count >= 2 && (function.result_inferred || function.result == Type::Unit),
         "getValue" | "provideDelegate" => count == 2,
         "setValue" => count == 3 && (function.result_inferred || function.result == Type::Unit),
+        "plus" | "minus" | "times" | "div" | "rem" => count == 1,
+        "plusAssign" | "minusAssign" | "timesAssign" | "divAssign" | "remAssign" => {
+            count == 1 && (function.result_inferred || function.result == Type::Unit)
+        }
         "invoke" => true,
         name if name
             .strip_prefix("component")
