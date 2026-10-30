@@ -261,17 +261,13 @@ pub(super) fn nullability<'a>(
         {
             continue;
         }
-        let nullable = match annotation.name.as_str() {
-            "Lorg/jetbrains/annotations/NotNull;"
-            | "Lorg/jspecify/annotations/NonNull;"
-            | "Landroidx/annotation/NonNull;"
-            | "Ljavax/annotation/Nonnull;" => false,
-            "Lorg/jetbrains/annotations/Nullable;"
-            | "Lorg/jspecify/annotations/Nullable;"
-            | "Landroidx/annotation/Nullable;"
-            | "Ljavax/annotation/Nullable;" => true,
-            _ => return Err(invalid()),
-        };
+        if matches!(
+            annotation.name.as_str(),
+            "Landroidx/annotation/RecentlyNonNull;" | "Landroidx/annotation/RecentlyNullable;"
+        ) {
+            return Err(invalid());
+        }
+        let nullable = nullability_polarity(&annotation.name).ok_or_else(invalid)?;
         if !annotation.values.is_empty() || state.is_some_and(|s| s != nullable) {
             return Err(invalid());
         }
@@ -284,10 +280,86 @@ pub(super) fn nullability<'a>(
     })
 }
 
+fn nullability_polarity(name: &str) -> Option<bool> {
+    Some(match name {
+        "Lorg/jetbrains/annotations/NotNull;"
+        | "Lorg/jspecify/annotations/NonNull;"
+        | "Landroid/annotation/NonNull;"
+        | "Landroidx/annotation/NonNull;"
+        | "Landroidx/annotation/RecentlyNonNull;"
+        | "Landroid/support/annotation/NonNull;"
+        | "Lcom/android/annotations/NonNull;"
+        | "Lorg/checkerframework/checker/nullness/compatqual/NonNullDecl;"
+        | "Lorg/checkerframework/checker/nullness/qual/NonNull;"
+        | "Ledu/umd/cs/findbugs/annotations/NonNull;"
+        | "Lio/reactivex/annotations/NonNull;"
+        | "Lio/reactivex/rxjava3/annotations/NonNull;"
+        | "Lorg/eclipse/jdt/annotation/NonNull;"
+        | "Llombok/NonNull;"
+        | "Ljavax/annotation/Nonnull;"
+        | "Ljakarta/annotation/Nonnull;" => false,
+        "Lorg/jetbrains/annotations/Nullable;"
+        | "Lorg/jspecify/nullness/Nullable;"
+        | "Lorg/jspecify/annotations/Nullable;"
+        | "Landroid/annotation/Nullable;"
+        | "Landroidx/annotation/Nullable;"
+        | "Landroidx/annotation/RecentlyNullable;"
+        | "Landroid/support/annotation/Nullable;"
+        | "Lcom/android/annotations/Nullable;"
+        | "Lorg/checkerframework/checker/nullness/compatqual/NullableDecl;"
+        | "Lorg/checkerframework/checker/nullness/qual/Nullable;"
+        | "Ledu/umd/cs/findbugs/annotations/Nullable;"
+        | "Ledu/umd/cs/findbugs/annotations/PossiblyNull;"
+        | "Ledu/umd/cs/findbugs/annotations/CheckForNull;"
+        | "Lio/reactivex/annotations/Nullable;"
+        | "Lio/reactivex/rxjava3/annotations/Nullable;"
+        | "Lorg/eclipse/jdt/annotation/Nullable;"
+        | "Ljavax/annotation/Nullable;"
+        | "Ljavax/annotation/CheckForNull;"
+        | "Ljakarta/annotation/Nullable;"
+        | "Lio/vertx/codegen/annotations/Nullable;" => true,
+        _ => return None,
+    })
+}
+
+pub(super) fn type_semantic_annotation(name: &str) -> bool {
+    nullability_polarity(name).is_some()
+        || matches!(
+            name,
+            "Lorg/jspecify/nullness/NullMarked;"
+                | "Lorg/jspecify/annotations/NullMarked;"
+                | "Lorg/jspecify/annotations/NullUnmarked;"
+                | "Lorg/jspecify/nullness/NullnessUnspecified;"
+                | "Lorg/jspecify/annotations/NullnessUnspecified;"
+                | "Ljavax/annotation/ParametersAreNonnullByDefault;"
+                | "Ljavax/annotation/ParametersAreNullableByDefault;"
+                | "Ljavax/annotation/meta/TypeQualifier;"
+                | "Ljavax/annotation/meta/TypeQualifierNickname;"
+                | "Ljavax/annotation/meta/TypeQualifierDefault;"
+                | "Lorg/jetbrains/annotations/ReadOnly;"
+                | "Lorg/jetbrains/annotations/Mutable;"
+                | "Lorg/jetbrains/annotations/Unmodifiable;"
+                | "Lorg/jetbrains/annotations/UnmodifiableView;"
+                | "Lkotlin/annotations/jvm/ReadOnly;"
+                | "Lkotlin/annotations/jvm/Mutable;"
+        )
+}
+
 pub(super) fn attach(
     class: &mut JavaClass,
     attrs: &Attributes,
     method_attrs: &[Attributes],
+) -> Result<()> {
+    attach_with_declarations(class, attrs, method_attrs, &mut |annotation| {
+        Ok(annotation.name == "Ljava/lang/FunctionalInterface;" && annotation.values.is_empty())
+    })
+}
+
+pub(super) fn attach_with_declarations(
+    class: &mut JavaClass,
+    attrs: &Attributes,
+    method_attrs: &[Attributes],
+    passive: &mut impl FnMut(&Annotation) -> Result<bool>,
 ) -> Result<()> {
     if !attrs.return_type_annotations.is_empty() || !attrs.parameter_type_annotations.is_empty() {
         return Err(invalid());
@@ -336,6 +408,22 @@ pub(super) fn attach(
             {
                 return Err(invalid());
             }
+            let mut declarations = Vec::new();
+            for annotation in &attributes.annotations {
+                if !passive(annotation)? {
+                    declarations.push(annotation);
+                }
+            }
+            let mut parameter_declarations = Vec::new();
+            for annotations in &attributes.parameter_annotations {
+                let mut selected = Vec::new();
+                for annotation in annotations {
+                    if !passive(annotation)? {
+                        selected.push(annotation);
+                    }
+                }
+                parameter_declarations.push(selected);
+            }
             let converted = params
                 .into_iter()
                 .enumerate()
@@ -344,11 +432,11 @@ pub(super) fn attach(
                         format!("arg{i}"),
                         nullability(
                             ty,
-                            attributes
-                                .parameter_annotations
+                            parameter_declarations
                                 .get(i)
                                 .into_iter()
                                 .flatten()
+                                .copied()
                                 .chain(attributes.parameter_type_annotations.iter().filter_map(
                                     |(index, annotation)| (*index == i).then_some(annotation),
                                 )),
@@ -359,9 +447,9 @@ pub(super) fn attach(
                 .collect::<Result<Vec<_>>>();
             let result = nullability(
                 result,
-                attributes
-                    .annotations
+                declarations
                     .iter()
+                    .copied()
                     .chain(attributes.return_type_annotations.iter()),
             );
             if let (Ok(params), Ok(result)) = (converted, result) {
@@ -385,13 +473,11 @@ pub(super) fn attach(
             }
         }
     }
-    if !attrs.unsupported
-        && attrs.annotations.iter().all(|annotation| {
-            class.access & 0x0200 != 0
-                && annotation.name == "Ljava/lang/FunctionalInterface;"
-                && annotation.values.is_empty()
-        })
-    {
+    let mut passive_class = true;
+    for annotation in &attrs.annotations {
+        passive_class &= passive(annotation)?;
+    }
+    if !attrs.unsupported && passive_class {
         class.unsupported = false;
     }
     class.library = Some(LibraryClass {

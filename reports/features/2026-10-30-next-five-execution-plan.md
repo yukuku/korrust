@@ -25,3 +25,9 @@ Each family needs positive, invalid and valid-unsupported cases; fixed Java call
 - Architecture, failure and selection audits started against the clean baseline.
 - Physical descriptor refactor and filename-policy repair have nonoverlapping live ownership. The lead owns the subject-when repair and integration.
 - Annotation implementation uses an isolated baseline under target; archived work is unaccepted until fresh integration and validation.
+
+### Prerequisite checkpoints
+
+Commit `986398d57` separates physical JVM descriptors and repairs legal ASCII facade naming, alias constructors and selected expression resolution. Four unchanged upstream originals now execute successfully: typeAliasConstructor, simpleFromOtherFile, enum/inner and genericTypeAliasConstructor2. The initial publication path error preserved execution results and was corrected without rerunning or overwriting history.
+
+The subsequent library-contract checkpoint resolves checked Kotlin/JVM renamed members through actual methods and distinguishes passive Java declaration annotations from semantic nullability/default/type-use annotations. Fixed Java differential contracts, descriptor comparisons, focused Rust regressions and warnings-denied Clippy pass. BackForwardList progresses past removeAt to compound assignment; SDK Intent.addFlags compilation is distinct from Android runtime. No new family is accepted by either repair checkpoint.

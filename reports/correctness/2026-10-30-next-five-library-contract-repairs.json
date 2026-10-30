@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T05:51:53.327574+00:00",
+  "status": "targeted_checkpoint_pass",
+  "scope": "Kotlin builtin JVM renamed signatures and Java declaration annotation availability; prerequisite repairs, zero new feature families.",
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "validation": {
+    "rust": "64 classpath tests, one fixed Java differential contract test, one physical bridge differential, four property visibility tests, one protected bridge test, five batch frontend tests passed. All-target Clippy warnings denied passed.",
+    "jvm": "Fixed official-compiled Java caller executes actual library methods under JVM verification, with UTF-16, seeded Random, boxed null/unboxing exception order, list mutation/override dispatch and receiver/index effects. Public descriptors compared.",
+    "application": "Real SDK Intent.addFlags isolated source compiles. Unchanged BackForwardList reaches a new compound-assignment blocker after removeAt; no whole-file success claimed."
+  },
+  "limitations": [
+    "Direct explicit java.lang.CharSequence and default Kotlin CharSequence provenance is not represented separately; direct mapping remains bounded while verified inherited StringBuilder contracts work.",
+    "Number conversion mappings remain out of scope because explicit Java Number differs from Kotlin Number.",
+    "Unknown type-use and semantic qualifier/default annotations remain explicit fences; ordinary passive declaration markers are structurally inspected, not API-name allowlisted.",
+    "This checkpoint is targeted validation before final integrated frozen regression runs."
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/library-member-contracts-final.log",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/library-repair-classpath-final.log",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/library-repair-clippy-final.log",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/library-repair-runtime-regressions.log",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/library-repair-source-checkpoint.zip",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/library-repair-source-sha256.json",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/next5-batch-provenance.log",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/probes/BackForwardList-final.json",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/probes/Builder.kt",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/probes/ExplicitCharSequence.kt",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/probes/Intent-final.json",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/probes/Intent.kt",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/probes/Random.kt",
+    "reports/correctness/2026-10-30-next-five-library-contract-repairs/probes/Remove.kt"
+  ]
+}

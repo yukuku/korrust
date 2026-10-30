@@ -733,7 +733,20 @@ impl Checker<'_> {
                 "(ILjava/lang/Object;)Ljava/lang/Object;",
                 Type::Java("java/lang/Object".into()),
             ),
-            _ => return self.extension_call(receiver, name, args, &[], offset),
+            _ => {
+                let owner = library::type_owner(&receiver.ty).unwrap();
+                let mapped =
+                    library::ordinary_member_methods(self.classpath, owner, name, args.len())?
+                        .iter()
+                        .any(|method| {
+                            method.source_name() == name && method.source_name() != method.name
+                        });
+                return if mapped {
+                    self.java_call(receiver, name, args, offset)
+                } else {
+                    self.extension_call(receiver, name, args, &[], offset)
+                };
+            }
         };
         let mut values = vec![receiver];
         if name == "set" {

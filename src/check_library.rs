@@ -9,7 +9,7 @@ pub(super) fn ordinary_member_methods(
     name: &str,
     argument_count: usize,
 ) -> Result<Vec<JavaMethod>> {
-    let methods = classpath
+    let mut methods = classpath
         .ordinary_methods(owner)?
         .into_iter()
         .map(|method| {
@@ -26,6 +26,39 @@ pub(super) fn ordinary_member_methods(
             Ok(method)
         })
         .collect::<Result<Vec<_>>>()?;
+    for mapping in crate::classpath::jvm_builtins::MAPPINGS
+        .iter()
+        .filter(|mapping| mapping.source_name == name)
+    {
+        if mapping.inherited_only && owner == mapping.owner {
+            continue;
+        }
+        if relations::as_supertype(classpath, &Type::Java(owner.into()), mapping.owner).is_none() {
+            continue;
+        }
+        let declarations =
+            classpath.builtin_member_declarations(mapping.classifier, mapping.source_name)?;
+        let declaration = declarations
+            .iter()
+            .find(|declaration| declaration.descriptor == mapping.descriptor)
+            .ok_or_else(|| {
+                Diagnostic::new(0, "Kotlin builtin JVM mapping does not match its metadata")
+            })?;
+        for method in methods.iter_mut().filter(|method| {
+            !method.unsupported
+                && method.name == mapping.jvm_name
+                && method.descriptor == mapping.descriptor
+                && method.access & 9 == 1
+                && method.source_name() == method.name
+        }) {
+            method.kotlin_params = declaration.kotlin_params.clone();
+            method.kotlin_result = declaration.kotlin_result.clone();
+            method.library = declaration.library.clone();
+            if let Some(library) = &mut method.library {
+                library.abstract_ = method.access & 0x400 != 0;
+            }
+        }
+    }
     let declarations = if methods.iter().any(|method| {
         method.owner == "java/lang/Object"
             && method.source_name() == name

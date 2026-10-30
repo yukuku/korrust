@@ -1162,10 +1162,9 @@ impl Checker<'_> {
                 .map(Ok)
                 .unwrap_or_else(|| self.classpath.load(owner))
             {
-                let inherited = self
-                    .classpath
-                    .methods(owner)
-                    .unwrap_or_else(|_| class.methods.clone());
+                let inherited =
+                    library::ordinary_member_methods(self.classpath, owner, name, args.len())
+                        .unwrap_or_else(|_| class.methods.clone());
                 let mut eligible = Vec::new();
                 let mut ordinary = Vec::new();
                 for method in inherited

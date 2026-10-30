@@ -582,6 +582,22 @@ pub(super) fn builtin_class_declarations(
     bytes: &[u8],
     classifier: &str,
 ) -> Result<Vec<JavaMethod>> {
+    builtin_declarations(bytes, classifier, None)
+}
+
+pub(super) fn builtin_member_declarations(
+    bytes: &[u8],
+    classifier: &str,
+    name: &str,
+) -> Result<Vec<JavaMethod>> {
+    builtin_declarations(bytes, classifier, Some(name))
+}
+
+fn builtin_declarations(
+    bytes: &[u8],
+    classifier: &str,
+    requested_name: Option<&str>,
+) -> Result<Vec<JavaMethod>> {
     let (strings, qualified_names, fragment) = builtin_fragment(bytes)?;
     let mut selected = None;
     for bytes in fragment.messages(4)? {
@@ -601,7 +617,7 @@ pub(super) fn builtin_class_declarations(
             "BUILTIN_CLASSIFIER_NOT_FOUND",
         )
     })?;
-    if !class.messages(5)?.is_empty() {
+    if requested_name.is_none() && !class.messages(5)?.is_empty() {
         return Err(Diagnostic::new(
             0,
             "Generic builtin class member inventories are unsupported",
@@ -613,10 +629,16 @@ pub(super) fn builtin_class_declarations(
     }
     let mut context = Context::new(&strings, &class)?;
     context.qualified_names = Some(&qualified_names);
+    context.type_parameters(&class, 5)?;
     let mut result = Vec::new();
     for bytes in class.messages(9)? {
         let function = Proto::parse(bytes)?;
-        if function.integer(9)?.unwrap_or(6) & 14 != 6 {
+        let name = metadata_name(&strings, function.integer(2)?)?;
+        if requested_name.is_some_and(|requested| requested != name) {
+            continue;
+        }
+        let flags = function.integer(9)?.unwrap_or(6);
+        if flags & 14 != 6 {
             continue;
         }
         if !function.messages(4)?.is_empty()
@@ -657,7 +679,7 @@ pub(super) fn builtin_class_declarations(
         descriptor.push_str(&returned.descriptor());
         result.push(JavaMethod {
             owner: classifier.into(),
-            name: metadata_name(&strings, function.integer(2)?)?.to_owned(),
+            name: name.to_owned(),
             descriptor,
             access: 1,
             unsupported: false,
@@ -665,7 +687,18 @@ pub(super) fn builtin_class_declarations(
             kotlin_params: Some(parameters),
             kotlin_result: Some(returned),
             kotlin_internal: false,
-            library: None,
+            library: requested_name.map(|_| LibraryMethod {
+                abstract_: true,
+                builtin_array: false,
+                kotlin_public: true,
+                source_name: name.to_owned(),
+                type_parameters: Vec::new(),
+                receiver: None,
+                infix: flags & 512 != 0,
+                operator: flags & 256 != 0,
+                inline: false,
+                code: None,
+            }),
         });
     }
     result.sort_by(|a, b| (&a.name, &a.descriptor).cmp(&(&b.name, &b.descriptor)));

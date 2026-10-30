@@ -1,0 +1,426 @@
+{
+  "schema_version": 1,
+  "kind": "selection_research",
+  "created_at": "2026-10-30T05:21:46.676195+00:00",
+  "status": "proposed_not_accepted",
+  "source_revision": "39e87a38ae59075ce14cd110c88efbab46858131",
+  "selection": "Practical bounded five following accepted ten; refactor and correctness repairs are prerequisites and excluded from the five. All new implementations require fresh final acceptance.",
+  "accepted_preexisting_family_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    13,
+    15,
+    16
+  ],
+  "recommended_family_numbers": [
+    17,
+    10,
+    11,
+    18,
+    19
+  ],
+  "research_execution_scope": "Read existing source, policy, matrix, reports and archived handoffs. No compiler or oracle execution during this audit. Historical first-diagnostic app reports do not establish current blockers.",
+  "selection_tradeoff": "Prioritizes substantial archived work and manageable new semantics plus repair dependencies. Inner classes and value ABI have stronger direct AndroidBible impact but much larger constructor/capture/representation changes. Class delegation has no observed AndroidBible use in the archived official PSI inventory.",
+  "families": [
+    {
+      "number": 17,
+      "name": "Rich annotation declarations and values",
+      "why_new": "Existing ordinary String/Int/Boolean annotation use does not implement source annotation declarations, richer JVM element types, defaults or metadata.",
+      "scope": "Source public top-level annotation classes; Long/Float/Double/Char, enums, KClass, arrays/nested annotations, defaults, retention and supported targets; Kotlin/Java consumers.",
+      "acceptance_requirements": [
+        "Java callers compiled against oracle reused against candidate with -Xverify:all; reflect AnnotationDefault and each value including raw floating bits/UTF16",
+        "Kotlin consumer must read KClass and KClass arrays via correct Class-to-KClass physical/logical conversion; otherwise explicit unsupported read boundary",
+        "Validate wrong authored shadow and annotationType expectations against oracle; hashCode/toString element names reject",
+        "Full final-source regression/malformed-classpath tests after three-way merge; archived dev-v2/dev-v3 JVM successes do not validate latest partial"
+      ],
+      "prerequisites": [
+        "Accepted class literals, constant expressions, array types, metadata; review annotation ABI mapping"
+      ],
+      "evidence": [
+        {
+          "path": "reports/features/2026-10-28-new-jvm-families-unintegrated-work/rich-annotations/handoff.json",
+          "line": 1,
+          "sha256": "46af866ce7d3ca0e78ec543e678cd1a0baefcf4a46b87461b2910f56feed4aa6",
+          "note": "Unintegrated/unaccepted; complete interfaces, base hashes, archives, remaining work"
+        },
+        {
+          "path": "benchmarks/sources/nowinandroid/core/common/src/main/kotlin/com/google/samples/apps/nowinandroid/core/common/network/NiaDispatchers.kt",
+          "line": 25,
+          "sha256": "4ad548d6a2ab295b04999096aaaf5b53ebfc7454253de9e709aea0135d4b5df0",
+          "note": "Small unchanged secondary app target: enum-valued Dispatcher annotation with Qualifier and runtime retention"
+        },
+        {
+          "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocument.kt",
+          "line": 51,
+          "sha256": "6fa1a91c4d5cf9f578891b1cce1c454a74d44a96765d2fc28085c0cf5b4c6a96",
+          "note": "KClass-valued Serializable(with=...) usage; serialization plugin behavior remains separately unsupported"
+        }
+      ],
+      "upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/annotations/defaultParameterValues.kt",
+          "line": 1,
+          "sha256": "580fe6257cda77ad174e2214ea8ce1639db6edba29ffc9c9a53ec030f202e2ba",
+          "note": "Substantial source declarations/defaults/nested/enum/class/array contract; may expose annotationClass mapping prerequisites"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/annotations/kt10136.kt",
+          "line": 1,
+          "sha256": "d5458d8a407ffd86095fa5d8fc1451b780b0d334aa906693ccaca0869508b4a1",
+          "note": "Nested annotation array default and reflection"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt",
+          "line": 1,
+          "sha256": "cc2a6d8fbfa40c2a3c699e95f1ea632f7b934ed36303dfb80d21cf74a0ea8268",
+          "note": "Retain original FILE 1.kt and JavaAnn package-private visibility; current historical first failure filename policy"
+        }
+      ],
+      "boundaries": [
+        "No Room/KSP/serialization/Compose plugin compatibility claim from passive annotation emission",
+        "Byte/Short/unsigned/generic/nonpublic/nested declaration/repeatable/type-use/runtime instantiation boundaries remain explicit until independently implemented"
+      ]
+    },
+    {
+      "number": 10,
+      "name": "Class/interface delegation",
+      "why_new": "Delegated properties are already supported; class-header by semantics require forwarding members, captured delegate identity, bridge and metadata contracts.",
+      "scope": "Public abstract source interface contracts, invariant parameterized interfaces, properties, explicit override precedence, disjoint delegates, bounded Java interfaces.",
+      "acceptance_requirements": [
+        "Finish archived frozen harness, including decorated imported contract boundaries and public/protected ABI normalization",
+        "Ensure delegation expression evaluated once; mutable source property changes do not retarget captured delegate",
+        "Generic bridge dispatch and Kotlin metadata checks",
+        "Do not relabel unsupported generic member-extension/default-body original as pass"
+      ],
+      "evidence": [
+        {
+          "path": "reports/features/2026-10-28-new-jvm-families-unintegrated-work/class-delegation/handoff.json",
+          "line": 1,
+          "sha256": "a8ad350d38cb7c7dff4f8c17b413ed537767805555e568a4408fcfa5a9bffbb3",
+          "note": "Archived source with base/current hashes; interrupted final run, prior 42 pass/4 failures/12 invalid/20 unsupported; no final acceptance"
+        },
+        {
+          "path": "reports/features/2026-10-28-new-jvm-families-unintegrated-work/class-delegation/README.md",
+          "line": 1,
+          "sha256": "3c70860daabd42e9b698024e2fb51fbc7da6099d8cb761059e661b392fc073ca",
+          "note": "Patch relative to sealed-v2-derived immutable baseline; must three-way merge"
+        }
+      ],
+      "app_impact": "Archived handoff records official PSI 400 AndroidBible Kotlin files, 0 KtDelegatedSuperTypeEntry nodes. No new AndroidBible source success should be claimed for this family.",
+      "upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/delegation/delegationDifferentModule2.kt",
+          "line": 1,
+          "sha256": "f879326677815c56b55de4c2b967ce4140d9a6de7e1ef5184d6201e1b14abea2",
+          "note": "Bounded source property forwarding in same and imported contract cases"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/delegation/delegationToVar.kt",
+          "line": 1,
+          "sha256": "9d245bd8581baaacaaea16a0d708b722118856697f3846dc867fe6183f0c9dd2",
+          "note": "Captured delegate identity after property mutation; captured anonymous closure may require expanded objects"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt",
+          "line": 1,
+          "sha256": "87e1f420a50df2fe2bc6917ba193b52a9070249b5cf16a5c35470918cb7b81a8",
+          "note": "Historical larger original additionally requires generic member extension property and default body; keep unsupported until implemented"
+        }
+      ],
+      "boundaries": [
+        "Default bodies, decorated contracts, complex erased overlap, data/object/enum/secondary/superclass combinations stay explicit until supported"
+      ]
+    },
+    {
+      "number": 11,
+      "name": "Expanded object semantics",
+      "why_new": "Existing named singleton fields/methods and limited anonymous interface implementations do not cover data-object generated semantics or ordinary superclass state.",
+      "scope": "Data object equality/hashCode/toString and Kotlin metadata, nominal superclass/interface support, supported object expressions with identity/state and override dispatch.",
+      "acceptance_requirements": [
+        "Compare equal-but-not-identical reflection-created data object instance, hash contract and override/final inherited toString precedence",
+        "Class initialization effects exactly once; object identity and superclass ctor ordering",
+        "Preserve LANGUAGE:+DataObjects original directives and add defensible matching settings support; harness is infrastructure and does not itself count"
+      ],
+      "evidence": [
+        {
+          "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt",
+          "line": 137,
+          "sha256": "725aa743c8b56b9a69dcdbfdc0bc9341885760366d0dba3c71c3fc679cbe8d62",
+          "note": "AudioBarCommand contains 12 data objects; complete file still depends on Compose support"
+        },
+        {
+          "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/ProgressMarkRenameDialog.kt",
+          "line": 18,
+          "sha256": "a0206c0c9fb35b685c2d48ba87d19face0167e2adfcf095d9ca263d14d15d04e",
+          "note": "Named object extends DialogFragment"
+        },
+        {
+          "path": "benchmarks/sources/nowinandroid/feature/search/impl/src/main/kotlin/com/google/samples/apps/nowinandroid/feature/search/impl/RecentSearchQueriesUiState.kt",
+          "line": 21,
+          "sha256": "77582715f18486f63d54f3d8ce5ec0af226874903cb1e7bd0126a24c05bc27bd",
+          "note": "Small unchanged secondary target: sealed interface with Loading data object and data-class Success"
+        }
+      ],
+      "upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/dataObjects/equals.kt",
+          "line": 1,
+          "sha256": "2f6061be9250e73090fb56bb1a5b2fef8edcf0e9fc385dd36aa3b7b7e4b3ec59",
+          "note": "Original +DataObjects directive was harness unsupported historically"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/dataObjects/hashCode.kt",
+          "line": 1,
+          "sha256": "0445eef11ca56801b263ef0b7dd81ee10c12b4614a58ea3282f9d6f7fc042d25",
+          "note": "Nested data object hash semantics"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/dataObjects/toString.kt",
+          "line": 1,
+          "sha256": "c10b40ba3b623737b97ee55236100ca13fac08a99a7705d1609d81acc61b628d",
+          "note": "Explicit override and inherited final/open/abstract method precedence"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/dataObjects/multipleInstances.kt",
+          "line": 1,
+          "sha256": "898047bbebea270f0bda3679b66ccd2e58c47eb086080586ac74921a87c094ec",
+          "note": "Reflection creates doppelganger; equality must be class equality, not identity"
+        }
+      ],
+      "boundaries": [
+        "General captured local/inner-class lowering remains separate unless explicitly implemented",
+        "Full AudioBar Compose execution not implied"
+      ]
+    },
+    {
+      "number": 18,
+      "name": "Member and companion extensions / extension properties",
+      "why_new": "Top-level and compiled library extensions already work; member extensions need distinct dispatch/extension receivers and property accessor metadata.",
+      "scope": "Ordinary source class/object/companion member extension functions and computed extension properties, virtual dispatch where supported, receiver priority/capture/nullability.",
+      "acceptance_requirements": [
+        "Ensure receiver identity/evaluation order and this versus this@Owner resolution",
+        "Java receiver parameter positions, descriptors and official Kotlin consumer calls/metadata",
+        "Invalid receiver access and ambiguous implicit receivers reject explicitly",
+        "Preserve larger inner-class/default-argument fixture as interaction boundary if inner classes remain unsupported"
+      ],
+      "evidence": [
+        {
+          "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ScrollbarSetter.kt",
+          "line": 37,
+          "sha256": "9dba6adc4877c902409d5462d2dd2920f0c0a568e89dd41f5b7abc3bee0a2e27",
+          "note": "Object member extension RecyclerView.setVerticalThumb; real Android dependencies, reflection and property delegation remain app prerequisites"
+        },
+        {
+          "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/MarkerListActivity.kt",
+          "line": 540,
+          "sha256": "56d4c32ab6deed3950195a06a459ba3f6fc809b36eefcbc9e2d7471e55646e3e",
+          "note": "Class member StringBuilder.dumpMarker extension; larger Android activity remains multi-blocked"
+        }
+      ],
+      "upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/extensionFunctions/functionWithTheSameDispatchAndExtensionReceiver.kt",
+          "line": 1,
+          "sha256": "4d6b0bf0b086bccc6a9b4974909aa2214642d7129827c219069db5d2f4baabc7",
+          "note": "Small direct distinct receiver identity original"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/extensionFunctions/kt3285.kt",
+          "line": 1,
+          "sha256": "e66af716ce24f0bf951ce247aaff4865fe3b324ae94ef21415e5f7db53e9a222",
+          "note": "Inherited generic member extension invoked through receiver lambda"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt",
+          "line": 1,
+          "sha256": "a6ead4a04087fc0097e79c3128b11378bfeed42be48845a02b53ba0f8aca5273",
+          "note": "Larger original also requires inner class B; do not narrow/edit to claim pass"
+        }
+      ],
+      "boundaries": [
+        "Local/generic/inner/context receiver extensions need explicit support or rejection",
+        "Existing top-level/library extensions remain regressions"
+      ]
+    },
+    {
+      "number": 19,
+      "name": "Source inline/reified semantics",
+      "why_new": "Existing compiled inline expansion and accepting certain private inline functions as ordinary functions are previous support. Reified specialization and source inline parameter/control-flow contracts are genuinely new.",
+      "scope": "Source inline call expansion, reified is/as?/as/class literals, noinline/crossinline and supported nonlocal returns; local state/evaluation order/exception boundaries.",
+      "acceptance_requirements": [
+        "Actual source inline semantics, not a synchronous ordinary-call approximation",
+        "Reified primitive/reference/nullable type tests and class identity; generic substitutions and boxing",
+        "Nonlocal return and finally effects, invalid noinline/crossinline escape calls",
+        "Re-run unchanged larger primitiveClassEquality after source reified and Short repair; Short repair itself is not a new family"
+      ],
+      "evidence": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt",
+          "line": 1,
+          "sha256": "64bb8bc84e23ff63081dfc70ba5b8a1b7c5388dcc0119ac77d9e685dd3fc6b88",
+          "note": "Historical larger correctness failure needs Short.toShort/class identity and reified inline support"
+        },
+        {
+          "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongFilter.kt",
+          "line": 37,
+          "sha256": "9f94d957dba2a3666f0f1fc6b1d4d165b7db7dc251146217490ae5183a5299e1",
+          "note": "Private inline matchesAll lambda call; existing private inline support must be treated as regression"
+        },
+        {
+          "path": "benchmarks/sources/nowinandroid/core/network/src/main/kotlin/com/google/samples/apps/nowinandroid/core/network/demo/DemoNiaNetworkDataSource.kt",
+          "line": 61,
+          "sha256": "1cf164494ce2cd18ae55f50b065a845d65d65c6433f311f75d0fbca56a751ca6",
+          "note": "Reified source app usage also suspend; no whole-file pass from reified alone"
+        },
+        {
+          "path": "benchmarks/sources/nowinandroid/core/designsystem/src/main/kotlin/com/google/samples/apps/nowinandroid/core/designsystem/component/scrollbar/LazyScrollbarUtilities.kt",
+          "line": 38,
+          "sha256": "3fe6c25c3285a7b6bd8eb3b8018ca784182a4ce72c0a5838fb2426a2e45e8f86",
+          "note": "Actual source crossinline callback parameters"
+        }
+      ],
+      "upstream_originals": [
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt",
+          "line": 1,
+          "sha256": "f500737df116ecdd44fa50403bf941dde82da05f55f7e092d75375d79b4d58ea",
+          "note": "Small source inline reified is original with FILE boundaries"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/boxInline/typeParameters/basic.kt",
+          "line": 1,
+          "sha256": "5dc0a84c78cdc5ab1dea24a02e9d60ed1d497141a458e0e8413708f917fd014c",
+          "note": "Generic class method inlining and nonlocal return; constructor inference may be prerequisite"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt",
+          "line": 1,
+          "sha256": "b10a8ee1323b6d69ea400193c9088222fb3f6a4c0ac6f6bea98118b0d81d68a0",
+          "note": "Nonlocal Unit return with effects; FILE numeric names must stay intact"
+        },
+        {
+          "path": "references/kotlin/compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt",
+          "line": 1,
+          "sha256": "64bb8bc84e23ff63081dfc70ba5b8a1b7c5388dcc0119ac77d9e685dd3fc6b88",
+          "note": "Full larger original retained unchanged"
+        }
+      ],
+      "boundaries": [
+        "Suspend inline bodies and unrestricted coroutine/crossinline captures remain separate",
+        "No API-name special cases and no runtime optimization claims"
+      ]
+    }
+  ],
+  "deferred_alternatives": [
+    {
+      "number": 7,
+      "name": "Single-field value-class JVM ABI",
+      "priority": "Highest direct small AndroidBible target, larger representation risk",
+      "evidence": [
+        {
+          "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+          "line": 3,
+          "sha256": "487b8ecadfe52f276154df2c2fabe3d4bdea0deb550ad5cd7400dd63fe0ddc0c",
+          "note": "True String-backed value class with toString override; unchanged complete-source target"
+        },
+        {
+          "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt",
+          "line": 3,
+          "sha256": "edaa027f6e6f053e85ae87a9afe7e9a6ded54e0fb09f98a1fe2db12391ecf37d",
+          "note": "Ordinary data-class consumer, not itself value class"
+        },
+        {
+          "path": "reports/features/2026-10-28-new-jvm-families-unintegrated-work/value-class-readonly-assessment.json",
+          "line": 1,
+          "sha256": "cd8fa3830620a0d47830e2bd0318b32852ffb76f95a837da136fd32358caf924",
+          "note": "Architecture-only research with mangling/carriers/boxing/metadata considerations"
+        }
+      ],
+      "reason": "Requires logical-versus-physical carrier and box/unbox ABI throughout calls/fields/constructors/generics/nullability before unsigned; do not graft primitive aliases."
+    },
+    {
+      "number": 9,
+      "name": "Inner/local classes and capture",
+      "priority": "Strongest widespread AndroidBible source syntax impact",
+      "evidence": [
+        {
+          "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt",
+          "line": 51,
+          "sha256": "8d020890054d7f277d4eb9dd6931d58ec559493bbcaccfe3e6caab08dd060431",
+          "note": "Inner adapter reads/captures outer state and this@BackForwardListController"
+        },
+        {
+          "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/versionmanager/VersionListFragment.kt",
+          "line": 293,
+          "sha256": "c7a53212199123e23e67d3ba822c75a0ad0361e14d8483ae24b182d13a04a882",
+          "note": "Multiple actual inner holder/adapter/callback classes"
+        }
+      ],
+      "reason": "Constructor outer receiver ABI, enclosing metadata, captures and synthetic access require broad lowering; sensible sixth milestone when requested."
+    },
+    {
+      "number": 12,
+      "name": "Expanded enums",
+      "reason": "Substantial entry subclass dispatch but current ordinary enum bodies/arguments already supported; direct app need for entry-specific subclasses unestablished. Do not count constructors/defaults alone."
+    },
+    {
+      "number": 14,
+      "name": "Unsigned",
+      "reason": "Depends on reusable value-class ABI and actual ordinary stdlib operations; signed unsignedBinarySearch helper does not demonstrate unsigned source need."
+    },
+    {
+      "number": 20,
+      "name": "Suspend functions",
+      "reason": "AndroidBible audio repositories use suspend extensively, but real Continuation/resumption/spilled state is larger than current five and cannot be approximated by synchronous calls."
+    }
+  ],
+  "historical_evidence_limits": [
+    "2026-10-28 final10-upstream sample is 7 pass/17 correctness failures/6 language boundaries/6 harness boundaries; this is a selected sample, no language percentage.",
+    "2026-10-26 resolved app scan mostly reports missing generated-input setup failures, not current language failures.",
+    "Existing fail repairs, Short support needed by primitiveClassEquality, settings/filename/harness fixes and refactor are excluded from new count.",
+    "Source/fixture freeze, matching official Kotlin classpaths/options, fixed Java callers, Kotlin consumers, metadata/signatures, invalid and supported-language boundaries, Rust/fmt/Clippy/report tests remain required."
+  ],
+  "source_inputs": [
+    {
+      "path": "README.md",
+      "line": 1,
+      "sha256": "46c7f159b2cfc8d8bb3dd75080cabcf7e504b6b6c4a31f215da18fe8e860c118",
+      "note": "Read selection/contract/evidence boundary"
+    },
+    {
+      "path": "reports/README.md",
+      "line": 1,
+      "sha256": "0847a6535af3a8862a74d8cee579221637c0d2873f1b161b2152bc1c04027eb9",
+      "note": "Read selection/contract/evidence boundary"
+    },
+    {
+      "path": "references/README.md",
+      "line": 1,
+      "sha256": "ecae74c585e13d845d6d28ec0e66c10cdee9e13993719a488420b21287dbe958",
+      "note": "Read selection/contract/evidence boundary"
+    },
+    {
+      "path": "reports/features/2026-10-28-new-jvm-families-execution-plan.md",
+      "line": 1,
+      "sha256": "87f1a0db85c9247d4ddb1a1b224d7ea8fcace978c30ce3328756898116cbe665",
+      "note": "Read selection/contract/evidence boundary"
+    },
+    {
+      "path": "reports/features/2026-10-28-new-jvm-families-capability-matrix.json",
+      "line": 1,
+      "sha256": "3c8f8a5cda709b574bce8f801b8ed2b0fae4b634f9189e55309e4d600eef2f27",
+      "note": "Read selection/contract/evidence boundary"
+    },
+    {
+      "path": "reports/correctness/2026-10-28T170101237877Z-final10-upstream.json",
+      "line": 1,
+      "sha256": "43318e3a486049a770123b93d56476448bdeba98bdd3205f8c59d4e7bf23dba4",
+      "note": "Read selection/contract/evidence boundary"
+    }
+  ]
+}

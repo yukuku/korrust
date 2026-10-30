@@ -1,0 +1,1178 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T05:30:25.371379+00:00",
+  "status": "complete",
+  "selection": "Purposive bounded upstream originals: six existing-language runtime regressions, twenty candidate family representatives and interaction/root checks. This matrix is an execution sample, not exhaustive coverage or a feature acceptance tally.",
+  "matrix_sha256": "09535b94b8339567566ae650a5dbf6a5839dfb6f9ae8712cf4af6b5af0187a86",
+  "limitations": [
+    "Unknown directives, unimplemented helpers, diagnostic equivalence, unsupported compiler settings, mixed cyclic Java/Kotlin compilation, and incremental edit scenarios are harness_unsupported.",
+    "Compilation/signature-only cases are scoped explicitly and do not establish runtime behavior or Kotlin metadata compatibility.",
+    "Incremental input is inventoried only; no speedup or rebuild-correctness claim.",
+    "Primitive array, sealed, value, generic, suspend and other family representatives do not establish every family dimension. Family acceptance requires additional independent assertions, invalid cases and official consumers."
+  ],
+  "cases": [
+    {
+      "id": "baseline_typealias",
+      "family": "existing_nongeneric_alias",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasConstructor.kt",
+        "sha256": "f39bee49f74aa332cb68082c019de03502305a067c5e20927007d6b7cc6d0fe6"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-next-five-prerequisite-upstream/baseline_typealias/sources/main/typeAliasConstructor.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/next5-prerequisite-upstream/baseline_typealias/caller/UpstreamBox.class": "dce76c5d14c4b07c63502bdde2daae317771498ccf9257462bc24b864d332c65"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "baseline_default_arguments",
+      "family": "existing_default_arguments",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/simpleFromOtherFile.kt",
+        "sha256": "75775f742707ff5aad7c66a819ae785102f52eb48831a1706b109f8ac3d5e578"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-next-five-prerequisite-upstream/baseline_default_arguments/sources/main/1.kt.source-map.json",
+        "reports/correctness/2026-10-30-next-five-prerequisite-upstream/baseline_default_arguments/sources/main/2.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/next5-prerequisite-upstream/baseline_default_arguments/caller/UpstreamBox.class": "f80dadfe77996b6df0b952caa7063e10e5ea0f989d312ceb20e215bd19916995"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "baseline_enum",
+      "family": "existing_enum",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/enum/inner.kt",
+        "sha256": "625c283ebbe4787e01570b1efafb8308b5671767bb886c03e93697f1e021bcc6"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-next-five-prerequisite-upstream/baseline_enum/sources/main/inner.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/next5-prerequisite-upstream/baseline_enum/caller/UpstreamBox.class": "a137fdffd5293fcba3b201a30f747ed111d52f1e8a2697de716d45de9eb887a5"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "generic_aliases",
+      "family": "generic_aliases",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt",
+        "sha256": "a416c2b8cd2592f0674b9b4b6c2974cb23ba14a5861db6857e36dee05db4fe5b"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-next-five-prerequisite-upstream/generic_aliases/sources/main/genericTypeAliasConstructor2.kt.source-map.json"
+      ],
+      "java_caller_class_hashes": {
+        "target/next5-prerequisite-upstream/generic_aliases/caller/UpstreamBox.class": "a7696ed382043d171aadbe6152c390c398bf107b38c1bbb3bab20e73c29fddd3"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    }
+  ],
+  "commands": [
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0000-stderr.txt"
+    },
+    {
+      "label": "Official compiler identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0001-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/sources/main/typeAliasConstructor.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0002-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/sources/main/typeAliasConstructor.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0003-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/caller",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0004-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/caller:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0005-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/caller:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0006-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0007-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0008-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0009-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0010-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/signatures/official/C",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "C"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0011-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/signatures/candidate/C",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "C"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0012-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/signatures/official/TypeAliasConstructorKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "TypeAliasConstructorKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0013-stderr.txt"
+    },
+    {
+      "label": "baseline_typealias/signatures/candidate/TypeAliasConstructorKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_typealias/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "TypeAliasConstructorKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0014-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/sources/main/1.kt",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/sources/main/2.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0015-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/sources/main/1.kt",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/sources/main/2.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0016-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/caller",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0017-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/caller:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0018-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/caller:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0019-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0020-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0021-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0022-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0023-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/signatures/official/_1Kt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "_1Kt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0024-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/signatures/candidate/_1Kt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "_1Kt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0025-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/signatures/official/_2Kt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "_2Kt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0026-stderr.txt"
+    },
+    {
+      "label": "baseline_default_arguments/signatures/candidate/_2Kt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_default_arguments/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "_2Kt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0027-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/sources/main/inner.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0028-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/sources/main/inner.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0029-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/caller",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0030-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/caller:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0031-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/caller:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0032-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0033-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0034-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0035-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0036-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/signatures/official/A",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "A"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0037-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/signatures/candidate/A",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "A"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0038-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/signatures/official/InnerKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "InnerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0039-stderr.txt"
+    },
+    {
+      "label": "baseline_enum/signatures/candidate/InnerKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/baseline_enum/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "InnerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0040-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/sources/main/genericTypeAliasConstructor2.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0041-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/sources/main/genericTypeAliasConstructor2.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0042-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/caller",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0043-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/caller:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0044-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/caller:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0045-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0046-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0047-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0048-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0049-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/signatures/official/GenericTypeAliasConstructor2Kt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "GenericTypeAliasConstructor2Kt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0050-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/signatures/candidate/GenericTypeAliasConstructor2Kt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "GenericTypeAliasConstructor2Kt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0051-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/signatures/official/Pair",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "Pair"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0052-stderr.txt"
+    },
+    {
+      "label": "generic_aliases/signatures/candidate/Pair",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-prerequisite-upstream/generic_aliases/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "Pair"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/commands/0053-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "reference_source_manifest_sha256": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "compiler_pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "adapter_sha256": "5de0b1dc40086cb5916fd50a1c55a8fe6b9b5ca7c3ecff8d790260b9ce969b2e",
+    "matrix_sha256": "09535b94b8339567566ae650a5dbf6a5839dfb6f9ae8712cf4af6b5af0187a86"
+  },
+  "compiler": {
+    "path": "target/release/korrust",
+    "sha256": "ba6a64d089900036fa987dec1a953b891b60710e96140cef990d152b4cece655"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "kotlin_test_sha256": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "java_version": "openjdk version \"21.0.8\" 2025-07-15\nOpenJDK Runtime Environment JBR-21.0.8+9-1138.52-nomod (build 21.0.8+9-b1138.52)\nOpenJDK 64-Bit Server VM JBR-21.0.8+9-1138.52-nomod (build 21.0.8+9-b1138.52, mixed mode, sharing)"
+  },
+  "frozen_input_hashes": {
+    "references/kotlin/compiler/testData/codegen/box/defaultArguments/simpleFromOtherFile.kt": "75775f742707ff5aad7c66a819ae785102f52eb48831a1706b109f8ac3d5e578",
+    "references/kotlin/compiler/testData/codegen/box/enum/inner.kt": "625c283ebbe4787e01570b1efafb8308b5671767bb886c03e93697f1e021bcc6",
+    "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt": "a416c2b8cd2592f0674b9b4b6c2974cb23ba14a5861db6857e36dee05db4fe5b",
+    "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasConstructor.kt": "f39bee49f74aa332cb68082c019de03502305a067c5e20927007d6b7cc6d0fe6",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+    "target/release/korrust": "ba6a64d089900036fa987dec1a953b891b60710e96140cef990d152b4cece655",
+    "tools/upstream_feature_matrix.json": "09535b94b8339567566ae650a5dbf6a5839dfb6f9ae8712cf4af6b5af0187a86",
+    "tools/upstream_jvm.py": "5de0b1dc40086cb5916fd50a1c55a8fe6b9b5ca7c3ecff8d790260b9ce969b2e"
+  },
+  "counts": {
+    "pass": 4
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "claims": "Selected upstream fixture outcomes only; no compatibility percentage, full-suite, Android, or performance claim",
+  "publication_note": "Initial execution completed but publication used an existing directory instead of a new JSON path and refused to overwrite it. This report publishes the unchanged execution outcomes.",
+  "archived_from": "target/next5-prerequisite-upstream",
+  "reproduction_command": [
+    "python3",
+    "tools/upstream_jvm.py",
+    "--candidate",
+    "target/release/korrust",
+    "--output",
+    "target/upstream-fresh-run"
+  ],
+  "retained_generated_outputs": [
+    {
+      "original": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/generic_aliases/candidate/main/.korrust/module-6d61696e.index",
+      "retained": "target/retained-next5-prerequisite-generated/generic_aliases/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "dfe7a672fae1926d383a4d5e275b68279d576ad11db75fe27a5414fa66922283"
+    },
+    {
+      "original": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/baseline_enum/candidate/main/.korrust/module-6d61696e.index",
+      "retained": "target/retained-next5-prerequisite-generated/baseline_enum/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "658a8de87e12279c9e00ce3ee9fe0ad26957b37a95ff9ac891d81dc2f3dabaf9"
+    },
+    {
+      "original": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/baseline_typealias/candidate/main/.korrust/module-6d61696e.index",
+      "retained": "target/retained-next5-prerequisite-generated/baseline_typealias/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "f3e70b4c780ee09294c4c2405ce1f88572a5634c27b0dc77bf3a99ad6da5036b"
+    },
+    {
+      "original": "reports/correctness/2026-10-30-next-five-prerequisite-upstream/baseline_default_arguments/candidate/main/.korrust/module-6d61696e.index",
+      "retained": "target/retained-next5-prerequisite-generated/baseline_default_arguments/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "f73c71da993715e6801f49b886f65cd982880a0bc2d663f0482404855ae08d21"
+    }
+  ],
+  "source_checkpoint": "986398d57",
+  "evidence": [
+    "reports/correctness/2026-10-30-next-five-prerequisite-checkpoint/source.zip"
+  ]
+}

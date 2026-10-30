@@ -3,6 +3,7 @@ use std::path::PathBuf;
 
 mod aliases;
 mod archive;
+pub(crate) mod jvm_builtins;
 mod metadata;
 pub(crate) mod nested;
 mod signature;
@@ -65,6 +66,7 @@ pub(crate) struct Classpath {
         std::cell::RefCell<std::collections::HashMap<(String, String), SourceBackingField>>,
     origins: std::cell::RefCell<std::collections::HashMap<String, PathBuf>>,
     cache: std::cell::RefCell<std::collections::HashMap<String, JavaClass>>,
+    passive_annotations: std::cell::RefCell<std::collections::HashMap<String, bool>>,
     package_names: std::cell::RefCell<std::collections::HashMap<String, Vec<String>>>,
     sources: std::cell::RefCell<std::collections::HashSet<String>>,
     package_index: std::cell::RefCell<std::collections::HashMap<String, PackageIndex>>,
@@ -231,6 +233,18 @@ impl Classpath {
 
     pub(crate) fn builtin_class_declarations(&self, classifier: &str) -> Result<Vec<JavaMethod>> {
         metadata::builtin_class_declarations(&self.builtin_class_resource(classifier)?, classifier)
+    }
+
+    pub(crate) fn builtin_member_declarations(
+        &self,
+        classifier: &str,
+        name: &str,
+    ) -> Result<Vec<JavaMethod>> {
+        metadata::builtin_member_declarations(
+            &self.builtin_class_resource(classifier)?,
+            classifier,
+            name,
+        )
     }
 
     fn builtin_class_resource(&self, classifier: &str) -> Result<Vec<u8>> {
@@ -559,6 +573,7 @@ impl Classpath {
             source_default_accessors: Default::default(),
             origins: Default::default(),
             cache: Default::default(),
+            passive_annotations: Default::default(),
             package_names: Default::default(),
             sources: Default::default(),
             package_index: Default::default(),
@@ -597,10 +612,12 @@ impl Classpath {
         }
         for path in &self.paths {
             if let Some(bytes) = archive::read(path, &format!("{internal_name}.class"))? {
-                let class = parse(&bytes, internal_name).map_err(|mut e| {
-                    e.message = format!("{}!{internal_name}: {}", path.display(), e.message);
-                    e
-                })?;
+                let class = self
+                    .parse_with_declarations(&bytes, internal_name)
+                    .map_err(|mut e| {
+                        e.message = format!("{}!{internal_name}: {}", path.display(), e.message);
+                        e
+                    })?;
                 let origin = std::fs::canonicalize(path)
                     .map_err(|error| Diagnostic::new(0, error.to_string()))?;
                 self.origins
@@ -616,7 +633,7 @@ impl Classpath {
                     if let Some(bytes) =
                         archive::read(&jmod, &format!("classes/{internal_name}.class"))?
                     {
-                        return parse(&bytes, internal_name);
+                        return self.parse_with_declarations(&bytes, internal_name);
                     }
                 }
             }
@@ -629,6 +646,74 @@ impl Classpath {
             ),
         )
         .with_kind(crate::DiagnosticKind::MissingDependency, "CLASS_NOT_FOUND"))
+    }
+
+    fn parse_with_declarations(&self, bytes: &[u8], expected: &str) -> Result<JavaClass> {
+        let (mut class, attrs, method_attrs) = parse_details(bytes, expected)?;
+        if !attrs
+            .annotations
+            .iter()
+            .any(|annotation| annotation.name == "Lkotlin/Metadata;")
+            && class.access & 0x2000 == 0
+        {
+            let _ = signature::attach_with_declarations(
+                &mut class,
+                &attrs,
+                &method_attrs,
+                &mut |annotation| self.passive_declaration_annotation(annotation),
+            );
+        }
+        Ok(class)
+    }
+
+    fn passive_declaration_annotation(&self, annotation: &Annotation) -> Result<bool> {
+        if signature::type_semantic_annotation(&annotation.name) {
+            return Ok(false);
+        }
+        if let Some(passive) = self.passive_annotations.borrow().get(&annotation.name) {
+            return Ok(*passive);
+        }
+        let passive = self.inspect_declaration_annotation(annotation)?;
+        self.passive_annotations
+            .borrow_mut()
+            .insert(annotation.name.clone(), passive);
+        Ok(passive)
+    }
+
+    fn inspect_declaration_annotation(&self, annotation: &Annotation) -> Result<bool> {
+        let owner = annotation
+            .name
+            .strip_prefix('L')
+            .and_then(|name| name.strip_suffix(';'))
+            .ok_or_else(invalid)?;
+        let resource = format!("{owner}.class");
+        let mut bytes = None;
+        for path in &self.paths {
+            if let Some(found) = archive::read(path, &resource)? {
+                bytes = Some(found);
+                break;
+            }
+        }
+        if bytes.is_none()
+            && let Some(java_home) = std::env::var_os("JAVA_HOME")
+        {
+            let jmod = PathBuf::from(java_home).join("jmods/java.base.jmod");
+            if jmod.is_file() {
+                bytes = archive::read(&jmod, &format!("classes/{resource}"))?;
+            }
+        }
+        let Some(bytes) = bytes else {
+            return Ok(true);
+        };
+        let (_, attrs, _) = parse_details(&bytes, owner)?;
+        Ok(!attrs.annotations.iter().any(|annotation| {
+            matches!(
+                annotation.name.as_str(),
+                "Ljavax/annotation/meta/TypeQualifier;"
+                    | "Ljavax/annotation/meta/TypeQualifierNickname;"
+                    | "Ljavax/annotation/meta/TypeQualifierDefault;"
+            )
+        }))
     }
 
     pub fn package_classes(&self, package: &str) -> Result<Vec<JavaClass>> {
@@ -2314,6 +2399,10 @@ fn annotation_definition(
 }
 
 fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
+    parse_details(bytes, expected).map(|(class, _, _)| class)
+}
+
+fn parse_details(bytes: &[u8], expected: &str) -> Result<(JavaClass, Attributes, Vec<Attributes>)> {
     let mut reader = Reader { bytes, offset: 0 };
     if reader.u4()? != 0xcafebabe {
         return Err(invalid());
@@ -2551,7 +2640,7 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
         class.annotation_definition = annotation_definition(&class, &attrs, &method_attributes)?;
         class.unsupported = class.annotation_definition.is_none();
     }
-    Ok(class)
+    Ok((class, attrs, method_attributes))
 }
 
 #[cfg(test)]

@@ -166,7 +166,7 @@ fn module_identity_is_stored_and_input_validation_keeps_provenance() {
     );
     for source in [
         input("Invalid.txt", "class A"),
-        input("Invalid-name.kt", "class A"),
+        input("NonAscii-é.kt", "class A"),
         input("TooLarge.kt", &" ".repeat(1_048_577)),
     ] {
         let identity = source.identity.clone();
