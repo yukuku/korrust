@@ -1,0 +1,693 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T07:57:20.696709+00:00",
+  "status": "passed",
+  "selection": "Supplementary retained command evidence for the already integrated value-resolution repair. Instrumented harness changes only evidence recording, project-root discovery and artifact retention; original compiler and Kotlin/Java fixture content retained.",
+  "compiler": {
+    "frozen_manifest": "reports/correctness/2026-10-30-value-resolution-command-evidence/frozen-inputs.json"
+  },
+  "inputs": {
+    "compiler_frozen_manifest": "target/value-resolution-handoff/frozen-inputs.json",
+    "original_test_sha256": "f1b060e833355505331ce14e5a532a7fb83872b50c31a1430aeb37a38881312b",
+    "instrumented_test_sha256": "9693cb7f7bf69673f82b05b854517394f7aa259df204dd94e552e09513563f17",
+    "instrumentation": "Record external commands and raw outputs, substitute project-root discovery, retain temporary artifacts. Kotlin/Java fixture strings and compile API calls are unchanged."
+  },
+  "commands": [
+    {
+      "id": "000",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Lib.kt",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Near.kt",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Imported.kt",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Other.kt",
+        "-no-stdlib",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-module-name",
+        "value_library",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/000.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/000.stderr.txt"
+    },
+    {
+      "id": "001",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Use.kt",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Priority.kt",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Star.kt",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Alias.kt",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/DefaultImport.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-module-name",
+        "value_consumer",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/001.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/001.stderr.txt"
+    },
+    {
+      "id": "002",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javac",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/callers",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Driver.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/002.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/002.stderr.txt"
+    },
+    {
+      "id": "003",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/callers:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Driver"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/003.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/003.stderr.txt"
+    },
+    {
+      "id": "004",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/callers:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/candidate:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Driver"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/004.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/004.stderr.txt"
+    },
+    {
+      "id": "005",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official",
+        "UseKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/005.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/005.stderr.txt"
+    },
+    {
+      "id": "006",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/candidate",
+        "UseKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/006.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/006.stderr.txt"
+    },
+    {
+      "id": "007",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official",
+        "Scope"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/007.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/007.stderr.txt"
+    },
+    {
+      "id": "008",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/candidate",
+        "Scope"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/008.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/008.stderr.txt"
+    },
+    {
+      "id": "009",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official",
+        "Holder"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/009.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/009.stderr.txt"
+    },
+    {
+      "id": "010",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/candidate",
+        "Holder"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/010.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/010.stderr.txt"
+    },
+    {
+      "id": "011",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official",
+        "near.PriorityKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/011.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/011.stderr.txt"
+    },
+    {
+      "id": "012",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/candidate",
+        "near.PriorityKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/012.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/012.stderr.txt"
+    },
+    {
+      "id": "013",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official",
+        "near.StarKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/013.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/013.stderr.txt"
+    },
+    {
+      "id": "014",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/candidate",
+        "near.StarKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/014.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/014.stderr.txt"
+    },
+    {
+      "id": "015",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official",
+        "near.AliasKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/015.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/015.stderr.txt"
+    },
+    {
+      "id": "016",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/candidate",
+        "near.AliasKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/016.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/016.stderr.txt"
+    },
+    {
+      "id": "017",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official",
+        "named.DefaultImportKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/017.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/017.stderr.txt"
+    },
+    {
+      "id": "018",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/candidate",
+        "named.DefaultImportKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/018.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/018.stderr.txt"
+    },
+    {
+      "id": "019",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/MetadataConsumer.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/consumer-0"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/019.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/019.stderr.txt"
+    },
+    {
+      "id": "020",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/consumer-0:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/official:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "MetadataConsumerKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/020.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/020.stderr.txt"
+    },
+    {
+      "id": "021",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/MetadataConsumer.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/candidate:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/consumer-1"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/021.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/021.stderr.txt"
+    },
+    {
+      "id": "022",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/consumer-1:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/candidate:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "MetadataConsumerKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/022.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/022.stderr.txt"
+    },
+    {
+      "id": "023",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Invalid0.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/invalid-reference-0"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/023.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/023.stderr.txt"
+    },
+    {
+      "id": "024",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Invalid1.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/invalid-reference-1"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/024.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/024.stderr.txt"
+    },
+    {
+      "id": "025",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Invalid2.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/invalid-reference-2"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/025.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/025.stderr.txt"
+    },
+    {
+      "id": "026",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Invalid3.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/invalid-reference-3"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/026.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/026.stderr.txt"
+    },
+    {
+      "id": "027",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Invalid4.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/invalid-reference-4"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/027.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/027.stderr.txt"
+    },
+    {
+      "id": "028",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Invalid5.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/invalid-reference-5"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/028.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/028.stderr.txt"
+    },
+    {
+      "id": "029",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Invalid6.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/invalid-reference-6"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/029.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/029.stderr.txt"
+    },
+    {
+      "id": "030",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Invalid7.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/invalid-reference-7"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/030.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/030.stderr.txt"
+    },
+    {
+      "id": "031",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Invalid8.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/invalid-reference-8"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/031.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/031.stderr.txt"
+    },
+    {
+      "id": "032",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/Friend.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/friend-reference"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/032.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/032.stderr.txt"
+    },
+    {
+      "id": "033",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "javac",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/friend-reference",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/callers",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/FriendDriver.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/033.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/033.stderr.txt"
+    },
+    {
+      "id": "034",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/callers:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/friend-reference:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "FriendDriver"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/034.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/034.stderr.txt"
+    },
+    {
+      "id": "035",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/callers:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/friend-candidate:/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "FriendDriver"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/035.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/035.stderr.txt"
+    },
+    {
+      "id": "036",
+      "cwd": "/Users/yuku/f/git/korrust/target/value-resolution-evidence/harness",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/bin/kotlinc",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/InternalObject.kt",
+        "-no-stdlib",
+        "-cp",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library:/Users/yuku/f/git/korrust/target/next5-value-resolution/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/library",
+        "-d",
+        "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-90502-1793346883896395000/internal-object-reference"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-value-resolution-command-evidence/036.stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-value-resolution-command-evidence/036.stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "instrumented_contract",
+      "outcome": "pass",
+      "scope": "Fixed official Java callers, Kotlin consumers, signatures, nine invalid input groups and explicit friend-internal object boundary;37 recorded external commands are not37 independent tests."
+    }
+  ],
+  "counts": {
+    "pass": 1
+  },
+  "evidence": [
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/000.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/000.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/001.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/001.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/002.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/002.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/003.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/003.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/004.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/004.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/005.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/005.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/006.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/006.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/007.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/007.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/008.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/008.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/009.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/009.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/010.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/010.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/011.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/011.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/012.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/012.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/013.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/013.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/014.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/014.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/015.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/015.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/016.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/016.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/017.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/017.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/018.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/018.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/019.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/019.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/020.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/020.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/021.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/021.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/022.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/022.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/023.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/023.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/024.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/024.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/025.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/025.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/026.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/026.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/027.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/027.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/028.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/028.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/029.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/029.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/030.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/030.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/031.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/031.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/032.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/032.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/033.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/033.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/034.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/034.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/035.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/035.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/036.stderr.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/036.stdout.txt",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/commands.json",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/evidence.zip",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/frozen-inputs.json",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/instrumentation.patch",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/manifest.json",
+    "reports/correctness/2026-10-30-value-resolution-command-evidence/provenance.json",
+    "reports/correctness/2026-10-30-value-resolution-repair.json"
+  ],
+  "archive_sha256": "b62914d927cee72b8a6026372190919d72535e9a5162214bc0037141c70e7db4",
+  "limitations": [
+    "Original temporary command paths are retained for provenance; their artifacts are archived in evidence.zip.",
+    "This supplementary isolated run is separate from the authoritative integrated root contract in the linked repair report."
+  ]
+}

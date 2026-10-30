@@ -1,0 +1,60 @@
+--- frozen/tests/value_resolution.rs
++++ evidence/harness/tests/contracts.rs
+@@ -2,8 +2,19 @@
+ use std::path::{Path, PathBuf};
+ use std::process::{Command, Output};
+ 
++fn record(command: &Command, output: &Output) {
++    static INDEX: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
++    let index = INDEX.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
++    let root = PathBuf::from(std::env::var_os("VALUE_EVIDENCE_ROOT").unwrap());
++    let prefix = root.join(format!("{index:03}"));
++    std::fs::write(prefix.with_extension("command.txt"), format!("cwd={:?}\n{command:?}\nexit_code={:?}\n", std::env::current_dir().unwrap(), output.status.code())).unwrap();
++    std::fs::write(prefix.with_extension("stdout.bin"), &output.stdout).unwrap();
++    std::fs::write(prefix.with_extension("stderr.bin"), &output.stderr).unwrap();
++}
++
+ fn run(command: &mut Command) -> Output {
+     let output = command.output().unwrap();
++    record(command, &output);
+     assert!(
+         output.status.success(),
+         "{command:?}\n{}\n{}",
+@@ -35,7 +46,7 @@
+ 
+ #[test]
+ fn value_names_use_kotlin_import_priority_and_constant_visibility() {
+-    let project = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
++    let project = PathBuf::from(std::env::var_os("VALUE_COMPILER_ROOT").unwrap());
+     let kotlin = project.join("references/kotlinc/bin/kotlinc");
+     let standard = project.join("references/kotlinc/lib/kotlin-stdlib.jar");
+     let root = std::env::temp_dir().join(format!(
+@@ -243,15 +254,16 @@
+     {
+         let file = root.join(format!("Invalid{index}.kt"));
+         std::fs::write(&file, source).unwrap();
+-        let output = Command::new(&kotlin)
++        let mut command = Command::new(&kotlin);
++        command
+             .arg(&file)
+             .arg("-no-stdlib")
+             .arg("-cp")
+             .arg(classpath(&[&library, &standard]))
+             .arg("-d")
+-            .arg(root.join(format!("invalid-reference-{index}")))
+-            .output()
+-            .unwrap();
++            .arg(root.join(format!("invalid-reference-{index}")));
++        let output = command.output().unwrap();
++        record(&command, &output);
+         assert!(!output.status.success(), "oracle accepted {source}");
+         let error = compile_batch_with_options(
+             &[SourceInput {
+@@ -338,5 +350,5 @@
+     .expect("Compiled internal object value is an explicit boundary");
+     assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
+     assert_eq!(error.code, "INTERNAL_CLASSIFIER_VALUE_UNSUPPORTED");
+-    std::fs::remove_dir_all(root).unwrap();
+-}
++    std::fs::write(PathBuf::from(std::env::var_os("VALUE_EVIDENCE_ROOT").unwrap()).join("work-dir.txt"), root.display().to_string()).unwrap();
++}
