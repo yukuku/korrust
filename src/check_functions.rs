@@ -763,6 +763,7 @@ mod shadowing_tests {
                 kotlin_interface: false,
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
+                        has_annotations: false,
                         abstract_: false,
                         builtin_array: false,
                         source_name: "getLibraryNumber".into(),

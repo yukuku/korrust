@@ -896,6 +896,9 @@ fn class_metadata(
         let mut constructor = Proto::default();
         constructor.number(1, if class.sealed_ { 4 } else { 6 });
         let mut constructor_desc = String::from("(");
+        if let Some(checked) = checked {
+            interface_delegation_members(&mut proto, checked, imports, &mut strings)?;
+        }
         for (index, (name, ty)) in class.params.iter().enumerate() {
             let mut param = parameter(name, ty, imports, &mut strings)?;
             let flags = (u32::from(class.defaults.get(index).is_some_and(Option::is_some)) * 2)
@@ -1201,6 +1204,99 @@ fn class_metadata(
         proto.message(10, &declaration);
     }
     strings.finish(1, proto)
+}
+
+fn interface_delegation_members(
+    proto: &mut Proto,
+    class: &crate::check::ClassDecl,
+    imports: Imports<'_>,
+    strings: &mut Strings,
+) -> Result<()> {
+    let mut properties: BTreeMap<String, Vec<&crate::check::InterfaceDelegatedMember>> =
+        BTreeMap::new();
+    for member in &class.interface_delegated_members {
+        if let Some(property) = &member.declaration.source_property {
+            properties.entry(property.clone()).or_default().push(member);
+            continue;
+        }
+        let method = class
+            .methods
+            .iter()
+            .find(|method| {
+                method.name == member.declaration.name
+                    && method.descriptor() == member.jvm_descriptor
+            })
+            .ok_or_else(|| Diagnostic::new(0, "Missing delegated method metadata contract"))?;
+        let mut function = Proto::default();
+        let extra = member.declaration.library.as_ref().map_or(0, |l| {
+            (u32::from(l.operator) * 256) | (u32::from(l.infix) * 512)
+        });
+        function.number(9, 150 | extra);
+        function.number(2, strings.id(&method.name)?);
+        function.message(3, &type_proto(&method.result, imports, strings)?);
+        for (name, ty) in &method.params {
+            function.message(6, &parameter(name, ty, imports, strings)?);
+        }
+        function.message(
+            100,
+            &method_signature(method.jvm_name(), &member.jvm_descriptor, strings)?,
+        );
+        proto.message(9, &function);
+    }
+    for (name, members) in properties {
+        let mut getter = None;
+        let mut setter = None;
+        for member in members {
+            let method = class
+                .methods
+                .iter()
+                .find(|method| {
+                    method.name == member.declaration.name
+                        && method.descriptor() == member.jvm_descriptor
+                })
+                .ok_or_else(|| {
+                    Diagnostic::new(0, "Missing delegated property metadata contract")
+                })?;
+            if method.result == Type::Unit && method.params.len() == 1 {
+                setter = Some((member, method));
+            } else if method.params.is_empty() {
+                getter = Some((member, method));
+            } else {
+                return Err(Diagnostic::new(
+                    0,
+                    "Unsupported delegated property metadata shape",
+                ));
+            }
+        }
+        let ty = getter
+            .map(|(_, method)| &method.result)
+            .or_else(|| setter.map(|(_, method)| &method.params[0].1))
+            .ok_or_else(|| Diagnostic::new(0, "Missing delegated property type"))?;
+        let mut property = Proto::default();
+        property.number(
+            11,
+            150 | if getter.is_some() { 512 } else { 0 }
+                | if setter.is_some() { 256 | 1024 } else { 0 },
+        );
+        property.number(2, strings.id(&name)?);
+        property.message(3, &type_proto(ty, imports, strings)?);
+        let mut signature = Proto::default();
+        if let Some((member, method)) = getter {
+            signature.message(
+                3,
+                &method_signature(method.jvm_name(), &member.jvm_descriptor, strings)?,
+            );
+        }
+        if let Some((member, method)) = setter {
+            signature.message(
+                4,
+                &method_signature(method.jvm_name(), &member.jvm_descriptor, strings)?,
+            );
+        }
+        property.message(100, &signature);
+        proto.message(10, &property);
+    }
+    Ok(())
 }
 
 fn property_has_annotations(annotations: &[crate::syntax::AnnotationUse]) -> bool {

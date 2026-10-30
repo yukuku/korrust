@@ -257,6 +257,10 @@ fn register_classes(
             return Err(Diagnostic::new(
                 function.offset,
                 "Annotations on source interface methods are not supported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "INTERFACE_METHOD_ANNOTATION_UNSUPPORTED",
             ));
         }
         if function.defaults.iter().any(Option::is_some) {
@@ -309,6 +313,7 @@ fn register_classes(
             JavaMethod {
                 library: (function.infix || function.operator).then(|| {
                     crate::classpath::LibraryMethod {
+                        has_annotations: false,
                         abstract_: false,
                         builtin_array: false,
                         source_name: function.name.clone(),
@@ -422,10 +427,13 @@ fn add_method(
     offset: usize,
 ) -> Result<()> {
     if inherited_object_method(&method.name) {
-        return Err(Diagnostic::new(
-            offset,
-            "Any and Object inherited members are not supported",
-        ));
+        return Err(
+            Diagnostic::new(offset, "Any and Object inherited members are not supported")
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "INTERFACE_ANY_MEMBER_UNSUPPORTED",
+                ),
+        );
     }
     if !names.insert(method.name.clone()) {
         return Err(Diagnostic::new(

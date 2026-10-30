@@ -171,6 +171,7 @@ pub(crate) struct LibraryTypeAlias {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryMethod {
+    pub has_annotations: bool,
     pub abstract_: bool,
     pub builtin_array: bool,
     pub kotlin_public: bool,

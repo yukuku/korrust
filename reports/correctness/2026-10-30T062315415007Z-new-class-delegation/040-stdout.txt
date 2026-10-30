@@ -1,0 +1,117 @@
+Classfile /Users/yuku/f/git/korrust/target/checks/2026-10-30T062315415007Z-new-class-delegation/candidate/delegated/Derived.class
+  Last modified Oct 30, 2026; size 855 bytes
+  SHA-256 checksum 36ab8495336bc14d9379413adf0e0ad0f4ae4313bc29f73a8b6cf60b9686d7e2
+  Compiled from "Use.kt"
+public final class delegated.Derived extends delegated.OpenForward
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // delegated/Derived
+  super_class: #4                         // delegated/OpenForward
+  interfaces: 0, fields: 0, methods: 1, attributes: 2
+Constant pool:
+   #1 = Utf8               delegated/Derived
+   #2 = Class              #1             // delegated/Derived
+   #3 = Utf8               delegated/OpenForward
+   #4 = Class              #3             // delegated/OpenForward
+   #5 = Utf8               delegate
+   #6 = String             #5             // delegate
+   #7 = Utf8               kotlin/jvm/internal/Intrinsics
+   #8 = Class              #7             // kotlin/jvm/internal/Intrinsics
+   #9 = Utf8               checkNotNullParameter
+  #10 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #11 = NameAndType        #9:#10         // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #12 = Methodref          #8.#11         // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #13 = Utf8               <init>
+  #14 = Utf8               (Ldelegated/Counter;)V
+  #15 = NameAndType        #13:#14        // "<init>":(Ldelegated/Counter;)V
+  #16 = Methodref          #4.#15         // delegated/OpenForward."<init>":(Ldelegated/Counter;)V
+  #17 = Utf8               Code
+  #18 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #19 = Utf8               RuntimeInvisibleParameterAnnotations
+  #20 = Utf8               delegated/Counter
+  #21 = Class              #20            // delegated/Counter
+  #22 = Utf8               java/lang/String
+  #23 = Class              #22            // java/lang/String
+  #24 = Utf8               java/lang/Throwable
+  #25 = Class              #24            // java/lang/Throwable
+  #26 = Utf8               StackMapTable
+  #27 = Utf8               SourceFile
+  #28 = Utf8               Use.kt
+  #29 = Utf8               Lkotlin/Metadata;
+  #30 = Utf8               mv
+  #31 = Integer            2
+  #32 = Integer            3
+  #33 = Integer            0
+  #34 = Utf8               k
+  #35 = Integer            1
+  #36 = Utf8               xi
+  #37 = Integer            48
+  #38 = Utf8               d1
+  #39 = Utf8               \u0000\b\n\u0002\b\u0006\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\u0011\b\u0006\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005¨\u0006\u0006
+  #40 = Utf8               d2
+  #41 = Utf8               class_delegation
+  #42 = Utf8               RuntimeVisibleAnnotations
+{
+  public delegated.Derived(delegated.Counter);
+    descriptor: (Ldelegated/Counter;)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=2, args_size=2
+         0: aload         1
+         2: ldc_w         #6                  // String delegate
+         5: invokestatic  #12                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload_0
+         9: aload         1
+        11: invokespecial #16                 // Method delegated/OpenForward."<init>":(Ldelegated/Counter;)V
+        14: return
+        15: nop
+        16: athrow
+      StackMapTable: number_of_entries = 8
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, class delegated/Counter ]
+          stack = [ class delegated/Counter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, class delegated/Counter ]
+          stack = [ class delegated/Counter, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, class delegated/Counter ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ this, class delegated/Counter ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, class delegated/Counter ]
+          stack = [ this, class delegated/Counter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/Derived, class delegated/Counter ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/Derived, class delegated/Counter ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/Derived, class delegated/Counter ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #18()
+          org.jetbrains.annotations.NotNull
+}
+SourceFile: "Use.kt"
+RuntimeVisibleAnnotations:
+  0: #29(#30=[I#31,I#32,I#33],#34=I#35,#36=I#37,#38=[s#39],#40=[s#1,s#3,s#5,s#20,s#13,s#14,s#41])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0006\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\u0011\b\u0006\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005¨\u0006\u0006"]
+      d2=["delegated/Derived","delegated/OpenForward","delegate","delegated/Counter","<init>","(Ldelegated/Counter;)V","class_delegation"]
+    )

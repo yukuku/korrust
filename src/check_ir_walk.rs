@@ -221,6 +221,9 @@ fn companion(node: &mut ClassCompanion, initializer_owner: &str, visitor: &mut i
 }
 
 pub(crate) fn class(node: &mut ClassDecl, owner: &str, visitor: &mut impl Visitor) {
+    for delegate in &mut node.interface_delegate_storage {
+        value(&mut delegate.initializer, owner, visitor);
+    }
     for (_, initializer) in &mut node.delegated_properties {
         value(initializer, owner, visitor);
     }
@@ -480,6 +483,8 @@ mod tests {
                 sealed_subclasses: Vec::new(),
                 type_params: Vec::new(),
                 super_types: Vec::new(),
+                interface_delegate_storage: Vec::new(),
+                interface_delegated_members: Vec::new(),
                 generic_bridges: Vec::new(),
                 exposed_fields: HashMap::new(),
                 delegated_properties: vec![("delegate".into(), int(5))],

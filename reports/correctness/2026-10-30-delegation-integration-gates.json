@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "status": "passed",
+  "baseline": "a2b1d3328",
+  "family_report": "reports/correctness/2026-10-30T062315415007Z-new-class-delegation.json",
+  "scope": "Integrated class-header delegation prerequisite and focused regression gate; final milestone whole-tree regression remains pending.",
+  "cases": [
+    {
+      "id": "focused-rust",
+      "outcome": "pass",
+      "tests": 15
+    },
+    {
+      "id": "all-target-clippy",
+      "outcome": "pass"
+    },
+    {
+      "id": "format",
+      "outcome": "pass"
+    },
+    {
+      "id": "report-generator",
+      "outcome": "pass",
+      "tests": 7
+    }
+  ],
+  "evidence": {
+    "reports/correctness/2026-10-30-delegation-integration-gates/delegation-root-tests.log": "c013b3f7e9f911910ddb7c7d2ec5993525bb462b8cc88dd26509f276c2a32fd7",
+    "reports/correctness/2026-10-30-delegation-integration-gates/delegation-root-clippy.log": "e741c0ceaaeb489fc9990f6fc24035470f194304a5bda3751321aaebd8e2ffc9",
+    "reports/correctness/2026-10-30-delegation-integration-gates/delegation-root-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/correctness/2026-10-30-delegation-integration-gates/delegation-root-report-tests.log": "3ed3be78b8dce345c130f853333e9b63c4f1c0db59ec470745a2a99efbbd1ec2",
+    "reports/correctness/2026-10-30-delegation-integration-gates/delegation-root-build.log": "22556cbbc948ddebdc8efa7486ccad1cf9a7fa71b014ab6d57c11d400d79d733",
+    "reports/correctness/2026-10-30-delegation-integration-gates/delegation-root-report-tests-empty-discovery.log": "0022ee81eaae586301bd919619db568337b011018f4f635ccdae17bcdd457edb"
+  },
+  "historical_harness_issue": "Initial discovery used tools/ and found zero tests; retained empty-discovery log. Correct tests/ discovery executes seven report-generator tests."
+}

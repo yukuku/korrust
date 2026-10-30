@@ -458,6 +458,7 @@ pub(super) fn attach_with_declarations(
                     method.kotlin_params = Some(params);
                     method.kotlin_result = Some(result);
                     method.library = Some(LibraryMethod {
+                        has_annotations: false,
                         abstract_: method.access & 0x400 != 0,
                         builtin_array: false,
                         kotlin_public: method.access & 1 != 0,

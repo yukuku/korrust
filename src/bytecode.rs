@@ -3993,6 +3993,14 @@ fn emit_class_with(
     for (name, value) in &class.delegated_properties {
         fields.extend(class_field(&mut pool, name, &value.ty, 0x101a)?);
     }
+    for delegate in &class.interface_delegate_storage {
+        fields.extend(class_field_scoped(
+            &mut pool,
+            &delegate.name,
+            &delegate.ty,
+            0x1012,
+        )?);
+    }
     let mut methods = Vec::new();
     if !lambdas.is_empty() {
         for function in class.methods.iter().filter(|function| function.private) {
@@ -4082,6 +4090,16 @@ fn emit_class_with(
                 .sum::<usize>(),
         );
         code.method_reference(0xb7, &class.super_class, "<init>", &super_descriptor)?;
+        for delegate in &class.interface_delegate_storage {
+            code.max_stack = code.max_stack.max(2);
+            code.value(&delegate.initializer)?;
+            code.bytes
+                .extend([store_opcode(&delegate.ty), delegate.slot]);
+            code.bytes.push(0x2a);
+            code.bytes
+                .extend([load_opcode(&delegate.ty), delegate.slot]);
+            code.field_reference(0xb5, owner, &delegate.name, &delegate.ty.descriptor())?;
+        }
         let slots = parameter_slots(&class.params, 1);
         for field in &class.fields {
             if field.param.is_none() && field.initializer.is_none() {
@@ -4513,6 +4531,7 @@ fn emit_class_with(
     u2(
         &mut out,
         (class.fields.len()
+            + class.interface_delegate_storage.len()
             + extra_field_count
             + class.delegated_properties.len()
             + class

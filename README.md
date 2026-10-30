@@ -166,6 +166,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 126. Sealed classes and interfaces with bounded exhaustive when analysis, JVM constructor access, and Kotlin hierarchy metadata.
 127. Independent property/accessor visibility, internal accessor contracts, and bounded safe-call property assignment.
 128. Source class literals and bounded KClass/Java Class interoperability through ordinary generic extension properties.
+129. Class-header interface delegation with saved receivers, property forwarding, explicit overrides, and bounded generic bridges and metadata.
 
 ## Project contract
 

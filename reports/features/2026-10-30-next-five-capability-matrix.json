@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "kind": "feature_capability_matrix",
+  "baseline_commit": "39e87a38ae59075ce14cd110c88efbab46858131",
+  "prior_completed_families": 10,
+  "requested_new_families": 5,
+  "new_validated_families": 1,
+  "families": [
+    {
+      "id": "rich_annotations",
+      "status": "isolated_validation",
+      "scope": "Scalar/enum/class/array/nested annotation values and defaults, supported source declarations, retention, placement, classfile metadata and consumers."
+    },
+    {
+      "id": "class_header_delegation",
+      "status": "validated",
+      "scope": "Saved interface delegate receivers, abstract forwarding/properties, explicit overrides, bounded generic substitutions and bridges.",
+      "report": "reports/correctness/2026-10-30T062315415007Z-new-class-delegation.json",
+      "limitations": [
+        "Public ordinary top-level delegators and abstract interface contracts; supported invariant Kotlin generics and nongeneric Java scalar/reference signatures.",
+        "Default interface bodies, decorated or generic methods, nested/internal contracts, delegating objects/data/enums and complex erased overlaps are explicit boundaries.",
+        "Actual AndroidBible inventory contains no class-header delegation uses, so no new app-file pass is claimed."
+      ]
+    },
+    {
+      "id": "expanded_objects",
+      "status": "implementation_validation",
+      "scope": "Data object equality/hash/string contracts, nested interface implementations, singleton initialization and metadata; object class inheritance and named companions remain outside this checkpoint."
+    },
+    {
+      "id": "member_extensions",
+      "status": "implementation",
+      "scope": "Separate dispatch and extension receivers for member/companion functions and extension properties."
+    },
+    {
+      "id": "source_inline_reified",
+      "status": "implementation",
+      "scope": "Real source inline expansion, bounded reification and inline parameter/return rules."
+    }
+  ],
+  "repairs": [
+    "Physical JVM descriptors and bridge slot representations",
+    "Legal upstream facade filenames and alias constructors",
+    "Invalid subject-when branch rejection",
+    "Kotlin JVM renamed members and passive Java annotations",
+    "Compound assignment resolution and unchanged BackForwardList runtime"
+  ],
+  "counting_policy": "Repair and harness work are excluded. Isolated validation is not integrated acceptance. No source-file compatibility percentages."
+}

@@ -115,6 +115,7 @@ fn legacy_check(
         }
         overloads.push(JavaMethod {
             library: function.infix.then(|| crate::classpath::LibraryMethod {
+                has_annotations: false,
                 abstract_: false,
                 builtin_array: false,
                 source_name: function.name.clone(),
@@ -592,6 +593,7 @@ pub(super) fn check(
             kotlin_result: Some(result),
             kotlin_internal: function.internal,
             library: Some(crate::classpath::LibraryMethod {
+                has_annotations: false,
                 abstract_: false,
                 builtin_array: false,
                 source_name: function.name.clone(),

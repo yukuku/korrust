@@ -116,6 +116,8 @@ fn method(
     );
     JavaMethod {
         library: Some(LibraryMethod {
+            has_annotations: !function.annotations.is_empty()
+                || function.param_annotations.iter().any(|a| !a.is_empty()),
             abstract_: access & 0x400 != 0,
             builtin_array: false,
             kotlin_public: !function.private && !function.protected && !function.internal,
@@ -510,6 +512,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 let name = format!("component{}", index + 1);
                 class.methods.push(JavaMethod {
                     library: Some(LibraryMethod {
+                        has_annotations: false,
                         abstract_: false,
                         builtin_array: false,
                         kotlin_public: true,
@@ -606,6 +609,23 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             if p.body.is_none() {
                 for method in &mut methods {
                     method.access |= 0x400;
+                }
+            }
+            if !p.annotations.is_empty() {
+                for method in &mut methods {
+                    method.library = Some(LibraryMethod {
+                        has_annotations: true,
+                        abstract_: method.access & 0x400 != 0,
+                        builtin_array: false,
+                        kotlin_public: true,
+                        source_name: method.name.clone(),
+                        type_parameters: Vec::new(),
+                        receiver: None,
+                        infix: false,
+                        operator: false,
+                        inline: false,
+                        code: None,
+                    });
                 }
             }
             class.methods.extend(methods);
@@ -795,6 +815,60 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             }
         }
         constants(&mut class, &module.constants)?;
+    }
+    let visibility = module
+        .class_decl
+        .as_ref()
+        .map(|d| d.internal)
+        .or_else(|| module.interface_decl.as_ref().map(|d| d.internal))
+        .or_else(|| module.object_decl.as_ref().map(|d| d.internal));
+    if let (Some(internal), Some(library)) = (visibility, &mut class.library) {
+        library.kotlin_visibility = Some(if internal { 0 } else { 3 });
+    }
+    if let Some(source) = &module.class_decl {
+        for delegate in &source.interface_delegates {
+            let ty = resolve(&delegate.ty, module, cp);
+            for mut method in crate::check::source_delegated_members(cp, &ty)? {
+                let (params, result) = crate::check::class_method_types(&method)?;
+                if class.methods.iter().any(|own| {
+                    own.name == method.name
+                        && crate::check::class_method_types(own).is_ok_and(|(a, _)| {
+                            a.iter()
+                                .map(Type::descriptor)
+                                .eq(params.iter().map(Type::descriptor))
+                        })
+                }) {
+                    continue;
+                }
+                method.owner = owner.into();
+                method.access = 1;
+                method.descriptor = format!(
+                    "({}){}",
+                    params.iter().map(Type::descriptor).collect::<String>(),
+                    result.descriptor()
+                );
+                if let Some(library) = &mut method.library {
+                    library.abstract_ = false;
+                    library.inline = false;
+                    library.code = None;
+                } else {
+                    method.library = Some(LibraryMethod {
+                        has_annotations: false,
+                        abstract_: false,
+                        builtin_array: false,
+                        kotlin_public: true,
+                        source_name: method.name.clone(),
+                        type_parameters: Vec::new(),
+                        receiver: None,
+                        infix: false,
+                        operator: false,
+                        inline: false,
+                        code: None,
+                    });
+                }
+                class.methods.push(method);
+            }
+        }
     }
     if module.class_decl.is_some() {
         let supertypes = class

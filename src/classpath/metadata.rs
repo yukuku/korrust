@@ -562,6 +562,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             kotlin_result: Some(array),
             kotlin_internal: false,
             library: Some(LibraryMethod {
+                has_annotations: false,
                 builtin_array: true,
                 abstract_: false,
                 kotlin_public: true,
@@ -688,6 +689,7 @@ fn builtin_declarations(
             kotlin_result: Some(returned),
             kotlin_internal: false,
             library: requested_name.map(|_| LibraryMethod {
+                has_annotations: false,
                 abstract_: true,
                 builtin_array: false,
                 kotlin_public: true,
@@ -816,7 +818,7 @@ fn attach_member(
     }
     all.extend(params.iter().map(|(_, ty, _)| ty.descriptor()));
     let descriptor = format!("({}){}", all.concat(), result.descriptor());
-    let (jvm_name, jvm_descriptor) = if let Some(bytes) = signature {
+    let (jvm_name, jvm_descriptor, explicit_descriptor) = if let Some(bytes) = signature {
         let p = Proto::parse(bytes)?;
         p.allowed(&[1, 2])?;
         (
@@ -828,9 +830,10 @@ fn attach_member(
                 .map(|i| metadata_name(strings, Some(i)))
                 .transpose()?
                 .unwrap_or(&descriptor),
+            p.integer(2)?.is_some(),
         )
     } else {
-        (name, descriptor.as_str())
+        (name, descriptor.as_str(), false)
     };
     let matching = class
         .methods
@@ -843,7 +846,17 @@ fn attach_member(
         return Err(invalid());
     };
     if jvm_descriptor != descriptor {
-        return Err(invalid());
+        let (logical_parameters, _) = descriptor.split_once(')').ok_or_else(invalid)?;
+        let (physical_parameters, physical_result) =
+            jvm_descriptor.split_once(')').ok_or_else(invalid)?;
+        if !explicit_descriptor
+            || logical_parameters != physical_parameters
+            || result.is_reference()
+            || result == Type::Unit
+            || physical_result != Type::Nullable(Box::new(result.clone())).descriptor()
+        {
+            return Err(invalid());
+        }
     }
     if let Some(signature) = &attributes[*index].signature {
         let class_parameters = class
@@ -913,6 +926,7 @@ fn attach_member(
     method.source_property = property;
     method.unsupported = false;
     method.library = Some(LibraryMethod {
+        has_annotations: flags & 1 != 0,
         builtin_array: false,
         abstract_: flags & 0x30 == 32,
         kotlin_public: flags & 14 == 6,
@@ -955,6 +969,7 @@ fn remember_callable(
             && method.library.is_none()
         {
             method.library = Some(LibraryMethod {
+                has_annotations: false,
                 builtin_array: false,
                 abstract_: member
                     .integer(if name == "<init>" { 1 } else { 9 })?
@@ -1176,9 +1191,14 @@ pub(super) fn attach(
                 } else {
                     metadata_name(&strings, member.integer(2)?)?
                 };
-                let flags = member
+                let mut flags = member
                     .integer(if constructor { 1 } else { 9 })?
                     .unwrap_or(6);
+                for parameter in member.messages(if constructor { 2 } else { 6 })? {
+                    if Proto::parse(parameter)?.integer(1)?.unwrap_or(0) & 1 != 0 {
+                        flags |= 1;
+                    }
+                }
                 let params = member
                     .messages(if constructor { 2 } else { 6 })?
                     .into_iter()
@@ -1647,6 +1667,64 @@ mod tests {
             unsupported: false,
             kotlin_interface: false,
             kotlin_fun_interface: false,
+        }
+    }
+
+    #[test]
+    fn boxed_metadata_results_require_explicit_descriptors_and_matching_parameters() {
+        for (physical, explicit, parameter, accepted) in [
+            ("()Ljava/lang/Integer;", true, false, true),
+            ("()Ljava/lang/Integer;", false, false, false),
+            ("()Ljava/lang/Long;", true, false, false),
+            ("(Ljava/lang/String;)Ljava/lang/Integer;", true, true, false),
+        ] {
+            let mut signature = int(1, 1);
+            if explicit {
+                signature.extend(int(2, 3));
+            }
+            let mut function = [
+                int(2, 1),
+                blob(3, &int(6, 2)),
+                int(9, 150),
+                blob(100, &signature),
+            ]
+            .concat();
+            if parameter {
+                function.extend(blob(6, &[int(2, 4), blob(3, &int(6, 2))].concat()));
+            }
+            let proto = [int(1, 6), int(3, 0), blob(9, &function)].concat();
+            let annotation = metadata_annotation(
+                1,
+                &[
+                    "sample/BoxReturn",
+                    "read",
+                    "kotlin/Int",
+                    physical,
+                    "argument",
+                ],
+                &proto,
+            );
+            let mut class = bare_metadata_class("sample/BoxReturn", 0x31);
+            class.methods.push(JavaMethod {
+                library: None,
+                owner: class.name.clone(),
+                name: "read".into(),
+                descriptor: physical.into(),
+                access: 1,
+                unsupported: false,
+                source_property: None,
+                kotlin_params: None,
+                kotlin_result: None,
+                kotlin_internal: false,
+            });
+            attach(&annotation, &mut class, &[Attributes::default()]).unwrap();
+            assert_eq!(
+                !class.methods[0].unsupported, accepted,
+                "{physical}, explicit={explicit}"
+            );
+            if accepted {
+                assert_eq!(class.methods[0].kotlin_result, Some(Type::Int));
+            }
         }
     }
 

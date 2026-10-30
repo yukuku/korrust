@@ -439,6 +439,7 @@ pub enum ConstValue {
 }
 #[derive(Clone, Debug)]
 pub struct ClassDecl {
+    pub interface_delegates: Vec<InterfaceDelegate>,
     pub sealed_: bool,
     pub type_params: Vec<TypeParameter>,
     pub super_types: Vec<Type>,
@@ -465,6 +466,12 @@ pub struct ClassDecl {
     pub super_class: Option<(String, Vec<Expr>)>,
     pub open: bool,
     pub abstract_: bool,
+}
+#[derive(Clone, Debug)]
+pub struct InterfaceDelegate {
+    pub ty: Type,
+    pub expression: Expr,
+    pub offset: usize,
 }
 #[derive(Clone, Debug)]
 pub struct ClassCompanion {
@@ -1175,6 +1182,7 @@ fn string_parts_depth(
                     token.offset += expression_start;
                 }
                 let mut parser = Parser {
+                    in_delegation_expression: false,
                     tokens,
                     pos: 0,
                     depth: depth + 1,
@@ -1536,6 +1544,7 @@ struct ClassHeader {
 }
 
 struct Parser {
+    in_delegation_expression: bool,
     tokens: Vec<Token>,
     pos: usize,
     depth: usize,
@@ -1571,16 +1580,17 @@ impl Parser {
         while self.take("\n") {}
     }
     fn at_trailing_lambda(&self) -> bool {
-        self.at("{")
-            || (identifier(&self.token().text)
-                && self
-                    .tokens
-                    .get(self.pos + 1)
-                    .is_some_and(|token| token.text == "@")
-                && self
-                    .tokens
-                    .get(self.pos + 2)
-                    .is_some_and(|token| token.text == "{"))
+        !self.in_delegation_expression
+            && (self.at("{")
+                || (identifier(&self.token().text)
+                    && self
+                        .tokens
+                        .get(self.pos + 1)
+                        .is_some_and(|token| token.text == "@")
+                    && self
+                        .tokens
+                        .get(self.pos + 2)
+                        .is_some_and(|token| token.text == "{")))
     }
     fn lines_before_trailing_lambda(&mut self) -> Result<()> {
         let saved = self.pos;
@@ -2291,6 +2301,14 @@ impl Parser {
                     "ENUM_TYPE_PARAMETERS_INVALID",
                 ));
         }
+        if !body.interface_delegates.is_empty() {
+            return Err(self
+                .error("Enum interface delegation is unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "INTERFACE_DELEGATION_ENUM_UNSUPPORTED",
+                ));
+        }
         body.offset = offset;
         body.annotations = annotations.clone();
         body.internal = visibility.as_deref() == Some("internal");
@@ -2532,6 +2550,14 @@ impl Parser {
                     return Err(self.error("Object exceeds the current 128-interface limit"));
                 }
                 self.lines();
+                if self.at("by") {
+                    return Err(self
+                        .error("Delegating object declarations are unsupported")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "INTERFACE_DELEGATION_OBJECT_UNSUPPORTED",
+                        ));
+                }
                 if !self.take(",") {
                     break;
                 }
@@ -3241,6 +3267,7 @@ impl Parser {
         self.lines();
         let mut interfaces = Vec::new();
         let mut super_types = Vec::new();
+        let mut interface_delegates = Vec::new();
         let mut super_class = None;
         if self.take(":") {
             self.lines();
@@ -3250,8 +3277,35 @@ impl Parser {
                     Type::Java(name) | Type::Parameterized { name, .. } => name.clone(),
                     _ => return Err(self.error("A supertype must name a class or interface")),
                 };
-                super_types.push(ty);
-                if self.at("(") {
+                super_types.push(ty.clone());
+                let before_by = self.pos;
+                self.lines();
+                let delegated = self.take("by");
+                if !delegated {
+                    self.pos = before_by;
+                }
+                if delegated {
+                    self.lines();
+                    let offset = self.token().offset;
+                    if self.at("object") {
+                        return Err(self
+                            .error("Delegation to object expressions is unsupported")
+                            .with_kind(
+                                DiagnosticKind::UnsupportedLanguage,
+                                "INTERFACE_DELEGATION_OBJECT_UNSUPPORTED",
+                            ));
+                    }
+                    let old = self.in_delegation_expression;
+                    self.in_delegation_expression = true;
+                    let expression = self.expr(0);
+                    self.in_delegation_expression = old;
+                    interface_delegates.push(InterfaceDelegate {
+                        ty,
+                        expression: expression?,
+                        offset,
+                    });
+                    interfaces.push(name);
+                } else if self.at("(") {
                     if super_class.is_some() {
                         return Err(self.error("Only one superclass constructor is allowed"));
                     }
@@ -3279,6 +3333,7 @@ impl Parser {
                 ));
         }
         let declaration = ClassDecl {
+            interface_delegates,
             sealed_,
             type_params,
             super_types,
@@ -3832,6 +3887,7 @@ impl Parser {
             return Err(self.error("Only unnamed companion objects are supported"));
         }
         let mut declaration = ClassDecl {
+            interface_delegates: Vec::new(),
             sealed_: false,
             type_params: Vec::new(),
             super_types: Vec::new(),
@@ -3969,6 +4025,14 @@ impl Parser {
                 }
                 after_header = self.pos;
                 self.lines();
+                if self.at("by") {
+                    return Err(self
+                        .error("Interfaces cannot delegate their supertypes")
+                        .with_kind(
+                            DiagnosticKind::InvalidKotlin,
+                            "INTERFACE_DELEGATION_IN_INTERFACE_INVALID",
+                        ));
+                }
                 if !self.take(",") {
                     break;
                 }
@@ -4337,6 +4401,7 @@ impl Parser {
                 self.lines();
                 self.expect("{")?;
                 let mut object = ClassDecl {
+                    interface_delegates: Vec::new(),
                     sealed_: false,
                     type_params: Vec::new(),
                     super_types: Vec::new(),
@@ -6438,6 +6503,7 @@ fn precedence(op: &str) -> Option<u8> {
 }
 pub fn parse(source: &str) -> Result<Module> {
     let mut p = Parser {
+        in_delegation_expression: false,
         tokens: lex(source)?,
         pos: 0,
         depth: 0,

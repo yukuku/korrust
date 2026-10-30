@@ -1,0 +1,188 @@
+[
+  {
+    "id": "wrong_value",
+    "source": "interface I\nclass F:I by \"bad\"",
+    "official": "reject",
+    "code": "INTERFACE_DELEGATION_VALUE_INVALID"
+  },
+  {
+    "id": "wrong_target",
+    "source": "class I\nclass F(value:I):I by value",
+    "official": "reject",
+    "code": "INTERFACE_DELEGATION_TYPE_INVALID"
+  },
+  {
+    "id": "interface_by",
+    "source": "interface I\nobject Value:I\ninterface F:I by Value",
+    "official": "reject",
+    "code": "INTERFACE_DELEGATION_IN_INTERFACE_INVALID"
+  },
+  {
+    "id": "conflicting_delegates",
+    "source": "interface I {fun f():Int}\ninterface J:I\nclass F(a:I,b:J):I by a,J by b",
+    "official": "reject",
+    "code": "INTERFACE_DELEGATION_CONFLICT_INVALID"
+  },
+  {
+    "id": "missing_other_member",
+    "source": "interface I{fun f():Int}\ninterface J{fun g():Int}\nclass F(a:I):I by a,J",
+    "official": "reject",
+    "code": "MISSING_INTERFACE_IMPLEMENTATION"
+  },
+  {
+    "id": "bridge_collision",
+    "source": "interface I<T>{fun f(v:T):T}\ninterface J{fun f(v:Any?):Any?}\nclass F(a:I<String>,b:J):I<String> by a,J by b",
+    "official": "reject",
+    "code": "JVM_SIGNATURE_CLASH"
+  },
+  {
+    "id": "default_body",
+    "source": "interface I{fun f():Int=1}\nclass F(value:I):I by value",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_DEFAULT_UNSUPPORTED"
+  },
+  {
+    "id": "generic_member",
+    "source": "interface I{fun <T> f(value:T):T}\nclass F(value:I):I by value",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_MEMBER_UNSUPPORTED"
+  },
+  {
+    "id": "primitive_receiver",
+    "source": "class F(value:Boolean):Comparable<Boolean> by value",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_JAVA_GENERIC_UNSUPPORTED"
+  },
+  {
+    "id": "delegating_object",
+    "source": "interface I{fun f():Int}\nclass Impl:I{override fun f():Int=1}\nobject F:I by Impl()",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_OBJECT_UNSUPPORTED"
+  },
+  {
+    "id": "object_expression",
+    "source": "interface I{fun f():Int}\nclass F:I by object:I{override fun f():Int=1}",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_OBJECT_UNSUPPORTED"
+  },
+  {
+    "id": "data_class",
+    "source": "interface I\ndata class F(val value:I):I by value",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "secondary_constructor",
+    "source": "interface I\nclass Impl:I\nclass F(value:I):I by value{constructor():this(Impl())}",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "superclass",
+    "source": "open class Base\ninterface I\nclass F(value:I):Base(),I by value",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "enum",
+    "source": "interface I\nobject Impl:I\nenum class F(value:I):I by value{ A(Impl) }",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_ENUM_UNSUPPORTED"
+  },
+  {
+    "id": "overlapping_erasure",
+    "source": "interface I<T>{fun f(v:T):T}\ninterface J{fun f(v:String):String}\nclass F(a:I<String>,b:J):I<String> by a,J by b{override fun f(v:String):String=v}",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_OVERLAP_UNSUPPORTED"
+  },
+  {
+    "id": "any_member",
+    "source": "interface I{override fun hashCode():Int}\nclass F(value:I):I by value",
+    "official": "accept",
+    "code": "INTERFACE_ANY_MEMBER_UNSUPPORTED"
+  },
+  {
+    "id": "internal_exposure",
+    "source": "internal interface I { fun f():Int }\nclass F(d:I):I by d",
+    "official": "reject",
+    "code": "DELEGATION_EXPOSED_INTERNAL_TYPE"
+  },
+  {
+    "id": "internal_contract",
+    "source": "internal interface I { fun f():Int }\ninternal class F(d:I):I by d",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_INTERNAL_UNSUPPORTED"
+  },
+  {
+    "id": "nested_contract",
+    "source": "interface Outer {interface I {fun f():Int}}\nclass F(d:Outer.I):Outer.I by d",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_NESTED_UNSUPPORTED"
+  },
+  {
+    "id": "java_generic",
+    "source": "import delegated.JavaGeneric\nclass F(d:JavaGeneric<Int>):JavaGeneric<Int> by d",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_JAVA_GENERIC_UNSUPPORTED"
+  },
+  {
+    "id": "java_default",
+    "source": "import delegated.JavaDefaults\nclass F(d:JavaDefaults):JavaDefaults by d",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_DEFAULT_UNSUPPORTED"
+  },
+  {
+    "id": "java_reference_array",
+    "source": "import delegated.JavaArrays\nclass F(d:JavaArrays):JavaArrays by d",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_JAVA_TYPE_UNSUPPORTED"
+  },
+  {
+    "id": "override_val",
+    "source": "interface I {var value:Int}\nclass F(d:I):I by d {override val value:Int=1}",
+    "official": "reject",
+    "code": "VAR_OVERRIDDEN_BY_VAL"
+  },
+  {
+    "id": "hiding_fun",
+    "source": "interface I {fun f():Int}\nclass F(d:I):I by d {fun f():Int=1}",
+    "official": "reject",
+    "code": "OVERRIDE_REQUIRED"
+  },
+  {
+    "id": "hiding_property",
+    "source": "interface I {val value:Int}\nclass F(d:I):I by d {val value:Int=1}",
+    "official": "reject",
+    "code": "OVERRIDE_REQUIRED"
+  },
+  {
+    "id": "default_collision",
+    "source": "interface I{fun f():Int=1}\ninterface J{fun f():Int=2}\nclass F(a:I,b:J):I by a,J by b",
+    "official": "reject",
+    "code": "INTERFACE_DELEGATION_DEFAULT_CONFLICT_INVALID"
+  },
+  {
+    "id": "default_resolved",
+    "source": "interface I{fun f():Int=1}\ninterface J{fun f():Int=2}\nclass F(a:I,b:J):I by a,J by b{override fun f():Int=3}",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_DEFAULT_UNSUPPORTED"
+  },
+  {
+    "id": "constructor_override_val",
+    "source": "interface I{var value:Int}\nclass F(d:I,override val value:Int):I by d",
+    "official": "reject",
+    "code": "VAR_OVERRIDDEN_BY_VAL"
+  },
+  {
+    "id": "annotated_member",
+    "source": "import delegated.Tag\ninterface I{@Tag fun f():Int}\nclass F(d:I):I by d",
+    "official": "accept",
+    "code": "INTERFACE_METHOD_ANNOTATION_UNSUPPORTED"
+  },
+  {
+    "id": "annotated_parameter",
+    "source": "import delegated.Tag\ninterface I{fun f(@Tag value:Int):Int}\nclass F(d:I):I by d",
+    "official": "accept",
+    "code": "INTERFACE_DELEGATION_ANNOTATION_UNSUPPORTED"
+  }
+]

@@ -1,5 +1,7 @@
 #[path = "check_annotation_placements.rs"]
 mod annotation_placements;
+#[path = "check_class_delegation.rs"]
+mod class_delegation;
 #[path = "check_sealed.rs"]
 mod sealed;
 use crate::classpath::{Classpath, JavaClass, JavaMethod};
@@ -198,7 +200,19 @@ pub struct GenericBridge {
     pub target_params: Vec<Type>,
     pub target_result: Type,
 }
+pub struct InterfaceDelegateStorage {
+    pub slot: u8,
+    pub name: String,
+    pub ty: Type,
+    pub initializer: Value,
+}
+pub struct InterfaceDelegatedMember {
+    pub declaration: JavaMethod,
+    pub jvm_descriptor: String,
+}
 pub struct ClassDecl {
+    pub interface_delegate_storage: Vec<InterfaceDelegateStorage>,
+    pub interface_delegated_members: Vec<InterfaceDelegatedMember>,
     pub sealed_: bool,
     pub sealed_subclasses: Vec<String>,
     pub type_params: Vec<syntax::TypeParameter>,
@@ -6295,6 +6309,13 @@ pub(crate) fn setter_name(name: &str) -> String {
         name
     };
     format!("set{}{}", suffix[..1].to_ascii_uppercase(), &suffix[1..])
+}
+
+pub(crate) fn source_delegated_members(
+    classpath: &Classpath,
+    target: &Type,
+) -> Result<Vec<JavaMethod>> {
+    class_delegation::headers(classpath, target)
 }
 
 pub(crate) fn source_jvm_result(

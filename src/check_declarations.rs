@@ -49,6 +49,13 @@ pub(super) fn check_class_with_constants(
             "SEALED_CONSTRUCTOR_DEFAULTS_UNSUPPORTED",
         ));
     }
+    if !source.interface_delegates.is_empty()
+        && (source.data
+            || !source.secondary_constructors.is_empty()
+            || source.super_class.is_some())
+    {
+        return Err(Diagnostic::new(source.offset, "Delegating data classes, secondary constructors, and explicit superclass interactions are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "INTERFACE_DELEGATION_CLASS_SHAPE_UNSUPPORTED"));
+    }
     validate_classifier_generics(
         &source.type_params,
         &source.super_types,
@@ -251,8 +258,12 @@ pub(super) fn check_class_with_constants(
             .find(|t| library::type_owner(t) == Some(super_class.as_str()))
             .cloned()
             .unwrap_or(Type::Java(super_class.clone()));
-        for method in classpath.methods(&super_class)? {
-            let method = library::specialize_receiver(method, &parent_type, &parent, classpath);
+        let inherited = classpath
+            .methods(&super_class)?
+            .into_iter()
+            .map(|method| library::specialize_receiver(method, &parent_type, &parent, classpath))
+            .collect();
+        for method in library::remove_overridden(inherited, classpath) {
             if !method.name.starts_with('<')
                 && method.access & 8 == 0
                 && method.access & 5 != 0
@@ -267,6 +278,16 @@ pub(super) fn check_class_with_constants(
             .get(alias)
             .ok_or_else(|| Diagnostic::new(source.offset, "Interfaces require explicit imports"))?;
         let interface = &classes[name];
+        if !source.interface_delegates.is_empty() && interface.access & 0x0200 == 0 {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Only interfaces can be delegated or implemented without a constructor call",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "INTERFACE_DELEGATION_TYPE_INVALID",
+            ));
+        }
         if source.data && classpath.methods(name)?.iter().any(|m| m.access & 8 == 0) {
             return Err(Diagnostic::new(
                 source.offset,
@@ -290,6 +311,11 @@ pub(super) fn check_class_with_constants(
             interfaces::interface_methods(interface, classes, source.offset)?.into_values()
         {
             let method = library::specialize_receiver(method, &parent_type, interface, classpath);
+            let method = if source.interface_delegates.is_empty() {
+                method
+            } else {
+                class_delegation::normalize_contract(method, classpath, source.offset)?
+            };
             if classpath.load("java/lang/Object").is_ok_and(|object| {
                 object.methods.iter().any(|candidate| {
                     candidate.access & 9 == 1
@@ -299,18 +325,115 @@ pub(super) fn check_class_with_constants(
             }) {
                 continue;
             }
-            if required
-                .insert(logical_member_key(&method)?, method)
-                .is_some()
-            {
-                return Err(Diagnostic::new(
+            let key = logical_member_key(&method)?;
+            if let Some(previous) = required.get(&key) {
+                let same_signature = previous.descriptor == method.descriptor
+                    && previous.source_property == method.source_property
+                    && class_method_types(previous)? == class_method_types(&method)?;
+                let default_body = previous.access & 0x0400 == 0
+                    || method.access & 0x0400 == 0
+                    || previous.library.as_ref().is_some_and(|l| !l.abstract_)
+                    || method.library.as_ref().is_some_and(|l| !l.abstract_);
+                if !source.interface_delegates.is_empty() && same_signature && default_body {
+                    let mut suppliers = 0;
+                    for delegate in &source.interface_delegates {
+                        let ty = resolve_type_checked(
+                            &delegate.ty,
+                            imports,
+                            delegate.offset,
+                            classpath,
+                            classes,
+                        )?;
+                        if class_delegation::headers(classpath, &ty)?
+                            .iter()
+                            .any(|candidate| logical_member_key(candidate).is_ok_and(|k| k == key))
+                        {
+                            suppliers += 1;
+                        }
+                    }
+                    let explicit = source.methods.iter().any(|m| {
+                        m.is_override
+                            && m.function.name == method.source_name()
+                            && m.function.params.len()
+                                == class_method_types(&method).map_or(usize::MAX, |p| p.0.len())
+                    }) || method.source_property.as_ref().is_some_and(|name| {
+                        source
+                            .properties
+                            .iter()
+                            .any(|p| p.name == *name && p.is_override)
+                            || source.override_params.contains(name)
+                    });
+                    if suppliers > 1 && !explicit {
+                        return Err(Diagnostic::new(source.offset, "Multiple delegated default implementations require an explicit override").with_kind(crate::DiagnosticKind::InvalidKotlin, "INTERFACE_DELEGATION_DEFAULT_CONFLICT_INVALID"));
+                    }
+                    return Err(Diagnostic::new(
+                        source.offset,
+                        "Delegation combined with interface default implementations is unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "INTERFACE_DELEGATION_DEFAULT_UNSUPPORTED",
+                    ));
+                }
+                if previous.access & 0x0400 != 0
+                    && method.access & 0x0400 != 0
+                    && previous.library.as_ref().is_none_or(|l| l.abstract_)
+                    && method.library.as_ref().is_none_or(|l| l.abstract_)
+                    && previous.descriptor == method.descriptor
+                    && previous.source_property == method.source_property
+                    && class_method_types(previous)? == class_method_types(&method)?
+                {
+                    continue;
+                }
+                let error = Diagnostic::new(
                     source.offset,
-                    "Overloaded or conflicting interface methods are not supported",
-                ));
+                    if source.interface_delegates.is_empty() {
+                        "Overloaded or conflicting interface methods are not supported"
+                    } else {
+                        "Overlapping interface contracts with different erased signatures are unsupported"
+                    },
+                );
+                return Err(if source.interface_delegates.is_empty() {
+                    error
+                } else {
+                    error.with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "INTERFACE_DELEGATION_OVERLAP_UNSUPPORTED",
+                    )
+                });
             }
+            required.insert(key, method);
         }
     }
 
+    for name in source
+        .properties
+        .iter()
+        .filter(|p| p.is_override && !p.mutable)
+        .map(|p| p.name.as_str())
+        .chain(
+            source
+                .override_params
+                .iter()
+                .filter(|name| !source.mutable_params.contains(name))
+                .map(String::as_str),
+        )
+    {
+        if required.values().any(|method| {
+            method.source_property.as_deref() == Some(name)
+                && class_method_types(method)
+                    .is_ok_and(|(parameters, result)| parameters.len() == 1 && result == Type::Unit)
+        }) {
+            return Err(Diagnostic::new(
+                source.offset,
+                "A var property cannot be overridden by a val property",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "VAR_OVERRIDDEN_BY_VAL",
+            ));
+        }
+    }
     let extensions = HashSet::new();
     let signatures = Vec::new();
     let functions = HashMap::new();
@@ -452,6 +575,8 @@ pub(super) fn check_class_with_constants(
             kind: ValueKind::Null,
         });
     }
+    let (interface_delegate_storage, interface_contracts) =
+        class_delegation::prepare(source, &mut initializer_checker)?;
     let mut constructor_locals = initializer_checker.next;
     drop(initializer_checker);
     let mut property_types = HashMap::new();
@@ -767,6 +892,7 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .find(|m| m.function.name == *name && m.function.params == *source_params)
                     .map(|m| crate::classpath::LibraryMethod {
+                        has_annotations: false,
                         abstract_: false,
                         builtin_array: false,
                         source_name: m.function.name.clone(),
@@ -1121,14 +1247,15 @@ pub(super) fn check_class_with_constants(
                     return Err(Diagnostic::new(
                         offset,
                         "Interface implementation requires override and an exact supported JVM signature",
-                    ));
+                    ).with_kind(crate::DiagnosticKind::InvalidKotlin, if !is_override { "OVERRIDE_REQUIRED" } else { "OVERRIDE_SIGNATURE_INVALID" }));
                 }
             }
             None if is_override => {
                 return Err(Diagnostic::new(
                     offset,
                     "Member overrides no supported interface declaration",
-                ));
+                )
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "NOTHING_TO_OVERRIDE"));
             }
             None => {}
         }
@@ -1165,7 +1292,7 @@ pub(super) fn check_class_with_constants(
                 return Err(Diagnostic::new(
                     source.offset,
                     "Interface property implementation requires override and an exact supported signature",
-                ));
+                ).with_kind(crate::DiagnosticKind::InvalidKotlin, if !property_override { "OVERRIDE_REQUIRED" } else { "OVERRIDE_SIGNATURE_INVALID" }));
             }
         } else if property_override {
             return Err(Diagnostic::new(
@@ -1272,6 +1399,15 @@ pub(super) fn check_class_with_constants(
             "GENERIC_CLASS_LAMBDA_UNSUPPORTED",
         ));
     }
+    let (forwarders, interface_delegated_members) = class_delegation::forwarders(
+        &interface_contracts,
+        &methods,
+        &owner,
+        &super_types,
+        classpath,
+        source.offset,
+    )?;
+    methods.extend(forwarders);
     for method in &mut methods {
         method.class_type_params = type_params.iter().map(|p| p.name.clone()).collect();
         let probe = function_method(method, &owner, 0, None);
@@ -1330,6 +1466,10 @@ pub(super) fn check_class_with_constants(
             return Err(Diagnostic::new(
                 source.offset,
                 format!("Missing interface implementation: {}", method.name),
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "MISSING_INTERFACE_IMPLEMENTATION",
             ));
         }
         if classes
@@ -1342,6 +1482,31 @@ pub(super) fn check_class_with_constants(
                 classpath,
                 source.offset,
             )?);
+        }
+    }
+    if !source.interface_delegates.is_empty() {
+        let mut signatures = HashSet::new();
+        for method in &methods {
+            for descriptor in std::iter::once(method.descriptor())
+                .chain(annotations::overload_descriptors(method))
+            {
+                if !signatures.insert((method.jvm_name().to_owned(), descriptor)) {
+                    return Err(Diagnostic::new(
+                        source.offset,
+                        "Delegation produces a JVM signature clash",
+                    )
+                    .with_kind(crate::DiagnosticKind::InvalidKotlin, "JVM_SIGNATURE_CLASH"));
+                }
+            }
+        }
+        for bridge in &generic_bridges {
+            if !signatures.insert((bridge.erased.name.clone(), bridge.erased.descriptor.clone())) {
+                return Err(Diagnostic::new(
+                    source.offset,
+                    "Delegation produces a JVM bridge signature clash",
+                )
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "JVM_SIGNATURE_CLASH"));
+            }
         }
     }
     if methods.len() + bridges.len() + 1 > 65535 {
@@ -1639,6 +1804,8 @@ pub(super) fn check_class_with_constants(
     }
     let abstract_methods = method_keys(|m| !m.has_body);
     Ok(ClassDecl {
+        interface_delegate_storage,
+        interface_delegated_members,
         sealed_: source.sealed_,
         sealed_subclasses: classpath
             .load(&owner)
@@ -3100,6 +3267,9 @@ pub(super) fn override_signature(
 ) -> Result<bool> {
     let (expected_params, expected_result) = class_method_types(method)?;
     fn compatible(expected: &Type, actual: &Type) -> bool {
+        if expected == actual {
+            return true;
+        }
         match expected {
             Type::Platform(inner) => {
                 inner.as_ref() == actual || matches!(actual,Type::Nullable(actual) if actual==inner)
@@ -3678,7 +3848,7 @@ pub(super) fn classifier_type(owner: &str, parameters: &[syntax::TypeParameter])
             .collect(),
     }
 }
-fn logical_member_key(method: &JavaMethod) -> Result<String> {
+pub(super) fn logical_member_key(method: &JavaMethod) -> Result<String> {
     let (parameters, result) = class_method_types(method)?;
     Ok(member_key(
         &method.name,

@@ -629,6 +629,7 @@ mod tests {
     fn inline_method(code: JavaCode) -> JavaMethod {
         JavaMethod {
             library: Some(crate::classpath::LibraryMethod {
+                has_annotations: false,
                 abstract_: false,
                 builtin_array: false,
                 kotlin_public: true,

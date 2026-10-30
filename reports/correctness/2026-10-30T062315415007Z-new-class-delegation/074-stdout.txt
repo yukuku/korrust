@@ -1,0 +1,348 @@
+Classfile /Users/yuku/f/git/korrust/target/checks/2026-10-30T062315415007Z-new-class-delegation/candidate/delegated/OverrideCounter.class
+  Last modified Oct 30, 2026; size 2027 bytes
+  SHA-256 checksum 877cf561b9de2076fa97e2dce2f28e81267b9bb8442272ab217edaba0596f485
+  Compiled from "Use.kt"
+public final class delegated.OverrideCounter implements delegated.Counter
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // delegated/OverrideCounter
+  super_class: #4                         // java/lang/Object
+  interfaces: 1, fields: 2, methods: 6, attributes: 2
+Constant pool:
+   #1 = Utf8               delegated/OverrideCounter
+   #2 = Class              #1             // delegated/OverrideCounter
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               delegated/Counter
+   #6 = Class              #5             // delegated/Counter
+   #7 = Utf8               count
+   #8 = Utf8               I
+   #9 = Utf8               $$delegate_0
+  #10 = Utf8               Ldelegated/Counter;
+  #11 = Utf8               RuntimeInvisibleAnnotations
+  #12 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #13 = Utf8               delegate
+  #14 = String             #13            // delegate
+  #15 = Utf8               kotlin/jvm/internal/Intrinsics
+  #16 = Class              #15            // kotlin/jvm/internal/Intrinsics
+  #17 = Utf8               checkNotNullParameter
+  #18 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #19 = NameAndType        #17:#18        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #20 = Methodref          #16.#19        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #21 = Utf8               <init>
+  #22 = Utf8               ()V
+  #23 = NameAndType        #21:#22        // "<init>":()V
+  #24 = Methodref          #4.#23         // java/lang/Object."<init>":()V
+  #25 = NameAndType        #9:#10         // $$delegate_0:Ldelegated/Counter;
+  #26 = Fieldref           #2.#25         // delegated/OverrideCounter.$$delegate_0:Ldelegated/Counter;
+  #27 = NameAndType        #7:#8          // count:I
+  #28 = Fieldref           #2.#27         // delegated/OverrideCounter.count:I
+  #29 = Utf8               (Ldelegated/Counter;)V
+  #30 = Utf8               Code
+  #31 = Utf8               RuntimeInvisibleParameterAnnotations
+  #32 = Utf8               java/lang/String
+  #33 = Class              #32            // java/lang/String
+  #34 = Utf8               java/lang/Throwable
+  #35 = Class              #34            // java/lang/Throwable
+  #36 = Utf8               StackMapTable
+  #37 = Utf8               read
+  #38 = Utf8               ()I
+  #39 = Utf8               getCount
+  #40 = Utf8               setCount
+  #41 = Utf8               (I)V
+  #42 = Utf8               getName
+  #43 = Utf8               ()Ljava/lang/String;
+  #44 = NameAndType        #42:#43        // getName:()Ljava/lang/String;
+  #45 = InterfaceMethodref #6.#44         // delegated/Counter.getName:()Ljava/lang/String;
+  #46 = Utf8               twice
+  #47 = Utf8               (J)J
+  #48 = NameAndType        #46:#47        // twice:(J)J
+  #49 = InterfaceMethodref #6.#48         // delegated/Counter.twice:(J)J
+  #50 = Utf8               SourceFile
+  #51 = Utf8               Use.kt
+  #52 = Utf8               Lkotlin/Metadata;
+  #53 = Utf8               mv
+  #54 = Integer            2
+  #55 = Integer            3
+  #56 = Integer            0
+  #57 = Utf8               k
+  #58 = Integer            1
+  #59 = Utf8               xi
+  #60 = Integer            48
+  #61 = Utf8               d1
+  #62 = Utf8               \u0000\b\n\u0002\b\u0015\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001J\u0018H\u0096\u0001\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0003¢\u0006\u0004\b\u0002\u0010\u0005R\u0012X\u0096\u0005\u0010\u0006\u001a\u00020\u0007¢\u0006\u0006\u001a\u0004\b\b\u0010\tB\u0011\b\u0006\u0012\u0006\u0010\n\u001a\u00020\u0001¢\u0006\u0004\b\u000b\u0010\fJ\u000fH\u0016\u0010\r\u001a\u00020\u000e¢\u0006\u0004\b\r\u0010\u000fR\u001eX\u0096\u000e\u0010\u0010\u001a\u00020\u000e¢\u0006\u0012\n\u0004\b\u0010\u0010\u0011\u001a\u0004\b\u0012\u0010\u000f\"\u0004\b\u0013\u0010\u0014¨\u0006\u0015
+  #63 = Utf8               d2
+  #64 = Utf8               kotlin/Long
+  #65 = Utf8               value
+  #66 = Utf8               name
+  #67 = Utf8               kotlin/String
+  #68 = Utf8               kotlin/Int
+  #69 = Utf8               class_delegation
+  #70 = Utf8               RuntimeVisibleAnnotations
+{
+  public delegated.OverrideCounter(delegated.Counter);
+    descriptor: (Ldelegated/Counter;)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=3, args_size=2
+         0: aload         1
+         2: ldc_w         #14                 // String delegate
+         5: invokestatic  #20                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload_0
+         9: invokespecial #24                 // Method java/lang/Object."<init>":()V
+        12: aload         1
+        14: astore        2
+        16: aload_0
+        17: aload         2
+        19: putfield      #26                 // Field $$delegate_0:Ldelegated/Counter;
+        22: aload         0
+        24: bipush        11
+        26: putfield      #28                 // Field count:I
+        29: return
+        30: nop
+        31: athrow
+      StackMapTable: number_of_entries = 15
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, class delegated/Counter ]
+          stack = [ class delegated/Counter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, class delegated/Counter ]
+          stack = [ class delegated/Counter, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, class delegated/Counter ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ this, class delegated/Counter ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter, class delegated/Counter ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class delegated/OverrideCounter, class delegated/Counter ]
+          stack = [ class delegated/Counter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class delegated/OverrideCounter, class delegated/Counter, class delegated/Counter ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter, class delegated/Counter, class delegated/Counter ]
+          stack = [ class delegated/OverrideCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class delegated/OverrideCounter, class delegated/Counter, class delegated/Counter ]
+          stack = [ class delegated/OverrideCounter, class delegated/Counter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter, class delegated/Counter, class delegated/Counter ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class delegated/OverrideCounter, class delegated/Counter, class delegated/Counter ]
+          stack = [ class delegated/OverrideCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class delegated/OverrideCounter, class delegated/Counter, class delegated/Counter ]
+          stack = [ class delegated/OverrideCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter, class delegated/Counter, class delegated/Counter ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter, class delegated/Counter, class delegated/Counter ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter, class delegated/Counter, class delegated/Counter ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #12()
+          org.jetbrains.annotations.NotNull
+
+  public int read();
+    descriptor: ()I
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: bipush        99
+         2: ireturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class java/lang/Throwable ]
+
+  public int getCount();
+    descriptor: ()I
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #28                 // Field count:I
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class delegated/OverrideCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class java/lang/Throwable ]
+
+  public void setCount(int);
+    descriptor: (I)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload         0
+         2: iload         1
+         4: putfield      #28                 // Field count:I
+         7: return
+         8: nop
+         9: athrow
+      StackMapTable: number_of_entries = 5
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter, int ]
+          stack = [ class delegated/OverrideCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class delegated/OverrideCounter, int ]
+          stack = [ class delegated/OverrideCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter, int ]
+          stack = [ class java/lang/Throwable ]
+
+  public java.lang.String getName();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #26                 // Field $$delegate_0:Ldelegated/Counter;
+         5: checkcast     #6                  // class delegated/Counter
+         8: invokeinterface #45,  1           // InterfaceMethod delegated/Counter.getName:()Ljava/lang/String;
+        13: areturn
+        14: nop
+        15: athrow
+      StackMapTable: number_of_entries = 6
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class delegated/OverrideCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class delegated/Counter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class delegated/Counter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 4
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleAnnotations:
+      0: #12()
+        org.jetbrains.annotations.NotNull
+
+  public long twice(long);
+    descriptor: (J)J
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=5, locals=3, args_size=2
+         0: aload         0
+         2: getfield      #26                 // Field $$delegate_0:Ldelegated/Counter;
+         5: checkcast     #6                  // class delegated/Counter
+         8: lload         1
+        10: invokeinterface #49,  3           // InterfaceMethod delegated/Counter.twice:(J)J
+        15: lreturn
+        16: nop
+        17: athrow
+      StackMapTable: number_of_entries = 7
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter, long ]
+          stack = [ class delegated/OverrideCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter, long ]
+          stack = [ class delegated/Counter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class delegated/OverrideCounter, long ]
+          stack = [ class delegated/Counter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class delegated/OverrideCounter, long ]
+          stack = [ class delegated/Counter, long ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 4
+          locals = [ class delegated/OverrideCounter, long ]
+          stack = [ long ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter, long ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class delegated/OverrideCounter, long ]
+          stack = [ class java/lang/Throwable ]
+}
+SourceFile: "Use.kt"
+RuntimeVisibleAnnotations:
+  0: #52(#53=[I#54,I#55,I#56],#57=I#58,#59=I#60,#61=[s#62],#63=[s#1,s#5,s#46,s#64,s#65,s#47,s#66,s#67,s#42,s#43,s#13,s#21,s#29,s#37,s#68,s#38,s#7,s#8,s#39,s#40,s#41,s#69])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0015\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001J\u0018H\u0096\u0001\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0003¢\u0006\u0004\b\u0002\u0010\u0005R\u0012X\u0096\u0005\u0010\u0006\u001a\u00020\u0007¢\u0006\u0006\u001a\u0004\b\b\u0010\tB\u0011\b\u0006\u0012\u0006\u0010\n\u001a\u00020\u0001¢\u0006\u0004\b\u000b\u0010\fJ\u000fH\u0016\u0010\r\u001a\u00020\u000e¢\u0006\u0004\b\r\u0010\u000fR\u001eX\u0096\u000e\u0010\u0010\u001a\u00020\u000e¢\u0006\u0012\n\u0004\b\u0010\u0010\u0011\u001a\u0004\b\u0012\u0010\u000f\"\u0004\b\u0013\u0010\u0014¨\u0006\u0015"]
+      d2=["delegated/OverrideCounter","delegated/Counter","twice","kotlin/Long","value","(J)J","name","kotlin/String","getName","()Ljava/lang/String;","delegate","<init>","(Ldelegated/Counter;)V","read","kotlin/Int","()I","count","I","getCount","setCount","(I)V","class_delegation"]
+    )

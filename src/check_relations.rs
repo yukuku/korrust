@@ -1130,6 +1130,7 @@ impl Checker<'_> {
             ),
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
+                has_annotations: false,
                 abstract_: false,
                 builtin_array: false,
                 source_name: String::new(),
