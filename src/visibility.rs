@@ -60,14 +60,7 @@ impl FunctionInfo {
             result: function.result.clone(),
             is_static,
             defaults: function.defaults.iter().any(Option::is_some),
-            mask_count: (function.params.len()
-                - usize::from(
-                    function
-                        .params
-                        .first()
-                        .is_some_and(|(name, _)| name == "<this>"),
-                ))
-            .div_ceil(32),
+            mask_count: function.value_parameter_count().div_ceil(32),
         }
     }
 

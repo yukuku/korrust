@@ -306,11 +306,15 @@ pub(super) fn projected_input(
                 return false;
             }
             (argument.ty.is_none() || argument.variance == Variance::Out)
-                && method.kotlin_params.as_ref().is_some_and(|params| {
+                && (method.kotlin_params.as_ref().is_some_and(|params| {
                     params
                         .iter()
                         .any(|(_, ty, _)| mentions(ty, &parameter.name))
-                })
+                }) || method
+                    .library
+                    .as_ref()
+                    .and_then(|library| library.receiver.as_ref())
+                    .is_some_and(|receiver| mentions(receiver, &parameter.name)))
         })
 }
 
@@ -389,6 +393,13 @@ pub(super) fn specialize_receiver(
         for (_, ty, _) in params {
             *ty = substitute(ty, &writable);
         }
+    }
+    if let Some(receiver) = method
+        .library
+        .as_mut()
+        .and_then(|library| library.receiver.as_mut())
+    {
+        *receiver = substitute(receiver, &writable);
     }
     if let Some(result) = &mut method.kotlin_result {
         let precise_mapped_parameter = matches!(
@@ -896,9 +907,17 @@ impl Checker<'_> {
         substitutions: &mut HashMap<String, Type>,
         fixed: &HashSet<String>,
         parameters: &HashSet<String>,
+        label: Option<&str>,
     ) -> Result<()> {
-        if let ExprKind::Labeled(_, inner) = &expr.kind {
-            return self.infer_lambda_result(pattern, inner, substitutions, fixed, parameters);
+        if let ExprKind::Labeled(label, inner) = &expr.kind {
+            return self.infer_lambda_result(
+                pattern,
+                inner,
+                substitutions,
+                fixed,
+                parameters,
+                Some(label),
+            );
         }
         if !matches!(
             expr.kind,
@@ -913,29 +932,43 @@ impl Checker<'_> {
         } = pattern.base()
         {
             let receiver = substitute(receiver, substitutions);
-            let old_receiver = self.receiver.clone();
+            let old_receivers = self.extension_receivers.clone();
+            let old_labels = self.receiver_labels.clone();
             let next = self.next;
             let initialized = self.initialized.clone();
             let slot = self.allocate_typed_slot(&receiver, expr.offset)?;
-            self.receiver = Some(Local {
+            let receiver = Local {
                 slot,
                 ty: receiver,
                 mutable: false,
-            });
+            };
+            self.extension_receivers.insert(0, receiver.clone());
+            self.initialized.insert(slot);
+            if let Some(label) = label {
+                self.receiver_labels.insert(label.into(), receiver);
+            }
             let function = Type::Function {
                 params: params.clone(),
                 result: result.clone(),
             };
             let inferred =
-                self.infer_lambda_result(&function, expr, substitutions, fixed, parameters);
-            self.receiver = old_receiver;
+                self.infer_lambda_result(&function, expr, substitutions, fixed, parameters, label);
+            self.extension_receivers = old_receivers;
+            self.receiver_labels = old_labels;
             self.next = next;
             self.initialized = initialized;
             return inferred;
         }
         let Type::Function { params, result } = pattern.base() else {
             if let Some((_, function)) = self.sam_function(pattern, expr.offset)? {
-                return self.infer_lambda_result(&function, expr, substitutions, fixed, parameters);
+                return self.infer_lambda_result(
+                    &function,
+                    expr,
+                    substitutions,
+                    fixed,
+                    parameters,
+                    label,
+                );
             }
             return Ok(());
         };
@@ -1029,10 +1062,15 @@ impl Checker<'_> {
                 return Err(Diagnostic::new(
                     expr.offset,
                     "Cannot infer a generic lambda result after unconditional termination",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "LAMBDA_ABRUPT_RESULT_INFERENCE_UNSUPPORTED",
                 ));
             }
             match &last.kind {
                 StatementKind::Expression(value) => Ok(self.value(value)?.ty),
+                StatementKind::Return(_) => Err(Diagnostic::new(expr.offset, "Generic lambda results with unconditional nonlocal returns require unsupported Nothing inference").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "LAMBDA_ABRUPT_RESULT_INFERENCE_UNSUPPORTED")),
                 _ => Ok(Type::Unit),
             }
         })();
@@ -1131,12 +1169,13 @@ impl Checker<'_> {
             ),
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
+                kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),
                 abstract_: false,
                 builtin_array: false,
-                source_name: String::new(),
+                source_name: self.function_names.get(id).cloned().unwrap_or_default(),
                 type_parameters,
                 receiver: None,
                 inline: false,
@@ -1177,6 +1216,8 @@ impl Checker<'_> {
                 ))
             };
         };
+        let labeled = member_extensions::call_labels(&library.source_name, args);
+        let args = labeled.as_slice();
         if library.type_parameters.is_empty() {
             return if explicit.is_empty() {
                 Ok(method.clone())
@@ -1334,13 +1375,32 @@ impl Checker<'_> {
             } else {
                 arg
             };
-            self.infer_lambda_result(
+            let previous_nonlocal = self.nonlocal_result.take();
+            self.nonlocal_result = if library.inline
+                && library
+                    .parameter_modes
+                    .get(*index)
+                    .is_none_or(|mode| *mode == syntax::InlineParameterMode::Ordinary)
+                && (self.allow_return || previous_nonlocal.is_some())
+            {
+                Some(
+                    previous_nonlocal
+                        .clone()
+                        .unwrap_or_else(|| self.result.clone()),
+                )
+            } else {
+                None
+            };
+            let inferred = self.infer_lambda_result(
                 &params[*index].1,
                 arg,
                 &mut substitutions,
                 &fixed,
                 &parameter_names,
-            )?;
+                None,
+            );
+            self.nonlocal_result = previous_nonlocal;
+            inferred?;
         }
         if let (Some(expected), Some(result)) = (expected, &method.kotlin_result) {
             let expected = match (result.base(), expected.base()) {
@@ -1543,6 +1603,8 @@ mod tests {
             public_inline_body: false,
             reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
+            extension_receivers: Vec::new(),
+            receiver_labels: HashMap::new(),
             lambdas: Rc::new(RefCell::new(Vec::new())),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),
@@ -1564,7 +1626,7 @@ mod tests {
             classes: &HashMap::new(),
             imports: &HashMap::new(),
             signatures: &Vec::new(),
-            receiver: None,
+            dispatch_receiver: None,
             fields: &HashMap::new(),
             members: &HashMap::new(),
             companion_fields: &HashMap::new(),

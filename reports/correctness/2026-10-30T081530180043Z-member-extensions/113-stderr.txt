@@ -1,0 +1,8 @@
+target/checks/2026-10-30T081530180043Z-member-extensions/boundaries/duplicate_receiver_property/Boundary.kt:1:22: error: conflicting declarations:
+val Int.bad: Int
+class Host { val Int.bad: Int get() = this; val Int.bad: Int get() = this }
+                     ^^^
+target/checks/2026-10-30T081530180043Z-member-extensions/boundaries/duplicate_receiver_property/Boundary.kt:1:53: error: conflicting declarations:
+val Int.bad: Int
+class Host { val Int.bad: Int get() = this; val Int.bad: Int get() = this }
+                                                    ^^^

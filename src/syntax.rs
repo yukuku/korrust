@@ -568,6 +568,7 @@ impl PropertyVisibility {
 
 #[derive(Clone, Debug)]
 pub struct PropertyDecl {
+    pub receiver: Option<Type>,
     pub annotations: Vec<AnnotationUse>,
     pub name: String,
     pub private: bool,
@@ -625,9 +626,18 @@ pub enum InlineParameterMode {
 }
 
 #[derive(Clone, Debug)]
+pub struct ExtensionProperty {
+    pub name: String,
+    pub setter: bool,
+    pub mutable: bool,
+    pub setter_visibility: PropertyVisibility,
+    pub setter_parameter: Option<String>,
+}
+#[derive(Clone, Debug)]
 pub struct Function {
     pub inline: bool,
     pub parameter_modes: Vec<InlineParameterMode>,
+    pub extension_property: Option<ExtensionProperty>,
     pub param_annotations: Vec<Vec<AnnotationUse>>,
     pub annotations: Vec<AnnotationUse>,
     pub name: String,
@@ -645,6 +655,119 @@ pub struct Function {
     pub result: Type,
     pub result_inferred: bool,
     pub body: Vec<Statement>,
+}
+
+fn extension_property_accessors(property: &PropertyDecl) -> Result<Vec<Function>> {
+    if !property.annotations.is_empty() {
+        return Err(Diagnostic::new(
+            property.offset,
+            "Annotations on extension properties are unsupported",
+        )
+        .with_kind(
+            DiagnosticKind::UnsupportedLanguage,
+            "EXTENSION_PROPERTY_ANNOTATION_UNSUPPORTED",
+        ));
+    }
+    if property.initializer.is_some() || property.delegate.is_some() || property.lateinit {
+        return Err(Diagnostic::new(
+            property.offset,
+            "Extension properties cannot have backing fields or initializers",
+        )
+        .with_kind(
+            DiagnosticKind::InvalidKotlin,
+            "EXTENSION_PROPERTY_BACKING_FIELD",
+        ));
+    }
+    if property.inferred {
+        return Err(Diagnostic::new(
+            property.offset,
+            "Extension property getter inference is unsupported",
+        )
+        .with_kind(
+            DiagnosticKind::UnsupportedLanguage,
+            "EXTENSION_PROPERTY_INFERENCE_UNSUPPORTED",
+        ));
+    }
+    if property.ty.base() == &Type::Unit {
+        return Err(Diagnostic::new(
+            property.offset,
+            "Unit extension properties require unsupported boxed accessor results",
+        )
+        .with_kind(
+            DiagnosticKind::UnsupportedLanguage,
+            "EXTENSION_PROPERTY_UNIT_UNSUPPORTED",
+        ));
+    }
+    if property.body.is_empty() || property.mutable && property.setter.is_none() {
+        return Err(Diagnostic::new(
+            property.offset,
+            "Extension properties require explicit accessors",
+        )
+        .with_kind(
+            DiagnosticKind::InvalidKotlin,
+            "EXTENSION_PROPERTY_ACCESSOR_REQUIRED",
+        ));
+    }
+    let make = |setter: bool| {
+        let visibility = if setter {
+            property.setter_visibility()
+        } else {
+            property.getter_visibility()
+        };
+        let params = if setter {
+            vec![(
+                property.setter.as_ref().unwrap().0.clone(),
+                property.ty.clone(),
+            )]
+        } else {
+            Vec::new()
+        };
+        Function {
+            inline: false,
+            parameter_modes: vec![InlineParameterMode::Ordinary; params.len()],
+            extension_property: Some(ExtensionProperty {
+                name: property.name.clone(),
+                setter,
+                mutable: property.mutable,
+                setter_visibility: property.setter_visibility(),
+                setter_parameter: property.setter.as_ref().map(|(name, _)| name.clone()),
+            }),
+            annotations: property.annotations.clone(),
+            param_annotations: vec![Vec::new(); params.len()],
+            name: if setter {
+                crate::check::setter_name(&property.name)
+            } else {
+                crate::check::getter_name(&property.name)
+            },
+            offset: property.offset,
+            private: visibility == PropertyVisibility::Private,
+            protected: visibility == PropertyVisibility::Protected,
+            internal: visibility == PropertyVisibility::Internal,
+            infix: false,
+            operator: false,
+            vararg: false,
+            receiver: property.receiver.clone(),
+            type_params: Vec::new(),
+            defaults: vec![None; params.len()],
+            params,
+            result: if setter {
+                Type::Unit
+            } else {
+                property.ty.clone()
+            },
+            result_inferred: false,
+            body: if setter {
+                property.setter.as_ref().unwrap().1.clone()
+            } else {
+                property.body.clone()
+            },
+        }
+    };
+    let mut functions = vec![make(false)];
+    if property.mutable {
+        functions.push(make(true));
+    }
+    Ok(functions)
 }
 #[derive(Clone, Debug)]
 pub struct Statement {
@@ -2794,6 +2917,21 @@ impl Parser {
                 property.internal = property_visibility == Some(PropertyVisibility::Internal);
                 Self::validate_static_property_visibility(&property)?;
                 property.annotations.splice(0..0, annotations);
+                if property.receiver.is_some() {
+                    for function in extension_property_accessors(&property)? {
+                        methods.push(ObjectMethod {
+                            synthesized: false,
+                            function,
+                            is_override,
+                            jvm_static: false,
+                            throws: Vec::new(),
+                            inline: false,
+                            suppress: Vec::new(),
+                        });
+                    }
+                    self.end()?;
+                    continue;
+                }
                 let name = property.name.clone();
                 fields.push(ObjectField {
                     annotations: property.annotations,
@@ -2987,12 +3125,6 @@ impl Parser {
         function.infix = infix;
         function.operator = operator;
         Self::validate_infix_function(&function)?;
-        if function.receiver.is_some() {
-            return Err(Diagnostic::new(
-                offset,
-                "Object member extension functions are not supported",
-            ));
-        }
         Ok(ObjectMethod {
             synthesized: false,
             is_override,
@@ -3529,6 +3661,15 @@ impl Parser {
     ) -> Result<()> {
         self.separators();
         while !self.at("}") {
+            if self.at("inner") {
+                return Err(self
+                    .error("Inner class declarations are unsupported")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "INNER_CLASS_UNSUPPORTED",
+                    ));
+            }
+
             if self.at("<eof>") {
                 return Err(self.error("Unterminated class body"));
             }
@@ -3654,6 +3795,18 @@ impl Parser {
                     property.protected = visibility.as_deref() == Some("protected");
                     property.internal = visibility.as_deref() == Some("internal");
                     Self::validate_property_visibility(&property)?;
+                    if property.receiver.is_some() {
+                        for function in extension_property_accessors(&property)? {
+                            declaration.methods.push(ClassMethod {
+                                function,
+                                is_override,
+                                open,
+                                has_body: true,
+                            });
+                        }
+                        self.end()?;
+                        continue;
+                    }
                     if !property_names.insert(property.name.clone()) {
                         return Err(Diagnostic::new(offset, "Duplicate class property name"));
                     }
@@ -3792,15 +3945,31 @@ impl Parser {
         if !mutable {
             self.expect("val")?;
         }
-        let name = self.declaration_name()?;
-        if self.at(".") {
+        if self.at("<") {
             return Err(self
-                .error("Extension property declarations are unsupported")
+                .error("Generic extension property declarations are unsupported")
                 .with_kind(
                     DiagnosticKind::UnsupportedLanguage,
-                    "EXTENSION_PROPERTY_UNSUPPORTED",
+                    "GENERIC_EXTENSION_PROPERTY_UNSUPPORTED",
                 ));
         }
+        let type_offset = self.token().offset;
+        let first = self.declaration_name()?;
+        let (receiver, name) = if self.at("<") || self.at("?") || self.at(".") || self.at("?.") {
+            let receiver = self.named_ty(first, type_offset)?;
+            let nullable_dot = self.take("?.");
+            let receiver = if nullable_dot || self.take("?") {
+                Type::Nullable(Box::new(receiver))
+            } else {
+                receiver
+            };
+            if !nullable_dot {
+                self.expect(".")?;
+            }
+            (Some(receiver), self.declaration_name()?)
+        } else {
+            (None, first)
+        };
         let ty = if self.take(":") {
             self.lines();
             Some(self.ty()?)
@@ -3915,6 +4084,7 @@ impl Parser {
             ));
         }
         Ok(PropertyDecl {
+            receiver,
             annotations,
             name,
             private,
@@ -4053,7 +4223,12 @@ impl Parser {
                     initializers: Vec::new(),
                 });
             }
-            return Err(self.error("Only unnamed companion objects are supported"));
+            return Err(self
+                .error("Named companion declarations are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "NAMED_COMPANION_DECLARATION_UNSUPPORTED",
+                ));
         }
         let mut declaration = ClassDecl {
             interface_delegates: Vec::new(),
@@ -4318,7 +4493,11 @@ impl Parser {
                     if function.receiver.is_some() {
                         return Err(Diagnostic::new(
                             offset,
-                            "Interface extension functions are not supported",
+                            "Interface extension declarations are unsupported",
+                        )
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "INTERFACE_EXTENSION_UNSUPPORTED",
                         ));
                     }
                     declaration.methods.push(InterfaceMethod {
@@ -4331,7 +4510,24 @@ impl Parser {
                     if !mutable {
                         self.expect("val")?;
                     }
+                    if self.at("<") {
+                        return Err(self
+                            .error("Generic interface extension properties are unsupported")
+                            .with_kind(
+                                DiagnosticKind::UnsupportedLanguage,
+                                "INTERFACE_EXTENSION_UNSUPPORTED",
+                            ));
+                    }
                     let name = self.declaration_name()?;
+                    if matches!(self.token().text.as_str(), "." | "?." | "?" | "<") {
+                        return Err(self
+                            .error("Interface extension property declarations are unsupported")
+                            .with_kind(
+                                DiagnosticKind::UnsupportedLanguage,
+                                "INTERFACE_EXTENSION_UNSUPPORTED",
+                            ));
+                    }
+
                     if !names.insert(name.clone()) {
                         return Err(Diagnostic::new(offset, "Duplicate interface member name"));
                     }
@@ -4409,7 +4605,12 @@ impl Parser {
                     initializers,
                 });
             }
-            return Err(self.error("Only unnamed companion objects are supported"));
+            return Err(self
+                .error("Named companion declarations are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "NAMED_COMPANION_DECLARATION_UNSUPPORTED",
+                ));
         }
         self.separators();
         let mut names = std::collections::HashSet::new();
@@ -4698,14 +4899,17 @@ impl Parser {
         let type_params = self.type_parameters(inline)?;
         let type_offset = self.token().offset;
         let first = self.name()?;
-        let (receiver, name) = if self.at("<") || self.at("?") || self.at(".") {
+        let (receiver, name) = if self.at("<") || self.at("?") || self.at(".") || self.at("?.") {
             let receiver = self.named_ty(first, type_offset)?;
-            let receiver = if self.take("?") {
+            let nullable_dot = self.take("?.");
+            let receiver = if nullable_dot || self.take("?") {
                 Type::Nullable(Box::new(receiver))
             } else {
                 receiver
             };
-            self.expect(".")?;
+            if !nullable_dot {
+                self.expect(".")?;
+            }
             (Some(receiver), self.name()?)
         } else {
             (None, first)
@@ -4851,6 +5055,7 @@ impl Parser {
             Function {
                 inline,
                 parameter_modes,
+                extension_property: None,
                 param_annotations,
                 annotations,
                 name,
@@ -6851,7 +7056,11 @@ pub fn parse(source: &str) -> Result<Module> {
             property.internal = property_visibility == Some(PropertyVisibility::Internal);
             Parser::validate_static_property_visibility(&property)?;
             property.annotations.splice(0..0, annotations);
-            properties.push(property);
+            if property.receiver.is_some() {
+                functions.extend(extension_property_accessors(&property)?);
+            } else {
+                properties.push(property);
+            }
         } else if p.starts_enum() {
             let declaration = p.enum_decl()?;
             if enum_decl.is_none() {

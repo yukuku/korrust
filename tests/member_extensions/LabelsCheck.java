@@ -1,0 +1,1 @@
+public final class LabelsCheck { public static void main(String[] args) { if (LabelsKt.aliased()!=3 || LabelsKt.named()!=4 || LabelsKt.overloaded("x")!=1 || LabelsKt.overloaded("x",7)!=7) throw new AssertionError("call-site receiver labels"); } }

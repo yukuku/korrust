@@ -2,7 +2,14 @@ package consumer
 import probe.*
 import lambdas.*
 import forward.*
+fun early(value: Boolean): Int {
+ genericNoArg { if (value) return 9; 11 }
+ return 13
+}
 fun main() {
+ check(genericNoArg { 37 } == 37)
+ check(early(true)==9)
+ check(early(false)==13)
  check(twice(7)==14)
  check(test<String>("x"))
  check(!test<Int>("x"))
@@ -18,5 +25,5 @@ fun main() {
  check(runCross { 31 }==31)
  val function = returnNo { 8 }
  check(function()==8)
- println("checks=14")
+ println("checks=17")
 }

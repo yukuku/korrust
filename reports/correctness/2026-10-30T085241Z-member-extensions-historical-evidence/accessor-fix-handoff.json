@@ -1,0 +1,36 @@
+{
+  "base_source_root": "/Users/yuku/f/git/korrust/target/next-five-final-freeze",
+  "base_binary_sha256": "3ef941907ae7a8bfa292fd5c39253d9c91d41b2cb9e887eb671dbd7062d300dd",
+  "changed_file": "src/check_member_extensions.rs",
+  "base_sha256": "8da98ba2e716ab54c60d03990c727ffea0d361f651c7dd1376d0f701e20ceb38",
+  "sha256": "be1c4f95d52d3478b09c7e3344a3d5f70bfd0fc4f453f6d4f231ce9257d65f08",
+  "fix_binary": "/Users/yuku/f/git/korrust/target/next5-member-accessor-fix/target/build/release/korrust",
+  "fix_binary_sha256": "365b2608dd29b6f70860caa7dcb7dab223ebbc06fcbb968b6dd93e2ac8977ca3",
+  "cause": "Static extension getter receiver-overload selection returned a specialized method; its still-declared type parameters were then inferred again from already substituted parameter patterns. Return the original normalized declaration candidate for the outer static-call inference; instance member accessors retain their selected specialization.",
+  "minimal_before": "target/accessor-regression/before.stderr",
+  "minimal_after": "target/accessor-regression/fixed.stdout",
+  "validation_status": "passed",
+  "class_literals": {
+    "report": "/Users/yuku/f/git/korrust/target/next5-member-accessor-fix/target/class-literals-fixed/report.json",
+    "status": "pass",
+    "summary": {
+      "pass": 15,
+      "invalid_kotlin": 26,
+      "unsupported_language": 20,
+      "harness_unsupported": 1
+    },
+    "input_integrity": {
+      "status": "unchanged",
+      "compiler_binary_sha256": "365b2608dd29b6f70860caa7dcb7dab223ebbc06fcbb968b6dd93e2ac8977ca3"
+    },
+    "java_assertions": 86,
+    "integration_assertions": 19,
+    "original_secret_settings_receiver_compiled_unchanged": true
+  },
+  "compound_operators": {
+    "log": "target/accessor-compound-regression.log",
+    "passed": 2,
+    "includes": "Unchanged BackForwardList fixed Java caller/signatures/official Kotlin consumers"
+  },
+  "clippy": "target/accessor-fix-clippy.log"
+}

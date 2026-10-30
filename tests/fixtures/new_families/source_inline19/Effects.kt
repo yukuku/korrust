@@ -19,3 +19,15 @@ private fun helperOverload(value: String): Int = 0
 fun helperOverload(value: Int): Int = value + 1
 inline fun publicOverload(value: Int): Int = helperOverload(value)
 fun overloaded(): Int = publicOverload(7)
+inline fun <R> genericNoArg(block: () -> R): R = block()
+fun conditionalNonlocal(early: Boolean): Int {
+    val result = genericNoArg { if (early) return 7; 11 }
+    return result + 1
+}
+fun conditionalFinally(early: Boolean): Int {
+    effects = 0
+    try {
+        val result = genericNoArg { if (early) return 7; 11 }
+        return result + 1
+    } finally { effects = effects + 1 }
+}

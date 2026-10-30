@@ -1,0 +1,1 @@
+fun boundary() = ShortArray::class

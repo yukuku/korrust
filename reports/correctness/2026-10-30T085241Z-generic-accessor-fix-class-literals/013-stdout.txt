@@ -1,0 +1,1871 @@
+Classfile /Users/yuku/f/git/korrust/target/next5-member-accessor-fix/target/class-literals-fixed/official/newfamilies/classes/ClassesKt.class
+  Last modified Oct 30, 2026; size 16035 bytes
+  SHA-256 checksum dfe160806fad816be2a357cb46d68cbc268cec3f9a49c9addf41c6d8af951283
+  Compiled from "Classes.kt"
+public final class newfamilies.classes.ClassesKt
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // newfamilies/classes/ClassesKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 2, methods: 80, attributes: 3
+Constant pool:
+    #1 = Utf8               newfamilies/classes/ClassesKt
+    #2 = Class              #1            // newfamilies/classes/ClassesKt
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               getCalls
+    #6 = Utf8               ()I
+    #7 = Utf8               calls
+    #8 = Utf8               I
+    #9 = NameAndType        #7:#8         // calls:I
+   #10 = Fieldref           #2.#9         // newfamilies/classes/ClassesKt.calls:I
+   #11 = Utf8               setCalls
+   #12 = Utf8               (I)V
+   #13 = Utf8               <set-?>
+   #14 = Utf8               getString
+   #15 = Utf8               ()Ljava/lang/Object;
+   #16 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #17 = Utf8               String
+   #18 = Utf8               Ljava/lang/Object;
+   #19 = NameAndType        #17:#18       // String:Ljava/lang/Object;
+   #20 = Fieldref           #2.#19        // newfamilies/classes/ClassesKt.String:Ljava/lang/Object;
+   #21 = Utf8               booleanType
+   #22 = Utf8               ()Lkotlin/reflect/KClass;
+   #23 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/Boolean;>;
+   #24 = Utf8               java/lang/Boolean
+   #25 = Class              #24           // java/lang/Boolean
+   #26 = Utf8               TYPE
+   #27 = Utf8               Ljava/lang/Class;
+   #28 = NameAndType        #26:#27       // TYPE:Ljava/lang/Class;
+   #29 = Fieldref           #25.#28       // java/lang/Boolean.TYPE:Ljava/lang/Class;
+   #30 = Utf8               kotlin/jvm/internal/Reflection
+   #31 = Class              #30           // kotlin/jvm/internal/Reflection
+   #32 = Utf8               getOrCreateKotlinClass
+   #33 = Utf8               (Ljava/lang/Class;)Lkotlin/reflect/KClass;
+   #34 = NameAndType        #32:#33       // getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+   #35 = Methodref          #31.#34       // kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+   #36 = Utf8               byteType
+   #37 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/Byte;>;
+   #38 = Utf8               java/lang/Byte
+   #39 = Class              #38           // java/lang/Byte
+   #40 = Fieldref           #39.#28       // java/lang/Byte.TYPE:Ljava/lang/Class;
+   #41 = Utf8               shortType
+   #42 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/Short;>;
+   #43 = Utf8               java/lang/Short
+   #44 = Class              #43           // java/lang/Short
+   #45 = Fieldref           #44.#28       // java/lang/Short.TYPE:Ljava/lang/Class;
+   #46 = Utf8               charType
+   #47 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/Character;>;
+   #48 = Utf8               java/lang/Character
+   #49 = Class              #48           // java/lang/Character
+   #50 = Fieldref           #49.#28       // java/lang/Character.TYPE:Ljava/lang/Class;
+   #51 = Utf8               intType
+   #52 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/Integer;>;
+   #53 = Utf8               java/lang/Integer
+   #54 = Class              #53           // java/lang/Integer
+   #55 = Fieldref           #54.#28       // java/lang/Integer.TYPE:Ljava/lang/Class;
+   #56 = Utf8               longType
+   #57 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/Long;>;
+   #58 = Utf8               java/lang/Long
+   #59 = Class              #58           // java/lang/Long
+   #60 = Fieldref           #59.#28       // java/lang/Long.TYPE:Ljava/lang/Class;
+   #61 = Utf8               floatType
+   #62 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/Float;>;
+   #63 = Utf8               java/lang/Float
+   #64 = Class              #63           // java/lang/Float
+   #65 = Fieldref           #64.#28       // java/lang/Float.TYPE:Ljava/lang/Class;
+   #66 = Utf8               doubleType
+   #67 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/Double;>;
+   #68 = Utf8               java/lang/Double
+   #69 = Class              #68           // java/lang/Double
+   #70 = Fieldref           #69.#28       // java/lang/Double.TYPE:Ljava/lang/Class;
+   #71 = Utf8               stringType
+   #72 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/String;>;
+   #73 = Utf8               java/lang/String
+   #74 = Class              #73           // java/lang/String
+   #75 = Utf8               anyType
+   #76 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/Object;>;
+   #77 = Utf8               sourceType
+   #78 = Utf8               ()Lkotlin/reflect/KClass<Lnewfamilies/classes/FixtureType;>;
+   #79 = Utf8               newfamilies/classes/FixtureType
+   #80 = Class              #79           // newfamilies/classes/FixtureType
+   #81 = Utf8               importedType
+   #82 = Utf8               ()Lkotlin/reflect/KClass<Ljava/lang/StringBuilder;>;
+   #83 = Utf8               java/lang/StringBuilder
+   #84 = Class              #83           // java/lang/StringBuilder
+   #85 = Utf8               genericType
+   #86 = Utf8               ()Lkotlin/reflect/KClass<Ljava/util/ArrayList<*>;>;
+   #87 = Utf8               java/util/ArrayList
+   #88 = Class              #87           // java/util/ArrayList
+   #89 = Utf8               listType
+   #90 = Utf8               ()Lkotlin/reflect/KClass<Ljava/util/List<*>;>;
+   #91 = Utf8               java/util/List
+   #92 = Class              #91           // java/util/List
+   #93 = Utf8               intArrayType
+   #94 = Utf8               ()Lkotlin/reflect/KClass<[I>;
+   #95 = Utf8               [I
+   #96 = Class              #95           // "[I"
+   #97 = Utf8               byteArrayType
+   #98 = Utf8               ()Lkotlin/reflect/KClass<[B>;
+   #99 = Utf8               [B
+  #100 = Class              #99           // "[B"
+  #101 = Utf8               charArrayType
+  #102 = Utf8               ()Lkotlin/reflect/KClass<[C>;
+  #103 = Utf8               [C
+  #104 = Class              #103          // "[C"
+  #105 = Utf8               stringArrayType
+  #106 = Utf8               ()Lkotlin/reflect/KClass<[Ljava/lang/String;>;
+  #107 = Utf8               [Ljava/lang/String;
+  #108 = Class              #107          // "[Ljava/lang/String;"
+  #109 = Utf8               boxedArrayType
+  #110 = Utf8               ()Lkotlin/reflect/KClass<[Ljava/lang/Integer;>;
+  #111 = Utf8               [Ljava/lang/Integer;
+  #112 = Class              #111          // "[Ljava/lang/Integer;"
+  #113 = Utf8               nestedArrayType
+  #114 = Utf8               ()Lkotlin/reflect/KClass<[[I>;
+  #115 = Utf8               [[I
+  #116 = Class              #115          // "[[I"
+  #117 = Utf8               nullableElementArrayType
+  #118 = Utf8               valueShadow
+  #119 = Utf8               ()Lkotlin/reflect/KClass<+Ljava/lang/Object;>;
+  #120 = Utf8               getClass
+  #121 = Utf8               ()Ljava/lang/Class;
+  #122 = NameAndType        #120:#121     // getClass:()Ljava/lang/Class;
+  #123 = Methodref          #4.#122       // java/lang/Object.getClass:()Ljava/lang/Class;
+  #124 = Utf8               localShadow
+  #125 = Utf8               local
+  #126 = String             #125          // local
+  #127 = Utf8               Int
+  #128 = Utf8               boundAny
+  #129 = Utf8               (Ljava/lang/Object;)Lkotlin/reflect/KClass;
+  #130 = Utf8               (Ljava/lang/Object;)Lkotlin/reflect/KClass<+Ljava/lang/Object;>;
+  #131 = Utf8               value
+  #132 = String             #131          // value
+  #133 = Utf8               kotlin/jvm/internal/Intrinsics
+  #134 = Class              #133          // kotlin/jvm/internal/Intrinsics
+  #135 = Utf8               checkNotNullParameter
+  #136 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #137 = NameAndType        #135:#136     // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #138 = Methodref          #134.#137     // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #139 = Utf8               boundInterface
+  #140 = Utf8               (Ljava/lang/CharSequence;)Lkotlin/reflect/KClass;
+  #141 = Utf8               (Ljava/lang/CharSequence;)Lkotlin/reflect/KClass<+Ljava/lang/CharSequence;>;
+  #142 = Utf8               Ljava/lang/CharSequence;
+  #143 = Utf8               boundInt
+  #144 = Utf8               (I)Lkotlin/reflect/KClass;
+  #145 = Utf8               (I)Lkotlin/reflect/KClass<+Ljava/lang/Integer;>;
+  #146 = Utf8               boundString
+  #147 = Utf8               (Ljava/lang/String;)Lkotlin/reflect/KClass;
+  #148 = Utf8               (Ljava/lang/String;)Lkotlin/reflect/KClass<+Ljava/lang/String;>;
+  #149 = Utf8               Ljava/lang/String;
+  #150 = Utf8               boundArray
+  #151 = Utf8               ([Ljava/lang/String;)Lkotlin/reflect/KClass;
+  #152 = Utf8               ([Ljava/lang/String;)Lkotlin/reflect/KClass<+[Ljava/lang/String;>;
+  #153 = Utf8               asserted
+  #154 = Utf8               Lorg/jetbrains/annotations/Nullable;
+  #155 = Utf8               checkNotNull
+  #156 = Utf8               (Ljava/lang/Object;)V
+  #157 = NameAndType        #155:#156     // checkNotNull:(Ljava/lang/Object;)V
+  #158 = Methodref          #134.#157     // kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+  #159 = Utf8               nextInt
+  #160 = Utf8               nextText
+  #161 = Utf8               ()Ljava/lang/CharSequence;
+  #162 = Utf8               effects
+  #163 = String             #162          // effects
+  #164 = Utf8               java/lang/CharSequence
+  #165 = Class              #164          // java/lang/CharSequence
+  #166 = Utf8               failValue
+  #167 = Utf8               java/lang/IllegalStateException
+  #168 = Class              #167          // java/lang/IllegalStateException
+  #169 = Utf8               class-effect
+  #170 = String             #169          // class-effect
+  #171 = Utf8               <init>
+  #172 = Utf8               (Ljava/lang/String;)V
+  #173 = NameAndType        #171:#172     // "<init>":(Ljava/lang/String;)V
+  #174 = Methodref          #168.#173     // java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+  #175 = Utf8               intEffect
+  #176 = Utf8               ()Lkotlin/reflect/KClass<+Ljava/lang/Integer;>;
+  #177 = NameAndType        #159:#6       // nextInt:()I
+  #178 = Methodref          #2.#177       // newfamilies/classes/ClassesKt.nextInt:()I
+  #179 = Utf8               textEffect
+  #180 = Utf8               ()Lkotlin/reflect/KClass<+Ljava/lang/CharSequence;>;
+  #181 = NameAndType        #160:#161     // nextText:()Ljava/lang/CharSequence;
+  #182 = Methodref          #2.#181       // newfamilies/classes/ClassesKt.nextText:()Ljava/lang/CharSequence;
+  #183 = Utf8               failEffect
+  #184 = NameAndType        #166:#15      // failValue:()Ljava/lang/Object;
+  #185 = Methodref          #2.#184       // newfamilies/classes/ClassesKt.failValue:()Ljava/lang/Object;
+  #186 = Utf8               javaInt
+  #187 = Utf8               ()Ljava/lang/Class<Ljava/lang/Integer;>;
+  #188 = Utf8               javaString
+  #189 = Utf8               ()Ljava/lang/Class<Ljava/lang/String;>;
+  #190 = Utf8               javaArray
+  #191 = Utf8               ()Ljava/lang/Class<[Ljava/lang/String;>;
+  #192 = Utf8               javaBound
+  #193 = Utf8               (Ljava/lang/Object;)Ljava/lang/Class;
+  #194 = Utf8               (Ljava/lang/Object;)Ljava/lang/Class<+Ljava/lang/Object;>;
+  #195 = Utf8               javaBoundInt
+  #196 = Utf8               (I)Ljava/lang/Class;
+  #197 = Utf8               (I)Ljava/lang/Class<+Ljava/lang/Integer;>;
+  #198 = Utf8               javaBoxedInt
+  #199 = Utf8               javaPrimitiveInt
+  #200 = Utf8               javaPrimitiveString
+  #201 = Utf8               kotlinClass
+  #202 = Utf8               (Ljava/lang/Class<Ljava/lang/String;>;)Lkotlin/reflect/KClass<Ljava/lang/String;>;
+  #203 = Utf8               kotlin/jvm/JvmClassMappingKt
+  #204 = Class              #203          // kotlin/jvm/JvmClassMappingKt
+  #205 = Utf8               getKotlinClass
+  #206 = NameAndType        #205:#33      // getKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+  #207 = Methodref          #204.#206     // kotlin/jvm/JvmClassMappingKt.getKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+  #208 = Utf8               relayType
+  #209 = Utf8               newfamilies/dependency/GenericPropertiesKt
+  #210 = Class              #209          // newfamilies/dependency/GenericPropertiesKt
+  #211 = Utf8               getRelay
+  #212 = Utf8               (Lkotlin/reflect/KClass;)Ljava/lang/Class;
+  #213 = NameAndType        #211:#212     // getRelay:(Lkotlin/reflect/KClass;)Ljava/lang/Class;
+  #214 = Methodref          #210.#213     // newfamilies/dependency/GenericPropertiesKt.getRelay:(Lkotlin/reflect/KClass;)Ljava/lang/Class;
+  #215 = Utf8               relayBound
+  #216 = Utf8               simpleName
+  #217 = Utf8               ()Ljava/lang/String;
+  #218 = Utf8               java/lang/Class
+  #219 = Class              #218          // java/lang/Class
+  #220 = Utf8               getSimpleName
+  #221 = NameAndType        #220:#217     // getSimpleName:()Ljava/lang/String;
+  #222 = Methodref          #219.#221     // java/lang/Class.getSimpleName:()Ljava/lang/String;
+  #223 = Utf8               getSimpleName(...)
+  #224 = String             #223          // getSimpleName(...)
+  #225 = Utf8               checkNotNullExpressionValue
+  #226 = NameAndType        #225:#136     // checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+  #227 = Methodref          #134.#226     // kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+  #228 = Utf8               className
+  #229 = Utf8               (Ljava/lang/Object;)Ljava/lang/String;
+  #230 = Utf8               getName
+  #231 = NameAndType        #230:#217     // getName:()Ljava/lang/String;
+  #232 = Methodref          #219.#231     // java/lang/Class.getName:()Ljava/lang/String;
+  #233 = Utf8               getName(...)
+  #234 = String             #233          // getName(...)
+  #235 = Utf8               threadName
+  #236 = Utf8               (Ljava/lang/Thread;)Ljava/lang/String;
+  #237 = Utf8               java/lang/Thread
+  #238 = Class              #237          // java/lang/Thread
+  #239 = Methodref          #238.#231     // java/lang/Thread.getName:()Ljava/lang/String;
+  #240 = Utf8               Ljava/lang/Thread;
+  #241 = Utf8               nestedType
+  #242 = Utf8               ()Lkotlin/reflect/KClass<Lnewfamilies/classes/Outer$Nested;>;
+  #243 = Utf8               newfamilies/classes/Outer$Nested
+  #244 = Class              #243          // newfamilies/classes/Outer$Nested
+  #245 = Utf8               identitySource
+  #246 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+  #247 = Utf8               <T:Ljava/lang/Object;>(TT;)TT;
+  #248 = Utf8               erasedSource
+  #249 = Utf8               ()Ljava/lang/Class<+Ljava/lang/Integer;>;
+  #250 = Utf8               valueOf
+  #251 = Utf8               (I)Ljava/lang/Integer;
+  #252 = NameAndType        #250:#251     // valueOf:(I)Ljava/lang/Integer;
+  #253 = Methodref          #54.#252      // java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+  #254 = NameAndType        #245:#246     // identitySource:(Ljava/lang/Object;)Ljava/lang/Object;
+  #255 = Methodref          #2.#254       // newfamilies/classes/ClassesKt.identitySource:(Ljava/lang/Object;)Ljava/lang/Object;
+  #256 = Utf8               erasedLibrary
+  #257 = Utf8               identity
+  #258 = NameAndType        #257:#246     // identity:(Ljava/lang/Object;)Ljava/lang/Object;
+  #259 = Methodref          #210.#258     // newfamilies/dependency/GenericPropertiesKt.identity:(Ljava/lang/Object;)Ljava/lang/Object;
+  #260 = Utf8               erasedProperty
+  #261 = Utf8               (Ljava/util/List;)Ljava/lang/Class;
+  #262 = Utf8               (Ljava/util/List<Ljava/lang/Integer;>;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+  #263 = Utf8               values
+  #264 = String             #263          // values
+  #265 = Utf8               getHead
+  #266 = Utf8               (Ljava/util/List;)Ljava/lang/Object;
+  #267 = NameAndType        #265:#266     // getHead:(Ljava/util/List;)Ljava/lang/Object;
+  #268 = Methodref          #210.#267     // newfamilies/dependency/GenericPropertiesKt.getHead:(Ljava/util/List;)Ljava/lang/Object;
+  #269 = Utf8               Ljava/util/List;
+  #270 = Utf8               erasedInvocation
+  #271 = Utf8               (Lkotlin/jvm/functions/Function0;)Ljava/lang/Class;
+  #272 = Utf8               (Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+  #273 = Utf8               block
+  #274 = String             #273          // block
+  #275 = Utf8               kotlin/jvm/functions/Function0
+  #276 = Class              #275          // kotlin/jvm/functions/Function0
+  #277 = Utf8               invoke
+  #278 = NameAndType        #277:#15      // invoke:()Ljava/lang/Object;
+  #279 = InterfaceMethodref #276.#278     // kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+  #280 = Utf8               Lkotlin/jvm/functions/Function0;
+  #281 = Utf8               assertedInt
+  #282 = Utf8               (Ljava/lang/Integer;)Ljava/lang/Class;
+  #283 = Utf8               (Ljava/lang/Integer;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+  #284 = Utf8               Ljava/lang/Integer;
+  #285 = Utf8               castInt
+  #286 = Utf8               (Ljava/lang/Object;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+  #287 = Utf8               listElement
+  #288 = Utf8               get
+  #289 = Utf8               (I)Ljava/lang/Object;
+  #290 = NameAndType        #288:#289     // get:(I)Ljava/lang/Object;
+  #291 = InterfaceMethodref #92.#290      // java/util/List.get:(I)Ljava/lang/Object;
+  #292 = Utf8               boxedArrayElement
+  #293 = Utf8               ([Ljava/lang/Integer;)Ljava/lang/Class;
+  #294 = Utf8               ([Ljava/lang/Integer;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+  #295 = Utf8               primitiveArrayElement
+  #296 = Utf8               ([I)Ljava/lang/Class;
+  #297 = Utf8               ([I)Ljava/lang/Class<+Ljava/lang/Integer;>;
+  #298 = Utf8               conditional
+  #299 = Utf8               (Z)Ljava/lang/Class;
+  #300 = Utf8               (Z)Ljava/lang/Class<+Ljava/lang/Integer;>;
+  #301 = Utf8               java/lang/Number
+  #302 = Class              #301          // java/lang/Number
+  #303 = Utf8               intValue
+  #304 = NameAndType        #303:#6       // intValue:()I
+  #305 = Methodref          #302.#304     // java/lang/Number.intValue:()I
+  #306 = Utf8               Z
+  #307 = Utf8               erasedUnchecked
+  #308 = Utf8               newfamilies/dependency/UnsafeGenerics
+  #309 = Class              #308          // newfamilies/dependency/UnsafeGenerics
+  #310 = NameAndType        #131:#15      // value:()Ljava/lang/Object;
+  #311 = Methodref          #309.#310     // newfamilies/dependency/UnsafeGenerics.value:()Ljava/lang/Object;
+  #312 = Utf8               storedPrimitive
+  #313 = Utf8               initializationType
+  #314 = Utf8               ()Lkotlin/reflect/KClass<Lnewfamilies/dependency/InitializationProbe;>;
+  #315 = Utf8               newfamilies/dependency/InitializationProbe
+  #316 = Class              #315          // newfamilies/dependency/InitializationProbe
+  #317 = Utf8               initializationJava
+  #318 = Utf8               ()Ljava/lang/Class<Lnewfamilies/dependency/InitializationProbe;>;
+  #319 = Utf8               initializationBound
+  #320 = Utf8               ()Lkotlin/reflect/KClass<+Lnewfamilies/dependency/InitializationProbe;>;
+  #321 = Utf8               create
+  #322 = Utf8               ()Lnewfamilies/dependency/InitializationProbe;
+  #323 = NameAndType        #321:#322     // create:()Lnewfamilies/dependency/InitializationProbe;
+  #324 = Methodref          #316.#323     // newfamilies/dependency/InitializationProbe.create:()Lnewfamilies/dependency/InitializationProbe;
+  #325 = Utf8               publicLibraryType
+  #326 = Utf8               ()Lkotlin/reflect/KClass<Lnewfamilies/dependency/PublicKotlinType;>;
+  #327 = Utf8               newfamilies/dependency/PublicKotlinType
+  #328 = Class              #327          // newfamilies/dependency/PublicKotlinType
+  #329 = Utf8               publicLibraryNested
+  #330 = Utf8               ()Lkotlin/reflect/KClass<*>;
+  #331 = Utf8               newfamilies/dependency/PublicOuter$PublicNested
+  #332 = Class              #331          // newfamilies/dependency/PublicOuter$PublicNested
+  #333 = Utf8               parenthesizedArray
+  #334 = Utf8               genericBound
+  #335 = Utf8               <T:Ljava/lang/Object;>(TT;)Lkotlin/reflect/KClass<+TT;>;
+  #336 = Utf8               genericBoundChain
+  #337 = Utf8               <U:Ljava/lang/Object;T::TU;>(TT;)Lkotlin/reflect/KClass<+TT;>;
+  #338 = Utf8               qualifiedArray
+  #339 = Utf8               escapedBound
+  #340 = Utf8               value$slot
+  #341 = String             #340          // value$slot
+  #342 = Utf8               classMarked
+  #343 = Utf8               ()V
+  #344 = Utf8               Lnewfamilies/dependency/ClassMark;
+  #345 = Utf8               shortClassMarked
+  #346 = Utf8               S
+  #347 = Utf8               shortBoxedArrayType
+  #348 = Utf8               ()Lkotlin/reflect/KClass<[Ljava/lang/Short;>;
+  #349 = Utf8               [Ljava/lang/Short;
+  #350 = Class              #349          // "[Ljava/lang/Short;"
+  #351 = Utf8               <clinit>
+  #352 = Utf8               Lkotlin/Metadata;
+  #353 = Utf8               mv
+  #354 = Integer            2
+  #355 = Integer            3
+  #356 = Integer            0
+  #357 = Utf8               k
+  #358 = Utf8               xi
+  #359 = Integer            48
+  #360 = Utf8               d1
+  #361 = Utf8               \u0000¾\u0001\n\u0000\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0010\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0005\n\u0000\n\u0002\u0010\n\n\u0000\n\u0002\u0010\f\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0010\u0006\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010 \n\u0000\n\u0002\u0010\u0015\n\u0000\n\u0002\u0010\u0012\n\u0000\n\u0002\u0010\u0019\n\u0000\n\u0002\u0010\u0011\n\u0002\b\b\n\u0002\u0010\r\n\u0002\b\f\n\u0002\u0018\u0002\n\u0002\b\r\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\n\n\u0002\u0010\u0002\n\u0002\b\u0003\u001a\f\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000b\u001a\f\u0010\r\u001a\b\u0012\u0004\u0012\u00020\u000e0\u000b\u001a\f\u0010\u000f\u001a\b\u0012\u0004\u0012\u00020\u00100\u000b\u001a\f\u0010\u0011\u001a\b\u0012\u0004\u0012\u00020\u00120\u000b\u001a\f\u0010\u0013\u001a\b\u0012\u0004\u0012\u00020\u00010\u000b\u001a\f\u0010\u0014\u001a\b\u0012\u0004\u0012\u00020\u00150\u000b\u001a\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00170\u000b\u001a\f\u0010\u0018\u001a\b\u0012\u0004\u0012\u00020\u00190\u000b\u001a\f\u0010\u001a\u001a\b\u0012\u0004\u0012\u00020\u001b0\u000b\u001a\f\u0010\u001c\u001a\b\u0012\u0004\u0012\u00020\u00070\u000b\u001a\f\u0010\u001d\u001a\b\u0012\u0004\u0012\u00020\u001e0\u000b\u001a\u0010\u0010\u001f\u001a\f\u0012\b\u0012\u00060 j\u0002`!0\u000b\u001a\u0010\u0010\"\u001a\f\u0012\b\u0012\u0006\u0012\u0002\b\u00030#0\u000b\u001a\u0010\u0010$\u001a\f\u0012\b\u0012\u0006\u0012\u0002\b\u00030%0\u000b\u001a\f\u0010&\u001a\b\u0012\u0004\u0012\u00020\'0\u000b\u001a\f\u0010(\u001a\b\u0012\u0004\u0012\u00020)0\u000b\u001a\f\u0010*\u001a\b\u0012\u0004\u0012\u00020+0\u000b\u001a\u0012\u0010,\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u001b0-0\u000b\u001a\u0012\u0010.\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u00010-0\u000b\u001a\u0012\u0010/\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\'0-0\u000b\u001a\u0014\u00100\u001a\u0010\u0012\f\u0012\n\u0012\u0006\u0012\u0004\u0018\u00010\u001b0-0\u000b\u001a\u000e\u00101\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070\u000b\u001a\u000e\u00102\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070\u000b\u001a\u0016\u00103\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070\u000b2\u0006\u00104\u001a\u00020\u0007\u001a\u0016\u00105\u001a\n\u0012\u0006\b\u0001\u0012\u0002060\u000b2\u0006\u00104\u001a\u000206\u001a\u0016\u00107\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010\u000b2\u0006\u00104\u001a\u00020\u0001\u001a\u0016\u00108\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u001b0\u000b2\u0006\u00104\u001a\u00020\u001b\u001a\'\u00109\u001a\u0010\u0012\f\b\u0001\u0012\b\u0012\u0004\u0012\u00020\u001b0-0\u000b2\f\u00104\u001a\b\u0012\u0004\u0012\u00020\u001b0-¢\u0006\u0002\u0010:\u001a\u0018\u0010;\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u001b0\u000b2\b\u00104\u001a\u0004\u0018\u00010\u001b\u001a\u0006\u0010<\u001a\u00020\u0001\u001a\u0006\u0010=\u001a\u000206\u001a\u0006\u0010>\u001a\u00020\u0007\u001a\u000e\u0010?\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010\u000b\u001a\u000e\u0010@\u001a\n\u0012\u0006\b\u0001\u0012\u0002060\u000b\u001a\u000e\u0010A\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070\u000b\u001a\f\u0010B\u001a\b\u0012\u0004\u0012\u00020\u00010C\u001a\f\u0010D\u001a\b\u0012\u0004\u0012\u00020\u001b0C\u001a\u0012\u0010E\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u001b0-0C\u001a\u0016\u0010F\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070C2\u0006\u00104\u001a\u00020\u0007\u001a\u0016\u0010G\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\u0006\u00104\u001a\u00020\u0001\u001a\f\u0010H\u001a\b\u0012\u0004\u0012\u00020\u00010C\u001a\u000e\u0010I\u001a\n\u0012\u0004\u0012\u00020\u0001\u0018\u00010C\u001a\u000e\u0010J\u001a\n\u0012\u0004\u0012\u00020\u001b\u0018\u00010C\u001a\u001a\u0010K\u001a\b\u0012\u0004\u0012\u00020\u001b0\u000b2\f\u00104\u001a\b\u0012\u0004\u0012\u00020\u001b0C\u001a\f\u0010L\u001a\b\u0012\u0004\u0012\u00020\u00010C\u001a\u0016\u0010M\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070C2\u0006\u00104\u001a\u00020\u0007\u001a\u0006\u0010N\u001a\u00020\u001b\u001a\u000e\u0010O\u001a\u00020\u001b2\u0006\u00104\u001a\u00020\u0007\u001a\u000e\u0010P\u001a\u00020\u001b2\u0006\u00104\u001a\u00020Q\u001a\f\u0010R\u001a\b\u0012\u0004\u0012\u00020S0\u000b\u001a\u0019\u0010T\u001a\u0002HU\"\u0004\b\u0000\u0010U2\u0006\u00104\u001a\u0002HU¢\u0006\u0002\u0010V\u001a\u000e\u0010W\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C\u001a\u000e\u0010X\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C\u001a\u001c\u0010Y\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\f\u0010Z\u001a\b\u0012\u0004\u0012\u00020\u00010%\u001a\u001c\u0010[\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\f\u0010\\\u001a\b\u0012\u0004\u0012\u00020\u00010]\u001a\u001d\u0010^\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\b\u00104\u001a\u0004\u0018\u00010\u0001¢\u0006\u0002\u0010_\u001a\u0016\u0010`\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\u0006\u00104\u001a\u00020\u0007\u001a\u001c\u0010a\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\f\u0010Z\u001a\b\u0012\u0004\u0012\u00020\u00010%\u001a!\u0010b\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\f\u0010Z\u001a\b\u0012\u0004\u0012\u00020\u00010-¢\u0006\u0002\u0010c\u001a\u0016\u0010d\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\u0006\u0010Z\u001a\u00020\'\u001a\u0016\u0010e\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\u0006\u00104\u001a\u00020\f\u001a\u000e\u0010f\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C\u001a\u000e\u0010g\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C\u001a\f\u0010h\u001a\b\u0012\u0004\u0012\u00020i0\u000b\u001a\f\u0010j\u001a\b\u0012\u0004\u0012\u00020i0C\u001a\u000e\u0010k\u001a\n\u0012\u0006\b\u0001\u0012\u00020i0\u000b\u001a\f\u0010l\u001a\b\u0012\u0004\u0012\u00020m0\u000b\u001a\n\u0010n\u001a\u0006\u0012\u0002\b\u00030\u000b\u001a\u0012\u0010o\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u001b0-0\u000b\u001a%\u0010p\u001a\n\u0012\u0006\b\u0001\u0012\u0002HU0\u000b\"\b\b\u0000\u0010U*\u00020\u00072\u0006\u00104\u001a\u0002HU¢\u0006\u0002\u0010q\u001a/\u0010r\u001a\n\u0012\u0006\b\u0001\u0012\u0002HU0\u000b\"\b\b\u0000\u0010s*\u00020\u0007\"\b\b\u0001\u0010U*\u0002Hs2\u0006\u00104\u001a\u0002HU¢\u0006\u0002\u0010q\u001a\u0012\u0010t\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u001b0-0\u000b\u001a\u0016\u0010u\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070\u000b2\u0006\u0010v\u001a\u00020\u0007\u001a\b\u0010w\u001a\u00020xH\u0007\u001a\b\u0010y\u001a\u00020xH\u0007\u001a\u0012\u0010z\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u00100-0\u000b\"\u001a\u0010\u0000\u001a\u00020\u0001X\u0086\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0002\u0010\u0003\"\u0004\b\u0004\u0010\u0005\"\u0011\u0010\u0006\u001a\u00020\u0007¢\u0006\b\n\u0000\u001a\u0004\b\b\u0010\t¨\u0006{
+  #362 = Utf8               d2
+  #363 = Utf8
+  #364 = Utf8               Lkotlin/reflect/KClass;
+  #365 = Utf8               Lnewfamilies/classes/FixtureType;
+  #366 = Utf8               Ljava/lang/StringBuilder;
+  #367 = Utf8               Lkotlin/text/StringBuilder;
+  #368 = Utf8               Ljava/util/ArrayList;
+  #369 = Utf8               Lnewfamilies/classes/Outer$Nested;
+  #370 = Utf8               T
+  #371 = Utf8               Lkotlin/Function0;
+  #372 = Utf8               Lnewfamilies/dependency/InitializationProbe;
+  #373 = Utf8               Lnewfamilies/dependency/PublicKotlinType;
+  #374 = Utf8               U
+  #375 = Utf8               new_class_literals
+  #376 = Utf8               newfamilies/classes/Outer
+  #377 = Class              #376          // newfamilies/classes/Outer
+  #378 = Utf8               Nested
+  #379 = Utf8               newfamilies/dependency/PublicOuter
+  #380 = Class              #379          // newfamilies/dependency/PublicOuter
+  #381 = Utf8               PublicNested
+  #382 = Utf8               Classes.kt
+  #383 = Utf8               RuntimeInvisibleAnnotations
+  #384 = Utf8               Code
+  #385 = Utf8               LineNumberTable
+  #386 = Utf8               LocalVariableTable
+  #387 = Utf8               Signature
+  #388 = Utf8               RuntimeInvisibleParameterAnnotations
+  #389 = Utf8               StackMapTable
+  #390 = Utf8               RuntimeVisibleAnnotations
+  #391 = Utf8               InnerClasses
+  #392 = Utf8               SourceFile
+{
+  public static final int getCalls();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #10                 // Field calls:I
+         3: ireturn
+      LineNumberTable:
+        line 12: 0
+
+  public static final void setCalls(int);
+    descriptor: (I)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: iload_0
+         1: putstatic     #10                 // Field calls:I
+         4: return
+      LineNumberTable:
+        line 12: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0 <set-?>   I
+
+  public static final java.lang.Object getString();
+    descriptor: ()Ljava/lang/Object;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #20                 // Field String:Ljava/lang/Object;
+         3: areturn
+      LineNumberTable:
+        line 13: 0
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.Boolean> booleanType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #29                 // Field java/lang/Boolean.TYPE:Ljava/lang/Class;
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 15: 6
+    Signature: #23                          // ()Lkotlin/reflect/KClass<Ljava/lang/Boolean;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.Byte> byteType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #40                 // Field java/lang/Byte.TYPE:Ljava/lang/Class;
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 16: 6
+    Signature: #37                          // ()Lkotlin/reflect/KClass<Ljava/lang/Byte;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.Short> shortType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #45                 // Field java/lang/Short.TYPE:Ljava/lang/Class;
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 17: 6
+    Signature: #42                          // ()Lkotlin/reflect/KClass<Ljava/lang/Short;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.Character> charType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #50                 // Field java/lang/Character.TYPE:Ljava/lang/Class;
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 18: 6
+    Signature: #47                          // ()Lkotlin/reflect/KClass<Ljava/lang/Character;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.Integer> intType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #55                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 19: 6
+    Signature: #52                          // ()Lkotlin/reflect/KClass<Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.Long> longType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #60                 // Field java/lang/Long.TYPE:Ljava/lang/Class;
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 20: 6
+    Signature: #57                          // ()Lkotlin/reflect/KClass<Ljava/lang/Long;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.Float> floatType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #65                 // Field java/lang/Float.TYPE:Ljava/lang/Class;
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 21: 6
+    Signature: #62                          // ()Lkotlin/reflect/KClass<Ljava/lang/Float;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.Double> doubleType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #70                 // Field java/lang/Double.TYPE:Ljava/lang/Class;
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 22: 6
+    Signature: #67                          // ()Lkotlin/reflect/KClass<Ljava/lang/Double;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.String> stringType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #74                 // class java/lang/String
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 23: 5
+    Signature: #72                          // ()Lkotlin/reflect/KClass<Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.Object> anyType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #4                  // class java/lang/Object
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 24: 5
+    Signature: #76                          // ()Lkotlin/reflect/KClass<Ljava/lang/Object;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<newfamilies.classes.FixtureType> sourceType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #80                 // class newfamilies/classes/FixtureType
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 25: 5
+    Signature: #78                          // ()Lkotlin/reflect/KClass<Lnewfamilies/classes/FixtureType;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.StringBuilder> importedType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #84                 // class java/lang/StringBuilder
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 26: 5
+    Signature: #82                          // ()Lkotlin/reflect/KClass<Ljava/lang/StringBuilder;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.util.ArrayList<?>> genericType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #88                 // class java/util/ArrayList
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 27: 5
+    Signature: #86                          // ()Lkotlin/reflect/KClass<Ljava/util/ArrayList<*>;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.util.List<?>> listType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #92                 // class java/util/List
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 28: 5
+    Signature: #90                          // ()Lkotlin/reflect/KClass<Ljava/util/List<*>;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<int[]> intArrayType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #96                 // class "[I"
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 29: 5
+    Signature: #94                          // ()Lkotlin/reflect/KClass<[I>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<byte[]> byteArrayType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #100                // class "[B"
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 30: 5
+    Signature: #98                          // ()Lkotlin/reflect/KClass<[B>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<char[]> charArrayType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #104                // class "[C"
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 31: 5
+    Signature: #102                         // ()Lkotlin/reflect/KClass<[C>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.String[]> stringArrayType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #108                // class "[Ljava/lang/String;"
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 32: 5
+    Signature: #106                         // ()Lkotlin/reflect/KClass<[Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.Integer[]> boxedArrayType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #112                // class "[Ljava/lang/Integer;"
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 33: 5
+    Signature: #110                         // ()Lkotlin/reflect/KClass<[Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<int[][]> nestedArrayType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #116                // class "[[I"
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 34: 5
+    Signature: #114                         // ()Lkotlin/reflect/KClass<[[I>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.String[]> nullableElementArrayType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #108                // class "[Ljava/lang/String;"
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 35: 5
+    Signature: #106                         // ()Lkotlin/reflect/KClass<[Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.Object> valueShadow();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #20                 // Field String:Ljava/lang/Object;
+         3: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+         6: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         9: areturn
+      LineNumberTable:
+        line 36: 0
+    Signature: #119                         // ()Lkotlin/reflect/KClass<+Ljava/lang/Object;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.Object> localShadow();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=0
+         0: ldc           #126                // String local
+         2: astore_0
+         3: aload_0
+         4: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+         7: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        10: areturn
+      LineNumberTable:
+        line 37: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            3       8     0   Int   Ljava/lang/Object;
+    Signature: #119                         // ()Lkotlin/reflect/KClass<+Ljava/lang/Object;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.Object> boundAny(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        10: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        13: areturn
+      LineNumberTable:
+        line 38: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      14     0 value   Ljava/lang/Object;
+    Signature: #130                         // (Ljava/lang/Object;)Lkotlin/reflect/KClass<+Ljava/lang/Object;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.CharSequence> boundInterface(java.lang.CharSequence);
+    descriptor: (Ljava/lang/CharSequence;)Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        10: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        13: areturn
+      LineNumberTable:
+        line 39: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      14     0 value   Ljava/lang/CharSequence;
+    Signature: #141                         // (Ljava/lang/CharSequence;)Lkotlin/reflect/KClass<+Ljava/lang/CharSequence;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.Integer> boundInt(int);
+    descriptor: (I)Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: getstatic     #55                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 40: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       7     0 value   I
+    Signature: #145                         // (I)Lkotlin/reflect/KClass<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.String> boundString(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        10: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        13: areturn
+      LineNumberTable:
+        line 41: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      14     0 value   Ljava/lang/String;
+    Signature: #148                         // (Ljava/lang/String;)Lkotlin/reflect/KClass<+Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.String[]> boundArray(java.lang.String[]);
+    descriptor: ([Ljava/lang/String;)Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        10: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        13: areturn
+      LineNumberTable:
+        line 42: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      14     0 value   [Ljava/lang/String;
+    Signature: #152                         // ([Ljava/lang/String;)Lkotlin/reflect/KClass<+[Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.String> asserted(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: dup
+         2: invokestatic  #158                // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+         5: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+         8: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        11: areturn
+      LineNumberTable:
+        line 43: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      12     0 value   Ljava/lang/String;
+    Signature: #148                         // (Ljava/lang/String;)Lkotlin/reflect/KClass<+Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #154()
+          org.jetbrains.annotations.Nullable
+
+  public static final int nextInt();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: getstatic     #10                 // Field calls:I
+         3: iconst_1
+         4: iadd
+         5: putstatic     #10                 // Field calls:I
+         8: bipush        7
+        10: ireturn
+      LineNumberTable:
+        line 44: 0
+
+  public static final java.lang.CharSequence nextText();
+    descriptor: ()Ljava/lang/CharSequence;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: getstatic     #10                 // Field calls:I
+         3: iconst_1
+         4: iadd
+         5: putstatic     #10                 // Field calls:I
+         8: ldc           #163                // String effects
+        10: checkcast     #165                // class java/lang/CharSequence
+        13: areturn
+      LineNumberTable:
+        line 45: 0
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Object failValue();
+    descriptor: ()Ljava/lang/Object;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: getstatic     #10                 // Field calls:I
+         3: iconst_1
+         4: iadd
+         5: putstatic     #10                 // Field calls:I
+         8: new           #168                // class java/lang/IllegalStateException
+        11: dup
+        12: ldc           #170                // String class-effect
+        14: invokespecial #174                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        17: athrow
+      LineNumberTable:
+        line 46: 0
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.Integer> intEffect();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: invokestatic  #178                // Method nextInt:()I
+         3: pop
+         4: getstatic     #55                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+         7: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        10: areturn
+      LineNumberTable:
+        line 47: 0
+    Signature: #176                         // ()Lkotlin/reflect/KClass<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.CharSequence> textEffect();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: invokestatic  #182                // Method nextText:()Ljava/lang/CharSequence;
+         3: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+         6: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         9: areturn
+      LineNumberTable:
+        line 48: 0
+    Signature: #180                         // ()Lkotlin/reflect/KClass<+Ljava/lang/CharSequence;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.Object> failEffect();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: invokestatic  #185                // Method failValue:()Ljava/lang/Object;
+         3: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+         6: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         9: areturn
+      LineNumberTable:
+        line 49: 0
+    Signature: #119                         // ()Lkotlin/reflect/KClass<+Ljava/lang/Object;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<java.lang.Integer> javaInt();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #55                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+         3: areturn
+      LineNumberTable:
+        line 50: 0
+    Signature: #187                         // ()Ljava/lang/Class<Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<java.lang.String> javaString();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #74                 // class java/lang/String
+         2: areturn
+      LineNumberTable:
+        line 51: 0
+    Signature: #189                         // ()Ljava/lang/Class<Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<java.lang.String[]> javaArray();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #108                // class "[Ljava/lang/String;"
+         2: areturn
+      LineNumberTable:
+        line 52: 0
+    Signature: #191                         // ()Ljava/lang/Class<[Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Object> javaBound(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        10: areturn
+      LineNumberTable:
+        line 53: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 value   Ljava/lang/Object;
+    Signature: #194                         // (Ljava/lang/Object;)Ljava/lang/Class<+Ljava/lang/Object;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> javaBoundInt(int);
+    descriptor: (I)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: getstatic     #55                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+         3: areturn
+      LineNumberTable:
+        line 54: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       4     0 value   I
+    Signature: #197                         // (I)Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<java.lang.Integer> javaBoxedInt();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #54                 // class java/lang/Integer
+         2: areturn
+      LineNumberTable:
+        line 55: 0
+    Signature: #187                         // ()Ljava/lang/Class<Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<java.lang.Integer> javaPrimitiveInt();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #55                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+         3: areturn
+      LineNumberTable:
+        line 56: 0
+    Signature: #187                         // ()Ljava/lang/Class<Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #154()
+        org.jetbrains.annotations.Nullable
+
+  public static final java.lang.Class<java.lang.String> javaPrimitiveString();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: aconst_null
+         1: areturn
+      LineNumberTable:
+        line 57: 0
+    Signature: #189                         // ()Ljava/lang/Class<Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #154()
+        org.jetbrains.annotations.Nullable
+
+  public static final kotlin.reflect.KClass<java.lang.String> kotlinClass(java.lang.Class<java.lang.String>);
+    descriptor: (Ljava/lang/Class;)Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokestatic  #207                // Method kotlin/jvm/JvmClassMappingKt.getKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        10: areturn
+      LineNumberTable:
+        line 58: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 value   Ljava/lang/Class;
+    Signature: #202                         // (Ljava/lang/Class<Ljava/lang/String;>;)Lkotlin/reflect/KClass<Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<java.lang.Integer> relayType();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #55                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: invokestatic  #214                // Method newfamilies/dependency/GenericPropertiesKt.getRelay:(Lkotlin/reflect/KClass;)Ljava/lang/Class;
+         9: areturn
+      LineNumberTable:
+        line 59: 6
+    Signature: #187                         // ()Ljava/lang/Class<Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Object> relayBound(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        10: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        13: invokestatic  #214                // Method newfamilies/dependency/GenericPropertiesKt.getRelay:(Lkotlin/reflect/KClass;)Ljava/lang/Class;
+        16: areturn
+      LineNumberTable:
+        line 60: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      17     0 value   Ljava/lang/Object;
+    Signature: #194                         // (Ljava/lang/Object;)Ljava/lang/Class<+Ljava/lang/Object;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String simpleName();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: ldc           #80                 // class newfamilies/classes/FixtureType
+         2: invokevirtual #222                // Method java/lang/Class.getSimpleName:()Ljava/lang/String;
+         5: dup
+         6: ldc           #224                // String getSimpleName(...)
+         8: invokestatic  #227                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        11: areturn
+      LineNumberTable:
+        line 61: 0
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String className(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        10: invokevirtual #232                // Method java/lang/Class.getName:()Ljava/lang/String;
+        13: dup
+        14: ldc           #234                // String getName(...)
+        16: invokestatic  #227                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        19: areturn
+      LineNumberTable:
+        line 62: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      20     0 value   Ljava/lang/Object;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String threadName(java.lang.Thread);
+    descriptor: (Ljava/lang/Thread;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #239                // Method java/lang/Thread.getName:()Ljava/lang/String;
+        10: dup
+        11: ldc           #234                // String getName(...)
+        13: invokestatic  #227                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        16: areturn
+      LineNumberTable:
+        line 63: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      17     0 value   Ljava/lang/Thread;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<newfamilies.classes.Outer$Nested> nestedType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #244                // class newfamilies/classes/Outer$Nested
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 66: 5
+    Signature: #242                         // ()Lkotlin/reflect/KClass<Lnewfamilies/classes/Outer$Nested;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final <T extends java.lang.Object> T identitySource(T);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: areturn
+      LineNumberTable:
+        line 67: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       2     0 value   Ljava/lang/Object;
+    Signature: #247                         // <T:Ljava/lang/Object;>(TT;)TT;
+
+  public static final java.lang.Class<? extends java.lang.Integer> erasedSource();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: bipush        42
+         2: invokestatic  #253                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+         5: invokestatic  #255                // Method identitySource:(Ljava/lang/Object;)Ljava/lang/Object;
+         8: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        11: areturn
+      LineNumberTable:
+        line 68: 0
+    Signature: #249                         // ()Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> erasedLibrary();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: bipush        42
+         2: invokestatic  #253                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+         5: invokestatic  #259                // Method newfamilies/dependency/GenericPropertiesKt.identity:(Ljava/lang/Object;)Ljava/lang/Object;
+         8: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        11: areturn
+      LineNumberTable:
+        line 69: 0
+    Signature: #249                         // ()Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> erasedProperty(java.util.List<java.lang.Integer>);
+    descriptor: (Ljava/util/List;)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc_w         #264                // String values
+         4: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         7: aload_0
+         8: invokestatic  #268                // Method newfamilies/dependency/GenericPropertiesKt.getHead:(Ljava/util/List;)Ljava/lang/Object;
+        11: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        14: areturn
+      LineNumberTable:
+        line 70: 7
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      15     0 values   Ljava/util/List;
+    Signature: #262                         // (Ljava/util/List<Ljava/lang/Integer;>;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> erasedInvocation(kotlin.jvm.functions.Function0<java.lang.Integer>);
+    descriptor: (Lkotlin/jvm/functions/Function0;)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc_w         #274                // String block
+         4: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         7: aload_0
+         8: invokeinterface #279,  1          // InterfaceMethod kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+        13: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        16: areturn
+      LineNumberTable:
+        line 71: 7
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      17     0 block   Lkotlin/jvm/functions/Function0;
+    Signature: #272                         // (Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> assertedInt(java.lang.Integer);
+    descriptor: (Ljava/lang/Integer;)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: dup
+         2: invokestatic  #158                // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+         5: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+         8: areturn
+      LineNumberTable:
+        line 72: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       9     0 value   Ljava/lang/Integer;
+    Signature: #283                         // (Ljava/lang/Integer;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #154()
+          org.jetbrains.annotations.Nullable
+
+  public static final java.lang.Class<? extends java.lang.Integer> castInt(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: checkcast     #54                 // class java/lang/Integer
+        10: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        13: areturn
+      LineNumberTable:
+        line 73: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      14     0 value   Ljava/lang/Object;
+    Signature: #286                         // (Ljava/lang/Object;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> listElement(java.util.List<java.lang.Integer>);
+    descriptor: (Ljava/util/List;)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc_w         #264                // String values
+         4: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         7: aload_0
+         8: iconst_0
+         9: invokeinterface #291,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+        14: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        17: areturn
+      LineNumberTable:
+        line 74: 7
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      18     0 values   Ljava/util/List;
+    Signature: #262                         // (Ljava/util/List<Ljava/lang/Integer;>;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> boxedArrayElement(java.lang.Integer[]);
+    descriptor: ([Ljava/lang/Integer;)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc_w         #264                // String values
+         4: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         7: aload_0
+         8: iconst_0
+         9: aaload
+        10: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        13: areturn
+      LineNumberTable:
+        line 75: 7
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      14     0 values   [Ljava/lang/Integer;
+    Signature: #294                         // ([Ljava/lang/Integer;)Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> primitiveArrayElement(int[]);
+    descriptor: ([I)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc_w         #264                // String values
+         4: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         7: aload_0
+         8: iconst_0
+         9: iaload
+        10: pop
+        11: getstatic     #55                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+        14: areturn
+      LineNumberTable:
+        line 76: 7
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      15     0 values   [I
+    Signature: #297                         // ([I)Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> conditional(boolean);
+    descriptor: (Z)Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: iload_0
+         1: ifeq          19
+         4: bipush        42
+         6: invokestatic  #253                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+         9: invokestatic  #255                // Method identitySource:(Ljava/lang/Object;)Ljava/lang/Object;
+        12: checkcast     #302                // class java/lang/Number
+        15: invokevirtual #305                // Method java/lang/Number.intValue:()I
+        18: pop
+        19: getstatic     #55                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+        22: areturn
+      StackMapTable: number_of_entries = 1
+        frame_type = 19 /* same */
+      LineNumberTable:
+        line 77: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      23     0 value   Z
+    Signature: #300                         // (Z)Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> erasedUnchecked();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: invokestatic  #311                // Method newfamilies/dependency/UnsafeGenerics.value:()Ljava/lang/Object;
+         3: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+         6: areturn
+      LineNumberTable:
+        line 79: 0
+    Signature: #249                         // ()Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<? extends java.lang.Integer> storedPrimitive();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=0
+         0: bipush        42
+         2: invokestatic  #253                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+         5: invokestatic  #255                // Method identitySource:(Ljava/lang/Object;)Ljava/lang/Object;
+         8: checkcast     #302                // class java/lang/Number
+        11: invokevirtual #305                // Method java/lang/Number.intValue:()I
+        14: istore_0
+        15: getstatic     #55                 // Field java/lang/Integer.TYPE:Ljava/lang/Class;
+        18: areturn
+      LineNumberTable:
+        line 80: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           15       4     0 value   I
+    Signature: #249                         // ()Ljava/lang/Class<+Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<newfamilies.dependency.InitializationProbe> initializationType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc_w         #316                // class newfamilies/dependency/InitializationProbe
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 81: 6
+    Signature: #314                         // ()Lkotlin/reflect/KClass<Lnewfamilies/dependency/InitializationProbe;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Class<newfamilies.dependency.InitializationProbe> initializationJava();
+    descriptor: ()Ljava/lang/Class;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc_w         #316                // class newfamilies/dependency/InitializationProbe
+         3: areturn
+      LineNumberTable:
+        line 82: 0
+    Signature: #318                         // ()Ljava/lang/Class<Lnewfamilies/dependency/InitializationProbe;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends newfamilies.dependency.InitializationProbe> initializationBound();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: invokestatic  #324                // Method newfamilies/dependency/InitializationProbe.create:()Lnewfamilies/dependency/InitializationProbe;
+         3: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+         6: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         9: areturn
+      LineNumberTable:
+        line 83: 0
+    Signature: #320                         // ()Lkotlin/reflect/KClass<+Lnewfamilies/dependency/InitializationProbe;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<newfamilies.dependency.PublicKotlinType> publicLibraryType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc_w         #328                // class newfamilies/dependency/PublicKotlinType
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 84: 6
+    Signature: #326                         // ()Lkotlin/reflect/KClass<Lnewfamilies/dependency/PublicKotlinType;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<?> publicLibraryNested();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc_w         #332                // class newfamilies/dependency/PublicOuter$PublicNested
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 85: 6
+    Signature: #330                         // ()Lkotlin/reflect/KClass<*>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.String[]> parenthesizedArray();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #108                // class "[Ljava/lang/String;"
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 87: 5
+    Signature: #106                         // ()Lkotlin/reflect/KClass<[Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final <T extends java.lang.Object> kotlin.reflect.KClass<? extends T> genericBound(T);
+    descriptor: (Ljava/lang/Object;)Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        10: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        13: areturn
+      LineNumberTable:
+        line 89: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      14     0 value   Ljava/lang/Object;
+    Signature: #335                         // <T:Ljava/lang/Object;>(TT;)Lkotlin/reflect/KClass<+TT;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final <U extends java.lang.Object, T extends U> kotlin.reflect.KClass<? extends T> genericBoundChain(T);
+    descriptor: (Ljava/lang/Object;)Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #132                // String value
+         3: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        10: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        13: areturn
+      LineNumberTable:
+        line 90: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      14     0 value   Ljava/lang/Object;
+    Signature: #337                         // <U:Ljava/lang/Object;T::TU;>(TT;)Lkotlin/reflect/KClass<+TT;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<java.lang.String[]> qualifiedArray();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #108                // class "[Ljava/lang/String;"
+         2: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         5: areturn
+      LineNumberTable:
+        line 92: 5
+    Signature: #106                         // ()Lkotlin/reflect/KClass<[Ljava/lang/String;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public static final kotlin.reflect.KClass<? extends java.lang.Object> escapedBound(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc_w         #341                // String value$slot
+         4: invokestatic  #138                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         7: aload_0
+         8: invokevirtual #123                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        11: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+        14: areturn
+      LineNumberTable:
+        line 93: 7
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      15     0 value$slot   Ljava/lang/Object;
+    Signature: #130                         // (Ljava/lang/Object;)Lkotlin/reflect/KClass<+Ljava/lang/Object;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #16()
+          org.jetbrains.annotations.NotNull
+
+  public static final void classMarked();
+    descriptor: ()V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=0, locals=0, args_size=0
+         0: return
+      LineNumberTable:
+        line 96: 0
+    RuntimeVisibleAnnotations:
+      0: #344(#131=c#149)
+        newfamilies.dependency.ClassMark(
+          value=class Ljava/lang/String;
+        )
+
+  public static final void shortClassMarked();
+    descriptor: ()V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=0, locals=0, args_size=0
+         0: return
+      LineNumberTable:
+        line 98: 0
+    RuntimeVisibleAnnotations:
+      0: #344(#131=c#346)
+        newfamilies.dependency.ClassMark(
+          value=class S
+        )
+
+  public static final kotlin.reflect.KClass<java.lang.Short[]> shortBoxedArrayType();
+    descriptor: ()Lkotlin/reflect/KClass;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc_w         #350                // class "[Ljava/lang/Short;"
+         3: invokestatic  #35                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+         6: areturn
+      LineNumberTable:
+        line 99: 6
+    Signature: #348                         // ()Lkotlin/reflect/KClass<[Ljava/lang/Short;>;
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=1, locals=0, args_size=0
+         0: bipush        7
+         2: invokestatic  #253                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+         5: putstatic     #20                 // Field String:Ljava/lang/Object;
+         8: return
+      LineNumberTable:
+        line 13: 0
+}
+InnerClasses:
+  public static final #378= #244 of #377; // Nested=class newfamilies/classes/Outer$Nested of class newfamilies/classes/Outer
+  public static final #381= #332 of #380; // PublicNested=class newfamilies/dependency/PublicOuter$PublicNested of class newfamilies/dependency/PublicOuter
+SourceFile: "Classes.kt"
+RuntimeVisibleAnnotations:
+  0: #352(#353=[I#354,I#355,I#356],#357=I#354,#358=I#359,#360=[s#361],#362=[s#7,s#363,s#5,s#6,s#11,s#12,s#17,s#363,s#14,s#15,s#21,s#364,s#363,s#36,s#363,s#41,s#363,s#46,s#363,s#51,s#56,s#363,s#61,s#363,s#66,s#363,s#71,s#363,s#75,s#77,s#365,s#81,s#366,s#367,s#85,s#368,s#89,s#363,s#93,s#363,s#97,s#363,s#101,s#363,s#105,s#363,s#109,s#113,s#117,s#118,s#124,s#128,s#131,s#139,s#363,s#143,s#146,s#150,s#151,s#153,s#159,s#160,s#166,s#175,s#179,s#183,s#186,s#27,s#188,s#190,s#192,s#195,s#198,s#199,s#200,s#201,s#208,s#215,s#216,s#228,s#235,s#240,s#241,s#369,s#245,s#370,s#246,s#248,s#256,s#260,s#263,s#270,s#273,s#371,s#281,s#282,s#285,s#287,s#292,s#293,s#295,s#298,s#307,s#312,s#313,s#372,s#317,s#319,s#325,s#373,s#329,s#333,s#334,s#129,s#336,s#374,s#338,s#339,s#340,s#342,s#363,s#345,s#347,s#375])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000¾\u0001\n\u0000\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0010\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0005\n\u0000\n\u0002\u0010\n\n\u0000\n\u0002\u0010\f\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0010\u0006\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010 \n\u0000\n\u0002\u0010\u0015\n\u0000\n\u0002\u0010\u0012\n\u0000\n\u0002\u0010\u0019\n\u0000\n\u0002\u0010\u0011\n\u0002\b\b\n\u0002\u0010\r\n\u0002\b\f\n\u0002\u0018\u0002\n\u0002\b\r\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\n\n\u0002\u0010\u0002\n\u0002\b\u0003\u001a\f\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000b\u001a\f\u0010\r\u001a\b\u0012\u0004\u0012\u00020\u000e0\u000b\u001a\f\u0010\u000f\u001a\b\u0012\u0004\u0012\u00020\u00100\u000b\u001a\f\u0010\u0011\u001a\b\u0012\u0004\u0012\u00020\u00120\u000b\u001a\f\u0010\u0013\u001a\b\u0012\u0004\u0012\u00020\u00010\u000b\u001a\f\u0010\u0014\u001a\b\u0012\u0004\u0012\u00020\u00150\u000b\u001a\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00170\u000b\u001a\f\u0010\u0018\u001a\b\u0012\u0004\u0012\u00020\u00190\u000b\u001a\f\u0010\u001a\u001a\b\u0012\u0004\u0012\u00020\u001b0\u000b\u001a\f\u0010\u001c\u001a\b\u0012\u0004\u0012\u00020\u00070\u000b\u001a\f\u0010\u001d\u001a\b\u0012\u0004\u0012\u00020\u001e0\u000b\u001a\u0010\u0010\u001f\u001a\f\u0012\b\u0012\u00060 j\u0002`!0\u000b\u001a\u0010\u0010\"\u001a\f\u0012\b\u0012\u0006\u0012\u0002\b\u00030#0\u000b\u001a\u0010\u0010$\u001a\f\u0012\b\u0012\u0006\u0012\u0002\b\u00030%0\u000b\u001a\f\u0010&\u001a\b\u0012\u0004\u0012\u00020\'0\u000b\u001a\f\u0010(\u001a\b\u0012\u0004\u0012\u00020)0\u000b\u001a\f\u0010*\u001a\b\u0012\u0004\u0012\u00020+0\u000b\u001a\u0012\u0010,\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u001b0-0\u000b\u001a\u0012\u0010.\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u00010-0\u000b\u001a\u0012\u0010/\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\'0-0\u000b\u001a\u0014\u00100\u001a\u0010\u0012\f\u0012\n\u0012\u0006\u0012\u0004\u0018\u00010\u001b0-0\u000b\u001a\u000e\u00101\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070\u000b\u001a\u000e\u00102\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070\u000b\u001a\u0016\u00103\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070\u000b2\u0006\u00104\u001a\u00020\u0007\u001a\u0016\u00105\u001a\n\u0012\u0006\b\u0001\u0012\u0002060\u000b2\u0006\u00104\u001a\u000206\u001a\u0016\u00107\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010\u000b2\u0006\u00104\u001a\u00020\u0001\u001a\u0016\u00108\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u001b0\u000b2\u0006\u00104\u001a\u00020\u001b\u001a\'\u00109\u001a\u0010\u0012\f\b\u0001\u0012\b\u0012\u0004\u0012\u00020\u001b0-0\u000b2\f\u00104\u001a\b\u0012\u0004\u0012\u00020\u001b0-¢\u0006\u0002\u0010:\u001a\u0018\u0010;\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u001b0\u000b2\b\u00104\u001a\u0004\u0018\u00010\u001b\u001a\u0006\u0010<\u001a\u00020\u0001\u001a\u0006\u0010=\u001a\u000206\u001a\u0006\u0010>\u001a\u00020\u0007\u001a\u000e\u0010?\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010\u000b\u001a\u000e\u0010@\u001a\n\u0012\u0006\b\u0001\u0012\u0002060\u000b\u001a\u000e\u0010A\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070\u000b\u001a\f\u0010B\u001a\b\u0012\u0004\u0012\u00020\u00010C\u001a\f\u0010D\u001a\b\u0012\u0004\u0012\u00020\u001b0C\u001a\u0012\u0010E\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u001b0-0C\u001a\u0016\u0010F\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070C2\u0006\u00104\u001a\u00020\u0007\u001a\u0016\u0010G\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\u0006\u00104\u001a\u00020\u0001\u001a\f\u0010H\u001a\b\u0012\u0004\u0012\u00020\u00010C\u001a\u000e\u0010I\u001a\n\u0012\u0004\u0012\u00020\u0001\u0018\u00010C\u001a\u000e\u0010J\u001a\n\u0012\u0004\u0012\u00020\u001b\u0018\u00010C\u001a\u001a\u0010K\u001a\b\u0012\u0004\u0012\u00020\u001b0\u000b2\f\u00104\u001a\b\u0012\u0004\u0012\u00020\u001b0C\u001a\f\u0010L\u001a\b\u0012\u0004\u0012\u00020\u00010C\u001a\u0016\u0010M\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070C2\u0006\u00104\u001a\u00020\u0007\u001a\u0006\u0010N\u001a\u00020\u001b\u001a\u000e\u0010O\u001a\u00020\u001b2\u0006\u00104\u001a\u00020\u0007\u001a\u000e\u0010P\u001a\u00020\u001b2\u0006\u00104\u001a\u00020Q\u001a\f\u0010R\u001a\b\u0012\u0004\u0012\u00020S0\u000b\u001a\u0019\u0010T\u001a\u0002HU\"\u0004\b\u0000\u0010U2\u0006\u00104\u001a\u0002HU¢\u0006\u0002\u0010V\u001a\u000e\u0010W\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C\u001a\u000e\u0010X\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C\u001a\u001c\u0010Y\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\f\u0010Z\u001a\b\u0012\u0004\u0012\u00020\u00010%\u001a\u001c\u0010[\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\f\u0010\\\u001a\b\u0012\u0004\u0012\u00020\u00010]\u001a\u001d\u0010^\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\b\u00104\u001a\u0004\u0018\u00010\u0001¢\u0006\u0002\u0010_\u001a\u0016\u0010`\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\u0006\u00104\u001a\u00020\u0007\u001a\u001c\u0010a\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\f\u0010Z\u001a\b\u0012\u0004\u0012\u00020\u00010%\u001a!\u0010b\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\f\u0010Z\u001a\b\u0012\u0004\u0012\u00020\u00010-¢\u0006\u0002\u0010c\u001a\u0016\u0010d\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\u0006\u0010Z\u001a\u00020\'\u001a\u0016\u0010e\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C2\u0006\u00104\u001a\u00020\f\u001a\u000e\u0010f\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C\u001a\u000e\u0010g\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00010C\u001a\f\u0010h\u001a\b\u0012\u0004\u0012\u00020i0\u000b\u001a\f\u0010j\u001a\b\u0012\u0004\u0012\u00020i0C\u001a\u000e\u0010k\u001a\n\u0012\u0006\b\u0001\u0012\u00020i0\u000b\u001a\f\u0010l\u001a\b\u0012\u0004\u0012\u00020m0\u000b\u001a\n\u0010n\u001a\u0006\u0012\u0002\b\u00030\u000b\u001a\u0012\u0010o\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u001b0-0\u000b\u001a%\u0010p\u001a\n\u0012\u0006\b\u0001\u0012\u0002HU0\u000b\"\b\b\u0000\u0010U*\u00020\u00072\u0006\u00104\u001a\u0002HU¢\u0006\u0002\u0010q\u001a/\u0010r\u001a\n\u0012\u0006\b\u0001\u0012\u0002HU0\u000b\"\b\b\u0000\u0010s*\u00020\u0007\"\b\b\u0001\u0010U*\u0002Hs2\u0006\u00104\u001a\u0002HU¢\u0006\u0002\u0010q\u001a\u0012\u0010t\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u001b0-0\u000b\u001a\u0016\u0010u\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00070\u000b2\u0006\u0010v\u001a\u00020\u0007\u001a\b\u0010w\u001a\u00020xH\u0007\u001a\b\u0010y\u001a\u00020xH\u0007\u001a\u0012\u0010z\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u00100-0\u000b\"\u001a\u0010\u0000\u001a\u00020\u0001X\u0086\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0002\u0010\u0003\"\u0004\b\u0004\u0010\u0005\"\u0011\u0010\u0006\u001a\u00020\u0007¢\u0006\b\n\u0000\u001a\u0004\b\b\u0010\t¨\u0006{"]
+      d2=["calls","","getCalls","()I","setCalls","(I)V","String","","getString","()Ljava/lang/Object;","booleanType","Lkotlin/reflect/KClass;","","byteType","","shortType","","charType","","intType","longType","","floatType","","doubleType","","stringType","","anyType","sourceType","Lnewfamilies/classes/FixtureType;","importedType","Ljava/lang/StringBuilder;","Lkotlin/text/StringBuilder;","genericType","Ljava/util/ArrayList;","listType","","intArrayType","","byteArrayType","","charArrayType","","stringArrayType","","boxedArrayType","nestedArrayType","nullableElementArrayType","valueShadow","localShadow","boundAny","value","boundInterface","","boundInt","boundString","boundArray","([Ljava/lang/String;)Lkotlin/reflect/KClass;","asserted","nextInt","nextText","failValue","intEffect","textEffect","failEffect","javaInt","Ljava/lang/Class;","javaString","javaArray","javaBound","javaBoundInt","javaBoxedInt","javaPrimitiveInt","javaPrimitiveString","kotlinClass","relayType","relayBound","simpleName","className","threadName","Ljava/lang/Thread;","nestedType","Lnewfamilies/classes/Outer$Nested;","identitySource","T","(Ljava/lang/Object;)Ljava/lang/Object;","erasedSource","erasedLibrary","erasedProperty","values","erasedInvocation","block","Lkotlin/Function0;","assertedInt","(Ljava/lang/Integer;)Ljava/lang/Class;","castInt","listElement","boxedArrayElement","([Ljava/lang/Integer;)Ljava/lang/Class;","primitiveArrayElement","conditional","erasedUnchecked","storedPrimitive","initializationType","Lnewfamilies/dependency/InitializationProbe;","initializationJava","initializationBound","publicLibraryType","Lnewfamilies/dependency/PublicKotlinType;","publicLibraryNested","parenthesizedArray","genericBound","(Ljava/lang/Object;)Lkotlin/reflect/KClass;","genericBoundChain","U","qualifiedArray","escapedBound","value$slot","classMarked","","shortClassMarked","shortBoxedArrayType","new_class_literals"]
+    )

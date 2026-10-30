@@ -116,6 +116,7 @@ fn method(
     );
     JavaMethod {
         library: Some(LibraryMethod {
+            kotlin_declared: true,
             has_annotations: !function.annotations.is_empty()
                 || function.param_annotations.iter().any(|a| !a.is_empty()),
             parameter_modes: function.parameter_modes.clone(),
@@ -156,7 +157,10 @@ fn method(
             access
         }) | if function.vararg { 0x80 } else { 0 },
         unsupported: false,
-        source_property: None,
+        source_property: function
+            .extension_property
+            .as_ref()
+            .map(|property| property.name.clone()),
         kotlin_params: Some(params),
         kotlin_result: Some(result),
         kotlin_internal: function.internal,
@@ -342,6 +346,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         });
     if let Some((parameters, _)) = generic {
         class.library = Some(LibraryClass {
+            companion_name: None,
             kotlin_visibility: None,
             type_aliases: Vec::new(),
             type_parameters: parameters
@@ -521,6 +526,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 let name = format!("component{}", index + 1);
                 class.methods.push(JavaMethod {
                     library: Some(LibraryMethod {
+                        kotlin_declared: true,
                         has_annotations: false,
                         parameter_modes: Vec::new(),
                         reified_arguments: Vec::new(),
@@ -628,6 +634,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     method.library = Some(LibraryMethod {
                         parameter_modes: Vec::new(),
                         reified_arguments: Vec::new(),
+                        kotlin_declared: true,
                         has_annotations: true,
                         abstract_: method.access & 0x400 != 0,
                         builtin_array: false,
@@ -771,6 +778,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         constants(&mut class, &source.constants)?;
     } else {
         class.library = Some(LibraryClass {
+            companion_name: None,
             kotlin_visibility: None,
             type_aliases: module
                 .type_aliases
@@ -843,6 +851,21 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
     if let (Some(internal), Some(library)) = (visibility, &mut class.library) {
         library.kotlin_visibility = Some(if internal { 0 } else { 3 });
     }
+    if let Some(library) = &mut class.library {
+        let companion = module
+            .class_decl
+            .as_ref()
+            .is_some_and(|source| source.companion.is_some())
+            || module
+                .interface_decl
+                .as_ref()
+                .is_some_and(|source| source.companion.is_some())
+            || module
+                .enum_decl
+                .as_ref()
+                .is_some_and(|source| source.body.companion.is_some());
+        library.companion_name = companion.then(|| "Companion".into());
+    }
     if let Some(source) = &module.class_decl {
         for delegate in &source.interface_delegates {
             let ty = resolve(&delegate.ty, module, cp);
@@ -873,6 +896,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     method.library = Some(LibraryMethod {
                         parameter_modes: Vec::new(),
                         reified_arguments: Vec::new(),
+                        kotlin_declared: true,
                         has_annotations: false,
                         abstract_: false,
                         builtin_array: false,
@@ -941,6 +965,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             .map(Type::Java)
             .collect();
         let library = class.library.get_or_insert_with(|| LibraryClass {
+            companion_name: None,
             kotlin_visibility: None,
             type_aliases: Vec::new(),
             type_parameters: Vec::new(),

@@ -314,6 +314,7 @@ fn register_classes(
             JavaMethod {
                 library: (function.infix || function.operator).then(|| {
                     crate::classpath::LibraryMethod {
+                        kotlin_declared: true,
                         has_annotations: false,
                         parameter_modes: Vec::new(),
                         reified_arguments: Vec::new(),
@@ -368,6 +369,7 @@ fn register_classes(
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
+                    companion_name: None,
                     kotlin_visibility: Some(if source.internal { 0 } else { 3 }),
                     type_aliases: Vec::new(),
                     type_parameters: source
@@ -876,6 +878,8 @@ fn check_function(
         public_inline_body: false,
         reified_parameters: Vec::new(),
         exhaustiveness_flow: false,
+        extension_receivers: Vec::new(),
+        receiver_labels: HashMap::new(),
         lambdas: lambdas.clone(),
         captured: HashMap::new(),
         captured_cells: HashMap::new(),
@@ -897,7 +901,7 @@ fn check_function(
         source_type_params: &[],
         source_infix: &HashSet::new(),
         source_operator: &HashSet::new(),
-        receiver: Some(Local {
+        dispatch_receiver: Some(Local {
             slot: 0,
             ty: Type::Java(owner.into()),
             mutable: false,
@@ -945,6 +949,7 @@ fn check_function(
         Vec::new()
     };
     Ok(Function {
+        extension_receiver: false,
         class_type_params: Vec::new(),
         jvm_result: None,
         jvm_name: None,
@@ -1240,6 +1245,8 @@ interface Catalog {
                 public_inline_body: false,
                 reified_parameters: Vec::new(),
                 exhaustiveness_flow: false,
+                extension_receivers: Vec::new(),
+                receiver_labels: HashMap::new(),
                 lambdas: Rc::new(RefCell::new(Vec::new())),
                 captured: HashMap::new(),
                 captured_cells: HashMap::new(),
@@ -1261,7 +1268,7 @@ interface Catalog {
                 source_type_params: &[],
                 source_infix: &HashSet::new(),
                 source_operator: &HashSet::new(),
-                receiver: None,
+                dispatch_receiver: None,
                 fields: &empty_fields,
                 members: &empty_members,
                 companion_fields: &companion_fields,

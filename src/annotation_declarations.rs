@@ -1114,6 +1114,7 @@ pub(crate) fn header(
                 library: Some(LibraryMethod {
                     parameter_modes: Vec::new(),
                     reified_arguments: Vec::new(),
+                    kotlin_declared: true,
                     has_annotations: false,
                     abstract_: true,
                     builtin_array: false,
@@ -1135,6 +1136,7 @@ pub(crate) fn header(
         annotation_definition: Some(definition),
         kotlin_fun_interface: false,
         library: Some(LibraryClass {
+            companion_name: None,
             kotlin_visibility: Some(3),
             type_aliases: Vec::new(),
             type_parameters: Vec::new(),

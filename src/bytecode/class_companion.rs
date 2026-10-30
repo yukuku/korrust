@@ -128,6 +128,7 @@ pub(super) fn outer(
                 code.bytes.extend([load_opcode(ty), slot as u8]);
             }
             let reduced = crate::check::Function {
+                extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
                 jvm_name: function.jvm_name.clone(),

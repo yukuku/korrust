@@ -53,6 +53,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
     ] {
         class.methods.push(JavaMethod {
             library: Some(LibraryMethod {
+                kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),
@@ -86,6 +87,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         });
     }
     class.library = Some(LibraryClass {
+        companion_name: source.body.companion.as_ref().map(|_| "Companion".into()),
         kotlin_visibility: Some(if source.body.internal { 0 } else { 3 }),
         type_aliases: Vec::new(),
         type_parameters: Vec::new(),

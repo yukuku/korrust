@@ -1,0 +1,104 @@
+[
+  {
+    "id": "ordinary_call_shim",
+    "source": "class Host { fun String.extension(): String = this }\nfun value(): String = Host().extension(\"wrong\")",
+    "official": "reject",
+    "code": "MEMBER_EXTENSION_DISPATCH_REQUIRED"
+  },
+  {
+    "id": "extension_initializer",
+    "source": "val String.bad: Int = 1",
+    "official": "reject",
+    "code": "EXTENSION_PROPERTY_BACKING_FIELD"
+  },
+  {
+    "id": "extension_missing_setter",
+    "source": "class Host { var String.bad: Int get() = length }",
+    "official": "reject",
+    "code": "EXTENSION_PROPERTY_ACCESSOR_REQUIRED"
+  },
+  {
+    "id": "duplicate_receiver_property",
+    "source": "class Host { val Int.bad: Int get() = this; val Int.bad: Int get() = this }",
+    "official": "reject",
+    "code": "CONFLICTING_JVM_SIGNATURE"
+  },
+  {
+    "id": "unknown_receiver_label",
+    "source": "class Host { fun String.bad(): String = this@Absent }",
+    "official": "reject",
+    "code": "UNRESOLVED_RECEIVER_LABEL"
+  },
+  {
+    "id": "inferred_property",
+    "source": "val String.good get() = length",
+    "official": "accept",
+    "code": "EXTENSION_PROPERTY_INFERENCE_UNSUPPORTED"
+  },
+  {
+    "id": "generic_property",
+    "source": "val <T> T.good: T get() = this",
+    "official": "accept",
+    "code": "GENERIC_EXTENSION_PROPERTY_UNSUPPORTED"
+  },
+  {
+    "id": "named_companion_source",
+    "source": "class Host { companion object Factory { fun String.good(): String = this } }",
+    "official": "accept",
+    "code": "NAMED_COMPANION_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "interface_extension",
+    "source": "interface Host { fun String.good(): String = this }",
+    "official": "accept",
+    "code": "INTERFACE_EXTENSION_UNSUPPORTED"
+  },
+  {
+    "id": "interface_property",
+    "source": "interface Host { val String.good: Int get() = length }",
+    "official": "accept",
+    "code": "INTERFACE_EXTENSION_UNSUPPORTED"
+  },
+  {
+    "id": "annotated_property",
+    "source": "@get:Suppress(\"unused\") val String.good: Int get() = length",
+    "official": "accept",
+    "code": "EXTENSION_PROPERTY_ANNOTATION_UNSUPPORTED"
+  },
+  {
+    "id": "readonly_member_overload",
+    "source": "class Host { val String.p: Int get() = 1; var Any.p: Int get() = 2; set(value) {} ; fun invalid() { \"\".p = 1 } }",
+    "official": "reject",
+    "code": "EXTENSION_PROPERTY_SETTER_UNAVAILABLE"
+  },
+  {
+    "id": "readonly_top_level_overload",
+    "source": "val String.p: Int get() = 1\nvar Any.p: Int get() = 2; set(value) {}\nfun invalid() { \"\".p = 1 }",
+    "official": "reject",
+    "code": "EXTENSION_PROPERTY_SETTER_UNAVAILABLE"
+  },
+  {
+    "id": "private_member_setter",
+    "source": "class Host { var String.p: Int get() = 1; private set(value) {} }\nfun invalid(host: Host): Int = with(host) { \"\".p = 1; 0 }",
+    "official": "reject",
+    "code": "EXTENSION_PROPERTY_SETTER_UNAVAILABLE"
+  },
+  {
+    "id": "unit_property",
+    "source": "val String.good: Unit get() = Unit",
+    "official": "accept",
+    "code": "EXTENSION_PROPERTY_UNIT_UNSUPPORTED"
+  },
+  {
+    "id": "unit_receiver",
+    "source": "class Host { fun Unit.good(): Int = 1 }",
+    "official": "accept",
+    "code": "UNIT_EXTENSION_RECEIVER_UNSUPPORTED"
+  },
+  {
+    "id": "projected_receiver",
+    "source": "class Host<T> { fun T.echo(): T = this }\nfun invalid(host: Host<out String>): String = with(host) { \"OK\".echo() }",
+    "official": "reject",
+    "code": "PROJECTED_MEMBER_EXTENSION_INPUT"
+  }
+]

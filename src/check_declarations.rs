@@ -461,6 +461,8 @@ pub(super) fn check_class_with_constants(
         public_inline_body: false,
         reified_parameters: Vec::new(),
         exhaustiveness_flow: false,
+        extension_receivers: Vec::new(),
+        receiver_labels: HashMap::new(),
         source_type_params: &[],
         source_infix: &HashSet::new(),
         source_operator: &HashSet::new(),
@@ -482,7 +484,7 @@ pub(super) fn check_class_with_constants(
         classes,
         imports,
         signatures: &signatures,
-        receiver: Some(Local {
+        dispatch_receiver: Some(Local {
             slot: 0,
             ty: self_type.clone(),
             mutable: false,
@@ -514,12 +516,12 @@ pub(super) fn check_class_with_constants(
         }
         initializer_checker.next += 2;
     }
-    initializer_checker.receiver = None;
+    initializer_checker.dispatch_receiver = None;
     let defaults =
         initializer_checker.checked_defaults(&source.defaults, &params, source.offset)?;
     let mut super_args = Vec::new();
     if let Some((_, arguments)) = &source.super_class {
-        initializer_checker.receiver = None;
+        initializer_checker.dispatch_receiver = None;
         let parent = classpath.load(&super_class)?;
         let parent_type = super_types
             .iter()
@@ -638,6 +640,8 @@ pub(super) fn check_class_with_constants(
                 public_inline_body: false,
                 reified_parameters: Vec::new(),
                 exhaustiveness_flow: false,
+                extension_receivers: Vec::new(),
+                receiver_labels: HashMap::new(),
                 lambdas: lambdas.clone(),
                 captured: HashMap::new(),
                 captured_cells: HashMap::new(),
@@ -659,7 +663,7 @@ pub(super) fn check_class_with_constants(
                 source_type_params: &[],
                 source_infix: &HashSet::new(),
                 source_operator: &HashSet::new(),
-                receiver: Some(Local {
+                dispatch_receiver: Some(Local {
                     slot: 0,
                     ty: self_type.clone(),
                     mutable: false,
@@ -865,18 +869,19 @@ pub(super) fn check_class_with_constants(
     }
     for method in &source.methods {
         let function = &method.function;
-        if function.receiver.is_some() {
-            return Err(Diagnostic::new(
-                function.offset,
-                "Member extension functions are not supported",
-            ));
+        let mut params = function.params.clone();
+        if let Some(receiver) = &function.receiver {
+            params.insert(0, ("<this>".into(), receiver.clone()));
         }
         declarations.push((
             function.name.clone(),
             function.private,
             method.is_override,
-            None,
-            function.params.clone(),
+            function
+                .extension_property
+                .as_ref()
+                .map(|property| property.name.as_str()),
+            params,
             &function.result,
             &function.body,
             function.offset,
@@ -901,8 +906,9 @@ pub(super) fn check_class_with_constants(
                 library: source
                     .methods
                     .iter()
-                    .find(|m| m.function.name == *name && m.function.params == *source_params)
-                    .map(|m| crate::classpath::LibraryMethod {
+                    .find(|m| m.function.offset == *offset && m.function.name == *name)
+                    .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
+                kotlin_declared: true,
                         has_annotations: false,
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),
@@ -913,16 +919,17 @@ pub(super) fn check_class_with_constants(
                         kotlin_public: !m.function.private
                             && !m.function.protected
                             && !m.function.internal,
-                        type_parameters: Vec::new(),
-                        receiver: None,
+                        type_parameters: resolve_parameters(&m.function.type_params, imports, classpath, *offset, classes)?,
+                        receiver: m.function.receiver.as_ref().map(|ty| resolve_type_checked(ty, imports, *offset, classpath, classes)).transpose()?,
                         infix: m.function.infix,
                         inline: false,
                         code: None,
-                    }),
+                    }) }).transpose()?,
                 kotlin_params: Some(
                     source_params
                         .iter()
                         .enumerate()
+                        .filter(|(i, _)| *i != 0 || !source.methods.iter().any(|m| m.function.offset == *offset && m.function.name == *name && m.function.receiver.is_some()))
                         .map(|(i, (n, t))| {
                             Ok((
                                 n.clone(),
@@ -931,11 +938,10 @@ pub(super) fn check_class_with_constants(
                                     .methods
                                     .iter()
                                     .find(|m| {
-                                        m.function.name == *name
-                                            && m.function.params == *source_params
+                                        m.function.name == *name && m.function.offset == *offset
                                     })
                                     .is_some_and(|m| {
-                                        m.function.defaults.get(i).is_some_and(Option::is_some)
+                                        m.function.defaults.get(i - usize::from(m.function.receiver.is_some())).is_some_and(Option::is_some)
                                     }),
                             ))
                         })
@@ -951,7 +957,7 @@ pub(super) fn check_class_with_constants(
                 } else if source
                     .methods
                     .iter()
-                    .any(|m| m.function.offset == *offset && m.function.protected)
+                    .any(|m| m.function.offset == *offset && m.function.name == *name && m.function.protected)
                     || source
                         .properties
                         .iter()
@@ -1058,10 +1064,12 @@ pub(super) fn check_class_with_constants(
                 .collect::<String>()
         );
         if !names.insert(source_descriptor) {
-            return Err(Diagnostic::new(
-                offset,
-                "Member overloads and JVM getter collisions are not supported",
-            ));
+            return Err(
+                Diagnostic::new(offset, "Conflicting JVM member signatures").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "CONFLICTING_JVM_SIGNATURE",
+                ),
+            );
         }
         let result = resolve_type_checked(result, imports, offset, classpath, classes)?;
         let mut body_members = members.clone();
@@ -1082,6 +1090,8 @@ pub(super) fn check_class_with_constants(
             public_inline_body: false,
             reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
+            extension_receivers: Vec::new(),
+            receiver_labels: HashMap::new(),
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),
@@ -1103,7 +1113,7 @@ pub(super) fn check_class_with_constants(
             source_type_params: &[],
             source_infix: &HashSet::new(),
             source_operator: &HashSet::new(),
-            receiver: Some(Local {
+            dispatch_receiver: Some(Local {
                 slot: 0,
                 ty: self_type.clone(),
                 mutable: false,
@@ -1143,27 +1153,34 @@ pub(super) fn check_class_with_constants(
                     "Unit and Float parameters are not supported",
                 ));
             }
-            checker.declare(&param, ty.clone(), false, offset)?;
+            let slot = checker.declare(&param, ty.clone(), false, offset)?;
+            if param == "<this>" {
+                let receiver = Local {
+                    slot,
+                    ty: ty.clone(),
+                    mutable: false,
+                };
+                checker.extension_receivers.push(receiver.clone());
+                let label = source
+                    .methods
+                    .iter()
+                    .find(|method| method.function.offset == offset && method.function.name == name)
+                    .and_then(|method| method.function.extension_property.as_ref())
+                    .map_or(name.as_str(), |property| property.name.as_str());
+                checker.receiver_labels.insert(label.into(), receiver);
+            }
             method_params.push((param, ty));
         }
-        let source_defaults = source
+        let source_method = source
             .methods
             .iter()
-            .find(|m| {
-                m.function.name == name
-                    && m.function.params.len() == method_params.len()
-                    && m.function
-                        .params
-                        .iter()
-                        .zip(&method_params)
-                        .all(|((n, t), (rn, rt))| {
-                            n == rn
-                                && resolve_type_checked(t, imports, offset, classpath, classes)
-                                    .is_ok_and(|t| t == *rt)
-                        })
-            })
-            .map(|m| m.function.defaults.clone())
+            .find(|method| method.function.offset == offset && method.function.name == name);
+        let mut source_defaults = source_method
+            .map(|method| method.function.defaults.clone())
             .unwrap_or_else(|| vec![None; method_params.len()]);
+        if source_method.is_some_and(|method| method.function.receiver.is_some()) {
+            source_defaults.insert(0, None);
+        }
         if source_defaults.iter().any(Option::is_some) {
             checker.next += 2;
         }
@@ -1172,7 +1189,7 @@ pub(super) fn check_class_with_constants(
         let has_body = source
             .methods
             .iter()
-            .find(|m| m.function.offset == offset)
+            .find(|m| m.function.offset == offset && m.function.name == name)
             .is_none_or(|m| m.has_body);
         if !has_body && !source.abstract_ {
             return Err(Diagnostic::new(
@@ -1200,8 +1217,10 @@ pub(super) fn check_class_with_constants(
         let source_method = source
             .methods
             .iter()
-            .find(|method| method.function.offset == offset);
+            .find(|method| method.function.offset == offset && method.function.name == name);
         let method = Function {
+            extension_receiver: source_method
+                .is_some_and(|method| method.function.receiver.is_some()),
             class_type_params: Vec::new(),
             jvm_result: None,
             jvm_name: None,
@@ -1218,7 +1237,7 @@ pub(super) fn check_class_with_constants(
                 &source
                     .methods
                     .iter()
-                    .find(|m| m.function.offset == offset)
+                    .find(|m| m.function.offset == offset && m.function.name == name)
                     .map(|m| m.function.type_params.clone())
                     .unwrap_or_default(),
                 imports,
@@ -1333,6 +1352,7 @@ pub(super) fn check_class_with_constants(
                 .any(|m| m.name == getter && m.params.is_empty())
             {
                 methods.push(Function {
+                    extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
                     jvm_name: None,
@@ -1376,6 +1396,7 @@ pub(super) fn check_class_with_constants(
                     .any(|m| m.name == setter_name(&field.name) && m.params.len() == 1)
             {
                 methods.push(Function {
+                    extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
                     jvm_name: None,
@@ -1647,7 +1668,7 @@ pub(super) fn check_class_with_constants(
             .filter(|m| m.name == "<init>" && m.access & 5 != 0)
             .cloned()
             .collect::<Vec<_>>();
-        checker.receiver = None;
+        checker.dispatch_receiver = None;
         let selected =
             checker.select_method(&constructors, &secondary.arguments, secondary.offset)?;
         let (types, _) = class_method_types(&selected)?;
@@ -1679,7 +1700,7 @@ pub(super) fn check_class_with_constants(
                 "Reordered and default constructor delegation arguments are unsupported",
             ));
         }
-        checker.receiver = Some(Local {
+        checker.dispatch_receiver = Some(Local {
             slot: 0,
             ty: self_type.clone(),
             mutable: false,
@@ -1711,6 +1732,7 @@ pub(super) fn check_class_with_constants(
             },
             initializer_local_base,
             function: Function {
+                extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
                 jvm_name: None,
@@ -1768,9 +1790,18 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .find(|f| {
                         f.name == m.function.name
-                            && f.params.len() == m.function.params.len()
-                            && f.params.iter().zip(&m.function.params).all(
-                                |((_, actual), (_, source))| {
+                            && f.params.len()
+                                == m.function.params.len()
+                                    + usize::from(m.function.receiver.is_some())
+                            && f.params
+                                .iter()
+                                .zip(
+                                    m.function
+                                        .receiver
+                                        .iter()
+                                        .chain(m.function.params.iter().map(|(_, ty)| ty)),
+                                )
+                                .all(|((_, actual), source)| {
                                     resolve_type_checked(
                                         source,
                                         imports,
@@ -1779,8 +1810,7 @@ pub(super) fn check_class_with_constants(
                                         classes,
                                     )
                                     .is_ok_and(|source| source == *actual)
-                                },
-                            )
+                                })
                     })
                     .map(|f| format!("{}{}", f.name, f.descriptor()))
             })
@@ -1927,6 +1957,8 @@ impl<'a> DeclarationContext<'a> {
             public_inline_body: false,
             reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
+            extension_receivers: Vec::new(),
+            receiver_labels: HashMap::new(),
             lambdas: self.lambdas.clone(),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),
@@ -1948,7 +1980,7 @@ impl<'a> DeclarationContext<'a> {
             source_type_params: &[],
             source_infix: &self.infix,
             source_operator: &self.infix,
-            receiver: receiver.then(|| Local {
+            dispatch_receiver: receiver.then(|| Local {
                 slot: 0,
                 ty: Type::Java(self.owner.clone()),
                 mutable: false,
@@ -1987,6 +2019,25 @@ impl<'a> DeclarationContext<'a> {
         )?;
         let mut checker = self.checker(receiver, u16::from(receiver), result.clone());
         let mut params = Vec::new();
+        if let Some(receiver) = &source.receiver {
+            let receiver = resolve_type_checked(
+                receiver,
+                self.imports,
+                source.offset,
+                self.classpath,
+                self.classes,
+            )?;
+            params.push(
+                checker.bind_extension_receiver(
+                    receiver,
+                    source
+                        .extension_property
+                        .as_ref()
+                        .map_or(source.name.as_str(), |property| property.name.as_str()),
+                    source.offset,
+                )?,
+            );
+        }
         for (name, ty) in &source.params {
             let ty = resolve_type_checked(
                 ty,
@@ -2014,7 +2065,11 @@ impl<'a> DeclarationContext<'a> {
         if source.defaults.iter().any(Option::is_some) {
             checker.next += 2;
         }
-        let defaults = checker.checked_defaults(&source.defaults, &params, source.offset)?;
+        let mut source_defaults = source.defaults.clone();
+        if source.receiver.is_some() {
+            source_defaults.insert(0, None);
+        }
+        let defaults = checker.checked_defaults(&source_defaults, &params, source.offset)?;
         let (mut body, returns) = checker.block(&source.body)?;
         if !returns {
             if result != Type::Unit {
@@ -2028,7 +2083,11 @@ impl<'a> DeclarationContext<'a> {
                 kind: ValueKind::Unit,
             }));
         }
+        if source.receiver.is_some() {
+            params[0].0 = "<this>".into();
+        }
         Ok(Function {
+            extension_receiver: source.receiver.is_some(),
             class_type_params: Vec::new(),
             jvm_result: None,
             jvm_name: None,
@@ -2566,6 +2625,7 @@ fn infer_source_results_impl(
                         })
                 } else if field.delegate.is_some() {
                     let property = syntax::PropertyDecl {
+                        receiver: None,
                         annotations: field.annotations.clone(),
                         name: field.name.clone(),
                         private: field.private,
@@ -2710,12 +2770,7 @@ fn infer_function(
             context.classpath,
             context.classes,
         )?;
-        let slot = checker.declare("<extension-this>", ty.clone(), false, function.offset)?;
-        checker.receiver = Some(Local {
-            slot,
-            ty,
-            mutable: false,
-        });
+        checker.bind_extension_receiver(ty, &function.name, function.offset)?;
     }
     for (name, ty) in &function.params {
         let ty = resolve_type_checked(
@@ -2769,6 +2824,7 @@ pub(super) fn accessor_source(
         defaults: vec![None; params.len()],
         params,
         result,
+        extension_property: None,
         result_inferred: false,
         body,
     }
@@ -2845,6 +2901,7 @@ pub(super) fn check_static_state(
         }
         if property.delegate.is_some() {
             let source = syntax::PropertyDecl {
+                receiver: None,
                 annotations: property.annotations.clone(),
                 name: property.name.clone(),
                 private: property.private,
@@ -3077,6 +3134,7 @@ pub(super) fn check_static_state(
         };
         let mut getter = if property.body.is_empty() {
             Function {
+                extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
                 jvm_name: None,
@@ -3152,6 +3210,7 @@ pub(super) fn check_static_state(
                     }
                 };
                 Function {
+                    extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
                     jvm_name: None,
@@ -3219,6 +3278,20 @@ pub(super) fn function_method(
 }
 
 pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Result<()> {
+    if function
+        .receiver
+        .as_ref()
+        .is_some_and(|receiver| receiver.base() == &Type::Unit)
+    {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Unit extension receivers require unsupported boxed receiver lowering",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "UNIT_EXTENSION_RECEIVER_UNSUPPORTED",
+        ));
+    }
     if function.vararg
         && function
             .params
@@ -3228,6 +3301,10 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         return Err(Diagnostic::new(
             function.offset,
             "Source reference vararg declarations require unsupported Array<out T> projections",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "SOURCE_REFERENCE_VARARG_UNSUPPORTED",
         ));
     }
 
@@ -3356,6 +3433,7 @@ fn infer_static_properties(
                     .map(|v| v.ty)
             } else if property.delegate.is_some() {
                 let source = syntax::PropertyDecl {
+                    receiver: None,
                     annotations: property.annotations.clone(),
                     name: property.name.clone(),
                     private: property.private,

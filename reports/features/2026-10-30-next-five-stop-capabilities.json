@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-10-30T08:54:36.279300+00:00",
+  "status": "stopped_by_user",
+  "selection": "Five-family milestone closeout: four accepted checkpoints, fifth implemented with final combined validation incomplete.",
+  "compiler": {
+    "final_source_manifest": "reports/correctness/2026-10-30-next-five-stop-checkpoint/v2-freeze.json",
+    "final_binary_sha256": "1e5d68a026b34a15242e0fdccd09dc8b2bbeaa0f3f69c7b661b3a4d2c2cd34ef"
+  },
+  "features": [
+    {
+      "name": "rich_annotations",
+      "status": "supported",
+      "scope": "Scalar/enum/class/array/nested annotation values and defaults, supported source declarations, retention, placement, classfile metadata and consumers.",
+      "restrictions": [
+        "Byte/Short/unsigned annotation elements, non-star KClass bounds, repeatable/container emission and annotation construction expressions remain bounded or unsupported.",
+        "Larger kt10136 upstream original still fails at ordinary assertion/lambda resolution; defaultParameterValues retains an unsupported interpolation boundary. Neither is claimed to pass.",
+        "Unchanged NIA NiaDispatchers passes with real javax.inject; no new AndroidBible full-file or full-app claim."
+      ],
+      "evidence_report": "reports/correctness/2026-10-30-next-five-rich-annotations.json"
+    },
+    {
+      "name": "class_header_delegation",
+      "status": "supported",
+      "scope": "Saved interface delegate receivers, abstract forwarding/properties, explicit overrides, bounded generic substitutions and bridges.",
+      "restrictions": [
+        "Public ordinary top-level delegators and abstract interface contracts; supported invariant Kotlin generics and nongeneric Java scalar/reference signatures.",
+        "Default interface bodies, decorated or generic methods, nested/internal contracts, delegating objects/data/enums and complex erased overlaps are explicit boundaries.",
+        "Actual AndroidBible inventory contains no class-header delegation uses, so no new app-file pass is claimed."
+      ],
+      "evidence_report": "reports/correctness/2026-10-30T062315415007Z-new-class-delegation.json"
+    },
+    {
+      "name": "expanded_objects",
+      "status": "supported",
+      "scope": "Data object equality/hash/string contracts, nested interface implementations, singleton initialization and metadata; object class inheritance and named companions remain outside this checkpoint.",
+      "restrictions": [
+        "Object class inheritance and source named companions are not included.",
+        "The larger original multipleInstances still fails at reflection Constructor/apply receiver resolution; duplicate-instance semantics pass independent fixed Java reflection and serialization checks.",
+        "Unchanged AndroidBible AudioBar now advances past data objects but remains blocked at a local delegated property."
+      ],
+      "evidence_report": "reports/correctness/2026-10-30-next-five-expanded-objects.json"
+    },
+    {
+      "name": "member_extensions",
+      "status": "partial",
+      "scope": "Separate dispatch and extension receivers for member/companion functions and extension properties.",
+      "restrictions": [
+        "Family suite passed62positive/9invalid/11unsupported on v1. Integrated generic getter regression was repaired and focused checks pass; final combined v2 acceptance interrupted at user request.",
+        "Source named companions, interface extensions, method-generic setters and generic/inferred/annotated source extension properties remain bounded."
+      ],
+      "evidence_report": "reports/correctness/2026-10-30T081530180043Z-member-extensions.json"
+    },
+    {
+      "name": "source_inline_reified",
+      "status": "supported",
+      "scope": "Real source inline expansion, bounded reification and inline parameter/return rules.",
+      "restrictions": [
+        "Top-level static bodies only; member/receiver inline functions, default/vararg inline parameters, body exception tables and generated inline closures remain explicitly unsupported.",
+        "Bounded reified tests/casts/class literals; nested generic reification, generic classifier operations, array creation and PublishedApi semantics remain explicit boundaries.",
+        "Scalar Short is a prerequisite within this family, not an extra feature count; ShortArray remains unsupported. No new unchanged AndroidBible whole-file pass is claimed."
+      ],
+      "evidence_report": "reports/correctness/2026-10-30-next-five-source-inline.json"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-10-30-next-five-rich-annotations.json",
+    "reports/correctness/2026-10-30T062315415007Z-new-class-delegation.json",
+    "reports/correctness/2026-10-30-next-five-expanded-objects.json",
+    "reports/correctness/2026-10-30T081530180043Z-member-extensions.json",
+    "reports/correctness/2026-10-30-next-five-source-inline.json",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint.json"
+  ],
+  "accepted_new_families": 4,
+  "implemented_new_families": 5,
+  "limitations": [
+    "Supported labels refer to the explicitly bounded preceding acceptance checkpoints; the latest combined full-suite validation was interrupted and is not certified complete.",
+    "Repairs and prerequisite scalar Short support are not separate feature counts. No full-app compatibility or performance claim."
+  ]
+}

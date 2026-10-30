@@ -140,6 +140,29 @@ pub(super) fn static_import_owner(
                     .load(&method.owner)
                     .is_ok_and(|declaring| declaring.access & 0x0200 == 0))
     });
+    if class
+        .fields
+        .iter()
+        .any(|field| field.name == "INSTANCE" && field.descriptor == format!("L{};", class.name))
+        && methods.iter().any(|method| {
+            method.access & 9 == 1
+                && method
+                    .library
+                    .as_ref()
+                    .is_some_and(|library| library.receiver.is_some())
+                && (method.source_name() == member
+                    || method.source_property.as_deref() == Some(member))
+        })
+    {
+        return Err(Diagnostic::new(
+            offset,
+            "Explicit imports of singleton member extensions are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "SINGLETON_EXTENSION_IMPORT_UNSUPPORTED",
+        ));
+    }
     let matching_field = classpath
         .field_candidates(owner, member)?
         .iter()
@@ -179,14 +202,14 @@ pub(super) fn static_import_owner(
 }
 
 impl Checker<'_> {
-    fn lexical_method_visible(&self, method: &JavaMethod) -> bool {
+    pub(super) fn lexical_method_visible(&self, method: &JavaMethod) -> bool {
         (!method.kotlin_internal || self.classpath.internal_visible(&method.owner))
             && (method.access & 1 != 0
                 || method.access & 2 != 0
                     && (self.lambda_owner == method.owner
                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)))
                 || method.access & 4 != 0
-                    && self.receiver.as_ref().is_some_and(|receiver| {
+                    && self.dispatch_receiver.as_ref().is_some_and(|receiver| {
                         self.subtype(&receiver.ty, &Type::Java(method.owner.clone()))
                     }))
     }
@@ -199,8 +222,13 @@ impl Checker<'_> {
         expected: Option<&Type>,
         offset: usize,
     ) -> Result<Option<Value>> {
+        let labeled = member_extensions::call_labels(name, args);
+        let args = labeled.as_slice();
         if self.local(name).is_some() || self.captured.contains_key(name) {
             return Ok(None);
+        }
+        if let Some(value) = self.implicit_extension_receiver_call(name, args, explicit, offset)? {
+            return Ok(Some(value));
         }
         let mut methods = self.object_methods.get(name).cloned().unwrap_or_default();
         methods.extend(
@@ -210,7 +238,7 @@ impl Checker<'_> {
                 .cloned(),
         );
         if let Some(owner) = self
-            .receiver
+            .dispatch_receiver
             .as_ref()
             .and_then(|receiver| type_owner(&receiver.ty))
         {
@@ -224,7 +252,12 @@ impl Checker<'_> {
             }
         }
         methods.retain(|method| {
-            method.source_property.is_none() && self.lexical_method_visible(method)
+            method.source_property.is_none()
+                && method
+                    .library
+                    .as_ref()
+                    .is_none_or(|library| library.receiver.is_none())
+                && self.lexical_method_visible(method)
         });
         let mut signatures = HashSet::new();
         methods
@@ -289,7 +322,7 @@ impl Checker<'_> {
         let value = if method.access & 8 != 0 {
             self.library_static_call(method, args, offset)?
         } else {
-            let receiver = self.receiver_value(offset)?;
+            let receiver = self.dispatch_receiver_value(offset)?;
             self.member_call(method, receiver, args, offset)?
         };
         Ok(Some(value))
@@ -304,7 +337,7 @@ impl Checker<'_> {
     }
 
     fn library_candidates_with_members(&self, name: &str, shadow_members: bool) -> Vec<JavaMethod> {
-        if name == "this" && self.receiver.is_some()
+        if name == "this" && self.dispatch_receiver.is_some()
             || self.local(name).is_some()
             || self.captured.contains_key(name)
             || self.fields.contains_key(name)
@@ -325,7 +358,7 @@ impl Checker<'_> {
                 })
             || shadow_members
                 && self
-                    .receiver
+                    .dispatch_receiver
                     .as_ref()
                     .and_then(|receiver| type_owner(&receiver.ty))
                     .is_some_and(|owner| {
@@ -343,7 +376,7 @@ impl Checker<'_> {
         let Some(binding) = self.imports.get(name) else {
             if shadow_members
                 && self
-                    .receiver
+                    .dispatch_receiver
                     .as_ref()
                     .and_then(|receiver| library::type_owner(&receiver.ty))
                     .is_some_and(|owner| {
@@ -440,6 +473,8 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        let labeled = member_extensions::call_labels(method.source_name(), args);
+        let args = labeled.as_slice();
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let args = normalized.as_slice();
         if self
@@ -1353,7 +1388,7 @@ impl Checker<'_> {
                 .values()
                 .any(|method| method.source_property.as_deref() == Some(name))
             || self
-                .receiver
+                .dispatch_receiver
                 .as_ref()
                 .and_then(|receiver| type_owner(&receiver.ty))
                 .is_some_and(|owner| {
@@ -1399,15 +1434,19 @@ impl Checker<'_> {
                 let method = self.select_method(&methods, &[], offset)?;
                 self.library_static_call(method, &[], offset).map(Some)
             }
-            Some(crate::classpath::ValueSymbol::Classifier(class))
+            Some(crate::classpath::ValueSymbol::Classifier(class)) => {
+                if let Some(companion) = self.companion_receiver(&class.name, offset)? {
+                    return Ok(Some(companion));
+                }
                 if class.fields.iter().any(|field| {
                     field.name == "INSTANCE" && field.descriptor == format!("L{};", class.name)
-                }) =>
-            {
-                Ok(Some(Value {
-                    ty: Type::Java(class.name.clone()),
-                    kind: ValueKind::ObjectInstance(class.name),
-                }))
+                }) {
+                    return Ok(Some(Value {
+                        ty: Type::Java(class.name.clone()),
+                        kind: ValueKind::ObjectInstance(class.name),
+                    }));
+                }
+                Ok(None)
             }
             _ => Ok(None),
         }

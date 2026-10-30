@@ -634,6 +634,7 @@ mod tests {
     fn inline_method(code: JavaCode) -> JavaMethod {
         JavaMethod {
             library: Some(crate::classpath::LibraryMethod {
+                kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),

@@ -464,6 +464,7 @@ pub(super) fn attach_with_declarations(
                     method.kotlin_params = Some(params);
                     method.kotlin_result = Some(result);
                     method.library = Some(LibraryMethod {
+                        kotlin_declared: false,
                         has_annotations: false,
                         parameter_modes: Vec::new(),
                         reified_arguments: Vec::new(),
@@ -490,6 +491,7 @@ pub(super) fn attach_with_declarations(
         class.unsupported = false;
     }
     class.library = Some(LibraryClass {
+        companion_name: None,
         kotlin_visibility: None,
         type_aliases: Vec::new(),
         type_parameters,

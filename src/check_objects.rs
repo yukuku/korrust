@@ -115,6 +115,7 @@ fn legacy_check(
         }
         overloads.push(JavaMethod {
             library: function.infix.then(|| crate::classpath::LibraryMethod {
+                kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),
@@ -233,6 +234,8 @@ fn legacy_check(
             public_inline_body: false,
             reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
+            extension_receivers: Vec::new(),
+            receiver_labels: HashMap::new(),
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),
@@ -254,7 +257,7 @@ fn legacy_check(
             source_type_params: &[],
             source_infix: &HashSet::new(),
             source_operator: &HashSet::new(),
-            receiver: None,
+            dispatch_receiver: None,
             fields: &empty_fields,
             members: &empty_members,
             companion_fields: &empty_object_fields,
@@ -313,6 +316,8 @@ fn legacy_check(
             public_inline_body: false,
             reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
+            extension_receivers: Vec::new(),
+            receiver_labels: HashMap::new(),
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),
@@ -334,7 +339,7 @@ fn legacy_check(
             source_type_params: &[],
             source_infix: &HashSet::new(),
             source_operator: &HashSet::new(),
-            receiver: if method.jvm_static {
+            dispatch_receiver: if method.jvm_static {
                 None
             } else {
                 Some(Local {
@@ -405,6 +410,7 @@ fn legacy_check(
         }
         methods.push(ObjectMethod {
             function: Function {
+                extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
                 jvm_name: None,
@@ -545,12 +551,6 @@ pub(super) fn check(
             ));
         }
 
-        if function.receiver.is_some() {
-            return Err(Diagnostic::new(
-                function.offset,
-                "Member extensions are unsupported",
-            ));
-        }
         let params = function
             .params
             .iter()
@@ -563,8 +563,14 @@ pub(super) fn check(
             classpath,
             classes,
         )?;
+        let extension = function
+            .receiver
+            .as_ref()
+            .map(|ty| resolve_type_checked(ty, imports, function.offset, classpath, classes))
+            .transpose()?;
         let descriptor = format!(
-            "({}){}",
+            "({}{}){}",
+            extension.as_ref().map(Type::descriptor).unwrap_or_default(),
             params.iter().map(Type::descriptor).collect::<String>(),
             result.descriptor()
         );
@@ -587,7 +593,10 @@ pub(super) fn check(
             descriptor,
             access: (if function.private { 2 } else { 1 }) | if method.jvm_static { 8 } else { 0 },
             unsupported: false,
-            source_property: None,
+            source_property: function
+                .extension_property
+                .as_ref()
+                .map(|property| property.name.clone()),
             kotlin_params: Some(
                 function
                     .params
@@ -606,6 +615,7 @@ pub(super) fn check(
             kotlin_result: Some(result),
             kotlin_internal: function.internal,
             library: Some(crate::classpath::LibraryMethod {
+                kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),
@@ -613,7 +623,7 @@ pub(super) fn check(
                 builtin_array: false,
                 source_name: function.name.clone(),
                 type_parameters: function.type_params.clone(),
-                receiver: None,
+                receiver: extension,
                 infix: function.infix,
                 operator: function.operator,
                 kotlin_public: !function.private && !function.protected && !function.internal,
@@ -686,6 +696,7 @@ pub(super) fn check(
         }
         if field.delegate.is_some() {
             let property = syntax::PropertyDecl {
+                receiver: None,
                 annotations: field.annotations.clone(),
                 name: field.name.clone(),
                 private: field.private,
@@ -1056,6 +1067,7 @@ pub(super) fn check(
         };
         let function = if field.body.is_empty() {
             Function {
+                extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
                 jvm_name: None,
@@ -1116,6 +1128,7 @@ pub(super) fn check(
             }
             methods.push(ObjectMethod {
                 function: Function {
+                    extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
                     jvm_name: None,
@@ -1252,7 +1265,7 @@ impl Checker<'_> {
             && !self.members.values().any(|method| method.source_property.as_deref() == Some(name))
             && !self.companion_fields.contains_key(name) && !self.imports.contains_key(name)
             && self.object_owner.is_none_or(|owner| owner.rsplit(['/', '$']).next() != Some(name))
-            && !self.receiver.as_ref().is_some_and(|receiver| matches!(receiver.ty.base(), Type::Java(owner) if owner.rsplit(['/', '$']).next() == Some(name)))
+            && !self.dispatch_receiver.as_ref().is_some_and(|receiver| matches!(receiver.ty.base(), Type::Java(owner) if owner.rsplit(['/', '$']).next() == Some(name)))
     }
     pub(super) fn object_call(
         &mut self,
@@ -1293,7 +1306,7 @@ impl Checker<'_> {
             let receiver = if let Some(receiver) = receiver {
                 receiver
             } else {
-                self.receiver_value(offset)?
+                self.dispatch_receiver_value(offset)?
             };
             self.member_call(method, receiver, args, offset)
         }

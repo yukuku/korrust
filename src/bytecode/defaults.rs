@@ -48,7 +48,10 @@ pub(super) fn function(
         if let Some(value) = function.defaults.get(index).and_then(Option::as_ref) {
             let next = body.label();
             body.bytes.extend([0x15, slots as u8]);
-            body.integer((1u32 << index) as i32)?;
+            let parameter = index
+                .checked_sub(usize::from(function.extension_receiver))
+                .ok_or_else(|| failure("Extension receiver cannot have a default argument"))?;
+            body.integer((1u32 << parameter) as i32)?;
             body.bytes.push(0x7e);
             body.branch(0x99, next);
             body.value(value)?;
@@ -65,7 +68,9 @@ pub(super) fn function(
     {
         body.bytes.extend([load_opcode(ty), slot as u8]);
     }
-    body.max_stack = body.max_stack.max(slots.max(function.result.slots()));
+    body.max_stack = body
+        .max_stack
+        .max(slots.max(function.physical_result().slots()));
     body.method_reference(
         if is_static {
             0xb8
@@ -78,7 +83,7 @@ pub(super) fn function(
         function.jvm_name(),
         &function.descriptor(),
     )?;
-    body.bytes.push(return_opcode(&function.result));
+    body.bytes.push(return_opcode(function.physical_result()));
     let max_stack = body.max_stack as u16;
     let code = body.into_simple(locals, max_stack)?;
     let mut params = Vec::new();
@@ -97,7 +102,7 @@ pub(super) fn function(
             .iter()
             .map(|(_, ty)| ty.descriptor())
             .collect::<String>(),
-        function.result.descriptor()
+        function.physical_result().descriptor()
     );
     let mut method = simple_method(
         pool,
@@ -273,8 +278,9 @@ pub(super) fn overloads(
         }
         omitted.insert(index);
         let reduced = crate::check::Function {
-            class_type_params: Vec::new(),
-            jvm_result: None,
+            extension_receiver: function.extension_receiver,
+            class_type_params: function.class_type_params.clone(),
+            jvm_result: function.jvm_result.clone(),
             jvm_name: function.jvm_name.clone(),
             annotations: function.annotations.clone(),
             vararg: function.vararg && !omitted.contains(&(function.params.len() - 1)),
@@ -308,7 +314,10 @@ pub(super) fn overloads(
                 .map(|(_, ty)| ty.slots())
                 .sum::<usize>()
             + 2;
-        let mut code = SimpleCode::new(stack.max(function.result.slots()) as u16, locals as u16);
+        let mut code = SimpleCode::new(
+            stack.max(function.physical_result().slots()) as u16,
+            locals as u16,
+        );
         if !function.private {
             for (slot, (name, ty)) in parameter_slots(&reduced.params, start)
                 .into_iter()
@@ -350,9 +359,9 @@ pub(super) fn overloads(
                 slot += ty.slots();
             }
         }
-        let mask = omitted
-            .iter()
-            .fold(0u32, |mask, index| mask | (1u32 << index));
+        let mask = omitted.iter().fold(0u32, |mask, index| {
+            mask | (1u32 << (index - usize::from(function.extension_receiver)))
+        });
         if mask <= 5 {
             code.bytes.push(0x03 + mask as u8);
         } else {
@@ -381,7 +390,7 @@ pub(super) fn overloads(
                 &descriptor,
             )?,
         );
-        code.bytes.push(return_opcode(&function.result));
+        code.bytes.push(return_opcode(function.physical_result()));
         let mut method = simple_method(
             pool,
             access | if reduced.vararg { 0x80 } else { 0 },

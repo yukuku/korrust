@@ -1,0 +1,6 @@
+target/class-literals-fixed/internal_library.kt:1:5: error: 'public' function exposes its 'internal' return type argument 'InternalKotlinType'.
+fun bad() = newfamilies.dependency.InternalKotlinType::class
+    ^^^
+target/class-literals-fixed/internal_library.kt:1:36: error: cannot access 'class InternalKotlinType : Any': it is internal in file.
+fun bad() = newfamilies.dependency.InternalKotlinType::class
+                                   ^^^^^^^^^^^^^^^^^^

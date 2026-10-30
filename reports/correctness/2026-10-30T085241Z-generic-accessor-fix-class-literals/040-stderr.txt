@@ -1,0 +1,3 @@
+target/class-literals-fixed/ConfusingBooleanWhen.kt:1:49: error: logical expression in when-with-subject. The branch will be matched by comparing the result of the logical expression with the subject. To suppress the diagnostic, wrap the expression with parentheses.
+fun existing(value: Any?): Int = when (false) { value !is String -> value.length; else -> 0 }
+                                                ^^^^^^^^^^^^^^^^

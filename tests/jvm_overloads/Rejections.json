@@ -58,11 +58,13 @@
     "diagnostic": "Annotations on source interface methods are not supported"
   },
   {
-    "id": "extension_default_boundary",
-    "source": "package rejected\n@JvmOverloads fun String.value(a: Int = 1): Int = a",
+    "id": "unit_extension_receiver_boundary",
+    "source": "package rejected\n@JvmOverloads fun Unit.value(a: Int = 1): Int = a",
     "official": "accept",
     "candidate": "reject",
-    "diagnostic": "Default arguments on extension functions are unsupported"
+    "diagnostic": "Unit extension receivers require unsupported boxed receiver lowering",
+    "code": "UNIT_EXTENSION_RECEIVER_UNSUPPORTED",
+    "category": "unsupported_language"
   },
   {
     "id": "inherited_collision",

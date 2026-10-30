@@ -12,6 +12,8 @@ public class JavaCheck {
  truth(lambdas.EffectsKt.captured()==1308); truth(lambdas.EffectsKt.cleanupLambda()==1); truth(lambdas.EffectsKt.getEffects()==110);
  truth(lambdas.EffectsKt.generic().equals("v3")); truth(lambdas.EffectsKt.genericReturn()==5); truth(lambdas.EffectsKt.privateCall()==14);
  truth(lambdas.EffectsKt.overloaded()==8);
+ truth(lambdas.EffectsKt.conditionalNonlocal(false)==12); truth(lambdas.EffectsKt.conditionalNonlocal(true)==7);
+ truth(lambdas.EffectsKt.conditionalFinally(false)==12); truth(lambdas.EffectsKt.getEffects()==1); truth(lambdas.EffectsKt.conditionalFinally(true)==7); truth(lambdas.EffectsKt.getEffects()==1);
  truth(forward.ForwardKt.answer()==15); truth(forward.ForwardKt.yes("x")); truth(!forward.ForwardKt.yes(2));
  truth(ordering.OrderingKt.property()==8);
  truth(ordering.OrderingKt.order()==9); truth(ordering.OrderingKt.getTrace()==2145); truth(ordering.OrderingKt.exception()==9); truth(ordering.OrderingKt.getTrace()==7); truth(ordering.OrderingKt.throwing()==12);

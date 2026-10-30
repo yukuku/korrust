@@ -738,6 +738,80 @@ fn function_proto(
     function_with_modality(function, if is_override { 16 } else { 0 }, imports, strings)
 }
 
+fn extension_property_proto(
+    function: &Function,
+    modality: u32,
+    imports: Imports<'_>,
+    strings: &mut Strings,
+) -> Result<Option<Proto>> {
+    let Some(source) = &function.extension_property else {
+        return Ok(None);
+    };
+    if source.setter {
+        return Ok(None);
+    }
+    let receiver = function.receiver.as_ref().unwrap();
+    let visibility = if function.private {
+        2
+    } else if function.protected {
+        4
+    } else if function.internal {
+        0
+    } else {
+        6
+    };
+    let mut property = Proto::default();
+    property.number(
+        11,
+        visibility | modality | 512 | if source.mutable { 256 | 1024 } else { 0 },
+    );
+    property.number(2, strings.id(&source.name)?);
+    property.message(3, &type_proto(&function.result, imports, strings)?);
+    property.message(5, &type_proto(receiver, imports, strings)?);
+    property.number(7, visibility | modality | 64);
+    if source.mutable {
+        property.number(8, source.setter_visibility.metadata() | modality | 64);
+    }
+    let mut signature = Proto::default();
+    signature.message(
+        3,
+        &method_signature(
+            &function.name,
+            &format!(
+                "({}){}",
+                descriptor(receiver, imports)?,
+                descriptor(&function.result, imports)?
+            ),
+            strings,
+        )?,
+    );
+    if source.mutable {
+        signature.message(
+            4,
+            &method_signature(
+                &crate::check::setter_name(&source.name),
+                &format!(
+                    "({}{})V",
+                    descriptor(receiver, imports)?,
+                    descriptor(&function.result, imports)?
+                ),
+                strings,
+            )?,
+        );
+        property.message(
+            6,
+            &parameter(
+                source.setter_parameter.as_deref().unwrap(),
+                &function.result,
+                imports,
+                strings,
+            )?,
+        );
+    }
+    property.message(100, &signature);
+    Ok(Some(property))
+}
+
 fn function_with_modality(
     function: &Function,
     modality: u32,
@@ -1006,6 +1080,23 @@ fn class_metadata(
         proto.message(8, &constructor);
     }
     for method in &class.methods {
+        if method.function.extension_property.is_some() {
+            if let Some(property) = extension_property_proto(
+                &method.function,
+                if !method.has_body {
+                    32
+                } else if method.open {
+                    16
+                } else {
+                    0
+                },
+                imports,
+                &mut strings,
+            )? {
+                proto.message(10, &property);
+            }
+            continue;
+        }
         proto.message(
             9,
             &function_with_jvm_name(
@@ -1662,6 +1753,14 @@ pub(crate) fn for_class_companion(
     constructor.message(100, &method_signature("<init>", "()V", &mut strings)?);
     proto.message(8, &constructor);
     for method in &source.methods {
+        if method.function.extension_property.is_some() {
+            if let Some(property) =
+                extension_property_proto(&method.function, 0, imports, &mut strings)?
+            {
+                proto.message(10, &property);
+            }
+            continue;
+        }
         proto.message(
             9,
             &function_with_jvm_name(
@@ -1849,6 +1948,14 @@ fn interface_metadata(
         proto.number(7, name);
     }
     for method in &interface.methods {
+        if method.function.extension_property.is_some() {
+            if let Some(property) =
+                extension_property_proto(&method.function, 0, imports, &mut strings)?
+            {
+                proto.message(10, &property);
+            }
+            continue;
+        }
         proto.message(
             9,
             &function_with_jvm_name(
@@ -1959,6 +2066,14 @@ fn companion_metadata(
         proto.message(10, &declaration);
     }
     for method in &companion.methods {
+        if method.function.extension_property.is_some() {
+            if let Some(property) =
+                extension_property_proto(&method.function, 0, imports, &mut strings)?
+            {
+                proto.message(10, &property);
+            }
+            continue;
+        }
         proto.message(
             9,
             &function_with_jvm_name(
@@ -2327,6 +2442,14 @@ fn object_metadata(
         );
     }
     for method in &object.methods {
+        if method.function.extension_property.is_some() {
+            if let Some(property) =
+                extension_property_proto(&method.function, 0, &module.imports, &mut strings)?
+            {
+                proto.message(10, &property);
+            }
+            continue;
+        }
         let flags = u32::from(method.jvm_static)
             | if method.inline { 1024 } else { 0 }
             | if method.synthesized { 192 } else { 0 }
@@ -2659,6 +2782,13 @@ pub(crate) fn for_checked_package(
         proto.message(5, &type_alias_proto(alias, &bindings, &mut strings)?);
     }
     for function in &module.functions {
+        if function.extension_property.is_some() {
+            if let Some(property) = extension_property_proto(function, 0, &bindings, &mut strings)?
+            {
+                proto.message(4, &property);
+            }
+            continue;
+        }
         proto.message(
             3,
             &function_proto(function, false, &bindings, &mut strings)?,
@@ -3535,6 +3665,7 @@ mod tests {
             lambdas: Vec::new(),
             constants: Vec::new(),
             functions: vec![crate::check::Function {
+                extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
                 annotations: Vec::new(),

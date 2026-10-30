@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T08:52:10.834693+00:00",
+  "status": "interrupted_user_stop",
+  "selection": "User-requested closeout of version2 app assessment and production replay; only the exact identified process trees were terminated. No further assessments or retries.",
+  "compiler": {
+    "binary": "target/next-five-final-freeze-v2/target/release/korrust",
+    "binary_sha256": "1e5d68a026b34a15242e0fdccd09dc8b2bbeaa0f3f69c7b661b3a4d2c2cd34ef",
+    "frozen_source_manifest": "target/next-five-final-freeze-v2/freeze.json"
+  },
+  "reference_compiler": {
+    "version": "2.3.21"
+  },
+  "inputs": {
+    "frozen_run": "target/final-next5-validation/v2-run.json",
+    "model": "target/final-androidbible-debug-model/model.json"
+  },
+  "jobs": [
+    {
+      "job": "app",
+      "state": "interrupted_user_stop",
+      "pid": 40074,
+      "terminated_descendant_pids": [
+        43890,
+        43892,
+        44242,
+        44301,
+        44338
+      ],
+      "active_at_stop": [
+        {
+          "pid": 43890,
+          "source": "Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogMessage.kt",
+          "case_index": 30,
+          "provider": "candidate"
+        },
+        {
+          "pid": 43892,
+          "source": "Alkitab/src/main/java/yuku/alkitab/base/audio/AudioPlaybackCoordinator.kt",
+          "case_index": 31,
+          "provider": "candidate"
+        },
+        {
+          "pid": 44242,
+          "source": "Alkitab/src/main/java/yuku/alkitab/base/audio/AudioSetSelections.kt",
+          "case_index": 32,
+          "provider": "candidate"
+        },
+        {
+          "pid": 44301,
+          "source": "Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt",
+          "case_index": 29,
+          "provider": "official"
+        }
+      ],
+      "completed_external_command_logs": 61,
+      "completed_source_cases_observed": 29,
+      "source_count_consistent_with_sampled_active_indices": true,
+      "completed_source_case_bounds": [
+        28,
+        29
+      ],
+      "raw_evidence_directory": "reports/correctness/2026-10-30T084850Z-final-next5-v2-debug-assessment",
+      "per_case_outcomes": "Not reconstructed; interrupted harness did not flush a corpus outcome report."
+    },
+    {
+      "job": "replay",
+      "state": "interrupted_user_stop",
+      "pid": 40073,
+      "terminated_descendant_pids": [
+        40241,
+        40242,
+        40244,
+        40243
+      ],
+      "active_at_stop": [
+        {
+          "pid": 40241,
+          "replay_request": "/Users/yuku/f/git/korrust/target/final-next5-v2-module-replay/AlkitabModel/compileDebugKotlin/request.json"
+        },
+        {
+          "pid": 40242,
+          "replay_request": "/Users/yuku/f/git/korrust/target/final-next5-v2-module-replay/AlkitabModel/compileReleaseKotlin/request.json"
+        }
+      ],
+      "completed_external_command_logs": null,
+      "prepared_requests": 6,
+      "completed_traces": 0,
+      "published_directories": 0,
+      "artifact_identity": "Not established; no completed replay result may be inferred from preparation or partial stage files."
+    }
+  ],
+  "cases": [],
+  "counts": {},
+  "commands": [],
+  "reproduction_commands": [],
+  "evidence": [
+    "target/final-next5-validation/debug-assessment-v2.log",
+    "target/final-next5-validation/module-replay-v2.log",
+    "reports/correctness/2026-10-30T084850Z-final-next5-v2-debug-assessment",
+    "target/final-next5-v2-module-replay",
+    "reports/correctness/2026-10-30T083348667439Z-androidbible-model-io-yes2.json",
+    "reports/correctness/2026-10-30T081554Z-final-next5-strict-assessment.json"
+  ],
+  "limitations": [
+    "No complete version2 app or module replay outcome exists. No per-case outcomes were fabricated.",
+    "Version1 real Gradle module build and127contract cases remain independently passed for version1compiler only. Version2 byte identity has not been established.",
+    "Strict original capture assessment completed400setup failures; these are metadata/prerequisite accounting, not a language coverage percentage."
+  ]
+}

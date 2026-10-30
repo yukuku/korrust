@@ -14,6 +14,9 @@ impl Checker<'_> {
         result
     }
     pub(super) fn expected_value(&mut self, expr: &Expr, expected: &Type) -> Result<Value> {
+        if let Some(labeled) = member_extensions::labeled_call(expr) {
+            return self.expected_value(&labeled, expected);
+        }
         if let ExprKind::VarargArray { elements, .. } = &expr.kind {
             return self.vararg_array(expected, elements, expr.offset);
         }
@@ -213,33 +216,25 @@ impl Checker<'_> {
             self.lambdas.borrow().len()
         );
         let mut capture_names = captures::free_names(&statements, &names);
-        let implicit_receiver = receiver_type.is_none()
-            && self.receiver.is_some()
-            && capture_names.iter().any(|name| {
-                self.local(name).is_none()
+        let receiver_dependent = capture_names.iter().any(|name| {
+            if name == "this" {
+                return receiver_type.is_none();
+            }
+            name.starts_with("this@")
+                || self.fields.contains_key(name)
+                || self.members.values().any(|method| {
+                    method.source_name() == name || method.source_property.as_ref() == Some(name)
+                })
+                || self.local(name).is_none()
                     && !self.captured.contains_key(name)
-                    && (name == "this"
-                        || self.receiver.is_some()
-                            && !self.functions.contains_key(name)
-                            && !self.constants.contains_key(name)
-                            && !self.imports.contains_key(name)
-                        || self.fields.contains_key(name)
-                        || self.members.values().any(|m| {
-                            m.access & 8 == 0
-                                && (m.source_name() == name
-                                    || m.source_property.as_deref() == Some(name))
-                        }))
-            });
-        if implicit_receiver {
-            capture_names.insert("this".into());
-        }
-        if receiver_type.is_some() {
-            capture_names.remove("this");
-        }
+                    && !self.functions.contains_key(name)
+                    && !self.constants.contains_key(name)
+                    && !self.imports.contains_key(name)
+        });
         capture_names.retain(|name| {
-            self.local(name).is_some()
-                || self.captured.contains_key(name)
-                || name == "this" && self.receiver.is_some()
+            name != "this"
+                && !name.starts_with("this@")
+                && (self.local(name).is_some() || self.captured.contains_key(name))
         });
         let mut capture_names = capture_names
             .into_iter()
@@ -283,15 +278,50 @@ impl Checker<'_> {
             fields.push((name, value.ty.clone()));
             captures.push(value);
         }
-        let own_receiver = receiver_type.is_some();
-        let receiver_fields = HashMap::new();
-        let receiver_members = HashMap::new();
+        let mut receiver_captures = Vec::new();
+        if receiver_dependent {
+            let mut bindings = self
+                .extension_receivers
+                .iter()
+                .map(|local| (false, Some(local.clone()), Self::local_receiver(local)))
+                .collect::<Vec<_>>();
+            if let Ok(dispatch) = self.dispatch_receiver_value(expr.offset) {
+                bindings.push((true, self.dispatch_receiver.clone(), dispatch));
+            }
+            for (dispatch, binding, value) in bindings {
+                let mut ordinal = receiver_captures.len();
+                let field = loop {
+                    let candidate = format!("$receiver${ordinal}");
+                    if !fields.iter().any(|(name, _)| name == &candidate) {
+                        break candidate;
+                    }
+                    ordinal += 1;
+                };
+                let labels = binding
+                    .as_ref()
+                    .map(|binding| {
+                        self.receiver_labels
+                            .iter()
+                            .filter(|(_, local)| {
+                                local.slot == binding.slot && local.ty == binding.ty
+                            })
+                            .map(|(name, _)| name.clone())
+                            .collect::<Vec<_>>()
+                    })
+                    .unwrap_or_default();
+                receiver_captures.push((dispatch, field.clone(), value.ty.clone(), labels));
+                fields.push((field, value.ty.clone()));
+                captures.push(value);
+            }
+        }
         let mut checker = Checker {
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,
             reified_parameters: self.reified_parameters.clone(),
             exhaustiveness_flow: false,
+            extension_receivers: Vec::new(),
+            receiver_labels: HashMap::new(),
             lambdas: self.lambdas.clone(),
             captured,
             captured_cells,
@@ -317,17 +347,9 @@ impl Checker<'_> {
             source_type_params: self.source_type_params,
             source_infix: self.source_infix,
             source_operator: self.source_operator,
-            receiver: None,
-            fields: if own_receiver {
-                &receiver_fields
-            } else {
-                self.fields
-            },
-            members: if own_receiver {
-                &receiver_members
-            } else {
-                self.members
-            },
+            dispatch_receiver: None,
+            fields: self.fields,
+            members: self.members,
             companion_fields: self.companion_fields,
             functions: self.functions,
             object_methods: self.object_methods,
@@ -371,21 +393,24 @@ impl Checker<'_> {
         for (name, ty) in &function_params {
             let slot = checker.declare(name, ty.clone(), false, expr.offset)?;
             if name == "this" {
-                checker.receiver = Some(Local {
+                let receiver = Local {
                     slot,
                     ty: ty.clone(),
                     mutable: false,
-                });
+                };
+                checker.extension_receivers.push(receiver.clone());
+                if let Some(label) = label {
+                    checker.receiver_labels.insert(label.into(), receiver);
+                }
             }
         }
         let mut receiver_setup = Vec::new();
-        if implicit_receiver {
-            let (_, ty) = checker.captured.get("this").cloned().unwrap();
+        for (dispatch, name, ty, labels) in receiver_captures {
             let value = Value {
                 ty: ty.clone(),
                 kind: ValueKind::JavaField {
                     owner: owner.clone(),
-                    name: "this".into(),
+                    name,
                     receiver: Some(Box::new(Value {
                         ty: Type::Java(owner.clone()),
                         kind: ValueKind::Local(0),
@@ -393,11 +418,23 @@ impl Checker<'_> {
                 },
             };
             let slot = checker.allocate_typed_slot(&ty, expr.offset)?;
-            checker.receiver = Some(Local {
+            checker.initialized.insert(slot);
+            let receiver = Local {
                 slot,
                 ty,
                 mutable: false,
-            });
+            };
+            if dispatch {
+                checker.dispatch_receiver = Some(receiver.clone());
+            } else {
+                checker.extension_receivers.push(receiver.clone());
+            }
+            for label in labels {
+                checker
+                    .receiver_labels
+                    .entry(label)
+                    .or_insert_with(|| receiver.clone());
+            }
             receiver_setup.push(Statement::Store(slot, value));
         }
         let last = statements.pop();
@@ -464,6 +501,7 @@ impl Checker<'_> {
             owner: owner.clone(),
             captures: fields,
             function: Function {
+                extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
                 jvm_name: None,
@@ -633,7 +671,8 @@ mod tests {
         assert_eq!(module.lambdas.len(), 1);
         assert!(module.lambdas[0].owner.contains("$lambda$"));
         let module=checked("class Holder(val n: Int) { fun run(): Int { val fn: () -> Int = { n }; return fn() } }").unwrap();
-        assert_eq!(module.lambdas[0].captures[0].0, "this");
+        assert_eq!(module.lambdas[0].captures.len(), 1);
+        assert_eq!(module.lambdas[0].captures[0].1, Type::Java("Holder".into()));
     }
     #[test]
     fn same_source_classifiers_validate_recursively_without_classpath_outputs() {
@@ -750,6 +789,7 @@ mod shadowing_tests {
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
+                    companion_name: None,
                     kotlin_visibility: None,
                     type_parameters: Vec::new(),
                     type_aliases: Vec::new(),
@@ -767,6 +807,7 @@ mod shadowing_tests {
                 kotlin_interface: false,
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
+                        kotlin_declared: true,
                         has_annotations: false,
                         parameter_modes: Vec::new(),
                         reified_arguments: Vec::new(),
@@ -799,6 +840,8 @@ mod shadowing_tests {
             public_inline_body: false,
             reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
+            extension_receivers: Vec::new(),
+            receiver_labels: HashMap::new(),
             lambdas: Rc::new(RefCell::new(Vec::new())),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),
@@ -820,7 +863,7 @@ mod shadowing_tests {
             source_type_params: &[],
             source_infix: &HashSet::new(),
             source_operator: &HashSet::new(),
-            receiver: None,
+            dispatch_receiver: None,
             fields: &HashMap::new(),
             members: &HashMap::new(),
             companion_fields: &HashMap::new(),

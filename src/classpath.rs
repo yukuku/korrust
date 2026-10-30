@@ -171,6 +171,7 @@ pub(crate) struct JavaMethod {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryClass {
+    pub companion_name: Option<String>,
     pub kotlin_visibility: Option<u8>,
     pub type_aliases: Vec<LibraryTypeAlias>,
     pub type_parameters: Vec<TypeParameter>,
@@ -188,6 +189,7 @@ pub(crate) struct LibraryTypeAlias {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryMethod {
+    pub kotlin_declared: bool,
     pub has_annotations: bool,
     pub parameter_modes: Vec<crate::syntax::InlineParameterMode>,
     pub reified_arguments: Vec<(String, Type)>,
@@ -390,6 +392,7 @@ impl Classpath {
                     annotation_definition: None,
                     kotlin_fun_interface: false,
                     library: Some(LibraryClass {
+                        companion_name: None,
                         kotlin_visibility: None,
                         type_aliases: Vec::new(),
                         type_parameters: Vec::new(),

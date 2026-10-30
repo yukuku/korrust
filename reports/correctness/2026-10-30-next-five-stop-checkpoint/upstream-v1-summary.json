@@ -1,0 +1,392 @@
+{
+  "created_at": "2026-10-30T08:46:12.558532+00:00",
+  "freeze": "original-freeze.json",
+  "compiler_sha256": "3ef941907ae7a8bfa292fd5c39253d9c91d41b2cb9e887eb671dbd7062d300dd",
+  "input_integrity": {
+    "status": "unchanged",
+    "changed": [],
+    "compiler_unchanged": true
+  },
+  "jobs": {
+    "source-inline": {
+      "report": "target/final-next5-upstream-regressions/source-inline/report.json",
+      "sha256": "993993089ee2ac36cd0cf7d362c0797c7d893886061dd3801691b2f517d6f4f6",
+      "status": "pass",
+      "counts": {
+        "pass": 19,
+        "invalid_rejected": 20,
+        "unsupported_language": 19
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed": []
+      },
+      "failure": null,
+      "failures": []
+    },
+    "upstream-full-matrix": {
+      "report": "target/final-next5-upstream-regressions/upstream-full-matrix/report.json",
+      "sha256": "d34ccc51f6943ec0ee2f6ba120f7ad4afbf9b47259c9029c46b63d0d1bb31767",
+      "status": "failed",
+      "counts": {
+        "correctness_failure": 6,
+        "harness_unsupported": 5,
+        "pass": 15,
+        "unsupported_language": 10
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      },
+      "failure": null,
+      "failures": [
+        {
+          "id": "raw_strings_quotes",
+          "family": "raw_strings",
+          "root": "box",
+          "tier": "complex",
+          "kind": "box",
+          "outcome": "correctness_failure",
+          "source": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+            "sha256": "7d6202a5d197351e2a716222b819d51b67fdba120b59935b952ed91f86556f26"
+          },
+          "modules": [
+            {
+              "name": "main",
+              "dependencies": [],
+              "friends": [],
+              "depends_on": [],
+              "directives": []
+            }
+          ],
+          "source_maps": [
+            "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt.source-map.json"
+          ],
+          "candidate_settings": {
+            "main": []
+          },
+          "candidate_diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt",
+              "offset": 50,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Source reference vararg declarations require unsupported Array<out T> projections",
+              "path": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt",
+              "line": 2,
+              "column": 1,
+              "upstream_location": {
+                "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+                "char_offset": 50,
+                "byte_offset": 50,
+                "line": 2,
+                "column": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "value_classes",
+          "family": "value_classes",
+          "root": "box",
+          "tier": "interaction",
+          "kind": "box",
+          "outcome": "correctness_failure",
+          "source": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt",
+            "sha256": "ee9a31ea5400aa67b9d11ef0494cdf80ebac7be427a3e9015293557a487cdb70"
+          },
+          "modules": [
+            {
+              "name": "main",
+              "dependencies": [],
+              "friends": [],
+              "depends_on": [],
+              "directives": [
+                {
+                  "name": "WITH_STDLIB",
+                  "value": "",
+                  "original_line": 1
+                }
+              ]
+            }
+          ],
+          "source_maps": [
+            "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/value_classes/sources/main/topLevel.kt.source-map.json"
+          ],
+          "candidate_settings": {
+            "main": []
+          },
+          "candidate_diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/value_classes/sources/main/topLevel.kt",
+              "offset": 78,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Unresolved member or imported extension: getOrThrow",
+              "path": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/value_classes/sources/main/topLevel.kt",
+              "line": 5,
+              "column": 13,
+              "upstream_location": {
+                "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt",
+                "char_offset": 78,
+                "byte_offset": 78,
+                "line": 5,
+                "column": 13
+              }
+            }
+          ]
+        },
+        {
+          "id": "interface_delegation",
+          "family": "interface_delegation",
+          "root": "box",
+          "tier": "interaction",
+          "kind": "box",
+          "outcome": "correctness_failure",
+          "source": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt",
+            "sha256": "87e1f420a50df2fe2bc6917ba193b52a9070249b5cf16a5c35470918cb7b81a8"
+          },
+          "modules": [
+            {
+              "name": "main",
+              "dependencies": [],
+              "friends": [],
+              "depends_on": [],
+              "directives": []
+            }
+          ],
+          "source_maps": [
+            "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/interface_delegation/sources/main/genericProperty.kt.source-map.json"
+          ],
+          "candidate_settings": {
+            "main": []
+          },
+          "candidate_diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/interface_delegation/sources/main/genericProperty.kt",
+              "offset": 23,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Expected an identifier",
+              "path": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/interface_delegation/sources/main/genericProperty.kt",
+              "line": 3,
+              "column": 9,
+              "upstream_location": {
+                "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt",
+                "char_offset": 23,
+                "byte_offset": 23,
+                "line": 3,
+                "column": 9
+              }
+            }
+          ]
+        },
+        {
+          "id": "rich_annotations",
+          "family": "rich_annotations",
+          "root": "box",
+          "tier": "interaction",
+          "kind": "box",
+          "outcome": "correctness_failure",
+          "source": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt",
+            "sha256": "cc2a6d8fbfa40c2a3c699e95f1ea632f7b934ed36303dfb80d21cf74a0ea8268"
+          },
+          "modules": [
+            {
+              "name": "lib",
+              "dependencies": [],
+              "friends": [],
+              "depends_on": [],
+              "directives": [
+                {
+                  "name": "TARGET_BACKEND",
+                  "value": "JVM",
+                  "original_line": 1
+                },
+                {
+                  "name": "WITH_STDLIB",
+                  "value": "",
+                  "original_line": 2
+                }
+              ]
+            },
+            {
+              "name": "main",
+              "dependencies": [
+                "lib"
+              ],
+              "friends": [],
+              "depends_on": [],
+              "directives": [
+                {
+                  "name": "TARGET_BACKEND",
+                  "value": "JVM",
+                  "original_line": 1
+                },
+                {
+                  "name": "WITH_STDLIB",
+                  "value": "",
+                  "original_line": 2
+                }
+              ]
+            }
+          ],
+          "source_maps": [
+            "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/rich_annotations/sources/lib/JavaAnn.java.source-map.json",
+            "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/rich_annotations/sources/main/1.kt.source-map.json"
+          ],
+          "candidate_settings": {
+            "main": []
+          },
+          "candidate_diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/rich_annotations/sources/main/1.kt",
+              "offset": 113,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Cannot infer type parameter T",
+              "path": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/rich_annotations/sources/main/1.kt",
+              "line": 8,
+              "column": 16,
+              "upstream_location": {
+                "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt",
+                "char_offset": 392,
+                "byte_offset": 392,
+                "line": 23,
+                "column": 16
+              }
+            }
+          ]
+        },
+        {
+          "id": "inline_nonlocal",
+          "family": "source_inline_reified",
+          "root": "boxInline",
+          "tier": "complex",
+          "kind": "inline",
+          "outcome": "correctness_failure",
+          "source": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt",
+            "sha256": "b10a8ee1323b6d69ea400193c9088222fb3f6a4c0ac6f6bea98118b0d81d68a0"
+          },
+          "modules": [
+            {
+              "name": "main",
+              "dependencies": [],
+              "friends": [],
+              "depends_on": [],
+              "directives": []
+            }
+          ],
+          "source_maps": [
+            "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/inline_nonlocal/sources/main/1.kt.source-map.json",
+            "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/inline_nonlocal/sources/main/2.kt.source-map.json"
+          ],
+          "candidate_settings": {
+            "main": []
+          },
+          "candidate_diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/inline_nonlocal/sources/main/2.kt",
+              "offset": 220,
+              "category": "invalid_kotlin",
+              "code": "NON_LOCAL_RETURN_NOT_ALLOWED",
+              "message": "Non-local return requires an inline lambda",
+              "path": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/inline_nonlocal/sources/main/2.kt",
+              "line": 12,
+              "column": 13,
+              "upstream_location": {
+                "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt",
+                "char_offset": 335,
+                "byte_offset": 335,
+                "line": 21,
+                "column": 13
+              }
+            }
+          ]
+        },
+        {
+          "id": "kotlin_consumes_nested_java",
+          "family": "java_member_resolution",
+          "root": "compileKotlinAgainstJava",
+          "tier": "interaction",
+          "kind": "kotlin_consumer",
+          "outcome": "correctness_failure",
+          "source": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.kt",
+            "sha256": "88d18006d69378e006963848192da5215116f0dbc39d0204244bd62cf9a7b21e"
+          },
+          "modules": [
+            {
+              "name": "main",
+              "dependencies": [],
+              "friends": [],
+              "depends_on": [],
+              "directives": []
+            }
+          ],
+          "source_maps": [
+            "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt.source-map.json"
+          ],
+          "paired_java": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.java",
+            "sha256": "ce8e7fa18cda41c361878a7cbaeffa844a6c71a5f3bc33e653a7da610312a9ca"
+          },
+          "candidate_settings": {
+            "main": []
+          },
+          "candidate_diagnostics": [
+            {
+              "source_identity": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt",
+              "offset": 29,
+              "category": "unclassified",
+              "code": "UNCLASSIFIED",
+              "message": "Unresolved Java field",
+              "path": "/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/upstream-full-matrix/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt",
+              "line": 3,
+              "column": 16,
+              "upstream_location": {
+                "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.kt",
+                "char_offset": 29,
+                "byte_offset": 29,
+                "line": 3,
+                "column": 16
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "class-literals": {
+      "report": "target/final-next5-upstream-regressions/class-literals/report.json",
+      "sha256": "e41798aedbcdd90f4be43dde458c8de944810a2c395bfcedfd0d0979ce9edef4",
+      "status": "fail",
+      "counts": {
+        "pass": 1
+      },
+      "input_integrity": null,
+      "failure": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/frozen-source-view/tests/fixtures/new_families/class_literals/Classes.kt\",\"offset\":2417,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Cannot infer type parameter T\",\"path\":\"/Users/yuku/f/git/korrust/target/final-next5-upstream-regressions/frozen-source-view/tests/fixtures/new_families/class_literals/Classes.kt\",\"line\":50,\"column\":29}\n",
+      "failures": []
+    },
+    "primitive-arrays": {
+      "report": "target/final-next5-upstream-regressions/primitive-arrays/report.json",
+      "sha256": "7cd861dc721e15527e15443d09a5d85f6f0162be18a4d1f4f340db12de688278",
+      "status": "complete_with_recorded_boundaries",
+      "counts": {
+        "invalid_kotlin": 10,
+        "pass": 23,
+        "unsupported_language": 6
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      },
+      "failure": null,
+      "failures": []
+    }
+  }
+}

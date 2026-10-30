@@ -42,8 +42,13 @@
     },
     {
       "id": "member_extensions",
-      "status": "implementation",
-      "scope": "Separate dispatch and extension receivers for member/companion functions and extension properties."
+      "status": "implemented_validation_incomplete",
+      "scope": "Separate dispatch and extension receivers for member/companion functions and extension properties.",
+      "report": "reports/correctness/2026-10-30T081530180043Z-member-extensions.json",
+      "limitations": [
+        "Family suite passed62positive/9invalid/11unsupported on v1. Integrated generic getter regression was repaired and focused checks pass; final combined v2 acceptance interrupted at user request.",
+        "Source named companions, interface extensions, method-generic setters and generic/inferred/annotated source extension properties remain bounded."
+      ]
     },
     {
       "id": "source_inline_reified",
@@ -64,5 +69,9 @@
     "Kotlin JVM renamed members and passive Java annotations",
     "Compound assignment resolution and unchanged BackForwardList runtime"
   ],
-  "counting_policy": "Repair and harness work are excluded. Isolated validation is not integrated acceptance. No source-file compatibility percentages."
+  "counting_policy": "Repair and harness work are excluded. Isolated validation is not integrated acceptance. No source-file compatibility percentages.",
+  "status": "stopped_by_user",
+  "new_implemented_families": 5,
+  "final_combined_validation": "incomplete_at_user_stop",
+  "stop_report": "reports/correctness/2026-10-30-next-five-stop-checkpoint.json"
 }

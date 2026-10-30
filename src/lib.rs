@@ -878,7 +878,8 @@ fn validate_batch_declarations(
                 scope.to_owned(),
                 function.name.clone(),
                 format!(
-                    "{:?}",
+                    "{:?}:{:?}",
+                    function.receiver,
                     function.params.iter().map(|(_, ty)| ty).collect::<Vec<_>>()
                 ),
             )) {
@@ -886,6 +887,7 @@ fn validate_batch_declarations(
                     function.offset,
                     format!("Conflicting source function declaration: {}", function.name),
                 )
+                .with_kind(DiagnosticKind::InvalidKotlin, "CONFLICTING_SOURCE_FUNCTION")
                 .for_source(&sources[provenance[owner]].identity));
             }
         }

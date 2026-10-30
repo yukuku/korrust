@@ -1,0 +1,6 @@
+target/class-literals-fixed/private_library.kt:1:5: error: 'public' function exposes its 'private-in-file' return type argument 'PrivateKotlinType'.
+fun bad() = newfamilies.dependency.PrivateKotlinType::class
+    ^^^
+target/class-literals-fixed/private_library.kt:1:36: error: cannot access 'class PrivateKotlinType : Any': it is private in file.
+fun bad() = newfamilies.dependency.PrivateKotlinType::class
+                                   ^^^^^^^^^^^^^^^^^

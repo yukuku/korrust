@@ -1,0 +1,1 @@
+class Host(val suffix: String) { fun String.make(): () -> String = { this + this@Host.suffix }; fun String.receiverFun(): String.() -> String = { this + this@Host.suffix + this@receiverFun }; fun String.counter(): () -> String { var count = 0; return { count += 1; this + suffix + count } } }

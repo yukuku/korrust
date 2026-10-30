@@ -5,6 +5,7 @@ pub(super) enum ExtensionKind {
     Operator,
     Infix,
     Property,
+    PropertySet,
     MemberFallback(Diagnostic),
 }
 
@@ -822,6 +823,9 @@ impl Checker<'_> {
         let matches = |method: &&JavaMethod| {
             method.access & 8 != 0
                 && (method.access & 1 != 0
+                    || self
+                        .classpath
+                        .file_private_visible(&self.lambda_owner, method)
                     || method
                         .library
                         .as_ref()
@@ -899,9 +903,14 @@ impl Checker<'_> {
     ) -> Result<Value> {
         let operator = matches!(&kind, ExtensionKind::Operator);
         let infix = matches!(&kind, ExtensionKind::Infix);
-        let property = matches!(&kind, ExtensionKind::Property);
-        let fallback = match kind {
-            ExtensionKind::MemberFallback(error) => Some(error),
+        let property = matches!(&kind, ExtensionKind::Property | ExtensionKind::PropertySet);
+        if let Some(value) =
+            self.instance_extension_call(receiver.clone(), name, args, types, &kind, offset)?
+        {
+            return Ok(value);
+        }
+        let fallback = match &kind {
+            ExtensionKind::MemberFallback(error) => Some(error.clone()),
             _ => None,
         };
         let groups = self.extension_candidate_groups(name, property)?;
@@ -927,22 +936,42 @@ impl Checker<'_> {
             let mut non_infix_applicable = false;
             for group in groups {
                 let mut applicable = Vec::new();
-                for mut method in group {
+                let normalized = group
+                    .into_iter()
+                    .map(|mut method| {
+                        let receiver = method.library.as_ref().unwrap().receiver.clone().unwrap();
+                        if let Some(params) = &mut method.kotlin_params {
+                            params.insert(0, ("<receiver>".into(), receiver, false));
+                        }
+                        method
+                    })
+                    .collect::<Vec<_>>();
+                if property {
+                    match self.select_extension_accessor(
+                        &normalized,
+                        &all_args,
+                        types,
+                        matches!(kind, ExtensionKind::PropertySet),
+                        offset,
+                    ) {
+                        Ok(method) => applicable.push(method),
+                        Err(error)
+                            if error.code == "TYPE_MISMATCH"
+                                || error.code == "ARGUMENT_MAPPING_MISMATCH"
+                                || error.message == "No applicable member overload" =>
+                        {
+                            failures.push(error)
+                        }
+                        Err(error) => return Err(error),
+                    }
+                    applicable_groups.push(applicable);
+                    continue;
+                }
+                for method in normalized {
                     if operator && !method.library.as_ref().is_some_and(|l| l.operator) {
                         continue;
                     }
                     let is_infix = method.library.as_ref().is_some_and(|library| library.infix);
-                    let receiver = method
-                        .library
-                        .as_ref()
-                        .unwrap()
-                        .receiver
-                        .as_ref()
-                        .unwrap()
-                        .clone();
-                    if let Some(params) = &mut method.kotlin_params {
-                        params.insert(0, ("<receiver>".into(), receiver, false));
-                    }
                     match self.select_method_types(
                         std::slice::from_ref(&method),
                         &all_args,
@@ -1029,6 +1058,16 @@ impl Checker<'_> {
         member_error: Diagnostic,
     ) -> Result<Value> {
         let offset = member_error.offset;
+        if let Some(value) = self.instance_extension_call(
+            receiver.clone(),
+            name,
+            args,
+            &[],
+            &ExtensionKind::Ordinary,
+            offset,
+        )? {
+            return Ok(value);
+        }
         let source_candidates = self
             .function_names
             .iter()
@@ -1133,18 +1172,21 @@ impl Checker<'_> {
         let checked = (|| {
             let id = self.select_function_types(&candidates, &all_args, explicit, offset)?;
             let (params, result) = self.specialize_source(id, &all_args, explicit, offset)?;
+            let defaults = self
+                .defaults
+                .get(id)
+                .map(|defaults| defaults.iter().map(Option::is_some).collect::<Vec<_>>())
+                .unwrap_or_else(|| vec![false; params.len()]);
             let (values, lets, mask) =
-                self.arguments(&params, &vec![false; params.len()], &all_args, true, offset)?;
-            if mask != 0 {
-                return Err(Diagnostic::new(
-                    offset,
-                    "Default extension arguments are unsupported",
-                ));
-            }
+                self.arguments(&params, &defaults, &all_args, true, offset)?;
             Ok(Self::wrap_lets(
                 Value {
                     ty: result,
-                    kind: ValueKind::Call(id, values),
+                    kind: if mask == 0 {
+                        ValueKind::Call(id, values)
+                    } else {
+                        ValueKind::DefaultCall(id, values, (mask >> 1) as u32)
+                    },
                 },
                 lets,
             ))
@@ -1167,7 +1209,7 @@ impl Checker<'_> {
             .filter(|m| {
                 m.source_name() == name
                     && self
-                        .receiver
+                        .dispatch_receiver
                         .as_ref()
                         .is_some_and(|own| own.ty == receiver.ty)
                     && m.library.as_ref().is_some_and(|l| l.infix)
@@ -1776,7 +1818,7 @@ impl Checker<'_> {
 
 impl Checker<'_> {
     pub(super) fn receiver_property(&mut self, name: &str, offset: usize) -> Result<Value> {
-        if self.receiver.is_none() {
+        if self.dispatch_receiver.is_none() {
             return Err(Diagnostic::new(offset, format!("Unresolved name: {name}")));
         }
         self.value(&Expr {
@@ -1797,7 +1839,7 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
-        let receiver = self.receiver_value(offset)?;
+        let receiver = self.default_receiver_value(offset)?;
         let next = self.next;
         let initialized = self.initialized.clone();
         let refinements = self.refinements.clone();
@@ -1873,7 +1915,7 @@ impl Checker<'_> {
                             || method.source_property.as_deref() == Some(name)
                     })
                     && !self
-                        .receiver
+                        .dispatch_receiver
                         .as_ref()
                         .and_then(|receiver| library::type_owner(&receiver.ty))
                         .is_some_and(|owner| {

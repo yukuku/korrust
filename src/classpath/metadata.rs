@@ -578,6 +578,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             kotlin_result: Some(array),
             kotlin_internal: false,
             library: Some(LibraryMethod {
+                kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),
@@ -772,6 +773,7 @@ fn builtin_declarations(
             library: requested_name.map(|_| LibraryMethod {
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),
+                kotlin_declared: false,
                 has_annotations: false,
                 abstract_: true,
                 builtin_array: false,
@@ -987,7 +989,7 @@ fn attach_member(
                 format!("{jvm_name}$default"),
                 format!(
                     "({dispatch}{parameters}{}Ljava/lang/Object;){}",
-                    "I".repeat((params.len() - usize::from(receiver.is_some())).div_ceil(32)),
+                    "I".repeat(params.len().div_ceil(32)),
                     &descriptor[closing + 1..]
                 ),
             )
@@ -1021,6 +1023,7 @@ fn attach_member(
         parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
     }
     method.library = Some(LibraryMethod {
+        kotlin_declared: true,
         has_annotations: flags & 1 != 0,
         parameter_modes,
         reified_arguments: Vec::new(),
@@ -1066,6 +1069,7 @@ fn remember_callable(
             && method.library.is_none()
         {
             method.library = Some(LibraryMethod {
+                kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),
@@ -1225,6 +1229,14 @@ pub(super) fn attach(
     }
     let class_flags = proto.integer(1)?.unwrap_or(6);
     class.library = Some(LibraryClass {
+        companion_name: if kind == 1 {
+            proto
+                .integer(4)?
+                .map(|name| metadata_name(&strings, Some(name)).map(str::to_owned))
+                .transpose()?
+        } else {
+            None
+        },
         kotlin_visibility: (kind == 1).then_some(((class_flags >> 1) & 7) as u8),
         type_aliases,
         type_parameters: parameters,

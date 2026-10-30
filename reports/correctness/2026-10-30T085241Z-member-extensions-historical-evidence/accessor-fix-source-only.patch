@@ -1,0 +1,26 @@
+diff --git a/src/check_member_extensions.rs b/src/check_member_extensions.rs
+--- a/src/check_member_extensions.rs
++++ b/src/check_member_extensions.rs
+@@ -78,6 +78,22 @@
+             .collect::<Vec<_>>();
+         let getter = self.select_method_types(&getters, &arguments[..1], explicit, offset)?;
+         if !setter {
++            if getter.access & 8 != 0 {
++                return methods
++                    .iter()
++                    .find(|method| {
++                        method.owner == getter.owner
++                            && method.name == getter.name
++                            && method.descriptor == getter.descriptor
++                    })
++                    .cloned()
++                    .ok_or_else(|| {
++                        Diagnostic::new(
++                            offset,
++                            "Selected extension getter has no declaration candidate",
++                        )
++                    });
++            }
+             return Ok(getter);
+         }
+         let setters = methods

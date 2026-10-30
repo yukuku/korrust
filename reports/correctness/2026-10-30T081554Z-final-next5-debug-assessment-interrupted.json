@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T08:43:58.681121+00:00",
+  "status": "interrupted_superseded",
+  "reason": "Authorized termination of version1 app assessment only: live-root source guard would invalidate after the version2 repair, and remaining probes will be covered by the fresh frozen-root version2 run.",
+  "assessment_pid": 13903,
+  "terminated_descendant_pids": [
+    36110,
+    36155,
+    36163
+  ],
+  "active_source_cases_at_stop": [
+    {
+      "case_index": 147,
+      "source": "Alkitab/src/main/java/yuku/alkitab/base/util/OsisBookNames.kt",
+      "provider": "candidate",
+      "pid": 36110
+    },
+    {
+      "case_index": 146,
+      "source": "Alkitab/src/main/java/yuku/alkitab/base/util/LidToAri.kt",
+      "provider": "official",
+      "pid": 36155
+    }
+  ],
+  "completed_external_command_logs_observed": 295,
+  "completed_source_cases_observed": 146,
+  "completed_source_count_basis": "Two identity commands plus two provider command logs per completed eligible source; subtract candidate-only command for sampled active official subprocesses. This is an observed progress count, not a fabricated per-case outcome list.",
+  "count_consistency": {
+    "source_command_count_minus_sampled_partial_is_even": true,
+    "highest_active_case_index": 147
+  },
+  "per_case_outcomes": "Not reconstructed. The interrupted harness did not flush a completed corpus report; raw outputs remain evidence only.",
+  "raw_evidence_directory": "reports/correctness/2026-10-30T081554Z-final-next5-debug-assessment",
+  "expected_report_path": "reports/correctness/2026-10-30T081554Z-final-next5-debug-assessment.json",
+  "compiler": {
+    "binary": "target/next-five-final-freeze/target/release/korrust",
+    "binary_sha256": "3ef941907ae7a8bfa292fd5c39253d9c91d41b2cb9e887eb671dbd7062d300dd",
+    "frozen_source_manifest": "target/next-five-final-freeze/freeze.json"
+  },
+  "strict_report_preserved": "reports/correctness/2026-10-30T081554Z-final-next5-strict-assessment.json",
+  "module_contract_report_preserved": "reports/correctness/2026-10-30T083348667439Z-androidbible-model-io-yes2.json",
+  "reference_compiler": {
+    "version": "2.3.21",
+    "scope": "Pinned compiler provider commands archived in partial raw logs; interrupted run has no reconstructed per-case outcomes."
+  },
+  "inputs": {
+    "source_total": 400,
+    "derived_model": "target/final-androidbible-debug-model/model.json",
+    "derived_model_provenance": "target/final-androidbible-debug-model/provenance.json",
+    "harness": "target/final-androidbible-debug-model/assess_debug.py"
+  },
+  "cases": [],
+  "counts": {},
+  "evidence": [
+    "reports/correctness/2026-10-30T081554Z-final-next5-debug-assessment",
+    "target/final-next5-validation/debug-assessment.log",
+    "reports/correctness/2026-10-30T081554Z-final-next5-strict-assessment.json",
+    "reports/correctness/2026-10-30T083348667439Z-androidbible-model-io-yes2.json"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "target/final-androidbible-debug-model/assess_debug.py",
+      "--mode",
+      "resolved",
+      "--model",
+      "target/final-androidbible-debug-model/model.json",
+      "--compiler",
+      "/Users/yuku/f/git/korrust/target/next-five-final-freeze/target/release/korrust",
+      "--jobs",
+      "2",
+      "--timeout",
+      "30",
+      "--official-timeout",
+      "120",
+      "--output",
+      "reports/correctness/2026-10-30T081554Z-final-next5-debug-assessment.json"
+    ]
+  ],
+  "commands": [
+    {
+      "label": "Interrupted version1 derived debug assessment",
+      "argv": [
+        "python3",
+        "target/final-androidbible-debug-model/assess_debug.py",
+        "--mode",
+        "resolved",
+        "--model",
+        "target/final-androidbible-debug-model/model.json",
+        "--compiler",
+        "/Users/yuku/f/git/korrust/target/next-five-final-freeze/target/release/korrust",
+        "--jobs",
+        "2",
+        "--timeout",
+        "30",
+        "--official-timeout",
+        "120",
+        "--output",
+        "reports/correctness/2026-10-30T081554Z-final-next5-debug-assessment.json"
+      ],
+      "exit_code": 143,
+      "stdout": "target/final-next5-validation/debug-assessment.log",
+      "stderr": "target/final-next5-validation/debug-assessment.log"
+    }
+  ]
+}

@@ -1,0 +1,275 @@
+Compiled from "Reified.kt"
+public final class probe.ReifiedKt {
+  public static final int twice(int);
+    Code:
+       0: iload         0
+       2: iload         0
+       4: iadd
+       5: ireturn
+       6: aconst_null
+       7: athrow
+
+  public static final <T> boolean test(java.lang.Object);
+    Code:
+       0: aload         0
+       2: iconst_3
+       3: ldc_w         #11                 // String T
+       6: invokestatic  #17                 // Method kotlin/jvm/internal/Intrinsics.reifiedOperationMarker:(ILjava/lang/String;)V
+       9: instanceof    #4                  // class java/lang/Object
+      12: ireturn
+      13: aconst_null
+      14: athrow
+
+  public static final <T> T cast(java.lang.Object);
+    Code:
+       0: aload         0
+       2: iconst_1
+       3: ldc_w         #11                 // String T
+       6: invokestatic  #17                 // Method kotlin/jvm/internal/Intrinsics.reifiedOperationMarker:(ILjava/lang/String;)V
+       9: checkcast     #4                  // class java/lang/Object
+      12: areturn
+      13: aconst_null
+      14: athrow
+
+  public static final <T> T safe(java.lang.Object);
+    Code:
+       0: aload         0
+       2: iconst_2
+       3: ldc_w         #11                 // String T
+       6: invokestatic  #17                 // Method kotlin/jvm/internal/Intrinsics.reifiedOperationMarker:(ILjava/lang/String;)V
+       9: checkcast     #4                  // class java/lang/Object
+      12: areturn
+      13: aconst_null
+      14: athrow
+
+  public static final <T> kotlin.reflect.KClass<?> token();
+    Code:
+       0: iconst_4
+       1: ldc_w         #11                 // String T
+       4: invokestatic  #17                 // Method kotlin/jvm/internal/Intrinsics.reifiedOperationMarker:(ILjava/lang/String;)V
+       7: ldc_w         #4                  // class java/lang/Object
+      10: invokestatic  #34                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+      13: areturn
+      14: aconst_null
+      15: athrow
+
+  public static final int result();
+    Code:
+       0: bipush        9
+       2: istore        0
+       4: iload         0
+       6: iload         0
+       8: iadd
+       9: goto          14
+      12: aconst_null
+      13: athrow
+      14: ireturn
+      15: aconst_null
+      16: athrow
+
+  public static final boolean yes(java.lang.Object);
+    Code:
+       0: aload         0
+       2: astore        1
+       4: aload         1
+       6: astore        2
+       8: aload         2
+      10: instanceof    #42                 // class java/lang/String
+      13: goto          18
+      16: aconst_null
+      17: athrow
+      18: ireturn
+      19: aconst_null
+      20: athrow
+
+  public static final boolean intYes(java.lang.Object);
+    Code:
+       0: aload         0
+       2: astore        1
+       4: aload         1
+       6: astore        2
+       8: aload         2
+      10: instanceof    #45                 // class java/lang/Integer
+      13: goto          18
+      16: aconst_null
+      17: athrow
+      18: ireturn
+      19: aconst_null
+      20: athrow
+
+  public static final boolean nullable(java.lang.Object);
+    Code:
+       0: aload         0
+       2: astore        1
+       4: aload         1
+       6: astore        2
+       8: aload         2
+      10: dup
+      11: ifnull        20
+      14: instanceof    #42                 // class java/lang/String
+      17: goto          22
+      20: pop
+      21: iconst_1
+      22: goto          27
+      25: aconst_null
+      26: athrow
+      27: ireturn
+      28: aconst_null
+      29: athrow
+
+  public static final java.lang.String str(java.lang.Object);
+    Code:
+       0: aload         0
+       2: astore        1
+       4: aload         1
+       6: astore        2
+       8: aload         2
+      10: dup
+      11: ldc_w         #49                 // String null cannot be cast to non-null type kotlin.String
+      14: invokestatic  #53                 // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      17: checkcast     #42                 // class java/lang/String
+      20: goto          25
+      23: aconst_null
+      24: athrow
+      25: checkcast     #42                 // class java/lang/String
+      28: areturn
+      29: aconst_null
+      30: athrow
+
+  public static final java.lang.String strSafe(java.lang.Object);
+    Code:
+       0: aload         0
+       2: astore        1
+       4: aload         1
+       6: astore        2
+       8: aload         2
+      10: dup
+      11: instanceof    #42                 // class java/lang/String
+      14: ifne          22
+      17: pop
+      18: aconst_null
+      19: goto          25
+      22: checkcast     #42                 // class java/lang/String
+      25: goto          30
+      28: aconst_null
+      29: athrow
+      30: checkcast     #42                 // class java/lang/String
+      33: areturn
+      34: aconst_null
+      35: athrow
+
+  public static final kotlin.reflect.KClass<?> cls();
+    Code:
+       0: ldc_w         #45                 // class java/lang/Integer
+       3: invokestatic  #34                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+       6: goto          11
+       9: aconst_null
+      10: athrow
+      11: areturn
+      12: aconst_null
+      13: athrow
+
+  public static final <T> java.lang.Class<?> physical();
+    Code:
+       0: iconst_4
+       1: ldc_w         #11                 // String T
+       4: invokestatic  #17                 // Method kotlin/jvm/internal/Intrinsics.reifiedOperationMarker:(ILjava/lang/String;)V
+       7: ldc_w         #4                  // class java/lang/Object
+      10: invokestatic  #34                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+      13: checkcast     #60                 // class kotlin/reflect/KClass
+      16: astore        0
+      18: aload         0
+      20: invokestatic  #66                 // Method kotlin/jvm/JvmClassMappingKt.getJavaClass:(Lkotlin/reflect/KClass;)Ljava/lang/Class;
+      23: areturn
+      24: aconst_null
+      25: athrow
+
+  public static final java.lang.Class<?> physicalInt();
+    Code:
+       0: ldc_w         #45                 // class java/lang/Integer
+       3: invokestatic  #34                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+       6: checkcast     #60                 // class kotlin/reflect/KClass
+       9: astore        0
+      11: aload         0
+      13: invokestatic  #66                 // Method kotlin/jvm/JvmClassMappingKt.getJavaClass:(Lkotlin/reflect/KClass;)Ljava/lang/Class;
+      16: goto          21
+      19: aconst_null
+      20: athrow
+      21: areturn
+      22: aconst_null
+      23: athrow
+
+  public static final java.lang.Class<?> physicalNullable();
+    Code:
+       0: ldc_w         #45                 // class java/lang/Integer
+       3: invokestatic  #34                 // Method kotlin/jvm/internal/Reflection.getOrCreateKotlinClass:(Ljava/lang/Class;)Lkotlin/reflect/KClass;
+       6: checkcast     #60                 // class kotlin/reflect/KClass
+       9: astore        0
+      11: aload         0
+      13: invokestatic  #66                 // Method kotlin/jvm/JvmClassMappingKt.getJavaClass:(Lkotlin/reflect/KClass;)Ljava/lang/Class;
+      16: goto          21
+      19: aconst_null
+      20: athrow
+      21: areturn
+      22: aconst_null
+      23: athrow
+
+  public static final boolean shortYes(java.lang.Object);
+    Code:
+       0: aload         0
+       2: astore        1
+       4: aload         1
+       6: astore        2
+       8: aload         2
+      10: instanceof    #74                 // class java/lang/Short
+      13: goto          18
+      16: aconst_null
+      17: athrow
+      18: ireturn
+      19: aconst_null
+      20: athrow
+
+  public static final short shortCast(java.lang.Object);
+    Code:
+       0: aload         0
+       2: astore        1
+       4: aload         1
+       6: astore        2
+       8: aload         2
+      10: dup
+      11: ldc_w         #77                 // String null cannot be cast to non-null type kotlin.Short
+      14: invokestatic  #53                 // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+      17: checkcast     #74                 // class java/lang/Short
+      20: invokevirtual #81                 // Method java/lang/Short.shortValue:()S
+      23: invokestatic  #85                 // Method java/lang/Short.valueOf:(S)Ljava/lang/Short;
+      26: goto          31
+      29: aconst_null
+      30: athrow
+      31: checkcast     #87                 // class java/lang/Number
+      34: invokevirtual #88                 // Method java/lang/Number.shortValue:()S
+      37: ireturn
+      38: aconst_null
+      39: athrow
+
+  public static final java.lang.Short shortSafe(java.lang.Object);
+    Code:
+       0: aload         0
+       2: astore        1
+       4: aload         1
+       6: astore        2
+       8: aload         2
+      10: dup
+      11: instanceof    #74                 // class java/lang/Short
+      14: ifne          22
+      17: pop
+      18: aconst_null
+      19: goto          25
+      22: checkcast     #74                 // class java/lang/Short
+      25: goto          30
+      28: aconst_null
+      29: athrow
+      30: checkcast     #74                 // class java/lang/Short
+      33: areturn
+      34: aconst_null
+      35: athrow
+}

@@ -1,0 +1,39 @@
+Compiled from "SnappyOutputStream.java"
+public class yuku.alkitab.yes2.compress.SnappyOutputStream extends java.io.FilterOutputStream {
+  private final yuku.snappy.codec.Snappy snappy;
+    descriptor: Lyuku/snappy/codec/Snappy;
+  private final int block_size;
+    descriptor: I
+  private byte[] uncompressed_buf;
+    descriptor: [B
+  private byte[] compressed_buf;
+    descriptor: [B
+  private int uncompressed_offset;
+    descriptor: I
+  private int[] compressed_block_sizes;
+    descriptor: [I
+  private int compressed_block_sizes_length;
+    descriptor: I
+  static final boolean $assertionsDisabled;
+    descriptor: Z
+  public yuku.alkitab.yes2.compress.SnappyOutputStream(java.io.OutputStream, int);
+    descriptor: (Ljava/io/OutputStream;I)V
+
+  public void write(int) throws java.io.IOException;
+    descriptor: (I)V
+
+  public void write(byte[], int, int) throws java.io.IOException;
+    descriptor: ([BII)V
+
+  private void dump() throws java.io.IOException;
+    descriptor: ()V
+
+  public void flush() throws java.io.IOException;
+    descriptor: ()V
+
+  public int[] getCompressedBlockSizes();
+    descriptor: ()[I
+
+  static {};
+    descriptor: ()V
+}

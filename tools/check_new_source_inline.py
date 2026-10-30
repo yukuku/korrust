@@ -19,6 +19,7 @@ UPSTREAM = [
     'reified/instanceof.kt',
     'reified/checkcast.kt',
     'reified/safecast.kt',
+    '../boxInline/nonLocalReturns/simpleVoid.kt',
 ]
 
 
@@ -41,7 +42,7 @@ def main():
     compiler = output / 'korrust-frozen'
     shutil.copy2(args.compiler.resolve(), compiler)
     frozen = [ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', *sorted((ROOT / 'src').rglob('*.rs')), *sorted(FIXTURES.rglob('*')), Path(__file__).resolve(), ROOT / 'tools/upstream_jvm.py', ROOT / 'references/compiler.json', ROOT / 'references/sources.json', ROOT / 'tests/batch_frontend.rs']
-    frozen += [ROOT / 'references/kotlin/compiler/testData/codegen/box' / name for name in UPSTREAM]
+    frozen += [Path(os.path.normpath(ROOT / 'references/kotlin/compiler/testData/codegen/box' / name)) for name in UPSTREAM]
     frozen = [path for path in frozen if path.is_file()]
     hashes = {str(path.relative_to(ROOT)): sha(path) for path in frozen}
     report['resource_limits'] = dict(source_inline_dependency_depth=64, command_seconds=180)
@@ -82,9 +83,9 @@ def main():
             consumer = output / (name + '-consumer')
             run(name + ' independent Kotlin consumer compilation', [reference / 'bin/kotlinc', FIXTURES / 'KotlinConsumer.kt', '-cp', destination, '-d', consumer])
             result = run(name + ' independent Kotlin consumer runtime', [jdk / 'java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [consumer, destination, stdlib])), 'consumer.KotlinConsumerKt'])
-            if result.stdout != 'checks=14\n':
+            if result.stdout != 'checks=17\n':
                 raise RuntimeError('Unexpected Kotlin assertion count')
-            case(name + '_kotlin_consumer', 'pass', assertions=14)
+            case(name + '_kotlin_consumer', 'pass', assertions=17)
         if outputs[0] != outputs[1]:
             raise RuntimeError('Java outputs differ')
         for classifier in ['probe.ReifiedKt', 'lambdas.EffectsKt', 'forward.ForwardKt', 'shorts.ShortsKt', 'ordering.OrderingKt']:
@@ -96,7 +97,7 @@ def main():
             if signatures[0] != signatures[1]:
                 raise RuntimeError('Signature mismatch ' + classifier + ': ' + repr(signatures))
             case('signatures_' + classifier, 'pass')
-        inline_names = ['twice', 'test', 'cast', 'safe', 'token', 'physical', 'apply', 'runCross', 'returnNo', 'genericApply', 'privateTwice', 'publicProperty', 'setPublicProperty', 'publicOverload', 'relay', 'outer', 'inner', 'combine', 'divide', 'fail']
+        inline_names = ['twice', 'test', 'cast', 'safe', 'token', 'physical', 'apply', 'runCross', 'returnNo', 'genericApply', 'genericNoArg', 'privateTwice', 'publicProperty', 'setPublicProperty', 'publicOverload', 'relay', 'outer', 'inner', 'combine', 'divide', 'fail']
         for classifier in ['probe.ReifiedKt', 'lambdas.EffectsKt', 'forward.ForwardKt', 'ordering.OrderingKt']:
             result = run('Actual callsite expansion ' + classifier, [jdk / 'javap', '-c', '-p', '-cp', candidate, classifier])
             for line in result.stdout.splitlines():
@@ -119,7 +120,7 @@ def main():
         matrix = dict(schema_version=1, selection='Unchanged pinned source inline/reified upstream originals', limitations=[], cases=[])
         for index, path in enumerate(UPSTREAM):
             source = ROOT / 'references/kotlin/compiler/testData/codegen/box' / path
-            matrix['cases'].append(dict(id='upstream_' + str(index), family='source_inline_reified', root='box', path=str(source.relative_to(ROOT)), tier='acceptance', kind='box', sha256=sha(source)))
+            matrix['cases'].append(dict(id='upstream_' + str(index), family='source_inline_reified', root='boxInline' if '/boxInline/' in source.as_posix() else 'box', path=str(source.relative_to(ROOT)), tier='acceptance', kind='box', sha256=sha(source)))
         matrix_path = output / 'upstream-matrix.json'
         matrix_path.write_text(json.dumps(matrix, indent=2) + '\n')
         run('Unchanged upstream originals', [sys.executable, ROOT / 'tools/upstream_jvm.py', '--matrix', matrix_path, '--candidate', compiler, '--output', output / 'upstream'])

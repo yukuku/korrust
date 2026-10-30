@@ -37,6 +37,8 @@ pub(crate) mod ir_walk;
 mod java_properties;
 #[path = "check_library.rs"]
 mod library;
+#[path = "check_member_extensions.rs"]
+mod member_extensions;
 #[path = "check_operations.rs"]
 mod operations;
 #[path = "check_overloads.rs"]
@@ -252,6 +254,7 @@ pub struct ClassDecl {
     pub bridges: Vec<JavaMethod>,
 }
 pub struct Function {
+    pub extension_receiver: bool,
     pub class_type_params: Vec<String>,
     pub jvm_result: Option<Type>,
     pub jvm_name: Option<String>,
@@ -268,6 +271,9 @@ pub struct Function {
     pub body: Vec<Statement>,
 }
 impl Function {
+    pub fn value_parameter_count(&self) -> usize {
+        self.params.len() - usize::from(self.extension_receiver)
+    }
     pub fn jvm_name(&self) -> &str {
         self.jvm_name.as_deref().unwrap_or(&self.name)
     }
@@ -663,7 +669,9 @@ struct Checker<'a> {
     source_type_params: &'a [Vec<syntax::TypeParameter>],
     source_infix: &'a HashSet<usize>,
     source_operator: &'a HashSet<usize>,
-    receiver: Option<Local>,
+    dispatch_receiver: Option<Local>,
+    extension_receivers: Vec<Local>,
+    receiver_labels: HashMap<String, Local>,
     fields: &'a HashMap<String, Type>,
     members: &'a HashMap<String, JavaMethod>,
     companion_fields: &'a HashMap<String, (String, Type)>,
@@ -680,6 +688,50 @@ struct Checker<'a> {
     result: Type,
 }
 impl Checker<'_> {
+    fn local_receiver(local: &Local) -> Value {
+        Value {
+            ty: local.ty.clone(),
+            kind: ValueKind::Local(local.slot),
+        }
+    }
+    fn default_receiver_value(&self, offset: usize) -> Result<Value> {
+        self.extension_receivers
+            .first()
+            .map(Self::local_receiver)
+            .map(Ok)
+            .unwrap_or_else(|| self.dispatch_receiver_value(offset))
+    }
+    fn labeled_receiver_value(&self, label: &str, offset: usize) -> Result<Value> {
+        if let Some(receiver) = self.receiver_labels.get(label) {
+            return Ok(Self::local_receiver(receiver));
+        }
+        if self.lambda_owner.rsplit(['/', '$']).next() == Some(label) {
+            return self.dispatch_receiver_value(offset);
+        }
+        Err(
+            Diagnostic::new(offset, format!("Unresolved receiver label: {label}")).with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "UNRESOLVED_RECEIVER_LABEL",
+            ),
+        )
+    }
+    fn bind_extension_receiver(
+        &mut self,
+        ty: Type,
+        label: &str,
+        offset: usize,
+    ) -> Result<(String, Type)> {
+        let name = format!("<extension-receiver{}>", self.next);
+        let slot = self.declare(&name, ty.clone(), false, offset)?;
+        let receiver = Local {
+            slot,
+            ty: ty.clone(),
+            mutable: false,
+        };
+        self.receiver_labels.insert(label.into(), receiver.clone());
+        self.extension_receivers.insert(0, receiver);
+        Ok((name, ty))
+    }
     fn list_call(
         &mut self,
         receiver: Value,
@@ -822,7 +874,17 @@ impl Checker<'_> {
         params: &[(String, Type)],
         offset: usize,
     ) -> Result<Vec<Option<Value>>> {
-        if defaults.iter().any(Option::is_some) && params.len() > 32 {
+        let receiver_parameter = params
+            .first()
+            .and_then(|(name, _)| self.local(name))
+            .is_some_and(|local| {
+                self.extension_receivers
+                    .first()
+                    .is_some_and(|receiver| receiver.slot == local.slot)
+            });
+        if defaults.iter().any(Option::is_some)
+            && params.len() - usize::from(receiver_parameter) > 32
+        {
             return Err(Diagnostic::new(
                 offset,
                 "Default arguments support at most 32 parameters",
@@ -1044,6 +1106,11 @@ impl Checker<'_> {
         expected: Option<&Type>,
         offset: usize,
     ) -> Result<JavaMethod> {
+        let labeled = member_extensions::call_labels(
+            methods.first().map_or("", JavaMethod::source_name),
+            args,
+        );
+        let args = labeled.as_slice();
         if args
             .iter()
             .any(|a| matches!(a.kind, ExprKind::NamedArgument(..)))
@@ -1285,20 +1352,28 @@ impl Checker<'_> {
         ))
     }
     fn method_named(&self, method: &JavaMethod) -> bool {
-        (method.library.is_none() && method.kotlin_params.is_some())
+        (method.kotlin_params.is_some()
+            && method
+                .library
+                .as_ref()
+                .is_none_or(|library| library.kotlin_declared))
             || (method.owner == self.lambda_owner
                 && self
                     .members
                     .values()
                     .any(|m| m.name == method.name && m.descriptor == method.descriptor))
-            || self
-                .classes
-                .get(&method.owner)
-                .is_some_and(|c| c.kotlin_class)
-            || self
-                .classpath
-                .load(&method.owner)
-                .is_ok_and(|c| c.kotlin_class)
+            || self.classes.get(&method.owner).is_some_and(|c| {
+                c.kotlin_class
+                    || c.library.as_ref().is_some_and(|library| {
+                        library.kotlin_visibility.is_some() || library.package.is_some()
+                    })
+            })
+            || self.classpath.load(&method.owner).is_ok_and(|c| {
+                c.kotlin_class
+                    || c.library.as_ref().is_some_and(|library| {
+                        library.kotlin_visibility.is_some() || library.package.is_some()
+                    })
+            })
     }
     fn factory(
         &mut self,
@@ -1735,22 +1810,22 @@ impl Checker<'_> {
             },
         })
     }
-    fn receiver_value(&self, offset: usize) -> Result<Value> {
-        if let Some(receiver) = &self.receiver {
+    fn dispatch_receiver_value(&self, offset: usize) -> Result<Value> {
+        if let Some(receiver) = &self.dispatch_receiver {
             return Ok(Value {
                 ty: receiver.ty.clone(),
                 kind: ValueKind::Local(receiver.slot),
             });
         }
         if let Some(owner) = self.object_owner {
-            let kind = if let Some(outer) = owner.strip_suffix("$Companion") {
-                ValueKind::StaticField {
-                    owner: outer.into(),
-                    name: "Companion".into(),
+            if let Some((outer, _)) = owner.rsplit_once('$') {
+                if let Some(companion) = self.companion_receiver(outer, offset)? {
+                    if companion.ty == Type::Java(owner.into()) {
+                        return Ok(companion);
+                    }
                 }
-            } else {
-                ValueKind::ObjectInstance(owner.into())
-            };
+            }
+            let kind = ValueKind::ObjectInstance(owner.into());
             return Ok(Value {
                 ty: Type::Java(owner.into()),
                 kind,
@@ -1853,6 +1928,16 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        self.member_call_with_extension(method, receiver, args, false, offset)
+    }
+    fn member_call_with_extension(
+        &mut self,
+        method: JavaMethod,
+        receiver: Value,
+        args: &[Expr],
+        extension: bool,
+        offset: usize,
+    ) -> Result<Value> {
         let method = if let Some(class) = library::type_owner(&receiver.ty).and_then(|owner| {
             self.classes
                 .get(owner)
@@ -1877,7 +1962,7 @@ impl Checker<'_> {
                     && (self.lambda_owner == method.owner
                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)));
             let protected_allowed = method.access & 4 != 0
-                && self.receiver.as_ref().is_some_and(|current| {
+                && self.dispatch_receiver.as_ref().is_some_and(|current| {
                     self.subtype(&current.ty, &Type::Java(method.owner.clone()))
                         && self.subtype(&receiver.ty, &current.ty)
                 });
@@ -1921,10 +2006,16 @@ impl Checker<'_> {
             .as_ref()
             .map(|v| v.iter().map(|p| p.2).collect::<Vec<_>>())
             .unwrap_or_else(|| vec![false; params.len()]);
+        let labeled = member_extensions::call_labels(method.source_name(), args);
+        let args = labeled.as_slice();
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let args = normalized.as_slice();
-        let (mut values, mut lets, mask) =
+        let (mut values, mut lets, mut mask) =
             self.arguments(&params, &defaults, args, self.method_named(&method), offset)?;
+        if extension {
+            mask >>= 1;
+        }
+        let value_parameters = params.len() - usize::from(extension);
         let receiver = if !lets.is_empty() {
             let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
             let ty = receiver.ty.clone();
@@ -2018,10 +2109,10 @@ impl Checker<'_> {
                 "(L{};{}{}Ljava/lang/Object;){}",
                 method.owner,
                 method.descriptor[1..method.descriptor.find(')').unwrap()].to_owned(),
-                "I".repeat(params.len().div_ceil(32)),
+                "I".repeat(value_parameters.div_ceil(32)),
                 &method.descriptor[method.descriptor.find(')').unwrap() + 1..]
             );
-            for index in 0..params.len().div_ceil(32) {
+            for index in 0..value_parameters.div_ceil(32) {
                 values.push(Value {
                     ty: Type::Int,
                     kind: ValueKind::Int((mask >> (index * 32)) as i32),
@@ -2092,6 +2183,20 @@ impl Checker<'_> {
         }
         if value.ty == expected {
             return Ok(value);
+        }
+        if value.ty == Type::Null
+            && expected.is_reference()
+            && expected.is_nullable()
+            && !matches!(value.kind, ValueKind::Null)
+        {
+            return Ok(Value {
+                ty: expected.clone(),
+                kind: ValueKind::Cast {
+                    value: Box::new(value),
+                    target: expected,
+                    safe: false,
+                },
+            });
         }
         if self.subtype(&value.ty, &expected)
             && !(matches!(value.ty, Type::Platform(_))
@@ -2358,15 +2463,25 @@ impl Checker<'_> {
             .fields
             .iter()
             .any(|f| f.name == "INSTANCE" && f.descriptor == format!("L{};", class.name));
+        let has_member_extension = inherited.iter().any(|method| {
+            method.source_name() == name
+                && method
+                    .library
+                    .as_ref()
+                    .is_some_and(|library| library.receiver.is_some())
+        });
         let methods = inherited
             .into_iter()
             .filter(|m| {
                 m.source_property.is_none()
+                    && m.library
+                        .as_ref()
+                        .is_none_or(|library| library.receiver.is_none())
                     && m.source_name() == name
                     && (m.access & 8 == 0 || singleton)
                     && (m.access & 1 != 0
                         || m.access & 4 != 0
-                            && self.receiver.as_ref().is_some_and(|current| {
+                            && self.dispatch_receiver.as_ref().is_some_and(|current| {
                                 self.subtype(&current.ty, &Type::Java(m.owner.clone()))
                                     && self.subtype(&receiver.ty, &current.ty)
                             })
@@ -2380,10 +2495,21 @@ impl Checker<'_> {
                 receiver,
                 name,
                 args,
-                Diagnostic::new(
-                    offset,
-                    format!("Unresolved member or imported extension: {name}"),
-                ),
+                if has_member_extension {
+                    Diagnostic::new(
+                        offset,
+                        "Member extensions require a separate implicit dispatch receiver",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "MEMBER_EXTENSION_DISPATCH_REQUIRED",
+                    )
+                } else {
+                    Diagnostic::new(
+                        offset,
+                        format!("Unresolved member or imported extension: {name}"),
+                    )
+                },
             );
         }
         let projected = methods
@@ -2489,17 +2615,34 @@ impl Checker<'_> {
         expr: &Expr,
         offset: usize,
     ) -> Result<Statement> {
-        if matches!(&receiver.kind,ExprKind::Name(n) if n=="this") {
+        let saved_next = self.next;
+        let saved_initialized = self.initialized.clone();
+        let saved_refinements = self.refinements.clone();
+        let saved_lambdas = self.lambdas.borrow().len();
+        if let Ok(value) = self.value(receiver) {
+            if let Some(value) = self.extension_property_set(value, name, expr, offset)? {
+                return Ok(Statement::Expression(value));
+            }
+        }
+        self.next = saved_next;
+        self.initialized = saved_initialized;
+        self.refinements = saved_refinements;
+        self.lambdas.borrow_mut().truncate(saved_lambdas);
+        if self.extension_receivers.is_empty()
+            && matches!(&receiver.kind,ExprKind::Name(n) if n=="this")
+        {
             if let Some(method) = self.members.get(&format!("#set:{name}")) {
                 return Ok(Statement::Expression(self.member_call(
                     method.clone(),
-                    self.receiver_value(offset)?,
+                    self.dispatch_receiver_value(offset)?,
                     std::slice::from_ref(expr),
                     offset,
                 )?));
             }
         }
-        if matches!(&receiver.kind,ExprKind::Name(n) if n=="this") && self.fields.contains_key(name)
+        if self.extension_receivers.is_empty()
+            && matches!(&receiver.kind,ExprKind::Name(n) if n=="this")
+            && self.fields.contains_key(name)
         {
             if !self.mutable_fields.contains(name) {
                 return Err(Diagnostic::new(offset, "Cannot reassign val property"));
@@ -2508,7 +2651,7 @@ impl Checker<'_> {
             let value = self.coerce(value, self.fields[name].clone(), offset)?;
             return Ok(Statement::FieldStore {
                 name: name.into(),
-                receiver: self.receiver_value(offset)?,
+                receiver: self.dispatch_receiver_value(offset)?,
                 value,
             });
         }
@@ -2580,6 +2723,9 @@ impl Checker<'_> {
             .iter()
             .find(|m| {
                 m.source_property.as_deref() == Some(name)
+                    && m.library
+                        .as_ref()
+                        .is_none_or(|library| library.receiver.is_none())
                     && m.source_name() == setter_name(name)
                     && (receiver.is_some()
                         || m.access & 8 != 0
@@ -2602,7 +2748,14 @@ impl Checker<'_> {
             if let Some(companion) = class
                 .fields
                 .iter()
-                .find(|field| field.name == "Companion" && field.access & 9 == 9)
+                .find(|field| {
+                    class
+                        .library
+                        .as_ref()
+                        .and_then(|library| library.companion_name.as_ref())
+                        == Some(&field.name)
+                        && field.access & 9 == 9
+                })
                 .and_then(|field| {
                     field
                         .descriptor
@@ -2630,7 +2783,11 @@ impl Checker<'_> {
                         ty: Type::Java(companion.into()),
                         kind: ValueKind::StaticField {
                             owner: owner.clone(),
-                            name: "Companion".into(),
+                            name: class
+                                .library
+                                .as_ref()
+                                .and_then(|library| library.companion_name.clone())
+                                .unwrap(),
                         },
                     };
                     return Ok(Statement::Expression(self.member_call(
@@ -3081,9 +3238,17 @@ impl Checker<'_> {
                             let value = self.expected_value(expr, &ty)?;
                             body.push(Statement::FieldStore {
                                 name,
-                                receiver: self.receiver_value(offset)?,
+                                receiver: self.dispatch_receiver_value(offset)?,
                                 value,
                             });
+                            continue;
+                        }
+                    }
+                    if self.local(name).is_none() && !self.captured.contains_key(name) {
+                        if let Some(value) =
+                            self.implicit_receiver_assignment(name, expr, offset)?
+                        {
+                            body.push(value);
                             continue;
                         }
                     }
@@ -3098,7 +3263,7 @@ impl Checker<'_> {
                             } else {
                                 self.member_call(
                                     method.clone(),
-                                    self.receiver_value(offset)?,
+                                    self.dispatch_receiver_value(offset)?,
                                     std::slice::from_ref(expr),
                                     offset,
                                 )?
@@ -3219,7 +3384,7 @@ impl Checker<'_> {
                         }
                         let value = self.value(expr)?;
                         let value = self.coerce(value, self.fields[name].clone(), offset)?;
-                        let receiver = self.receiver_value(offset)?;
+                        let receiver = self.dispatch_receiver_value(offset)?;
                         body.push(Statement::FieldStore {
                             name: name.clone(),
                             receiver,
@@ -3449,6 +3614,9 @@ impl Checker<'_> {
         Ok((body, returns))
     }
     fn value(&mut self, expr: &Expr) -> Result<Value> {
+        if let Some(labeled) = member_extensions::labeled_call(expr) {
+            return self.value(&labeled);
+        }
         let offset = expr.offset;
         if let ExprKind::Call(target, args) = &expr.kind {
             if let Some(value) = self.qualified_constructor(target, args, offset)? {
@@ -3856,6 +4024,12 @@ impl Checker<'_> {
                 return Ok(result);
             }
             ExprKind::Name(name) => {
+                if let Some(label) = name
+                    .strip_prefix("this@")
+                    .filter(|_| !name.starts_with("this@<") || self.local(name).is_none())
+                {
+                    return self.labeled_receiver_value(label, offset);
+                }
                 if name == "field" {
                     if let Some(backing) = self.members.get("#backing") {
                         if let Some((owner, ty)) = self.object_fields.get(&backing.name) {
@@ -3886,9 +4060,18 @@ impl Checker<'_> {
                             ty,
                             kind: ValueKind::Field(
                                 backing.name.clone(),
-                                Box::new(self.receiver_value(offset)?),
+                                Box::new(self.dispatch_receiver_value(offset)?),
                             ),
                         });
+                    }
+                }
+                if name != "this"
+                    && self.local(name).is_none()
+                    && !self.captured.contains_key(name)
+                    && self.cell_binding(name).is_none()
+                {
+                    if let Some(value) = self.implicit_extension_receiver_property(name, offset)? {
+                        return Ok(value);
                     }
                 }
                 if self.local(name).is_none() && !self.captured.contains_key(name) {
@@ -3898,7 +4081,7 @@ impl Checker<'_> {
                         } else {
                             self.member_call(
                                 method.clone(),
-                                self.receiver_value(offset)?,
+                                self.dispatch_receiver_value(offset)?,
                                 &[],
                                 offset,
                             )
@@ -3960,7 +4143,10 @@ impl Checker<'_> {
                     return self.coerce(value, ty.clone(), offset);
                 }
                 if let Some(local) = if name == "this" {
-                    self.receiver.clone()
+                    self.extension_receivers
+                        .first()
+                        .cloned()
+                        .or_else(|| self.dispatch_receiver.clone())
                 } else {
                     self.local(name)
                 } {
@@ -4005,10 +4191,10 @@ impl Checker<'_> {
                         },
                     )
                 } else if name == "this" && self.object_owner.is_some() {
-                    let value = self.receiver_value(offset)?;
+                    let value = self.dispatch_receiver_value(offset)?;
                     (value.ty, value.kind)
                 } else if let Some(ty) = self.fields.get(name) {
-                    let receiver = self.receiver.as_ref().ok_or_else(|| {
+                    let receiver = self.dispatch_receiver.as_ref().ok_or_else(|| {
                         Diagnostic::new(offset, "Instance field requires a receiver")
                     })?;
                     (
@@ -4023,9 +4209,13 @@ impl Checker<'_> {
                     )
                 } else if let Some(method) = self.members.values().find(|method| {
                     method.source_property.as_deref() == Some(name)
+                        && method
+                            .library
+                            .as_ref()
+                            .is_none_or(|library| library.receiver.is_none())
                         && method.source_name() == getter_name(name)
                 }) {
-                    let receiver = self.receiver_value(offset)?;
+                    let receiver = self.dispatch_receiver_value(offset)?;
                     return self.member_call(method.clone(), receiver, &[], offset);
                 } else if let Some((owner, ty)) = self.companion_fields.get(name) {
                     (
@@ -4039,7 +4229,7 @@ impl Checker<'_> {
                     if let Some(value) = self.imported_value(name, offset)? {
                         return Ok(value);
                     }
-                    if self.receiver.is_some() {
+                    if self.dispatch_receiver.is_some() {
                         return self.receiver_property(name, offset);
                     }
                     return Err(Diagnostic::new(offset, format!("Unresolved local: {name}")));
@@ -4277,6 +4467,12 @@ impl Checker<'_> {
                         {
                             if let Some(class) = self.value_classifier(receiver)? {
                                 let owner = &class.name;
+                                if let Some(companion) = self.companion_receiver(owner, offset)? {
+                                    if matches!(&companion.kind, ValueKind::StaticField { name: declared, .. } if declared == name)
+                                    {
+                                        return Ok(companion);
+                                    }
+                                }
                                 {
                                     if class.fields.iter().any(|f| {
                                         f.name == "INSTANCE" && f.descriptor == format!("L{owner};")
@@ -4286,6 +4482,9 @@ impl Checker<'_> {
                                             .iter()
                                             .find(|m| {
                                                 m.source_property.as_deref() == Some(name)
+                                                    && m.library.as_ref().is_none_or(|library| {
+                                                        library.receiver.is_none()
+                                                    })
                                                     && m.kotlin_params
                                                         .as_ref()
                                                         .is_some_and(Vec::is_empty)
@@ -4318,9 +4517,13 @@ impl Checker<'_> {
                                     {
                                         return self.library_static_call(method, &[], offset);
                                     }
-                                    if let Some(field) =
-                                        class.fields.iter().find(|f| f.name == "Companion")
-                                    {
+                                    if let Some(field) = class.fields.iter().find(|f| {
+                                        class
+                                            .library
+                                            .as_ref()
+                                            .and_then(|library| library.companion_name.as_ref())
+                                            == Some(&f.name)
+                                    }) {
                                         let companion = field
                                             .descriptor
                                             .trim_start_matches('L')
@@ -4332,6 +4535,9 @@ impl Checker<'_> {
                                             .iter()
                                             .find(|m| {
                                                 m.source_property.as_deref() == Some(name)
+                                                    && m.library.as_ref().is_none_or(|library| {
+                                                        library.receiver.is_none()
+                                                    })
                                                     && m.kotlin_params
                                                         .as_ref()
                                                         .is_some_and(Vec::is_empty)
@@ -4344,7 +4550,7 @@ impl Checker<'_> {
                                                     ty: Type::Java(companion),
                                                     kind: ValueKind::StaticField {
                                                         owner: owner.clone(),
-                                                        name: "Companion".into(),
+                                                        name: field.name.clone(),
                                                     },
                                                 },
                                                 &[],
@@ -4359,10 +4565,14 @@ impl Checker<'_> {
                     }
                     let receiver = self.value(receiver)?;
                     if receiver.ty.is_nullable() {
-                        return Err(Diagnostic::new(
+                        return self.resolved_extension_call(
+                            receiver,
+                            name,
+                            &[],
+                            &[],
+                            operations::ExtensionKind::Property,
                             offset,
-                            "Nullable receivers require a safe call or not-null assertion",
-                        ));
+                        );
                     }
                     if matches!(receiver.ty.base(), Type::List(_) | Type::MutableList(_)) {
                         if unresolved_list(&receiver.ty) {
@@ -4379,7 +4589,7 @@ impl Checker<'_> {
                         }
                     }
                     if self
-                        .receiver
+                        .dispatch_receiver
                         .as_ref()
                         .is_some_and(|this| this.ty == receiver.ty)
                     {
@@ -4388,7 +4598,7 @@ impl Checker<'_> {
                         }
                     }
                     if self
-                        .receiver
+                        .dispatch_receiver
                         .as_ref()
                         .is_some_and(|this| this.ty == receiver.ty)
                     {
@@ -4400,12 +4610,16 @@ impl Checker<'_> {
                         }
                     }
                     if self
-                        .receiver
+                        .dispatch_receiver
                         .as_ref()
                         .is_some_and(|this| this.ty == receiver.ty)
                     {
                         if let Some(method) = self.members.values().find(|method| {
                             method.source_property.as_deref() == Some(name)
+                                && method
+                                    .library
+                                    .as_ref()
+                                    .is_none_or(|library| library.receiver.is_none())
                                 && method.source_name() == getter_name(name)
                         }) {
                             return self.member_call(method.clone(), receiver, &[], offset);
@@ -4421,6 +4635,9 @@ impl Checker<'_> {
                                 .into_iter()
                                 .find(|m| {
                                     m.source_property.as_deref() == Some(name)
+                                        && m.library
+                                            .as_ref()
+                                            .is_none_or(|library| library.receiver.is_none())
                                         && m.kotlin_params.as_ref().is_some_and(Vec::is_empty)
                                 })
                             {
@@ -4477,6 +4694,16 @@ impl Checker<'_> {
                             ty: Type::Int,
                             kind: ValueKind::Length(Box::new(receiver)),
                         });
+                    }
+                    if let Some(value) = self.instance_extension_call(
+                        receiver.clone(),
+                        name,
+                        &[],
+                        &[],
+                        &operations::ExtensionKind::Property,
+                        offset,
+                    )? {
+                        return Ok(value);
                     }
                     if !self.extension_candidates(name, true)?.is_empty() {
                         return self.resolved_extension_call(
@@ -4742,10 +4969,10 @@ impl Checker<'_> {
                                 "Kotlin properties cannot be invoked as functions",
                             ));
                         }
-                        let receiver = self.receiver_value(offset)?;
+                        let receiver = self.dispatch_receiver_value(offset)?;
                         return self.member_call(method, receiver, args, offset);
                     }
-                    if self.receiver.is_some() && !self.functions.contains_key(name) {
+                    if self.dispatch_receiver.is_some() && !self.functions.contains_key(name) {
                         if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
                             return Ok(call);
                         }
@@ -4797,7 +5024,7 @@ impl Checker<'_> {
                         let function = self.value(target)?;
                         return self.function_invoke(function, args, offset);
                     }
-                    if self.receiver.is_some() && !self.functions.contains_key(name) {
+                    if self.dispatch_receiver.is_some() && !self.functions.contains_key(name) {
                         if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
                             return Ok(call);
                         }
@@ -4819,7 +5046,7 @@ impl Checker<'_> {
                         return self.receiver_function_call(receiver, name, args, offset);
                     }
                     if matches!(&receiver.kind,ExprKind::Name(n) if n=="super") {
-                        let this = self.receiver_value(offset)?;
+                        let this = self.dispatch_receiver_value(offset)?;
                         let owner = library::type_owner(&this.ty).ok_or_else(|| {
                             Diagnostic::new(offset, "super requires a class receiver")
                         })?;
@@ -4873,7 +5100,11 @@ impl Checker<'_> {
                                             .methods(owner)?
                                             .into_iter()
                                             .filter(|m| {
-                                                m.source_name() == name && m.access & 1 != 0
+                                                m.source_name() == name
+                                                    && m.access & 1 != 0
+                                                    && m.library.as_ref().is_none_or(|library| {
+                                                        library.receiver.is_none()
+                                                    })
                                             })
                                             .collect::<Vec<_>>();
                                         let method = self.select_method(&methods, args, offset)?;
@@ -4891,9 +5122,13 @@ impl Checker<'_> {
                                             )
                                         };
                                     }
-                                    if let Some(field) =
-                                        class.fields.iter().find(|f| f.name == "Companion")
-                                    {
+                                    if let Some(field) = class.fields.iter().find(|f| {
+                                        class
+                                            .library
+                                            .as_ref()
+                                            .and_then(|library| library.companion_name.as_ref())
+                                            == Some(&f.name)
+                                    }) {
                                         let companion = field
                                             .descriptor
                                             .trim_start_matches('L')
@@ -4904,7 +5139,7 @@ impl Checker<'_> {
                                                 ty: Type::Java(companion),
                                                 kind: ValueKind::StaticField {
                                                     owner: owner.clone(),
-                                                    name: "Companion".into(),
+                                                    name: field.name.clone(),
                                                 },
                                             },
                                             name,
@@ -4927,10 +5162,15 @@ impl Checker<'_> {
                         return self.function_invoke(receiver, args, offset);
                     }
                     if receiver.ty.is_nullable() {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Nullable receivers require a safe call or not-null assertion",
-                        ));
+                        return self.member_extension_fallback(
+                            receiver,
+                            name,
+                            args,
+                            Diagnostic::new(
+                                offset,
+                                "Nullable receivers require a safe call or not-null assertion",
+                            ),
+                        );
                     }
                     if self
                         .object_owner
@@ -5036,15 +5276,25 @@ impl Checker<'_> {
                     }
 
                     if self
-                        .receiver
+                        .dispatch_receiver
                         .as_ref()
                         .is_some_and(|this| this.ty == receiver.ty)
-                        && self.members.values().any(|m| m.source_name() == name)
+                        && self.members.values().any(|m| {
+                            m.source_name() == name
+                                && m.library
+                                    .as_ref()
+                                    .is_none_or(|library| library.receiver.is_none())
+                        })
                     {
                         let candidates = self
                             .members
                             .values()
-                            .filter(|m| m.source_name() == name)
+                            .filter(|m| {
+                                m.source_name() == name
+                                    && m.library
+                                        .as_ref()
+                                        .is_none_or(|library| library.receiver.is_none())
+                            })
                             .cloned()
                             .collect::<Vec<_>>();
                         let selected = self.select_method(&candidates, args, offset);
@@ -5181,12 +5431,7 @@ impl Checker<'_> {
                             ),
                             "substring" => (StringMethod::Substring, &[Type::Int], Type::String),
                             "compareTo" => (StringMethod::CompareTo, &[Type::String], Type::Int),
-                            _ => {
-                                return Err(Diagnostic::new(
-                                    offset,
-                                    format!("Unsupported String method: {name}"),
-                                ));
-                            }
+                            _ => return self.java_call(receiver, name, args, offset),
                         };
                         if args.len() != expected.len() {
                             return Err(Diagnostic::new(
@@ -6167,16 +6412,6 @@ pub fn check_with_owner(
                 "Infix functions require a receiver",
             ));
         }
-        if function.receiver.is_some() && function.defaults.iter().any(Option::is_some) {
-            return Err(Diagnostic::new(
-                function.offset,
-                "Default arguments on extension functions are unsupported",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "SOURCE_EXTENSION_DEFAULTS_UNSUPPORTED",
-            ));
-        }
         functions.entry(function.name.clone()).or_insert(i);
         let mut params = Vec::new();
         if let Some(receiver) = &function.receiver {
@@ -6326,7 +6561,13 @@ pub fn check_with_owner(
     let source_defaults = source
         .functions
         .iter()
-        .map(|f| f.defaults.clone())
+        .map(|f| {
+            let mut defaults = f.defaults.clone();
+            if f.receiver.is_some() {
+                defaults.insert(0, None);
+            }
+            defaults
+        })
         .collect::<Vec<_>>();
     let fields = HashMap::new();
     let mut members = HashMap::new();
@@ -6363,6 +6604,8 @@ pub fn check_with_owner(
             public_inline_body: function.inline && !function.private && !function.internal,
             reified_parameters: function.type_params.clone(),
             exhaustiveness_flow: false,
+            extension_receivers: Vec::new(),
+            receiver_labels: HashMap::new(),
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
             captured_cells: HashMap::new(),
@@ -6384,7 +6627,7 @@ pub fn check_with_owner(
             source_type_params: &source_type_params,
             source_infix: &source_infix,
             source_operator: &source_operator,
-            receiver: None,
+            dispatch_receiver: None,
             fields: &fields,
             members: &members,
             companion_fields: &companion_fields,
@@ -6404,18 +6647,20 @@ pub fn check_with_owner(
             checker.declare(name, ty.clone(), false, function.offset)?;
         }
         if function.receiver.is_some() {
-            checker.receiver = checker.local(&params[0].0);
+            let receiver = checker.local(&params[0].0).unwrap();
+            checker.extension_receivers.push(receiver.clone());
+            checker.receiver_labels.insert(
+                function
+                    .extension_property
+                    .as_ref()
+                    .map_or(function.name.clone(), |property| property.name.clone()),
+                receiver,
+            );
         }
         if function.defaults.iter().any(Option::is_some) {
-            if params.len() > 32 {
-                return Err(Diagnostic::new(
-                    function.offset,
-                    "Default arguments support at most 32 parameters",
-                ));
-            }
             checker.next += 2;
         }
-        let defaults = checker.checked_defaults(&function.defaults, &params, function.offset)?;
+        let defaults = checker.checked_defaults(&source_defaults[id], &params, function.offset)?;
         let (mut body, returns) = checker.block(&function.body)?;
         if !returns {
             if return_type != Type::Unit {
@@ -6434,6 +6679,7 @@ pub fn check_with_owner(
             params[0].0 = "<this>".into();
         }
         result.push(Function {
+            extension_receiver: function.receiver.is_some(),
             class_type_params: Vec::new(),
             jvm_result: None,
             jvm_name: None,
@@ -6554,7 +6800,17 @@ pub(crate) fn source_jvm_result(
 
 pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type)> {
     if let (Some(params), Some(result)) = (&method.kotlin_params, &method.kotlin_result) {
-        return Ok((params.iter().map(|p| p.1.clone()).collect(), result.clone()));
+        let mut parameters = params.iter().map(|p| p.1.clone()).collect::<Vec<_>>();
+        if method.access & 8 == 0 {
+            if let Some(receiver) = method
+                .library
+                .as_ref()
+                .and_then(|library| library.receiver.as_ref())
+            {
+                parameters.insert(0, receiver.clone());
+            }
+        }
+        return Ok((parameters, result.clone()));
     }
     let (parameters, result) = crate::jvm_descriptor::method_types(&method.descriptor)?;
     if parameters.iter().map(Type::slots).sum::<usize>() > 254 {

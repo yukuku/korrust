@@ -1,0 +1,6 @@
+target/class-literals-fixed/private_nested.kt:1:5: error: 'public' function exposes its 'private-in-class' return type argument 'PrivateNested'.
+fun bad() = newfamilies.dependency.PublicOuter.PrivateNested::class
+    ^^^
+target/class-literals-fixed/private_nested.kt:1:48: error: cannot access 'class PrivateNested : Any': it is private in 'newfamilies.dependency.PublicOuter'.
+fun bad() = newfamilies.dependency.PublicOuter.PrivateNested::class
+                                               ^^^^^^^^^^^^^

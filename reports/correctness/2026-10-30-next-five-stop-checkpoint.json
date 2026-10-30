@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T08:53:30.309240+00:00",
+  "status": "stopped_by_user",
+  "selection": "Delivery checkpoint at explicit user request to stop, push and stop. No final combined validation success is claimed.",
+  "compiler": {
+    "binary_sha256": "1e5d68a026b34a15242e0fdccd09dc8b2bbeaa0f3f69c7b661b3a4d2c2cd34ef",
+    "source_manifest": "reports/correctness/2026-10-30-next-five-stop-checkpoint/v2-freeze.json",
+    "source_archive": "reports/correctness/2026-10-30-next-five-stop-checkpoint/final-sources.zip"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "cases": [
+    {
+      "id": "final_v2_python",
+      "outcome": "pass",
+      "tests": 168
+    },
+    {
+      "id": "final_v2_upstream_adapter",
+      "outcome": "pass",
+      "tests": 12
+    },
+    {
+      "id": "final_v2_clippy",
+      "outcome": "pass",
+      "scope": "all targets with warnings denied"
+    },
+    {
+      "id": "final_v2_format",
+      "outcome": "pass"
+    },
+    {
+      "id": "compiled_generic_property_repair",
+      "outcome": "pass",
+      "rust_tests": 1
+    },
+    {
+      "id": "explicit_upstream_boundaries",
+      "outcome": "pass",
+      "rust_tests": 1
+    },
+    {
+      "id": "final_v2_full_rust",
+      "outcome": "interrupted",
+      "reason": "Stopped at user request; partial successes are not a full-suite pass."
+    },
+    {
+      "id": "final_v2_member_family",
+      "outcome": "interrupted",
+      "reason": "Stopped at user request; prior v1 suite62positive/9invalid/11unsupported is preserved separately."
+    },
+    {
+      "id": "final_v2_app_and_module_replay",
+      "outcome": "interrupted",
+      "evidence": "reports/correctness/2026-10-30T084850Z-final-next5-v2-user-stop.json"
+    }
+  ],
+  "counts": {
+    "pass": 6,
+    "interrupted": 3
+  },
+  "evidence": [
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/explicit-upstream-boundaries-test.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/final-sources.zip",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/member-property-inference-root-test.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/member-root-final-v2.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/member-root-final.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/next-five-final-adapter.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/next-five-final-clippy.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/next-five-final-python.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/next-five-final-rust.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/next-five-final-v2-adapter.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/next-five-final-v2-clippy.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/next-five-final-v2-fmt.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/next-five-final-v2-python.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/next-five-final-v2-rust.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/next-five-v2-release.log",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/v1-freeze.json",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/v2-freeze.json",
+    "reports/correctness/2026-10-30T081530180043Z-member-extensions.json",
+    "reports/correctness/2026-10-30T083348667439Z-androidbible-model-io-yes2.json",
+    "reports/correctness/2026-10-30T084850Z-final-next5-v2-user-stop.json",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/upstream-checkpoint-evidence.zip",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/upstream-checkpoint-stop.json",
+    "reports/correctness/2026-10-30-next-five-stop-checkpoint/upstream-v1-summary.json",
+    "reports/correctness/2026-10-30-inline-return-repair-isolated.json"
+  ],
+  "limitations": [
+    "Four families were accepted at preceding integration checkpoints. Fifth-family implementation and follow-up repairs are included, but final combined acceptance remains incomplete at user stop.",
+    "The v1 full Rust run caught the generic extension-property inference regression. Independent fixed checks restore class literals and unchanged BackForwardList; the full v2 suite was interrupted.",
+    "The three module builds and127contract groups passed with v1. No completed v2 module replay or full-app result is claimed.",
+    "The complete upstream v1 sample retains remaining failures, including value-class Result/getOrThrow and nested Java field interoperability; no complete Kotlin conformance or compatibility percentage claim."
+  ]
+}
