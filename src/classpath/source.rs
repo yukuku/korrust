@@ -126,6 +126,7 @@ fn method(
                 .type_params
                 .iter()
                 .map(|parameter| crate::syntax::TypeParameter {
+                    only_input_types: parameter.only_input_types,
                     name: parameter.name.clone(),
                     variance: parameter.variance,
                     bounds: parameter
@@ -343,6 +344,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             type_parameters: parameters
                 .iter()
                 .map(|p| crate::syntax::TypeParameter {
+                    only_input_types: p.only_input_types,
                     name: p.name.clone(),
                     variance: p.variance,
                     bounds: p.bounds.iter().map(|t| resolve(t, module, cp)).collect(),
@@ -772,6 +774,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                         .type_params
                         .iter()
                         .map(|parameter| crate::syntax::TypeParameter {
+                            only_input_types: parameter.only_input_types,
                             name: parameter.name.clone(),
                             variance: parameter.variance,
                             bounds: parameter

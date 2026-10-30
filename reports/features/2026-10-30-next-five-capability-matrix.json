@@ -4,7 +4,7 @@
   "baseline_commit": "39e87a38ae59075ce14cd110c88efbab46858131",
   "prior_completed_families": 10,
   "requested_new_families": 5,
-  "new_validated_families": 2,
+  "new_validated_families": 3,
   "families": [
     {
       "id": "rich_annotations",
@@ -31,8 +31,14 @@
     },
     {
       "id": "expanded_objects",
-      "status": "implementation_validation",
-      "scope": "Data object equality/hash/string contracts, nested interface implementations, singleton initialization and metadata; object class inheritance and named companions remain outside this checkpoint."
+      "status": "validated",
+      "scope": "Data object equality/hash/string contracts, nested interface implementations, singleton initialization and metadata; object class inheritance and named companions remain outside this checkpoint.",
+      "report": "reports/correctness/2026-10-30-next-five-expanded-objects.json",
+      "limitations": [
+        "Object class inheritance and source named companions are not included.",
+        "The larger original multipleInstances still fails at reflection Constructor/apply receiver resolution; duplicate-instance semantics pass independent fixed Java reflection and serialization checks.",
+        "Unchanged AndroidBible AudioBar now advances past data objects but remains blocked at a local delegated property."
+      ]
     },
     {
       "id": "member_extensions",

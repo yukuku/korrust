@@ -1,0 +1,31 @@
+   Compiling korrust v0.1.0 (/Users/yuku/f/git/korrust/target/next5-objects)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.69s
+     Running tests/expanded_objects.rs (target/next5-objects-build/debug/deps/expanded_objects-406d14fe7e46df7a)
+
+running 4 tests
+test data_object_equality_redefinitions_are_invalid ... ok
+test data_object_contracts_are_emitted_with_nested_interface_implementations ... FAILED
+test object_class_inheritance_is_an_explicit_boundary ... ok
+test imported_input_type_constraints_are_checked_without_replacing_library_calls ... FAILED
+
+failures:
+
+---- data_object_contracts_are_emitted_with_nested_interface_implementations stdout ----
+
+thread 'data_object_contracts_are_emitted_with_nested_interface_implementations' (5945395) panicked at tests/expanded_objects.rs:11:86:
+called `Result::unwrap()` on an `Err` value: Diagnostic { offset: 0, message: "Java class java.lang.Object was not found on the classpath", source_identity: Some("Objects.kt"), kind: MissingDependency, code: "CLASS_NOT_FOUND", type_name: None }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- imported_input_type_constraints_are_checked_without_replacing_library_calls stdout ----
+
+thread 'imported_input_type_constraints_are_checked_without_replacing_library_calls' (5945397) panicked at tests/expanded_objects.rs:56:178:
+called `Result::unwrap()` on an `Err` value: Diagnostic { offset: 0, message: "Java class java.lang.Object was not found on the classpath", source_identity: Some("Inputs.kt"), kind: MissingDependency, code: "CLASS_NOT_FOUND", type_name: None }
+
+
+failures:
+    data_object_contracts_are_emitted_with_nested_interface_implementations
+    imported_input_type_constraints_are_checked_without_replacing_library_calls
+
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.68s
+
+error: test failed, to rerun pass `--test expanded_objects`

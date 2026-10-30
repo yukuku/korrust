@@ -168,6 +168,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 128. Source class literals and bounded KClass/Java Class interoperability through ordinary generic extension properties.
 129. Class-header interface delegation with saved receivers, property forwarding, explicit overrides, and bounded generic bridges and metadata.
 130. Source annotation declarations with recursive scalar, enum, class, array, and nested values/defaults, supported retention and placement, and JVM/Kotlin metadata.
+131. Data objects with Kotlin-compatible equality, hash codes, string representation, initialization, nested interface implementations, and metadata.
 
 ## Project contract
 

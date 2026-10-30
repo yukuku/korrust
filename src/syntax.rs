@@ -61,6 +61,7 @@ pub struct TypeArgument {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct TypeParameter {
+    pub only_input_types: bool,
     pub name: String,
     pub variance: Variance,
     pub bounds: Vec<Type>,
@@ -371,6 +372,7 @@ pub struct EnumDecl {
 }
 #[derive(Clone, Debug)]
 pub struct ObjectDecl {
+    pub data_: bool,
     pub annotation_uses: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
@@ -424,6 +426,7 @@ impl ObjectField {
 
 #[derive(Clone, Debug)]
 pub struct ObjectMethod {
+    pub synthesized: bool,
     pub is_override: bool,
     pub function: Function,
     pub jvm_static: bool,
@@ -2007,6 +2010,7 @@ impl Parser {
                     ));
             }
             let mut parameter = TypeParameter {
+                only_input_types: false,
                 name,
                 variance: Variance::Invariant,
                 bounds: Vec::new(),
@@ -2634,14 +2638,7 @@ impl Parser {
             .filter(|annotation| annotation.use_site.is_none() && annotation.arguments.is_empty())
             .map(|annotation| annotation.name.clone())
             .collect();
-        if self.at("data") {
-            return Err(self
-                .error("Data object equality, hashing, and string contracts are unsupported")
-                .with_kind(
-                    DiagnosticKind::UnsupportedLanguage,
-                    "DATA_OBJECT_UNSUPPORTED",
-                ));
-        }
+        let data_ = self.take("data");
         if !self.take("object") {
             return Err(
                 self.error("Unsupported object modifier; only public and internal are supported")
@@ -2665,6 +2662,14 @@ impl Parser {
                 }
                 self.record_type(&interface, type_offset);
                 self.reject_parameterized_supertype()?;
+                if self.at("(") {
+                    return Err(self
+                        .error("Object superclass construction is unsupported")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "OBJECT_SUPERCLASS_UNSUPPORTED",
+                        ));
+                }
                 interfaces.push(interface);
                 after_header = self.pos;
                 if interfaces.len() > 128 {
@@ -2684,9 +2689,6 @@ impl Parser {
                 }
             }
         }
-        if depth > 1 && !interfaces.is_empty() {
-            return Err(self.error("Nested object supertypes are not supported"));
-        }
         if !self.take("{") {
             if matches!(self.token().text.as_str(), "(" | ":" | "<" | "where") {
                 return Err(
@@ -2700,6 +2702,7 @@ impl Parser {
             };
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
                 return Ok(ObjectDecl {
+                    data_,
                     annotation_uses,
                     name,
                     offset,
@@ -2819,6 +2822,7 @@ impl Parser {
         }
         self.expect("}")?;
         Ok(ObjectDecl {
+            data_,
             annotation_uses,
             name,
             offset,
@@ -2962,6 +2966,7 @@ impl Parser {
             ));
         }
         Ok(ObjectMethod {
+            synthesized: false,
             is_override,
             function,
             jvm_static,

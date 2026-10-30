@@ -2274,6 +2274,7 @@ fn object_metadata(
     proto.number(
         1,
         (if object.internal { 320 } else { 326 })
+            | if object.data_ { 1024 } else { 0 }
             | u32::from(serializable || !object.annotation_uses.is_empty()),
     );
     proto.number(3, strings.id(&owner.replace('$', "."))?);
@@ -2316,7 +2317,25 @@ fn object_metadata(
         );
     }
     for method in &object.methods {
-        let flags = u32::from(method.jvm_static) | if method.inline { 1024 } else { 0 };
+        let flags = u32::from(method.jvm_static)
+            | if method.inline { 1024 } else { 0 }
+            | if method.synthesized { 192 } else { 0 }
+            | if method.is_override { 16 } else { 0 }
+            | if method.is_override
+                && matches!(
+                    method.function.name.as_str(),
+                    "equals" | "hashCode" | "toString"
+                )
+            {
+                65536
+            } else {
+                0
+            }
+            | if method.synthesized && method.function.name == "equals" {
+                256
+            } else {
+                0
+            };
         proto.message(
             9,
             &function_with_jvm_name(

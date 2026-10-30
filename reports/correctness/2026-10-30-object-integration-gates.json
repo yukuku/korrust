@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "status": "passed",
+  "scope": "Integrated data-object, imported inference-annotation and adapter gates; final milestone whole-tree regression remains pending.",
+  "cases": [
+    {
+      "id": "focused-rust",
+      "outcome": "pass",
+      "tests": 9
+    },
+    {
+      "id": "classpath-rust",
+      "outcome": "pass",
+      "tests": 69
+    },
+    {
+      "id": "adapter-python",
+      "outcome": "pass",
+      "tests": 12
+    },
+    {
+      "id": "report-python",
+      "outcome": "pass",
+      "tests": 7
+    },
+    {
+      "id": "clippy-all-targets",
+      "outcome": "pass"
+    },
+    {
+      "id": "format",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": {
+    "reports/correctness/2026-10-30-object-integration-gates/objects-root-rust.log": "9df95787bd042954170adeb912a2a8f55856374b6034a9619ff94a8e22a9dbf3",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-classpath-regression.log": "085a916e93a1b6809db6f4225341c795adead6ceb6416e9446dea17a7ac336ec",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-root-clippy.log": "ca832465ac11f16c5b0d6e062aefeffca2c1d64112cbcb38e6c75851246ab590",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-root-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-upstream-adapter-tests.log": "f29f7827b66a1937eec363ec247bf347476092ad98d6e1de4cef3111b610bef6",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-report-tests.log": "f5f028ac81de59b9e97a67ff93b429aee338b8198f8ed9b64e3d19c4aab5de42",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-root-build.log": "8a15f4f9ba5d74c94c0c91350c47a05f0dfac71e0a45f5a222a705057cd37eb7",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-rust-v1.log": "4d1b511142fed8efaadc8a4efe9ddd901c4a6d2f3db0c28d15c4bd1ccc98e527",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-rust-v2.log": "09e32dd4b71533758a52e53f967c045139f309dca52d949f8d8d44deafc541bd",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-rust-v3.log": "f886ecc95acce001c18e5bdb2391f226d9ac0beafcce387dcaf3bdb3bcd51f25",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-rust-v4.log": "e06150bf095ad0643cb7dd8d9bd6c130b6094515c6bb52be3206c8ef1d6baa63",
+    "reports/correctness/2026-10-30-object-integration-gates/objects-rust-v5.log": "440f5ccce4f7926cfb7aac85d2dab449ceed7af4f2143741da9a94bc6dd55ee6"
+  },
+  "historical_failures": [
+    "Initial authored Rust test used unwrap_err requiring Debug; corrected to existing project style.",
+    "Second run lacked JAVA_HOME and could not resolve java.lang.Object; no language-failure claim.",
+    "Default-package object self-type lookup repaired through scoped self import.",
+    "Overload probing now preserves an explicit unsupported inference-shape diagnostic instead of losing it to an unclassified overload error."
+  ]
+}

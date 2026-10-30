@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "status": "passed",
+  "scope": "Imported OnlyInputTypes constraints: direct heterogeneous inference invalid, nested shape valid unsupported, explicit type argument accepted; runtime equality not asserted by these compile-only probes.",
+  "cases": [
+    {
+      "id": "invalid",
+      "outcome": "pass",
+      "source_sha256": "d62c342f41a5e87aca95e541cf460c6be2e3d1ae72d7e453c452c1816c19728d",
+      "oracle_accepts": false,
+      "results": {
+        "official": {
+          "returncode": 1,
+          "log": "reports/correctness/2026-10-30-next-five-only-input-boundaries/official-invalid.txt",
+          "argv": [
+            "references/kotlinc/bin/kotlinc",
+            "target/only-input-boundaries/invalid.kt",
+            "-cp",
+            "references/kotlinc/lib/kotlin-stdlib.jar:references/kotlinc/lib/kotlin-test.jar",
+            "-d",
+            "target/only-input-boundaries/official-invalid",
+            "-language-version",
+            "2.3",
+            "-api-version",
+            "2.3",
+            "-jvm-target",
+            "1.8"
+          ]
+        },
+        "candidate": {
+          "returncode": 1,
+          "log": "reports/correctness/2026-10-30-next-five-only-input-boundaries/candidate-invalid.txt",
+          "argv": [
+            "target/next5-root-build/release/korrust",
+            "target/only-input-boundaries/invalid.kt",
+            "-cp",
+            "references/kotlinc/lib/kotlin-stdlib.jar:references/kotlinc/lib/kotlin-test.jar",
+            "-d",
+            "target/only-input-boundaries/candidate-invalid",
+            "--diagnostic-format",
+            "json"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nested",
+      "outcome": "pass",
+      "source_sha256": "c631273b603f89b68bfd2c7c629321301b93123259412862e10fb32810cc1d34",
+      "oracle_accepts": true,
+      "results": {
+        "official": {
+          "returncode": 0,
+          "log": "reports/correctness/2026-10-30-next-five-only-input-boundaries/official-nested.txt",
+          "argv": [
+            "references/kotlinc/bin/kotlinc",
+            "target/only-input-boundaries/nested.kt",
+            "-cp",
+            "references/kotlinc/lib/kotlin-stdlib.jar:references/kotlinc/lib/kotlin-test.jar",
+            "-d",
+            "target/only-input-boundaries/official-nested",
+            "-language-version",
+            "2.3",
+            "-api-version",
+            "2.3",
+            "-jvm-target",
+            "1.8"
+          ]
+        },
+        "candidate": {
+          "returncode": 1,
+          "log": "reports/correctness/2026-10-30-next-five-only-input-boundaries/candidate-nested.txt",
+          "argv": [
+            "target/next5-root-build/release/korrust",
+            "target/only-input-boundaries/nested.kt",
+            "-cp",
+            "references/kotlinc/lib/kotlin-stdlib.jar:references/kotlinc/lib/kotlin-test.jar",
+            "-d",
+            "target/only-input-boundaries/candidate-nested",
+            "--diagnostic-format",
+            "json"
+          ]
+        }
+      }
+    },
+    {
+      "id": "explicit",
+      "outcome": "pass",
+      "source_sha256": "f299348a9e87974e1fbef6a8649da46b9427109f47f6f69c7268a1ce5d8b4566",
+      "oracle_accepts": true,
+      "results": {
+        "official": {
+          "returncode": 0,
+          "log": "reports/correctness/2026-10-30-next-five-only-input-boundaries/official-explicit.txt",
+          "argv": [
+            "references/kotlinc/bin/kotlinc",
+            "target/only-input-boundaries/explicit.kt",
+            "-cp",
+            "references/kotlinc/lib/kotlin-stdlib.jar:references/kotlinc/lib/kotlin-test.jar",
+            "-d",
+            "target/only-input-boundaries/official-explicit",
+            "-language-version",
+            "2.3",
+            "-api-version",
+            "2.3",
+            "-jvm-target",
+            "1.8"
+          ]
+        },
+        "candidate": {
+          "returncode": 0,
+          "log": "reports/correctness/2026-10-30-next-five-only-input-boundaries/candidate-explicit.txt",
+          "argv": [
+            "target/next5-root-build/release/korrust",
+            "target/only-input-boundaries/explicit.kt",
+            "-cp",
+            "references/kotlinc/lib/kotlin-stdlib.jar:references/kotlinc/lib/kotlin-test.jar",
+            "-d",
+            "target/only-input-boundaries/candidate-explicit",
+            "--diagnostic-format",
+            "json"
+          ]
+        }
+      }
+    }
+  ],
+  "archived_from": "/Users/yuku/f/git/korrust/target/only-input-boundaries",
+  "archival_scope": "Original frozen source archives, text command evidence and source fixtures retained; compiler binaries and generated class/index files remain ignored."
+}

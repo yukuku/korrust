@@ -98,6 +98,7 @@ impl<'a> Signature<'a> {
                 },
             );
             result.push(TypeParameter {
+                only_input_types: false,
                 name,
                 variance: Variance::Invariant,
                 bounds,
@@ -453,7 +454,10 @@ pub(super) fn attach_with_declarations(
                     .chain(attributes.return_type_annotations.iter()),
             );
             if let (Ok(params), Ok(result)) = (converted, result) {
-                if !attributes.unsupported && method.access & (0x40 | 0x1000) == 0 {
+                if !attributes.unsupported
+                    && attributes.only_input_type_parameters.is_empty()
+                    && method.access & (0x40 | 0x1000) == 0
+                {
                     method.unsupported = false;
                     method.kotlin_params = Some(params);
                     method.kotlin_result = Some(result);

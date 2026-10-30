@@ -373,6 +373,7 @@ fn register_classes(
                         .iter()
                         .map(|p| {
                             Ok(syntax::TypeParameter {
+                                only_input_types: p.only_input_types,
                                 name: p.name.clone(),
                                 variance: p.variance,
                                 bounds: p

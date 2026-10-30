@@ -1,0 +1,1865 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T06:41:25.053384+00:00",
+  "status": "complete_with_correctness_failures",
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 101,
+      "output": "OK 101"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 101,
+      "output": "OK 101"
+    },
+    {
+      "id": "metadata",
+      "outcome": "pass",
+      "snapshots": {
+        "official": [
+          "equals 6",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "objectcases.Container$Nested 1350",
+          "objectcases.Empty 1350",
+          "objectcases.SerializableEntry 1350",
+          "objectcases.Start 1350",
+          "objectcases.Stop 1350",
+          "objectcases.Tracked 1350",
+          "toString 65558",
+          "toString 65750",
+          "toString 65750",
+          "toString 65750",
+          "toString 65750",
+          "toString 65750",
+          "value 6"
+        ],
+        "candidate": [
+          "equals 6",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "objectcases.Container$Nested 1350",
+          "objectcases.Empty 1350",
+          "objectcases.SerializableEntry 1350",
+          "objectcases.Start 1350",
+          "objectcases.Stop 1350",
+          "objectcases.Tracked 1350",
+          "toString 65558",
+          "toString 65750",
+          "toString 65750",
+          "toString 65750",
+          "toString 65750",
+          "toString 65750",
+          "value 6"
+        ]
+      }
+    },
+    {
+      "id": "signature/objectcases.Start",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.Stop",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.Container$Nested",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.Empty",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.Tracked",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.SerializableEntry",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.ObjectsKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_consumer/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_consumer/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/custom_hash",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "DATA_OBJECT_CUSTOM_EQUALITY",
+      "source": "reports/correctness/2026-10-30-expanded-objects-v4-historical/custom_hash.kt",
+      "source_sha256": "c008e84206d14b156daa3b0b801dc37ed8e0c8840a06f0457799b5d6c67c8da5"
+    },
+    {
+      "id": "boundary/custom_equals",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "DATA_OBJECT_CUSTOM_EQUALITY",
+      "source": "reports/correctness/2026-10-30-expanded-objects-v4-historical/custom_equals.kt",
+      "source_sha256": "a3f8c563e0888bc2ad91e045c81cf64c4aefcacc55df5dbec48cfdc9d742e8b5"
+    },
+    {
+      "id": "boundary/custom_equals_without_override",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "DATA_OBJECT_CUSTOM_EQUALITY",
+      "source": "reports/correctness/2026-10-30-expanded-objects-v4-historical/custom_equals_without_override.kt",
+      "source_sha256": "5b1bb8cb0525ad9eafe4eaf21d347d239c6bcd57c8e0328f91d2a97428889b6b"
+    },
+    {
+      "id": "boundary/superclass",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "OBJECT_SUPERCLASS_UNSUPPORTED",
+      "source": "reports/correctness/2026-10-30-expanded-objects-v4-historical/superclass.kt",
+      "source_sha256": "a86f7153d37fe3ad843f058fea6ce8021a851ccd70f0f3d90129ea2108f2a74e"
+    },
+    {
+      "id": "upstream/equals",
+      "family": "expanded_objects",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/equals.kt",
+        "sha256": "2f6061be9250e73090fb56bb1a5b2fef8edcf0e9fc385dd36aa3b7b7e4b3ec59"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "LANGUAGE",
+              "value": "+DataObjects",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-expanded-objects-v4-historical/upstream/upstream/equals/sources/main/equals.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": [
+          "--language-feature",
+          "+DataObjects"
+        ]
+      },
+      "java_caller_class_hashes": {
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/caller/UpstreamBox.class": "42bb10e22ffb3d231d1c362ed146119eb06ce4cc22c43adf8a3ec96846c64402"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "upstream/hashCode",
+      "family": "expanded_objects",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/hashCode.kt",
+        "sha256": "0445eef11ca56801b263ef0b7dd81ee10c12b4614a58ea3282f9d6f7fc042d25"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "LANGUAGE",
+              "value": "+DataObjects",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-expanded-objects-v4-historical/upstream/upstream/hashCode/sources/main/hashCode.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": [
+          "--language-feature",
+          "+DataObjects"
+        ]
+      },
+      "java_caller_class_hashes": {
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/caller/UpstreamBox.class": "99571575cd8239cdcb172efa27c94690a4a203e2bd1ac377d84547fb4f138938"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    },
+    {
+      "id": "upstream/toString",
+      "family": "expanded_objects",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/toString.kt",
+        "sha256": "c10b40ba3b623737b97ee55236100ca13fac08a99a7705d1609d81acc61b628d"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "LANGUAGE",
+              "value": "+DataObjects",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-expanded-objects-v4-historical/upstream/upstream/toString/sources/main/toString.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": [
+          "--language-feature",
+          "+DataObjects"
+        ]
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-10-30-expanded-objects-v4-historical/upstream/upstream/toString/sources/main/toString.kt",
+          "offset": 393,
+          "category": "unsupported_language",
+          "code": "OBJECT_SUPERCLASS_UNSUPPORTED",
+          "message": "Object superclass construction is unsupported",
+          "path": "reports/correctness/2026-10-30-expanded-objects-v4-historical/upstream/upstream/toString/sources/main/toString.kt",
+          "line": 24,
+          "column": 67,
+          "upstream_location": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/toString.kt",
+            "char_offset": 393,
+            "byte_offset": 393,
+            "line": 24,
+            "column": 67
+          }
+        }
+      ]
+    },
+    {
+      "id": "upstream/multipleInstances",
+      "family": "expanded_objects",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/multipleInstances.kt",
+        "sha256": "898047bbebea270f0bda3679b66ccd2e58c47eb086080586ac74921a87c094ec"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "LANGUAGE",
+              "value": "+DataObjects",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            },
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM_IR",
+              "original_line": 3
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-expanded-objects-v4-historical/upstream/upstream/multipleInstances/sources/main/multipleInstances.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": [
+          "--language-feature",
+          "+DataObjects"
+        ]
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-10-30-expanded-objects-v4-historical/upstream/upstream/multipleInstances/sources/main/multipleInstances.kt",
+          "offset": 133,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unresolved member or imported extension: apply",
+          "path": "reports/correctness/2026-10-30-expanded-objects-v4-historical/upstream/upstream/multipleInstances/sources/main/multipleInstances.kt",
+          "line": 9,
+          "column": 20,
+          "upstream_location": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/multipleInstances.kt",
+            "char_offset": 133,
+            "byte_offset": 133,
+            "line": 9,
+            "column": 20
+          }
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "label": "JVM version",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0000-stderr.txt"
+    },
+    {
+      "label": "Official compiler version",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0001-stderr.txt"
+    },
+    {
+      "label": "Compile official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Objects.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0002-stderr.txt"
+    },
+    {
+      "label": "Compile candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Objects.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0003-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/java",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Check.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0004-stderr.txt"
+    },
+    {
+      "label": "Execute fixed caller official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/java:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0005-stderr.txt"
+    },
+    {
+      "label": "Execute fixed caller candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/java:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0006-stderr.txt"
+    },
+    {
+      "label": "Compile metadata reader",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-compiler.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/metadata",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/MetadataDump.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0007-stderr.txt"
+    },
+    {
+      "label": "Read metadata official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/metadata:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-compiler.jar",
+        "MetadataDump",
+        "objectcases.Start",
+        "objectcases.Stop",
+        "objectcases.Container$Nested",
+        "objectcases.Empty",
+        "objectcases.Tracked",
+        "objectcases.SerializableEntry"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0008-stderr.txt"
+    },
+    {
+      "label": "Read metadata candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/metadata:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-compiler.jar",
+        "MetadataDump",
+        "objectcases.Start",
+        "objectcases.Stop",
+        "objectcases.Container$Nested",
+        "objectcases.Empty",
+        "objectcases.Tracked",
+        "objectcases.SerializableEntry"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0009-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.Start",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official",
+        "objectcases.Start"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0010-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.Start",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate",
+        "objectcases.Start"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0011-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.Stop",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official",
+        "objectcases.Stop"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0012-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.Stop",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate",
+        "objectcases.Stop"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0013-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.Container$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official",
+        "objectcases.Container$Nested"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0014-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.Container$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate",
+        "objectcases.Container$Nested"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0015-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.Empty",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official",
+        "objectcases.Empty"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0016-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.Empty",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate",
+        "objectcases.Empty"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0017-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.Tracked",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official",
+        "objectcases.Tracked"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0018-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.Tracked",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate",
+        "objectcases.Tracked"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0019-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.SerializableEntry",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official",
+        "objectcases.SerializableEntry"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0020-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.SerializableEntry",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate",
+        "objectcases.SerializableEntry"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0021-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.ObjectsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official",
+        "objectcases.ObjectsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0022-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.ObjectsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate",
+        "objectcases.ObjectsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0023-stderr.txt"
+    },
+    {
+      "label": "Compile Kotlin consumer official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/consumer-official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0024-stderr.txt"
+    },
+    {
+      "label": "Compile Kotlin consumer launcher official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/consumer-official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/launcher-official",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Launch.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0025-stderr.txt"
+    },
+    {
+      "label": "Execute Kotlin consumer official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/launcher-official:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/consumer-official:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Launch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0026-stderr.txt"
+    },
+    {
+      "label": "Compile Kotlin consumer candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/consumer-candidate",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0027-stderr.txt"
+    },
+    {
+      "label": "Compile Kotlin consumer launcher candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/consumer-candidate:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/launcher-candidate",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Launch.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0028-stderr.txt"
+    },
+    {
+      "label": "Execute Kotlin consumer candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/launcher-candidate:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/consumer-candidate:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Launch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0029-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_hash/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/custom_hash.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official-custom_hash",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0030-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_hash/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/custom_hash.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate-custom_hash",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0031-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_equals/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/custom_equals.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official-custom_equals",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0032-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_equals/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/custom_equals.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate-custom_equals",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0033-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_equals_without_override/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/custom_equals_without_override.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official-custom_equals_without_override",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0034-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_equals_without_override/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/custom_equals_without_override.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate-custom_equals_without_override",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0035-stderr.txt"
+    },
+    {
+      "label": "Boundary superclass/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/superclass.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/official-superclass",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0036-stderr.txt"
+    },
+    {
+      "label": "Boundary superclass/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/superclass.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/candidate-superclass",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0037-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/sources/main/equals.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-XXLanguage:+DataObjects",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0038-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/sources/main/equals.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/candidate/main",
+        "--diagnostic-format",
+        "json",
+        "--language-feature",
+        "+DataObjects"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0039-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/caller",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0040-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/caller:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0041-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/caller:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/candidate/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0042-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0042-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0043-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0043-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0044-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0044-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/candidate/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0045-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0045-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/candidate/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0046-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0046-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/signatures/official/com.example.DataObject",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "com.example.DataObject"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0047-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0047-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/signatures/candidate/com.example.DataObject",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/candidate/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "com.example.DataObject"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0048-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0048-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/signatures/official/com.example.EqualsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "com.example.EqualsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0049-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0049-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/signatures/candidate/com.example.EqualsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/equals/candidate/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "com.example.EqualsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0050-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0050-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/sources/main/hashCode.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-XXLanguage:+DataObjects",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0051-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0051-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/sources/main/hashCode.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/candidate/main",
+        "--diagnostic-format",
+        "json",
+        "--language-feature",
+        "+DataObjects"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0052-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0052-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/caller",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0053-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0053-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/caller:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0054-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0054-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/caller:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/candidate/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0055-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0055-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0056-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0056-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0057-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0057-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/candidate/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0058-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0058-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/candidate/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0059-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0059-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/signatures/official/com.example.DataObject",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "com.example.DataObject"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0060-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0060-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/signatures/candidate/com.example.DataObject",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/candidate/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "com.example.DataObject"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0061-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0061-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/signatures/official/com.example.HashCodeKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/official/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "com.example.HashCodeKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0062-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0062-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/signatures/candidate/com.example.HashCodeKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/hashCode/candidate/main:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "com.example.HashCodeKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0063-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0063-stderr.txt"
+    },
+    {
+      "label": "upstream/toString/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/toString/sources/main/toString.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/toString/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-XXLanguage:+DataObjects",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0064-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0064-stderr.txt"
+    },
+    {
+      "label": "upstream/toString/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/toString/sources/main/toString.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/toString/candidate/main",
+        "--diagnostic-format",
+        "json",
+        "--language-feature",
+        "+DataObjects"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0065-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0065-stderr.txt"
+    },
+    {
+      "label": "upstream/multipleInstances/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/multipleInstances/sources/main/multipleInstances.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/multipleInstances/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-XXLanguage:+DataObjects",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0066-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0066-stderr.txt"
+    },
+    {
+      "label": "upstream/multipleInstances/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/multipleInstances/sources/main/multipleInstances.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/upstream/upstream/multipleInstances/candidate/main",
+        "--diagnostic-format",
+        "json",
+        "--language-feature",
+        "+DataObjects"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0067-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0067-stderr.txt"
+    },
+    {
+      "label": "Unchanged AndroidBible AudioBar with captured real dependencies",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt",
+        "-cp",
+        "/Users/yuku/Library/Android/sdk/platforms/android-36/android.jar:/Users/yuku/Library/Android/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/intermediates/compile_r_class_jar/plainDebug/generatePlainDebugRFile/R.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIntegration/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabIo/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabYes2/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Bintex/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/a9ed68492ca585fc10cc3f9876aeee22/transformed/preference-ktx-1.2.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/edf0b359b0872023c4bf841c6fc1b072/transformed/material-1.13.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ea32da85060e63b612cb8501bd1d3b70/transformed/appcompat-resources-1.7.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/46ffc9f5fd0faeb48c77d2579ac0b344/transformed/preference-1.2.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ed68d937b65ed8bc7608ba0e0e1d6648/transformed/appcompat-1.7.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7dab49e3729134bd0eb1048476d9da39/transformed/viewpager2-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3564239ded549fc983cfce2838ff19df/transformed/firebase-crashlytics-20.0.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f59ead5bee89ae59c395cf82ba9560d4/transformed/firebase-messaging-25.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0090133f3c89ce380c09766c4c256d54/transformed/firebase-sessions-3.0.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/e30facc6a648da6aae92a7067d277d6e/transformed/firebase-installations-19.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/b42b9b137999b3ec457d1a80aec590c3/transformed/firebase-installations-interop-17.2.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/00e1522f16ab693eeb98f2a25878d40a/transformed/firebase-iid-interop-17.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c1ab6272e1e3cc54a9f4ab96045c33d0/transformed/firebase-common-22.0.0-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.room/room-common-jvm/2.7.0/46a9845444d0b849131baeb85bfe4051828261ad/room-common-jvm-2.7.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/892e545d2aa2914687d616e4bbed3487/transformed/room-runtime-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/aad6e4bf2856cc09fd5e4bf37bec4c68/transformed/room-ktx-2.7.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0645bfcd96e7d2bd0c09ac58aac600e3/transformed/work-runtime-ktx-2.10.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/9156cdbb1f234c88470dd450386a6efb/transformed/work-runtime-2.10.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/e4f97e2c091b625b838cfe5db8b4bcd4/transformed/coil-2.7.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/05e9858c90aefb541a499cd2999f38db/transformed/coil-base-2.7.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/5c03fff715078af0eb7f9746f802419f/transformed/material3-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/af76055845755772c58a69b5efa238a3/transformed/animation-core-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0d0fbe27da544673d615f993a646207f/transformed/animation-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/6c99ab36c49eb52cf604a8575773cbdb/transformed/foundation-layout-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/08b49689b988d8ac692addee2b2d663b/transformed/material-ripple-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/55356a5ba4677d2d89a930a54470f7a7/transformed/foundation-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/75f9eaa88e02368d048e40abc6bbe91e/transformed/ui-tooling-data-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c00a11f77155c75d0dd8a0f48c02bdf1/transformed/ui-util-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ec5d9e2846467c20d248fa245996adfb/transformed/ui-unit-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ff583e8ce42e52285e0309cbc87342d6/transformed/ui-geometry-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ee70e136249d39e8cce6af5b62d5b9e6/transformed/ui-text-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/591448e7ed8f86467452b8c5717b6eb1/transformed/ui-tooling-preview-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/96f9cdd6d19ca5252879e1dce38f0509/transformed/ui-graphics-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3ec19c357184c94232be732c284c9724/transformed/material-icons-extended-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3fa78f071fe33050fb02d4f9c7c936f0/transformed/material-icons-core-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/6e0889122490d072c87bb5689f928caa/transformed/activity-1.13.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3174bb428a2dc373db6ea9e8fe5d9679/transformed/loader-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/2b5dcd62c469c3fc7df70ca5d45e554e/transformed/media3-session-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/b7d7a807bfa31df95520656fa4446aa1/transformed/percentlayout-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/28cd8eb79b1fa54fe416fb142ec092c6/transformed/recyclerview-1.4.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7f7cd57a3d224b57bf8489fbf2689064/transformed/swiperefreshlayout-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/dd5e4f6448c5675a81701e29e42d994a/transformed/lifecycle-runtime-ktx-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/dd28c008482e07f4dd8c5abbaffd9055/transformed/lifecycle-runtime-compose-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/df28c65a127826e8fccbb67e82c10249/transformed/lifecycle-runtime-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3103f3748bfbe10539bff45555b1988f/transformed/lifecycle-viewmodel-savedstate-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/cc0165ce2585cdff5362f425ef7fde51/transformed/core-ktx-1.18.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f68a179d39ebe551aa5901b0dc39bb81/transformed/drawerlayout-1.1.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/adaf93e511adc7cd785ba16ebf908764/transformed/coordinatorlayout-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/88bf78ded7849b0b74d6edbd0cab0626/transformed/dynamicanimation-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/d3dfd8cdda745f1b8cf67beba77b836b/transformed/transition-1.5.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/2ea812b5d9f555497b803a6a3e621f3a/transformed/vectordrawable-animated-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0cc20a8b797074538c42451a746ca638/transformed/vectordrawable-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7cfe2b8d59d1aa7374ae0919f4871611/transformed/viewpager-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/631f89cb9fba3b0742d26635d2424eaf/transformed/slidingpanelayout-1.2.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/2acec95fd498348ebdc905b2e9265b39/transformed/customview-1.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/623dc510c8a8b524e50df4f30c15baf9/transformed/core-1.18.0-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common-jvm/2.9.4/ab739bccdb3541983385af169565c7c035d897e7/lifecycle-common-jvm-2.9.4.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/af354d8ca6ce3e5fdc097cce7de8663a/transformed/lifecycle-viewmodel-ktx-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3992b8bdde160d8844a4c8dface67db9/transformed/lifecycle-service-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f2bf963aff4a8feea1e275a642a022f4/transformed/lifecycle-livedata-core-ktx-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0c56473f457124aec0b979f83252973e/transformed/lifecycle-livedata-core-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/38c07936870f6c26ef578c5c692fd56c/transformed/lifecycle-livedata-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3ef2958d3810d2b691b0769d3a7bb4c2/transformed/lifecycle-viewmodel-2.9.4-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c1733171cfd9347725571079b5b21b9a/transformed/lifecycle-viewmodel-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/5e7ba575d327c1c51f83465e5ca5cb2e/transformed/lifecycle-viewmodel-compose-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/54e93c26190f1f80d3346c7f724c42fd/transformed/ui-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f8772389ac6124f5ea7e9f09d6ee47d4/transformed/ui-tooling-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/cf5ba46bd19e035dd3fbd114c3129118/transformed/navigationevent-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/18108d505677a9296cafbbd8f7e3eefd/transformed/navigationevent-compose-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3b89c8140c6795188ac2f8d128d1286a/transformed/runtime-retain-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/ef64ffdc4dbf2810f4da14b9c7501c2e/transformed/runtime-annotation-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/777f8873815ac7ab8e2258270dd71644/transformed/runtime-saveable-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7b4981831f6235e9c2abd519791faa01/transformed/savedstate-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/da27e6fa37c3e81e66919be32910eb24/transformed/savedstate-ktx-1.3.2-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/4bf6719ecd7915d00cc1e56cbd35cade/transformed/savedstate-compose-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/29ef014947a3b2b649a061e7ed9e2905/transformed/runtime-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-android/1.9.0/6cf3b8df5a2ce8c6b0dffe55657a827c405ee2fe/kotlinx-coroutines-android-1.9.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.9.0/9beade4c1c1569e4f36cbd2c37e02e3e41502601/kotlinx-coroutines-core-jvm-1.9.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-play-services/1.9.0/9d715295c29dddf8c381565c513fb2d9923f9f41/kotlinx-coroutines-play-services-1.9.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/b440518a4e460e85d50558c710a925a6/transformed/play-services-tasks-18.1.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3a458da4c83d7d701f3904192eec4b92/transformed/firebase-measurement-connector-20.0.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/8f882bfee3a753db9ef9af08f8aae306/transformed/play-services-basement-18.3.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f1341e0039585558025be5d145e64d36/transformed/fragment-1.8.9-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/64fb97c9f2f4649b2d91d07332ca47f2/transformed/fragment-ktx-1.8.9-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/5723e22997d06277a3ad3848480fcfcb/transformed/activity-ktx-1.13.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/9a0539f2561e189bf7489d93b6ff3c16/transformed/activity-compose-1.13.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7755c2451e35d17a05052ba38d24d5e1/transformed/core-splashscreen-1.2.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c9e6c15e097b54d15ded3b21703a74c8/transformed/media3-exoplayer-midi-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/df135483f10b29895829224260cce9ea/transformed/media3-exoplayer-1.10.1-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-parcelize-runtime/2.3.21/5eeb7fbd98f9b6a762d45a93636b87f31fc6dd17/kotlin-parcelize-runtime-2.3.21.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/8ba9ddb7176d6122092c37c935898f2f/transformed/leakcanary-android-2.14-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/e3a37dd53632c77ed15c7e35b8227183/transformed/leakcanary-object-watcher-android-2.14-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3a5b2c602c8a779314ddb16c74348652/transformed/media3-datasource-okhttp-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/eb9468ad9e44baa970438c43b4949ec9/transformed/okhttp-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c766b83d0bcfb02aaa10495cc1172be3/transformed/core-viewtree-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/35b9dac2582c58c34436a908bfe9d5de/transformed/media3-extractor-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/5afaa7ccd06472e5b024ce6531bb2274/transformed/media3-container-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/89e99dc47c6888b4609e89c55e23afa4/transformed/media3-datasource-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/51da9df0b620fa34c77cb731ef7e2aa1/transformed/media3-decoder-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0b3df73ebbb63f2b4928217a98deaa3a/transformed/media3-database-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/d134777f6e8ff6dfe66b352e54ae9b7d/transformed/media3-common-1.10.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c7c5676f4101ca3766fdbecf9bfa42f7/transformed/annotation-experimental-1.4.1-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.15.0/cb3c285187640f543150fcac1ae012bdd778c0e1/okio-jvm-3.15.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/70ddf1be339f5356eb32b6690e326227/transformed/versionedparcelable-1.1.1-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-ktx/1.5.0/27c78a926a16a1bf792b2285cf2834e8caae4a07/collection-ktx-1.5.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.5.0/7ba2c69414d46ebc2dd76598bdd0a75c54281a57/collection-jvm-1.5.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/6203c1c04698ffa88eb6296e2ae5c063/transformed/cursoradapter-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f03f78e0833a1a50dd3362f07598f7d8/transformed/interpolator-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/353f57181bab40e0e9904504bb8a17d1/transformed/cardview-1.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/d891afb4156966970623df3be1ddde1a/transformed/firebase-config-interop-16.0.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/99da32edda83f0a8b286d55b7cc47881/transformed/firebase-datatransport-18.2.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/d1b1fedecfdd258d0ff63fb8dc350634/transformed/transport-backend-cct-3.1.9-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/86125809f9cf44985b7fc0a4916ab89f/transformed/firebase-encoders-json-18.0.1-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/deaef11fb710996de94bce7c0a7bbf77/transformed/transport-runtime-3.1.9-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders-proto/16.0.0/a42d5fd83b96ae7b73a8617d29c94703e18c9992/firebase-encoders-proto-16.0.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders/17.0.0/26f52dc549c42575b155f8c720e84059ee600a85/firebase-encoders-17.0.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f9faf517679aac55e925ba8fd20f1b0e/transformed/sqlite-framework-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/57feac86df3b957150f118d70b1dff4c/transformed/sqlite-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/f1fe02a9cc0f616a469a9f014037a4f8/transformed/transport-api-3.0.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/4ea0cd1c405a9e097163ea404346c3fc/transformed/core-runtime-2.2.0-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.2.0/5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3/core-common-2.2.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.9.1/b17951747e38bf3986a24431b9ba0d039958aa5f/annotation-jvm-1.9.1.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.8.0/ed04f49e186a116753ad70d34f0ac2925d1d8020/kotlin-stdlib-jdk8-1.8.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.8.0/3c91271347f678c239607abb676d4032a7898427/kotlin-stdlib-jdk7-1.8.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.7.3/6701e8c68d9e82387ce72ee96e8ddf058208d58f/kotlinx-serialization-json-jvm-1.7.3.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.7.3/1f226780b845ff9206474c05159245d861556249/kotlinx-serialization-core-jvm-1.7.3.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/d8db848666c32ca4cb2b585c617e687d/transformed/constraintlayout-2.2.1-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.12.1/4e773a317740b83b43cfc3d652962856041697cb/gson-2.12.1.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/c32d87dc0f4bed9cb89732751ceceffb/transformed/library-1.3.0-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/574747cbefbefaed326fab998bd4dc10/transformed/FancyShowCaseView-1.4.0-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/16ebcf8a81c437a1a5f30af5e7cb84fc/transformed/leakcanary-android-core-2.14-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.resourceinspection/resourceinspection-annotation/1.0.1/8c21f8ff5d96d5d52c948707f7e4d6ca6773feef/resourceinspection-annotation-1.0.1.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.36.0/227d4d4957ccc3dc5761bd897e3a0ee587e750a7/error_prone_annotations-2.36.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-android/2.14/6fb0b4ab27c085678a3d26ce2b9350fb77c32407/shark-android-2.14.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/0e904cbd2566cb658ab936fd429c0023/transformed/leakcanary-object-watcher-android-androidx-2.14-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/9a41bde09e2f0c9b6d39e5dd918086dc/transformed/leakcanary-object-watcher-android-support-fragments-2.14-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7abfc44fd274b2ec61dee42981f6a2b5/transformed/leakcanary-object-watcher-android-core-2.14-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/388cd814d28282086642b1d9bb0b69d7/transformed/startup-runtime-1.1.1-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/33.3.1-android/36162b3b4e9df67dae90db62a2c54616ca42c1bd/guava-33.3.1-android.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/3a5a55f609d1cbad2f3e765b09564458/transformed/graphics-shapes-release-api.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/7f0838d27a7b16f6a062b5d1cf423bba/transformed/firebase-components-19.0.0-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-annotations/17.0.0/fd04a6accd970e0fcf9baf2424abe2926e00d0e2/firebase-annotations-17.0.0.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark/2.14/768be00911a64d2314345115687fe0d14924bd87/shark-2.14.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/leakcanary-object-watcher/2.14/4e9e9ea14da4e86321b1369c7aea6528f0ef2/leakcanary-object-watcher-2.14.jar:/Users/yuku/.gradle/caches/9.7.1/transforms/6f86fd3bfea59b45aa267dc023f0ff9c/transformed/leakcanary-android-utils-2.14-api.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.2/c4a06a64e650562f30b7bf9aaec1bfed43aca12b/failureaccess-1.0.2.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-graph/2.14/ed8d34d03693373e1e9e1bcdcd52e2a63391e6d9/shark-graph-2.14.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-hprof/2.14/561aba011e38279be7e068f6760f816baab0ccb9/shark-hprof-2.14.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-log/2.14/25574b6474a61c3d0a5df80272ecfa51c560bd7e/shark-log-2.14.jar:/Users/yuku/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4/androidbible-audiobar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0068-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v4-historical/commands/0068-stderr.txt"
+    }
+  ],
+  "compiler": {
+    "path": "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+    "sha256": "d22f3ebd7a817d96f7f67ee0264b58813ae4fcb87623ad03328562b0953e872a"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "claims": "Bounded data-object singleton semantics and nested interface supertypes; not full reflection or unrestricted object inheritance.",
+  "app_assessment": {
+    "original": "/Users/yuku/f/git/korrust/target/next5-objects/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt",
+    "source_sha256": "725aa743c8b56b9a69dcdbfdc0bc9341885760366d0dba3c71c3fc679cbe8d62",
+    "capture": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/build.json",
+    "capture_sha256": "a99f93782a2f34549596802539fe3893d23f5455983954f43bab3ebb96756bdc",
+    "captured_options": {
+      "jvmTarget": "JVM_21",
+      "languageVersion": null,
+      "apiVersion": null,
+      "freeCompilerArgs": [
+        "-Xuse-inline-scopes-numbers",
+        "-Xallow-unstable-dependencies"
+      ],
+      "javaParameters": "false",
+      "allWarningsAsErrors": "false",
+      "suppressWarnings": "false",
+      "progressiveMode": "false",
+      "optIn": [],
+      "jvmDefault": null,
+      "module_name": "Alkitab"
+    },
+    "captured_plugins": [
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-parcelize-compiler/2.3.21/10cd03e4a85ec5f6122cf9d5e170c7cb2b91106a/kotlin-parcelize-compiler-2.3.21.jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-serialization-compiler-plugin-embeddable/2.3.21/973ceb6ece211cc75d4bc877e1a2edb5fe2be012/kotlin-serialization-compiler-plugin-embeddable-2.3.21.jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compose-compiler-plugin-embeddable/2.3.21/96eb34ab9364f1c4291f35b38b1b98d0fc70170c/kotlin-compose-compiler-plugin-embeddable-2.3.21.jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.devtools.ksp/symbol-processing-api/2.3.8/17799fb29499ca8f2a6e8e26d5d4b47c8af9d617/symbol-processing-api-2.3.8.jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.3.21/c4b47f8e33cdbeedd8c1415ab9f9ade870388162/kotlin-compiler-embeddable-2.3.21.jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.3.21/8dafd7f0eb5efef35a446683a2774fef61c68aeb/kotlin-script-runtime-2.3.21.jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.3.21/384c12222b10aaa06fdd2163435709efdade5a02/kotlin-daemon-embeddable-2.3.21.jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar"
+    ],
+    "missing_classpath_entries": [
+      "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/generated/ksp/plainDebug/classes"
+    ],
+    "classpath_files_sha256": {
+      "/Users/yuku/Library/Android/sdk/platforms/android-36/android.jar": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a",
+      "/Users/yuku/Library/Android/sdk/build-tools/36.0.0/core-lambda-stubs.jar": "2feb8df434cae3218ed9ffe9bae01ddec101d1dc5e12824c4209f61e283e0d3d",
+      "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/intermediates/compile_r_class_jar/plainDebug/generatePlainDebugRFile/R.jar": "0d3883aeac179561d8d1aba99eaa431294c5d85ff2a780f95d577f3c51f5cbf7",
+      "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIntegration/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar": "324eeb3708d04824f4c87b068b96036645b12a65ef07dc97e0426a3e4407075b",
+      "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabIo/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar": "e650ffd1598119db77f3358dd4b78b6ec8a3fbb51f6d0ace23cb534bcd1242a8",
+      "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar": "1c4441f5cea6e05d7e3ded0a5e920c528b742fb9280a641f05fd80dcb4c22df4",
+      "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabYes2/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar": "e512860f54e47e1f1ec41f7004734b65fdaaabd5f0f2950aec95856379deb8b5",
+      "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Bintex/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar": "a94964515b553bdccbc6ff68c46416384c3214584d2e898ab78821e0a1327c06",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/a9ed68492ca585fc10cc3f9876aeee22/transformed/preference-ktx-1.2.1-api.jar": "093d3cc7923bf4c5420b2b9d7cb23c512e44079c8c76c71883afaf49325fee3c",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/edf0b359b0872023c4bf841c6fc1b072/transformed/material-1.13.0-api.jar": "b81b187114ca4b56ed810e4123a66140f213aca93e17bd199d2fa2f25778c852",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/ea32da85060e63b612cb8501bd1d3b70/transformed/appcompat-resources-1.7.1-api.jar": "70f3a24f10ceee3f514f594e1dde463753805fb2f4c76b9143564b5e4bedc3fb",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/46ffc9f5fd0faeb48c77d2579ac0b344/transformed/preference-1.2.1-api.jar": "ac65fc505f78004d79136fd919be7cd540eb438976406fe66f31d47c9cf6b58b",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/ed68d937b65ed8bc7608ba0e0e1d6648/transformed/appcompat-1.7.1-api.jar": "94f9deedb60d99dcfbdbe5d07d4b4a69ee7bbb4ec4270ad925277fdcb5482cdd",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/7dab49e3729134bd0eb1048476d9da39/transformed/viewpager2-1.0.0-api.jar": "60c8a5105f3620a75812373197451a0d2074e3a1165d13dbd9594eaa9b34d503",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3564239ded549fc983cfce2838ff19df/transformed/firebase-crashlytics-20.0.1-api.jar": "2b267851e47cf5a1d9f6f720519859b1495b63235a2c0d324f098954d9be0b89",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/f59ead5bee89ae59c395cf82ba9560d4/transformed/firebase-messaging-25.0.0-api.jar": "b68acac86d9c8931dffeb932748b0d449269692c3f8b51ed0b59a5182229a627",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/0090133f3c89ce380c09766c4c256d54/transformed/firebase-sessions-3.0.1-api.jar": "9379cb9aa11c517eafc1ebba09aa9e3d577acf56cb46c1294091aff49cc8f7cb",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/e30facc6a648da6aae92a7067d277d6e/transformed/firebase-installations-19.0.0-api.jar": "e27d14ca3a6b3558905e9bb1c9d191d88a11a0d4fe595e4d3cb2d0a95591a27d",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/b42b9b137999b3ec457d1a80aec590c3/transformed/firebase-installations-interop-17.2.0-api.jar": "a58906ff9b02bdb24091e266f52a4a61447667c6753beab9c17868237a5b655f",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/00e1522f16ab693eeb98f2a25878d40a/transformed/firebase-iid-interop-17.1.0-api.jar": "04ab55dbd90d79a8bdd545881a5caadae891185e0e1f91a0c96d2ad44229ae86",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/c1ab6272e1e3cc54a9f4ab96045c33d0/transformed/firebase-common-22.0.0-api.jar": "257ffae02b71f1c3cd91b62f472525020f4e858417f0177ff1975e0b21c0260b",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.room/room-common-jvm/2.7.0/46a9845444d0b849131baeb85bfe4051828261ad/room-common-jvm-2.7.0.jar": "b2a00b88c8b8d810d07ecbdf92fdff47db7f0ea884efe5c31cda7a526c9b1ae5",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/892e545d2aa2914687d616e4bbed3487/transformed/room-runtime-release-api.jar": "90d262b1678b094f7593dba2f44bc60ea975b4dc7c5279b29138ca000f8c4a54",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/aad6e4bf2856cc09fd5e4bf37bec4c68/transformed/room-ktx-2.7.0-api.jar": "57ef57577608e30569869f27268d282355cdb94725e7f90d736d2351b257ea75",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/0645bfcd96e7d2bd0c09ac58aac600e3/transformed/work-runtime-ktx-2.10.4-api.jar": "38aa01dff711ab800128564173c7d1ab327b030f527521e6c5275cdf814de77b",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/9156cdbb1f234c88470dd450386a6efb/transformed/work-runtime-2.10.4-api.jar": "bfd123b72a1c188ce80c1fd4d1f6ea643d602d10cd1ce22fa62e13ea7a4b43b9",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/e4f97e2c091b625b838cfe5db8b4bcd4/transformed/coil-2.7.0-api.jar": "69c4d7168ecdc7df351e3796c3c83073a24f2c8c7bdf2eba548b43f0309e765f",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/05e9858c90aefb541a499cd2999f38db/transformed/coil-base-2.7.0-api.jar": "29ee6046279ad7d0a02aa690fd4245f265d3fa6ccacad1c98dd42a09dc62d10a",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/5c03fff715078af0eb7f9746f802419f/transformed/material3-api.jar": "c3f879d944bcaced24d4d9d389839bf6cdeccd7d1bf7fca7ff4d9fd7feb830ad",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/af76055845755772c58a69b5efa238a3/transformed/animation-core-api.jar": "b8d0667af5404421ba7db77dab40ae155d88469356d2c013114f6391c699d097",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/0d0fbe27da544673d615f993a646207f/transformed/animation-api.jar": "36b9299a9169c6dec7ba351f85c9ff59301d8dd223d2d60926134fd73f5261d8",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/6c99ab36c49eb52cf604a8575773cbdb/transformed/foundation-layout-api.jar": "6a4f2fa6be95a36c6d2049462128200ec92cfa4b84a80632cae4491be610e345",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/08b49689b988d8ac692addee2b2d663b/transformed/material-ripple-api.jar": "da3e4edb81f0add80ede47b53af59acaa26c2f02e65d753ef7af9dc97ec7b98d",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/55356a5ba4677d2d89a930a54470f7a7/transformed/foundation-api.jar": "d180718b984c60bb8de277e7cfcd12252d615e4f036ad28e806a4e450681efc6",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/75f9eaa88e02368d048e40abc6bbe91e/transformed/ui-tooling-data-api.jar": "5ea0b4e2f2e0313dc118cfe68a077aee5b7d70f50972885938b0c8e768f33956",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/c00a11f77155c75d0dd8a0f48c02bdf1/transformed/ui-util-api.jar": "112f196a366273cd0e0e28e3002da67326962b929592c40b86156cdb23b07f2f",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/ec5d9e2846467c20d248fa245996adfb/transformed/ui-unit-api.jar": "d3be324943d98e6a3c5b74fb0cebc7e5b62946303ee315fc4ffdd685ddbdcd25",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/ff583e8ce42e52285e0309cbc87342d6/transformed/ui-geometry-api.jar": "026ee7401e347b43a8e3aae4cf06929f583f245f8024867e14fbfe4092f19c05",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/ee70e136249d39e8cce6af5b62d5b9e6/transformed/ui-text-api.jar": "76eae4814d73a23df6772dea19e8b1ee87abb52246038891b2d47685667b0ca2",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/591448e7ed8f86467452b8c5717b6eb1/transformed/ui-tooling-preview-api.jar": "c871eabe897198831b0db5bc24d0aa6f41a4afd40d4f8c5c8a3ba00e3a9a20c7",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/96f9cdd6d19ca5252879e1dce38f0509/transformed/ui-graphics-api.jar": "0c5d0a6ca0a488827f2e822de823bd64957c26cae062fa9ccf1830f93a7fdf81",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3ec19c357184c94232be732c284c9724/transformed/material-icons-extended-release-api.jar": "f02b1ce6d69dd020669993145a14ab0abd55843a4cd502eb8afc4e85ae60b2d1",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3fa78f071fe33050fb02d4f9c7c936f0/transformed/material-icons-core-release-api.jar": "288bc21645a7f1b05dd88bb8bbf8b0f7f8d8afdcd2476bdfc140f3b4acee85ff",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/6e0889122490d072c87bb5689f928caa/transformed/activity-1.13.0-api.jar": "45742fb8e6141eaa35b9a6dbf0474913a47c6c615d718b5ed4518834ad801993",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3174bb428a2dc373db6ea9e8fe5d9679/transformed/loader-1.0.0-api.jar": "7b8d130a2134503e4153a9fcf0d6ce4ca7e995c57bafbb12e5f85cd796f2e31e",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/2b5dcd62c469c3fc7df70ca5d45e554e/transformed/media3-session-1.10.1-api.jar": "c99933c0306e798238b25d5f404b90f6f79388882f2d8f64d191ee07686e4702",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/b7d7a807bfa31df95520656fa4446aa1/transformed/percentlayout-1.0.0-api.jar": "ceec6837f0372868565398ca4ed699efbe4013072247ba294c674bf2afb73305",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/28cd8eb79b1fa54fe416fb142ec092c6/transformed/recyclerview-1.4.0-api.jar": "45fa8879627a04a9a3d5e901af808f35391af94d3e58a5069026ee1e8e094a3f",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/7f7cd57a3d224b57bf8489fbf2689064/transformed/swiperefreshlayout-1.1.0-api.jar": "efb99ef17234d1ab84527541d52189a672b5cd5c3efff322f8fca9d54468f7cd",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/dd5e4f6448c5675a81701e29e42d994a/transformed/lifecycle-runtime-ktx-api.jar": "e52c14aead36b8c3bb89e4ca23b21b7fade8426437db554f0a5a9fa43aa45f2c",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/dd28c008482e07f4dd8c5abbaffd9055/transformed/lifecycle-runtime-compose-release-api.jar": "0528efaf8aeeee6d7565317f71e4e9f686866ed6341c6ba13ea24d61cd0e369f",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/df28c65a127826e8fccbb67e82c10249/transformed/lifecycle-runtime-release-api.jar": "145375e2d95077bc2bd8ab69dd2cb99a6188b2882186df63584c31130df5cdd4",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3103f3748bfbe10539bff45555b1988f/transformed/lifecycle-viewmodel-savedstate-release-api.jar": "17c7560e1153e2aa87e68dd815dd6b39efc182aeaa897cf8bfc463ea6e9824d0",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/cc0165ce2585cdff5362f425ef7fde51/transformed/core-ktx-1.18.0-api.jar": "29b3d8980608ec3910338c0da3335cc32af13b59c61fe3de4e0d229f50ddf895",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/f68a179d39ebe551aa5901b0dc39bb81/transformed/drawerlayout-1.1.1-api.jar": "e528985a7fc2b89b5e47ddab09a76d59cef4a5736a14cd5dce19baf609be1c85",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/adaf93e511adc7cd785ba16ebf908764/transformed/coordinatorlayout-1.1.0-api.jar": "3bc1e5825071f4ff5a8c6b78e2bcc37a704bafdcd26080418bbe90c9482c8e19",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/88bf78ded7849b0b74d6edbd0cab0626/transformed/dynamicanimation-1.1.0-api.jar": "4a6cf21f6209a86518a8567c48b9f11880a3c4e500e629f33ae602ea96259f5b",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/d3dfd8cdda745f1b8cf67beba77b836b/transformed/transition-1.5.0-api.jar": "346a6b76c1c712552634c63a28f2582306eb386c7e45b9910a065084221a1899",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/2ea812b5d9f555497b803a6a3e621f3a/transformed/vectordrawable-animated-1.1.0-api.jar": "7fb48b12b5cfefd6cab0972eaf5b358a9edd2ed68322e37bbb5ed9dc9f86d3a4",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/0cc20a8b797074538c42451a746ca638/transformed/vectordrawable-1.1.0-api.jar": "d4ab4b9fc7a598dd2e8cf60e8517a6234e5cc9b6a0515565dc338885d7564c01",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/7cfe2b8d59d1aa7374ae0919f4871611/transformed/viewpager-1.1.0-api.jar": "fc60c1262e78803becf4c10ead82b9a07193c1d1ce3f61958b43549c7471962b",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/631f89cb9fba3b0742d26635d2424eaf/transformed/slidingpanelayout-1.2.0-api.jar": "e169bafcb71e8627ff11b5d9bb2b732e711956e2a10f826c06c29c44adeed53b",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/2acec95fd498348ebdc905b2e9265b39/transformed/customview-1.1.0-api.jar": "72d31f12c192c189087dc9e3c8e720055479ed125ee1193a12fc35d5c9bea0c5",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/623dc510c8a8b524e50df4f30c15baf9/transformed/core-1.18.0-api.jar": "e40dc80e32472b7b615052e79a5372c8e553d2d76edadab64f36c03ea8ffd7dc",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common-jvm/2.9.4/ab739bccdb3541983385af169565c7c035d897e7/lifecycle-common-jvm-2.9.4.jar": "37d89b2101f074ac6c260917dabb185607645ee200aa3018c7c5bde70edcf184",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/af354d8ca6ce3e5fdc097cce7de8663a/transformed/lifecycle-viewmodel-ktx-2.9.4-api.jar": "1ade561b240bda93eefeb24e2fd1c5e783e078f3216f205d2fa29c51cc3126f9",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3992b8bdde160d8844a4c8dface67db9/transformed/lifecycle-service-2.9.4-api.jar": "dbbe3f9fc3defd9b18d2e5f511ec288d451a15bf272714f33b710410bd8e1b0b",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/f2bf963aff4a8feea1e275a642a022f4/transformed/lifecycle-livedata-core-ktx-2.9.4-api.jar": "a18c22c55a9b43e3d19f10059dcb6883e4908147d858ec318f9f56d9b15c9507",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/0c56473f457124aec0b979f83252973e/transformed/lifecycle-livedata-core-2.9.4-api.jar": "3777f6a0364b8bf64f86a300fa5817f432189bdb06d6db1d3fa2357eae8694ca",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/38c07936870f6c26ef578c5c692fd56c/transformed/lifecycle-livedata-2.9.4-api.jar": "84aa103467d6e986553f04cb38bb1b1f1234eeb63c7b1b93ed0a50962dbec475",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3ef2958d3810d2b691b0769d3a7bb4c2/transformed/lifecycle-viewmodel-2.9.4-api.jar": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/c1733171cfd9347725571079b5b21b9a/transformed/lifecycle-viewmodel-release-api.jar": "df3d89010ce3b970954fca798a18ea98c9c3bbf5c490c039b28a749ac8b542f3",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/5e7ba575d327c1c51f83465e5ca5cb2e/transformed/lifecycle-viewmodel-compose-release-api.jar": "a51f9a9e64c7a6e79db3255bf4ef41252aa01068fdc16ec8cf11ad79aef4c344",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/54e93c26190f1f80d3346c7f724c42fd/transformed/ui-api.jar": "3a2d709dad4cc82f60772ddb690c4a07f944b52e84fe646f83600f7e01e881c1",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/f8772389ac6124f5ea7e9f09d6ee47d4/transformed/ui-tooling-api.jar": "db76faf23efa1af62db1ba25e6b6f99750767a4133e628ac9b7202cd5293a252",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/cf5ba46bd19e035dd3fbd114c3129118/transformed/navigationevent-api.jar": "8860e665522d9564703bdaf4ecc105e02e73f3a1e9919e50984d1b162c97cc1c",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/18108d505677a9296cafbbd8f7e3eefd/transformed/navigationevent-compose-api.jar": "b1f2e8d9316d754feeb92d08b4ad0a510fca2a2fd995881a2672ea12fdfede22",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3b89c8140c6795188ac2f8d128d1286a/transformed/runtime-retain-api.jar": "18b2068db1dc7ab579b269b461f978fa56e36f0b1278150039ae370ca6c145cf",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/ef64ffdc4dbf2810f4da14b9c7501c2e/transformed/runtime-annotation-api.jar": "170c4da3a8d2afadf0ed5174849278a6216f9fb7f15a8aec9fa7b5528d8f8657",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/777f8873815ac7ab8e2258270dd71644/transformed/runtime-saveable-api.jar": "fcc32296db17879df4ca694fb5714c1f2a73f093b99c1d54fe1d6e3c9c684520",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/7b4981831f6235e9c2abd519791faa01/transformed/savedstate-release-api.jar": "ebfa68e340ae7cda489eb168623a8a268f279a0ec146ca9262af3fe47b892cdd",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/da27e6fa37c3e81e66919be32910eb24/transformed/savedstate-ktx-1.3.2-api.jar": "8882edfda27e22bc67405aa458bb03aadf1ca0e008d108f5e56270f6530f07c6",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/4bf6719ecd7915d00cc1e56cbd35cade/transformed/savedstate-compose-api.jar": "224573f5835b062436f15f8e98003b3fa5c8a3f4b4788ac7cb8adb8f377d7bce",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/29ef014947a3b2b649a061e7ed9e2905/transformed/runtime-api.jar": "ae6caa9675046526701e8d10bb82bfc095a9b9f3c99ca2e7b9a71828c816b2b3",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-android/1.9.0/6cf3b8df5a2ce8c6b0dffe55657a827c405ee2fe/kotlinx-coroutines-android-1.9.0.jar": "bd783acd2f9738845d58380f46f45b5cde95d0cb03027d56725338b26bfc4d72",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.9.0/9beade4c1c1569e4f36cbd2c37e02e3e41502601/kotlinx-coroutines-core-jvm-1.9.0.jar": "ad89c2892235e670f222d819cb3d81188143cb19a05b59df9889ae4269f5c70a",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-play-services/1.9.0/9d715295c29dddf8c381565c513fb2d9923f9f41/kotlinx-coroutines-play-services-1.9.0.jar": "4cb6b6321df1664b99fee756de63f6af65ccb4f68936f26cf76c211dea1b23ae",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/b440518a4e460e85d50558c710a925a6/transformed/play-services-tasks-18.1.0-api.jar": "17fa1cb4bb77361de553da1b1ccf2e5eb18dd3ac1a0f072054b272fbc23b16b1",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3a458da4c83d7d701f3904192eec4b92/transformed/firebase-measurement-connector-20.0.1-api.jar": "0462dc4dd21104d9493994afec19df0569901b5f69fd5484bedf7b1584296019",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/8f882bfee3a753db9ef9af08f8aae306/transformed/play-services-basement-18.3.0-api.jar": "8f67ed0820acf42ea3e88e907a40ec0a16d9341f6dc68da0bd294266f082e21d",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/f1341e0039585558025be5d145e64d36/transformed/fragment-1.8.9-api.jar": "e449e2594ec40a3944ce7b80569eab1be85457211373e04d5e4404d76ff48257",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/64fb97c9f2f4649b2d91d07332ca47f2/transformed/fragment-ktx-1.8.9-api.jar": "5ab11881a22e91a7863e713d7c4e1739ee712bfdbf14249f308f15ddee4d90bc",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/5723e22997d06277a3ad3848480fcfcb/transformed/activity-ktx-1.13.0-api.jar": "f3af72458a483c151f25e5f132728b6370c2fc48c99988d75672005a5ac24d99",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/9a0539f2561e189bf7489d93b6ff3c16/transformed/activity-compose-1.13.0-api.jar": "ecf64116e2b8e5747fabca04b757d394738bc02201dcef095c6ce6f396a11b0c",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/7755c2451e35d17a05052ba38d24d5e1/transformed/core-splashscreen-1.2.0-api.jar": "4767f0cca684ea881b72075d8fdd91df079007911daf57f403aaa462570b4b1f",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/c9e6c15e097b54d15ded3b21703a74c8/transformed/media3-exoplayer-midi-1.10.1-api.jar": "617888caf5d6c1be131baf90e3fa2e319aa1eb0f9ed3cb8a7166418dd2cd5ff7",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/df135483f10b29895829224260cce9ea/transformed/media3-exoplayer-1.10.1-api.jar": "f744ad900c8d1c7b0f5c7ad613a0fdebf1825132d6dfe4e7d8fe0a5ff51a9c5b",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-parcelize-runtime/2.3.21/5eeb7fbd98f9b6a762d45a93636b87f31fc6dd17/kotlin-parcelize-runtime-2.3.21.jar": "a21d5f85475efb27f17dd97d1a289d64874f2ddfdb508ea484477a4cf1afe969",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/8ba9ddb7176d6122092c37c935898f2f/transformed/leakcanary-android-2.14-api.jar": "0511a469f4cd606bc45b53a3ea4c2e8ef91741cf8e358fd1ac1a8d665fe3e651",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/e3a37dd53632c77ed15c7e35b8227183/transformed/leakcanary-object-watcher-android-2.14-api.jar": "97224ed08c6621eb64d3a1586cc348aa3a09b65a7559be0a5b3dce36cdafcac7",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3a5b2c602c8a779314ddb16c74348652/transformed/media3-datasource-okhttp-1.10.1-api.jar": "566c58fbc0f03147aabdacb98be3993d2a63181dff7ff9b7c995c48b83eea6d5",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/eb9468ad9e44baa970438c43b4949ec9/transformed/okhttp-release-api.jar": "cd30f982342dbeb6e3b34a680501e3c095f35c47dbf32a26cb963c80efe28bed",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/c766b83d0bcfb02aaa10495cc1172be3/transformed/core-viewtree-1.0.0-api.jar": "edb97285f289307f89297649222fcf647bd091b32ebc764edd6ba5afaeef6b2a",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/35b9dac2582c58c34436a908bfe9d5de/transformed/media3-extractor-1.10.1-api.jar": "f9ee5c20605b361694f1edc64ca134d67523a8d7913e5040d81060befb6ec16d",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/5afaa7ccd06472e5b024ce6531bb2274/transformed/media3-container-1.10.1-api.jar": "3bc7caf92070c75136faf7a6986ab3fe94d014003e196cb61baa2123a2c4560f",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/89e99dc47c6888b4609e89c55e23afa4/transformed/media3-datasource-1.10.1-api.jar": "b0d2c6b68550806ef40edf107e025adf79d8622538ba3837734eb1efc59f1642",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/51da9df0b620fa34c77cb731ef7e2aa1/transformed/media3-decoder-1.10.1-api.jar": "30b42528521206d2d357d0233cf673d9651d7ca6384862820bc093303c5f5a55",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/0b3df73ebbb63f2b4928217a98deaa3a/transformed/media3-database-1.10.1-api.jar": "a7020ba4b8e7d59d20bcc4a8f236429be902682f9de8a50f71c55ebe7d9330f0",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/d134777f6e8ff6dfe66b352e54ae9b7d/transformed/media3-common-1.10.1-api.jar": "9845b9955bcc3678b2462610dbefe9a1dbdb8f2c0dc17987e6a8a606bd4ab5cd",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/c7c5676f4101ca3766fdbecf9bfa42f7/transformed/annotation-experimental-1.4.1-api.jar": "bf4cbf3c5951f25298ca8e02436bd8ae88aa5ab161d2718f297691ce552adb0f",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.15.0/cb3c285187640f543150fcac1ae012bdd778c0e1/okio-jvm-3.15.0.jar": "483dc383b1049d220892322a0d6a4308425f09bb05b48c43d4eaa9ff82b1cd16",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/70ddf1be339f5356eb32b6690e326227/transformed/versionedparcelable-1.1.1-api.jar": "ffa7b07e41fa6e83e9f6f7dedd7b3a7f084e33420fa2b0f61599a3da816d170c",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-ktx/1.5.0/27c78a926a16a1bf792b2285cf2834e8caae4a07/collection-ktx-1.5.0.jar": "939b4a8697640e77d83e4e8b4c4a9d18f8130198c5961194af8dd9db9dc7c353",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.5.0/7ba2c69414d46ebc2dd76598bdd0a75c54281a57/collection-jvm-1.5.0.jar": "70b35924e4babcdffa37d0e575ee039c56a2d97123342624c48b603233704341",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/6203c1c04698ffa88eb6296e2ae5c063/transformed/cursoradapter-1.0.0-api.jar": "cd51036ac1b49da0613a4766e8c870b43da6b61802151449cd7c65663ce497a5",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/f03f78e0833a1a50dd3362f07598f7d8/transformed/interpolator-1.0.0-api.jar": "41afedcf53756d2b0c05cc3479263a2d00bb981e1a4691be8649855919a199d1",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/353f57181bab40e0e9904504bb8a17d1/transformed/cardview-1.0.0-api.jar": "fce09f3efb3ba739aabe7a7e63f317a5d28530209f789ea10fa998d8b98a4331",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/d891afb4156966970623df3be1ddde1a/transformed/firebase-config-interop-16.0.1-api.jar": "6d3f2777e92bb980475ab4b789e45374405bfad69abb3bcaead1e2537fd670d1",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/99da32edda83f0a8b286d55b7cc47881/transformed/firebase-datatransport-18.2.0-api.jar": "2c2167e9b6cd95aad274dfca342056fcdde1eb686bfae52583626db8e2e04874",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/d1b1fedecfdd258d0ff63fb8dc350634/transformed/transport-backend-cct-3.1.9-api.jar": "836be2e1d57ed7ee0f5760b2588c07ded2e8bc4b71efaaf3a371bc3cfef6a869",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/86125809f9cf44985b7fc0a4916ab89f/transformed/firebase-encoders-json-18.0.1-api.jar": "763db3973210d939c35889b4f7cb51d3a52ad15a70f37025c149eb1f8aaac84d",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/deaef11fb710996de94bce7c0a7bbf77/transformed/transport-runtime-3.1.9-api.jar": "af72190b9ec204642624560ff154b4d4fb4f0c3e149bf19df4a4cdfbfb242bde",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders-proto/16.0.0/a42d5fd83b96ae7b73a8617d29c94703e18c9992/firebase-encoders-proto-16.0.0.jar": "293db96a0d1d43f033167881b638d8fde844e4e5495f5101cf52295765295e0e",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders/17.0.0/26f52dc549c42575b155f8c720e84059ee600a85/firebase-encoders-17.0.0.jar": "282a5a703f9b7eb56508dde97ea918e95d73318b157050f457f7a86dca750150",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/f9faf517679aac55e925ba8fd20f1b0e/transformed/sqlite-framework-release-api.jar": "1655755be96e7773eae2665a4aa279ba6b9f3f21bf9db598f56dbe07c0c88c34",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/57feac86df3b957150f118d70b1dff4c/transformed/sqlite-release-api.jar": "27828d6bca8afe8f8527bd12030acaa37e6f61da1224b08a3337d4ea97903c45",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/f1fe02a9cc0f616a469a9f014037a4f8/transformed/transport-api-3.0.0-api.jar": "869115ad7657e39b116742b853bc1660183d7b345e450a17bfe607f40feab5b8",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/4ea0cd1c405a9e097163ea404346c3fc/transformed/core-runtime-2.2.0-api.jar": "e7800bf258bd590b9e25455391535b9f3a692035c11dc7699611be747abb0387",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.2.0/5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3/core-common-2.2.0.jar": "65308a06b1c00ee186cb9e19321383f043b993813f1522c47f4a3e3303bdba41",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.9.1/b17951747e38bf3986a24431b9ba0d039958aa5f/annotation-jvm-1.9.1.jar": "1e343917ebf27ba96fe4dc52b1cad7fd32b738fbc6355bb6cd5b3b305d7212d0",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.8.0/ed04f49e186a116753ad70d34f0ac2925d1d8020/kotlin-stdlib-jdk8-1.8.0.jar": "05b62804441b0c9a1920b6b7d5cf7329a4e24b6258478e32b1f046ca01900946",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.8.0/3c91271347f678c239607abb676d4032a7898427/kotlin-stdlib-jdk7-1.8.0.jar": "4c889d1d9803f5f2eb6c1592a6b7e62369ac7660c9eee15aba16fec059163666",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.7.3/6701e8c68d9e82387ce72ee96e8ddf058208d58f/kotlinx-serialization-json-jvm-1.7.3.jar": "b1e9138499ed8d20375edda3f2b1c95f3103a258eff6af9edc5ea07100f2b29c",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.7.3/1f226780b845ff9206474c05159245d861556249/kotlinx-serialization-core-jvm-1.7.3.jar": "f0adde45864144475385cf4aa7e0b7feb27f61fcf9472665ed98cc971b06b1eb",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/d8db848666c32ca4cb2b585c617e687d/transformed/constraintlayout-2.2.1-api.jar": "6e88a00c750df359599665063fb4fcce89099b26eaf37f8c8cec5b806d192993",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.12.1/4e773a317740b83b43cfc3d652962856041697cb/gson-2.12.1.jar": "ebee13d5fb7477cd7f1cc010e0c356df8ca80709715248da97f79e35ccb4fbec",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/c32d87dc0f4bed9cb89732751ceceffb/transformed/library-1.3.0-api.jar": "44629a1ba7c44e0c497402cc3e6935090ff508debf978edac40d282b407c6f1b",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/574747cbefbefaed326fab998bd4dc10/transformed/FancyShowCaseView-1.4.0-api.jar": "7ef0dd6b01622ad424f98fe9a260232941a53a7025e85545e0137127d0872662",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/16ebcf8a81c437a1a5f30af5e7cb84fc/transformed/leakcanary-android-core-2.14-api.jar": "274bd3010cbd7202eb48c3cc67c68f0fa6e863de6771c7397c0b9723736356b4",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.resourceinspection/resourceinspection-annotation/1.0.1/8c21f8ff5d96d5d52c948707f7e4d6ca6773feef/resourceinspection-annotation-1.0.1.jar": "8cff870ec6fb31db48a52f4a792335b4bf8de07e03bd37823181526433ccd5cb",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.36.0/227d4d4957ccc3dc5761bd897e3a0ee587e750a7/error_prone_annotations-2.36.0.jar": "77440e270b0bc9a249903c5a076c36a722c4886ca4f42675f2903a1c53ed61a5",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-android/2.14/6fb0b4ab27c085678a3d26ce2b9350fb77c32407/shark-android-2.14.jar": "b79dfb05903e69018d598bb4da4f41e0f7732a585cb66a0a5ffb5b89d2076c72",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/0e904cbd2566cb658ab936fd429c0023/transformed/leakcanary-object-watcher-android-androidx-2.14-api.jar": "ec3f7ccfa3f0436f76632db209a3a240210c8723808de2d5b646d57f4c88c99e",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/9a41bde09e2f0c9b6d39e5dd918086dc/transformed/leakcanary-object-watcher-android-support-fragments-2.14-api.jar": "9d5739411df6d44c75bd8368ccefbe02f03533a17713d36023a5f8d0ab72ca37",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/7abfc44fd274b2ec61dee42981f6a2b5/transformed/leakcanary-object-watcher-android-core-2.14-api.jar": "74e1c4357f1379193429e737da13d22b5a3c1e85807976d2af924dac2f7910cf",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/388cd814d28282086642b1d9bb0b69d7/transformed/startup-runtime-1.1.1-api.jar": "a3c09dd3aa31c2366e5a7890444f20db2dcb78394c2a2a7622ce13c1f1762460",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/33.3.1-android/36162b3b4e9df67dae90db62a2c54616ca42c1bd/guava-33.3.1-android.jar": "2c3e41d1b380f2044d257947a3aa82dabf3ae4b978622745254aa18b6cf89ab0",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar": "1fad6e6be7557781e4d33729d49ae1cdc8fdda6fe477bb0cc68ce351eafdfbab",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/3a5a55f609d1cbad2f3e765b09564458/transformed/graphics-shapes-release-api.jar": "c2d441cdddf6dab0f38ea9f32ba00615ab8177ada776b9b85d0e5c501bcb9aa9",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/7f0838d27a7b16f6a062b5d1cf423bba/transformed/firebase-components-19.0.0-api.jar": "cab1bab028bb16716dc070a8c9db625d7cecf376d4978fd5ef522751f1b3d11f",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-annotations/17.0.0/fd04a6accd970e0fcf9baf2424abe2926e00d0e2/firebase-annotations-17.0.0.jar": "f80305e6f7b5d111278d4df9504f51f7230e06c6457a0fa7c16e236c7613cc71",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark/2.14/768be00911a64d2314345115687fe0d14924bd87/shark-2.14.jar": "ffadb874b3a4d4d0033afd302e37b26ade2b63d6e23f9bcd568f727304845f01",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/leakcanary-object-watcher/2.14/4e9e9ea14da4e86321b1369c7aea6528f0ef2/leakcanary-object-watcher-2.14.jar": "575a046bcc362916fa6f106373f393bacf5578f13640419a464b4c81d89e646e",
+      "/Users/yuku/.gradle/caches/9.7.1/transforms/6f86fd3bfea59b45aa267dc023f0ff9c/transformed/leakcanary-android-utils-2.14-api.jar": "82bc7e35c0cc00ffc41291d57dcc15061e1a4a46e49827f9483f38ca3e0d2a4f",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.2/c4a06a64e650562f30b7bf9aaec1bfed43aca12b/failureaccess-1.0.2.jar": "8a8f81cf9b359e3f6dfa691a1e776985c061ef2f223c9b2c80753e1b458e8064",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-graph/2.14/ed8d34d03693373e1e9e1bcdcd52e2a63391e6d9/shark-graph-2.14.jar": "7596fc9caea47e95f6001f57098b66c64beaa968c1354ab6c0aa98dee901681b",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-hprof/2.14/561aba011e38279be7e068f6760f816baab0ccb9/shark-hprof-2.14.jar": "8f19f11585b0fb34fb8cac021504208ed1c73dfe8cb1f69b2bdb0437bb1191fa",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-log/2.14/25574b6474a61c3d0a5df80272ecfa51c560bd7e/shark-log-2.14.jar": "ba1011ae450664f7e8e37c5b6e5e01660b11456ddca8960b5cbe6df0e3f99926",
+      "/Users/yuku/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar": "91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff"
+    },
+    "returncode": 1,
+    "diagnostics": [
+      {
+        "source_identity": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt",
+        "offset": 8310,
+        "category": "unclassified",
+        "code": "UNCLASSIFIED",
+        "message": "Uninitialized locals require an explicit supported type",
+        "path": "/Users/yuku/f/git/korrust/target/next5-objects/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/ui/AudioBar.kt",
+        "line": 210,
+        "column": 31
+      }
+    ],
+    "scope": "Standalone unchanged-source assessment with actual captured dependencies; production JVM21/plugin build and bounded compiler JVM1.8 are distinct. No full-app or Compose transformation claim."
+  },
+  "input_integrity": {
+    "changed_paths": []
+  },
+  "counts": {
+    "pass": 16,
+    "invalid_kotlin": 3,
+    "unsupported_language": 2,
+    "correctness_failure": 1
+  },
+  "archived_from": "/Users/yuku/f/git/korrust/target/next5-objects-validation-v4",
+  "archival_scope": "Original frozen source archives, text command evidence and source fixtures retained; compiler binaries and generated class/index files remain ignored."
+}

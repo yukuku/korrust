@@ -275,6 +275,7 @@ mod tests {
             LibraryTypeAlias {
                 name: "Names".into(),
                 type_parameters: vec![TypeParameter {
+                    only_input_types: false,
                     name: "T".into(),
                     variance: Variance::Invariant,
                     bounds: vec![Type::Nullable(Box::new(Type::Java(

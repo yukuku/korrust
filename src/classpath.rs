@@ -1044,6 +1044,7 @@ struct Attributes {
     parameter_annotations: Vec<Vec<Annotation>>,
     return_type_annotations: Vec<Annotation>,
     parameter_type_annotations: Vec<(usize, Annotation)>,
+    only_input_type_parameters: Vec<usize>,
     type_annotation_targets: Vec<u8>,
     type_annotation_parameter_indices: Vec<usize>,
     signature: Option<String>,
@@ -1242,7 +1243,15 @@ fn attributes(
                         }
                     }
                     let value = annotation(&mut data, pool, 0)?;
-                    if path_length != 0 || !matches!(target, 0x14 | 0x16) {
+                    if target == 0x01
+                        && path_length == 0
+                        && value.name == "Lkotlin/internal/OnlyInputTypes;"
+                        && value.values.is_empty()
+                    {
+                        result
+                            .only_input_type_parameters
+                            .push(parameter.ok_or_else(invalid)?);
+                    } else if path_length != 0 || !matches!(target, 0x14 | 0x16) {
                         result.unsupported = true;
                     } else if target == 0x14 {
                         result.return_type_annotations.push(value);
@@ -2710,6 +2719,7 @@ fn parse_details(bytes: &[u8], expected: &str) -> Result<(JavaClass, Attributes,
         }
         validate_type_annotation_parameters(&descriptor, &attrs)?;
         let unsupported = attrs.unsupported
+            || !attrs.only_input_type_parameters.is_empty()
             || attrs.annotated
             || attrs.signature.is_some()
             || access & (0x0040 | 0x1000) != 0;

@@ -73,10 +73,6 @@ fn valid_unsupported_sealed_shapes_fail_explicitly_at_the_source() {
             "SEALED_CONSTRUCTOR_DEFAULTS_UNSUPPORTED",
         ),
         (
-            "sealed interface S\ndata object A:S",
-            "DATA_OBJECT_UNSUPPORTED",
-        ),
-        (
             "fun f():Int=try{1}catch(_:Exception){2}",
             "DISCARD_CATCH_BINDING_UNSUPPORTED",
         ),
@@ -119,4 +115,19 @@ fn source_batch_resource_limit_is_an_explicit_boundary() {
         .unwrap();
     assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
     assert_eq!(error.code, "SOURCE_DECLARATION_LIMIT_UNSUPPORTED");
+}
+
+#[test]
+fn data_objects_close_sealed_interfaces() {
+    let outputs = compile_outputs_with_classpath(
+        "sealed interface S\ndata object A:S\nfun f(v:S):Int=when(v){A->1}",
+        "Data.kt",
+        &classpath(),
+    )
+    .unwrap();
+    assert!(
+        outputs
+            .iter()
+            .any(|output| output.relative_path == "A.class")
+    );
 }

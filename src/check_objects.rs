@@ -478,6 +478,9 @@ pub(super) fn check(
             format!("{}/{}", package.replace('.', "/"), source.name)
         }
     });
+    let mut scoped_imports = imports.clone();
+    scoped_imports.insert(source.name.clone(), owner.clone());
+    let imports = &scoped_imports;
     let lambdas = Rc::new(RefCell::new(Vec::new()));
     let mut context =
         declarations::DeclarationContext::new(&owner, classpath, imports, classes, &lambdas);

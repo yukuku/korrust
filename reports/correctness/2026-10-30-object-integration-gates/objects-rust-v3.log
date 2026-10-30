@@ -1,0 +1,25 @@
+   Compiling korrust v0.1.0 (/Users/yuku/f/git/korrust/target/next5-objects)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.86s
+     Running tests/expanded_objects.rs (target/next5-objects-build/debug/deps/expanded_objects-406d14fe7e46df7a)
+
+running 4 tests
+test data_object_equality_redefinitions_are_invalid ... ok
+test data_object_contracts_are_emitted_with_nested_interface_implementations ... ok
+test object_class_inheritance_is_an_explicit_boundary ... ok
+test imported_input_type_constraints_are_checked_without_replacing_library_calls ... FAILED
+
+failures:
+
+---- imported_input_type_constraints_are_checked_without_replacing_library_calls stdout ----
+
+thread 'imported_input_type_constraints_are_checked_without_replacing_library_calls' (5951995) panicked at tests/expanded_objects.rs:61:178:
+called `Result::unwrap()` on an `Err` value: Diagnostic { offset: 21, message: "Type requires an explicit class import: Entry", source_identity: Some("Inputs.kt"), kind: MissingDependency, code: "CLASS_NOT_FOUND", type_name: Some("Entry") }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    imported_input_type_constraints_are_checked_without_replacing_library_calls
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.24s
+
+error: test failed, to rerun pass `--test expanded_objects`

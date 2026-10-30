@@ -62,6 +62,15 @@ class UpstreamAdapterTests(unittest.TestCase):
         self.assertIn('-XXLanguage:-SomeFeature', options)
         self.assertEqual(options[options.index('-jvm-target') + 1], '17')
 
+    def test_candidate_settings_preserve_stable_features_and_exact_versions(self):
+        fixture = self.fixture('// LANGUAGE: +DataObjects\nfun box() = "OK"\n')
+        self.assertEqual(adapter.candidate_options(fixture['modules'][0]), (['--language-feature', '+DataObjects'], []))
+        for directive in ['LANGUAGE: -DataObjects', 'LANGUAGE: +BareArrayClassLiteral', 'LANGUAGE: +DataObjects -DataObjects', 'LANGUAGE_VERSION: 1.8', 'API_VERSION: 1.8', 'JVM_TARGET: 2.3', 'JVM_TARGET: 17']:
+            fixture = self.fixture('// ' + directive + '\nfun box() = "OK"\n')
+            self.assertTrue(adapter.candidate_options(fixture['modules'][0])[1], directive)
+        fixture = self.fixture('// LANGUAGE_VERSION: 2.3\n// API_VERSION: 2.3\n// JVM_TARGET: 1.8\nfun box() = "OK"\n')
+        self.assertEqual(adapter.candidate_options(fixture['modules'][0]), ([], []))
+
     def test_byte_offset_diagnostic_maps_to_original_source(self):
         fixture = self.fixture('val λ = <!UNRESOLVED_REFERENCE!>missing<!>\n')
         source = fixture['modules'][0]['files'][0]

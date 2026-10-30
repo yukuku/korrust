@@ -105,6 +105,7 @@ pub(super) fn check_class_with_constants(
         .iter()
         .map(|parameter| {
             Ok(syntax::TypeParameter {
+                only_input_types: parameter.only_input_types,
                 name: parameter.name.clone(),
                 variance: parameter.variance,
                 bounds: parameter

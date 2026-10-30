@@ -1121,6 +1121,12 @@ impl Checker<'_> {
             if failures.len() == 1 {
                 return Err(failures.pop().unwrap());
             }
+            if let Some(error) = failures
+                .iter()
+                .find(|error| error.kind == crate::DiagnosticKind::UnsupportedLanguage)
+            {
+                return Err(error.clone());
+            }
             if !methods.is_empty() && methods.iter().all(|m| m.kotlin_internal) {
                 return Err(Diagnostic::new(
                     offset,
@@ -5306,6 +5312,7 @@ fn resolve_parameters(
         .iter()
         .map(|parameter| {
             Ok(syntax::TypeParameter {
+                only_input_types: parameter.only_input_types,
                 name: parameter.name.clone(),
                 variance: parameter.variance,
                 bounds: parameter
@@ -5600,9 +5607,6 @@ pub fn check_with_owner(
                 ));
             }
             for class in package_classes {
-                if class.access & 1 == 0 {
-                    continue;
-                }
                 if class.library.as_ref().is_some_and(|l| l.package.is_some()) {
                     for method in &class.methods {
                         if method.access & 9 == 9 {
@@ -5620,7 +5624,7 @@ pub fn check_with_owner(
                         }
                     }
                 } else {
-                    if class.unsupported {
+                    if class.access & 1 == 0 || class.unsupported {
                         continue;
                     }
                     let simple = class.name.rsplit('/').next().unwrap().to_owned();

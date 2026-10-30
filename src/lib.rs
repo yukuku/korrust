@@ -6,6 +6,7 @@ mod compiled_inline;
 mod const_eval;
 mod jvm_descriptor;
 mod metadata;
+mod object_lowering;
 mod visibility;
 
 use std::path::PathBuf;
@@ -962,7 +963,8 @@ fn declaration_units(
             unit.class_decl = Some(d);
             nested
         }
-        syntax::Declaration::Object(d) => {
+        syntax::Declaration::Object(mut d) => {
+            object_lowering::lower(&mut d, &owner)?;
             let mut nested = d.nested.clone();
             nested.extend(d.objects.iter().cloned().map(syntax::Declaration::Object));
             unit.object_decl = Some(d);

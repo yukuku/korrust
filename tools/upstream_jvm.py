@@ -188,6 +188,24 @@ def options_for(module):
     return options
 
 
+def candidate_options(module):
+    options = []
+    unsupported = []
+    defaults = {'LANGUAGE_VERSION': '2.3', 'API_VERSION': '2.3', 'JVM_TARGET': '1.8'}
+    for setting in module['directives']:
+        name, value = setting['name'], setting['value']
+        if name == 'LANGUAGE':
+            features = list(filter(None, re.split(r'[,\s]+', value)))
+            if not features or any(feature != '+DataObjects' for feature in features):
+                unsupported.append(setting)
+            else:
+                for feature in features:
+                    options.extend(['--language-feature', feature])
+        elif name in defaults and value != defaults[name]:
+            unsupported.append(setting)
+    return options, unsupported
+
+
 class Commands:
     def __init__(self, directory, environment):
         self.directory = directory
@@ -370,13 +388,12 @@ def run_case(entry, context):
                     friend_index = args.index(os.pathsep.join(map(str, friends)))
                     args[friend_index] = '-Xfriend-paths=' + args[friend_index]
             else:
-                unsupported_options = [item for item in module['directives']
-                                       if item['name'] in {'LANGUAGE', 'LANGUAGE_VERSION', 'API_VERSION', 'JVM_TARGET'}
-                                       and (item['name'] == 'LANGUAGE' or item['value'] not in {'2.3', '1.8'})]
+                settings, unsupported_options = candidate_options(module)
                 if unsupported_options:
                     case.update(outcome='harness_unsupported', reasons=['Candidate CLI cannot match requested language/JVM settings'], settings=unsupported_options)
                     return case
-                args = [context['candidate'], *common, '--diagnostic-format', 'json']
+                args = [context['candidate'], *common, '--diagnostic-format', 'json', *settings]
+                case.setdefault('candidate_settings', {})[name] = settings
             result = commands.run(entry['id'] + '/' + provider + '/' + name, args)
             if provider == 'official' and (result is None or result.returncode):
                 if entry['kind'] == 'diagnostics' and result is not None and result.returncode:

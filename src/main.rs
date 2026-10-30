@@ -45,7 +45,7 @@ fn run() -> std::result::Result<(), String> {
             None,
         )
     };
-    let usage = "Usage: korrust [source.kt ...] -d <output-directory> [-cp <classpath>] [--module-name <name>] [--friend-paths <classpath>] [--diagnostic-format human|json]";
+    let usage = "Usage: korrust [source.kt ...] -d <output-directory> [-cp <classpath>] [--module-name <name>] [--friend-paths <classpath>] [--diagnostic-format human|json] [--language-feature +DataObjects]";
     let mut inputs = Vec::new();
     let mut module_name = None;
     let mut destination = None;
@@ -62,6 +62,7 @@ fn run() -> std::result::Result<(), String> {
             || args[index] == "--module-name"
             || args[index] == "--friend-paths"
             || args[index] == "--diagnostic-format"
+            || args[index] == "--language-feature"
         {
             let option = &args[index];
             index += 1;
@@ -93,6 +94,13 @@ fn run() -> std::result::Result<(), String> {
                 }
                 has_friend_paths = true;
                 friend_paths = env::split_paths(value).collect();
+            } else if option == "--language-feature" {
+                if value != "+DataObjects" {
+                    return Err(setup(
+                        "UNSUPPORTED_LANGUAGE_SETTING",
+                        "Only the default-enabled +DataObjects setting is supported",
+                    ));
+                }
             } else if option == "--diagnostic-format" {
                 if has_diagnostic_format || !(value == "human" || value == "json") {
                     return Err(setup(

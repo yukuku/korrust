@@ -105,6 +105,7 @@ impl Checker<'_> {
         };
         let class = self.classpath.load(owner)?;
         let mut getters = Vec::new();
+        let mut unsupported_getter = false;
         let methods = self.classpath.methods(owner)?;
         for method in &methods {
             if method.access & 8 != 0
@@ -143,6 +144,13 @@ impl Checker<'_> {
             )? {
                 continue;
             }
+            if method.unsupported
+                && method.descriptor.starts_with("()")
+                && method.descriptor != "()V"
+            {
+                unsupported_getter = true;
+                continue;
+            }
             let method =
                 library::specialize_receiver(method.clone(), receiver, &class, self.classpath);
             let (parameters, result) = class_method_types(&method)?;
@@ -156,6 +164,16 @@ impl Checker<'_> {
                 }
                 getters.push(method);
             }
+        }
+        if unsupported_getter {
+            return Err(Diagnostic::new(
+                offset,
+                "Java property getter has an unsupported declaration or type signature",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "JAVA_PROPERTY_DECLARATION_UNSUPPORTED",
+            ));
         }
         match getters.len() {
             0 => Ok(None),

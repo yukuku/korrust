@@ -1193,6 +1193,7 @@ impl Checker<'_> {
         }
         let fixed = substitutions.keys().cloned().collect::<HashSet<_>>();
         let mut captures = HashMap::<String, TypeArgument>::new();
+        let mut input_types = HashMap::<String, Vec<Type>>::new();
         let params = method
             .kotlin_params
             .as_ref()
@@ -1293,6 +1294,24 @@ impl Checker<'_> {
                     captures.insert(name.clone(), projection.clone());
                 }
             }
+            for parameter in library
+                .type_parameters
+                .iter()
+                .filter(|p| p.only_input_types && !fixed.contains(&p.name))
+            {
+                let pattern = &params[*index].1;
+                if !mentions(pattern, &parameter.name) {
+                    continue;
+                }
+                if !matches!(pattern, Type::Parameter { name, .. } if name == &parameter.name) {
+                    return Err(Diagnostic::new(offset, "OnlyInputTypes inference through nested or captured parameter types is unsupported")
+                        .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "ONLY_INPUT_TYPES_SHAPE_UNSUPPORTED"));
+                }
+                input_types
+                    .entry(parameter.name.clone())
+                    .or_default()
+                    .push(value.ty.clone());
+            }
             if !self.infer_constraints(&params[*index].1, &value.ty, &mut substitutions, &fixed, 0)
             {
                 return Err(Diagnostic::new(
@@ -1350,6 +1369,26 @@ impl Checker<'_> {
                     format!("Cannot infer type parameter {}", parameter.name),
                 )
             })?;
+            if parameter.only_input_types && !fixed.contains(&parameter.name) {
+                let Some(inputs) = input_types.get(&parameter.name) else {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "OnlyInputTypes requires supported direct input constraints",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "ONLY_INPUT_TYPES_SHAPE_UNSUPPORTED",
+                    ));
+                };
+                if !inputs.contains(inferred) {
+                    return Err(
+                        Diagnostic::new(offset, "Inferred type is not an input type").with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "TYPE_INFERENCE_ONLY_INPUT_TYPES_ERROR",
+                        ),
+                    );
+                }
+            }
             for bound in &parameter.bounds {
                 let bound = substitute(bound, &substitutions);
                 let bound = if named || matches!(bound, Type::Platform(_)) {

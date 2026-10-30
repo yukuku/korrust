@@ -1,0 +1,1209 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-10-30T05:58:06.075414+00:00",
+  "status": "complete",
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 77,
+      "output": "OK 77"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 77,
+      "output": "OK 77"
+    },
+    {
+      "id": "metadata",
+      "outcome": "pass",
+      "snapshots": {
+        "official": [
+          "equals 6",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "objectcases.Container$Nested 1350",
+          "objectcases.Empty 1350",
+          "objectcases.Start 1350",
+          "objectcases.Stop 1350",
+          "objectcases.Tracked 1350",
+          "toString 65558",
+          "toString 65750",
+          "toString 65750",
+          "toString 65750",
+          "toString 65750",
+          "value 6"
+        ],
+        "candidate": [
+          "equals 6",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "equals 66006",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "hashCode 65750",
+          "objectcases.Container$Nested 1350",
+          "objectcases.Empty 1350",
+          "objectcases.Start 1350",
+          "objectcases.Stop 1350",
+          "objectcases.Tracked 1350",
+          "toString 65558",
+          "toString 65750",
+          "toString 65750",
+          "toString 65750",
+          "toString 65750",
+          "value 6"
+        ]
+      }
+    },
+    {
+      "id": "signature/objectcases.Start",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.Stop",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.Container$Nested",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.Empty",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.Tracked",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/objectcases.ObjectsKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_consumer/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_consumer/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/custom_hash",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "DATA_OBJECT_CUSTOM_EQUALITY",
+      "source": "reports/correctness/2026-10-30-expanded-objects-v3-historical/custom_hash.kt",
+      "source_sha256": "c008e84206d14b156daa3b0b801dc37ed8e0c8840a06f0457799b5d6c67c8da5"
+    },
+    {
+      "id": "boundary/custom_equals",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "DATA_OBJECT_CUSTOM_EQUALITY",
+      "source": "reports/correctness/2026-10-30-expanded-objects-v3-historical/custom_equals.kt",
+      "source_sha256": "a3f8c563e0888bc2ad91e045c81cf64c4aefcacc55df5dbec48cfdc9d742e8b5"
+    },
+    {
+      "id": "boundary/custom_equals_without_override",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "DATA_OBJECT_CUSTOM_EQUALITY",
+      "source": "reports/correctness/2026-10-30-expanded-objects-v3-historical/custom_equals_without_override.kt",
+      "source_sha256": "5b1bb8cb0525ad9eafe4eaf21d347d239c6bcd57c8e0328f91d2a97428889b6b"
+    },
+    {
+      "id": "boundary/superclass",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "OBJECT_SUPERCLASS_UNSUPPORTED",
+      "source": "reports/correctness/2026-10-30-expanded-objects-v3-historical/superclass.kt",
+      "source_sha256": "a86f7153d37fe3ad843f058fea6ce8021a851ccd70f0f3d90129ea2108f2a74e"
+    },
+    {
+      "id": "upstream/equals",
+      "family": "expanded_objects",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/equals.kt",
+        "sha256": "2f6061be9250e73090fb56bb1a5b2fef8edcf0e9fc385dd36aa3b7b7e4b3ec59"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "LANGUAGE",
+              "value": "+DataObjects",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/equals/sources/main/equals.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": [
+          "--language-feature",
+          "+DataObjects"
+        ]
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/equals/sources/main/equals.kt",
+          "offset": 133,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "No applicable function overload or wrong argument count",
+          "path": "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/equals/sources/main/equals.kt",
+          "line": 11,
+          "column": 5,
+          "upstream_location": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/equals.kt",
+            "char_offset": 133,
+            "byte_offset": 133,
+            "line": 11,
+            "column": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "upstream/hashCode",
+      "family": "expanded_objects",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/hashCode.kt",
+        "sha256": "0445eef11ca56801b263ef0b7dd81ee10c12b4614a58ea3282f9d6f7fc042d25"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "LANGUAGE",
+              "value": "+DataObjects",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/hashCode/sources/main/hashCode.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": [
+          "--language-feature",
+          "+DataObjects"
+        ]
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/hashCode/sources/main/hashCode.kt",
+          "offset": 159,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "No applicable function overload or wrong argument count",
+          "path": "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/hashCode/sources/main/hashCode.kt",
+          "line": 13,
+          "column": 5,
+          "upstream_location": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/hashCode.kt",
+            "char_offset": 159,
+            "byte_offset": 159,
+            "line": 13,
+            "column": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "upstream/toString",
+      "family": "expanded_objects",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/toString.kt",
+        "sha256": "c10b40ba3b623737b97ee55236100ca13fac08a99a7705d1609d81acc61b628d"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "LANGUAGE",
+              "value": "+DataObjects",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/toString/sources/main/toString.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": [
+          "--language-feature",
+          "+DataObjects"
+        ]
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/toString/sources/main/toString.kt",
+          "offset": 393,
+          "category": "unsupported_language",
+          "code": "OBJECT_SUPERCLASS_UNSUPPORTED",
+          "message": "Object superclass construction is unsupported",
+          "path": "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/toString/sources/main/toString.kt",
+          "line": 24,
+          "column": 67,
+          "upstream_location": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/toString.kt",
+            "char_offset": 393,
+            "byte_offset": 393,
+            "line": 24,
+            "column": 67
+          }
+        }
+      ]
+    },
+    {
+      "id": "upstream/multipleInstances",
+      "family": "expanded_objects",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/multipleInstances.kt",
+        "sha256": "898047bbebea270f0bda3679b66ccd2e58c47eb086080586ac74921a87c094ec"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "LANGUAGE",
+              "value": "+DataObjects",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            },
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM_IR",
+              "original_line": 3
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/multipleInstances/sources/main/multipleInstances.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": [
+          "--language-feature",
+          "+DataObjects"
+        ]
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/multipleInstances/sources/main/multipleInstances.kt",
+          "offset": 133,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unsupported property: declaredConstructors",
+          "path": "reports/correctness/2026-10-30-expanded-objects-v3-historical/upstream/upstream/multipleInstances/sources/main/multipleInstances.kt",
+          "line": 9,
+          "column": 20,
+          "upstream_location": {
+            "path": "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/dataObjects/multipleInstances.kt",
+            "char_offset": 133,
+            "byte_offset": 133,
+            "line": 9,
+            "column": 20
+          }
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "label": "Compile official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Objects.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0000-stderr.txt"
+    },
+    {
+      "label": "Compile candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Objects.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0001-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/java",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Check.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0002-stderr.txt"
+    },
+    {
+      "label": "Execute fixed caller official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/java:/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0003-stderr.txt"
+    },
+    {
+      "label": "Execute fixed caller candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/java:/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0004-stderr.txt"
+    },
+    {
+      "label": "Compile metadata reader",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-compiler.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/metadata",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/MetadataDump.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0005-stderr.txt"
+    },
+    {
+      "label": "Read metadata official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/metadata:/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-compiler.jar",
+        "MetadataDump",
+        "objectcases.Start",
+        "objectcases.Stop",
+        "objectcases.Container$Nested",
+        "objectcases.Empty",
+        "objectcases.Tracked"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0006-stderr.txt"
+    },
+    {
+      "label": "Read metadata candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/metadata:/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-compiler.jar",
+        "MetadataDump",
+        "objectcases.Start",
+        "objectcases.Stop",
+        "objectcases.Container$Nested",
+        "objectcases.Empty",
+        "objectcases.Tracked"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0007-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.Start",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official",
+        "objectcases.Start"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0008-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.Start",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate",
+        "objectcases.Start"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0009-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.Stop",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official",
+        "objectcases.Stop"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0010-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.Stop",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate",
+        "objectcases.Stop"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0011-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.Container$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official",
+        "objectcases.Container$Nested"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0012-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.Container$Nested",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate",
+        "objectcases.Container$Nested"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0013-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.Empty",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official",
+        "objectcases.Empty"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0014-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.Empty",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate",
+        "objectcases.Empty"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0015-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.Tracked",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official",
+        "objectcases.Tracked"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0016-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0016-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.Tracked",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate",
+        "objectcases.Tracked"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0017-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0017-stderr.txt"
+    },
+    {
+      "label": "Signature official/objectcases.ObjectsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official",
+        "objectcases.ObjectsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0018-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0018-stderr.txt"
+    },
+    {
+      "label": "Signature candidate/objectcases.ObjectsKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate",
+        "objectcases.ObjectsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0019-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0019-stderr.txt"
+    },
+    {
+      "label": "Compile Kotlin consumer official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/consumer-official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0020-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0020-stderr.txt"
+    },
+    {
+      "label": "Compile Kotlin consumer launcher official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/consumer-official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/launcher-official",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Launch.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0021-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0021-stderr.txt"
+    },
+    {
+      "label": "Execute Kotlin consumer official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/launcher-official:/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/consumer-official:/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Launch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0022-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0022-stderr.txt"
+    },
+    {
+      "label": "Compile Kotlin consumer candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/consumer-candidate",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0023-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0023-stderr.txt"
+    },
+    {
+      "label": "Compile Kotlin consumer launcher candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/consumer-candidate:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/launcher-candidate",
+        "/Users/yuku/f/git/korrust/target/next5-objects/tests/expanded_objects/Launch.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0024-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0024-stderr.txt"
+    },
+    {
+      "label": "Execute Kotlin consumer candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/launcher-candidate:/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/consumer-candidate:/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Launch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0025-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0025-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_hash/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/custom_hash.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official-custom_hash",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0026-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0026-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_hash/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/custom_hash.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate-custom_hash",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0027-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0027-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_equals/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/custom_equals.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official-custom_equals",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0028-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0028-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_equals/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/custom_equals.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate-custom_equals",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0029-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0029-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_equals_without_override/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/custom_equals_without_override.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official-custom_equals_without_override",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0030-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0030-stderr.txt"
+    },
+    {
+      "label": "Boundary custom_equals_without_override/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/custom_equals_without_override.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate-custom_equals_without_override",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0031-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0031-stderr.txt"
+    },
+    {
+      "label": "Boundary superclass/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/superclass.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/official-superclass",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0032-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0032-stderr.txt"
+    },
+    {
+      "label": "Boundary superclass/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/superclass.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/candidate-superclass",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0033-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0033-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/equals/sources/main/equals.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/equals/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-XXLanguage:+DataObjects",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0034-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0034-stderr.txt"
+    },
+    {
+      "label": "upstream/equals/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/equals/sources/main/equals.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/equals/candidate/main",
+        "--diagnostic-format",
+        "json",
+        "--language-feature",
+        "+DataObjects"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0035-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0035-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/hashCode/sources/main/hashCode.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/hashCode/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-XXLanguage:+DataObjects",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0036-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0036-stderr.txt"
+    },
+    {
+      "label": "upstream/hashCode/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/hashCode/sources/main/hashCode.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/hashCode/candidate/main",
+        "--diagnostic-format",
+        "json",
+        "--language-feature",
+        "+DataObjects"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0037-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0037-stderr.txt"
+    },
+    {
+      "label": "upstream/toString/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/toString/sources/main/toString.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/toString/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-XXLanguage:+DataObjects",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0038-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0038-stderr.txt"
+    },
+    {
+      "label": "upstream/toString/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/toString/sources/main/toString.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/toString/candidate/main",
+        "--diagnostic-format",
+        "json",
+        "--language-feature",
+        "+DataObjects"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0039-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0039-stderr.txt"
+    },
+    {
+      "label": "upstream/multipleInstances/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/multipleInstances/sources/main/multipleInstances.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/multipleInstances/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-XXLanguage:+DataObjects",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0040-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0040-stderr.txt"
+    },
+    {
+      "label": "upstream/multipleInstances/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/multipleInstances/sources/main/multipleInstances.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/next5-objects/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3/upstream/upstream/multipleInstances/candidate/main",
+        "--diagnostic-format",
+        "json",
+        "--language-feature",
+        "+DataObjects"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0041-stdout.txt",
+      "stderr": "reports/correctness/2026-10-30-expanded-objects-v3-historical/commands/0041-stderr.txt"
+    }
+  ],
+  "compiler": {
+    "path": "/Users/yuku/f/git/korrust/target/next5-objects-build/release/korrust",
+    "sha256": "332443d8df19f05e3c969f36081d90391be85a3096e22557ea59191e4a6ff22b"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "claims": "Bounded data-object singleton semantics and nested interface supertypes; not full reflection or unrestricted object inheritance.",
+  "input_integrity": {
+    "changed_paths": []
+  },
+  "counts": {
+    "pass": 13,
+    "invalid_kotlin": 3,
+    "unsupported_language": 2,
+    "correctness_failure": 3
+  },
+  "archived_from": "/Users/yuku/f/git/korrust/target/next5-objects-validation-v3",
+  "archival_scope": "Original frozen source archives, text command evidence and source fixtures retained; compiler binaries and generated class/index files remain ignored."
+}

@@ -341,7 +341,18 @@ impl<'a> Context<'a> {
         }
         for bytes in values {
             let p = Proto::parse(bytes)?;
-            p.allowed(&[1, 2, 3, 4, 5, 6])?;
+            p.allowed(&[1, 2, 3, 4, 5, 6, 100])?;
+            let mut only_input_types = false;
+            for annotation in p.messages(100)? {
+                let annotation = Proto::parse(annotation)?;
+                annotation.allowed(&[1])?;
+                if metadata_name(self.strings, annotation.integer(1)?)?
+                    != "kotlin/internal/OnlyInputTypes"
+                {
+                    return Err(invalid());
+                }
+                only_input_types = true;
+            }
             let reified = p.integer(3)?.unwrap_or(0);
             if reified > 1 || (reified != 0 && !allow_reified) {
                 return Err(invalid());
@@ -374,6 +385,7 @@ impl<'a> Context<'a> {
                 },
             );
             result.push(TypeParameter {
+                only_input_types,
                 name,
                 variance,
                 bounds,
@@ -914,6 +926,13 @@ fn attach_member(
         }) {
             return Err(invalid());
         }
+    }
+    let observed = &attributes[*index].only_input_type_parameters;
+    if observed
+        .iter()
+        .any(|i| !type_parameters.get(*i).is_some_and(|p| p.only_input_types))
+    {
+        return Err(invalid());
     }
     let method = &mut class.methods[*index];
     if flags & (1 << 13 | 1 << 14 | 1 << 12) != 0
@@ -1917,5 +1936,29 @@ mod tests {
                 .field(&Proto::parse(&reference).unwrap(), 3, 7)
                 .is_err()
         );
+    }
+    #[test]
+    fn only_input_type_metadata_is_narrowly_decoded() {
+        for (annotation_name, accepted) in [
+            ("kotlin/internal/OnlyInputTypes", true),
+            ("sample/Unknown", false),
+        ] {
+            let strings = vec!["T".into(), annotation_name.into()];
+            let mut context = Context {
+                strings: &strings,
+                qualified_names: None,
+                table: Vec::new(),
+                first_nullable: None,
+                parameters: BTreeMap::new(),
+            };
+            let parameter = [int(1, 0), int(2, 0), blob(100, &int(1, 1))].concat();
+            let bytes = blob(4, &parameter);
+            let proto = Proto::parse(&bytes).unwrap();
+            let result = context.type_parameters(&proto, 4);
+            assert_eq!(result.is_ok(), accepted);
+            if let Ok(parameters) = result {
+                assert!(parameters[0].only_input_types);
+            }
+        }
     }
 }
