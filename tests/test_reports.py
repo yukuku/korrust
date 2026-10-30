@@ -81,6 +81,18 @@ class ReportsTest(unittest.TestCase):
                     target.feed(destination.read_text())
                     self.assertIn(url.fragment, target.ids)
 
+    def test_undated_reports_do_not_replace_the_latest_dated_result(self):
+        for name, timestamp in [("missing", {}), ("null", {"created_at": None})]:
+            self.write("correctness/" + name + ".json", {
+                "kind": "correctness", "status": "unassessed", "cases": [], **timestamp,
+            })
+        index = reports.generate(self.root).read_text()
+        latest = index.split("<h2>Correctness</h2>", 1)[1].split("<h2>", 1)[0]
+        self.assertIn("correctness/check.json", latest)
+        self.assertNotIn("correctness/missing.json", latest)
+        self.assertNotIn("correctness/null.json", latest)
+        self.assertIn("correctness/missing.json", index)
+
     def test_partial_write_and_recovery_are_visible(self):
         broken = self.root / "reports/features/incomplete.json"
         broken.write_text('{"kind":')

@@ -172,7 +172,8 @@ def generate(root=ROOT, output=None):
                 if not isinstance(data, dict):
                     raise ValueError("Report must be a JSON object")
                 index_record = "kind" in data
-                record.update({key: str(data.get(key, "Not recorded")) for key in ["kind", "status", "created_at"]})
+                record.update({key: str(data.get(key, "Not recorded")) for key in ["kind", "status"]})
+                record["created_at"] = str(data.get("created_at") or "")
                 record["data"] = data
                 render = Renderer(root, output, page, data)
                 summary = {k: data[k] for k in ["kind", "created_at", "finished_at", "status", "reason", "selection"] if k in data}
