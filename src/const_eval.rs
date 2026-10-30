@@ -1049,21 +1049,21 @@ impl Resolver<'_> {
 
     fn library_field(&self, field: &JavaField, offset: usize) -> Result<ConstValue> {
         let class = self.classpath.load(&field.owner)?;
-        if class.kotlin_class
+        let kotlin = class.kotlin_class
             || class
                 .library
                 .as_ref()
-                .is_some_and(|library| library.package.is_some())
-        {
-            return Err(
-                unsupported(offset, "Compiled Kotlin constant visibility is unsupported")
-                    .with_kind(
-                        DiagnosticKind::UnsupportedLanguage,
-                        "COMPILED_KOTLIN_CONSTANT_UNSUPPORTED",
-                    ),
-            );
+                .is_some_and(|library| library.package.is_some());
+        if kotlin && !field.kotlin.as_ref().is_some_and(|field| field.constant) {
+            return Err(unsupported(
+                offset,
+                "Kotlin property does not declare a supported const field",
+            ));
         }
-        if class.access & 1 == 0 || field.access & 0x19 != 0x19 {
+        if !self.classpath.kotlin_field_visible("", field)
+            || field.access & 0x18 != 0x18
+            || !kotlin && class.access & 1 == 0
+        {
             return Err(invalid(
                 offset,
                 "Constant field must be accessible, static and final",
@@ -1102,9 +1102,7 @@ impl Resolver<'_> {
     }
 
     fn library_reference(&self, name: &str, offset: usize) -> Result<Option<ConstValue>> {
-        let Some((owner, field_name)) = name.rsplit_once('.') else {
-            return Ok(None);
-        };
+        let (owner, field_name) = name.rsplit_once('.').unwrap_or(("", name));
         if let Ok(class) = self.classpath.load(&owner.replace('.', "/")) {
             if let Some(field) = class.fields.iter().find(|field| field.name == field_name) {
                 return self.library_field(field, offset).map(Some);
@@ -1269,16 +1267,31 @@ impl Resolver<'_> {
                 "Explicit import does not resolve to a supported constant declaration",
             ));
         }
+        let renamed = |head: &str| {
+            imports.iter().any(|(alias, import, _)| {
+                alias != "*" && alias != &path[0] && import.replace('/', ".") == head
+            }) && !imports
+                .iter()
+                .any(|(alias, import, _)| alias == &path[0] && import.replace('/', ".") == head)
+        };
         let candidate = qualified(&package, &name);
         let head = qualified(&package, &path[0]);
-        if let Some(value) = self.source_path(&context, &candidate, &head, path.len() > 1)? {
-            return Ok(value);
+        if !renamed(&head) {
+            if let Some(value) = self.source_path(&context, &candidate, &head, path.len() > 1)? {
+                return Ok(value);
+            }
+            if let Some(value) = self.library_reference(&candidate, offset)? {
+                return Ok(value);
+            }
         }
         let mut star_values = Vec::new();
         for (_, import, _) in imports.iter().filter(|(alias, _, _)| alias == "*") {
             let imported = import.trim_end_matches("/*").replace('/', ".");
             let candidate = qualified(&imported, &name);
             let head = qualified(&imported, &path[0]);
+            if renamed(&head) {
+                continue;
+            }
             if let Some(value) = self.source_path(&context, &candidate, &head, path.len() > 1)? {
                 star_values.push(value);
             } else if let Some(value) = self.library_reference(&candidate, offset)? {
@@ -1294,11 +1307,13 @@ impl Resolver<'_> {
         if let Some(value) = star_values.pop() {
             return Ok(value);
         }
-        if let Some(value) = self.source_path(&context, &name, &path[0], path.len() > 1)? {
-            return Ok(value);
-        }
-        if let Some(value) = self.library_reference(&name, offset)? {
-            return Ok(value);
+        if (package.is_empty() || path.len() > 1) && !renamed(&path[0]) {
+            if let Some(value) = self.source_path(&context, &name, &path[0], path.len() > 1)? {
+                return Ok(value);
+            }
+            if let Some(value) = self.library_reference(&name, offset)? {
+                return Ok(value);
+            }
         }
         if path.len() == 1 && !imports.iter().any(|(alias, _, _)| alias == "*") {
             return Err(invalid(offset, "Unresolved constant reference"));

@@ -2658,8 +2658,15 @@ impl Checker<'_> {
                     .with_kind(crate::DiagnosticKind::InvalidKotlin, "AMBIGUOUS_JAVA_FIELD"));
             }
         };
-        if field.access & 1 == 0
-            || field.unsupported
+        if !self
+            .classpath
+            .kotlin_field_visible(&self.lambda_owner, field)
+        {
+            return Err(Diagnostic::new(offset, "Field is inaccessible")
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "INVISIBLE_REFERENCE"));
+        }
+        if field.unsupported
+            || field.access & 1 == 0 && !field.kotlin.as_ref().is_some_and(|field| field.constant)
             || (field.access & 8 != 0) != receiver.is_none()
         {
             return Err(Diagnostic::new(
@@ -2668,12 +2675,14 @@ impl Checker<'_> {
             ));
         }
         let mut cursor = 0;
-        let ty = self.java_type(&field.descriptor, &mut cursor, offset)?;
-        if let Some(constant) = field
-            .constant
-            .as_ref()
-            .filter(|_| field.access & 0x18 == 0x18)
-        {
+        let ty = if let Some(kotlin) = &field.kotlin {
+            kotlin.ty.clone()
+        } else {
+            self.java_type(&field.descriptor, &mut cursor, offset)?
+        };
+        if let Some(constant) = field.constant.as_ref().filter(|_| {
+            field.access & 0x18 == 0x18 && field.kotlin.as_ref().is_none_or(|field| field.constant)
+        }) {
             use crate::classpath::JavaConstant as C;
             let kind = match constant {
                 C::Int(n) if ty == Type::Boolean => ValueKind::Boolean(*n != 0),
@@ -2691,7 +2700,7 @@ impl Checker<'_> {
                 value
             });
         }
-        let ty = if ty.is_reference() {
+        let ty = if ty.is_reference() && field.kotlin.is_none() {
             Type::Platform(Box::new(ty))
         } else {
             ty
@@ -3821,7 +3830,7 @@ impl Checker<'_> {
                         });
                     }
                 }
-                if self.local(name).is_none() {
+                if self.local(name).is_none() && !self.captured.contains_key(name) {
                     if let Some(method) = self.members.get(&format!("#get:{name}")) {
                         return if method.access & 8 != 0 {
                             self.library_static_call(method.clone(), &[], offset)
@@ -3834,6 +3843,9 @@ impl Checker<'_> {
                             )
                         };
                     }
+                }
+                if let Some(value) = self.imported_value(name, offset)? {
+                    return Ok(value);
                 }
                 let getters = self
                     .library_candidates(name)
@@ -3885,22 +3897,6 @@ impl Checker<'_> {
                 {
                     let value = self.value(expr)?;
                     return self.coerce(value, ty.clone(), offset);
-                }
-                if self.local(name).is_none() && !self.fields.contains_key(name) {
-                    if let Some((owner, member)) = self
-                        .imports
-                        .get(name)
-                        .and_then(|binding| binding.rsplit_once("::"))
-                    {
-                        if self
-                            .classpath
-                            .field_candidates(owner, member)?
-                            .iter()
-                            .any(|field| field.access & 8 != 0)
-                        {
-                            return self.java_field(owner, member, None, offset);
-                        }
-                    }
                 }
                 if let Some(local) = if name == "this" {
                     self.receiver.clone()
@@ -3979,17 +3975,8 @@ impl Checker<'_> {
                         },
                     )
                 } else {
-                    if let Some(owner) = self.imports.get(name) {
-                        if self.classes.get(owner).is_some_and(|c| {
-                            c.fields.iter().any(|f| {
-                                f.name == "INSTANCE" && f.descriptor == format!("L{owner};")
-                            })
-                        }) {
-                            return Ok(Value {
-                                ty: Type::Java(owner.clone()),
-                                kind: ValueKind::ObjectInstance(owner.clone()),
-                            });
-                        }
+                    if let Some(value) = self.imported_value(name, offset)? {
+                        return Ok(value);
                     }
                     if self.receiver.is_some() {
                         return self.receiver_property(name, offset);
@@ -4227,8 +4214,9 @@ impl Checker<'_> {
                             && !self.object_fields.contains_key(alias)
                             && !self.constants.contains_key(alias)
                         {
-                            if let Some(owner) = self.imports.get(alias) {
-                                if let Some(class) = self.classes.get(owner) {
+                            if let Some(class) = self.value_classifier(receiver)? {
+                                let owner = &class.name;
+                                {
                                     if class.fields.iter().any(|f| {
                                         f.name == "INSTANCE" && f.descriptor == format!("L{owner};")
                                     }) {
@@ -5547,6 +5535,7 @@ pub fn check_with_owner(
     classpath: &Classpath,
     owner: &str,
 ) -> Result<Module> {
+    classpath.register_value_scope(owner, source);
     annotation_placements::preflight_property_visibility(source, classpath)?;
     if source.object_decl.as_ref().is_some_and(|object| {
         !object.annotations.is_empty()
@@ -5622,6 +5611,27 @@ pub fn check_with_owner(
             continue;
         }
         if classpath.load(name).is_err() {
+            if !name.contains('/')
+                && let Some(symbol) = classpath.value_symbol(owner, alias, *offset)?
+            {
+                let field = match symbol {
+                    crate::classpath::ValueSymbol::Field(field) => Some((field.owner, field.name)),
+                    crate::classpath::ValueSymbol::Property(methods) => {
+                        methods.first().map(|method| {
+                            (
+                                method.owner.clone(),
+                                method.source_property.clone().unwrap(),
+                            )
+                        })
+                    }
+                    crate::classpath::ValueSymbol::Classifier(_) => None,
+                };
+                if let Some((declaring, member)) = field {
+                    imports.insert(alias.clone(), format!("{declaring}::{member}"));
+                    classes.insert(declaring.clone(), classpath.load(&declaring)?);
+                    continue;
+                }
+            }
             if let Some((parent, member)) = name.rsplit_once('/') {
                 if let Some(class) =
                     library::static_import_owner(classpath, parent, member, *offset)?

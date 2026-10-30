@@ -595,6 +595,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         }
         if source.companion.is_some() {
             class.fields.push(JavaField {
+                kotlin: None,
                 constant: None,
                 owner: owner.into(),
                 name: "Companion".into(),
@@ -698,6 +699,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             }
             cp.register_source(nested);
             class.fields.push(JavaField {
+                kotlin: None,
                 constant: None,
                 owner: owner.into(),
                 name: "Companion".into(),
@@ -718,6 +720,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             )
             .collect();
         class.fields.push(JavaField {
+            kotlin: None,
             constant: None,
             owner: owner.into(),
             name: "INSTANCE".into(),
@@ -961,6 +964,18 @@ fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) -> R
             }
         };
         class.fields.push(JavaField {
+            kotlin: Some(KotlinField {
+                name: c.name.clone(),
+                ty: ty.clone(),
+                visibility: if c.private {
+                    1
+                } else if c.internal {
+                    0
+                } else {
+                    3
+                },
+                constant: true,
+            }),
             constant: Some(constant),
             owner: class.name.clone(),
             name: c.name.clone(),

@@ -330,6 +330,7 @@ pub fn compile_batch_with_options(
         })
         .collect::<Vec<_>>();
     for (owner, unit) in &units {
+        classpath.register_value_scope(owner, &modules[owner_sources[owner]]);
         classpath.register_source_file(
             owner,
             &sources[owner_sources[owner]].identity,
@@ -1553,6 +1554,14 @@ fn validate_source_imports(
             continue;
         }
         if let Err(mut diagnostic) = classpath.load(path) {
+            if !path.contains('/')
+                && classpath
+                    .package_constants("", path)?
+                    .iter()
+                    .any(|field| !field.unsupported && classpath.kotlin_field_visible("", field))
+            {
+                continue;
+            }
             if let Some((package, member)) = path.rsplit_once('/') {
                 if classpath.type_alias(package, member)?.is_some()
                     || classpath.package_classes(package)?.iter().any(|class| {

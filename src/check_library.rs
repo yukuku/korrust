@@ -1249,3 +1249,78 @@ impl Checker<'_> {
         .map(Some)
     }
 }
+
+impl Checker<'_> {
+    fn value_name_is_bound(&self, name: &str) -> bool {
+        name == "this"
+            || self.local(name).is_some()
+            || self.captured.contains_key(name)
+            || self.constants.contains_key(name)
+            || self.fields.contains_key(name)
+            || self.object_fields.contains_key(name)
+            || self.companion_fields.contains_key(name)
+            || self
+                .members
+                .values()
+                .any(|method| method.source_property.as_deref() == Some(name))
+            || self
+                .receiver
+                .as_ref()
+                .and_then(|receiver| type_owner(&receiver.ty))
+                .is_some_and(|owner| {
+                    self.classpath.methods(owner).is_ok_and(|methods| {
+                        methods.iter().any(|method| {
+                            method.source_property.as_deref() == Some(name)
+                                && self.lexical_method_visible(method)
+                        })
+                    })
+                })
+    }
+
+    pub(super) fn value_classifier(&self, expression: &Expr) -> Result<Option<JavaClass>> {
+        let ExprKind::Name(name) = &expression.kind else {
+            return Ok(None);
+        };
+        if self.value_name_is_bound(name) {
+            return Ok(None);
+        }
+        Ok(
+            match self
+                .classpath
+                .value_symbol(&self.lambda_owner, name, expression.offset)?
+            {
+                Some(crate::classpath::ValueSymbol::Classifier(class)) => Some(*class),
+                _ => None,
+            },
+        )
+    }
+
+    pub(super) fn imported_value(&mut self, name: &str, offset: usize) -> Result<Option<Value>> {
+        if self.value_name_is_bound(name) {
+            return Ok(None);
+        }
+        match self
+            .classpath
+            .value_symbol(&self.lambda_owner, name, offset)?
+        {
+            Some(crate::classpath::ValueSymbol::Field(field)) => self
+                .java_field(&field.owner, &field.name, None, offset)
+                .map(Some),
+            Some(crate::classpath::ValueSymbol::Property(methods)) => {
+                let method = self.select_method(&methods, &[], offset)?;
+                self.library_static_call(method, &[], offset).map(Some)
+            }
+            Some(crate::classpath::ValueSymbol::Classifier(class))
+                if class.fields.iter().any(|field| {
+                    field.name == "INSTANCE" && field.descriptor == format!("L{};", class.name)
+                }) =>
+            {
+                Ok(Some(Value {
+                    ty: Type::Java(class.name.clone()),
+                    kind: ValueKind::ObjectInstance(class.name),
+                }))
+            }
+            _ => Ok(None),
+        }
+    }
+}

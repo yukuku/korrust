@@ -1,0 +1,97 @@
+{
+  "baseline_commit": "47a2a2964e67966219396335c689574685324311",
+  "source_dir": "/Users/yuku/f/git/korrust/target/next5-value-resolution",
+  "frozen_at": "2026-10-30T07:51:37.520794+00:00",
+  "files": [
+    {
+      "path": "src/check.rs",
+      "base_sha256": "0de80c6fffc4e90f9a46003311dc2fb486c278b9ec3727f0d943596f1ede4b1d",
+      "sha256": "b77b7a6d916353998bc181b9ff3d868711938f744e0d598239d476dbb61f29a1"
+    },
+    {
+      "path": "src/check_library.rs",
+      "base_sha256": "97fbe48ed5bdfeed7c13e08d0a2065f82541a74e41f0f743ffee2fd361d3bdbb",
+      "sha256": "d57ff590c622d5a2fbf1b406dc6784fd217ada2782e26f99a68fd4f1de75d38c"
+    },
+    {
+      "path": "src/classpath/metadata.rs",
+      "base_sha256": "f400f616f938bfb44568bb968f3f0667a7a7a84fa69483ea79160a4b9f4db39c",
+      "sha256": "4e25360ff4f03ed7fb1eda5cf5714a3968fb7c63ad74e7832e1eb4009eea0180"
+    },
+    {
+      "path": "src/classpath/source.rs",
+      "base_sha256": "f642f795640bbd7e57fadc96bd1bc7165c3022188ba35d102eb6241e1c89e45b",
+      "sha256": "ea0bbaa445e13f18348e03d1ded19afa910bc8b9ade4edf0279aab37a48515bb"
+    },
+    {
+      "path": "src/classpath/source_enums.rs",
+      "base_sha256": "cffdcb1f31d970dfd9a68a32b9aa0e288b4ef25468bf4a30ad18a90b82a0fd83",
+      "sha256": "a5b45daa5633384e901028550e33fe04301deea0b86da0baa4710cf462fae464"
+    },
+    {
+      "path": "src/classpath/value_names.rs",
+      "base_sha256": null,
+      "sha256": "80e84a5a3414a1052d7c5e43edd89f71446d41163241fbbd0684a150e2f8fff4"
+    },
+    {
+      "path": "src/classpath.rs",
+      "base_sha256": "2feb0f93849a85d14f47cab0303995cbe4d52a2c15427158c19e0bd27dff3125",
+      "sha256": "fdd662eb4390c934a4d245d06ebd197294ef9921cdbd8b683c9990a5aed01271"
+    },
+    {
+      "path": "src/const_eval.rs",
+      "base_sha256": "d188e75a217fbf582a901a153548ccd290070051a277ec55c96eae93ac637fad",
+      "sha256": "044fc1cd3f1a40c951f7456baeab58608a259244f57668b20036db29b2691ce0"
+    },
+    {
+      "path": "src/lib.rs",
+      "base_sha256": "43573e26ac82fc3e09a44992f43782b3a18ef8769fd2dde5202802ec7f7c06fc",
+      "sha256": "f01573ecbf5708550d5a2a11e8d7077ff349ffd2aae1c3aba9068559a55e1fb2"
+    },
+    {
+      "path": "tests/value_resolution.rs",
+      "base_sha256": null,
+      "sha256": "f1b060e833355505331ce14e5a532a7fb83872b50c31a1430aeb37a38881312b"
+    }
+  ],
+  "zip_sha256": "67bcacf00b37230a8c4e00c1ec2d667a797b901ee2478b7f87f7efc0311fc0d6",
+  "patch_sha256": "1c489186e921f1117fa0255cb60a3feebabd7ac0cc6fe353a6507fba56be98b0",
+  "behavior": [
+    "Original source value scopes retain explicit, same-package, star and default import priorities, renamed-name suppression, ambiguity, binding/capture/member shadowing. Constructors unchanged.",
+    "Direct Kotlin facade constants carry checked metadata name/type/visibility and constant provenance; source and friend internal constants are visible. Arbitrary Java class constants do not become package values.",
+    "Kotlin property fields decode logical type and nullability with exact physical signature and supported annotations; Charsets and independent Marker fields use ordinary JVM bodies.",
+    "Compiled friend-visible internal object classifier values are explicit UnsupportedLanguage INTERNAL_CLASSIFIER_VALUE_UNSUPPORTED; inaccessible nonfriend object values reject."
+  ],
+  "checks": {
+    "value_differential_v7": "pass, before final internal-classifier review delta; current refreshed run pending",
+    "classpath": "69 passed",
+    "const_eval": "9 passed",
+    "string_and_static": "2 passed before internal-classifier review delta",
+    "clippy_all_targets": "pass before final internal-classifier review delta",
+    "full_library": "269 passed, 1 stale baseline singleton parse assertion fails; inline owner fixes during integration",
+    "exact_upstream_const": "PASS official dependency and main, candidate main, same independent Java caller both with -Xverify:all"
+  },
+  "evidence": {
+    "expanded_differential": "target/value-resolution-v7.log",
+    "classpath": "target/value-resolution-classpath.log",
+    "const_eval": "target/value-resolution-const.log",
+    "library_regressions": "target/value-resolution-library-regressions.log",
+    "clippy": "target/value-resolution-clippy.log",
+    "full_library": "target/value-resolution-final.log",
+    "exact_upstream": "target/value-resolution-upstream/outcomes.json",
+    "app_audio": "target/value-resolution-app-audio.json",
+    "app_formatted": "target/value-resolution-app-formatted.json",
+    "app_snappy": "target/value-resolution-app-snappy.json"
+  },
+  "limits": [
+    "Multifile constant physical-field ownership is not reconstructed yet; no claim of all compiled constants.",
+    "Unsupported Kotlin field annotation/type-use/generic contracts remain fenced.",
+    "AudioHttpErrorBody advances to line28 Cannot infer type parameter T; FormattedVerseText remains line42 No applicable member overload; Snappy remains line7 ANNOTATION_DEFINITION_UNSUPPORTED for org/junit/Test.",
+    "No whole app, Android runtime, incremental or performance compatibility claim."
+  ],
+  "integration": [
+    "Member-extension owner must remove eager call_names(Name) discovery and invoke companion_receiver in imported_value Classifier arm before INSTANCE.",
+    "Retain root public/private multifile method ownership correction.",
+    "Inline owner supplies stale check_singletons parse-test correction; do not copy duplicate change from this handoff."
+  ]
+}

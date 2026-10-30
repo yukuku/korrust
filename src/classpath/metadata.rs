@@ -1082,6 +1082,7 @@ pub(super) fn attach(
     annotation: &Annotation,
     class: &mut JavaClass,
     attributes: &[Attributes],
+    field_attributes: &[Attributes],
 ) -> Result<()> {
     let kind = integer(annotation, "k")?.unwrap_or(1);
     if !matches!(kind, 1 | 2 | 5) {
@@ -1351,6 +1352,59 @@ pub(super) fn attach(
                 None
             };
             let sig = Proto::parse(property.bytes(100)?.ok_or_else(invalid)?)?;
+            if receiver.is_none() && type_parameters.is_empty() {
+                if let Some(bytes) = sig.bytes(1)? {
+                    let field_signature = Proto::parse(bytes)?;
+                    let field_name = field_signature
+                        .integer(1)?
+                        .map(|index| metadata_name(&strings, Some(index)))
+                        .transpose()?
+                        .unwrap_or(name);
+                    let descriptor = field_signature
+                        .integer(2)?
+                        .map(|index| metadata_name(&strings, Some(index)))
+                        .transpose()?
+                        .map(str::to_owned)
+                        .unwrap_or_else(|| ty.descriptor());
+                    if descriptor == ty.descriptor() {
+                        if let Some((index, field)) =
+                            class.fields.iter_mut().enumerate().find(|(_, field)| {
+                                field.name == field_name && field.descriptor == descriptor
+                            })
+                        {
+                            let attributes = field_attributes.get(index).ok_or_else(invalid)?;
+                            let nullable = matches!(ty, Type::Nullable(_));
+                            let annotations_supported =
+                                attributes.annotations.iter().all(|annotation| {
+                                    annotation.values.is_empty()
+                                        && match annotation.name.as_str() {
+                                            "Lkotlin/jvm/JvmField;" => true,
+                                            "Lorg/jetbrains/annotations/NotNull;" => {
+                                                ty.is_reference() && !nullable
+                                            }
+                                            "Lorg/jetbrains/annotations/Nullable;" => nullable,
+                                            _ => false,
+                                        }
+                                });
+                            if !attributes.unsupported
+                                && attributes.signature.is_none()
+                                && attributes.type_annotation_targets.is_empty()
+                                && annotations_supported
+                                && field.access & 0x1000 == 0
+                            {
+                                field.unsupported = false;
+                            }
+                            field.kotlin = Some(KotlinField {
+                                name: name.into(),
+                                ty: ty.clone(),
+                                visibility: ((flags >> 1) & 7) as u8,
+                                constant: flags & (2048 | 8192 | 256 | 1024) == 2048 | 8192
+                                    && field.access & 0x18 == 0x18,
+                            });
+                        }
+                    }
+                }
+            }
             let accessor_flags = |field| -> Result<u64> {
                 let accessor = property.integer(field)?.unwrap_or(flags & 63);
                 if accessor & !(63 | 64 | 256) != 0 {
@@ -1879,7 +1933,7 @@ mod tests {
                 kotlin_result: None,
                 kotlin_internal: false,
             });
-            attach(&annotation, &mut class, &[Attributes::default()]).unwrap();
+            attach(&annotation, &mut class, &[Attributes::default()], &[]).unwrap();
             assert_eq!(
                 !class.methods[0].unsupported, accepted,
                 "{physical}, explicit={explicit}"
@@ -1924,7 +1978,7 @@ mod tests {
                 kotlin_result: None,
                 kotlin_internal: false,
             });
-            attach(&annotation, &mut class, &[Attributes::default()]).unwrap();
+            attach(&annotation, &mut class, &[Attributes::default()], &[]).unwrap();
             assert_eq!(class.kotlin_fun_interface, fun);
             assert_eq!(
                 class.methods[0].library.as_ref().unwrap().abstract_,
@@ -1952,7 +2006,7 @@ mod tests {
         let proto = [blob(5, &visible), blob(5, &hidden)].concat();
         let annotation = metadata_annotation(2, &["Visible", "Hidden", "kotlin/String"], &proto);
         let mut class = bare_metadata_class("sample/AliasesKt", 0x31);
-        attach(&annotation, &mut class, &[]).unwrap();
+        attach(&annotation, &mut class, &[], &[]).unwrap();
         let aliases = &class.library.as_ref().unwrap().type_aliases;
         assert_eq!(aliases.len(), 1);
         assert_eq!(aliases[0].name, "Visible");

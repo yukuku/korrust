@@ -19,6 +19,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
     }
     for (name, _) in &source.entries {
         class.fields.push(JavaField {
+            kotlin: None,
             constant: None,
             owner: owner.into(),
             name: name.clone(),

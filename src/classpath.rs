@@ -8,6 +8,8 @@ mod metadata;
 pub(crate) mod nested;
 mod signature;
 mod source;
+mod value_names;
+pub(crate) use value_names::ValueSymbol;
 
 use crate::syntax::TypeParameter;
 
@@ -61,6 +63,7 @@ pub(crate) struct Classpath {
     paths: Vec<PathBuf>,
     module_name: String,
     friends: std::collections::HashSet<PathBuf>,
+    value_scopes: std::cell::RefCell<std::collections::HashMap<String, value_names::ValueScope>>,
     source_files: std::cell::RefCell<std::collections::HashMap<String, (String, bool)>>,
     source_default_accessors:
         std::cell::RefCell<std::collections::HashMap<(String, String), SourceBackingField>>,
@@ -83,6 +86,7 @@ pub(crate) struct SourceBackingField {
 
 #[derive(Clone, Default)]
 struct PackageIndex {
+    constants: std::collections::HashMap<String, Vec<JavaField>>,
     methods: std::collections::HashMap<String, Vec<JavaMethod>>,
     aliases: std::collections::HashMap<String, Vec<LibraryTypeAlias>>,
 }
@@ -125,12 +129,21 @@ pub(crate) struct JavaClass {
 
 #[derive(Clone, Debug)]
 pub(crate) struct JavaField {
+    pub kotlin: Option<KotlinField>,
     pub constant: Option<JavaConstant>,
     pub owner: String,
     pub name: String,
     pub descriptor: String,
     pub access: u16,
     pub unsupported: bool,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct KotlinField {
+    pub name: String,
+    pub ty: Type,
+    pub visibility: u8,
+    pub constant: bool,
 }
 
 #[derive(Clone, Debug)]
@@ -310,6 +323,25 @@ impl Classpath {
         }
         let mut index = PackageIndex::default();
         for class in self.package_facades(&package)? {
+            if class
+                .library
+                .as_ref()
+                .is_some_and(|library| library.package.is_some())
+            {
+                for field in &class.fields {
+                    if let Some(kotlin) = field
+                        .kotlin
+                        .as_ref()
+                        .filter(|kotlin| kotlin.constant && field.constant.is_some())
+                    {
+                        index
+                            .constants
+                            .entry(kotlin.name.clone())
+                            .or_default()
+                            .push(field.clone());
+                    }
+                }
+            }
             for method in class.methods {
                 let mut names = std::collections::HashSet::new();
                 names.insert(method.name.clone());
@@ -381,12 +413,16 @@ impl Classpath {
     }
 
     pub(crate) fn package_constants(&self, package: &str, name: &str) -> Result<Vec<JavaField>> {
+        let package = self.index_package(package)?;
         Ok(self
-            .package_facades(&package.replace('.', "/"))?
-            .into_iter()
-            .flat_map(|class| class.fields)
-            .filter(|field| field.name == name && field.constant.is_some())
-            .collect())
+            .package_index
+            .borrow()
+            .get(&package)
+            .unwrap()
+            .constants
+            .get(name)
+            .cloned()
+            .unwrap_or_default())
     }
 
     fn package_facades(&self, package: &str) -> Result<Vec<JavaClass>> {
@@ -578,6 +614,7 @@ impl Classpath {
             paths: paths.to_vec(),
             module_name: options.module_name.clone(),
             friends,
+            value_scopes: Default::default(),
             source_files: Default::default(),
             source_default_accessors: Default::default(),
             origins: Default::default(),
@@ -2658,6 +2695,7 @@ fn parse_details(bytes: &[u8], expected: &str) -> Result<(JavaClass, Attributes,
         return Err(invalid());
     }
     let mut fields = Vec::new();
+    let mut field_attributes = Vec::new();
     for _ in 0..reader.u2()? {
         let access = reader.u2()?;
         let field_name = utf8(&pool, reader.u2()?)?.to_owned();
@@ -2694,7 +2732,10 @@ fn parse_details(bytes: &[u8], expected: &str) -> Result<(JavaClass, Attributes,
             .transpose()?
             .flatten();
         let unsupported_constant = attrs.constant.is_some() && constant.is_none();
+        field_attributes.push(attrs);
+        let attrs = field_attributes.last().unwrap();
         fields.push(JavaField {
+            kotlin: None,
             owner: name.clone(),
             name: field_name,
             descriptor,
@@ -2801,7 +2842,14 @@ fn parse_details(bytes: &[u8], expected: &str) -> Result<(JavaClass, Attributes,
     {
         if class.unsupported || class.library.is_none() {
             let mut candidate = class.clone();
-            if metadata::attach(metadata, &mut candidate, &method_attributes).is_ok() {
+            if metadata::attach(
+                metadata,
+                &mut candidate,
+                &method_attributes,
+                &field_attributes,
+            )
+            .is_ok()
+            {
                 class = candidate;
             }
         }
@@ -3758,7 +3806,7 @@ mod tests {
     #[test]
     fn unsupported_kotlin_parameters_retain_callable_identity() {
         let (metadata, mut class, attributes) = fixture_metadata(false, &[], 550, 4, 38);
-        metadata::attach(&metadata, &mut class, &attributes).unwrap();
+        metadata::attach(&metadata, &mut class, &attributes, &[]).unwrap();
         let method = class.methods.iter().find(|m| m.name == "item").unwrap();
         assert!(method.unsupported);
         assert_eq!(method.library.as_ref().unwrap().source_name, "item");
@@ -3810,7 +3858,7 @@ mod tests {
             .find(|(name, _)| name == "d1")
             .unwrap()
             .1 = AnnotationValue::Array(vec![AnnotationValue::String(data)]);
-        metadata::attach(&metadata, &mut class, &attributes).unwrap();
+        metadata::attach(&metadata, &mut class, &attributes, &[]).unwrap();
         let getter = class
             .methods
             .iter()
