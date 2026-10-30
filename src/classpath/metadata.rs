@@ -608,11 +608,10 @@ pub(super) fn builtin_member_declarations(
     builtin_declarations(bytes, classifier, Some(name))
 }
 
-fn builtin_declarations(
-    bytes: &[u8],
+fn builtin_classifier<'a>(
+    bytes: &'a [u8],
     classifier: &str,
-    requested_name: Option<&str>,
-) -> Result<Vec<JavaMethod>> {
+) -> Result<(Vec<String>, Vec<String>, Proto<'a>)> {
     let (strings, qualified_names, fragment) = builtin_fragment(bytes)?;
     let mut selected = None;
     for bytes in fragment.messages(4)? {
@@ -632,6 +631,70 @@ fn builtin_declarations(
             "BUILTIN_CLASSIFIER_NOT_FOUND",
         )
     })?;
+    Ok((strings, qualified_names, class))
+}
+
+pub(super) fn builtin_constructors(bytes: &[u8], classifier: &str) -> Result<Vec<JavaMethod>> {
+    let (strings, qualified_names, class) = builtin_classifier(bytes, classifier)?;
+    let mut context = Context::new(&strings, &class)?;
+    context.qualified_names = Some(&qualified_names);
+    context.type_parameters(&class, 5)?;
+    let mut methods = Vec::new();
+    for bytes in class.messages(8)? {
+        let constructor = Proto::parse(bytes)?;
+        if constructor.integer(1)?.unwrap_or(6) & 14 != 6 {
+            continue;
+        }
+        let mut params = Vec::new();
+        for bytes in constructor.messages(2)? {
+            let parameter = Proto::parse(bytes)?;
+            if parameter.integer(1)?.unwrap_or(0) != 0
+                || parameter.bytes(4)?.is_some()
+                || parameter.integer(6)?.is_some()
+            {
+                return Err(Diagnostic::new(
+                    0,
+                    "Defaulted and vararg builtin constructors are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "BUILTIN_CONSTRUCTOR_SIGNATURE_UNSUPPORTED",
+                ));
+            }
+            params.push((
+                metadata_name(&strings, parameter.integer(2)?)?.to_owned(),
+                context.field(&parameter, 3, 5)?,
+                false,
+            ));
+        }
+        methods.push(JavaMethod {
+            library: None,
+            owner: classifier.into(),
+            name: "<init>".into(),
+            descriptor: format!(
+                "({})V",
+                params
+                    .iter()
+                    .map(|(_, ty, _)| ty.descriptor())
+                    .collect::<String>()
+            ),
+            access: 1,
+            unsupported: false,
+            source_property: None,
+            kotlin_params: Some(params),
+            kotlin_result: Some(Type::Unit),
+            kotlin_internal: false,
+        });
+    }
+    Ok(methods)
+}
+
+fn builtin_declarations(
+    bytes: &[u8],
+    classifier: &str,
+    requested_name: Option<&str>,
+) -> Result<Vec<JavaMethod>> {
+    let (strings, qualified_names, class) = builtin_classifier(bytes, classifier)?;
     if requested_name.is_none() && !class.messages(5)?.is_empty() {
         return Err(Diagnostic::new(
             0,
@@ -1339,7 +1402,9 @@ pub(super) fn attach(
         .and_then(|library| library.multifile_facade.clone())
     {
         for method in &mut class.methods {
-            method.owner = owner.clone();
+            if method.access & 2 == 0 {
+                method.owner = owner.clone();
+            }
         }
     }
     Ok(())

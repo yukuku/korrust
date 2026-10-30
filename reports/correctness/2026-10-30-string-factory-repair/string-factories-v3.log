@@ -1,0 +1,30 @@
+   Compiling korrust v0.1.0 (/Users/yuku/f/git/korrust/target/next5-string-factories)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.98s
+     Running tests/string_factories.rs (/Users/yuku/f/git/korrust/target/string-factories-build/debug/deps/string_factories-8454ea5a8841c111)
+
+running 1 test
+
+thread 'ordinary_factories_and_builtin_constructor_contracts_match_the_pin' (6002062) panicked at tests/string_factories.rs:7:5:
+"/Users/yuku/f/git/korrust/target/next5-string-factories/references/kotlinc/bin/kotlinc" "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-factories-23643-1793342654732972000/Factories.kt" "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-factories-23643-1793342654732972000/Renamed.kt" "-cp" "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-factories-23643-1793342654732972000/dependency:/Users/yuku/f/git/korrust/target/next5-string-factories/references/kotlinc/lib/kotlin-stdlib.jar" "-d" "/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-factories-23643-1793342654732972000/official"
+
+/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-factories-23643-1793342654732972000/Factories.kt:20:46: error: none of the following candidates is applicable:
+
+constructor(p0: String!): String:
+  Argument type mismatch: actual type is 'java.lang.String', but 'kotlin.String!' was expected.
+
+constructor(p0: CharArray!): String:
+  Argument type mismatch: actual type is 'String', but 'CharArray!' was expected.
+fun javaCopy(data: JavaString): JavaString = JavaString(data)
+                                             ^^^^^^^^^^
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test ordinary_factories_and_builtin_constructor_contracts_match_the_pin ... FAILED
+
+failures:
+
+failures:
+    ordinary_factories_and_builtin_constructor_contracts_match_the_pin
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.86s
+
+error: test failed, to rerun pass `--test string_factories`

@@ -240,6 +240,10 @@ impl Classpath {
         metadata::builtin_class_declarations(&self.builtin_class_resource(classifier)?, classifier)
     }
 
+    pub(crate) fn builtin_constructors(&self, classifier: &str) -> Result<Vec<JavaMethod>> {
+        metadata::builtin_constructors(&self.builtin_class_resource(classifier)?, classifier)
+    }
+
     pub(crate) fn builtin_member_declarations(
         &self,
         classifier: &str,

@@ -1832,22 +1832,6 @@ impl Code<'_> {
                     &format!("({array_type}I){array_type}"),
                 )?;
             }
-            ValueKind::StringFromChars(args) => {
-                self.max_stack = self.max_stack.max(
-                    2 + args
-                        .iter()
-                        .enumerate()
-                        .map(|(index, value)| index + value.stack())
-                        .max()
-                        .unwrap_or(0),
-                );
-                self.class_reference(0xbb, "java/lang/String")?;
-                self.bytes.push(0x59);
-                for arg in args {
-                    self.value(arg)?;
-                }
-                self.method_reference(0xb7, "java/lang/String", "<init>", "([CII)V")?;
-            }
             ValueKind::StaticCall {
                 owner,
                 name,

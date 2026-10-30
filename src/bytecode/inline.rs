@@ -388,7 +388,6 @@ fn nonlocal_value(value: &Value, lambdas: &[crate::check::LambdaDecl]) -> bool {
         | ValueKind::StaticCall { args, .. }
         | ValueKind::MemberCall { args, .. }
         | ValueKind::JavaCall { args, .. }
-        | ValueKind::StringFromChars(args)
         | ValueKind::CopyInto(args)
         | ValueKind::StringCall(_, args)
         | ValueKind::Call(_, args)

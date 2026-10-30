@@ -466,7 +466,6 @@ pub enum ValueKind {
     ThreadLocalGet(Box<Value>, Type),
     ThreadLocalSet(Box<Value>, Box<Value>),
     CopyOf(Box<Value>, Box<Value>),
-    StringFromChars(Vec<Value>),
     StaticCall {
         owner: String,
         name: String,
@@ -598,12 +597,6 @@ impl Value {
                 a.stack().max(a.ty.slots() + b.stack())
             }
             ValueKind::StringConcat(a, b) => 2.max(1 + a.stack()).max(1 + b.stack()),
-            ValueKind::StringFromChars(args) => args
-                .iter()
-                .enumerate()
-                .map(|(index, value)| 2 + index + value.stack())
-                .max()
-                .unwrap_or(2),
             ValueKind::DefaultCall(_, args, _) => args
                 .iter()
                 .scan(0, |slots, v| {
@@ -4540,28 +4533,6 @@ impl Checker<'_> {
                         let function = self.value(target)?;
                         return self.function_invoke(function, args, offset);
                     }
-                    if name == "String" && self.unshadowed(name) {
-                        if args.len() != 3 {
-                            return Err(Diagnostic::new(
-                                offset,
-                                "String array constructor requires CharArray, offset, and count",
-                            ));
-                        }
-                        let mut values = Vec::new();
-                        for (index, arg) in args.iter().enumerate() {
-                            let value = self.value(arg)?;
-                            let expected = if index == 0 {
-                                Type::CharArray
-                            } else {
-                                Type::Int
-                            };
-                            values.push(self.coerce(value, expected, arg.offset)?);
-                        }
-                        return Ok(Value {
-                            ty: Type::String,
-                            kind: ValueKind::StringFromChars(values),
-                        });
-                    }
                     if let Some(value) = self.lexical_call(name, args, &[], None, offset)? {
                         return Ok(value);
                     }
@@ -4574,6 +4545,18 @@ impl Checker<'_> {
                         })
                         .collect::<Vec<_>>();
                     if !imported.is_empty() {
+                        let has_arity = imported.iter().any(|method| {
+                            method.kotlin_params.as_ref().is_none_or(|params| {
+                                params.iter().filter(|(_, _, default)| !default).count()
+                                    <= args.len()
+                                    && (method.access & 0x80 != 0 || args.len() <= params.len())
+                            })
+                        });
+                        if !has_arity {
+                            if let Some(value) = self.default_constructor(name, args, offset)? {
+                                return Ok(value);
+                            }
+                        }
                         let method = self.select_method(&imported, args, offset)?;
                         return self.library_static_call(method, args, offset);
                     }

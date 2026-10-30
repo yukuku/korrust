@@ -538,7 +538,7 @@ fn collect_value(value: &Value, accesses: &mut HashSet<(String, String)>) {
             collect_value(a, accesses);
             collect_value(b, accesses);
         }
-        ValueKind::StaticCall { args, .. } | ValueKind::StringFromChars(args) => {
+        ValueKind::StaticCall { args, .. } => {
             for value in args {
                 collect_value(value, accesses);
             }

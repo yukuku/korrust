@@ -20,7 +20,6 @@ pub(crate) fn value(node: &mut Value, owner: &str, visitor: &mut impl Visitor) {
         | ValueKind::StaticCall { args, .. }
         | ValueKind::MemberCall { args, .. }
         | ValueKind::JavaCall { args, .. }
-        | ValueKind::StringFromChars(args)
         | ValueKind::CopyInto(args)
         | ValueKind::StringCall(_, args)
         | ValueKind::Call(_, args)

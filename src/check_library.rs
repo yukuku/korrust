@@ -892,14 +892,57 @@ impl Checker<'_> {
                 "ABSTRACT_CONSTRUCTION_INVALID",
             ));
         }
+        let mapped = crate::classpath::kotlin_mapped_classifier(&class.name);
+        let builtin = !class.kotlin_class
+            && mapped.is_some_and(|classifier| {
+                alias && expanded == Type::String
+                    || !alias && classifier.rsplit('/').next() == Some(name)
+            });
+        let contract = if builtin {
+            Some(self.classpath.builtin_constructors(mapped.unwrap())?)
+        } else {
+            None
+        };
         let constructors = class
             .methods
             .iter()
             .filter(|method| {
                 method.name == "<init>" && method.access & 1 != 0 && !method.unsupported
             })
-            .cloned()
+            .filter_map(|method| {
+                let mut method = method.clone();
+                if let Some(contract) = &contract {
+                    let declaration = contract
+                        .iter()
+                        .find(|declaration| declaration.descriptor == method.descriptor)?;
+                    method.kotlin_params = declaration.kotlin_params.clone();
+                    method.kotlin_result = declaration.kotlin_result.clone();
+                }
+                Some(method)
+            })
             .collect::<Vec<_>>();
+        if let Some(contract) = &contract {
+            if contract.is_empty() {
+                return Err(Diagnostic::new(
+                    offset,
+                    "No accessible constructor in the Kotlin builtin contract",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "BUILTIN_CONSTRUCTOR_NOT_ACCESSIBLE",
+                ));
+            }
+            if constructors.is_empty() {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Kotlin builtin constructor has no matching JVM declaration",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "BUILTIN_CONSTRUCTOR_JVM_MISMATCH",
+                ));
+            }
+        }
         let method = self.select_method(&constructors, args, offset)?;
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let (params, defaults) = Self::method_parameters(&method)?;

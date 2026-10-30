@@ -1,0 +1,98 @@
+{
+  "baseline_commit": "a2b1d3328d42a9ba431595e690cb0774cc73e998",
+  "source_dir": "/Users/yuku/f/git/korrust/target/next5-string-factories",
+  "changed_files": [
+    {
+      "path": "src/bytecode.rs",
+      "base_sha256": "353abc2ff731571fd5c9f3ffb221c88a23d8ca74de7dd4634185838ca3ad9688",
+      "current_sha256": "c36bc9143d2bfe43d79056f728fb1d3b656b176bb90a9b5c8515373ee59a3eea"
+    },
+    {
+      "path": "src/bytecode/inline.rs",
+      "base_sha256": "4ec1a5689e06bd70d81a520dc88dbf4effdda7bb3e7a33ae74e7d701c7b00f5e",
+      "current_sha256": "044f9a57d65dc391edd3f942318783945812ee8f845ca2d6a3214485b4d06134"
+    },
+    {
+      "path": "src/bytecode/interfaces.rs",
+      "base_sha256": "3a9a8415c4b4b3eb95dfa2a4fbf3e1f069a0381743b4bcff3cfb77212473bce0",
+      "current_sha256": "3de141d1778670d22c264aa28853efe0076cb37a710c41fb503d2c3d0f8e0170"
+    },
+    {
+      "path": "src/check.rs",
+      "base_sha256": "d2fb8b9c917a620471d1d1799a19a923628f5cde11c9a8c379e88c6e5b99f0b6",
+      "current_sha256": "4d5f825991b201a73cf79c1a46d0b3b55610588b5b9e3a3e3663f1f4d6b6924d"
+    },
+    {
+      "path": "src/check_enums.rs",
+      "base_sha256": "64731132517a81c13a3ec87dcd4c127b58b752b65bc52eba6d4a61916a519766",
+      "current_sha256": "6dd54af17a25e6b16231f0da227522c19ddce09def7872f6100b643c376188eb"
+    },
+    {
+      "path": "src/check_ir_walk.rs",
+      "base_sha256": "cf667a71acc65700de5aa6da84448bd38dd5a3f41e5ff742b8800f8f6c382e69",
+      "current_sha256": "bb50e03011e06709a807c17489480945c02116a888e60786e650d56a49935a8b"
+    },
+    {
+      "path": "src/check_library.rs",
+      "base_sha256": "a02c8a153ca8722c8df4dc9d827005e5daa285af8183a308a9b6a516dc0f2da7",
+      "current_sha256": "1ec9328eeb75053c4f454393606ffa3a08276f9702552d3f4f4fd7534e8db727"
+    },
+    {
+      "path": "src/check_objects.rs",
+      "base_sha256": "67d25ec90423fd010709fcfc20f21937256e71ea5faf5f226773d8510a947d85",
+      "current_sha256": "41c424f54ec1436354a51d9bc4bf9d53a740a7dafe0d4a22c70b433ea4e548cb"
+    },
+    {
+      "path": "src/classpath.rs",
+      "base_sha256": "a9eb2996617257b6231626f73359bf36dd768231d690e085b4630631306f138c",
+      "current_sha256": "1946e84eedf0d0048e5324ef938588e511496deefa80a90a14864514565ed45c"
+    },
+    {
+      "path": "src/classpath/metadata.rs",
+      "base_sha256": "1382515d523d747299915e1f38a6b50199a0a2e5129d92f88699d4948f1909b1",
+      "current_sha256": "92768834bb9a31f3b0179991bc456f75f695aa3be31ffe5d37b52b866a866c58"
+    },
+    {
+      "path": "tests/string_factories.rs",
+      "base_sha256": null,
+      "current_sha256": "1e646d4957108d8d33b0bdee1c934e7876364ce910c5bb1d7f2e4630fde40e1e"
+    }
+  ],
+  "tests": {
+    "factory_contracts": 1,
+    "classpath_unit_tests": 64,
+    "thread_local_null_assertion": 1,
+    "inline_regressions": 3,
+    "fmt": "pass",
+    "all_target_clippy_warnings_denied": "pass"
+  },
+  "gates_detail": [
+    "Fixed Java caller compiled against official output, same bytecodes run against both with -Xverify:all.",
+    "UTF8 malformed input, ASCII/Latin1 dispatch, UTF16 surrogate preservation, codepoints, bounds/overflow, nulls, snapshots, argument effects and platform-null assertion order/message pass.",
+    "Public callable signatures match. Official Kotlin consumers compile and execute with both outputs, including exported String type alias constructor.",
+    "Seven oracle-invalid constructor/factory rows reject, including Java-only String overloads, String type alias factory misuse and inaccessible primitive constructors."
+  ],
+  "remaining_app_failure": {
+    "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+    "line": 23,
+    "category": "unclassified",
+    "message": "No applicable member overload",
+    "isolated_cause": "fun field(): Any = Charsets.US_ASCII reports Unresolved local: Charsets; general default-import object/value lookup remains missing.",
+    "whole_source_success": false
+  },
+  "limitations": [
+    "Defaulted/vararg builtin constructor signatures remain explicit unsupported boundaries.",
+    "General reordered named arguments for compiled inline functions remain unsupported.",
+    "No full AudioHttpErrorBody, Android or full-app execution is claimed.",
+    "No live root compiler source edits or commits were made for this handoff."
+  ],
+  "logs": {
+    "string-factories-final.log": "aa4175acb705b29d7f99e66256610e3bed5f5fc9ec6afa2b23a641f36b52f4ee",
+    "string-factories-classpath.log": "cdc38351abde1162c1890b721b2564e139af744c18be21fb7f2707fa4e333b42",
+    "string-factories-null-final.log": "e53cecc48f4589d335b72ecbde9a0cec8f611e6db7dc4f3e0fcddc05d3c8369f",
+    "string-factories-inline-regressions.log": "42462f2fc11a2927322182c6a402b07484a7a9e41fb1f4b3ab93663262db2203",
+    "string-factories-clippy.log": "a63c351d9bc89005239bdbf3ee469415305f990eede4f371aaeff2e9311f156f",
+    "string-factory-audio-body.log": "202f7bf069ab467fbb18bda8569657f0a3a021fbcf2c5da5d64dbb6dcd5e3f92",
+    "string-field-probe.log": "3fa84ac9214326a1cca06525fc6ec8677eb986102a2902c266a1ccae9bef684f"
+  }
+}

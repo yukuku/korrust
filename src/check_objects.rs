@@ -1590,16 +1590,17 @@ object Scratch {
     }
     #[test]
     fn implicit_thread_local_get_assertions_preserve_the_expression_name() {
-        let object = checked("object Scratch { private val buffer = ThreadLocal.withInitial { CharArray(1) }; @JvmStatic fun string(): String = String(buffer.get(), 0, 0) }").unwrap().object_decl.unwrap();
-        let Statement::Return(value) = &object.methods[0].function.body[0] else {
-            panic!()
-        };
-        let ValueKind::StringFromChars(args) = &value.kind else {
-            panic!()
-        };
-        let ValueKind::NotNull(_, message) = &args[0].kind else {
-            panic!()
-        };
-        assert_eq!(message, "get(...)");
+        let mut object = checked("object Scratch { private val buffer = ThreadLocal.withInitial { CharArray(1) }; @JvmStatic fun string(): String = String(buffer.get(), 0, 0) }").unwrap().object_decl.unwrap();
+        let mut messages = Vec::new();
+        ir_walk::statements(
+            &mut object.methods[0].function.body,
+            &object.owner,
+            &mut |value: &mut Value, _: &str| {
+                if let ValueKind::NotNull(_, message) = &value.kind {
+                    messages.push(message.clone());
+                }
+            },
+        );
+        assert_eq!(messages, ["get(...)"]);
     }
 }

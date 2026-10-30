@@ -435,7 +435,6 @@ fn uninitialized_read<'a>(
         V::New { args, .. }
         | V::SuperCall { args, .. }
         | V::StaticCall { args, .. }
-        | V::StringFromChars(args)
         | V::CopyInto(args)
         | V::StringCall(_, args)
         | V::Call(_, args)
