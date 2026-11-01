@@ -11,6 +11,7 @@ use crate::{
 };
 
 pub(crate) struct Metadata {
+    pub value_classes: crate::value_abi::Registry,
     pub raw_data2: BTreeMap<u32, Vec<u16>>,
     pub kind: i32,
     pub data1: Vec<Vec<u16>>,
@@ -434,6 +435,7 @@ impl Strings {
             ));
         }
         Ok(Metadata {
+            value_classes: Default::default(),
             kind,
             data1,
             data2: self.values,
@@ -969,6 +971,7 @@ fn class_metadata(
         }) | u32::from(!class.annotations.is_empty())
             | if class.data { 1024 } else { 0 }
             | if class.inner { 512 } else { 0 }
+            | if class.value_ { 8192 } else { 0 }
             | if class.sealed_ {
                 48
             } else if class.abstract_ {
@@ -989,6 +992,10 @@ fn class_metadata(
         strings.local_names.push(name);
     }
     proto.number(3, name);
+    if class.value_ {
+        proto.number(17, strings.id(&class.params[0].0)?);
+        proto.message(18, &type_proto(&class.params[0].1, imports, &mut strings)?);
+    }
     classifier_parameters(&mut proto, &class.type_params, imports, &mut strings)?;
     if let Some(checked) = checked {
         for child in &checked.sealed_subclasses {
@@ -3914,5 +3921,380 @@ mod tests {
                 .2,
         );
         assert_eq!(number(&method, 9) & 1, 1);
+    }
+}
+
+#[derive(Clone)]
+enum AbiField {
+    Number(u64),
+    Bytes(Vec<u8>),
+}
+#[derive(Clone, Default)]
+struct AbiProto(Vec<(u32, AbiField)>);
+impl AbiProto {
+    fn varint(bytes: &[u8], cursor: &mut usize) -> Result<u64> {
+        let mut value = 0;
+        for shift in (0..64).step_by(7) {
+            let byte = *bytes
+                .get(*cursor)
+                .ok_or_else(|| Diagnostic::new(0, "Invalid generated metadata"))?;
+            *cursor += 1;
+            value |= u64::from(byte & 127) << shift;
+            if byte & 128 == 0 {
+                return Ok(value);
+            }
+        }
+        Err(Diagnostic::new(0, "Invalid generated metadata varint"))
+    }
+    fn parse(bytes: &[u8]) -> Result<Self> {
+        let mut result = Self::default();
+        let mut cursor = 0;
+        while cursor < bytes.len() {
+            let tag = Self::varint(bytes, &mut cursor)?;
+            let value = match tag & 7 {
+                0 => AbiField::Number(Self::varint(bytes, &mut cursor)?),
+                2 => {
+                    let length = Self::varint(bytes, &mut cursor)? as usize;
+                    let end = cursor
+                        .checked_add(length)
+                        .filter(|end| *end <= bytes.len())
+                        .ok_or_else(|| Diagnostic::new(0, "Invalid generated metadata length"))?;
+                    let value = bytes[cursor..end].to_vec();
+                    cursor = end;
+                    AbiField::Bytes(value)
+                }
+                _ => {
+                    return Err(Diagnostic::new(
+                        0,
+                        "Unsupported generated metadata wire type",
+                    ));
+                }
+            };
+            result.0.push(((tag >> 3) as u32, value));
+        }
+        Ok(result)
+    }
+    fn number(&self, field: u32) -> Option<u64> {
+        self.0.iter().find_map(|(number, value)| {
+            if *number == field {
+                if let AbiField::Number(value) = value {
+                    Some(*value)
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+    }
+    fn bytes(&self, field: u32) -> Option<&[u8]> {
+        self.0.iter().find_map(|(number, value)| {
+            if *number == field {
+                if let AbiField::Bytes(value) = value {
+                    Some(value.as_slice())
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+    }
+    fn set_number(&mut self, field: u32, value: u64) {
+        self.0.retain(|(number, _)| *number != field);
+        self.0.push((field, AbiField::Number(value)));
+    }
+    fn set_bytes(&mut self, field: u32, value: Vec<u8>) {
+        self.0.retain(|(number, _)| *number != field);
+        self.0.push((field, AbiField::Bytes(value)));
+    }
+    fn encode(&self) -> Vec<u8> {
+        let mut out = Proto::default();
+        for (field, value) in &self.0 {
+            match value {
+                AbiField::Number(value) => {
+                    out.varint(u64::from(*field) << 3);
+                    out.varint(*value);
+                }
+                AbiField::Bytes(value) => out.bytes(*field, value),
+            }
+        }
+        out.0
+    }
+}
+impl Metadata {
+    pub(crate) fn with_value_abi(
+        mut self,
+        registry: crate::value_abi::Registry,
+        owner: &str,
+    ) -> Result<Self> {
+        self.value_classes = registry;
+        if self.value_classes.is_empty()
+            || !self.value_classes.keys().any(|owner| {
+                self.data2.iter().any(|value| {
+                    value == owner
+                        || value == &owner.replace('$', ".")
+                        || value.contains(&format!("L{owner};"))
+                })
+            })
+        {
+            return Ok(self);
+        }
+        let bytes = self
+            .data1
+            .iter()
+            .flatten()
+            .skip(1)
+            .map(|unit| {
+                u8::try_from(*unit)
+                    .map_err(|_| Diagnostic::new(0, "Invalid generated metadata bytes"))
+            })
+            .collect::<Result<Vec<_>>>()?;
+        let mut cursor = 0;
+        let length = AbiProto::varint(&bytes, &mut cursor)? as usize;
+        let start = cursor
+            .checked_add(length)
+            .filter(|start| *start <= bytes.len())
+            .ok_or_else(|| Diagnostic::new(0, "Invalid generated metadata table"))?;
+        let mut root = AbiProto::parse(&bytes[start..])?;
+        let class_member = self.kind == 1;
+        let own = self.value_classes.get(owner).cloned();
+        let function_field = if class_member { 9 } else { 3 };
+        let property_field = if class_member { 10 } else { 4 };
+        for (field, value) in &mut root.0 {
+            let AbiField::Bytes(bytes) = value else {
+                continue;
+            };
+            if *field == function_field || class_member && *field == 8 {
+                let constructor = class_member && *field == 8;
+                let mut declaration = AbiProto::parse(bytes)?;
+                if let Some(signature) = declaration.bytes(100) {
+                    let mut signature = AbiProto::parse(signature)?;
+                    self.abi_signature(
+                        &mut signature,
+                        &declaration,
+                        owner,
+                        class_member,
+                        constructor,
+                        None,
+                    )?;
+                    declaration.set_bytes(100, signature.encode());
+                    *bytes = declaration.encode();
+                }
+            } else if *field == property_field {
+                let mut property = AbiProto::parse(bytes)?;
+                if let Some(signature) = property.bytes(100) {
+                    let mut signature = AbiProto::parse(signature)?;
+                    let property_name = property
+                        .number(2)
+                        .and_then(|id| self.data2.get(id as usize))
+                        .cloned();
+                    let logical = self.abi_logical_type(property.bytes(3), None)?;
+                    for (kind, value) in &mut signature.0 {
+                        let AbiField::Bytes(bytes) = value else {
+                            continue;
+                        };
+                        let mut part = AbiProto::parse(bytes)?;
+                        if *kind == 1 {
+                            if let Some(logical) = &logical {
+                                let physical =
+                                    crate::value_abi::physical(logical, &self.value_classes)
+                                        .descriptor();
+                                let id = self.abi_string(&physical);
+                                part.set_number(2, id);
+                            }
+                        } else if *kind == 3 || *kind == 4 {
+                            let underlying = own.as_ref().is_some_and(|info| {
+                                Some(info.property.as_str()) == property_name.as_deref()
+                            });
+                            self.abi_signature(
+                                &mut part,
+                                &property,
+                                owner,
+                                class_member,
+                                false,
+                                Some((*kind, logical.clone(), underlying)),
+                            )?;
+                        }
+                        *bytes = part.encode();
+                    }
+                    property.set_bytes(100, signature.encode());
+                    *bytes = property.encode();
+                }
+            }
+        }
+        let mut table = AbiProto::parse(&bytes[cursor..start])?;
+        table.0.retain(|(field, _)| *field != 1);
+        let mut record = AbiProto::default();
+        record.set_number(1, self.data2.len() as u64);
+        table.0.insert(0, (1, AbiField::Bytes(record.encode())));
+        let table = table.encode();
+        let mut encoded = Proto::default();
+        encoded.varint(table.len() as u64);
+        encoded.0.extend(table);
+        encoded.0.extend(root.encode());
+        self.data1 = encode_bytes(&encoded.0);
+        Ok(self)
+    }
+    fn abi_string(&mut self, value: &str) -> u64 {
+        if let Some(index) = self.data2.iter().position(|old| old == value) {
+            index as u64
+        } else {
+            let id = self.data2.len();
+            self.data2.push(value.into());
+            id as u64
+        }
+    }
+    fn abi_logical_type(
+        &self,
+        bytes: Option<&[u8]>,
+        fallback: Option<Type>,
+    ) -> Result<Option<Type>> {
+        let Some(bytes) = bytes else {
+            return Ok(fallback);
+        };
+        let proto = AbiProto::parse(bytes)?;
+        let Some(name) = proto.number(6).and_then(|id| self.data2.get(id as usize)) else {
+            return Ok(fallback);
+        };
+        let ty = match name.as_str() {
+            "kotlin/Int" => Type::Int,
+            "kotlin/Long" => Type::Long,
+            "kotlin/String" => Type::String,
+            "kotlin/Unit" => Type::Unit,
+            "kotlin/Boolean" => Type::Boolean,
+            _ => fallback
+                .clone()
+                .unwrap_or_else(|| Type::Java(name.replace('.', "$"))),
+        };
+        Ok(Some(if proto.number(3) == Some(1) {
+            Type::Nullable(Box::new(ty))
+        } else {
+            ty
+        }))
+    }
+    fn abi_signature(
+        &mut self,
+        signature: &mut AbiProto,
+        declaration: &AbiProto,
+        owner: &str,
+        class_member: bool,
+        constructor: bool,
+        property: Option<(u32, Option<Type>, bool)>,
+    ) -> Result<()> {
+        let Some(name) = signature
+            .number(1)
+            .and_then(|id| self.data2.get(id as usize))
+            .cloned()
+        else {
+            return Ok(());
+        };
+        let Some(descriptor) = signature
+            .number(2)
+            .and_then(|id| self.data2.get(id as usize))
+            .cloned()
+        else {
+            return Ok(());
+        };
+        let (mut parameters, mut result) = crate::jvm_descriptor::method_types(&descriptor)?;
+        if let Some((kind, logical, _)) = &property {
+            if let Some(logical) = logical {
+                if *kind == 3 {
+                    result = logical.clone();
+                } else if let Some(parameter) = parameters.last_mut() {
+                    *parameter = logical.clone();
+                }
+            }
+        } else {
+            let parameter_field = if constructor { 2 } else { 6 };
+            let mut index = usize::from(!constructor && declaration.bytes(5).is_some());
+            if index == 1 {
+                if let Some(ty) =
+                    self.abi_logical_type(declaration.bytes(5), parameters.first().cloned())?
+                {
+                    parameters[0] = ty;
+                }
+            }
+            for (_, value) in declaration
+                .0
+                .iter()
+                .filter(|(number, _)| *number == parameter_field)
+            {
+                if let AbiField::Bytes(bytes) = value {
+                    let parameter = AbiProto::parse(bytes)?;
+                    if let Some(ty) =
+                        self.abi_logical_type(parameter.bytes(3), parameters.get(index).cloned())?
+                    {
+                        if index < parameters.len() {
+                            parameters[index] = ty;
+                        }
+                    }
+                    index += 1;
+                }
+            }
+            if !constructor {
+                if let Some(ty) =
+                    self.abi_logical_type(declaration.bytes(3), Some(result.clone()))?
+                {
+                    result = ty;
+                }
+            }
+        }
+        if let Some((kind, _, _)) = &property {
+            let property_flags = declaration.number(11).unwrap_or(518);
+            let accessor_flags = declaration
+                .number(if *kind == 3 { 7 } else { 8 })
+                .unwrap_or(property_flags & 63);
+            if accessor_flags & 14 == 2 {
+                return Ok(());
+            }
+        }
+        if !constructor
+            && property.is_none()
+            && declaration.number(9).is_some_and(|flags| flags & 14 == 2)
+        {
+            return Ok(());
+        }
+        let own = self.value_classes.get(owner).cloned();
+        let underlying = property
+            .as_ref()
+            .is_some_and(|(_, _, underlying)| *underlying);
+        let actual_name = if constructor {
+            if own.is_some() {
+                "constructor-impl".into()
+            } else {
+                name.clone()
+            }
+        } else {
+            crate::value_abi::mangled_name(
+                &name,
+                &parameters,
+                class_member.then_some(&result),
+                |owner| self.value_classes.get(owner).cloned(),
+                own.is_some() && !underlying,
+            )
+        };
+        let mut physical = parameters
+            .iter()
+            .map(|ty| crate::value_abi::physical(ty, &self.value_classes))
+            .collect::<Vec<_>>();
+        let result = if constructor {
+            own.as_ref().map_or(Type::Unit, |info| info.carrier.clone())
+        } else {
+            crate::value_abi::physical(&result, &self.value_classes)
+        };
+        if !constructor && !underlying {
+            if let Some(info) = &own {
+                physical.insert(0, info.carrier.clone());
+            }
+        }
+        let descriptor = format!(
+            "({}){}",
+            physical.iter().map(Type::descriptor).collect::<String>(),
+            result.descriptor()
+        );
+        signature.set_number(1, self.abi_string(&actual_name));
+        signature.set_number(2, self.abi_string(&descriptor));
+        Ok(())
     }
 }

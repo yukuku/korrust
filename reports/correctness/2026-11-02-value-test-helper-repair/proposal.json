@@ -1,0 +1,37 @@
+{
+  "classification": "Unit test setup discrepancy; exact Text source passes production CLI. Root Rust gates require repair and rerun; no production regression inferred.",
+  "production_binary": {
+    "binary_sha256": "ee997b859067bd406b70ff43a883cc44572e032efa12ef18a48eabca5689b8ed",
+    "source_sha256": "b5366327bd5e02fd1849514cf1f8c9fe37da23a70d618dc7a9eb4e54431d1ece"
+  },
+  "proposed_patch": "target/resume-value-regression-audit/proposed-check-wrapper.patch",
+  "change": "cfg(test) check::check registers source_header for object/interface declarations as it already does for classes, matching production multi-unit header staging.",
+  "root_source_edits": false,
+  "validation": [
+    {
+      "test": "check::objects::tests::object_and_class_overloads_do_not_override_unrelated_inherited_signatures",
+      "pass": 1,
+      "fail": 0,
+      "seconds": 107.81,
+      "log": "overloads-fixed.log"
+    },
+    {
+      "test": "check::objects::tests::suppliers_and_builtin_annotation_shadowing_fail_closed",
+      "pass": 1,
+      "fail": 0,
+      "seconds": 238.28,
+      "log": "suppliers-fixed.log"
+    }
+  ],
+  "production_reproduction": {
+    "source": "Text.kt",
+    "candidate_compile_exit": 0,
+    "diagnostics": [],
+    "output": "candidate/Text.class",
+    "output_sha256": "6809532b7ce20171b1384902af7493966491869dd020dceafff7a921bba1def7"
+  },
+  "root_repro_logs": [
+    "target/resume-value-integration/overloads-repro.log",
+    "target/resume-value-integration/rust-final-v1.log"
+  ]
+}

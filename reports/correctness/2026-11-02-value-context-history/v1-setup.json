@@ -1,0 +1,796 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T19:01:17.013326+00:00",
+  "status": "completed",
+  "selection": "Small independent value-class body/emitter context probes; fixed official Java callers reused against both outputs under -Xverify:all. No root source changes.",
+  "compiler": {
+    "path": "target/resume-value-context-probes/korrust-value-v3",
+    "sha256": "cdae0ccb89a6b671d98ab04dfe50944b3fad6c61686729a55d561d5adf091d55",
+    "handoff": "target/resume-values/handoff.json",
+    "handoff_report": "target/resume-values/evidence-final-v3/report.json",
+    "handoff_report_sha256": "839da70709cce8c7b6b840444c6e02bff6d69ed43b1915c03ac2dc9f29bbc4c1"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "pinned-official-identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 1.9482330410392024,
+      "stdout": "target/resume-value-context-probes/000-stdout.txt",
+      "stderr": "target/resume-value-context-probes/000-stderr.txt"
+    },
+    {
+      "label": "object_body/official-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/Context.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "value_context_object_body",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/official"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 2.9562990829581395,
+      "stdout": "target/resume-value-context-probes/001-stdout.txt",
+      "stderr": "target/resume-value-context-probes/001-stderr.txt"
+    },
+    {
+      "label": "object_body/candidate-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/korrust-value-v3",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/Context.kt",
+        "--module-name",
+        "value_context_object_body",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/candidate"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 1,
+      "wall_time_seconds": 0.2774863329832442,
+      "stdout": "target/resume-value-context-probes/002-stdout.txt",
+      "stderr": "target/resume-value-context-probes/002-stderr.txt"
+    },
+    {
+      "label": "object_body/fixed-java-compile",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/callers",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/Check.java"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.4251052910112776,
+      "stdout": "target/resume-value-context-probes/003-stdout.txt",
+      "stderr": "target/resume-value-context-probes/003-stderr.txt"
+    },
+    {
+      "label": "object_body/official-verified-runtime",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.11226304102456197,
+      "stdout": "target/resume-value-context-probes/004-stdout.txt",
+      "stderr": "target/resume-value-context-probes/004-stderr.txt"
+    },
+    {
+      "label": "object_body/official-javap",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-c",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/official",
+        "valuecontext.ContextObject"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.19944820803357288,
+      "stdout": "target/resume-value-context-probes/005-stdout.txt",
+      "stderr": "target/resume-value-context-probes/005-stderr.txt"
+    },
+    {
+      "label": "companion_body/official-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/Context.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "value_context_companion_body",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/official"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 2.912188708956819,
+      "stdout": "target/resume-value-context-probes/006-stdout.txt",
+      "stderr": "target/resume-value-context-probes/006-stderr.txt"
+    },
+    {
+      "label": "companion_body/candidate-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/korrust-value-v3",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/Context.kt",
+        "--module-name",
+        "value_context_companion_body",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/candidate"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 1,
+      "wall_time_seconds": 0.2720674159936607,
+      "stdout": "target/resume-value-context-probes/007-stdout.txt",
+      "stderr": "target/resume-value-context-probes/007-stderr.txt"
+    },
+    {
+      "label": "companion_body/fixed-java-compile",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/callers",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/Check.java"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.41287933400599286,
+      "stdout": "target/resume-value-context-probes/008-stdout.txt",
+      "stderr": "target/resume-value-context-probes/008-stderr.txt"
+    },
+    {
+      "label": "companion_body/official-verified-runtime",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.09849312499864027,
+      "stdout": "target/resume-value-context-probes/009-stdout.txt",
+      "stderr": "target/resume-value-context-probes/009-stderr.txt"
+    },
+    {
+      "label": "companion_body/official-javap",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-c",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/official",
+        "valuecontext.ContextHost$Companion"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.17841541703091934,
+      "stdout": "target/resume-value-context-probes/010-stdout.txt",
+      "stderr": "target/resume-value-context-probes/010-stderr.txt"
+    },
+    {
+      "label": "enum_method/official-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/Context.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "value_context_enum_method",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/official"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 3.7295053339912556,
+      "stdout": "target/resume-value-context-probes/011-stdout.txt",
+      "stderr": "target/resume-value-context-probes/011-stderr.txt"
+    },
+    {
+      "label": "enum_method/candidate-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/korrust-value-v3",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/Context.kt",
+        "--module-name",
+        "value_context_enum_method",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/candidate"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 1,
+      "wall_time_seconds": 0.2872578340466134,
+      "stdout": "target/resume-value-context-probes/012-stdout.txt",
+      "stderr": "target/resume-value-context-probes/012-stderr.txt"
+    },
+    {
+      "label": "enum_method/fixed-java-compile",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/callers",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/Check.java"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.7286671249894425,
+      "stdout": "target/resume-value-context-probes/013-stdout.txt",
+      "stderr": "target/resume-value-context-probes/013-stderr.txt"
+    },
+    {
+      "label": "enum_method/official-verified-runtime",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.17818037496181205,
+      "stdout": "target/resume-value-context-probes/014-stdout.txt",
+      "stderr": "target/resume-value-context-probes/014-stderr.txt"
+    },
+    {
+      "label": "enum_method/official-javap",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-c",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/official",
+        "valuecontext.ContextEnum"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.3186667920090258,
+      "stdout": "target/resume-value-context-probes/015-stdout.txt",
+      "stderr": "target/resume-value-context-probes/015-stderr.txt"
+    },
+    {
+      "label": "enum_entry_initializer/official-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/Context.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "value_context_enum_entry_initializer",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/official"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 4.796652792021632,
+      "stdout": "target/resume-value-context-probes/016-stdout.txt",
+      "stderr": "target/resume-value-context-probes/016-stderr.txt"
+    },
+    {
+      "label": "enum_entry_initializer/candidate-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/korrust-value-v3",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/Context.kt",
+        "--module-name",
+        "value_context_enum_entry_initializer",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/candidate"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 1,
+      "wall_time_seconds": 0.315627540985588,
+      "stdout": "target/resume-value-context-probes/017-stdout.txt",
+      "stderr": "target/resume-value-context-probes/017-stderr.txt"
+    },
+    {
+      "label": "enum_entry_initializer/fixed-java-compile",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/callers",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/Check.java"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.5726602500071749,
+      "stdout": "target/resume-value-context-probes/018-stdout.txt",
+      "stderr": "target/resume-value-context-probes/018-stderr.txt"
+    },
+    {
+      "label": "enum_entry_initializer/official-verified-runtime",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.12977891700575128,
+      "stdout": "target/resume-value-context-probes/019-stdout.txt",
+      "stderr": "target/resume-value-context-probes/019-stderr.txt"
+    },
+    {
+      "label": "enum_entry_initializer/official-javap",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-c",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/official",
+        "valuecontext.ContextEnum"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.20959737501107156,
+      "stdout": "target/resume-value-context-probes/020-stdout.txt",
+      "stderr": "target/resume-value-context-probes/020-stderr.txt"
+    },
+    {
+      "label": "interface_default_body/official-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/Context.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "value_context_interface_default_body",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/official"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 3.0395144999492913,
+      "stdout": "target/resume-value-context-probes/021-stdout.txt",
+      "stderr": "target/resume-value-context-probes/021-stderr.txt"
+    },
+    {
+      "label": "interface_default_body/candidate-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/korrust-value-v3",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/Context.kt",
+        "--module-name",
+        "value_context_interface_default_body",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/candidate"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 1,
+      "wall_time_seconds": 0.2752539170323871,
+      "stdout": "target/resume-value-context-probes/022-stdout.txt",
+      "stderr": "target/resume-value-context-probes/022-stderr.txt"
+    },
+    {
+      "label": "interface_default_body/fixed-java-compile",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/callers",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/Check.java"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.4015348749817349,
+      "stdout": "target/resume-value-context-probes/023-stdout.txt",
+      "stderr": "target/resume-value-context-probes/023-stderr.txt"
+    },
+    {
+      "label": "interface_default_body/official-verified-runtime",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.09988620900548995,
+      "stdout": "target/resume-value-context-probes/024-stdout.txt",
+      "stderr": "target/resume-value-context-probes/024-stderr.txt"
+    },
+    {
+      "label": "interface_default_body/official-javap",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-c",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/official",
+        "valuecontext.ContextInterface"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.18300291599007323,
+      "stdout": "target/resume-value-context-probes/025-stdout.txt",
+      "stderr": "target/resume-value-context-probes/025-stderr.txt"
+    },
+    {
+      "label": "enum_value_parameter/official-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/Context.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "value_context_enum_value_parameter",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/official"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 2.9218324170215055,
+      "stdout": "target/resume-value-context-probes/026-stdout.txt",
+      "stderr": "target/resume-value-context-probes/026-stderr.txt"
+    },
+    {
+      "label": "enum_value_parameter/candidate-compile",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/korrust-value-v3",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/Context.kt",
+        "--module-name",
+        "value_context_enum_value_parameter",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/candidate"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 1,
+      "wall_time_seconds": 0.2740591669571586,
+      "stdout": "target/resume-value-context-probes/027-stdout.txt",
+      "stderr": "target/resume-value-context-probes/027-stderr.txt"
+    },
+    {
+      "label": "enum_value_parameter/fixed-java-compile",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/callers",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/Check.java"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.3929229580098763,
+      "stdout": "target/resume-value-context-probes/028-stdout.txt",
+      "stderr": "target/resume-value-context-probes/028-stderr.txt"
+    },
+    {
+      "label": "enum_value_parameter/official-verified-runtime",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.12163999996846542,
+      "stdout": "target/resume-value-context-probes/029-stdout.txt",
+      "stderr": "target/resume-value-context-probes/029-stderr.txt"
+    },
+    {
+      "label": "enum_value_parameter/official-javap",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-c",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/official",
+        "valuecontext.ContextEnum"
+      ],
+      "cwd": "/Users/yuku/f/git/korrust",
+      "exit_code": 0,
+      "wall_time_seconds": 0.1810856670490466,
+      "stdout": "target/resume-value-context-probes/030-stdout.txt",
+      "stderr": "target/resume-value-context-probes/030-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "object_body",
+      "source": "target/resume-value-context-probes/object_body/Context.kt",
+      "source_sha256": "d0c8ea5dea2216e4702fcdd416fac2f1a07e49cb619db11a9d3b6f24ce3263b8",
+      "java_caller_source_sha256": "f36e10c4606384e52385e89930eeec2ac21a19b8fedccba0ae109f5cdd3ad55a",
+      "expected_result": 7,
+      "official_compile_exit": 0,
+      "candidate_compile_exit": 1,
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/Context.kt",
+          "offset": 0,
+          "category": "missing_dependency",
+          "code": "CLASS_NOT_FOUND",
+          "message": "Java class java.lang.Object was not found on the classpath",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/Context.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "candidate_explicit_unsupported": false,
+      "candidate_stderr": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/Context.kt\",\"offset\":0,\"category\":\"missing_dependency\",\"code\":\"CLASS_NOT_FOUND\",\"message\":\"Java class java.lang.Object was not found on the classpath\",\"path\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/object_body/Context.kt\",\"line\":1,\"column\":1}\n",
+      "official_classes_sha256": {
+        "official/valuecontext/ContextObject.class": "cafa28c75a2ae206934312d6e9d3d8e2729682069200611a1396f62c18646bc6",
+        "official/valuecontext/V.class": "054b8e7920bb65ea435ffbf4316dbcf59db9d15e20d311b896b931c620b4dcdd"
+      },
+      "candidate_classes_sha256": {},
+      "fixed_java_compile_exit": 0,
+      "fixed_java_caller_sha256": "90e15d5bb625fc8e59cc6df5c84c65807695c924b40e26b5c06d842048f84bd9",
+      "official_runtime_exit": 0,
+      "official_runtime_stderr": "",
+      "fixed_java_caller_unchanged": true,
+      "outcome": "candidate_rejection"
+    },
+    {
+      "id": "companion_body",
+      "source": "target/resume-value-context-probes/companion_body/Context.kt",
+      "source_sha256": "55f72794d6528b0345fc0e2ac8cf69f0a06129b9c8df51f6419cd972f6dae7ef",
+      "java_caller_source_sha256": "d6de05a71499b29c8e059ee888a86f5232515c4b147beee251146eb777d71a27",
+      "expected_result": 11,
+      "official_compile_exit": 0,
+      "candidate_compile_exit": 1,
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/Context.kt",
+          "offset": 0,
+          "category": "missing_dependency",
+          "code": "CLASS_NOT_FOUND",
+          "message": "Java class java.lang.Object was not found on the classpath",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/Context.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "candidate_explicit_unsupported": false,
+      "candidate_stderr": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/Context.kt\",\"offset\":0,\"category\":\"missing_dependency\",\"code\":\"CLASS_NOT_FOUND\",\"message\":\"Java class java.lang.Object was not found on the classpath\",\"path\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/companion_body/Context.kt\",\"line\":1,\"column\":1}\n",
+      "official_classes_sha256": {
+        "official/valuecontext/ContextHost$Companion.class": "d5f8f1f62be8f10fc6fb33a4ed5d94d0fc24d596a1eb4c603c9a78cf1c72a529",
+        "official/valuecontext/ContextHost.class": "080d288b0353cc46e1bb318089a597b11ff95ab10c267dfdb613aabcd15a82a8",
+        "official/valuecontext/V.class": "c6bbfd6eb41162ecda25681dc41bf448eb30c9855bdfdd9ecaaf486e5d3d2324"
+      },
+      "candidate_classes_sha256": {},
+      "fixed_java_compile_exit": 0,
+      "fixed_java_caller_sha256": "69352c38f7fe8cc4938efa1c3a90865bf5ad15daac7cc6dc0ab340c4067d6ca2",
+      "official_runtime_exit": 0,
+      "official_runtime_stderr": "",
+      "fixed_java_caller_unchanged": true,
+      "outcome": "candidate_rejection"
+    },
+    {
+      "id": "enum_method",
+      "source": "target/resume-value-context-probes/enum_method/Context.kt",
+      "source_sha256": "f3cd0b4f272ee5652dff79a7b1f63a156e2c1d6a442d8cdc4156dcdc30e70b2a",
+      "java_caller_source_sha256": "d3031a84fcba843069891fdfa5cc1c18d010ac3e108f74a28e8d24deb301267f",
+      "expected_result": 13,
+      "official_compile_exit": 0,
+      "candidate_compile_exit": 1,
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/Context.kt",
+          "offset": 0,
+          "category": "missing_dependency",
+          "code": "CLASS_NOT_FOUND",
+          "message": "Java class java.lang.Object was not found on the classpath",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/Context.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "candidate_explicit_unsupported": false,
+      "candidate_stderr": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/Context.kt\",\"offset\":0,\"category\":\"missing_dependency\",\"code\":\"CLASS_NOT_FOUND\",\"message\":\"Java class java.lang.Object was not found on the classpath\",\"path\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_method/Context.kt\",\"line\":1,\"column\":1}\n",
+      "official_classes_sha256": {
+        "official/valuecontext/ContextEnum.class": "255f9d4c1cbcb860ef1ab9469769924dd732ad6fbfff92ba066506bc734c80ef",
+        "official/valuecontext/V.class": "74bc0907e52579bc30abf32ccfce83c508e20a2ef29ecad4d036f9da5d598387"
+      },
+      "candidate_classes_sha256": {},
+      "fixed_java_compile_exit": 0,
+      "fixed_java_caller_sha256": "cbaa343e6f322c58f4373ee4e65a53407063f41eeb9de7b84d6c7cfda35d08da",
+      "official_runtime_exit": 0,
+      "official_runtime_stderr": "",
+      "fixed_java_caller_unchanged": true,
+      "outcome": "candidate_rejection"
+    },
+    {
+      "id": "enum_entry_initializer",
+      "source": "target/resume-value-context-probes/enum_entry_initializer/Context.kt",
+      "source_sha256": "1124fd3ac067229aa0cbda82f5ee02e33f1391b9843a320f06ee7ee601d169ea",
+      "java_caller_source_sha256": "e2ec075db95a850b1c6b15e64cc99e7266aa27ea0f548f4bc274949862951226",
+      "expected_result": 17,
+      "official_compile_exit": 0,
+      "candidate_compile_exit": 1,
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/Context.kt",
+          "offset": 0,
+          "category": "missing_dependency",
+          "code": "CLASS_NOT_FOUND",
+          "message": "Java class java.lang.Enum was not found on the classpath",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/Context.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "candidate_explicit_unsupported": false,
+      "candidate_stderr": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/Context.kt\",\"offset\":0,\"category\":\"missing_dependency\",\"code\":\"CLASS_NOT_FOUND\",\"message\":\"Java class java.lang.Enum was not found on the classpath\",\"path\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_entry_initializer/Context.kt\",\"line\":1,\"column\":1}\n",
+      "official_classes_sha256": {
+        "official/valuecontext/ContextEnum.class": "e48300a513cde1e39586aa9235fb4547522c77249ff70fed5b40235d00835b9b",
+        "official/valuecontext/V.class": "aaab3d7910e9d2b5df0241b02c84635ab2b0787999b9dc97115c9b78f8a6f568"
+      },
+      "candidate_classes_sha256": {},
+      "fixed_java_compile_exit": 0,
+      "fixed_java_caller_sha256": "510e49c569c62d6b88bc90c0f20c14a032e18a22378f33d8be216438950b0aa9",
+      "official_runtime_exit": 0,
+      "official_runtime_stderr": "",
+      "fixed_java_caller_unchanged": true,
+      "outcome": "candidate_rejection"
+    },
+    {
+      "id": "interface_default_body",
+      "source": "target/resume-value-context-probes/interface_default_body/Context.kt",
+      "source_sha256": "aecc971b41b594cc6c71fac70952bb146095212035241831ad17b38dad468ed2",
+      "java_caller_source_sha256": "a75b0010a854fabb26c8da2a6c84b77bb9f79201061f9aa571c5c859425fb002",
+      "expected_result": 19,
+      "official_compile_exit": 0,
+      "candidate_compile_exit": 1,
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/Context.kt",
+          "offset": 0,
+          "category": "missing_dependency",
+          "code": "CLASS_NOT_FOUND",
+          "message": "Java class java.lang.Object was not found on the classpath",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/Context.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "candidate_explicit_unsupported": false,
+      "candidate_stderr": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/Context.kt\",\"offset\":0,\"category\":\"missing_dependency\",\"code\":\"CLASS_NOT_FOUND\",\"message\":\"Java class java.lang.Object was not found on the classpath\",\"path\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/interface_default_body/Context.kt\",\"line\":1,\"column\":1}\n",
+      "official_classes_sha256": {
+        "official/valuecontext/ContextImpl.class": "eb575194fd9c50b8c33fbd8a49c351a6169706b70d10fdb951800a87f30d9795",
+        "official/valuecontext/ContextInterface$DefaultImpls.class": "5779e2b67fbf75289485e754f43dcd71e4f5be80dc59893d7dd42ec10d8815e0",
+        "official/valuecontext/ContextInterface.class": "251b5508f6d2b6ba7f282b04826599879a25efcda58cc1e443f6c3418642c659",
+        "official/valuecontext/V.class": "bd57e01ba48272157697b91b3055afa027a1bbbb31111ff1a8ec8702684e0857"
+      },
+      "candidate_classes_sha256": {},
+      "fixed_java_compile_exit": 0,
+      "fixed_java_caller_sha256": "1cf5b1dc36c310451c85d4247b79932e032de69449c7978d9e07dc290987a2ea",
+      "official_runtime_exit": 0,
+      "official_runtime_stderr": "",
+      "fixed_java_caller_unchanged": true,
+      "outcome": "candidate_rejection"
+    },
+    {
+      "id": "enum_value_parameter",
+      "source": "target/resume-value-context-probes/enum_value_parameter/Context.kt",
+      "source_sha256": "6a34cacd923a0ece38e9b022cc7110bc7778ef5df7299f475fbad2108f13081b",
+      "java_caller_source_sha256": "a84ace63154cd8708fee162f069ca98043aded26db88528033f0562c48b3fbe1",
+      "expected_result": 23,
+      "official_compile_exit": 0,
+      "candidate_compile_exit": 1,
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/Context.kt",
+          "offset": 0,
+          "category": "missing_dependency",
+          "code": "CLASS_NOT_FOUND",
+          "message": "Java class java.lang.Enum was not found on the classpath",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/Context.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "candidate_explicit_unsupported": false,
+      "candidate_stderr": "{\"source_identity\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/Context.kt\",\"offset\":0,\"category\":\"missing_dependency\",\"code\":\"CLASS_NOT_FOUND\",\"message\":\"Java class java.lang.Enum was not found on the classpath\",\"path\":\"/Users/yuku/f/git/korrust/target/resume-value-context-probes/enum_value_parameter/Context.kt\",\"line\":1,\"column\":1}\n",
+      "official_classes_sha256": {
+        "official/valuecontext/ContextEnum.class": "56fbd0be60898e8068ab0ba0f2f48e6e1ae03e68a69fb43a70ac2df967cc8934",
+        "official/valuecontext/V.class": "61ff58bb0f069d155a20cb22648f28b6adfe281bd915339d697cf1195bfaeff4"
+      },
+      "candidate_classes_sha256": {},
+      "fixed_java_compile_exit": 0,
+      "fixed_java_caller_sha256": "07ef25ace2691247931b1f2d287d1ce6603d43c820303618fc35c5104cdf9747",
+      "official_runtime_exit": 0,
+      "official_runtime_stderr": "",
+      "fixed_java_caller_unchanged": true,
+      "outcome": "candidate_rejection"
+    }
+  ],
+  "counts": {
+    "candidate_rejection": 6
+  }
+}

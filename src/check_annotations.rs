@@ -16,7 +16,6 @@ pub(crate) fn unsupported_lowering(owner: &str) -> Option<&'static str> {
         | "kotlin/jvm/JvmPackageName"
         | "kotlin/jvm/JvmSuppressWildcards"
         | "kotlin/jvm/JvmWildcard"
-        | "kotlin/jvm/JvmInline"
         | "kotlin/jvm/JvmRecord"
         | "kotlin/jvm/JvmExposeBoxed"
         | "kotlin/jvm/Transient"

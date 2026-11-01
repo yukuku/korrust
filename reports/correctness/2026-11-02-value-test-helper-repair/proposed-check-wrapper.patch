@@ -1,0 +1,10 @@
+--- a/src/check.rs
++++ b/src/check.rs
+@@ -6045,3 +6045,6 @@
+-    if source.class_decl.is_some() {
++    if source.class_decl.is_some()
++        || source.object_decl.is_some()
++        || source.interface_decl.is_some()
++    {
+         classpath.source_header(source, &owner)?;
+     }

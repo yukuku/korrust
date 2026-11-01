@@ -466,6 +466,7 @@ pub enum ConstValue {
 #[derive(Clone, Debug)]
 pub struct ClassDecl {
     pub inner: bool,
+    pub value_: bool,
     pub interface_delegates: Vec<InterfaceDelegate>,
     pub sealed_: bool,
     pub type_params: Vec<TypeParameter>,
@@ -3366,6 +3367,7 @@ impl Parser {
             self.pos = after_header;
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
                 self.type_parameters.truncate(scope);
+                Self::validate_value_class(&declaration)?;
                 return Ok(declaration);
             }
             return Err(self.error("Expected a class body or declaration separator"));
@@ -3374,14 +3376,109 @@ impl Parser {
         declaration.primary_constructor =
             has_constructor || declaration.secondary_constructors.is_empty();
         self.type_parameters.truncate(scope);
+        Self::validate_value_class(&declaration)?;
         Ok(declaration)
     }
+    fn validate_value_class(class: &ClassDecl) -> Result<()> {
+        if !class.value_ {
+            return Ok(());
+        }
+        let invalid = |message: &str, code: &'static str| {
+            Diagnostic::new(class.offset, message).with_kind(DiagnosticKind::InvalidKotlin, code)
+        };
+        let unsupported = |message: &str, code: &'static str| {
+            Diagnostic::new(class.offset, message)
+                .with_kind(DiagnosticKind::UnsupportedLanguage, code)
+        };
+        if class.annotations.is_empty() {
+            return Err(invalid(
+                "JVM value classes require JvmInline",
+                "VALUE_JVM_INLINE_REQUIRED",
+            ));
+        }
+        if class.data || class.open || class.abstract_ || class.sealed_ || class.inner {
+            return Err(invalid(
+                "Value classes must be final and cannot be data, sealed or inner classes",
+                "VALUE_MODIFIERS_INVALID",
+            ));
+        }
+        if class.params.len() != 1
+            || class.param_properties.len() != 1
+            || !class.mutable_params.is_empty()
+        {
+            return Err(invalid(
+                "Value classes require one read-only constructor property",
+                "VALUE_CARRIER_INVALID",
+            ));
+        }
+        if !class.type_params.is_empty()
+            || !class.secondary_constructors.is_empty()
+            || class.defaults.iter().any(Option::is_some)
+            || class.companion.is_some()
+            || !class.nested.is_empty()
+        {
+            return Err(unsupported(
+                "Generic, secondary, default, companion and nested value class declarations are unsupported",
+                "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
+            ));
+        }
+        if class.properties.iter().any(|property| {
+            property.initializer.is_some() || property.delegate.is_some() || property.lateinit
+        }) || class.super_class.is_some()
+        {
+            return Err(invalid(
+                "Value classes cannot have backing properties or inherit a class",
+                "VALUE_STORAGE_INVALID",
+            ));
+        }
+        if !matches!(&class.params[0].1, Type::Int | Type::Long | Type::String)
+            && !matches!(&class.params[0].1, Type::Nullable(inner) if **inner == Type::String)
+        {
+            return Err(unsupported(
+                "Value class carrier requires Int, Long, String or nullable String",
+                "VALUE_CARRIER_UNSUPPORTED",
+            ));
+        }
+        if class
+            .super_types
+            .iter()
+            .any(|ty| matches!(ty, Type::Parameterized { .. }))
+        {
+            return Err(unsupported(
+                "Parameterized value class supertypes are unsupported",
+                "VALUE_GENERIC_SUPERTYPE_UNSUPPORTED",
+            ));
+        }
+        if class.methods.iter().any(|method| {
+            method.function.inline
+                || method.function.vararg
+                || !method.function.type_params.is_empty()
+                || method.function.defaults.iter().any(Option::is_some)
+        }) {
+            return Err(unsupported(
+                "Inline, generic, default and vararg value class members are unsupported",
+                "VALUE_MEMBER_SHAPE_UNSUPPORTED",
+            ));
+        }
+        if class
+            .methods
+            .iter()
+            .any(|method| matches!(method.function.name.as_str(), "equals" | "hashCode"))
+        {
+            return Err(invalid(
+                "Value class equals and hashCode methods are reserved",
+                "VALUE_RESERVED_METHOD",
+            ));
+        }
+        Ok(())
+    }
     fn class_header(&mut self) -> Result<ClassHeader> {
-        let offset = self.token().offset;
+        let mut offset = self.token().offset;
         let mut annotations = self.annotations()?;
         let mut visibility = None;
         let mut final_modifier = false;
         let mut inner = false;
+        let mut value_ = false;
         let mut data = false;
         let mut open = false;
         let mut abstract_ = false;
@@ -3389,13 +3486,14 @@ impl Parser {
         loop {
             if self.at("@") {
                 annotations.extend(self.annotations()?);
-            } else if self.at("value") {
-                return Err(self
-                    .error("Value classes require unsupported JVM boxing and unboxing semantics")
-                    .with_kind(
-                        DiagnosticKind::UnsupportedLanguage,
-                        "VALUE_CLASS_JVM_BOXING_UNSUPPORTED",
-                    ));
+            } else if self.take("value") {
+                if value_ {
+                    return Err(self
+                        .error("Repeated value modifier")
+                        .with_kind(DiagnosticKind::InvalidKotlin, "VALUE_MODIFIER_REPEATED"));
+                }
+                value_ = true;
+                offset = self.tokens[self.pos - 1].offset;
             } else if matches!(self.token().text.as_str(), "public" | "internal") {
                 if visibility.is_some() {
                     return Err(self.error("Conflicting or repeated class visibility modifiers"));
@@ -3459,6 +3557,20 @@ impl Parser {
         }
         let before_visibility = self.pos;
         self.lines();
+        if value_
+            && matches!(
+                self.token().text.as_str(),
+                "public" | "private" | "internal" | "protected" | "constructor"
+            )
+        {
+            return Err(self
+                .error("Explicit value class constructor visibility is unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "VALUE_CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
+                ));
+        }
+
         if sealed_
             && matches!(
                 self.token().text.as_str(),
@@ -3661,6 +3773,7 @@ impl Parser {
         }
         let declaration = ClassDecl {
             inner,
+            value_,
             interface_delegates,
             sealed_,
             type_params,
@@ -4269,6 +4382,7 @@ impl Parser {
         }
         let mut declaration = ClassDecl {
             inner: false,
+            value_: false,
             interface_delegates: Vec::new(),
             sealed_: false,
             type_params: Vec::new(),
@@ -4818,6 +4932,7 @@ impl Parser {
                 self.expect("{")?;
                 let mut object = ClassDecl {
                     inner: false,
+                    value_: false,
                     interface_delegates: Vec::new(),
                     sealed_: false,
                     type_params: Vec::new(),
@@ -7529,14 +7644,14 @@ mod tests {
     fn unsupported_constructs_have_stable_codes_and_source_offsets() {
         for (source, marker, code) in [
             (
-                "@JvmInline\nvalue class Gid(val raw: Int)",
+                "@JvmInline\nvalue class Gid<T>(val raw: T)",
                 "value",
-                "VALUE_CLASS_JVM_BOXING_UNSUPPORTED",
+                "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
             ),
             (
-                "object O { @kotlin.jvm.JvmInline value class Gid(val raw: Int) }",
+                "object O { @kotlin.jvm.JvmInline value class Gid<T>(val raw: T) }",
                 "value",
-                "VALUE_CLASS_JVM_BOXING_UNSUPPORTED",
+                "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
             ),
             (
                 "fun f(input: @Mark String) {}",
@@ -7572,9 +7687,8 @@ mod tests {
         let source = include_str!(
             "../benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt"
         );
-        let error = parse(source).err().unwrap();
-        assert_eq!(error.code, "VALUE_CLASS_JVM_BOXING_UNSUPPORTED");
-        assert_eq!(error.offset, source.find("value class").unwrap());
+        let module = parse(source).unwrap();
+        assert!(module.class_decl.unwrap().value_);
     }
 
     #[test]

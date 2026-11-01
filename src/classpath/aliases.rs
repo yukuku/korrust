@@ -250,6 +250,7 @@ mod tests {
             annotation_definition: None,
             kotlin_fun_interface: false,
             library: Some(LibraryClass {
+                value_class: None,
                 companion_name: None,
                 kotlin_visibility: None,
                 type_aliases: aliases,

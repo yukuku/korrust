@@ -112,8 +112,8 @@ pub(super) fn remove_overridden(
             !methods.iter().any(|other| {
                 other.owner != method.owner
                     && other.source_name() == method.source_name()
-                    && other.access & 8 == 0
-                    && method.access & 8 == 0
+                    && other.instance_dispatch()
+                    && method.instance_dispatch()
                     && relations::as_supertype(
                         classpath,
                         &Type::Java(other.owner.clone()),
@@ -196,7 +196,7 @@ pub(super) fn static_import_owner(
     class.methods = methods
         .into_iter()
         .filter(|method| {
-            method.access & 8 == 0
+            method.instance_dispatch()
                 || method.owner == owner
                 || classpath
                     .load(&method.owner)
@@ -260,9 +260,9 @@ impl Checker<'_> {
             if let Ok(inherited) = ordinary_member_methods(self.classpath, owner, name, args.len())
             {
                 methods.extend(
-                    inherited
-                        .into_iter()
-                        .filter(|method| method.source_name() == name && method.access & 8 == 0),
+                    inherited.into_iter().filter(|method| {
+                        method.source_name() == name && method.instance_dispatch()
+                    }),
                 );
             }
         }
@@ -334,7 +334,7 @@ impl Checker<'_> {
         } else {
             method
         };
-        let value = if method.access & 8 != 0 {
+        let value = if !method.instance_dispatch() {
             self.library_static_call(method, args, offset)?
         } else {
             let receiver = self.dispatch_receiver_value(offset)?;
@@ -368,7 +368,7 @@ impl Checker<'_> {
             || shadow_members
                 && self.members.values().any(|method| {
                     method.source_name() == name
-                        && method.access & 8 == 0
+                        && method.instance_dispatch()
                         && self.lexical_method_visible(method)
                 })
             || shadow_members
@@ -380,7 +380,7 @@ impl Checker<'_> {
                         self.classpath.methods(owner).is_ok_and(|methods| {
                             methods.iter().any(|method| {
                                 method.source_name() == name
-                                    && method.access & 8 == 0
+                                    && method.instance_dispatch()
                                     && self.lexical_method_visible(method)
                             })
                         })
@@ -398,7 +398,7 @@ impl Checker<'_> {
                         self.classpath.methods(owner).is_ok_and(|methods| {
                             methods.iter().any(|method| {
                                 method.source_name() == name
-                                    && method.access & 8 == 0
+                                    && method.instance_dispatch()
                                     && self.lexical_method_visible(method)
                             })
                         })
@@ -488,6 +488,22 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        if method
+            .library
+            .as_ref()
+            .is_some_and(|library| library.value_dispatch)
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Value class members require an instance receiver",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "VALUE_MEMBER_RECEIVER_REQUIRED",
+            ));
+        }
+
+        let method = self.classpath.source_value_method(method, false);
         let labeled = member_extensions::call_labels(method.source_name(), args);
         let args = labeled.as_slice();
         let normalized = self.vararg_arguments(&method, args, offset)?;

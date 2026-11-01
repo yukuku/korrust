@@ -1112,6 +1112,7 @@ pub(crate) fn header(
                 kotlin_result: Some(logical),
                 kotlin_internal: false,
                 library: Some(LibraryMethod {
+                    value_dispatch: false,
                     parameter_modes: Vec::new(),
                     reified_arguments: Vec::new(),
                     kotlin_declared: true,
@@ -1136,6 +1137,7 @@ pub(crate) fn header(
         annotation_definition: Some(definition),
         kotlin_fun_interface: false,
         library: Some(LibraryClass {
+            value_class: None,
             companion_name: None,
             kotlin_visibility: Some(3),
             type_aliases: Vec::new(),

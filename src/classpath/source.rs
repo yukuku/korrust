@@ -116,6 +116,7 @@ fn method(
     );
     JavaMethod {
         library: Some(LibraryMethod {
+            value_dispatch: false,
             kotlin_declared: true,
             has_annotations: !function.annotations.is_empty()
                 || function.param_annotations.iter().any(|a| !a.is_empty()),
@@ -346,6 +347,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         });
     if let Some((parameters, _)) = generic {
         class.library = Some(LibraryClass {
+            value_class: None,
             companion_name: None,
             kotlin_visibility: None,
             type_aliases: Vec::new(),
@@ -366,6 +368,12 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
     }
 
     if let Some(source) = &module.class_decl {
+        if source.value_ {
+            class.library.as_mut().unwrap().value_class = Some(crate::value_abi::ValueClassInfo {
+                property: source.params[0].0.clone(),
+                carrier: resolve(&source.params[0].1, module, cp),
+            });
+        }
         if source.sealed_
             && (!source.secondary_constructors.is_empty()
                 || source.defaults.iter().any(Option::is_some))
@@ -546,6 +554,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 let name = format!("component{}", index + 1);
                 class.methods.push(JavaMethod {
                     library: Some(LibraryMethod {
+                        value_dispatch: false,
                         kotlin_declared: true,
                         has_annotations: false,
                         parameter_modes: Vec::new(),
@@ -652,6 +661,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             if !p.annotations.is_empty() {
                 for method in &mut methods {
                     method.library = Some(LibraryMethod {
+                        value_dispatch: false,
                         parameter_modes: Vec::new(),
                         reified_arguments: Vec::new(),
                         kotlin_declared: true,
@@ -798,6 +808,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         constants(&mut class, &source.constants)?;
     } else {
         class.library = Some(LibraryClass {
+            value_class: None,
             companion_name: None,
             kotlin_visibility: None,
             type_aliases: module
@@ -914,6 +925,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     library.code = None;
                 } else {
                     method.library = Some(LibraryMethod {
+                        value_dispatch: false,
                         parameter_modes: Vec::new(),
                         reified_arguments: Vec::new(),
                         kotlin_declared: true,
@@ -985,6 +997,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             .map(Type::Java)
             .collect();
         let library = class.library.get_or_insert_with(|| LibraryClass {
+            value_class: None,
             companion_name: None,
             kotlin_visibility: None,
             type_aliases: Vec::new(),

@@ -314,6 +314,7 @@ fn register_classes(
             JavaMethod {
                 library: (function.infix || function.operator).then(|| {
                     crate::classpath::LibraryMethod {
+                        value_dispatch: false,
                         kotlin_declared: true,
                         has_annotations: false,
                         parameter_modes: Vec::new(),
@@ -369,6 +370,7 @@ fn register_classes(
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
+                    value_class: None,
                     companion_name: None,
                     kotlin_visibility: Some(if source.internal { 0 } else { 3 }),
                     type_aliases: Vec::new(),

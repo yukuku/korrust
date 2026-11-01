@@ -86,6 +86,7 @@ fn original_pool(reader: &mut Reader<'_>) -> Result<(Pool, HashMap<u16, Vec<u8>>
         return Err(failure("Invalid JVM annotation input constant pool count"));
     }
     let mut pool = Pool {
+        value_classes: Default::default(),
         entries: vec![Constant::Reserved; usize::from(count) - 1],
         indices: HashMap::new(),
     };
@@ -422,6 +423,7 @@ mod tests {
         let metadata = super::super::metadata_attribute_with_annotations(
             &mut pool,
             &crate::metadata::Metadata {
+                value_classes: Default::default(),
                 raw_data2: Default::default(),
                 kind: 1,
                 data1: vec![vec![0, 1, 2]],

@@ -203,7 +203,14 @@ pub(crate) fn emit(
         });
     }
     for lambda in &checked.lambdas {
-        files.push(lambdas::emit(lambda, &[], owner, file, &checked.lambdas)?);
+        files.push(lambdas::emit(
+            lambda,
+            &[],
+            owner,
+            file,
+            &checked.lambdas,
+            &metadata.value_classes,
+        )?);
     }
     Ok(files)
 }

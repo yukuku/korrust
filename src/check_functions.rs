@@ -789,6 +789,7 @@ mod shadowing_tests {
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
+                    value_class: None,
                     companion_name: None,
                     kotlin_visibility: None,
                     type_parameters: Vec::new(),
@@ -807,6 +808,7 @@ mod shadowing_tests {
                 kotlin_interface: false,
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
+                        value_dispatch: false,
                         kotlin_declared: true,
                         has_annotations: false,
                         parameter_modes: Vec::new(),

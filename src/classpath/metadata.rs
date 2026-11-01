@@ -578,6 +578,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             kotlin_result: Some(array),
             kotlin_internal: false,
             library: Some(LibraryMethod {
+                value_dispatch: false,
                 kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
@@ -771,6 +772,7 @@ fn builtin_declarations(
             kotlin_result: Some(returned),
             kotlin_internal: false,
             library: requested_name.map(|_| LibraryMethod {
+                value_dispatch: false,
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),
                 kotlin_declared: false,
@@ -796,6 +798,111 @@ fn builtin_declarations(
         return Err(invalid());
     }
     Ok(result)
+}
+
+pub(super) fn value_abi_dependencies(
+    annotation: &Annotation,
+    class: &JavaClass,
+) -> Result<Vec<String>> {
+    let kind = integer(annotation, "k")?.unwrap_or(1);
+    if !matches!(kind, 1 | 2 | 5) {
+        return Ok(Vec::new());
+    }
+    let bytes = decode(&strings(annotation, "d1")?)?;
+    let mut reader = Reader {
+        bytes: &bytes,
+        offset: 0,
+    };
+    let length = usize::try_from(varint(&mut reader)?).map_err(|_| invalid())?;
+    let names = metadata_strings(reader.take(length)?, &strings(annotation, "d2")?)?;
+    let root = Proto::parse(reader.take(bytes.len() - reader.offset)?)?;
+    let mut context = Context::new(&names, &root)?;
+    if kind == 1 {
+        let _ = context.type_parameters(&root, 5)?;
+    }
+    let mut dependencies = std::collections::BTreeSet::new();
+    let mut remember = |logical: &Type, physical: &Type| {
+        let base = match logical.base() {
+            Type::Nullable(inner) => inner.base(),
+            base => base,
+        };
+        if logical.descriptor() != physical.descriptor() {
+            if let Type::Java(owner) = base {
+                if owner != &class.name {
+                    dependencies.insert(owner.clone());
+                }
+            }
+        }
+    };
+    for (field, constructor) in [(if kind == 1 { 9 } else { 3 }, false), (8, true)] {
+        if constructor && kind != 1 {
+            continue;
+        }
+        for bytes in root.messages(field)? {
+            let parsed = (|| -> Result<()> {
+                let member = Proto::parse(bytes)?;
+                let Some(signature) = member.bytes(100)? else {
+                    return Ok(());
+                };
+                let signature = Proto::parse(signature)?;
+                let Some(descriptor) = signature.integer(2)?.and_then(|id| names.get(id as usize))
+                else {
+                    return Ok(());
+                };
+                let (physical, result) = crate::jvm_descriptor::method_types(descriptor)?;
+                let mut scope = context.clone();
+                scope.set_table(&member)?;
+                if !constructor {
+                    let _ = scope.type_parameters(&member, 4)?;
+                }
+                let mut logical = Vec::new();
+                if !constructor && (member.bytes(5)?.is_some() || member.integer(8)?.is_some()) {
+                    logical.push(scope.field(&member, 5, 8)?);
+                }
+                for bytes in member.messages(if constructor { 2 } else { 6 })? {
+                    logical.push(scope.parameter(bytes)?.1);
+                }
+                let skip = usize::from(
+                    physical.len() == logical.len() + 1
+                        && class
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| library.value_class.is_some()),
+                );
+                if physical.len() == logical.len() + skip {
+                    for (logical, physical) in logical.iter().zip(&physical[skip..]) {
+                        remember(logical, physical);
+                    }
+                }
+                if !constructor {
+                    remember(&scope.field(&member, 3, 7)?, &result);
+                }
+                Ok(())
+            })();
+            let _ = parsed;
+        }
+    }
+    for bytes in root.messages(if kind == 1 { 10 } else { 4 })? {
+        let parsed = (|| -> Result<()> {
+            let property = Proto::parse(bytes)?;
+            let logical = context.field(&property, 3, 9)?;
+            if let Some(signature) = property.bytes(100)? {
+                let signature = Proto::parse(signature)?;
+                if let Some(getter) = signature.bytes(3)? {
+                    let getter = Proto::parse(getter)?;
+                    if let Some(descriptor) =
+                        getter.integer(2)?.and_then(|id| names.get(id as usize))
+                    {
+                        let (_, result) = crate::jvm_descriptor::method_types(descriptor)?;
+                        remember(&logical, &result);
+                    }
+                }
+            }
+            Ok(())
+        })();
+        let _ = parsed;
+    }
+    Ok(dependencies.into_iter().collect())
 }
 
 #[cfg(test)]
@@ -873,7 +980,8 @@ pub(super) fn module_parts(bytes: &[u8], package: &str) -> Result<Vec<String>> {
     Ok(result)
 }
 
-struct MemberTypes {
+struct MemberTypes<'a> {
+    value_classes: &'a crate::value_abi::Registry,
     parameter_modes: Vec<crate::syntax::InlineParameterMode>,
     params: Vec<(String, Type, bool)>,
     result: Type,
@@ -886,12 +994,13 @@ fn attach_member(
     class: &mut JavaClass,
     attributes: &[Attributes],
     name: &str,
-    types: MemberTypes,
+    types: MemberTypes<'_>,
     signature: Option<&[u8]>,
     strings: &[String],
     property: Option<String>,
 ) -> Result<()> {
     let MemberTypes {
+        value_classes: values,
         mut parameter_modes,
         params,
         result,
@@ -937,7 +1046,36 @@ fn attach_member(
     let [index] = matching.as_slice() else {
         return Err(invalid());
     };
-    if jvm_descriptor != descriptor {
+    let own = class
+        .library
+        .as_ref()
+        .and_then(|library| library.value_class.as_ref());
+    let mut registry = values.clone();
+    if let Some(info) = own {
+        registry.insert(class.name.clone(), info.clone());
+    }
+    let mut logical = receiver
+        .iter()
+        .cloned()
+        .chain(params.iter().map(|(_, ty, _)| ty.clone()))
+        .collect::<Vec<_>>();
+    let value_dispatch = own.is_some() && name != "<init>" && class.methods[*index].access & 8 != 0;
+    if value_dispatch {
+        logical.insert(0, Type::Java(class.name.clone()));
+    }
+    let physical_result = match (name, own) {
+        ("<init>", Some(info)) => info.carrier.clone(),
+        _ => crate::value_abi::physical(&result, &registry),
+    };
+    let physical = format!(
+        "({}){}",
+        logical
+            .iter()
+            .map(|ty| crate::value_abi::physical(ty, &registry).descriptor())
+            .collect::<String>(),
+        physical_result.descriptor()
+    );
+    if jvm_descriptor != descriptor && jvm_descriptor != physical {
         let (logical_parameters, _) = descriptor.split_once(')').ok_or_else(invalid)?;
         let (physical_parameters, physical_result) =
             jvm_descriptor.split_once(')').ok_or_else(invalid)?;
@@ -1032,6 +1170,7 @@ fn attach_member(
         parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
     }
     method.library = Some(LibraryMethod {
+        value_dispatch,
         kotlin_declared: true,
         has_annotations: flags & 1 != 0,
         parameter_modes,
@@ -1078,6 +1217,7 @@ fn remember_callable(
             && method.library.is_none()
         {
             method.library = Some(LibraryMethod {
+                value_dispatch: false,
                 kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
@@ -1111,6 +1251,21 @@ pub(super) fn attach(
     class: &mut JavaClass,
     attributes: &[Attributes],
     field_attributes: &[Attributes],
+) -> Result<()> {
+    attach_with_values(
+        annotation,
+        class,
+        attributes,
+        field_attributes,
+        &Default::default(),
+    )
+}
+pub(super) fn attach_with_values(
+    annotation: &Annotation,
+    class: &mut JavaClass,
+    attributes: &[Attributes],
+    field_attributes: &[Attributes],
+    values: &crate::value_abi::Registry,
 ) -> Result<()> {
     let kind = integer(annotation, "k")?.unwrap_or(1);
     if !matches!(kind, 1 | 2 | 5) {
@@ -1238,6 +1393,29 @@ pub(super) fn attach(
     }
     let class_flags = proto.integer(1)?.unwrap_or(6);
     class.library = Some(LibraryClass {
+        value_class: if kind == 1 && class_flags & 8192 != 0 {
+            Some(crate::value_abi::ValueClassInfo {
+                property: metadata_name(&strings, proto.integer(17)?)?.into(),
+                carrier: if proto.bytes(18)?.is_some() || proto.integer(19)?.is_some() {
+                    ctx.field(&proto, 18, 19)?
+                } else {
+                    let property_name = metadata_name(&strings, proto.integer(17)?)?;
+                    let property = proto
+                        .messages(10)?
+                        .into_iter()
+                        .find_map(|bytes| {
+                            let property = Proto::parse(bytes).ok()?;
+                            (metadata_name(&strings, property.integer(2).ok()?).ok()?
+                                == property_name)
+                                .then_some(property)
+                        })
+                        .ok_or_else(invalid)?;
+                    ctx.field(&property, 3, 9)?
+                },
+            })
+        } else {
+            None
+        },
         companion_name: if kind == 1 {
             proto
                 .integer(4)?
@@ -1279,7 +1457,21 @@ pub(super) fn attach(
     class.kotlin_fun_interface = kind == 1 && class.kotlin_interface && class_flags & 16384 != 0;
     class.unsupported = kind == 1
         && (class_flags & 14 == 0
-            || class_flags & (2048 | 4096 | 8192) != 0
+            || class_flags & (2048 | 4096) != 0
+            || class.library.as_ref().is_some_and(|library| {
+                library.value_class.as_ref().is_some_and(|info| {
+                    !library.type_parameters.is_empty()
+                        || !matches!(
+                            info.carrier,
+                            Type::Int
+                                | Type::Long
+                                | Type::Byte
+                                | Type::Short
+                                | Type::String
+                                | Type::Nullable(_)
+                        )
+                })
+            })
             || !matches!((class_flags >> 6) & 7, 0 | 1 | 2 | 5 | 6)
             || (class_flags >> 6) & 7 == 2
                 && (class.access & 0x4000 == 0
@@ -1368,6 +1560,7 @@ pub(super) fn attach(
                     attributes,
                     name,
                     MemberTypes {
+                        value_classes: values,
                         parameter_modes,
                         params,
                         result,
@@ -1478,6 +1671,7 @@ pub(super) fn attach(
                     attributes,
                     &crate::check::getter_name(name),
                     MemberTypes {
+                        value_classes: values,
                         parameter_modes: Vec::new(),
                         params: Vec::new(),
                         result: ty.clone(),
@@ -1496,6 +1690,7 @@ pub(super) fn attach(
                     attributes,
                     &crate::check::setter_name(name),
                     MemberTypes {
+                        value_classes: values,
                         parameter_modes: Vec::new(),
                         params: vec![("value".into(), ty, false)],
                         result: Type::Unit,
@@ -1511,6 +1706,55 @@ pub(super) fn attach(
             Ok(())
         })();
         let _ = parsed;
+    }
+    if let Some(info) = class
+        .library
+        .as_ref()
+        .and_then(|library| library.value_class.clone())
+    {
+        if let Some(constructor) = class
+            .methods
+            .iter()
+            .find(|method| method.name == "constructor-impl" && !method.unsupported)
+            .cloned()
+        {
+            let mut constructor = constructor;
+            constructor.name = "<init>".into();
+            constructor.descriptor = format!("({})V", info.carrier.descriptor());
+            constructor.access = 1;
+            constructor.kotlin_result = Some(Type::Unit);
+            if let Some(existing) = class.methods.iter_mut().find(|existing| {
+                existing.name == constructor.name
+                    && existing.descriptor == constructor.descriptor
+                    && existing.access & 1 != 0
+            }) {
+                *existing = constructor;
+            } else {
+                class.methods.push(constructor);
+            }
+        }
+    } else {
+        let constructors = class
+            .methods
+            .iter()
+            .filter(|method| {
+                method.name == "<init>" && !method.unsupported && method.access & 2 != 0
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+        for constructor in constructors {
+            let descriptor = constructor
+                .descriptor
+                .replace(")V", "Lkotlin/jvm/internal/DefaultConstructorMarker;)V");
+            if let Some(marker) = class.methods.iter_mut().find(|method| {
+                method.name == "<init>" && method.descriptor == descriptor && method.access & 1 != 0
+            }) {
+                marker.kotlin_params = constructor.kotlin_params;
+                marker.kotlin_result = constructor.kotlin_result;
+                marker.library = constructor.library;
+                marker.unsupported = false;
+            }
+        }
     }
     if let Some(owner) = class
         .library

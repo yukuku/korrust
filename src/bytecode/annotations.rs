@@ -455,6 +455,7 @@ mod tests {
         let first = super::super::metadata_attribute_with_annotations(
             &mut pool,
             &crate::metadata::Metadata {
+                value_classes: Default::default(),
                 raw_data2: Default::default(),
                 kind: 1,
                 data1: vec![vec![0, 1, 0x1234]],

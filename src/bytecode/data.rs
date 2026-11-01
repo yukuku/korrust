@@ -25,9 +25,10 @@ fn code<'a>(pool: &'a mut Pool, owner: &'a str) -> Code<'a> {
 }
 fn field(code: &mut Code<'_>, owner: &str, receiver: u8, name: &str, ty: &Type) -> Result<()> {
     code.bytes.extend([0x19, receiver]);
-    code.field_reference(0xb4, owner, name, &ty.descriptor())
+    code.storage_field(0xb4, owner, name, ty)
 }
 fn finish(code: Code<'_>, locals: u16, max_stack: usize) -> Result<SimpleCode> {
+    let max_stack = max_stack.max(code.max_stack);
     code.into_simple(
         locals,
         u16::try_from(max_stack).map_err(|_| failure("Data class stack exceeds JVM limit"))?,
@@ -160,7 +161,16 @@ pub(super) fn methods(
     {
         body.bytes.extend([load_opcode(ty), slot as u8]);
     }
-    body.method_reference(0xb6, owner, "copy", &desc)?;
+    let opcode = if class
+        .params
+        .iter()
+        .any(|(_, ty)| crate::value_abi::value_parameter(ty, &body.pool.value_classes))
+    {
+        0xb7
+    } else {
+        0xb6
+    };
+    body.method_reference(opcode, owner, "copy", &desc)?;
     body.bytes.push(0xb0);
     let body = finish(body, (slots + 3) as u16, (slots + 1).max(2))?;
     let mut params = vec![("$this".into(), result.clone())];

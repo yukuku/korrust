@@ -173,6 +173,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 133. Member and companion extensions with distinct dispatch and extension receivers, computed extension properties, and bounded generic receiver substitution.
 134. Enum entry-specific subclasses, abstract/open method and interface dispatch, constructor defaults and named arguments, with JVM signatures and Kotlin metadata.
 135. Named inner classes with a stored enclosing instance, outer-state access, qualified construction, bounded constructor references, and JVM/Kotlin consumer metadata.
+136. Nongeneric single-field JVM value classes with Int, Long, String and nullable String carriers, nullable/generic/interface boxing, mangled JVM signatures, and Kotlin metadata.
 
 ## Project contract
 

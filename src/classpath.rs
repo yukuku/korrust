@@ -180,6 +180,7 @@ pub(crate) struct JavaMethod {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryClass {
+    pub value_class: Option<crate::value_abi::ValueClassInfo>,
     pub companion_name: Option<String>,
     pub kotlin_visibility: Option<u8>,
     pub type_aliases: Vec<LibraryTypeAlias>,
@@ -198,6 +199,7 @@ pub(crate) struct LibraryTypeAlias {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryMethod {
+    pub value_dispatch: bool,
     pub kotlin_declared: bool,
     pub has_annotations: bool,
     pub parameter_modes: Vec<crate::syntax::InlineParameterMode>,
@@ -245,6 +247,13 @@ pub(crate) enum InlineConstant {
 }
 
 impl JavaMethod {
+    pub(crate) fn instance_dispatch(&self) -> bool {
+        self.access & 8 == 0
+            || self
+                .library
+                .as_ref()
+                .is_some_and(|library| library.value_dispatch)
+    }
     pub(crate) fn source_name(&self) -> &str {
         self.library
             .as_ref()
@@ -253,6 +262,78 @@ impl JavaMethod {
 }
 
 impl Classpath {
+    pub(crate) fn source_value_method(&self, mut method: JavaMethod, member: bool) -> JavaMethod {
+        if !self.is_source(&method.owner) || method.access & 2 != 0 {
+            return method;
+        }
+        let (Some(parameters), Some(result)) = (&method.kotlin_params, &method.kotlin_result)
+        else {
+            return method;
+        };
+        let registry = self.value_classes();
+        let logical = method
+            .library
+            .as_ref()
+            .and_then(|library| library.receiver.as_ref())
+            .into_iter()
+            .cloned()
+            .chain(parameters.iter().map(|(_, ty, _)| ty.clone()))
+            .collect::<Vec<_>>();
+        let original = format!(
+            "({}){}",
+            logical.iter().map(Type::descriptor).collect::<String>(),
+            result.descriptor()
+        );
+        if method.descriptor != original {
+            return method;
+        }
+        let own = registry
+            .get(&method.owner)
+            .filter(|info| method.name != crate::check::getter_name(&info.property) && member);
+        let name = crate::value_abi::mangled_name(
+            &method.name,
+            &logical,
+            member.then_some(result),
+            |owner| registry.get(owner).cloned(),
+            own.is_some(),
+        );
+        let mut physical = logical
+            .iter()
+            .map(|ty| crate::value_abi::physical(ty, &registry))
+            .collect::<Vec<_>>();
+        if let Some(info) = own {
+            physical.insert(0, info.carrier.clone());
+        }
+        let descriptor = format!(
+            "({}){}",
+            physical.iter().map(Type::descriptor).collect::<String>(),
+            crate::value_abi::physical(result, &registry).descriptor()
+        );
+        if name != method.name || descriptor != method.descriptor {
+            method.name = name;
+            method.descriptor = descriptor;
+            if own.is_some() {
+                method.access |= 8;
+                if let Some(library) = &mut method.library {
+                    library.value_dispatch = true;
+                }
+            }
+        }
+        method
+    }
+    pub(crate) fn value_classes(&self) -> crate::value_abi::Registry {
+        self.cache
+            .borrow()
+            .values()
+            .filter_map(|class| {
+                class
+                    .library
+                    .as_ref()
+                    .and_then(|library| library.value_class.clone())
+                    .map(|value| (class.name.clone(), value))
+            })
+            .collect()
+    }
     pub(crate) fn expand_type_alias(
         &self,
         ty: &Type,
@@ -401,6 +482,7 @@ impl Classpath {
                     annotation_definition: None,
                     kotlin_fun_interface: false,
                     library: Some(LibraryClass {
+                        value_class: None,
                         companion_name: None,
                         kotlin_visibility: None,
                         type_aliases: Vec::new(),
@@ -808,6 +890,52 @@ impl Classpath {
 
     fn parse_with_declarations(&self, bytes: &[u8], expected: &str) -> Result<JavaClass> {
         let (mut class, attrs, method_attrs) = parse_details(bytes, expected)?;
+        if let Some(annotation) = attrs
+            .annotations
+            .iter()
+            .find(|annotation| annotation.name == "Lkotlin/Metadata;")
+        {
+            self.cache
+                .borrow_mut()
+                .insert(expected.into(), class.clone());
+            for owner in metadata::value_abi_dependencies(annotation, &class).unwrap_or_default() {
+                let _ = self.load(&owner);
+            }
+            let values = self.value_classes();
+            if !values.is_empty() {
+                let mut replay = class.clone();
+                if metadata::attach_with_values(
+                    annotation,
+                    &mut replay,
+                    &method_attrs,
+                    &[],
+                    &values,
+                )
+                .is_ok()
+                {
+                    for method in replay
+                        .methods
+                        .into_iter()
+                        .filter(|method| !method.unsupported)
+                    {
+                        if let Some(existing) = class.methods.iter_mut().find(|existing| {
+                            existing.name == method.name
+                                && existing.descriptor == method.descriptor
+                                && (method.name != "<init>"
+                                    || existing.access & 7 == method.access & 7)
+                        }) {
+                            *existing = method;
+                        } else {
+                            class.methods.push(method);
+                        }
+                    }
+                    class.library = replay.library;
+                    if class.annotation_definition.is_none() {
+                        class.unsupported = replay.unsupported;
+                    }
+                }
+            }
+        }
         if !attrs
             .annotations
             .iter()

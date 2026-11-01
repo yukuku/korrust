@@ -55,6 +55,30 @@ pub(super) fn check_class_with_constants(
     } else {
         source
     };
+    let inline_marker = source.annotations.iter().any(|annotation| {
+        annotations::annotation_owner(&annotation.name, classpath, imports)
+            == "kotlin/jvm/JvmInline"
+    });
+    if source.value_ && !inline_marker {
+        return Err(Diagnostic::new(
+            source.offset,
+            "JVM value classes require kotlin.jvm.JvmInline",
+        )
+        .with_kind(
+            crate::DiagnosticKind::InvalidKotlin,
+            "VALUE_JVM_INLINE_REQUIRED",
+        ));
+    }
+    if !source.value_ && inline_marker {
+        return Err(Diagnostic::new(
+            source.offset,
+            "JvmInline requires a value class declaration",
+        )
+        .with_kind(
+            crate::DiagnosticKind::InvalidKotlin,
+            "VALUE_JVM_INLINE_PLACEMENT_INVALID",
+        ));
+    }
     if source.sealed_
         && (!source.secondary_constructors.is_empty()
             || source.defaults.iter().any(Option::is_some))
@@ -948,6 +972,7 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .find(|m| m.function.offset == *offset && m.function.name == *name)
                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
+            value_dispatch: false,
                 kotlin_declared: true,
                         has_annotations: false,
                 parameter_modes: Vec::new(),
@@ -1903,6 +1928,7 @@ pub(super) fn check_class_with_constants(
             |declaration| matches!(declaration, syntax::Declaration::Class(class) if class.inner),
         ),
         inner: source.inner,
+        value_: source.value_,
         interface_delegate_storage,
         interface_delegated_members,
         sealed_: source.sealed_,

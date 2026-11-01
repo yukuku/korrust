@@ -1,10 +1,24 @@
 use super::*;
 
-pub fn emit_lambdas(module: &Module, facade: &str, file: &str) -> Result<Vec<crate::ClassFile>> {
+pub fn emit_lambdas(
+    module: &Module,
+    facade: &str,
+    file: &str,
+    values: &crate::value_abi::Registry,
+) -> Result<Vec<crate::ClassFile>> {
     module
         .lambdas
         .iter()
-        .map(|lambda| emit(lambda, &module.functions, facade, file, &module.lambdas))
+        .map(|lambda| {
+            emit(
+                lambda,
+                &module.functions,
+                facade,
+                file,
+                &module.lambdas,
+                values,
+            )
+        })
         .collect()
 }
 
@@ -14,6 +28,7 @@ pub(super) fn emit(
     facade: &str,
     file: &str,
     lambdas: &[crate::check::LambdaDecl],
+    values: &crate::value_abi::Registry,
 ) -> Result<crate::ClassFile> {
     let function = &lambda.function;
     if function.params.len() > 22 {
@@ -30,7 +45,10 @@ pub(super) fn emit(
         ));
     }
     let owner = &lambda.owner;
-    let mut pool = Pool::default();
+    let mut pool = Pool {
+        value_classes: values.clone(),
+        ..Pool::default()
+    };
     let this = pool.class(owner)?;
     let parent = pool.class("java/lang/Object")?;
     let interface = lambda.interface.as_ref().map_or_else(
@@ -572,7 +590,15 @@ mod tests {
         ));
         std::fs::create_dir_all(&root).unwrap();
         for lambda in [long, unit, sam] {
-            let class = emit(&lambda, &[], "Unused", "Lambda.kt", &[]).unwrap();
+            let class = emit(
+                &lambda,
+                &[],
+                "Unused",
+                "Lambda.kt",
+                &[],
+                &Default::default(),
+            )
+            .unwrap();
             std::fs::write(
                 root.join(format!("{}.class", class.internal_name)),
                 class.bytes,

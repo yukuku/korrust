@@ -8,6 +8,7 @@ mod inner_classes;
 mod jvm_descriptor;
 mod metadata;
 mod object_lowering;
+mod value_abi;
 mod visibility;
 
 use std::path::PathBuf;
@@ -611,6 +612,103 @@ pub fn compile_batch_with_options(
             .map_err(|error| error.for_source(&sources[index].identity))?;
     }
     validate_batch_declarations(&units, &owner_sources, &sources)?;
+    let value_classes = classpath.value_classes();
+    for (owner, unit) in &units {
+        let resolved = |ty: &syntax::Type| {
+            value_abi::nominal_owner(ty).is_some_and(|name| {
+                value_classes.contains_key(name)
+                    || unit
+                        .imports
+                        .iter()
+                        .any(|(alias, path, _)| alias == name && value_classes.contains_key(path))
+            })
+        };
+        let bounded = |parameters: &[syntax::TypeParameter]| {
+            parameters
+                .iter()
+                .any(|parameter| parameter.bounds.iter().any(resolved))
+        };
+        let classifier_bounds = unit
+            .class_decl
+            .as_ref()
+            .is_some_and(|class| bounded(&class.type_params))
+            || unit
+                .interface_decl
+                .as_ref()
+                .is_some_and(|interface| bounded(&interface.type_params));
+        if classifier_bounds
+            || unit
+                .functions
+                .iter()
+                .any(|function| bounded(&function.type_params))
+            || unit.class_decl.as_ref().is_some_and(|class| {
+                class
+                    .methods
+                    .iter()
+                    .any(|method| bounded(&method.function.type_params))
+            })
+        {
+            return Err(locate(Diagnostic::new(0,"Generic bounds involving value classes require unsupported carrier substitution").with_kind(DiagnosticKind::UnsupportedLanguage,"VALUE_GENERIC_BOUND_UNSUPPORTED"),owner));
+        }
+        if unit.class_decl.as_ref().is_some_and(|class| {
+            class.methods.iter().any(|method| {
+                let function = &method.function;
+                (function.params.iter().any(|(_, ty)| resolved(ty)) || resolved(&function.result))
+                    && (function.internal
+                        || function.vararg
+                        || function.defaults.iter().any(Option::is_some)
+                        || function.annotations.iter().any(|annotation| {
+                            matches!(
+                                annotation.name.rsplit('/').next(),
+                                Some("JvmName" | "JvmOverloads" | "JvmStatic")
+                            )
+                        }))
+            })
+        }) {
+            return Err(locate(Diagnostic::new(0,"Decorated, internal, default and vararg class members with value class signatures are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage,"VALUE_MEMBER_SIGNATURE_UNSUPPORTED"),owner));
+        }
+        for function in &unit.functions {
+            if function.params.iter().any(|(_, ty)| resolved(ty)) || resolved(&function.result) {
+                if function.defaults.iter().any(Option::is_some) || function.vararg {
+                    return Err(locate(
+                        Diagnostic::new(
+                            function.offset,
+                            "Default and vararg value class function signatures are unsupported",
+                        )
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "VALUE_DEFAULT_ARGUMENT_UNSUPPORTED",
+                        ),
+                        owner,
+                    ));
+                }
+                if function.internal {
+                    return Err(locate(
+                        Diagnostic::new(
+                            function.offset,
+                            "Internal value class function signatures are unsupported",
+                        )
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "VALUE_INTERNAL_CALLABLE_UNSUPPORTED",
+                        ),
+                        owner,
+                    ));
+                }
+                if function.inline {
+                    return Err(locate(Diagnostic::new(function.offset,"Source inline functions with value class parameters or results are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage,"VALUE_INLINE_FUNCTION_UNSUPPORTED"),owner));
+                }
+                if function.annotations.iter().any(|annotation| {
+                    matches!(
+                        annotation.name.rsplit('/').next(),
+                        Some("JvmName" | "JvmOverloads" | "JvmStatic")
+                    )
+                }) {
+                    return Err(locate(Diagnostic::new(function.offset,"JVM ABI annotations on value class function signatures are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage,"VALUE_JVM_ANNOTATION_UNSUPPORTED"),owner));
+                }
+            }
+        }
+    }
     source_inline::stage(&units, &classpath, module_name)
         .map_err(|(owner, error)| locate(error, &owner))?;
     synchronize_nested_units(&mut units);
@@ -1030,6 +1128,16 @@ fn declaration_units(
             Vec::new()
         }
         syntax::Declaration::Class(d) => {
+            if d.value_ && owner.contains('$') {
+                return Err(Diagnostic::new(
+                    d.offset,
+                    "Nested value class declarations are unsupported",
+                )
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "VALUE_NESTED_DECLARATION_UNSUPPORTED",
+                ));
+            }
             let nested = d.nested.clone();
             unit.class_decl = Some(d);
             nested
@@ -1129,6 +1237,174 @@ fn emit_unit(
     Ok(files)
 }
 
+fn value_context_bodies<'a>(
+    functions: impl IntoIterator<Item = &'a check::Function>,
+    expressions: impl IntoIterator<Item = &'a check::Value>,
+    bodies: impl IntoIterator<Item = &'a [check::Statement]>,
+    registry: &value_abi::Registry,
+) -> bool {
+    let mut found = false;
+    let mut inspect = |node: &mut check::Value, _: &str| {
+        let (descriptor, arguments, receiver, constructor) = match &node.kind {
+            check::ValueKind::StaticCall {
+                descriptor, args, ..
+            } => (descriptor, args, 0, false),
+            check::ValueKind::New {
+                descriptor, args, ..
+            } => (descriptor, args, 0, true),
+            check::ValueKind::JavaCall { method, args }
+            | check::ValueKind::MemberCall { method, args, .. }
+            | check::ValueKind::SuperCall { method, args }
+            | check::ValueKind::CompiledInline { method, args, .. } => (
+                &method.descriptor,
+                args,
+                usize::from(method.access & 8 == 0),
+                false,
+            ),
+            _ => return,
+        };
+        if let Ok((parameters, result)) = jvm_descriptor::method_types(descriptor) {
+            let adapts = |logical: &syntax::Type, physical: &syntax::Type| {
+                value_abi::value_parameter(logical, registry)
+                    && logical.descriptor() != physical.descriptor()
+                    && value_abi::physical(logical, registry).descriptor() == physical.descriptor()
+            };
+            found |= arguments
+                .iter()
+                .skip(receiver)
+                .zip(parameters)
+                .any(|(argument, parameter)| adapts(&argument.ty, &parameter))
+                || !constructor && adapts(&node.ty, &result);
+        }
+    };
+    for function in functions {
+        for value in function.defaults.iter().flatten() {
+            check::ir_walk::value(&mut value.clone(), "", &mut inspect);
+        }
+        check::ir_walk::statements(&mut function.body.clone(), "", &mut inspect);
+    }
+    for value in expressions {
+        check::ir_walk::value(&mut value.clone(), "", &mut inspect);
+    }
+    for body in bodies {
+        check::ir_walk::statements(&mut body.to_vec(), "", &mut inspect);
+    }
+    found
+}
+
+fn value_context_function(function: &check::Function, registry: &value_abi::Registry) -> bool {
+    function
+        .params
+        .iter()
+        .any(|(_, ty)| value_abi::value_parameter(ty, registry))
+        || value_abi::value_parameter(&function.result, registry)
+        || value_context_bodies([function], [], [], registry)
+}
+
+fn value_context_companion(
+    companion: &check::ClassCompanion,
+    registry: &value_abi::Registry,
+) -> bool {
+    companion
+        .properties
+        .iter()
+        .any(|property| value_abi::value_parameter(&property.ty, registry))
+        || companion
+            .methods
+            .iter()
+            .any(|function| value_context_function(function, registry))
+        || value_context_bodies(
+            [],
+            companion.properties.iter().map(|property| &property.value),
+            [companion.initializers.as_slice()],
+            registry,
+        )
+}
+
+fn value_context_class(class: &check::ClassDecl, registry: &value_abi::Registry) -> bool {
+    class
+        .params
+        .iter()
+        .any(|(_, ty)| value_abi::value_parameter(ty, registry))
+        || class
+            .fields
+            .iter()
+            .any(|field| value_abi::value_parameter(&field.ty, registry))
+        || class
+            .methods
+            .iter()
+            .any(|function| value_context_function(function, registry))
+        || class
+            .secondary_constructors
+            .iter()
+            .any(|constructor| value_context_function(&constructor.function, registry))
+        || class
+            .companion
+            .as_ref()
+            .is_some_and(|companion| value_context_companion(companion, registry))
+        || value_context_bodies(
+            class
+                .secondary_constructors
+                .iter()
+                .map(|constructor| &constructor.function),
+            class
+                .fields
+                .iter()
+                .filter_map(|field| field.initializer.as_ref())
+                .chain(class.defaults.iter().flatten())
+                .chain(&class.super_args)
+                .chain(class.delegated_properties.iter().map(|(_, value)| value))
+                .chain(
+                    class
+                        .interface_delegate_storage
+                        .iter()
+                        .map(|delegate| &delegate.initializer),
+                )
+                .chain(
+                    class
+                        .secondary_constructors
+                        .iter()
+                        .flat_map(|constructor| &constructor.delegation_args),
+                ),
+            std::iter::once(class.constructor_body.as_slice()).chain(
+                class
+                    .secondary_constructors
+                    .iter()
+                    .map(|constructor| constructor.initializers.as_slice()),
+            ),
+            registry,
+        )
+}
+
+fn value_context_interface(
+    interface: &check::InterfaceDecl,
+    registry: &value_abi::Registry,
+) -> bool {
+    interface
+        .methods
+        .iter()
+        .any(|method| value_context_function(&method.function, registry))
+        || interface
+            .nested
+            .iter()
+            .any(|nested| value_context_interface(nested, registry))
+        || interface.companion.as_ref().is_some_and(|companion| {
+            companion
+                .state
+                .as_ref()
+                .is_some_and(|state| value_context_companion(state, registry))
+                || companion
+                    .properties
+                    .iter()
+                    .any(|property| match &property.value {
+                        check::CompanionValue::StringArray(_) => false,
+                        check::CompanionValue::Object { class_decl, .. } => {
+                            value_context_class(class_decl, registry)
+                        }
+                    })
+        })
+}
+
 #[allow(clippy::too_many_arguments)]
 fn emit_unit_without_annotations(
     module: &syntax::Module,
@@ -1144,6 +1420,43 @@ fn emit_unit_without_annotations(
         let CheckedUnit::Enum(checked) = checked else {
             return Err(Diagnostic::new(0, "Expected checked enum"));
         };
+        let values = _classpath.value_classes();
+        if checked
+            .class
+            .params
+            .iter()
+            .any(|(_, ty)| value_abi::value_parameter(ty, &values))
+        {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Enum constructors consuming value classes are unsupported",
+            )
+            .with_kind(
+                DiagnosticKind::UnsupportedLanguage,
+                "VALUE_CONSUMER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+            ));
+        }
+        if value_context_class(&checked.class, &values)
+            || checked
+                .entry_classes
+                .iter()
+                .any(|entry| value_context_class(&entry.class, &values))
+            || value_context_bodies(
+                checked.lambdas.iter().map(|lambda| &lambda.function),
+                checked.entries.iter().map(|(_, value)| value),
+                [],
+                &values,
+            )
+        {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Enum value class storage, signatures and physical ABI calls are unsupported",
+            )
+            .with_kind(
+                DiagnosticKind::UnsupportedLanguage,
+                "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+            ));
+        }
         let mut generated = checked
             .lambdas
             .iter()
@@ -1183,6 +1496,75 @@ fn emit_unit_without_annotations(
     let CheckedUnit::Module(typed) = checked else {
         return Err(Diagnostic::new(0, "Expected checked declaration"));
     };
+    let values = _classpath.value_classes();
+    let has_value = |ty: &syntax::Type| value_abi::value_parameter(ty, &values);
+    let function_value = |function: &check::Function| value_context_function(function, &values);
+    let unsupported = |code: &'static str, message: &str| {
+        Diagnostic::new(0, message).with_kind(DiagnosticKind::UnsupportedLanguage, code)
+    };
+    if typed
+        .properties
+        .iter()
+        .any(|property| has_value(&property.ty))
+    {
+        return Err(unsupported(
+            "VALUE_PACKAGE_PROPERTY_UNSUPPORTED",
+            "Top-level value class properties are unsupported",
+        ));
+    }
+    if typed
+        .interface_decl
+        .as_ref()
+        .is_some_and(|interface| value_context_interface(interface, &values))
+    {
+        return Err(unsupported(
+            "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+            "Source interface value class signatures and physical ABI calls are unsupported",
+        ));
+    }
+    if typed.object_decl.as_ref().is_some_and(|object| {
+        object.fields.iter().any(|field| has_value(&field.ty))
+            || object
+                .methods
+                .iter()
+                .any(|method| function_value(&method.function))
+            || value_context_bodies(
+                [],
+                object.fields.iter().map(|field| match &field.initializer {
+                    check::ObjectInitializer::Value { value, .. } => value,
+                    check::ObjectInitializer::ThreadLocalArray { size, .. } => size,
+                }),
+                [object.initializers.as_slice()],
+                &values,
+            )
+    }) {
+        return Err(unsupported(
+            "VALUE_OBJECT_MEMBER_UNSUPPORTED",
+            "Object value class properties, signatures and physical ABI calls are unsupported",
+        ));
+    }
+    if let Some(class) = &typed.class_decl {
+        if class
+            .fields
+            .iter()
+            .any(|field| has_value(&field.ty) && class.exposed_fields.contains_key(&field.name))
+        {
+            return Err(
+                Diagnostic::new(0, "JvmField cannot expose a value class property")
+                    .with_kind(DiagnosticKind::InvalidKotlin, "VALUE_JVM_FIELD_INVALID"),
+            );
+        }
+        if class
+            .companion
+            .as_ref()
+            .is_some_and(|companion| value_context_companion(companion, &values))
+        {
+            return Err(unsupported(
+                "VALUE_COMPANION_MEMBER_UNSUPPORTED",
+                "Companion value class properties, signatures and physical ABI calls are unsupported",
+            ));
+        }
+    }
     let mut generated_owners = typed
         .lambdas
         .iter()
@@ -1217,7 +1599,12 @@ fn emit_unit_without_annotations(
         }
     }
     let with_lambdas = |mut files: Vec<ClassFile>| -> Result<Vec<ClassFile>> {
-        files.extend(bytecode::emit_lambdas(typed, internal_name, file_name)?);
+        files.extend(bytecode::emit_lambdas(
+            typed,
+            internal_name,
+            file_name,
+            &_classpath.value_classes(),
+        )?);
         Ok(files)
     };
     if module.interface_decl.is_some() {
@@ -1300,7 +1687,8 @@ fn emit_unit_without_annotations(
                 internal_name,
                 &module.imports,
             )?
-            .in_module(module_name)?,
+            .in_module(module_name)?
+            .with_value_abi(_classpath.value_classes(), internal_name)?,
             companion_metadata.as_ref(),
             &typed.lambdas,
         )?);
@@ -1311,7 +1699,9 @@ fn emit_unit_without_annotations(
             typed,
             internal_name,
             file_name,
-            &metadata::for_checked_package(module, typed)?.in_module(module_name)?,
+            &metadata::for_checked_package(module, typed)?
+                .in_module(module_name)?
+                .with_value_abi(_classpath.value_classes(), internal_name)?,
             bridges,
         )?,
     };

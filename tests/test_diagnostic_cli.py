@@ -115,11 +115,11 @@ class StructuredDiagnosticCliTests(unittest.TestCase):
         self.assert_location(diagnostic, self.first, text, 'value\n')
         self.assertGreater(diagnostic['offset'], text.index('value:'))
 
-    def test_value_class_reports_utf8_byte_offset_and_unicode_column(self):
-        text = '// λ🙂\n\n/* café λ🙂 */ @JvmInline value class Identifier(val value: Int)\n'
+    def test_generic_value_class_reports_utf8_byte_offset_and_unicode_column(self):
+        text = '// λ🙂\n\n/* café λ🙂 */ @JvmInline value class Identifier<T>(val value: T)\n'
         self.first.write_text(text)
         diagnostic = self.failure([self.first])
-        self.assertEqual((diagnostic['category'], diagnostic['code']), ('unsupported_language', 'VALUE_CLASS_JVM_BOXING_UNSUPPORTED'))
+        self.assertEqual((diagnostic['category'], diagnostic['code']), ('unsupported_language', 'VALUE_DECLARATION_SHAPE_UNSUPPORTED'))
         self.assert_location(diagnostic, self.first, text, 'value class')
         prefix = text[:text.index('value class')]
         self.assertGreater(diagnostic['offset'], len(prefix))

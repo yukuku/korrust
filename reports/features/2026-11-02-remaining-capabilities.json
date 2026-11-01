@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "kind": "features",
-  "created_at": "2026-11-01T18:30:23.809814+00:00",
+  "created_at": "2026-11-01T19:40:07.206962+00:00",
   "status": "in_progress",
   "selection": "One carryover acceptance plus five remaining original families; infrastructure and repairs are uncounted.",
   "features": [
@@ -37,10 +37,20 @@
     },
     {
       "name": "value_classes",
-      "status": "partial",
-      "scope": "Single-field value representation, mangling, boxing and Kotlin metadata.",
+      "status": "supported",
+      "scope": "Nongeneric single-field Int/Long/String/nullable-String value classes with nullable/generic/interface boxing, ordinary class/data-class consumption, mangled physical JVM ABI, metadata and Kotlin consumers.",
       "restrictions": [
-        "Implementation and acceptance are in progress; no validated-family count yet."
+        "Generic/nested value declarations, other carrier types, secondary/default/explicit constructor visibility, companions, parameterized supertypes and decorated/inline/generic/vararg member shapes remain excluded.",
+        "Source object/interface/companion signatures and physical carrier calls, enum value storage/signatures/physical calls, and inner/enum/defaulted/secondary value-consuming constructors remain explicit boundaries. Direct boxed construction/property reads in five contexts are independently verified.",
+        "None of the five selected upstream originals passes in full: three language boundaries and two harness boundaries. Unchanged AndroidBible Gid/Rpp and independent authored proofs are separate evidence.",
+        "Internal temporaries are boxed; no optimization or complete app claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-02-value-classes.json",
+      "additional_evidence": [
+        "reports/correctness/2026-11-02-value-inner-interaction.json",
+        "reports/correctness/2026-11-02-value-context-history/index.json",
+        "reports/correctness/2026-11-02-value-test-helper-repair.json",
+        "reports/correctness/2026-11-02-value-integration-checks.json"
       ]
     },
     {
@@ -76,8 +86,8 @@
     }
   ],
   "accepted_carryover_families": 1,
-  "accepted_new_families": 2,
-  "remaining_new_families": 3,
+  "accepted_new_families": 3,
+  "remaining_new_families": 2,
   "limitations": [
     "Final combined validation is pending. Supported labels refer to bounded feature acceptance, not unrestricted Kotlin or Android compatibility."
   ],
@@ -85,6 +95,8 @@
     "reports/correctness/2026-11-02-resume-member-extensions.json",
     "reports/correctness/2026-11-02-expanded-enums-v3.json",
     "reports/correctness/2026-11-02-expanded-enums-upstream-v3.json",
-    "reports/correctness/2026-11-01T183844319464Z-inner-classes.json"
+    "reports/correctness/2026-11-01T183844319464Z-inner-classes.json",
+    "reports/correctness/2026-11-02-value-classes.json",
+    "reports/correctness/2026-11-02-value-inner-interaction.json"
   ]
 }

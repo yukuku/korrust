@@ -1,0 +1,22 @@
+................................KORRUST production batch: /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmpv81csnku/Module/src/debug/kotlin/B.kt /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmpv81csnku/Module/src/debug/kotlin/A.kt
+..KORRUST production batch: /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmptni9_v59/Module/src/debug/kotlin/B.kt /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmptni9_v59/Module/src/debug/kotlin/A.kt
+rejected.....................................................................................................F..........................................
+======================================================================
+FAIL: test_value_class_reports_utf8_byte_offset_and_unicode_column (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_diagnostic_cli.py", line 122, in test_value_class_reports_utf8_byte_offset_and_unicode_column
+    self.assertEqual((diagnostic['category'], diagnostic['code']), ('unsupported_language', 'VALUE_DECLARATION_SHAPE_UNSUPPORTED'))
+AssertionError: Tuples differ: ('invalid_kotlin', 'VALUE_JVM_INLINE_REQUIRED') != ('unsupported_language', 'VALUE_CLASS_JVM_BOXING_UNSUPPORTED')
+
+First differing element 0:
+'invalid_kotlin'
+'unsupported_language'
+
+- ('invalid_kotlin', 'VALUE_JVM_INLINE_REQUIRED')
++ ('unsupported_language', 'VALUE_CLASS_JVM_BOXING_UNSUPPORTED')
+
+----------------------------------------------------------------------
+Ran 178 tests in 54.108s
+
+FAILED (failures=1)

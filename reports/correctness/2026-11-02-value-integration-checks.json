@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T19:39:25.819701+00:00",
+  "status": "completed",
+  "selection": "Targeted value-class integration checks and preserved regression history; full final combined Rust acceptance remains pending.",
+  "compiler": {
+    "path": "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+    "sha256": "ee997b859067bd406b70ff43a883cc44572e032efa12ef18a48eabca5689b8ed"
+  },
+  "checks": [
+    {
+      "name": "enum_regressions",
+      "status": "passed",
+      "tests": 7,
+      "log": "reports/correctness/2026-11-02-value-integration-checks/integration-final-v1.log"
+    },
+    {
+      "name": "updated_frontend_enum_tests",
+      "status": "passed",
+      "tests": 5,
+      "log": "reports/correctness/2026-11-02-value-integration-checks/frontend-enum-repair.log"
+    },
+    {
+      "name": "value_inner_resolution_tests",
+      "status": "passed",
+      "tests": 8,
+      "log": "reports/correctness/2026-11-02-value-integration-checks/remaining-integration-v1.log"
+    },
+    {
+      "name": "python_tests",
+      "status": "passed",
+      "tests": 178,
+      "log": "reports/correctness/2026-11-02-value-integration-checks/python-tests-final-v1.log"
+    },
+    {
+      "name": "clippy_all_targets_warnings_denied",
+      "status": "passed",
+      "log": "reports/correctness/2026-11-02-value-integration-checks/clippy-final-v1.log"
+    },
+    {
+      "name": "formatting",
+      "status": "passed",
+      "log": "reports/correctness/2026-11-02-value-integration-checks/fmt-post-helper.log"
+    }
+  ],
+  "historical_failures": [
+    {
+      "run": "first Rust library run",
+      "passed": 271,
+      "failed": 2,
+      "resolution": "cfg(test) object/interface headers were missing; both exact original tests pass in the isolated repaired helper. Production String source emitted successfully.",
+      "evidence": "reports/correctness/2026-11-02-value-test-helper-repair.json"
+    },
+    {
+      "run": "first integration run",
+      "enum_passed": 7,
+      "frontend_passed": 59,
+      "frontend_failed": 1,
+      "resolution": "Old frontend test rejected newly supported enum entry bodies. The five affected enum frontend tests pass after moving those cases to positive multi-class compilation."
+    },
+    {
+      "run": "first Python run",
+      "tests": 178,
+      "failures": 53,
+      "resolution": "Incorrect launch environment lacked JAVA_HOME; preserved as setup failures."
+    },
+    {
+      "run": "second Python run",
+      "tests": 178,
+      "failures": 1,
+      "resolution": "Stale value-class rejection expectation replaced by still-unsupported generic value-class source; UTF-8 byte/column assertions remain. Fresh full Python run passes178."
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-02-value-integration-checks/rust-final-v1.log",
+    "reports/correctness/2026-11-02-value-integration-checks/integration-final-v1.log",
+    "reports/correctness/2026-11-02-value-integration-checks/frontend-enum-repair.log",
+    "reports/correctness/2026-11-02-value-integration-checks/remaining-integration-v1.log",
+    "reports/correctness/2026-11-02-value-integration-checks/python-tests.log",
+    "reports/correctness/2026-11-02-value-integration-checks/python-tests-v2.log",
+    "reports/correctness/2026-11-02-value-integration-checks/diagnostic-tests-v3.log",
+    "reports/correctness/2026-11-02-value-integration-checks/python-tests-final-v1.log",
+    "reports/correctness/2026-11-02-value-integration-checks/review-notes.json",
+    "reports/correctness/2026-11-02-value-integration-checks/clippy-final-v1.log",
+    "reports/correctness/2026-11-02-value-integration-checks/fmt-post-helper.log",
+    "reports/correctness/2026-11-02-value-integration-checks/build-final-v1.log"
+  ],
+  "limitations": [
+    "No full updated Rust suite pass is claimed here. Original failures remain visible; final combined validation is pending.",
+    "Test helper and frontend expectation repairs occurred after the frozen value runtime/ABI suite; their production feature implementation is unchanged."
+  ]
+}

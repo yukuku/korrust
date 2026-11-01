@@ -228,6 +228,7 @@ pub struct InterfaceDelegatedMember {
 pub struct ClassDecl {
     pub lexical_bridges: bool,
     pub inner: bool,
+    pub value_: bool,
     pub interface_delegate_storage: Vec<InterfaceDelegateStorage>,
     pub interface_delegated_members: Vec<InterfaceDelegatedMember>,
     pub sealed_: bool,
@@ -1624,6 +1625,56 @@ impl Checker<'_> {
             });
         }
         descriptor.push_str(")V");
+        let value_class = self
+            .classpath
+            .load(owner)
+            .ok()
+            .and_then(|class| class.library.and_then(|library| library.value_class));
+        if let Some(value_class) = value_class {
+            let carrier = value_class.carrier;
+            return Ok(Self::wrap_lets(
+                Value {
+                    ty: Type::Java(owner.into()),
+                    kind: ValueKind::StaticCall {
+                        owner: owner.into(),
+                        name: "box-impl".into(),
+                        descriptor: format!("({})L{owner};", carrier.descriptor()),
+                        args: vec![Value {
+                            ty: carrier.clone(),
+                            kind: ValueKind::StaticCall {
+                                owner: owner.into(),
+                                name: "constructor-impl".into(),
+                                descriptor: format!(
+                                    "({}){}",
+                                    carrier.descriptor(),
+                                    carrier.descriptor()
+                                ),
+                                args: values,
+                            },
+                        }],
+                    },
+                },
+                lets,
+            ));
+        }
+        let registry = self.classpath.value_classes();
+        if mask == 0
+            && params
+                .iter()
+                .any(|(_, ty)| crate::value_abi::value_parameter(ty, &registry))
+        {
+            descriptor = format!(
+                "({}Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+                params
+                    .iter()
+                    .map(|(_, ty)| crate::value_abi::physical(ty, &registry).descriptor())
+                    .collect::<String>()
+            );
+            values.push(Value {
+                ty: Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
+                kind: ValueKind::Null,
+            });
+        }
         Ok(Self::wrap_lets(
             Value {
                 ty: Type::Java(owner.into()),
@@ -1878,7 +1929,7 @@ impl Checker<'_> {
                 "Specialized private default accessors with different JVM field representations are unsupported",
             ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SPECIALIZED_PRIVATE_ACCESSOR_UNSUPPORTED"));
         }
-        let receiver = if method.access & 8 == 0 {
+        let receiver = if method.instance_dispatch() {
             Some(args.remove(0))
         } else {
             None
@@ -2037,6 +2088,7 @@ impl Checker<'_> {
         if method.unsupported {
             return Err(Diagnostic::new(offset, "Unsupported library member"));
         }
+        let method = self.classpath.source_value_method(method, true);
         let (types, mut result) = class_method_types(&method)?;
         if method.kotlin_result.is_none() && result.is_reference() {
             result = Type::Platform(Box::new(result));
@@ -2147,7 +2199,18 @@ impl Checker<'_> {
             None
         };
         let kind = if mask == 0 {
-            if interface {
+            if method
+                .library
+                .as_ref()
+                .is_some_and(|library| library.value_dispatch)
+            {
+                ValueKind::StaticCall {
+                    owner: method.owner,
+                    name: method.name,
+                    descriptor: method.descriptor,
+                    args: values,
+                }
+            } else if interface {
                 ValueKind::MemberCall {
                     method,
                     interface,
@@ -2541,7 +2604,7 @@ impl Checker<'_> {
                         .as_ref()
                         .is_none_or(|library| library.receiver.is_none())
                     && m.source_name() == name
-                    && (m.access & 8 == 0 || singleton)
+                    && (m.instance_dispatch() || singleton)
                     && (m.access & 1 != 0
                         || m.access & 4 != 0
                             && self.dispatch_receiver.as_ref().is_some_and(|current| {
@@ -2606,7 +2669,7 @@ impl Checker<'_> {
             Err(error) if error.message.contains("Ambiguous") => return Err(error),
             Err(error) => return self.member_extension_fallback(receiver, name, args, error),
         };
-        if method.access & 8 != 0 {
+        if !method.instance_dispatch() {
             let call = self.library_static_call(method, args, offset)?;
             let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
             return Ok(Value {
@@ -2815,7 +2878,7 @@ impl Checker<'_> {
             })
             .cloned()
         {
-            let call = if method.access & 8 != 0 {
+            let call = if !method.instance_dispatch() {
                 self.library_static_call(method, std::slice::from_ref(expr), offset)?
             } else {
                 let receiver = receiver.clone().unwrap_or_else(|| Value {
@@ -3342,7 +3405,7 @@ impl Checker<'_> {
                     }
                     if self.local(name).is_none() {
                         if let Some(method) = self.members.get(&format!("#set:{name}")) {
-                            let value = if method.access & 8 != 0 {
+                            let value = if !method.instance_dispatch() {
                                 self.library_static_call(
                                     method.clone(),
                                     std::slice::from_ref(expr),
@@ -4164,7 +4227,7 @@ impl Checker<'_> {
                 }
                 if self.local(name).is_none() && !self.captured.contains_key(name) {
                     if let Some(method) = self.members.get(&format!("#get:{name}")) {
-                        return if method.access & 8 != 0 {
+                        return if !method.instance_dispatch() {
                             self.library_static_call(method.clone(), &[], offset)
                         } else {
                             self.member_call(
@@ -5178,7 +5241,9 @@ impl Checker<'_> {
                             .methods(&parent)?
                             .into_iter()
                             .filter(|m| {
-                                m.source_name() == name && m.access & 8 == 0 && m.access & 5 != 0
+                                m.source_name() == name
+                                    && m.instance_dispatch()
+                                    && m.access & 5 != 0
                             })
                             .collect::<Vec<_>>();
                         let method = self.select_method(&methods, args, offset)?;
@@ -5227,7 +5292,7 @@ impl Checker<'_> {
                                             })
                                             .collect::<Vec<_>>();
                                         let method = self.select_method(&methods, args, offset)?;
-                                        return if method.access & 8 != 0 {
+                                        return if !method.instance_dispatch() {
                                             self.library_static_call(method, args, offset)
                                         } else {
                                             self.member_call(
@@ -5980,7 +6045,10 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
             }
         })
         .unwrap_or_else(|| "Korrust".into());
-    if source.class_decl.is_some() {
+    if source.class_decl.is_some()
+        || source.object_decl.is_some()
+        || source.interface_decl.is_some()
+    {
         classpath.source_header(source, &owner)?;
     }
     check_with_owner(source, classpath, &owner)
@@ -6198,9 +6266,26 @@ pub fn check_with_owner(
             ));
         }
         if class.access & 1 == 0 || (class.unsupported && !supported_jvm_marker) {
+            if class
+                .library
+                .as_ref()
+                .is_some_and(|library| library.value_class.is_some())
+            {
+                return Err(Diagnostic::new(
+                    *offset,
+                    "Compiled value class uses an unsupported carrier or generic declaration",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "COMPILED_VALUE_CLASS_SHAPE_UNSUPPORTED",
+                ));
+            }
             return Err(Diagnostic::new(
                 *offset,
-                "Imported class is inaccessible or unsupported",
+                format!(
+                    "Imported class is inaccessible or unsupported: {}",
+                    class.name
+                ),
             ));
         }
         if imports.insert(alias.clone(), name.clone()).is_some() {
@@ -6920,7 +7005,7 @@ pub(crate) fn source_jvm_result(
 pub(crate) fn class_method_types(method: &JavaMethod) -> Result<(Vec<Type>, Type)> {
     if let (Some(params), Some(result)) = (&method.kotlin_params, &method.kotlin_result) {
         let mut parameters = params.iter().map(|p| p.1.clone()).collect::<Vec<_>>();
-        if method.access & 8 == 0 {
+        if method.instance_dispatch() {
             if let Some(receiver) = method
                 .library
                 .as_ref()

@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T19:34:15.504638+00:00",
+  "status": "complete",
+  "selection": "Diagnosis and isolated verification of two Rust unit-test setup failures; cfg(test) source-header staging repair only, no production semantics or feature-family change.",
+  "compiler": {
+    "production_probe_binary_sha256": "ee997b859067bd406b70ff43a883cc44572e032efa12ef18a48eabca5689b8ed",
+    "isolated_unit_test_binary_sha256": "3a64a8dc14be8ae8cfcb0c41a6e31e79dc4b74f2591e67fb46c81dfc7fcaa9d3",
+    "isolated_source_archive": "reports/correctness/2026-11-02-value-test-helper-repair/isolated-source.zip",
+    "isolated_source_archive_sha256": "afaf35ec87086912afd6984397eeca3171e0bd1d3106caf5bea87331f310f2c2"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "RUST_MIN_STACK": "16777216",
+    "rust": "Project-local Rust toolchain via target/cargo-home/bin and target/rustup"
+  },
+  "diagnosis": {
+    "observed": "The original frozen lib run passed271 and failed2 object-unit tests. The supplier test reported Java class Scratch was not found on the classpath. The exact Text source emitted successfully through the frozen production CLI.",
+    "cause": "The cfg(test) check::check wrapper registered class headers but omitted object/interface headers before check_with_owner; production compilation stages declaration headers. Object self lookup therefore operated with missing unit-test classpath setup.",
+    "repair": "Register object and interface source headers in the test wrapper alongside classes. Keep production type/constructor/override checks unchanged.",
+    "root_application": "Parent applied this cfg(test)-only patch after frozen value acceptance finished; current root check.rs matches isolated checked source byte-for-byte.",
+    "before_check_rs_sha256": "2c825c4f8b4637b31af208cc8acbe0123c4533c4bc22e7b590a21be39c4c3a78",
+    "after_check_rs_sha256": "308608fdc98b570b9076141aa8e033b822e9a52996e6019ab1d377f3181e9b25",
+    "check_objects_tests_sha256": "07dc0e8369d041a4af4571b1a4b7e8cb726f989b2dbf639d172f8e5da8be9969",
+    "patch_sha256": "3172ec551c0773a2749556a80ab7cabf6b6395d1750efb856007b2093ef81b7e"
+  },
+  "cases": [
+    {
+      "id": "historical_original_lib",
+      "outcome": "historical_failure",
+      "pass": 271,
+      "fail": 2,
+      "log": "reports/correctness/2026-11-02-value-test-helper-repair/original-lib-271-pass-2-fail.log",
+      "scope": "Full original frozen lib gate before helper repair; selected integration tests were not run after cargo stopped."
+    },
+    {
+      "id": "historical_overloads_exact",
+      "outcome": "historical_failure",
+      "pass": 0,
+      "fail": 1,
+      "log": "reports/correctness/2026-11-02-value-test-helper-repair/original-overloads-repro.log",
+      "diagnostic": "Assertion on checked(Text source).is_ok(); assertion omitted the checker error text. No exact checker diagnostic inferred."
+    },
+    {
+      "id": "isolated_overloads_exact",
+      "outcome": "pass",
+      "pass": 1,
+      "fail": 0,
+      "seconds": 107.81,
+      "log": "reports/correctness/2026-11-02-value-test-helper-repair/isolated-overloads-fixed.log"
+    },
+    {
+      "id": "isolated_suppliers_exact",
+      "outcome": "pass",
+      "pass": 1,
+      "fail": 0,
+      "seconds": 238.28,
+      "log": "reports/correctness/2026-11-02-value-test-helper-repair/isolated-suppliers-fixed.log"
+    },
+    {
+      "id": "production_Text_emission_only",
+      "outcome": "pass",
+      "validation": "emission_only",
+      "compiler_sha256": "ee997b859067bd406b70ff43a883cc44572e032efa12ef18a48eabca5689b8ed",
+      "source_sha256": "b5366327bd5e02fd1849514cf1f8c9fe37da23a70d618dc7a9eb4e54431d1ece",
+      "compile_exit": 0,
+      "emitted_class_sha256": "6809532b7ce20171b1384902af7493966491869dd020dceafff7a921bba1def7",
+      "source": "reports/correctness/2026-11-02-value-test-helper-repair/production-Text.kt",
+      "limitation": "Class emission only; no Java caller, JVM verification, Kotlin consumer or runtime assertion for this probe."
+    }
+  ],
+  "counts": {
+    "historical_failure": 2,
+    "pass": 3
+  },
+  "commands": [
+    {
+      "label": "Production emission-only source probe",
+      "argv": [
+        "target/resume-value-regression-audit/korrust",
+        "target/resume-value-regression-audit/Text.kt",
+        "-cp",
+        "references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "target/resume-value-regression-audit/candidate"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "Build isolated repaired lib tests",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "target/resume-value-regression-audit/compiler/Cargo.toml",
+        "--lib",
+        "--no-run",
+        "--locked",
+        "--offline"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "Exact repaired overload unit test",
+      "argv": [
+        "target/resume-value-regression-audit/build/debug/deps/korrust-f58e2056262cfb0c",
+        "--exact",
+        "check::objects::tests::object_and_class_overloads_do_not_override_unrelated_inherited_signatures",
+        "--nocapture"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "Exact repaired supplier/shadowing unit test",
+      "argv": [
+        "target/resume-value-regression-audit/build/debug/deps/korrust-f58e2056262cfb0c",
+        "--exact",
+        "check::objects::tests::suppliers_and_builtin_annotation_shadowing_fail_closed",
+        "--nocapture"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "updated_full_lib_gate": {
+    "status": "not_run",
+    "reason": "Parent owns subsequent root gate; isolated proof checks only the two original failing tests."
+  },
+  "limitations": [
+    "No new language-family count.",
+    "No claim that the complete updated root lib suite passed.",
+    "Production Text probe proves emission only and is separate from passing isolated Rust unit checks.",
+    "Historical failure counts remain unchanged; no binaries, classes or jars are included in the durable source/log evidence."
+  ],
+  "evidence": {
+    "reports/correctness/2026-11-02-value-test-helper-repair/check-after.rs": "308608fdc98b570b9076141aa8e033b822e9a52996e6019ab1d377f3181e9b25",
+    "reports/correctness/2026-11-02-value-test-helper-repair/check-before.rs": "2c825c4f8b4637b31af208cc8acbe0123c4533c4bc22e7b590a21be39c4c3a78",
+    "reports/correctness/2026-11-02-value-test-helper-repair/check-objects-tests.rs": "07dc0e8369d041a4af4571b1a4b7e8cb726f989b2dbf639d172f8e5da8be9969",
+    "reports/correctness/2026-11-02-value-test-helper-repair/isolated-overloads-fixed.log": "e341b63c6afc3397527047a0b199332d8fc3a1c550b39cfc9d92de7526e0d717",
+    "reports/correctness/2026-11-02-value-test-helper-repair/isolated-source-hashes.json": "f0d61ae4b5eb6cae31857a8a6153b2d876f336fc1ca9ce115df03c0f6f4e8a1d",
+    "reports/correctness/2026-11-02-value-test-helper-repair/isolated-source.zip": "afaf35ec87086912afd6984397eeca3171e0bd1d3106caf5bea87331f310f2c2",
+    "reports/correctness/2026-11-02-value-test-helper-repair/isolated-suppliers-fixed.log": "df27d5d55eef7f11930dc65875f18ab2980ea5757000e7b41310aae3b8c719d2",
+    "reports/correctness/2026-11-02-value-test-helper-repair/isolated-test-build.log": "b3e0658f4d09bf4dd94abbcd706aca6c719b6ee52ba7fa0d93349111ff666d44",
+    "reports/correctness/2026-11-02-value-test-helper-repair/original-lib-271-pass-2-fail.log": "eb8650faefbb39cb0f5ef1de02f1907bd273863d2db8dd552a979dba76cc3d6e",
+    "reports/correctness/2026-11-02-value-test-helper-repair/original-overloads-repro.log": "d42fee25f717d07644b742f95b2228acefdea0cb40924984eb0c2205e79436e9",
+    "reports/correctness/2026-11-02-value-test-helper-repair/production-Text.kt": "b5366327bd5e02fd1849514cf1f8c9fe37da23a70d618dc7a9eb4e54431d1ece",
+    "reports/correctness/2026-11-02-value-test-helper-repair/production-identity.json": "2c818905c58c8df81aa7c5bd0c30168f0d9328df745e134dabac15703fe371f6",
+    "reports/correctness/2026-11-02-value-test-helper-repair/production-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/correctness/2026-11-02-value-test-helper-repair/production-stdout.txt": "d3a645db7e5fd8fa15df2462eac95aa35fba8296ea447bb9c8fb4d6297f9736e",
+    "reports/correctness/2026-11-02-value-test-helper-repair/proposal.json": "148c1ac278395d313835d19eed1032158fe35ca542b4fd625559c18c7184783c",
+    "reports/correctness/2026-11-02-value-test-helper-repair/proposed-check-wrapper.patch": "3172ec551c0773a2749556a80ab7cabf6b6395d1750efb856007b2093ef81b7e"
+  }
+}

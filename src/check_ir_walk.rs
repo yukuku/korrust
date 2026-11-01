@@ -481,6 +481,7 @@ mod tests {
             class_decl: Some(ClassDecl {
                 lexical_bridges: false,
                 inner: false,
+                value_: false,
                 sealed_: false,
                 sealed_subclasses: Vec::new(),
                 type_params: Vec::new(),

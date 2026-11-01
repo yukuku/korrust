@@ -1,0 +1,573 @@
+................................KORRUST production batch: /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmp85r_6ttr/Module/src/debug/kotlin/B.kt /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmp85r_6ttr/Module/src/debug/kotlin/A.kt
+..KORRUST production batch: /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmp9zn25p_t/Module/src/debug/kotlin/B.kt /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/tmp9zn25p_t/Module/src/debug/kotlin/A.kt
+rejected.......................................FFFFFF.FF.FFFFFFFFFFFFFFFF.FF.FFFFF.F.FFFF.F............FFFFFFF..........................................
+======================================================================
+FAIL: test_batch_changed_mapping_blocks_empty_publication (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 402, in test_batch_changed_mapping_blocks_empty_publication
+    self.batch([("First.kt", "fun first(): Int = 1")])
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-0k2s_a3h/First.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_changed_removed_source_output_blocks_cleanup (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 394, in test_batch_changed_removed_source_output_blocks_cleanup
+    self.batch([("First.kt", "object First"), ("Second.kt", "object Second")])
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-gn3xjn6k/Second.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_compile_failure_uses_original_source_and_preserves_outputs (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 373, in test_batch_compile_failure_uses_original_source_and_preserves_outputs
+    self.batch([("First.kt", "object First"), ("Second.kt", "object Second")])
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-atl1zbft/First.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_corrupt_module_manifest_preserves_all_bytes (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 436, in test_batch_corrupt_module_manifest_preserves_all_bytes
+    self.batch([("First.kt", "object First")])
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-1zr1_lxj/First.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_default_module_and_explicit_main_are_same_owner (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 466, in test_batch_default_module_and_explicit_main_are_same_owner
+    self.batch([("First.kt", "object First"), ("Second.kt", "object Second")], module=None)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-pe26su_3/First.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_duplicate_jvm_owner_preserves_existing_outputs (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 366, in test_batch_duplicate_jvm_owner_preserves_existing_outputs
+    self.batch([("First.kt", "object First"), ("Second.kt", "object Second")])
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-q5d6crua/First.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_legacy_and_other_module_ownership_collisions_preserve_bytes (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 424, in test_batch_legacy_and_other_module_ownership_collisions_preserve_bytes
+    self.compile("object Legacy")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-x6o9i6hb/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_missing_output_blocks_cleanup (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 410, in test_batch_missing_output_blocks_cleanup
+    self.batch([("First.kt", "object First { object Nested }")])
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-f587rt7i/First.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_preflight_unowned_output_preserves_all_bytes (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 385, in test_batch_preflight_unowned_output_preserves_all_bytes
+    self.batch([("First.kt", "object First { object Nested }")])
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-rfcnivqk/First.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_reordering_is_byte_deterministic (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 339, in test_batch_reordering_is_byte_deterministic
+    first = self.batch(sources)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-zei14bxr/Second.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_source_ownership_can_transfer_within_same_complete_module (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 451, in test_batch_source_ownership_can_transfer_within_same_complete_module
+    self.batch([("First.kt", "object Shared"), ("Second.kt", "object Other")])
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-qqo_6_1z/First.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_source_paths_support_non_ascii_and_whitespace (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 461, in test_batch_source_paths_support_non_ascii_and_whitespace
+    self.batch(sources)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-ou8ez919/é space/Second.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_staging_failure_preserves_prior_outputs_and_metadata (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 444, in test_batch_staging_failure_preserves_prior_outputs_and_metadata
+    self.batch([("First.kt", "object First { object Nested }")])
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-ucj_f0nu/First.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_symlink_preflight_preserves_existing_outputs (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 490, in test_batch_symlink_preflight_preserves_existing_outputs
+    self.batch([("First.kt", "object First")])
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-9fdbf0mf/First.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_unrelated_module_and_legacy_outputs_survive_cleanup (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 417, in test_batch_unrelated_module_and_legacy_outputs_survive_cleanup
+    self.compile("object Legacy")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-_6wpt0ao/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_removed_sources_facades_nested_outputs_and_empty_module_match_clean (test_cli.BatchOutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 349, in test_removed_sources_facades_nested_outputs_and_empty_module_match_clean
+    self.batch([("First.kt", "package sample; fun first(): Int = 1"),
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 331, in batch
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-pmjmo2am/Second.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_canonical_source_alias_updates_existing_owner (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 279, in test_canonical_source_alias_updates_existing_owner
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-l7f4t3lk/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_changed_owned_output_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 226, in test_changed_owned_output_rejects_without_changes
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-49zybgor/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_changed_package_mapping_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 131, in test_changed_package_mapping_rejects_without_changes
+    self.compile("fun value(): Int { return 1 }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-ca1fdy86/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_corrupt_index_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 199, in test_corrupt_index_rejects_without_changes
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-lusf_1bs/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_cross_source_collision_preserves_both_sources (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 173, in test_cross_source_collision_preserves_both_sources
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-qbgs6nei/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_duplicate_manifest_record_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 220, in test_duplicate_manifest_record_rejects_without_changes
+    self.compile("object Root")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-os0hhetp/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_existing_lock_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 236, in test_existing_lock_rejects_without_changes
+    self.compile("object Root")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-7br_7zkn/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_interface_helpers_and_anonymous_outputs_match_clean_recompilation (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 152, in test_interface_helpers_and_anonymous_outputs_match_clean_recompilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-gbry82zp/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_invalid_source_preserves_previous_outputs_and_index (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 165, in test_invalid_source_preserves_previous_outputs_and_index
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-ai_b29r8/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_long_package_uses_bounded_mapping_filename (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 123, in test_long_package_uses_bounded_mapping_filename
+    self.compile(f"package {package}; fun value(): Int {{ return 1 }}")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-nmc3ek8u/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_missing_owned_output_rejects_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 231, in test_missing_owned_output_rejects_without_changes
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-k3tgtxvt/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_multiple_source_package_mappings_survive_recompilation (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 109, in test_multiple_source_package_mappings_survive_recompilation
+    self.compile("package sample; fun first(): Int { return 1 }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-4pigr022/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_object_supplier_removal_matches_clean_compilation (test_cli.OutputLifecycleTests) (version=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 85, in test_object_supplier_removal_matches_clean_compilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-2odfvc55/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_object_supplier_removal_matches_clean_compilation (test_cli.OutputLifecycleTests) (version=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 85, in test_object_supplier_removal_matches_clean_compilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-2odfvc55/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_object_supplier_removal_matches_clean_compilation (test_cli.OutputLifecycleTests) (version=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 85, in test_object_supplier_removal_matches_clean_compilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-2odfvc55/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_object_supplier_removal_matches_clean_compilation (test_cli.OutputLifecycleTests) (version=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 85, in test_object_supplier_removal_matches_clean_compilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-2odfvc55/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_object_supplier_removal_matches_clean_compilation (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 93, in test_object_supplier_removal_matches_clean_compilation
+    self.assertEqual(set(self.classes()), {"moved/Renamed.class"})
+AssertionError: Items in the second set but not the first:
+'moved/Renamed.class'
+
+======================================================================
+FAIL: test_owned_output_symlink_cannot_delete_target (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 253, in test_owned_output_symlink_cannot_delete_target
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-2fi4pm54/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_package_mapping_cleanup_matches_clean_compilation (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 102, in test_package_mapping_cleanup_matches_clean_compilation
+    self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-soe6nepn/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_package_symlink_cannot_escape_destination (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 242, in test_package_symlink_cannot_escape_destination
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-5crinb9v/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests) (version=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 69, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    result = self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-fvkjm2rp/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests) (version=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 69, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    result = self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-fvkjm2rp/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests) (version=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 69, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    result = self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-fvkjm2rp/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests) (version=3)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 69, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    result = self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-fvkjm2rp/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests) (version=4)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 69, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    result = self.compile(source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-fvkjm2rp/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_repeated_removal_rename_and_package_change_match_clean_compilation (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 74, in test_repeated_removal_rename_and_package_change_match_clean_compilation
+    self.assertEqual(set(self.classes()), {"Final.class"})
+AssertionError: Items in the second set but not the first:
+'Final.class'
+
+======================================================================
+FAIL: test_source_path_encoding_handles_whitespace (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 308, in test_source_path_encoding_handles_whitespace
+    self.compile("object Root { object Child }", source=source)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-s92v9i_y/space tab	line
+folder/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_symlink_ancestor_above_destination_supports_creation_and_cleanup (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 293, in test_symlink_ancestor_above_destination_supports_creation_and_cleanup
+    self.compile("object Root { object Child }", destination=destination)
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-6ul4_e6t/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_traversal_and_absolute_manifest_paths_reject_without_changes (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 204, in test_traversal_and_absolute_manifest_paths_reject_without_changes
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-e3tm8ec_/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_unrelated_outputs_survive_stale_cleanup (test_cli.OutputLifecycleTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 187, in test_unrelated_outputs_survive_stale_cleanup
+    self.compile("object Root { object Child }")
+  File "/Users/yuku/f/git/korrust/tests/test_cli.py", line 30, in compile
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-cli-gjdnqedj/Example.kt:1:1: error: Java class java.lang.Object was not found on the classpath
+
+
+======================================================================
+FAIL: test_batch_diagnostic_identifies_failing_file_in_both_source_orders (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_diagnostic_cli.py", line 24, in setUp
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : {"source_identity":"/private/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-wuwtbjss/First.kt","offset":0,"category":"missing_dependency","code":"CLASS_NOT_FOUND","message":"Java class java.lang.Object was not found on the classpath","path":"/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-wuwtbjss/First.kt","line":1,"column":1}
+
+
+======================================================================
+FAIL: test_invalid_flags_report_setup_without_changing_owned_outputs (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_diagnostic_cli.py", line 24, in setUp
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : {"source_identity":"/private/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-wjy1w39x/First.kt","offset":0,"category":"missing_dependency","code":"CLASS_NOT_FOUND","message":"Java class java.lang.Object was not found on the classpath","path":"/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-wjy1w39x/First.kt","line":1,"column":1}
+
+
+======================================================================
+FAIL: test_invalid_operator_reports_invalid_signature_at_declaration (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_diagnostic_cli.py", line 24, in setUp
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : {"source_identity":"/private/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-wfeqqtjg/Second.kt","offset":0,"category":"missing_dependency","code":"CLASS_NOT_FOUND","message":"Java class java.lang.Object was not found on the classpath","path":"/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-wfeqqtjg/Second.kt","line":1,"column":1}
+
+
+======================================================================
+FAIL: test_missing_signature_type_reports_class_code_at_type_token (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_diagnostic_cli.py", line 24, in setUp
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : {"source_identity":"/private/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-3qs9c9pk/Second.kt","offset":0,"category":"missing_dependency","code":"CLASS_NOT_FOUND","message":"Java class java.lang.Object was not found on the classpath","path":"/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-3qs9c9pk/Second.kt","line":1,"column":1}
+
+
+======================================================================
+FAIL: test_missing_source_reports_io_without_fabricating_source_location (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_diagnostic_cli.py", line 24, in setUp
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : {"source_identity":"/private/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-5swiph15/First.kt","offset":0,"category":"missing_dependency","code":"CLASS_NOT_FOUND","message":"Java class java.lang.Object was not found on the classpath","path":"/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-5swiph15/First.kt","line":1,"column":1}
+
+
+======================================================================
+FAIL: test_nonproperty_constructor_reference_reports_expression_location (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_diagnostic_cli.py", line 24, in setUp
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : {"source_identity":"/private/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-6rtqhqqk/First.kt","offset":0,"category":"missing_dependency","code":"CLASS_NOT_FOUND","message":"Java class java.lang.Object was not found on the classpath","path":"/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-6rtqhqqk/First.kt","line":1,"column":1}
+
+
+======================================================================
+FAIL: test_value_class_reports_utf8_byte_offset_and_unicode_column (test_diagnostic_cli.StructuredDiagnosticCliTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuku/f/git/korrust/tests/test_diagnostic_cli.py", line 24, in setUp
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : {"source_identity":"/private/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-a9kask6d/First.kt","offset":0,"category":"missing_dependency","code":"CLASS_NOT_FOUND","message":"Java class java.lang.Object was not found on the classpath","path":"/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-diagnostic-cli-a9kask6d/First.kt","line":1,"column":1}
+
+
+----------------------------------------------------------------------
+Ran 178 tests in 1.065s
+
+FAILED (failures=53)

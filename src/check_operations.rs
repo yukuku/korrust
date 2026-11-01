@@ -682,6 +682,29 @@ impl Checker<'_> {
             || matches!((relations::type_owner(nonnull(&left.ty)), relations::type_owner(nonnull(&right.ty))), (Some(left), Some(right)) if left == right && self.classpath.load(left).is_ok_and(|class| class.access & 0x200 != 0))
             || self.subtype(nonnull(&left.ty), nonnull(&right.ty))
             || self.subtype(nonnull(&right.ty), nonnull(&left.ty));
+        if (op == "===" || op == "!==")
+            && left.ty != Type::Null
+            && right.ty != Type::Null
+            && [&left.ty, &right.ty].iter().any(|ty| {
+                relations::type_owner(nonnull(ty)).is_some_and(|owner| {
+                    self.classpath.load(owner).is_ok_and(|class| {
+                        class
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| library.value_class.is_some())
+                    })
+                })
+            })
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Reference equality is forbidden for value class operands",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "VALUE_IDENTITY_EQUALITY_INVALID",
+            ));
+        }
         if op == "===" || op == "!==" {
             if !left.ty.is_reference() || !right.ty.is_reference() {
                 return Err(Diagnostic::new(

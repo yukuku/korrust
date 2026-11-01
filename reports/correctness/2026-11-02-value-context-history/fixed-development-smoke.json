@@ -1,0 +1,1127 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T19:20:33.885049+00:00",
+  "status": "complete",
+  "selection": "Development smoke for targeted value ABI context guards; final frozen acceptance remains parent task responsibility.",
+  "compiler": {
+    "path": "target/resume-value-context-probes/fixed/korrust",
+    "sha256": "b1a7b1e9bef857b4c27d483bf1fccc8ba2711b582440485ade111bbe76159272"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "cases": [
+    {
+      "id": "v2/object_body",
+      "outcome": "pass",
+      "source": "target/resume-value-context-probes/v2/object_body/Context.kt",
+      "source_sha256": "d0c8ea5dea2216e4702fcdd416fac2f1a07e49cb619db11a9d3b6f24ce3263b8",
+      "diagnostics": [],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v2/report.json",
+      "fixed_java_caller_sha256": "90e15d5bb625fc8e59cc6df5c84c65807695c924b40e26b5c06d842048f84bd9",
+      "runtime_verification": "-Xverify:all"
+    },
+    {
+      "id": "v2/companion_body",
+      "outcome": "pass",
+      "source": "target/resume-value-context-probes/v2/companion_body/Context.kt",
+      "source_sha256": "55f72794d6528b0345fc0e2ac8cf69f0a06129b9c8df51f6419cd972f6dae7ef",
+      "diagnostics": [],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v2/report.json",
+      "fixed_java_caller_sha256": "69352c38f7fe8cc4938efa1c3a90865bf5ad15daac7cc6dc0ab340c4067d6ca2",
+      "runtime_verification": "-Xverify:all"
+    },
+    {
+      "id": "v2/enum_method",
+      "outcome": "pass",
+      "source": "target/resume-value-context-probes/v2/enum_method/Context.kt",
+      "source_sha256": "f3cd0b4f272ee5652dff79a7b1f63a156e2c1d6a442d8cdc4156dcdc30e70b2a",
+      "diagnostics": [],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v2/report.json",
+      "fixed_java_caller_sha256": "cbaa343e6f322c58f4373ee4e65a53407063f41eeb9de7b84d6c7cfda35d08da",
+      "runtime_verification": "-Xverify:all"
+    },
+    {
+      "id": "v2/enum_entry_initializer",
+      "outcome": "pass",
+      "source": "target/resume-value-context-probes/v2/enum_entry_initializer/Context.kt",
+      "source_sha256": "1124fd3ac067229aa0cbda82f5ee02e33f1391b9843a320f06ee7ee601d169ea",
+      "diagnostics": [],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v2/report.json",
+      "fixed_java_caller_sha256": "510e49c569c62d6b88bc90c0f20c14a032e18a22378f33d8be216438950b0aa9",
+      "runtime_verification": "-Xverify:all"
+    },
+    {
+      "id": "v2/interface_default_body",
+      "outcome": "pass",
+      "source": "target/resume-value-context-probes/v2/interface_default_body/Context.kt",
+      "source_sha256": "aecc971b41b594cc6c71fac70952bb146095212035241831ad17b38dad468ed2",
+      "diagnostics": [],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v2/report.json",
+      "fixed_java_caller_sha256": "1cf5b1dc36c310451c85d4247b79932e032de69449c7978d9e07dc290987a2ea",
+      "runtime_verification": "-Xverify:all"
+    },
+    {
+      "id": "v2/enum_value_parameter",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/v2/enum_value_parameter/Context.kt",
+      "source_sha256": "6a34cacd923a0ece38e9b022cc7110bc7778ef5df7299f475fbad2108f13081b",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/enum_value_parameter/Context.kt",
+          "offset": 60,
+          "category": "unsupported_language",
+          "code": "VALUE_CONSUMER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+          "message": "Enum constructors consuming value classes are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/enum_value_parameter/Context.kt",
+          "line": 3,
+          "column": 1
+        }
+      ],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v2/report.json"
+    },
+    {
+      "id": "v3/object_body",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/v3/object_body/Context.kt",
+      "source_sha256": "1535bc54e4e2fcd166b34abc8a38451ee86c05511f28e031e52d0d3bcb44a88d",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/object_body/Context.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_OBJECT_MEMBER_UNSUPPORTED",
+          "message": "Object value class properties, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/object_body/Context.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v3/report.json"
+    },
+    {
+      "id": "v3/companion_body",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/v3/companion_body/Context.kt",
+      "source_sha256": "c749c28051503aa90a583e82e64049fe5257fe49f28484e12aed02d41443ee78",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/companion_body/Context.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_COMPANION_MEMBER_UNSUPPORTED",
+          "message": "Companion value class properties, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/companion_body/Context.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v3/report.json"
+    },
+    {
+      "id": "v3/enum_method",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/v3/enum_method/Context.kt",
+      "source_sha256": "4b26c03d41320bfa1e4ee58e23deb5b8bc893b3dfa09b581476f9d97d356aae7",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/enum_method/Context.kt",
+          "offset": 96,
+          "category": "unsupported_language",
+          "code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+          "message": "Enum value class storage, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/enum_method/Context.kt",
+          "line": 4,
+          "column": 1
+        }
+      ],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v3/report.json"
+    },
+    {
+      "id": "v3/enum_entry_initializer",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/v3/enum_entry_initializer/Context.kt",
+      "source_sha256": "8bd5d599c5238297641278b07bc995da12465f79a5162aa0fee650b9a4f6cb52",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/enum_entry_initializer/Context.kt",
+          "offset": 96,
+          "category": "unsupported_language",
+          "code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+          "message": "Enum value class storage, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/enum_entry_initializer/Context.kt",
+          "line": 4,
+          "column": 1
+        }
+      ],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v3/report.json"
+    },
+    {
+      "id": "v3/interface_default_body",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/v3/interface_default_body/Context.kt",
+      "source_sha256": "705fa4c5d74af73b4e812de484482758482ee00144026705a6aae53903585aaa",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/interface_default_body/Context.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+          "message": "Source interface value class signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/interface_default_body/Context.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v3/report.json"
+    },
+    {
+      "id": "v3/enum_value_parameter",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/v3/enum_value_parameter/Context.kt",
+      "source_sha256": "c3754f86585adb60b0b4c7e8bff4c08455aa4b5b2fbf4e3dbdabd9686c27414b",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/enum_value_parameter/Context.kt",
+          "offset": 96,
+          "category": "unsupported_language",
+          "code": "VALUE_CONSUMER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+          "message": "Enum constructors consuming value classes are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/enum_value_parameter/Context.kt",
+          "line": 4,
+          "column": 1
+        }
+      ],
+      "prior_oracle_evidence": "target/resume-value-context-probes/v3/report.json"
+    },
+    {
+      "id": "object_physical_call",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/object_physical_call/Boundary.kt",
+      "source_sha256": "0bc9876520682f460763074c024b412103e75fb0e691d010ca67609ef596eea6",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_call/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_OBJECT_MEMBER_UNSUPPORTED",
+          "message": "Object value class properties, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_call/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "object_physical_initializer",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/object_physical_initializer/Boundary.kt",
+      "source_sha256": "43a59e669e52ebdd8dd310612f977805505879ac699510897dc1e410da184818",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_initializer/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_OBJECT_MEMBER_UNSUPPORTED",
+          "message": "Object value class properties, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_initializer/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "companion_physical_call",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/companion_physical_call/Boundary.kt",
+      "source_sha256": "be9647d9f9c5a92f8807491c57bfb65440fbe11e0286b67ba503753a3398c974",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_call/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_COMPANION_MEMBER_UNSUPPORTED",
+          "message": "Companion value class properties, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_call/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "companion_physical_initializer",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/companion_physical_initializer/Boundary.kt",
+      "source_sha256": "2fe8014981164e9c465031343b805448ae8204f7f878417dd551e162958c9fa2",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_initializer/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_COMPANION_MEMBER_UNSUPPORTED",
+          "message": "Companion value class properties, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_initializer/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "interface_physical_call",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/interface_physical_call/Boundary.kt",
+      "source_sha256": "5143c7e95a8caa86ec9feb8d1440ca249cb7d960bd0107cdffbfd94d1759b4fa",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_physical_call/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+          "message": "Source interface value class signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_physical_call/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "interface_companion_physical_initializer",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/interface_companion_physical_initializer/Boundary.kt",
+      "source_sha256": "db7ed298b1b347a13c03e235c9a3f1c34ff1d9c2f8c6f65568c908e604bc1895",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_companion_physical_initializer/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+          "message": "Source interface value class signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_companion_physical_initializer/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "enum_physical_call",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/enum_physical_call/Boundary.kt",
+      "source_sha256": "19a02771656af5a88c983e5bc08ece48cd781c5ed5a6d0cdd8fc933f36a2841e",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_call/Boundary.kt",
+          "offset": 75,
+          "category": "unsupported_language",
+          "code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+          "message": "Enum value class storage, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_call/Boundary.kt",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "enum_physical_initializer",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/enum_physical_initializer/Boundary.kt",
+      "source_sha256": "0e865e48be3d11ed01834282d98bfc76e9344771945c95475267fb8b9b7fe951",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_initializer/Boundary.kt",
+          "offset": 75,
+          "category": "unsupported_language",
+          "code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+          "message": "Enum value class storage, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_initializer/Boundary.kt",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "enum_physical_default",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/enum_physical_default/Boundary.kt",
+      "source_sha256": "dddeb0f4acc7fca8589d19cbcfb1e07177bb56efb834a8ae79b02e3d4adf963e",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_default/Boundary.kt",
+          "offset": 75,
+          "category": "unsupported_language",
+          "code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+          "message": "Enum value class storage, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_default/Boundary.kt",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "enum_entry_physical_call",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/enum_entry_physical_call/Boundary.kt",
+      "source_sha256": "d73c27c30772b162853264b2cbb852ec13ef77d69a0ef55d74e3f61d353829e7",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_entry_physical_call/Boundary.kt",
+          "offset": 75,
+          "category": "unsupported_language",
+          "code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+          "message": "Enum value class storage, signatures and physical ABI calls are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_entry_physical_call/Boundary.kt",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "enum_companion_physical_closure",
+      "outcome": "unsupported_language",
+      "source": "target/resume-value-context-probes/fixed/enum_companion_physical_closure/Boundary.kt",
+      "source_sha256": "dba86ea25d19ace1d3f76bb8cb2c214b599714391ded8833d649f1822672adef",
+      "official_accepts": true,
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_companion_physical_closure/Boundary.kt",
+          "offset": 75,
+          "category": "unsupported_language",
+          "code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+          "message": "Enum value class storage, signatures and physical ABI calls are unsupported",
+          "path": "target/resume-value-context-probes/fixed/enum_companion_physical_closure/Boundary.kt",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "pass": 5,
+    "unsupported_language": 18
+  },
+  "commands": [
+    {
+      "label": "v2/object_body/compile",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/object_body/Context.kt",
+        "--module-name",
+        "value_context_object_body",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-object_body/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/000-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/000-stderr.txt"
+    },
+    {
+      "label": "v2/object_body/runtime",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/object_body/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-object_body/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/001-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/001-stderr.txt"
+    },
+    {
+      "label": "v2/companion_body/compile",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/companion_body/Context.kt",
+        "--module-name",
+        "value_context_companion_body",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-companion_body/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/002-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/002-stderr.txt"
+    },
+    {
+      "label": "v2/companion_body/runtime",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/companion_body/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-companion_body/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/003-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/003-stderr.txt"
+    },
+    {
+      "label": "v2/enum_method/compile",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/enum_method/Context.kt",
+        "--module-name",
+        "value_context_enum_method",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-enum_method/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/004-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/004-stderr.txt"
+    },
+    {
+      "label": "v2/enum_method/runtime",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/enum_method/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-enum_method/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/005-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/005-stderr.txt"
+    },
+    {
+      "label": "v2/enum_entry_initializer/compile",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/enum_entry_initializer/Context.kt",
+        "--module-name",
+        "value_context_enum_entry_initializer",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-enum_entry_initializer/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/006-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/006-stderr.txt"
+    },
+    {
+      "label": "v2/enum_entry_initializer/runtime",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/enum_entry_initializer/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-enum_entry_initializer/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/007-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/007-stderr.txt"
+    },
+    {
+      "label": "v2/interface_default_body/compile",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/interface_default_body/Context.kt",
+        "--module-name",
+        "value_context_interface_default_body",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-interface_default_body/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/008-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/008-stderr.txt"
+    },
+    {
+      "label": "v2/interface_default_body/runtime",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/interface_default_body/callers:/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-interface_default_body/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/009-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/009-stderr.txt"
+    },
+    {
+      "label": "v2/enum_value_parameter/compile",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v2/enum_value_parameter/Context.kt",
+        "--module-name",
+        "value_context_enum_value_parameter",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v2-enum_value_parameter/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/010-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/010-stderr.txt"
+    },
+    {
+      "label": "v3/object_body/compile",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/object_body/Context.kt",
+        "--module-name",
+        "value_context_object_body",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v3-object_body/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/011-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/011-stderr.txt"
+    },
+    {
+      "label": "v3/companion_body/compile",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/companion_body/Context.kt",
+        "--module-name",
+        "value_context_companion_body",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v3-companion_body/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/012-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/012-stderr.txt"
+    },
+    {
+      "label": "v3/enum_method/compile",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/enum_method/Context.kt",
+        "--module-name",
+        "value_context_enum_method",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v3-enum_method/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/013-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/013-stderr.txt"
+    },
+    {
+      "label": "v3/enum_entry_initializer/compile",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/enum_entry_initializer/Context.kt",
+        "--module-name",
+        "value_context_enum_entry_initializer",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v3-enum_entry_initializer/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/014-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/014-stderr.txt"
+    },
+    {
+      "label": "v3/interface_default_body/compile",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/interface_default_body/Context.kt",
+        "--module-name",
+        "value_context_interface_default_body",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v3-interface_default_body/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/015-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/015-stderr.txt"
+    },
+    {
+      "label": "v3/enum_value_parameter/compile",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/v3/enum_value_parameter/Context.kt",
+        "--module-name",
+        "value_context_enum_value_parameter",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/v3-enum_value_parameter/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/016-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/016-stderr.txt"
+    },
+    {
+      "label": "object_physical_call/oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_call/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_call/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/017-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/017-stderr.txt"
+    },
+    {
+      "label": "object_physical_call/candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_call/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_call/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/018-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/018-stderr.txt"
+    },
+    {
+      "label": "object_physical_initializer/oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_initializer/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_initializer/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/019-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/019-stderr.txt"
+    },
+    {
+      "label": "object_physical_initializer/candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_initializer/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/object_physical_initializer/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/020-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/020-stderr.txt"
+    },
+    {
+      "label": "companion_physical_call/oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_call/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_call/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/021-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/021-stderr.txt"
+    },
+    {
+      "label": "companion_physical_call/candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_call/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_call/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/022-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/022-stderr.txt"
+    },
+    {
+      "label": "companion_physical_initializer/oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_initializer/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_initializer/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/023-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/023-stderr.txt"
+    },
+    {
+      "label": "companion_physical_initializer/candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_initializer/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/companion_physical_initializer/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/024-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/024-stderr.txt"
+    },
+    {
+      "label": "interface_physical_call/oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_physical_call/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_physical_call/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/025-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/025-stderr.txt"
+    },
+    {
+      "label": "interface_physical_call/candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_physical_call/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_physical_call/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/026-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/026-stderr.txt"
+    },
+    {
+      "label": "interface_companion_physical_initializer/oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_companion_physical_initializer/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_companion_physical_initializer/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/027-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/027-stderr.txt"
+    },
+    {
+      "label": "interface_companion_physical_initializer/candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_companion_physical_initializer/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/interface_companion_physical_initializer/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/028-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/028-stderr.txt"
+    },
+    {
+      "label": "enum_physical_call/oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_call/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_call/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/029-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/029-stderr.txt"
+    },
+    {
+      "label": "enum_physical_call/candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_call/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_call/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/030-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/030-stderr.txt"
+    },
+    {
+      "label": "enum_physical_initializer/oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_initializer/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_initializer/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/031-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/031-stderr.txt"
+    },
+    {
+      "label": "enum_physical_initializer/candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_initializer/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_initializer/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/032-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/032-stderr.txt"
+    },
+    {
+      "label": "enum_physical_default/oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_default/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_default/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/033-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/033-stderr.txt"
+    },
+    {
+      "label": "enum_physical_default/candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_default/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_physical_default/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/034-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/034-stderr.txt"
+    },
+    {
+      "label": "enum_entry_physical_call/oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_entry_physical_call/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_entry_physical_call/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/035-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/035-stderr.txt"
+    },
+    {
+      "label": "enum_entry_physical_call/candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_entry_physical_call/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_entry_physical_call/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/036-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/036-stderr.txt"
+    },
+    {
+      "label": "enum_companion_physical_closure/historical-untyped-oracle",
+      "exit_code": 0,
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_companion_physical_closure/Boundary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_companion_physical_closure/official"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/037-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/037-stderr.txt",
+      "source_at_invocation_sha256": "ce2746edad280fda7ea39065905c398967d4adb00ede7cfc972d189a5657c3d5",
+      "source_at_invocation_copy": "target/resume-value-context-probes/fixed/enum_companion_physical_closure/UntypedBoundary-historical.kt"
+    },
+    {
+      "label": "enum_companion_physical_closure/historical-untyped-candidate",
+      "exit_code": 1,
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_companion_physical_closure/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-value-context-probes/fixed/enum_companion_physical_closure/candidate"
+      ],
+      "stdout": "target/resume-value-context-probes/fixed/038-stdout.txt",
+      "stderr": "target/resume-value-context-probes/fixed/038-stderr.txt",
+      "source_at_invocation_sha256": "ce2746edad280fda7ea39065905c398967d4adb00ede7cfc972d189a5657c3d5",
+      "source_at_invocation_copy": "target/resume-value-context-probes/fixed/enum_companion_physical_closure/UntypedBoundary-historical.kt"
+    },
+    {
+      "label": "enum_companion_physical_closure/explicit-type-oracle",
+      "exit_code": 0,
+      "stdout": "target/resume-value-context-probes/typed-closure-oracle-stdout.log",
+      "stderr": "target/resume-value-context-probes/typed-closure-oracle-stderr.log"
+    },
+    {
+      "label": "enum_companion_physical_closure/explicit-type-candidate",
+      "exit_code": 1,
+      "stdout": "target/resume-value-context-probes/typed-closure-stdout.log",
+      "stderr": "target/resume-value-context-probes/typed-closure-stderr.log"
+    }
+  ],
+  "prior_reports": [
+    "target/resume-value-context-probes/v2/report.json",
+    "target/resume-value-context-probes/v3/report.json"
+  ],
+  "historical_setup_log": "target/resume-value-context-probes/smoke-fixed.log",
+  "historical_setup_note": "Untyped companion closure hit prior unclassified lambda inference boundary; explicitly typed fixture proves new guard. All preceding checks reused their completed raw outputs; none were rerun.",
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "limitations": [
+    "No full value harness or full Rust suite; root owns final frozen acceptance.",
+    "Development binary predates root independent constructor metadata replay correction.",
+    "Direct boxed construction/getter contexts stay supported; physical carrier call adaptation is rejected only in emitter contexts without registry."
+  ],
+  "source_hashes": {
+    "src/lib.rs": "4da1cc2f81fd438d51e2ddcd168a57b50110602ec1ec3fa9e53661905e2ca713",
+    "tools/check_value_classes.py": "dd7cc235e192a1b00515db00b8729c05abd07e698963476e0cfcba728bd3ec9c"
+  }
+}

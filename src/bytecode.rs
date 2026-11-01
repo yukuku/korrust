@@ -19,6 +19,7 @@ mod inline;
 mod interfaces;
 mod lambdas;
 mod objects;
+mod value_classes;
 pub(crate) use enums::emit as emit_checked_enum;
 pub use interfaces::emit_interfaces;
 pub use lambdas::emit_lambdas;
@@ -587,6 +588,7 @@ enum Constant {
 }
 #[derive(Default)]
 struct Pool {
+    value_classes: crate::value_abi::Registry,
     entries: Vec<Constant>,
     indices: HashMap<Constant, u16>,
 }
@@ -961,6 +963,9 @@ impl Code<'_> {
         }
     }
     fn adapt_value(&mut self, from: &Type, to: &Type) -> Result<()> {
+        if self.adapt_value_class(from, to)? {
+            return Ok(());
+        }
         if from.base() == &Type::Unit {
             if to.base() != &Type::Unit {
                 if !to.is_reference() {
@@ -985,6 +990,80 @@ impl Code<'_> {
             }
         } else if from.descriptor() != to.descriptor() {
             return Err(failure("Unsupported JVM primitive adaptation"));
+        }
+        Ok(())
+    }
+    fn adapt_value_class(&mut self, from: &Type, to: &Type) -> Result<bool> {
+        fn nominal(ty: &Type) -> Option<(&str, bool)> {
+            match ty.base() {
+                Type::Java(owner) => Some((owner, false)),
+                Type::Nullable(inner) => match inner.base() {
+                    Type::Java(owner) => Some((owner, true)),
+                    _ => None,
+                },
+                _ => None,
+            }
+        }
+        if let Some((owner, nullable)) = nominal(from) {
+            if let Some(info) = self.pool.value_classes.get(owner).cloned() {
+                let physical = info.physical(owner, nullable);
+                if physical.descriptor() == to.descriptor() && from.descriptor() != to.descriptor()
+                {
+                    let done = nullable.then(|| self.label());
+                    if let Some(done) = done {
+                        self.bytes.push(0x59);
+                        self.branch(0xc6, done);
+                    }
+                    self.method_reference(
+                        0xb6,
+                        owner,
+                        "unbox-impl",
+                        &format!("(){}", info.carrier.descriptor()),
+                    )?;
+                    if let Some(done) = done {
+                        self.mark(done);
+                        self.class_reference(0xc0, &reference_class(to)?)?;
+                    }
+                    return Ok(true);
+                }
+            }
+        }
+        if let Some((owner, nullable)) = nominal(to) {
+            if let Some(info) = self.pool.value_classes.get(owner).cloned() {
+                let physical = info.physical(owner, nullable);
+                if physical.descriptor() == from.descriptor()
+                    && from.descriptor() != to.descriptor()
+                {
+                    let done = nullable.then(|| self.label());
+                    if let Some(done) = done {
+                        self.bytes.push(0x59);
+                        self.branch(0xc6, done);
+                    }
+                    self.method_reference(
+                        0xb8,
+                        owner,
+                        "box-impl",
+                        &format!("({})L{owner};", info.carrier.descriptor()),
+                    )?;
+                    if let Some(done) = done {
+                        self.mark(done);
+                        self.class_reference(0xc0, &reference_class(to)?)?;
+                    }
+                    return Ok(true);
+                }
+            }
+        }
+        Ok(false)
+    }
+    fn storage_field(&mut self, opcode: u8, owner: &str, name: &str, logical: &Type) -> Result<()> {
+        let physical = crate::value_abi::physical(logical, &self.pool.value_classes);
+        self.max_stack = self.max_stack.max(4 + physical.slots() + logical.slots());
+        if opcode == 0xb5 || opcode == 0xb3 {
+            self.adapt_value(logical, &physical)?;
+        }
+        self.field_reference(opcode, owner, name, &physical.descriptor())?;
+        if opcode == 0xb4 || opcode == 0xb2 {
+            self.adapt_value(&physical, logical)?;
         }
         Ok(())
     }
@@ -1560,9 +1639,9 @@ impl Code<'_> {
             } => {
                 self.class_reference(0xbb, owner)?;
                 self.bytes.push(0x59);
-                for arg in args {
-                    self.value(arg)?;
-                }
+                let (parameters, _) = invocation_types(descriptor)?;
+                self.call_arguments(args, &parameters)?;
+                self.max_stack += 2;
                 self.method_reference(0xb7, owner, "<init>", descriptor)?;
             }
             ValueKind::JavaField {
@@ -2172,8 +2251,7 @@ impl Code<'_> {
                     _ => self.owner,
                 };
                 if !self.captured_field(owner, name, &value.ty, false, false)? {
-                    let field = self.pool.field(owner, name, &value.ty.descriptor())?;
-                    self.reference(0xb4, field);
+                    self.storage_field(0xb4, owner, name, &value.ty)?;
                 }
             }
             ValueKind::Local(slot) => self
@@ -2405,7 +2483,7 @@ impl Code<'_> {
                         _ => self.owner,
                     };
                     if !self.captured_field(owner, name, &value.ty, false, true)? {
-                        self.field_reference(0xb5, owner, name, &value.ty.descriptor())?;
+                        self.storage_field(0xb5, owner, name, &value.ty)?;
                     }
                 }
                 Statement::Store(slot, value) => {
@@ -2723,7 +2801,10 @@ pub(crate) fn emit_with_bridges(
     metadata: &crate::metadata::Metadata,
     bridges: &[crate::visibility::Bridge],
 ) -> Result<Vec<u8>> {
-    let mut pool = Pool::default();
+    let mut pool = Pool {
+        value_classes: metadata.value_classes.clone(),
+        ..Pool::default()
+    };
     let class = pool.class(owner)?;
     let parent = pool.class("java/lang/Object")?;
     let source_name = pool.utf8("SourceFile")?;
@@ -2820,6 +2901,20 @@ pub(crate) fn emit_with_bridges(
     for bridge in bridges.iter().filter(|bridge| bridge.owner == owner) {
         methods.push(visibility_bridge(&mut pool, bridge)?);
     }
+    let signatures = module
+        .functions
+        .iter()
+        .map(|function| {
+            (
+                (function.jvm_name().into(), function.descriptor()),
+                (
+                    function.params.iter().map(|(_, ty)| ty.clone()).collect(),
+                    function.physical_result().clone(),
+                ),
+            )
+        })
+        .collect();
+    value_classes::bridges(&mut pool, owner, &mut methods, false, &signatures)?;
     let metadata = metadata_attribute(&mut pool, metadata)?;
     let mut fields = Vec::new();
     for constant in &module.constants {
@@ -3404,6 +3499,9 @@ fn field_bridges(
     is_static: bool,
     mutable: bool,
 ) -> Result<Vec<Vec<u8>>> {
+    if crate::value_abi::physical(ty, &pool.value_classes).descriptor() != ty.descriptor() {
+        return value_classes::storage_bridges(pool, owner, name, ty, is_static, mutable);
+    }
     let mut methods = Vec::new();
     let receiver = if is_static {
         String::new()
@@ -4052,7 +4150,10 @@ fn emit_class_with(
     enum_entry: bool,
     additional_attributes: impl FnOnce(&mut Pool) -> Result<Vec<Vec<u8>>>,
 ) -> Result<Vec<u8>> {
-    let mut pool = Pool::default();
+    let mut pool = Pool {
+        value_classes: metadata.value_classes.clone(),
+        ..Pool::default()
+    };
     let this = pool.class(owner)?;
     let parent = pool.class(&class.super_class)?;
     let mut interfaces = Vec::new();
@@ -4061,10 +4162,11 @@ fn emit_class_with(
     }
     let mut fields = Vec::new();
     for field in &class.fields {
+        let physical = crate::value_abi::physical(&field.ty, &pool.value_classes);
         fields.extend(class_field_scoped(
             &mut pool,
             &field.name,
-            &field.ty,
+            &physical,
             if class.inner && field.name == "this$0" {
                 0x1000
             } else {
@@ -4110,15 +4212,18 @@ fn emit_class_with(
     }
     if class.primary_constructor {
         let constructor_descriptor = format!(
-            "({})V",
+            "({}{})V",
             class
                 .params
                 .iter()
                 .map(|(_, ty)| ty.descriptor())
-                .collect::<String>()
+                .collect::<String>(),
+            if class.value_ { "Z" } else { "" }
         );
         let constructor_slots = 1 + class.params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
-        let constructor_locals = class.constructor_locals.max(constructor_slots as u16);
+        let constructor_locals = class
+            .constructor_locals
+            .max((constructor_slots + usize::from(class.value_)) as u16);
         let mut code = Code {
             pool: &mut pool,
             functions: &class.methods,
@@ -4207,15 +4312,34 @@ fn emit_class_with(
                 code.max_stack = code.max_stack.max(1 + value.stack());
                 code.value(value)?;
             }
-            code.field_reference(0xb5, owner, &field.name, &field.ty.descriptor())?;
+            code.storage_field(0xb5, owner, &field.name, &field.ty)?;
         }
         code.block(&class.constructor_body)?;
         code.bytes.push(0xb1);
         let max_stack = code.max_stack as u16;
         let code = code.into_simple(constructor_locals, max_stack)?;
+        let flags = if class.value_ {
+            0x1002
+        } else if class.sealed_ {
+            2
+        } else if class
+            .params
+            .iter()
+            .any(|(_, ty)| crate::value_abi::value_parameter(ty, &pool.value_classes))
+        {
+            if class.params.iter().any(|(_, ty)| {
+                crate::value_abi::physical(ty, &pool.value_classes).descriptor() != ty.descriptor()
+            }) {
+                0x1002
+            } else {
+                2
+            }
+        } else {
+            constructor_flags
+        };
         let mut constructor = simple_method(
             &mut pool,
-            if class.sealed_ { 2 } else { constructor_flags },
+            flags,
             "<init>",
             &constructor_descriptor,
             code,
@@ -4407,8 +4531,17 @@ fn emit_class_with(
         )?;
         methods.push(method);
     }
-    if class.data {
-        methods.extend(data::methods(&mut pool, class, owner)?);
+    if class.data || class.value_ {
+        let generated = data::methods(&mut pool, class, owner)?;
+        for method in generated {
+            let name = value_classes::member_name(&pool, &method)?;
+            if !class.value_
+                || matches!(name.as_str(), "equals" | "hashCode" | "toString")
+                    && !class.methods.iter().any(|method| method.name == name)
+            {
+                methods.push(method);
+            }
+        }
     }
     for function in &class.methods {
         if defaults::annotated(function, "JvmStatic") {
@@ -4634,6 +4767,70 @@ fn emit_class_with(
     }
     let source_name = pool.utf8("SourceFile")?;
     let source_file = pool.utf8(file)?;
+    if !class.value_ {
+        methods.extend(value_classes::consumer_constructor(
+            &mut pool, owner, class,
+        )?);
+    }
+    let mut signatures = class
+        .methods
+        .iter()
+        .map(|function| {
+            (
+                (function.jvm_name().into(), function.descriptor()),
+                (
+                    function.params.iter().map(|(_, ty)| ty.clone()).collect(),
+                    function.physical_result().clone(),
+                ),
+            )
+        })
+        .collect::<HashMap<_, _>>();
+    if class.data {
+        let parameters = class
+            .params
+            .iter()
+            .map(|(_, ty)| ty.clone())
+            .collect::<Vec<_>>();
+        let result = Type::Java(owner.into());
+        for (index, ty) in parameters.iter().enumerate() {
+            signatures.insert(
+                (
+                    format!("component{}", index + 1),
+                    format!("(){}", ty.descriptor()),
+                ),
+                (Vec::new(), ty.clone()),
+            );
+        }
+        let desc = format!(
+            "({})L{owner};",
+            parameters.iter().map(Type::descriptor).collect::<String>()
+        );
+        signatures.insert(("copy".into(), desc), (parameters.clone(), result.clone()));
+        let mut default_parameters = vec![result.clone()];
+        default_parameters.extend(parameters);
+        default_parameters.push(Type::Int);
+        default_parameters.push(Type::Nullable(Box::new(Type::Java(
+            "java/lang/Object".into(),
+        ))));
+        let desc = format!(
+            "({})L{owner};",
+            default_parameters
+                .iter()
+                .map(Type::descriptor)
+                .collect::<String>()
+        );
+        signatures.insert(("copy$default".into(), desc), (default_parameters, result));
+    }
+    value_classes::bridges(&mut pool, owner, &mut methods, true, &signatures)?;
+    if class.value_ {
+        let info = pool
+            .value_classes
+            .get(owner)
+            .cloned()
+            .ok_or_else(|| failure("Missing value class representation"))?;
+        methods.extend(value_classes::helpers(&mut pool, owner, &info)?);
+    }
+
     let metadata = metadata_attribute(&mut pool, metadata)?;
     let mut out = Vec::new();
     u4(&mut out, 0xcafebabe);
@@ -4795,6 +4992,7 @@ mod representation_tests {
             .finish(
                 "Value.kt",
                 &crate::metadata::Metadata {
+                    value_classes: Default::default(),
                     raw_data2: std::collections::BTreeMap::new(),
                     kind: 1,
                     data1: Vec::new(),
