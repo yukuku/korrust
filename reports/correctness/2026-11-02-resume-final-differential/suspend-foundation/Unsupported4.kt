@@ -1,0 +1,1 @@
+suspend fun bounded(value: Int = 1): Int = value

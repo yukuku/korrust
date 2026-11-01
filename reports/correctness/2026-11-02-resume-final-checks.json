@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T20:36:22.104439+00:00",
+  "status": "completed",
+  "compiler": {
+    "path": "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+    "sha256": "362e12fd88ea493a1132d85a618a656f916242ef7ba4f48d002ea64fb054105b"
+  },
+  "checks": [
+    {
+      "name": "rust_all_targets",
+      "status": "passed",
+      "test_binaries": 39,
+      "tests": 469,
+      "failed": 0,
+      "ignored": 0,
+      "log": "reports/correctness/2026-11-02-resume-final-checks/rust.log"
+    },
+    {
+      "name": "python_all_tests",
+      "status": "passed",
+      "tests": 178,
+      "log": "reports/correctness/2026-11-02-resume-final-checks/python-v2.log"
+    },
+    {
+      "name": "release_all_target_clippy_warnings_denied",
+      "status": "passed",
+      "log": "reports/correctness/2026-11-02-resume-final-checks/clippy.log"
+    },
+    {
+      "name": "formatting",
+      "status": "passed",
+      "log": "reports/correctness/2026-11-02-resume-final-checks/fmt.log"
+    }
+  ],
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "frozen_input_manifest": "reports/correctness/2026-11-02-resume-final-checks/freeze.json",
+  "source_archive": "reports/correctness/2026-11-02-resume-final-checks/frozen-sources.zip",
+  "historical_failures": [
+    {
+      "name": "first_python_launch",
+      "tests": 178,
+      "failures": 53,
+      "classification": "harness_setup",
+      "reason": "Launch omitted JAVA_HOME and KORRUST_COMPILER. Missing java.lang.Object errors are not compiler language failures. Fresh correctly configured whole run passed.",
+      "log": "reports/correctness/2026-11-02-resume-final-checks/python.log"
+    }
+  ],
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "RUST_MIN_STACK": "16777216",
+    "KORRUST_COMPILER": "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust"
+  },
+  "reproduction_commands": [
+    "cargo test --release --locked --offline --all-targets",
+    "python3 -m unittest discover -s tests -p test_*.py",
+    "cargo clippy --release --all-targets --locked --offline -- -D warnings",
+    "cargo fmt --check"
+  ],
+  "limitations": [
+    "Rust/Python regression results are separate from upstream differential, runtime ABI, module and full-app evidence."
+  ]
+}

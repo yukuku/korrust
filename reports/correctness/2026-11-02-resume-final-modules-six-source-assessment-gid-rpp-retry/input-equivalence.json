@@ -1,0 +1,66 @@
+{
+  "initial_report": "reports/correctness/2026-11-02-resume-final-modules-six-source-assessment.json",
+  "initial_report_sha256": "18bd60aec4dbd43dca5479c93c96510c43b96976777a3b0f8deb5897e33cd580",
+  "retry_report": "reports/correctness/2026-11-02-resume-final-modules-six-source-assessment-gid-rpp-retry.json",
+  "retry_report_sha256": "2bc8621b3ffc92dbe0ef53dca88c980ca3dd1be1fbe57b124337ebef7cb63bef",
+  "same_model_sha256": "0284875decce71dcda40c438bd6ac61ba6a08bfc73f2a187fcec28118b7e8c92",
+  "change": "Candidate timeout120 to600; jobs2 to1; run after candidate Gradle and contract completed. Source/dependencies/options unchanged; only output paths differ in compiler argv.",
+  "cases": [
+    {
+      "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+      "source_sha256": "487b8ecadfe52f276154df2c2fabe3d4bdea0deb550ad5cd7400dd63fe0ddc0c",
+      "same_compiler_source_model_classpath_plugin_runtime_friend_options": true,
+      "old_outcome": "timeout",
+      "retry_outcome": "emitted",
+      "candidate_classes_sha256": {
+        "yuku/alkitab/datatransfer/model/Gid.class": "43224529ff8794e8e7ee3898f2dad4054d11cfc94260a4fd617596684f732e30"
+      },
+      "official_classes_sha256": {
+        "yuku/alkitab/datatransfer/model/Gid.class": "4a6c8958254d748493c6f94507d03c3139f4bd2bc75da74bee9a27b735af2b5e"
+      },
+      "non_emission_checks": {
+        "behavior": {
+          "outcome": "not_run",
+          "reason": "Emission probe does not execute behavior."
+        },
+        "abi": {
+          "outcome": "not_run"
+        },
+        "kotlin_consumer": {
+          "outcome": "not_run"
+        },
+        "emission": {
+          "outcome": "emitted"
+        }
+      }
+    },
+    {
+      "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt",
+      "source_sha256": "edaa027f6e6f053e85ae87a9afe7e9a6ded54e0fb09f98a1fe2db12391ecf37d",
+      "same_compiler_source_model_classpath_plugin_runtime_friend_options": true,
+      "old_outcome": "timeout",
+      "retry_outcome": "emitted",
+      "candidate_classes_sha256": {
+        "yuku/alkitab/datatransfer/model/Rpp.class": "b209ba347f475bd2f0c1ac8766e15d92fdf293025b5de14657f1e29e2ce67d80"
+      },
+      "official_classes_sha256": {
+        "yuku/alkitab/datatransfer/model/Rpp.class": "1dd8ed84e0125288731d1318483fd9a6de660f196f7e1f40cc16777351079e62"
+      },
+      "non_emission_checks": {
+        "behavior": {
+          "outcome": "not_run",
+          "reason": "Emission probe does not execute behavior."
+        },
+        "abi": {
+          "outcome": "not_run"
+        },
+        "kotlin_consumer": {
+          "outcome": "not_run"
+        },
+        "emission": {
+          "outcome": "emitted"
+        }
+      }
+    }
+  ]
+}

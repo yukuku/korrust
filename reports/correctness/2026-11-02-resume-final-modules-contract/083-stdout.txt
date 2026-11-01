@@ -1,0 +1,53 @@
+Compiled from "SnappyInputStream.java"
+public class yuku.alkitab.yes2.compress.SnappyInputStream extends yuku.alkitab.yes2.io.RandomInputStream {
+  private final yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream input;
+    descriptor: Lyuku/alkitab/yes2/io/RandomAccessFileRandomInputStream;
+  private final yuku.snappy.codec.Snappy snappy;
+    descriptor: Lyuku/snappy/codec/Snappy;
+  private final long baseOffset;
+    descriptor: J
+  private final int block_size;
+    descriptor: I
+  private final int[] compressed_block_sizes;
+    descriptor: [I
+  private final int[] compressed_block_offsets;
+    descriptor: [I
+  private int current_block_index;
+    descriptor: I
+  private int current_block_skip;
+    descriptor: I
+  private byte[] compressed_buf;
+    descriptor: [B
+  private int uncompressed_block_index;
+    descriptor: I
+  private byte[] uncompressed_buf;
+    descriptor: [B
+  private int uncompressed_len;
+    descriptor: I
+  public yuku.alkitab.yes2.compress.SnappyInputStream(yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream, long, int, int[], int[]) throws java.io.IOException;
+    descriptor: (Lyuku/alkitab/yes2/io/RandomAccessFileRandomInputStream;JI[I[I)V
+
+  public void seek(long) throws java.io.IOException;
+    descriptor: (J)V
+
+  private void prepareBuffer() throws java.io.IOException;
+    descriptor: ()V
+
+  public int read() throws java.io.IOException;
+    descriptor: ()I
+
+  public int read(byte[], int, int) throws java.io.IOException;
+    descriptor: ([BII)I
+
+  public int read(byte[]) throws java.io.IOException;
+    descriptor: ([B)I
+
+  public long getFilePointer() throws java.io.IOException;
+    descriptor: ()J
+
+  public long skip(long) throws java.io.IOException;
+    descriptor: (J)J
+
+  public static yuku.alkitab.yes2.compress.SnappyInputStream getInstanceFromAttributes(yuku.alkitab.yes2.io.RandomAccessFileRandomInputStream, yuku.bintex.ValueMap, long) throws java.io.IOException;
+    descriptor: (Lyuku/alkitab/yes2/io/RandomAccessFileRandomInputStream;Lyuku/bintex/ValueMap;J)Lyuku/alkitab/yes2/compress/SnappyInputStream;
+}

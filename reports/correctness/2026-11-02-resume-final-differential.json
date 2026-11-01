@@ -1,0 +1,3253 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T20:15:29.487826+00:00",
+  "status": "failed",
+  "compiler": {
+    "path": "target/resume-final-validation/frozen-root/target/release/korrust",
+    "sha256": "362e12fd88ea493a1132d85a618a656f916242ef7ba4f48d002ea64fb054105b"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "scope": "Final exact-binary regression: complete unchanged 36-case upstream feature matrix plus value-class and suspend-foundation suites. No source edits, full-app, Android runtime or performance claim.",
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": [],
+    "added_source_paths": []
+  },
+  "source_freeze": "reports/correctness/2026-11-02-resume-final-differential/source-freeze.json",
+  "source_bundle": {
+    "path": "reports/correctness/2026-11-02-resume-final-differential/source.zip",
+    "sha256": "9a24e2fa038c3de0089bb18d30c2a04800ec0aa7efb883688f47d06f0e04bfc6"
+  },
+  "root_source_matches_frozen_compiler_checkout": true,
+  "observations": {
+    "rich_annotations": {
+      "actual_class_exists": true,
+      "generated_class_path": "target/resume-final-differential/upstream-full36/rich_annotations/java-dependencies/lib/JavaAnn.class",
+      "generated_class_sha256": "4d6bb44149d99be2c3b4ae574c57e5c48c34fcf065610492f8ebdb6800d3f0dd",
+      "candidate_classpath_contains_class_directory": true,
+      "javac_dependency_exit_code": 0,
+      "official_module_exit_code": 0,
+      "declarations": "reports/correctness/2026-11-02-resume-final-differential/javaann-dependency.txt",
+      "interpretation": "The harness records dependency_failure because the candidate reports missing_dependency, despite the JavaAnn class being generated successfully and supplied on the candidate classpath. This is retained as an unresolved supplied-class lookup gap, not an absent setup dependency."
+    }
+  },
+  "suites": [
+    {
+      "id": "upstream-full36",
+      "status": "failed",
+      "counts": {
+        "pass": 18,
+        "unsupported_language": 10,
+        "correctness_failure": 2,
+        "dependency_failure": 1,
+        "harness_unsupported": 5
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      },
+      "report": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36.json",
+      "raw_report": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/raw-report.json",
+      "raw_report_sha256": "4ded61914ff06faf25b10ac1bf8ad8f1254d2fffae259121f3321a20b306e887",
+      "error": null
+    },
+    {
+      "id": "value-classes",
+      "status": "complete",
+      "counts": {
+        "pass": 31,
+        "unsupported_language": 32,
+        "invalid_kotlin": 11,
+        "harness_unsupported": 2
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      },
+      "report": "reports/correctness/2026-11-02-resume-final-differential/value-classes.json",
+      "raw_report": "reports/correctness/2026-11-02-resume-final-differential/value-classes/raw-report.json",
+      "raw_report_sha256": "fb60eb149d6fe09a52b6100f5eb84c7a4cb5854b0aa09388e0055eb317880d03",
+      "error": null
+    },
+    {
+      "id": "suspend-foundation",
+      "status": "complete",
+      "counts": {
+        "pass": 9,
+        "invalid_rejected": 5,
+        "unsupported_language": 14
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      },
+      "report": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation.json",
+      "raw_report": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/raw-report.json",
+      "raw_report_sha256": "695ad24065e7cd604be4c6e236db7b654da2740a135abfc7caea15975caefc44",
+      "error": null
+    }
+  ],
+  "cases": [
+    {
+      "id": "upstream-full36/baseline_int_when",
+      "family": "existing_control_flow",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/branching/when2.kt",
+        "sha256": "fab72714f7c99ebbe8a93947b0b372e3bfe025fb89453a370679b47a7afaca28"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/baseline_int_when/sources/main/when2.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/baseline_int_when/caller/UpstreamBox.class": "51ca1fc00446648f15f342ef0bb17468140fa663724865b248089b7e6c9246d0"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "baseline_int_when"
+    },
+    {
+      "id": "upstream-full36/baseline_arrays",
+      "family": "existing_primitive_arrays",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachIntArray.kt",
+        "sha256": "428b491fbe0b8a68cced0cf689986be13399fe555912b0fcfb79fc444c186d9f"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/baseline_arrays/sources/main/forEachIntArray.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/baseline_arrays/caller/UpstreamBox.class": "b18af038da664f42994533f696d61ae7febde818edb0d3fe007047a7fcdcc988"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "baseline_arrays"
+    },
+    {
+      "id": "upstream-full36/baseline_typealias",
+      "family": "existing_nongeneric_alias",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/typealias/typeAliasConstructor.kt",
+        "sha256": "f39bee49f74aa332cb68082c019de03502305a067c5e20927007d6b7cc6d0fe6"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/baseline_typealias/sources/main/typeAliasConstructor.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/baseline_typealias/caller/UpstreamBox.class": "dce76c5d14c4b07c63502bdde2daae317771498ccf9257462bc24b864d332c65"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "baseline_typealias"
+    },
+    {
+      "id": "upstream-full36/baseline_default_arguments",
+      "family": "existing_default_arguments",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/simpleFromOtherFile.kt",
+        "sha256": "75775f742707ff5aad7c66a819ae785102f52eb48831a1706b109f8ac3d5e578"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/baseline_default_arguments/sources/main/1.kt.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/baseline_default_arguments/sources/main/2.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/baseline_default_arguments/caller/UpstreamBox.class": "f80dadfe77996b6df0b952caa7063e10e5ea0f989d312ceb20e215bd19916995"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "baseline_default_arguments"
+    },
+    {
+      "id": "upstream-full36/baseline_enum",
+      "family": "existing_enum",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/enum/inner.kt",
+        "sha256": "625c283ebbe4787e01570b1efafb8308b5671767bb886c03e93697f1e021bcc6"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/baseline_enum/sources/main/inner.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/baseline_enum/caller/UpstreamBox.class": "a137fdffd5293fcba3b201a30f747ed111d52f1e8a2697de716d45de9eb887a5"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "baseline_enum"
+    },
+    {
+      "id": "upstream-full36/baseline_fun_interface",
+      "family": "existing_fun_interface",
+      "root": "box",
+      "tier": "regression",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/funInterface/basicFunInterfaceConversion.kt",
+        "sha256": "43d8f4479302c25d02941b4f30847efaea36a89c3661ae397f0a15c978f5829a"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/baseline_fun_interface/sources/main/basicFunInterfaceConversion.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/baseline_fun_interface/caller/UpstreamBox.class": "b1c940779e749aed71b2458d541026d5a07438f737a8abd49f7363779239ec84"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "baseline_fun_interface"
+    },
+    {
+      "id": "upstream-full36/raw_strings",
+      "family": "raw_strings",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStrings.kt",
+        "sha256": "5ee1ac4401a57d6c6251af419bcdeb34114fde450c219990aec95a279013b28e"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/raw_strings/sources/main/rawStrings.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/raw_strings/caller/UpstreamBox.class": "bcfc22635d19ec0bc23ee30326cd5c05f0d0e0e8d12036c1e0f189bf6601279c"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "raw_strings"
+    },
+    {
+      "id": "upstream-full36/raw_strings_quotes",
+      "family": "raw_strings",
+      "root": "box",
+      "tier": "complex",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+        "sha256": "7d6202a5d197351e2a716222b819d51b67fdba120b59935b952ed91f86556f26"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt",
+          "offset": 50,
+          "category": "unsupported_language",
+          "code": "SOURCE_REFERENCE_VARARG_UNSUPPORTED",
+          "message": "Source reference vararg declarations require unsupported Array<out T> projections",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/raw_strings_quotes/sources/main/rawStringsWithManyQuotes.kt",
+          "line": 2,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt",
+            "char_offset": 50,
+            "byte_offset": 50,
+            "line": 2,
+            "column": 1
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "raw_strings_quotes"
+    },
+    {
+      "id": "upstream-full36/generic_classifiers",
+      "family": "generic_classifiers",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/dataClasses/genericParam.kt",
+        "sha256": "4d90d91655040e777f064a5ee5afa789618aa28d59cadfc5ea50bfe5925e1b98"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/generic_classifiers/sources/main/genericParam.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/generic_classifiers/sources/main/genericParam.kt",
+          "offset": 59,
+          "category": "unsupported_language",
+          "code": "GENERIC_CONSTRUCTOR_INFERENCE_UNSUPPORTED",
+          "message": "Source generic construction requires explicit type arguments",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/generic_classifiers/sources/main/genericParam.kt",
+          "line": 4,
+          "column": 13,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/dataClasses/genericParam.kt",
+            "char_offset": 59,
+            "byte_offset": 59,
+            "line": 4,
+            "column": 13
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "generic_classifiers"
+    },
+    {
+      "id": "upstream-full36/accessor_visibility",
+      "family": "accessor_visibility",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/properties/accessToPrivateSetter.kt",
+        "sha256": "bca47d89d65097ec1d3f4726f6f7cf3c19c96c1ac0a735907e87be1d6dcfe9d8"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/accessor_visibility/sources/main/accessToPrivateSetter.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/accessor_visibility/caller/UpstreamBox.class": "a52f904e534de25889478b839b3a988132d925a6dc0bc56c8e3cba0073fc2fed"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "accessor_visibility"
+    },
+    {
+      "id": "upstream-full36/jvm_overloads",
+      "family": "jvm_overloads",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/jvmOverloads/constructorWithTypeParams.kt",
+        "sha256": "f61fe2f5494ef3304f18a71aa1452a5cfdbf70bd60879a88d90f2bf916045298"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/jvm_overloads/sources/main/constructorWithTypeParams.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/jvm_overloads/sources/main/constructorWithTypeParams.kt",
+          "offset": 50,
+          "category": "unsupported_language",
+          "code": "CONSTRUCTOR_ANNOTATION_UNSUPPORTED",
+          "message": "Primary constructor annotations are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/jvm_overloads/sources/main/constructorWithTypeParams.kt",
+          "line": 4,
+          "column": 12,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/jvmOverloads/constructorWithTypeParams.kt",
+            "char_offset": 50,
+            "byte_offset": 50,
+            "line": 4,
+            "column": 12
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "jvm_overloads"
+    },
+    {
+      "id": "upstream-full36/primitive_arrays",
+      "family": "primitive_arrays",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachLongArray.kt",
+        "sha256": "b7c27c4727e4868d1afd73e589e12b3638b31782f09b5a64e38f5ebc122570fa"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/primitive_arrays/sources/main/forEachLongArray.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/primitive_arrays/caller/UpstreamBox.class": "f111e605ba2340176471a6683b5800e6946bf2369338b20533cb04be31dd9ebd"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "primitive_arrays"
+    },
+    {
+      "id": "upstream-full36/class_references",
+      "family": "class_references",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/simple.kt",
+        "sha256": "269a232f26fef4e3a87351e181857044612b480246be4286dff26c6a5b598774"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/class_references/sources/main/simple.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/class_references/sources/main/simple.kt",
+          "offset": 132,
+          "category": "unsupported_language",
+          "code": "STRING_TEMPLATE_VALUE_UNSUPPORTED",
+          "message": "String templates support only String, supported primitives, their nullable forms, and null",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/class_references/sources/main/simple.kt",
+          "line": 5,
+          "column": 58,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/classLiteral/bound/simple.kt",
+            "char_offset": 132,
+            "byte_offset": 132,
+            "line": 5,
+            "column": 58
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "class_references"
+    },
+    {
+      "id": "upstream-full36/value_classes",
+      "family": "value_classes",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt",
+        "sha256": "ee9a31ea5400aa67b9d11ef0494cdf80ebac7be427a3e9015293557a487cdb70"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/value_classes/sources/main/topLevel.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/value_classes/sources/main/topLevel.kt",
+          "offset": 78,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unresolved member or imported extension: getOrThrow",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/value_classes/sources/main/topLevel.kt",
+          "line": 5,
+          "column": 13,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/returnResult/topLevel.kt",
+            "char_offset": 78,
+            "byte_offset": 78,
+            "line": 5,
+            "column": 13
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "value_classes"
+    },
+    {
+      "id": "upstream-full36/sealed_hierarchies",
+      "family": "sealed_hierarchies",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/sealed/delegatingConstructor.kt",
+        "sha256": "2ee9221dc82708c99a62f22474e1ec3ee8ecfe3f47874c8a11b5855f940424b5"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/sealed_hierarchies/sources/main/delegatingConstructor.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/sealed_hierarchies/sources/main/delegatingConstructor.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SEALED_CONSTRUCTOR_DEFAULTS_UNSUPPORTED",
+          "message": "Sealed secondary constructors and default constructor parameters are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/sealed_hierarchies/sources/main/delegatingConstructor.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/sealed/delegatingConstructor.kt",
+            "char_offset": 0,
+            "byte_offset": 0,
+            "line": 1,
+            "column": 1
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "sealed_hierarchies"
+    },
+    {
+      "id": "upstream-full36/inner_classes",
+      "family": "inner_classes",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/innerClass/simple.kt",
+        "sha256": "750757723f3b66fc2a88e2e87dcd1b4f49f49d5f67621a527b687ab7aea9fa84"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/inner_classes/sources/main/simple.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/inner_classes/caller/UpstreamBox.class": "5a4cdd6e3b9f92051e731b54731f643aba6be427f4d7b5884efa97ee8ab99aea"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "inner_classes"
+    },
+    {
+      "id": "upstream-full36/interface_delegation",
+      "family": "interface_delegation",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt",
+        "sha256": "87e1f420a50df2fe2bc6917ba193b52a9070249b5cf16a5c35470918cb7b81a8"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/interface_delegation/sources/main/genericProperty.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/interface_delegation/sources/main/genericProperty.kt",
+          "offset": 23,
+          "category": "unsupported_language",
+          "code": "INTERFACE_EXTENSION_UNSUPPORTED",
+          "message": "Generic interface extension properties are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/interface_delegation/sources/main/genericProperty.kt",
+          "line": 3,
+          "column": 9,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt",
+            "char_offset": 23,
+            "byte_offset": 23,
+            "line": 3,
+            "column": 9
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "interface_delegation"
+    },
+    {
+      "id": "upstream-full36/data_objects",
+      "family": "expanded_objects",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/dataObjects/equals.kt",
+        "sha256": "2f6061be9250e73090fb56bb1a5b2fef8edcf0e9fc385dd36aa3b7b7e4b3ec59"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "LANGUAGE",
+              "value": "+DataObjects",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/data_objects/sources/main/equals.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": [
+          "--language-feature",
+          "+DataObjects"
+        ]
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/data_objects/caller/UpstreamBox.class": "42bb10e22ffb3d231d1c362ed146119eb06ce4cc22c43adf8a3ec96846c64402"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "data_objects"
+    },
+    {
+      "id": "upstream-full36/enum_subclasses",
+      "family": "expanded_enums",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/enum/interfaceCallWithEntryClass.kt",
+        "sha256": "f557b70100036251bfc54c081c3eff2dd86a99c3cca3567a875fbc38b1d838ce"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/enum_subclasses/sources/main/interfaceCallWithEntryClass.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/enum_subclasses/caller/UpstreamBox.class": "6ee13e536f1e3322040ee0004e8193e34a7d29b206a5cf8669b40eca10fa6748"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "enum_subclasses"
+    },
+    {
+      "id": "upstream-full36/generic_aliases",
+      "family": "generic_aliases",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/typealias/genericTypeAliasConstructor2.kt",
+        "sha256": "a416c2b8cd2592f0674b9b4b6c2974cb23ba14a5861db6857e36dee05db4fe5b"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/generic_aliases/sources/main/genericTypeAliasConstructor2.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/generic_aliases/caller/UpstreamBox.class": "a7696ed382043d171aadbe6152c390c398bf107b38c1bbb3bab20e73c29fddd3"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "generic_aliases"
+    },
+    {
+      "id": "upstream-full36/unsigned",
+      "family": "unsigned",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt",
+        "sha256": "abeddd4b29c3024780bc06179bc7f83823c83c7499bd97ced7db3026182a3af2"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/unsigned/sources/main/unsignedLiteralsWithSignedOverflow.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/unsigned/sources/main/unsignedLiteralsWithSignedOverflow.kt",
+          "offset": 56,
+          "category": "unsupported_language",
+          "code": "UNSIGNED_SMALL_LITERAL_UNSUPPORTED",
+          "message": "Contextual UByte and UShort literals are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/unsigned/sources/main/unsignedLiteralsWithSignedOverflow.kt",
+          "line": 4,
+          "column": 21,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/unsignedTypes/unsignedLiteralsWithSignedOverflow.kt",
+            "char_offset": 56,
+            "byte_offset": 56,
+            "line": 4,
+            "column": 21
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "unsigned"
+    },
+    {
+      "id": "upstream-full36/constant_expressions",
+      "family": "constant_expressions",
+      "root": "box",
+      "tier": "basic",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/properties/initializerOfConstValWithConstExpr.kt",
+        "sha256": "52f8b0aa5a21ea146fb4dda1286ceaf6b5fe79565d6ae3230697c2ccd51c1ffb"
+      },
+      "modules": [
+        {
+          "name": "lib",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        },
+        {
+          "name": "main",
+          "dependencies": [
+            "lib"
+          ],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/constant_expressions/sources/lib/lib.kt.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/constant_expressions/sources/main/main.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "lib": [],
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/constant_expressions/caller/UpstreamBox.class": "f14461728c4869d930bcc290297216e97001b415ee33173f2b5309e352832b11"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "constant_expressions"
+    },
+    {
+      "id": "upstream-full36/java_static_imports",
+      "family": "java_member_resolution",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/enum/simpleJavaEnumWithStaticImport.kt",
+        "sha256": "4c92d1773b91145f002b8ec85b268a01f2bab43b96fa1820d5f0e849afe2b1f1"
+      },
+      "modules": [
+        {
+          "name": "lib",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            }
+          ]
+        },
+        {
+          "name": "main",
+          "dependencies": [
+            "lib"
+          ],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/java_static_imports/sources/lib/test/En.java.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/java_static_imports/sources/main/1.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/java_static_imports/caller/UpstreamBox.class": "f80dadfe77996b6df0b952caa7063e10e5ea0f989d312ceb20e215bd19916995"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "java_static_imports"
+    },
+    {
+      "id": "upstream-full36/rich_annotations",
+      "family": "rich_annotations",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "dependency_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt",
+        "sha256": "cc2a6d8fbfa40c2a3c699e95f1ea632f7b934ed36303dfb80d21cf74a0ea8268"
+      },
+      "modules": [
+        {
+          "name": "lib",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        },
+        {
+          "name": "main",
+          "dependencies": [
+            "lib"
+          ],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/rich_annotations/sources/lib/JavaAnn.java.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/rich_annotations/sources/main/1.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/rich_annotations/sources/main/1.kt",
+          "offset": 147,
+          "category": "missing_dependency",
+          "code": "CLASS_NOT_FOUND",
+          "message": "Type requires an explicit class import: JavaAnn",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/rich_annotations/sources/main/1.kt",
+          "line": 8,
+          "column": 50,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/annotations/kClassMapping/arrayClassParameter.kt",
+            "char_offset": 426,
+            "byte_offset": 426,
+            "line": 23,
+            "column": 50
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "rich_annotations"
+    },
+    {
+      "id": "upstream-full36/member_extensions",
+      "family": "member_extensions",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/defaultArguments/private/memberExtensionFunction.kt",
+        "sha256": "a6ead4a04087fc0097e79c3128b11378bfeed42be48845a02b53ba0f8aca5273"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/member_extensions/sources/main/memberExtensionFunction.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/member_extensions/caller/UpstreamBox.class": "7f4c18765bffd714c0f9f27b479416c9e3100df05c02b2a27ba6b0029f8b3ed7"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "member_extensions"
+    },
+    {
+      "id": "upstream-full36/source_reified",
+      "family": "source_inline_reified",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt",
+        "sha256": "f500737df116ecdd44fa50403bf941dde82da05f55f7e092d75375d79b4d58ea"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/source_reified/sources/main/lib.kt.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/source_reified/sources/main/main.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/source_reified/sources/main/main.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "COMPILED_INLINE_BODY_UNSUPPORTED",
+          "message": "Unsupported compiled inline body: unresolved inline method reference",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/source_reified/sources/main/main.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt",
+            "char_offset": 123,
+            "byte_offset": 123,
+            "line": 9,
+            "column": 1
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "source_reified"
+    },
+    {
+      "id": "upstream-full36/suspension",
+      "family": "suspension",
+      "root": "box",
+      "tier": "interaction",
+      "kind": "box",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/coroutines/async.kt",
+        "sha256": "fcc28400bf3f28b1e7bcb5c0aeda12891e29b99752e01aecd6f7b3d8913844d9"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "SKIP_JDK6",
+              "value": "",
+              "original_line": 1
+            },
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 2
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 3
+            },
+            {
+              "name": "FULL_JDK",
+              "value": "",
+              "original_line": 4
+            },
+            {
+              "name": "WITH_COROUTINES",
+              "value": "",
+              "original_line": 5
+            }
+          ]
+        }
+      ],
+      "reasons": [
+        "Unsupported directive SKIP_JDK6"
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "suspension"
+    },
+    {
+      "id": "upstream-full36/inline_generics",
+      "family": "source_inline_reified",
+      "root": "boxInline",
+      "tier": "interaction",
+      "kind": "inline",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/boxInline/typeParameters/basic.kt",
+        "sha256": "5dc0a84c78cdc5ab1dea24a02e9d60ed1d497141a458e0e8413708f917fd014c"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/inline_generics/sources/main/1.kt.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/inline_generics/sources/main/2.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/inline_generics/sources/main/1.kt",
+          "offset": 34,
+          "category": "unsupported_language",
+          "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+          "message": "Source member inline functions are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/inline_generics/sources/main/1.kt",
+          "line": 3,
+          "column": 5,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/boxInline/typeParameters/basic.kt",
+            "char_offset": 48,
+            "byte_offset": 48,
+            "line": 4,
+            "column": 5
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "inline_generics"
+    },
+    {
+      "id": "upstream-full36/inline_nonlocal",
+      "family": "source_inline_reified",
+      "root": "boxInline",
+      "tier": "complex",
+      "kind": "inline",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt",
+        "sha256": "b10a8ee1323b6d69ea400193c9088222fb3f6a4c0ac6f6bea98118b0d81d68a0"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/inline_nonlocal/sources/main/1.kt.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/inline_nonlocal/sources/main/2.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/inline_nonlocal/caller/UpstreamBox.class": "f69d033fb24c77c249bcfc4ce206a60f2bfe0a29546cfbf23c5379ebb6541e32"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "inline_nonlocal"
+    },
+    {
+      "id": "upstream-full36/diagnostics_markers",
+      "family": "diagnostic_mapping",
+      "root": "diagnostics",
+      "tier": "invalid",
+      "kind": "diagnostics",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/diagnostics/tests/controlFlowAnalysis/unresolvedReference.kt",
+        "sha256": "be51b2d72a2b6f000d4ef2a441bf69f5c64c19f2512ac40a94b5b9b32a41a7ca"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "RUN_PIPELINE_TILL",
+              "value": "FRONTEND",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/diagnostics_markers/sources/main/unresolvedReference.kt.source-map.json"
+      ],
+      "reasons": [
+        "Diagnostic sources and marker ranges mapped; diagnostic category/range equivalence is not implemented"
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "diagnostics_markers"
+    },
+    {
+      "id": "upstream-full36/diagnostics_options",
+      "family": "diagnostic_mapping",
+      "root": "diagnostics",
+      "tier": "interaction",
+      "kind": "diagnostics",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/diagnostics/tests/integerLiterals/typealiasOnLong.kt",
+        "sha256": "7b273a1dc0b12de5ea581e69f2a40fc60be4c2c637edeb17ce96527a517a055b"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "RUN_PIPELINE_TILL",
+              "value": "BACKEND",
+              "original_line": 1
+            },
+            {
+              "name": "FIR_IDENTICAL",
+              "value": "",
+              "original_line": 2
+            },
+            {
+              "name": "ISSUE",
+              "value": "KT-52825",
+              "original_line": 3
+            }
+          ]
+        }
+      ],
+      "reasons": [
+        "Unsupported directive ISSUE: KT-52825"
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "diagnostics_options"
+    },
+    {
+      "id": "upstream-full36/java_consumes_void",
+      "family": "java_consumer_contract",
+      "root": "compileJavaAgainstKotlin",
+      "tier": "regression",
+      "kind": "java_consumer",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/compileJavaAgainstKotlin/method/Void.kt",
+        "sha256": "b5e0af55af5ad7839fc2eb107430fe63757fb07fca584bfc4f776ec2fc9bd06a"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/java_consumes_void/sources/main/Void.kt.source-map.json"
+      ],
+      "paired_java": {
+        "path": "references/kotlin/compiler/testData/compileJavaAgainstKotlin/method/Void.java",
+        "sha256": "93deecd2e0d8ec3269ca363387a1256fccaff4e1961da2c2637e737da2f91dbf"
+      },
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-final-differential/upstream-full36/java_consumes_void/java-consumer/test/Void.class": "2ef945df067bf54b07f9b5a23a944e1636d544fef60e6f9993083d963073c25b"
+      },
+      "reasons": [
+        "Original Java caller compiled once against official output and JVM signatures compared; no upstream executable assertion entry point"
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "java_consumes_void"
+    },
+    {
+      "id": "upstream-full36/kotlin_consumes_nested_java",
+      "family": "java_member_resolution",
+      "root": "compileKotlinAgainstJava",
+      "tier": "interaction",
+      "kind": "kotlin_consumer",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.kt",
+        "sha256": "88d18006d69378e006963848192da5215116f0dbc39d0204244bd62cf9a7b21e"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt.source-map.json"
+      ],
+      "paired_java": {
+        "path": "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.java",
+        "sha256": "ce8e7fa18cda41c361878a7cbaeffa844a6c71a5f3bc33e653a7da610312a9ca"
+      },
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt",
+          "offset": 29,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Unresolved Java field",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/kotlin_consumes_nested_java/sources/main/StaticNestedClass.kt",
+          "line": 3,
+          "column": 16,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/compileKotlinAgainstJava/StaticNestedClass.kt",
+            "char_offset": 29,
+            "byte_offset": 29,
+            "line": 3,
+            "column": 16
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "kotlin_consumes_nested_java"
+    },
+    {
+      "id": "upstream-full36/constructor_signature",
+      "family": "constructor_signature",
+      "root": "writeSignature",
+      "tier": "regression",
+      "kind": "signature",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/writeSignature/constructor/Constructor0.kt",
+        "sha256": "84702e728eaa840f4c7ba4de80fb5749d7b82844b50e76a68a1a11eb8e4286a4"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/constructor_signature/sources/main/Constructor0.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Compilation and top-level JVM descriptors only; no runtime assertion",
+      "source_suite": "upstream-full36",
+      "suite_case_id": "constructor_signature"
+    },
+    {
+      "id": "upstream-full36/spec_receiver_priority",
+      "family": "member_extensions",
+      "root": "tests-spec",
+      "tier": "interaction",
+      "kind": "spec_box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/tests-spec/testData/codegen/box/linked/overload-resolution/receivers/p-6/pos/2.2.kt",
+        "sha256": "bce6ca16199272336a29190b21984e7ed365e28342fb6d592f25d7e088252161"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/spec_receiver_priority/sources/main/2.2.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/spec_receiver_priority/sources/main/2.2.kt",
+          "offset": 525,
+          "category": "unsupported_language",
+          "code": "NAMED_COMPANION_DECLARATION_UNSUPPORTED",
+          "message": "Named companion declarations are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/upstream-full36/spec_receiver_priority/sources/main/2.2.kt",
+          "line": 27,
+          "column": 22,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/tests-spec/testData/codegen/box/linked/overload-resolution/receivers/p-6/pos/2.2.kt",
+            "char_offset": 525,
+            "byte_offset": 525,
+            "line": 27,
+            "column": 22
+          }
+        }
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "spec_receiver_priority"
+    },
+    {
+      "id": "upstream-full36/incremental_classpath_snapshot",
+      "family": "incremental_dependency_semantics",
+      "root": "incremental",
+      "tier": "interaction",
+      "kind": "incremental",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/incremental-compilation-impl/testData/org/jetbrains/kotlin/incremental/classpathDiff/ClasspathSnapshotterTest/kotlin/testSimpleClass/src/com/example/SimpleClass.kt",
+        "sha256": "9ae77b24c8265351afdff0305c053b79740b4e567e26457dd32c289f6ef41f60"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "reasons": [
+        "Incremental scenario dependency snapshots/edit scripts are not implemented"
+      ],
+      "source_suite": "upstream-full36",
+      "suite_case_id": "incremental_classpath_snapshot"
+    },
+    {
+      "id": "value-classes/compile/official",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "compile/official"
+    },
+    {
+      "id": "value-classes/compile/candidate",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "compile/candidate"
+    },
+    {
+      "id": "value-classes/runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 139,
+      "output": "OK 139",
+      "source_suite": "value-classes",
+      "suite_case_id": "runtime/official"
+    },
+    {
+      "id": "value-classes/runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 139,
+      "output": "OK 139",
+      "source_suite": "value-classes",
+      "suite_case_id": "runtime/candidate"
+    },
+    {
+      "id": "value-classes/fixed_caller_integrity",
+      "outcome": "pass",
+      "class_hashes": {
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/java/Check.class": "1a79e5bcc54f99ec94ee592b6e2dc8aab35400231171875607ed80bbad7a6fef"
+      },
+      "source_suite": "value-classes",
+      "suite_case_id": "fixed_caller_integrity"
+    },
+    {
+      "id": "value-classes/metadata",
+      "outcome": "pass",
+      "owners": [
+        "valuecases.Id",
+        "valuecases.Wide",
+        "valuecases.Text",
+        "valuecases.MaybeText",
+        "valuecases.Tracked",
+        "valuecases.Secret"
+      ],
+      "snapshot": "valuecases.Id FLAGS 8199 PROPERTY raw\nvaluecases.Id CARRIER kotlin/Int NULLABLE false\nvaluecases.Id CONSTRUCTOR constructor-impl(I)I\nvaluecases.Wide FLAGS 8199 PROPERTY raw\nvaluecases.Wide CARRIER kotlin/Long NULLABLE false\nvaluecases.Wide CONSTRUCTOR constructor-impl(J)J\nvaluecases.Text FLAGS 8199 PROPERTY raw\nvaluecases.Text CARRIER kotlin/String NULLABLE false\nvaluecases.Text CONSTRUCTOR constructor-impl(Ljava/lang/String;)Ljava/lang/String;\nvaluecases.MaybeText FLAGS 8199 PROPERTY raw\nvaluecases.MaybeText CARRIER kotlin/String NULLABLE true\nvaluecases.MaybeText CONSTRUCTOR constructor-impl(Ljava/lang/String;)Ljava/lang/String;\nvaluecases.Tracked FLAGS 8199 PROPERTY raw\nvaluecases.Tracked CARRIER kotlin/Int NULLABLE false\nvaluecases.Tracked CONSTRUCTOR constructor-impl(I)I\nvaluecases.Secret FLAGS 8199 PROPERTY raw\nvaluecases.Secret CARRIER kotlin/Int NULLABLE false\nvaluecases.Secret CONSTRUCTOR constructor-impl(I)I",
+      "source_suite": "value-classes",
+      "suite_case_id": "metadata"
+    },
+    {
+      "id": "value-classes/abi",
+      "outcome": "pass",
+      "owners": [
+        "valuecases.Id",
+        "valuecases.Wide",
+        "valuecases.Text",
+        "valuecases.MaybeText",
+        "valuecases.Tracked",
+        "valuecases.Secret",
+        "valuecases.Holder",
+        "valuecases.Pair",
+        "valuecases.Mixed",
+        "valuecases.ValuesKt"
+      ],
+      "snapshot": "valuecases.Holder CLASS 17\nvaluecases.Holder CTOR (I)V 2 [int]\nvaluecases.Holder CTOR (ILkotlin/jvm/internal/DefaultConstructorMarker;)V 4097 [int, class kotlin.jvm.internal.DefaultConstructorMarker]\nvaluecases.Holder FIELD value I 18 int\nvaluecases.Holder METHOD capture()Lkotlin/jvm/functions/Function0; 17 kotlin.jvm.functions.Function0<valuecases.Id> []\nvaluecases.Holder METHOD getValue-zP0CK5Y()I 17 int []\nvaluecases.Id CLASS 17\nvaluecases.Id FIELD raw I 18 int\nvaluecases.Id METHOD add-BskOqUQ(II)I 25 int [int, int]\nvaluecases.Id METHOD box-impl(I)Lvaluecases/Id; 4121 valuecases.Id [int]\nvaluecases.Id METHOD constructor-impl(I)I 9 int [int]\nvaluecases.Id METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Id METHOD equals-impl(ILjava/lang/Object;)Z 9 boolean [int, class java.lang.Object]\nvaluecases.Id METHOD equals-impl0(II)Z 25 boolean [int, int]\nvaluecases.Id METHOD format-impl(ILjava/util/List;)Ljava/lang/String; 25 java.lang.String [int, java.util.List<java.lang.String>]\nvaluecases.Id METHOD getRaw()I 17 int []\nvaluecases.Id METHOD hashCode()I 1 int []\nvaluecases.Id METHOD hashCode-impl(I)I 9 int [int]\nvaluecases.Id METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Id METHOD toString-impl(I)Ljava/lang/String; 9 java.lang.String [int]\nvaluecases.Id METHOD unbox-impl()I 4113 int []\nvaluecases.MaybeText CLASS 17\nvaluecases.MaybeText FIELD raw Ljava/lang/String; 18 java.lang.String\nvaluecases.MaybeText METHOD box-impl(Ljava/lang/String;)Lvaluecases/MaybeText; 4121 valuecases.MaybeText [class java.lang.String]\nvaluecases.MaybeText METHOD constructor-impl(Ljava/lang/String;)Ljava/lang/String; 9 java.lang.String [class java.lang.String]\nvaluecases.MaybeText METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.MaybeText METHOD equals-impl(Ljava/lang/String;Ljava/lang/Object;)Z 9 boolean [class java.lang.String, class java.lang.Object]\nvaluecases.MaybeText METHOD equals-impl0(Ljava/lang/String;Ljava/lang/String;)Z 25 boolean [class java.lang.String, class java.lang.String]\nvaluecases.MaybeText METHOD getRaw()Ljava/lang/String; 17 java.lang.String []\nvaluecases.MaybeText METHOD hashCode()I 1 int []\nvaluecases.MaybeText METHOD hashCode-impl(Ljava/lang/String;)I 9 int [class java.lang.String]\nvaluecases.MaybeText METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.MaybeText METHOD toString-impl(Ljava/lang/String;)Ljava/lang/String; 9 java.lang.String [class java.lang.String]\nvaluecases.MaybeText METHOD unbox-impl()Ljava/lang/String; 4113 java.lang.String []\nvaluecases.Mixed CLASS 17\nvaluecases.Mixed CTOR ()V 1 []\nvaluecases.Mixed METHOD keep-l_SpL-w(Ljava/util/List;Lvaluecases/Id;)Lvaluecases/Id; 17 valuecases.Id [java.util.List<java.lang.String>, class valuecases.Id]\nvaluecases.Pair CLASS 17\nvaluecases.Pair CTOR (IJLjava/lang/String;)V 2 [int, long, class java.lang.String]\nvaluecases.Pair CTOR (IJLjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V 4097 [int, long, class java.lang.String, class kotlin.jvm.internal.DefaultConstructorMarker]\nvaluecases.Pair FIELD id I 18 int\nvaluecases.Pair FIELD text Ljava/lang/String; 18 java.lang.String\nvaluecases.Pair FIELD wide J 18 long\nvaluecases.Pair METHOD component1-zP0CK5Y()I 17 int []\nvaluecases.Pair METHOD component2-xvjNKjo()J 17 long []\nvaluecases.Pair METHOD component3-dc_CzQI()Ljava/lang/String; 17 java.lang.String []\nvaluecases.Pair METHOD copy-hN-PzLM$default(Lvaluecases/Pair;IJLjava/lang/String;ILjava/lang/Object;)Lvaluecases/Pair; 4105 valuecases.Pair [class valuecases.Pair, int, long, class java.lang.String, int, class java.lang.Object]\nvaluecases.Pair METHOD copy-hN-PzLM(IJLjava/lang/String;)Lvaluecases/Pair; 17 valuecases.Pair [int, long, class java.lang.String]\nvaluecases.Pair METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Pair METHOD getId-zP0CK5Y()I 17 int []\nvaluecases.Pair METHOD getText-dc_CzQI()Ljava/lang/String; 17 java.lang.String []\nvaluecases.Pair METHOD getWide-xvjNKjo()J 17 long []\nvaluecases.Pair METHOD hashCode()I 1 int []\nvaluecases.Pair METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Secret CLASS 17\nvaluecases.Secret FIELD raw I 18 int\nvaluecases.Secret METHOD box-impl(I)Lvaluecases/Secret; 4121 valuecases.Secret [int]\nvaluecases.Secret METHOD constructor-impl(I)I 9 int [int]\nvaluecases.Secret METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Secret METHOD equals-impl(ILjava/lang/Object;)Z 9 boolean [int, class java.lang.Object]\nvaluecases.Secret METHOD equals-impl0(II)Z 25 boolean [int, int]\nvaluecases.Secret METHOD hashCode()I 1 int []\nvaluecases.Secret METHOD hashCode-impl(I)I 9 int [int]\nvaluecases.Secret METHOD read-impl(I)I 25 int [int]\nvaluecases.Secret METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Secret METHOD toString-impl(I)Ljava/lang/String; 9 java.lang.String [int]\nvaluecases.Secret METHOD unbox-impl()I 4113 int []\nvaluecases.Text CLASS 17\nvaluecases.Text FIELD raw Ljava/lang/String; 18 java.lang.String\nvaluecases.Text METHOD box-impl(Ljava/lang/String;)Lvaluecases/Text; 4121 valuecases.Text [class java.lang.String]\nvaluecases.Text METHOD constructor-impl(Ljava/lang/String;)Ljava/lang/String; 9 java.lang.String [class java.lang.String]\nvaluecases.Text METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Text METHOD equals-impl(Ljava/lang/String;Ljava/lang/Object;)Z 9 boolean [class java.lang.String, class java.lang.Object]\nvaluecases.Text METHOD equals-impl0(Ljava/lang/String;Ljava/lang/String;)Z 25 boolean [class java.lang.String, class java.lang.String]\nvaluecases.Text METHOD getRaw()Ljava/lang/String; 17 java.lang.String []\nvaluecases.Text METHOD hashCode()I 1 int []\nvaluecases.Text METHOD hashCode-impl(Ljava/lang/String;)I 9 int [class java.lang.String]\nvaluecases.Text METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Text METHOD toString-impl(Ljava/lang/String;)Ljava/lang/String; 9 java.lang.String [class java.lang.String]\nvaluecases.Text METHOD unbox-impl()Ljava/lang/String; 4113 java.lang.String []\nvaluecases.Tracked CLASS 17\nvaluecases.Tracked FIELD raw I 18 int\nvaluecases.Tracked METHOD box-impl(I)Lvaluecases/Tracked; 4121 valuecases.Tracked [int]\nvaluecases.Tracked METHOD constructor-impl(I)I 9 int [int]\nvaluecases.Tracked METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Tracked METHOD equals-impl(ILjava/lang/Object;)Z 9 boolean [int, class java.lang.Object]\nvaluecases.Tracked METHOD equals-impl0(II)Z 25 boolean [int, int]\nvaluecases.Tracked METHOD getRaw()I 17 int []\nvaluecases.Tracked METHOD hashCode()I 1 int []\nvaluecases.Tracked METHOD hashCode-impl(I)I 9 int [int]\nvaluecases.Tracked METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Tracked METHOD toString-impl(I)Ljava/lang/String; 9 java.lang.String [int]\nvaluecases.Tracked METHOD unbox-impl()I 4113 int []\nvaluecases.ValuesKt CLASS 17\nvaluecases.ValuesKt METHOD asAny-iRHAk-E(I)Ljava/lang/Object; 25 java.lang.Object [int]\nvaluecases.ValuesKt METHOD asShow-ihQjY_g(J)Lvaluecases/Show; 25 valuecases.Show [long]\nvaluecases.ValuesKt METHOD boxedNullMaybe()Lvaluecases/MaybeText; 25 valuecases.MaybeText []\nvaluecases.ValuesKt METHOD capture-iRHAk-E(I)Lkotlin/jvm/functions/Function0; 25 kotlin.jvm.functions.Function0<valuecases.Id> [int]\nvaluecases.ValuesKt METHOD createId(I)I 25 int [int]\nvaluecases.ValuesKt METHOD createMaybeText(Ljava/lang/String;)Ljava/lang/String; 25 java.lang.String [class java.lang.String]\nvaluecases.ValuesKt METHOD createText(Ljava/lang/String;)Ljava/lang/String; 25 java.lang.String [class java.lang.String]\nvaluecases.ValuesKt METHOD createWide(J)J 25 long [long]\nvaluecases.ValuesKt METHOD fromAny(Ljava/lang/Object;)I 25 int [class java.lang.Object]\nvaluecases.ValuesKt METHOD fromShow(Lvaluecases/Show;)J 25 long [interface valuecases.Show]\nvaluecases.ValuesKt METHOD generic-iRHAk-E(I)Lvaluecases/Box; 25 valuecases.Box<valuecases.Id> [int]\nvaluecases.ValuesKt METHOD list-iRHAk-E(I)Ljava/util/List; 25 java.util.List<valuecases.Id> [int]\nvaluecases.ValuesKt METHOD mixed-CMbc2x0(Ljava/util/List;Lvaluecases/Id;)Ljava/util/List; 25 java.util.List<valuecases.Id> [java.util.List<java.lang.String>, class valuecases.Id]\nvaluecases.ValuesKt METHOD nullMaybe()Lvaluecases/MaybeText; 25 valuecases.MaybeText []\nvaluecases.ValuesKt METHOD nullableId-cf9GXdU(Lvaluecases/Id;)Lvaluecases/Id; 25 valuecases.Id [class valuecases.Id]\nvaluecases.ValuesKt METHOD nullableMaybeText-RU6d98Q(Lvaluecases/MaybeText;)Lvaluecases/MaybeText; 25 valuecases.MaybeText [class valuecases.MaybeText]\nvaluecases.ValuesKt METHOD nullableText-RIVotzo(Ljava/lang/String;)Ljava/lang/String; 25 java.lang.String [class java.lang.String]\nvaluecases.ValuesKt METHOD tracked(I)I 25 int [int]\nvaluecases.Wide CLASS 17\nvaluecases.Wide FIELD raw J 18 long\nvaluecases.Wide INTERFACE valuecases.Show\nvaluecases.Wide METHOD box-impl(J)Lvaluecases/Wide; 4121 valuecases.Wide [long]\nvaluecases.Wide METHOD constructor-impl(J)J 9 long [long]\nvaluecases.Wide METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Wide METHOD equals-impl(JLjava/lang/Object;)Z 9 boolean [long, class java.lang.Object]\nvaluecases.Wide METHOD equals-impl0(JJ)Z 25 boolean [long, long]\nvaluecases.Wide METHOD getRaw()J 17 long []\nvaluecases.Wide METHOD hashCode()I 1 int []\nvaluecases.Wide METHOD hashCode-impl(J)I 9 int [long]\nvaluecases.Wide METHOD show()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Wide METHOD show-impl(J)Ljava/lang/String; 9 java.lang.String [long]\nvaluecases.Wide METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Wide METHOD toString-impl(J)Ljava/lang/String; 9 java.lang.String [long]\nvaluecases.Wide METHOD unbox-impl()J 4113 long []",
+      "source_suite": "value-classes",
+      "suite_case_id": "abi"
+    },
+    {
+      "id": "value-classes/kotlin_consumer/official/official",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "kotlin_consumer/official/official"
+    },
+    {
+      "id": "value-classes/kotlin_consumer/official/candidate",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "kotlin_consumer/official/candidate"
+    },
+    {
+      "id": "value-classes/kotlin_consumer/candidate/official",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "kotlin_consumer/candidate/official"
+    },
+    {
+      "id": "value-classes/kotlin_consumer/candidate/candidate",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "kotlin_consumer/candidate/candidate"
+    },
+    {
+      "id": "value-classes/imported_compile/official",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "imported_compile/official"
+    },
+    {
+      "id": "value-classes/imported_compile/candidate",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "imported_compile/candidate"
+    },
+    {
+      "id": "value-classes/imported_runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 5,
+      "source_suite": "value-classes",
+      "suite_case_id": "imported_runtime/official"
+    },
+    {
+      "id": "value-classes/imported_runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 5,
+      "source_suite": "value-classes",
+      "suite_case_id": "imported_runtime/candidate"
+    },
+    {
+      "id": "value-classes/unchanged_app_compile/official",
+      "outcome": "pass",
+      "sources": [
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt"
+      ],
+      "source_suite": "value-classes",
+      "suite_case_id": "unchanged_app_compile/official"
+    },
+    {
+      "id": "value-classes/unchanged_app_compile/candidate",
+      "outcome": "pass",
+      "sources": [
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt"
+      ],
+      "source_suite": "value-classes",
+      "suite_case_id": "unchanged_app_compile/candidate"
+    },
+    {
+      "id": "value-classes/unchanged_app_consumer/official/official",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "unchanged_app_consumer/official/official"
+    },
+    {
+      "id": "value-classes/unchanged_app_consumer/official/candidate",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "unchanged_app_consumer/official/candidate"
+    },
+    {
+      "id": "value-classes/unchanged_app_consumer/candidate/official",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "unchanged_app_consumer/candidate/official"
+    },
+    {
+      "id": "value-classes/unchanged_app_consumer/candidate/candidate",
+      "outcome": "pass",
+      "source_suite": "value-classes",
+      "suite_case_id": "unchanged_app_consumer/candidate/candidate"
+    },
+    {
+      "id": "value-classes/direct_context/object/official",
+      "outcome": "pass",
+      "source_sha256": "efde8fc2e6902b0b12ca5743c0795213cdea67973e255ce384b0e5a89f3946fb",
+      "expected_result": 7,
+      "fixed_java_caller_sha256": "8ce1bd7631d1086fa99bd81a297f019332fd874954c5d012cac838116f8ca90b",
+      "source_suite": "value-classes",
+      "suite_case_id": "direct_context/object/official"
+    },
+    {
+      "id": "value-classes/direct_context/object/candidate",
+      "outcome": "pass",
+      "source_sha256": "efde8fc2e6902b0b12ca5743c0795213cdea67973e255ce384b0e5a89f3946fb",
+      "expected_result": 7,
+      "fixed_java_caller_sha256": "8ce1bd7631d1086fa99bd81a297f019332fd874954c5d012cac838116f8ca90b",
+      "source_suite": "value-classes",
+      "suite_case_id": "direct_context/object/candidate"
+    },
+    {
+      "id": "value-classes/direct_context/companion/official",
+      "outcome": "pass",
+      "source_sha256": "3761d0c7e67f093f6cbac73df7abc8fa45ecd6438c31ee9f386530b4ebe5c3f9",
+      "expected_result": 11,
+      "fixed_java_caller_sha256": "6effa1dc9e0d4dd0480d7743891d82bf79d074dc2dee8568186208ffb066f7c1",
+      "source_suite": "value-classes",
+      "suite_case_id": "direct_context/companion/official"
+    },
+    {
+      "id": "value-classes/direct_context/companion/candidate",
+      "outcome": "pass",
+      "source_sha256": "3761d0c7e67f093f6cbac73df7abc8fa45ecd6438c31ee9f386530b4ebe5c3f9",
+      "expected_result": 11,
+      "fixed_java_caller_sha256": "6effa1dc9e0d4dd0480d7743891d82bf79d074dc2dee8568186208ffb066f7c1",
+      "source_suite": "value-classes",
+      "suite_case_id": "direct_context/companion/candidate"
+    },
+    {
+      "id": "value-classes/direct_context/enum_method/official",
+      "outcome": "pass",
+      "source_sha256": "227b3cc79c7d26d5e4b88790d5ad48ec9cd358b47bedec919e067496da1ad707",
+      "expected_result": 13,
+      "fixed_java_caller_sha256": "f8594640acc834780e690f60dd0b45f6d5a42fa43402fc45f20964f986138443",
+      "source_suite": "value-classes",
+      "suite_case_id": "direct_context/enum_method/official"
+    },
+    {
+      "id": "value-classes/direct_context/enum_method/candidate",
+      "outcome": "pass",
+      "source_sha256": "227b3cc79c7d26d5e4b88790d5ad48ec9cd358b47bedec919e067496da1ad707",
+      "expected_result": 13,
+      "fixed_java_caller_sha256": "f8594640acc834780e690f60dd0b45f6d5a42fa43402fc45f20964f986138443",
+      "source_suite": "value-classes",
+      "suite_case_id": "direct_context/enum_method/candidate"
+    },
+    {
+      "id": "value-classes/direct_context/enum_initializer/official",
+      "outcome": "pass",
+      "source_sha256": "a5d6af5eb2593fa5ff3fff39b564da529fe2406e7be7b39c7caf4bd0bc110550",
+      "expected_result": 17,
+      "fixed_java_caller_sha256": "60834fbb2314becfbd40952bcdc5eae544f35f9c7f51e46e56ab4cad6074804a",
+      "source_suite": "value-classes",
+      "suite_case_id": "direct_context/enum_initializer/official"
+    },
+    {
+      "id": "value-classes/direct_context/enum_initializer/candidate",
+      "outcome": "pass",
+      "source_sha256": "a5d6af5eb2593fa5ff3fff39b564da529fe2406e7be7b39c7caf4bd0bc110550",
+      "expected_result": 17,
+      "fixed_java_caller_sha256": "60834fbb2314becfbd40952bcdc5eae544f35f9c7f51e46e56ab4cad6074804a",
+      "source_suite": "value-classes",
+      "suite_case_id": "direct_context/enum_initializer/candidate"
+    },
+    {
+      "id": "value-classes/direct_context/interface_default/official",
+      "outcome": "pass",
+      "source_sha256": "2cffe78ec499bedf43b37fad90bf7fb9152610dd4f362a146065c8262488efa2",
+      "expected_result": 19,
+      "fixed_java_caller_sha256": "1dfcff88b13e5726820609c9c19b4030eca507c8bb54205636dee204accf2231",
+      "source_suite": "value-classes",
+      "suite_case_id": "direct_context/interface_default/official"
+    },
+    {
+      "id": "value-classes/direct_context/interface_default/candidate",
+      "outcome": "pass",
+      "source_sha256": "2cffe78ec499bedf43b37fad90bf7fb9152610dd4f362a146065c8262488efa2",
+      "expected_result": 19,
+      "fixed_java_caller_sha256": "1dfcff88b13e5726820609c9c19b4030eca507c8bb54205636dee204accf2231",
+      "source_suite": "value-classes",
+      "suite_case_id": "direct_context/interface_default/candidate"
+    },
+    {
+      "id": "value-classes/boundary/object_physical_call",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_OBJECT_MEMBER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/object_physical_call.kt",
+      "source_sha256": "0bc9876520682f460763074c024b412103e75fb0e691d010ca67609ef596eea6",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/object_physical_call"
+    },
+    {
+      "id": "value-classes/boundary/object_physical_initializer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_OBJECT_MEMBER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/object_physical_initializer.kt",
+      "source_sha256": "43a59e669e52ebdd8dd310612f977805505879ac699510897dc1e410da184818",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/object_physical_initializer"
+    },
+    {
+      "id": "value-classes/boundary/companion_physical_call",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_COMPANION_MEMBER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/companion_physical_call.kt",
+      "source_sha256": "be9647d9f9c5a92f8807491c57bfb65440fbe11e0286b67ba503753a3398c974",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/companion_physical_call"
+    },
+    {
+      "id": "value-classes/boundary/companion_physical_initializer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_COMPANION_MEMBER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/companion_physical_initializer.kt",
+      "source_sha256": "2fe8014981164e9c465031343b805448ae8204f7f878417dd551e162958c9fa2",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/companion_physical_initializer"
+    },
+    {
+      "id": "value-classes/boundary/interface_physical_call",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/interface_physical_call.kt",
+      "source_sha256": "5143c7e95a8caa86ec9feb8d1440ca249cb7d960bd0107cdffbfd94d1759b4fa",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/interface_physical_call"
+    },
+    {
+      "id": "value-classes/boundary/interface_companion_physical_initializer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/interface_companion_physical_initializer.kt",
+      "source_sha256": "db7ed298b1b347a13c03e235c9a3f1c34ff1d9c2f8c6f65568c908e604bc1895",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/interface_companion_physical_initializer"
+    },
+    {
+      "id": "value-classes/boundary/enum_physical_call",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_physical_call.kt",
+      "source_sha256": "19a02771656af5a88c983e5bc08ece48cd781c5ed5a6d0cdd8fc933f36a2841e",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/enum_physical_call"
+    },
+    {
+      "id": "value-classes/boundary/enum_physical_initializer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_physical_initializer.kt",
+      "source_sha256": "0e865e48be3d11ed01834282d98bfc76e9344771945c95475267fb8b9b7fe951",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/enum_physical_initializer"
+    },
+    {
+      "id": "value-classes/boundary/enum_physical_default",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_physical_default.kt",
+      "source_sha256": "dddeb0f4acc7fca8589d19cbcfb1e07177bb56efb834a8ae79b02e3d4adf963e",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/enum_physical_default"
+    },
+    {
+      "id": "value-classes/boundary/enum_entry_physical_call",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_entry_physical_call.kt",
+      "source_sha256": "d73c27c30772b162853264b2cbb852ec13ef77d69a0ef55d74e3f61d353829e7",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/enum_entry_physical_call"
+    },
+    {
+      "id": "value-classes/boundary/enum_companion_physical_closure",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_companion_physical_closure.kt",
+      "source_sha256": "dba86ea25d19ace1d3f76bb8cb2c214b599714391ded8833d649f1822672adef",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/enum_companion_physical_closure"
+    },
+    {
+      "id": "value-classes/boundary/inner_value_modifier",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_MODIFIERS_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/inner_value_modifier.kt",
+      "source_sha256": "9ee6640891bff1e0aa60ec7dc8fe14035516295071aea34594f663ff1fcf42cf",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/inner_value_modifier"
+    },
+    {
+      "id": "value-classes/boundary/inner_consumer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CONSUMER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/inner_consumer.kt",
+      "source_sha256": "9e583ec733757308e565638366d37eb11fe5274176fb86bc47dc3dd8accc7015",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/inner_consumer"
+    },
+    {
+      "id": "value-classes/boundary/enum_consumer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CONSUMER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_consumer.kt",
+      "source_sha256": "b6bec7b05a682b0f7afd202a8c9e027e326e9bee1c1ab26fb7a3b289b29f1985",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/enum_consumer"
+    },
+    {
+      "id": "value-classes/boundary/missing_marker",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_JVM_INLINE_REQUIRED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/missing_marker.kt",
+      "source_sha256": "77f54114cfed5ef11b439af2cdbac15dd8e511adc0196b416a57a35af83b4e9d",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/missing_marker"
+    },
+    {
+      "id": "value-classes/boundary/marker_on_ordinary",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_JVM_INLINE_PLACEMENT_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/marker_on_ordinary.kt",
+      "source_sha256": "141631b0eb22fedb7d5bf8d036a3a62927926b0e3643120c165974e28a2ab0d4",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/marker_on_ordinary"
+    },
+    {
+      "id": "value-classes/boundary/shadow_marker",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_JVM_INLINE_REQUIRED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/shadow_marker.kt",
+      "source_sha256": "a72df47c5d0bb695976c0719ab2713ebc614c95cd229fa6d93f8e7d9fa76c537",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/shadow_marker"
+    },
+    {
+      "id": "value-classes/boundary/mutable_carrier",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_CARRIER_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/mutable_carrier.kt",
+      "source_sha256": "4970a333967560de82e7e6f7b126a15cb7719d2fdcba2ed594bd95aa7e880bbc",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/mutable_carrier"
+    },
+    {
+      "id": "value-classes/boundary/plain_parameter",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_CARRIER_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/plain_parameter.kt",
+      "source_sha256": "3b05d5e8ea6170c9b6c6ad55690d7a13fee2114efbff09454d49a3f15c93df11",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/plain_parameter"
+    },
+    {
+      "id": "value-classes/boundary/two_carriers",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_CARRIER_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/two_carriers.kt",
+      "source_sha256": "33d60870224ace75d026aedaef9df20322427955fdfc34b41bda7a839c444a1f",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/two_carriers"
+    },
+    {
+      "id": "value-classes/boundary/data_modifier",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_MODIFIERS_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/data_modifier.kt",
+      "source_sha256": "ef3d30ca88cec5a047add36da765cfd21092b53f40bd6fe8f8d78f41956398e6",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/data_modifier"
+    },
+    {
+      "id": "value-classes/boundary/backing_field",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_STORAGE_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/backing_field.kt",
+      "source_sha256": "f93ae1dbbbace767bec66bd4ec132b07187cf9cf32a54b7fe1b266412f225f42",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/backing_field"
+    },
+    {
+      "id": "value-classes/boundary/reserved_hash",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_RESERVED_METHOD",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/reserved_hash.kt",
+      "source_sha256": "b3696dc7748dd0a2030c3a597c565b2dd30e07f2c90ab968d3cb8fa7aad4e39b",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/reserved_hash"
+    },
+    {
+      "id": "value-classes/boundary/identity",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_IDENTITY_EQUALITY_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/identity.kt",
+      "source_sha256": "cf80c277669dcc9278c2ebb830d75ad280564370ce516c09ee581d640d34597b",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/identity"
+    },
+    {
+      "id": "value-classes/boundary/generic_carrier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/generic_carrier.kt",
+      "source_sha256": "3f6d547f097edd0808899d355d51ad459b96b4a185b46cecb2e4580c2f809843",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/generic_carrier"
+    },
+    {
+      "id": "value-classes/boundary/default_carrier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/default_carrier.kt",
+      "source_sha256": "e345f89378bbcc5b547230c2478ed8c14ede6ef1a1523cf942c2d096f1b733c1",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/default_carrier"
+    },
+    {
+      "id": "value-classes/boundary/secondary",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/secondary.kt",
+      "source_sha256": "3e2592925166dce51abb4d6e741ecaaca9a524354a767709f4a8b51f0f6535ef",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/secondary"
+    },
+    {
+      "id": "value-classes/boundary/companion",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/companion.kt",
+      "source_sha256": "5579351142a318bee7bf56ddc122ba703515903805fd3188086927099981491a",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/companion"
+    },
+    {
+      "id": "value-classes/boundary/array_carrier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CARRIER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/array_carrier.kt",
+      "source_sha256": "961e9aede970f35c570a52edb5de912b188030f7e5c518cbe0a7f7880c876c87",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/array_carrier"
+    },
+    {
+      "id": "value-classes/boundary/float_carrier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CARRIER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/float_carrier.kt",
+      "source_sha256": "420244b3616fcede059118fc538a47ee65a57881cd854a686fd0a84f98bf9d30",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/float_carrier"
+    },
+    {
+      "id": "value-classes/boundary/nullable_int_carrier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CARRIER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/nullable_int_carrier.kt",
+      "source_sha256": "af767c952b39279bfbc4d9685c1c4dba58f37c56ae887c843a9237cd9218dea2",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/nullable_int_carrier"
+    },
+    {
+      "id": "value-classes/boundary/private_constructor",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/private_constructor.kt",
+      "source_sha256": "bac810d1d2c84e41dc5c56fcc002ae31f9e469ee6411b28a7a318cef3b60da87",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/private_constructor"
+    },
+    {
+      "id": "value-classes/boundary/inline_member",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/inline_member.kt",
+      "source_sha256": "9044fec693655f382b75ce4777067f946846cee5454b416e419a6a360664e5f3",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/inline_member"
+    },
+    {
+      "id": "value-classes/boundary/generic_interface",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_GENERIC_SUPERTYPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/generic_interface.kt",
+      "source_sha256": "8f18715f9b852e9ac9b0b56d8df1ed1c5faf3c5e638fca0913f87004d9058686",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/generic_interface"
+    },
+    {
+      "id": "value-classes/boundary/interface_signature",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/interface_signature.kt",
+      "source_sha256": "30ae2011db419beaf5fa2e10166d3577c202503028d0444fedda62135ec2f7ef",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/interface_signature"
+    },
+    {
+      "id": "value-classes/boundary/object_signature",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_OBJECT_MEMBER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/object_signature.kt",
+      "source_sha256": "9f8cda6f57ef61cb611cd5fa4c552ae357e8a4269f013f8cb77845be8eb6ffca",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/object_signature"
+    },
+    {
+      "id": "value-classes/boundary/top_property",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_PACKAGE_PROPERTY_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/top_property.kt",
+      "source_sha256": "61e5d41d4424480c3c6aa475ddf7094583ee281de0818b81b24d55daf652393a",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/top_property"
+    },
+    {
+      "id": "value-classes/boundary/nested_classifier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_NESTED_DECLARATION_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/nested_classifier.kt",
+      "source_sha256": "239b150a4b4fdb9762442f021b0c42182a2846c4fdda3db85e05c5ddec0c0c8a",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/nested_classifier"
+    },
+    {
+      "id": "value-classes/boundary/generic_value_bound",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_GENERIC_BOUND_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/generic_value_bound.kt",
+      "source_sha256": "679a75d4a9241c5ac1c46bfb5ade93453626d29406658a4ad7b98b0f9ebe6121",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/generic_value_bound"
+    },
+    {
+      "id": "value-classes/boundary/consumer_defaults",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CONSUMER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/consumer_defaults.kt",
+      "source_sha256": "c82194fe08b069570d36a0b2f4b61d15c93915635526bfc9bc21e34017c2f218",
+      "source_suite": "value-classes",
+      "suite_case_id": "boundary/consumer_defaults"
+    },
+    {
+      "id": "value-classes/kt54656",
+      "family": "single_field_values",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt54656.kt",
+        "sha256": "44c7e30cc0de52985174775482c02a9b04f68f3f7d8b32a3299ffecbc724bebb"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM_IR",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt54656/sources/main/J.java.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt54656/sources/main/1.kt.source-map.json"
+      ],
+      "reasons": [
+        "Java dependency cannot compile independently; mixed cyclic Java/Kotlin requires adapter support"
+      ],
+      "acceptance_scope": "unchanged_original_assessment",
+      "source_suite": "value-classes",
+      "suite_case_id": "kt54656"
+    },
+    {
+      "id": "value-classes/kt51353",
+      "family": "single_field_values",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51353.kt",
+        "sha256": "24b23272da5159be02fde68e360bf6b2ec8929a88f3cb11fb4117468836d31ed"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51353/sources/main/1.kt.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51353/sources/main/2.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51353/sources/main/1.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_PACKAGE_PROPERTY_UNSUPPORTED",
+          "message": "Top-level value class properties are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51353/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51353.kt",
+            "char_offset": 52,
+            "byte_offset": 52,
+            "line": 4,
+            "column": 1
+          }
+        }
+      ],
+      "acceptance_scope": "unchanged_original_assessment",
+      "source_suite": "value-classes",
+      "suite_case_id": "kt51353"
+    },
+    {
+      "id": "value-classes/kt51672",
+      "family": "single_field_values",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51672.kt",
+        "sha256": "68bd204d03e717b997831b170c36ff646f2b9aef69c326823e01c38c15d1a295"
+      },
+      "modules": [
+        {
+          "name": "lib",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            },
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 3
+            }
+          ]
+        },
+        {
+          "name": "main",
+          "dependencies": [
+            "lib"
+          ],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51672/sources/lib/lib.kt.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51672/sources/main/main.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "lib": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51672/sources/lib/lib.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+          "message": "Source interface value class signatures and physical ABI calls are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51672/sources/lib/lib.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51672.kt",
+            "char_offset": 69,
+            "byte_offset": 69,
+            "line": 5,
+            "column": 1
+          }
+        }
+      ],
+      "acceptance_scope": "unchanged_original_assessment",
+      "source_suite": "value-classes",
+      "suite_case_id": "kt51672"
+    },
+    {
+      "id": "value-classes/kt51254",
+      "family": "single_field_values",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51254.kt",
+        "sha256": "13050932801f9ed3e7200d83de7e99a611a78b3f714c2ed7fa1de667c6b2d067"
+      },
+      "preprocessors": [
+        {
+          "path": "references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/preprocessors/JvmInlineSourceTransformer.kt",
+          "sha256": "4ba19b9c5fc19f22f2d9619d43571455174ebd1d9bce2ec7ca48577d3227d9e3"
+        },
+        {
+          "path": "references/kotlin/compiler/test-infrastructure-utils/testFixtures/org/jetbrains/kotlin/test/utils/TransformersFunctions.kt",
+          "sha256": "c6ceec7e43fdf440a7d81f2e310a8b31b09d25e23705c33d6c87060b7c89cad4"
+        },
+        {
+          "path": "references/kotlin/compiler/test-infrastructure-utils/testFixtures/org/jetbrains/kotlin/test/utils/ReplacingSourceTransformer.kt",
+          "sha256": "173727d11bc3dce72847f427fecd83fa785be45859dfa7e1c86c86dc23e08d36"
+        }
+      ],
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            },
+            {
+              "name": "WORKS_WHEN_VALUE_CLASS",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51254/sources/main/kt51254.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51254/sources/main/kt51254.kt",
+          "offset": 134,
+          "category": "unsupported_language",
+          "code": "SEALED_GENERIC_CLASSIFIER_UNSUPPORTED",
+          "message": "Source generic sealed classifiers are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51254/sources/main/kt51254.kt",
+          "line": 7,
+          "column": 33,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51254.kt",
+            "char_offset": 142,
+            "byte_offset": 142,
+            "line": 7,
+            "column": 33
+          }
+        }
+      ],
+      "acceptance_scope": "unchanged_original_assessment",
+      "source_suite": "value-classes",
+      "suite_case_id": "kt51254"
+    },
+    {
+      "id": "value-classes/boxImplDoesNotExecuteInitBlock",
+      "family": "single_field_values",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInitBlock.kt",
+        "sha256": "f6c25ee8fb9b594a970a01960090681b01dc1749062766f34b4d17d7ec0e9f9c"
+      },
+      "preprocessors": [
+        {
+          "path": "references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/preprocessors/JvmInlineSourceTransformer.kt",
+          "sha256": "4ba19b9c5fc19f22f2d9619d43571455174ebd1d9bce2ec7ca48577d3227d9e3"
+        },
+        {
+          "path": "references/kotlin/compiler/test-infrastructure-utils/testFixtures/org/jetbrains/kotlin/test/utils/TransformersFunctions.kt",
+          "sha256": "c6ceec7e43fdf440a7d81f2e310a8b31b09d25e23705c33d6c87060b7c89cad4"
+        },
+        {
+          "path": "references/kotlin/compiler/test-infrastructure-utils/testFixtures/org/jetbrains/kotlin/test/utils/ReplacingSourceTransformer.kt",
+          "sha256": "173727d11bc3dce72847f427fecd83fa785be45859dfa7e1c86c86dc23e08d36"
+        }
+      ],
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            },
+            {
+              "name": "WORKS_WHEN_VALUE_CLASS",
+              "value": "",
+              "original_line": 2
+            },
+            {
+              "name": "LANGUAGE",
+              "value": "+ValueClasses",
+              "original_line": 3
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/boxImplDoesNotExecuteInitBlock/sources/main/boxImplDoesNotExecuteInitBlock.kt.source-map.json"
+      ],
+      "reasons": [
+        "Candidate CLI cannot match requested language/JVM settings"
+      ],
+      "settings": [
+        {
+          "name": "LANGUAGE",
+          "value": "+ValueClasses",
+          "original_line": 3
+        }
+      ],
+      "acceptance_scope": "unchanged_original_assessment",
+      "source_suite": "value-classes",
+      "suite_case_id": "boxImplDoesNotExecuteInitBlock"
+    },
+    {
+      "id": "suspend-foundation/runtime_delayed",
+      "outcome": "pass",
+      "detail": "Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all",
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "runtime_delayed"
+    },
+    {
+      "id": "suspend-foundation/runtime_scalars",
+      "outcome": "pass",
+      "detail": "Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all",
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "runtime_scalars"
+    },
+    {
+      "id": "suspend-foundation/runtime_failures",
+      "outcome": "pass",
+      "detail": "Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all",
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "runtime_failures"
+    },
+    {
+      "id": "suspend-foundation/runtime_private",
+      "outcome": "pass",
+      "detail": "Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all",
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "runtime_private"
+    },
+    {
+      "id": "suspend-foundation/runtime_boxing",
+      "outcome": "pass",
+      "detail": "Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all",
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "runtime_boxing"
+    },
+    {
+      "id": "suspend-foundation/kotlin_consumer_official",
+      "outcome": "pass",
+      "detail": "Official Kotlin consumer compiles against official, suspends twice using standard suspendCoroutine, then resumes and completes on both outputs",
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "kotlin_consumer_official"
+    },
+    {
+      "id": "suspend-foundation/kotlin_consumer_candidate",
+      "outcome": "pass",
+      "detail": "Official Kotlin consumer compiles against candidate, suspends twice using standard suspendCoroutine, then resumes and completes on both outputs",
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "kotlin_consumer_candidate"
+    },
+    {
+      "id": "suspend-foundation/logical_metadata",
+      "outcome": "pass",
+      "detail": "Function visibility/suspend flags, logical return and parameter types, names, nested suspend type flags/projections/nullability and resolved JVM signatures match pinned Kotlin metadata",
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "logical_metadata"
+    },
+    {
+      "id": "suspend-foundation/public_jvm_abi",
+      "outcome": "pass",
+      "detail": "Public Kotlin declarations have exact JVM descriptors and generic signatures, including Continuation/Object and runtime FunctionN continuation parameters; generated synthetic bridges/frames excluded explicitly",
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "public_jvm_abi"
+    },
+    {
+      "id": "suspend-foundation/invalid_0",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Invalid0.kt",
+            "offset": 0,
+            "category": "invalid_kotlin",
+            "code": "SUSPEND_CALL_CONTEXT_INVALID",
+            "message": "Suspend calls require a suspend function context",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Invalid0.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "invalid_0"
+    },
+    {
+      "id": "suspend-foundation/invalid_1",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Invalid1.kt",
+            "offset": 54,
+            "category": "invalid_kotlin",
+            "code": "TYPE_MISMATCH",
+            "message": "Type mismatch: expected String, found Int",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Invalid1.kt",
+            "line": 1,
+            "column": 55
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "invalid_1"
+    },
+    {
+      "id": "suspend-foundation/invalid_2",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Invalid2.kt",
+            "offset": 59,
+            "category": "invalid_kotlin",
+            "code": "TYPE_MISMATCH",
+            "message": "Type mismatch: expected Int, found String",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Invalid2.kt",
+            "line": 1,
+            "column": 60
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "invalid_2"
+    },
+    {
+      "id": "suspend-foundation/invalid_3",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Invalid3.kt",
+            "offset": 0,
+            "category": "invalid_kotlin",
+            "code": "SUSPEND_CALL_CONTEXT_INVALID",
+            "message": "Suspend calls require a suspend function context",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Invalid3.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "invalid_3"
+    },
+    {
+      "id": "suspend-foundation/invalid_4",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Invalid4.kt",
+            "offset": 0,
+            "category": "invalid_kotlin",
+            "code": "SUSPEND_CALL_CONTEXT_INVALID",
+            "message": "Suspend calls require a suspend function context",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Invalid4.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "invalid_4"
+    },
+    {
+      "id": "suspend-foundation/unsupported_0",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported0.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+            "message": "Suspension in nested control flow, lambdas, or expression trees is unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported0.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_0"
+    },
+    {
+      "id": "suspend-foundation/unsupported_1",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported1.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+            "message": "Suspension in nested control flow, lambdas, or expression trees is unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported1.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_1"
+    },
+    {
+      "id": "suspend-foundation/unsupported_2",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported2.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+            "message": "Suspension in nested control flow, lambdas, or expression trees is unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported2.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_2"
+    },
+    {
+      "id": "suspend-foundation/unsupported_3",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported3.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_DECLARATION_SHAPE_UNSUPPORTED",
+            "message": "Generic, extension, inline, vararg, and defaulted suspend declarations are unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported3.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_3"
+    },
+    {
+      "id": "suspend-foundation/unsupported_4",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported4.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_DECLARATION_SHAPE_UNSUPPORTED",
+            "message": "Generic, extension, inline, vararg, and defaulted suspend declarations are unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported4.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_4"
+    },
+    {
+      "id": "suspend-foundation/unsupported_5",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported5.kt",
+            "offset": 15,
+            "category": "unsupported_language",
+            "code": "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
+            "message": "Source suspend member declarations are unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported5.kt",
+            "line": 1,
+            "column": 16
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_5"
+    },
+    {
+      "id": "suspend-foundation/unsupported_6",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported6.kt",
+            "offset": 92,
+            "category": "unsupported_language",
+            "code": "SUSPEND_LAMBDA_UNSUPPORTED",
+            "message": "Source suspend lambdas and references are unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported6.kt",
+            "line": 1,
+            "column": 93
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_6"
+    },
+    {
+      "id": "suspend-foundation/unsupported_7",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported7.kt",
+            "offset": 75,
+            "category": "unsupported_language",
+            "code": "SUSPEND_REFERENCE_UNSUPPORTED",
+            "message": "Source suspend callable references are unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported7.kt",
+            "line": 2,
+            "column": 39
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_7"
+    },
+    {
+      "id": "suspend-foundation/unsupported_8",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported8.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+            "message": "Suspension in nested control flow, lambdas, or expression trees is unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported8.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_8"
+    },
+    {
+      "id": "suspend-foundation/unsupported_9",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported9.kt",
+            "offset": 50,
+            "category": "unsupported_language",
+            "code": "SUSPEND_FUNCTION_TYPE_SHAPE_UNSUPPORTED",
+            "message": "Suspend function types require at most 21 ordinary parameters",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported9.kt",
+            "line": 1,
+            "column": 51
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_9"
+    },
+    {
+      "id": "suspend-foundation/unsupported_10",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported10.kt",
+            "offset": 29,
+            "category": "unsupported_language",
+            "code": "NULLABLE_UNIT_UNSUPPORTED",
+            "message": "Nullable Unit is not supported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported10.kt",
+            "line": 1,
+            "column": 30
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_10"
+    },
+    {
+      "id": "suspend-foundation/unsupported_11",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported11.kt",
+            "offset": 39,
+            "category": "unsupported_language",
+            "code": "SUSPEND_VALUE_CLASS_INTERACTION_UNSUPPORTED",
+            "message": "Value-class types in suspend declarations, callbacks, or saved values are unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported11.kt",
+            "line": 2,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_11"
+    },
+    {
+      "id": "suspend-foundation/unsupported_12",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported12.kt",
+            "offset": 39,
+            "category": "unsupported_language",
+            "code": "SUSPEND_VALUE_CLASS_INTERACTION_UNSUPPORTED",
+            "message": "Value-class types in suspend declarations, callbacks, or saved values are unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported12.kt",
+            "line": 2,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_12"
+    },
+    {
+      "id": "suspend-foundation/unsupported_13",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported13.kt",
+            "offset": 39,
+            "category": "unsupported_language",
+            "code": "SUSPEND_VALUE_CLASS_INTERACTION_UNSUPPORTED",
+            "message": "Value-class types in suspend declarations, callbacks, or saved values are unsupported",
+            "path": "reports/correctness/2026-11-02-resume-final-differential/suspend-foundation/Unsupported13.kt",
+            "line": 2,
+            "column": 1
+          }
+        ]
+      },
+      "source_suite": "suspend-foundation",
+      "suite_case_id": "unsupported_13"
+    }
+  ],
+  "counts": {
+    "pass": 58,
+    "unsupported_language": 56,
+    "correctness_failure": 2,
+    "dependency_failure": 1,
+    "harness_unsupported": 7,
+    "invalid_kotlin": 11,
+    "invalid_rejected": 5
+  },
+  "unaccepted_outcomes": [
+    {
+      "id": "upstream-full36/value_classes",
+      "outcome": "correctness_failure"
+    },
+    {
+      "id": "upstream-full36/rich_annotations",
+      "outcome": "dependency_failure"
+    },
+    {
+      "id": "upstream-full36/kotlin_consumes_nested_java",
+      "outcome": "correctness_failure"
+    }
+  ],
+  "limitations": [
+    "Passes are executable case/group outcomes, not a language-conformance percentage.",
+    "Original unsupported-language, harness, excluded-target and oracle/failure classifications are preserved.",
+    "Published files omit generated class/JAR/compiler binaries; source bundles, command logs and fixed-caller/dependency hashes preserve provenance.",
+    "Exact executed command arguments remain unchanged in archived report copies; relocated evidence links refer to published artifacts."
+  ],
+  "reproduction_commands": [
+    [
+      "env",
+      "JAVA_HOME=/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+      "python3",
+      "tools/upstream_jvm.py",
+      "--matrix",
+      "tools/upstream_feature_matrix.json",
+      "--candidate",
+      "target/resume-final-validation/frozen-root/target/release/korrust",
+      "--output",
+      "target/resume-final-differential-replay/upstream-full36"
+    ],
+    [
+      "env",
+      "JAVA_HOME=/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+      "python3",
+      "tools/check_value_classes.py",
+      "--candidate",
+      "target/resume-final-validation/frozen-root/target/release/korrust",
+      "--output",
+      "target/resume-final-differential-replay/value-classes"
+    ],
+    [
+      "env",
+      "JAVA_HOME=/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+      "python3",
+      "tools/check_suspend_foundation.py",
+      "--candidate",
+      "target/resume-final-validation/frozen-root/target/release/korrust",
+      "--output",
+      "target/resume-final-differential-replay/suspend-foundation"
+    ]
+  ]
+}

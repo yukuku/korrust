@@ -1,0 +1,38 @@
+--- tools/check_androidbible_io.py
++++ target/resume-final-modules/check_androidbible_io_owned.py
+@@ -61,8 +61,8 @@
+     args = parser.parse_args()
+     args.official_json, args.candidate_json = args.official_json.resolve(), args.candidate_json.resolve()
+     now = datetime.now(timezone.utc)
+-    run_id = now.strftime("%Y-%m-%dT%H%M%S%fZ") + "-androidbible-model-io-yes2"
+-    work = ROOT / "target/checks" / run_id
++    run_id = "2026-11-02-resume-final-modules-contract"
++    work = ROOT / "target/resume-final-modules/contract"
+     evidence = ROOT / "reports/correctness" / run_id
+     work.mkdir(parents=True)
+     evidence.mkdir(parents=True)
+@@ -71,7 +71,7 @@
+     report = {"schema_version": 1, "kind": "correctness", "created_at": now.isoformat(), "status": "running", "compiler": {}, "reference_compiler": {}, "inputs": {}, "environment": {"os": platform.platform(), "machine": platform.machine()}, "commands": commands, "evidence": [], "cases": cases, "selection": "Batch-integration revalidation of previously demonstrated module coverage, not new module coverage. Complete unchanged AlkitabModel, AlkitabIo and AlkitabYes2 production modules: 4 Kotlin and 39 Java sources through real Gradle/AGP Java/resource/dependency/AAR tasks, all selected modules production Kotlin compiled exclusively by Korrust. Dependencies and original test Kotlin use normal compilers. All three AAR class inventories/signatures, exact candidate source traces/staged bytes, independent Java/Kotlin consumers, 27 original Io/Yes2 JUnit tests and standalone invocation of actual AGP9.2.1 embedded D8 with strict warning-free diagnostics are checked. The Gradle library AAR task graph and standalone D8 check are separate evidence. No Android-device/full-app runtime or incremental speed claim."}
+ 
+     def archive(path, name):
+-        destination = evidence / name
++        destination = (work if Path(name).suffix in {".aar", ".jar", ".class", ".dex"} else evidence) / name
+         shutil.copy2(path, destination)
+         report["evidence"].append(relative(destination))
+         return destination
+@@ -367,13 +367,9 @@
+     if report["status"] == "completed":
+         feature = {key: report[key] for key in ["schema_version", "created_at", "compiler", "reference_compiler", "inputs"]}
+         feature.update({"kind": "features", "status": "assessed", "commands": [["python3", "tools/check_androidbible_io.py"]], "evidence": [relative(report_path)], "features": [{"name": "androidbible_model_io_yes2_modules", "status": "supported", "scope": "Complete pinned AlkitabModel, AlkitabIo and AlkitabYes2 production modules, all 4 unchanged Kotlin and 39 Java sources. Korrust selected production Kotlin without fallback; real release AARs, all class ABI/JVM verification, independent Java/Kotlin consumers, 27 original Io/Yes2 tests and strict warning-free standalone AGP embedded D8 generation. This revalidates historical module coverage with the batch driver.", "evidence_cases": [case["id"] for case in cases], "restrictions": ["Only these pinned modules/sources are established; nonselected dependencies and original test Kotlin use normal compilers.", "D8/JVM evidence does not establish Android-device or full-application runtime compatibility; no incremental performance/dependency graph/cache claim."]}]})
+-        (ROOT / "reports/features" / (run_id + ".json")).write_text(json.dumps(feature, indent=2) + "\n")
++        (work / "feature.json").write_text(json.dumps(feature, indent=2) + "\n")
+     return 0 if report["status"] == "completed" else 1
+ 
+ 
+ if __name__ == "__main__":
+-    try:
+-        sys.exit(main())
+-    finally:
+-        from reports import generate
+-        print("HTML report: " + str(generate(ROOT)), flush=True)
++    sys.exit(main())

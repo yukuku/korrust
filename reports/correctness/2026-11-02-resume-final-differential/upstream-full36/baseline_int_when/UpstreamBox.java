@@ -1,0 +1,1 @@
+public final class UpstreamBox { public static void main(String[] args) throws Exception { String actual = When2Kt.box(); if (!"OK".equals(actual)) throw new AssertionError(actual); System.out.println("OK"); } }

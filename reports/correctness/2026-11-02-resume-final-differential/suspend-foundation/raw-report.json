@@ -1,0 +1,1557 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T20:02:32.983169+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/resume-final-validation/frozen-root/target/release/korrust",
+    "sha256": "362e12fd88ea493a1132d85a618a656f916242ef7ba4f48d002ea64fb054105b"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "1c50fb5e94df8a4d48d14d03a00d411c33b402bbc847d0df45ac622d39b7be01",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "src/bytecode/annotations.rs": "397e6b298ce180be4f6e733e2240da2f23f36bc975be46e5700ced1162d9741c",
+    "src/bytecode/class_companion.rs": "a5756a0c46cc33fa449bebe330ef5748789da70b4b941c21c7f72aa923802fc2",
+    "src/bytecode/data.rs": "703ed86a9cda8f219aa57869043e0537d20e1e6866bace28049f01467afd133b",
+    "src/bytecode/defaults.rs": "f8eb6d73077c057a293d676723c2801007d9d0fa21dd6784ae16730b1637e0d9",
+    "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+    "src/bytecode/interfaces.rs": "1cfee2e8d5d0847eb719dedde5b429953c3f9d24697fcee653aa278efa1d4c49",
+    "src/bytecode/lambdas.rs": "50d5de628118856e96b21d69b555b626e23608838dc4fca1eef22acca96fcc65",
+    "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "src/bytecode/suspend.rs": "ec4fb43e1402edeb4e85b60ed3a360408ad2dccdb408caca5e27287115a1e0c4",
+    "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "src/bytecode.rs": "433fd46a2ca3c7c0a2bf3de0d62ea3eb761cdcaee91bcb1ce9eb81bbbe54a757",
+    "src/check.rs": "7a2c66bb6210f61d6062f2230f5d1b87f87d5bcf1773fdb3ca74f9e51c940b13",
+    "src/check_annotation_placements.rs": "003f33a33ee64b2fc939e07f6c54f3e1e0acee4138582c186de258499698c840",
+    "src/check_annotations.rs": "862647750f7f11a048d9cfae0df11cb931078fb56409939a902222d6b5f336be",
+    "src/check_captures.rs": "d1bc5a311e720072df4eb38bef24ff253a01c4bee4d6ca5690f51455024ff1ba",
+    "src/check_class_delegation.rs": "05355235cd6de1998c890c17fe9615c1a020f6e8faee704af48a243e8e957741",
+    "src/check_classes.rs": "a1f83cc6ade810a6227503cd7fe88f9f6d69af0e86784d0e47d4dc0c8737e473",
+    "src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+    "src/check_declarations.rs": "bdc6377e186d0a9f71561e33d238e9d042eddea14f77405d9daf417be58cf1b4",
+    "src/check_delegates.rs": "094b9bdc43d4cecb0fb3dcef1681181f8e7737804f3808582192b3190d01dc92",
+    "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "src/check_functions.rs": "ce6c57f2a6b5e0765aa1e20efbe5f0d5ac0825d4353e1f1d4501698c26435834",
+    "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "src/check_interfaces.rs": "8c31ef564cf99b24fd0e6a9416886e60abc0c96e9214834c1501692d883b6de5",
+    "src/check_ir_walk.rs": "358a447f20e6957785a582f3a2842e937b1db7bf204afcac9ee5fc1ba1779e68",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_library.rs": "f84ed384f7c93a10bb0d44cacb01f8e8569f776606252680f12d64e9efe738a6",
+    "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+    "src/check_objects.rs": "a4cd8542a749e0dc670f571363df5fe260e83fa7c2cd6ccd9e1ed5bb79cbf5d3",
+    "src/check_operations.rs": "4ce334fcf91a6d65683c1b9354d6a2df64b170c556e0330790920a4309a30363",
+    "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+    "src/check_references.rs": "dd677362351c02d61f48ff4466ff0418ab9eb33a3152f5947640fc14ee12b5b2",
+    "src/check_relations.rs": "3915c7cc3637126fb82acd68714025ea81e1289663a0b4cfce9840483b2b13a5",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "da9a12ea565853f297f1bc7e6fb1dba6cf55670f43380873090719c23af51ca5",
+    "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "8b9017fa76bb300363825f6db7057c7f67218da83ebac6a27568b792d58e1142",
+    "src/classpath/source.rs": "b70e8ea77a4c689dbe3164efb5217fa298e2d99f535c7dad6147f79a10a684ee",
+    "src/classpath/source_enums.rs": "3366b5ad4fc96e61e95b398e72dbb6c6a3de8e734247b6e7cdba7d937ef527f4",
+    "src/classpath/value_names.rs": "a13518357c7c68a8e9df0ee09dc114fbc51de37d1cf12407ba84a77b6a93a2ba",
+    "src/classpath.rs": "e9948e6ce0b3879c13313078295c41c0aed9ba12304d608acba1eb63dd87e691",
+    "src/compiled_inline.rs": "06250c79ae618989985360ced0235cca4628f0f7c4d92630a00295d217310102",
+    "src/const_eval.rs": "bd03e7339e107ee39f061225d9e838c24bbad37a012d3c2dc8d3cbed8779980d",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "a665e290c4777ceacb0a986f03975491d8d5e51bcaed3a322606b65d8d571dfb",
+    "src/lib.rs": "edfca3d553ee9bfd6232863b3df7b807f20f23d71a68b5e822d2b8900a6373e3",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "8ba7c67e78229b4626f1cc32539d24e6fcf6f6026d5e658cc0537dddea66c8f7",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "src/syntax.rs": "80e3f98b938bcfa76e58d9912a34b56097e203ed4dafdf861d3f59b549fd7ba9",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "tests/fixtures/suspend_foundation/Calls.java": "5c368513a302b2d8ea16ea2f3aca1a883c2201d81db432ecb49e738eb0b7431c",
+    "tests/fixtures/suspend_foundation/Consumer.kt": "f072478c85f02b2b4a87988c091bb189b03b1eace6a00c91a693641c99ef7754",
+    "tests/fixtures/suspend_foundation/Dependency.kt": "8de8c079151a05f0e0eb3e1a47cac914285959c10e27746da08b56b6748655f6",
+    "tests/fixtures/suspend_foundation/MetadataCheck.java": "1bd114a76a81242ae33746f85831ebd0e05673ae01732249252e07fcee15a5dd",
+    "tests/fixtures/suspend_foundation/Models.kt": "8a671634886a34454b4a645c4f44c50985975c695d4e6f2d0574b4facff5fc96",
+    "tools/check_suspend_foundation.py": "b38b13805486d2eae99d8c9324093ef0a4a599d2bae21a3b2a81fd9be31440dc",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "references/kotlin/libraries/stdlib/jvm/src/kotlin/coroutines/jvm/internal/boxing.kt": "2a9315306f718ca0786c9fdd3b722a087db68bc1e14b19c6ae6a3f0c0c8907c9",
+    "tools/upstream_suspend_foundation.json": "3d806850dc87ab46b0b67a976bbb929d81d84aa04d780b55e3254baa943d3707",
+    "target/resume-final-validation/frozen-root/target/release/korrust": "362e12fd88ea493a1132d85a618a656f916242ef7ba4f48d002ea64fb054105b",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "input_bundle": {
+    "path": "target/resume-final-differential/suspend-foundation/inputs.zip",
+    "sha256": "5944105089a538db5f0da8bfb9cba32b44123394ad01bf005d28c3e9f4cf0f01"
+  },
+  "cases": [
+    {
+      "id": "runtime_delayed",
+      "outcome": "pass",
+      "detail": "Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all"
+    },
+    {
+      "id": "runtime_scalars",
+      "outcome": "pass",
+      "detail": "Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all"
+    },
+    {
+      "id": "runtime_failures",
+      "outcome": "pass",
+      "detail": "Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all"
+    },
+    {
+      "id": "runtime_private",
+      "outcome": "pass",
+      "detail": "Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all"
+    },
+    {
+      "id": "runtime_boxing",
+      "outcome": "pass",
+      "detail": "Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all"
+    },
+    {
+      "id": "kotlin_consumer_official",
+      "outcome": "pass",
+      "detail": "Official Kotlin consumer compiles against official, suspends twice using standard suspendCoroutine, then resumes and completes on both outputs"
+    },
+    {
+      "id": "kotlin_consumer_candidate",
+      "outcome": "pass",
+      "detail": "Official Kotlin consumer compiles against candidate, suspends twice using standard suspendCoroutine, then resumes and completes on both outputs"
+    },
+    {
+      "id": "logical_metadata",
+      "outcome": "pass",
+      "detail": "Function visibility/suspend flags, logical return and parameter types, names, nested suspend type flags/projections/nullability and resolved JVM signatures match pinned Kotlin metadata"
+    },
+    {
+      "id": "public_jvm_abi",
+      "outcome": "pass",
+      "detail": "Public Kotlin declarations have exact JVM descriptors and generic signatures, including Continuation/Object and runtime FunctionN continuation parameters; generated synthetic bridges/frames excluded explicitly"
+    },
+    {
+      "id": "invalid_0",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid0.kt",
+            "offset": 0,
+            "category": "invalid_kotlin",
+            "code": "SUSPEND_CALL_CONTEXT_INVALID",
+            "message": "Suspend calls require a suspend function context",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid0.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "invalid_1",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid1.kt",
+            "offset": 54,
+            "category": "invalid_kotlin",
+            "code": "TYPE_MISMATCH",
+            "message": "Type mismatch: expected String, found Int",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid1.kt",
+            "line": 1,
+            "column": 55
+          }
+        ]
+      }
+    },
+    {
+      "id": "invalid_2",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid2.kt",
+            "offset": 59,
+            "category": "invalid_kotlin",
+            "code": "TYPE_MISMATCH",
+            "message": "Type mismatch: expected Int, found String",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid2.kt",
+            "line": 1,
+            "column": 60
+          }
+        ]
+      }
+    },
+    {
+      "id": "invalid_3",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid3.kt",
+            "offset": 0,
+            "category": "invalid_kotlin",
+            "code": "SUSPEND_CALL_CONTEXT_INVALID",
+            "message": "Suspend calls require a suspend function context",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid3.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "invalid_4",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid4.kt",
+            "offset": 0,
+            "category": "invalid_kotlin",
+            "code": "SUSPEND_CALL_CONTEXT_INVALID",
+            "message": "Suspend calls require a suspend function context",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid4.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_0",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported0.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+            "message": "Suspension in nested control flow, lambdas, or expression trees is unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported0.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_1",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported1.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+            "message": "Suspension in nested control flow, lambdas, or expression trees is unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported1.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_2",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported2.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+            "message": "Suspension in nested control flow, lambdas, or expression trees is unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported2.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_3",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported3.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_DECLARATION_SHAPE_UNSUPPORTED",
+            "message": "Generic, extension, inline, vararg, and defaulted suspend declarations are unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported3.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_4",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported4.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_DECLARATION_SHAPE_UNSUPPORTED",
+            "message": "Generic, extension, inline, vararg, and defaulted suspend declarations are unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported4.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_5",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported5.kt",
+            "offset": 15,
+            "category": "unsupported_language",
+            "code": "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
+            "message": "Source suspend member declarations are unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported5.kt",
+            "line": 1,
+            "column": 16
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_6",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported6.kt",
+            "offset": 92,
+            "category": "unsupported_language",
+            "code": "SUSPEND_LAMBDA_UNSUPPORTED",
+            "message": "Source suspend lambdas and references are unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported6.kt",
+            "line": 1,
+            "column": 93
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_7",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported7.kt",
+            "offset": 75,
+            "category": "unsupported_language",
+            "code": "SUSPEND_REFERENCE_UNSUPPORTED",
+            "message": "Source suspend callable references are unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported7.kt",
+            "line": 2,
+            "column": 39
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_8",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported8.kt",
+            "offset": 0,
+            "category": "unsupported_language",
+            "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+            "message": "Suspension in nested control flow, lambdas, or expression trees is unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported8.kt",
+            "line": 1,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_9",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported9.kt",
+            "offset": 50,
+            "category": "unsupported_language",
+            "code": "SUSPEND_FUNCTION_TYPE_SHAPE_UNSUPPORTED",
+            "message": "Suspend function types require at most 21 ordinary parameters",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported9.kt",
+            "line": 1,
+            "column": 51
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_10",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported10.kt",
+            "offset": 29,
+            "category": "unsupported_language",
+            "code": "NULLABLE_UNIT_UNSUPPORTED",
+            "message": "Nullable Unit is not supported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported10.kt",
+            "line": 1,
+            "column": 30
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_11",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported11.kt",
+            "offset": 39,
+            "category": "unsupported_language",
+            "code": "SUSPEND_VALUE_CLASS_INTERACTION_UNSUPPORTED",
+            "message": "Value-class types in suspend declarations, callbacks, or saved values are unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported11.kt",
+            "line": 2,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_12",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported12.kt",
+            "offset": 39,
+            "category": "unsupported_language",
+            "code": "SUSPEND_VALUE_CLASS_INTERACTION_UNSUPPORTED",
+            "message": "Value-class types in suspend declarations, callbacks, or saved values are unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported12.kt",
+            "line": 2,
+            "column": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_13",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported13.kt",
+            "offset": 39,
+            "category": "unsupported_language",
+            "code": "SUSPEND_VALUE_CLASS_INTERACTION_UNSUPPORTED",
+            "message": "Value-class types in suspend declarations, callbacks, or saved values are unsupported",
+            "path": "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported13.kt",
+            "line": 2,
+            "column": 1
+          }
+        ]
+      }
+    }
+  ],
+  "commands": [
+    {
+      "label": "authored external suspend dependency compiled once with pinned Kotlin",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/suspend_foundation/Dependency.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/000.txt"
+    },
+    {
+      "label": "official model",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/suspend_foundation/Models.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/001.txt"
+    },
+    {
+      "label": "candidate model",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/tests/fixtures/suspend_foundation/Models.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/002.txt"
+    },
+    {
+      "label": "Java driver and metadata decoder against official output only",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java",
+        "/Users/yuku/f/git/korrust/tests/fixtures/suspend_foundation/Calls.java",
+        "/Users/yuku/f/git/korrust/tests/fixtures/suspend_foundation/MetadataCheck.java"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/003.txt"
+    },
+    {
+      "label": "official independent delayed",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "suspension.Calls",
+        "delayed"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/004.txt"
+    },
+    {
+      "label": "candidate independent delayed",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "suspension.Calls",
+        "delayed"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/005.txt"
+    },
+    {
+      "label": "official independent scalars",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "suspension.Calls",
+        "scalars"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/006.txt"
+    },
+    {
+      "label": "candidate independent scalars",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "suspension.Calls",
+        "scalars"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/007.txt"
+    },
+    {
+      "label": "official independent failures",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "suspension.Calls",
+        "failures"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/008.txt"
+    },
+    {
+      "label": "candidate independent failures",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "suspension.Calls",
+        "failures"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/009.txt"
+    },
+    {
+      "label": "official independent private",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "suspension.Calls",
+        "private"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/010.txt"
+    },
+    {
+      "label": "candidate independent private",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "suspension.Calls",
+        "private"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/011.txt"
+    },
+    {
+      "label": "official independent boxing",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "suspension.Calls",
+        "boxing"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/012.txt"
+    },
+    {
+      "label": "official boxing positions bytecode",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-c",
+        "-p",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official",
+        "suspension.ModelsKt"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/013.txt"
+    },
+    {
+      "label": "candidate independent boxing",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "suspension.Calls",
+        "boxing"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/014.txt"
+    },
+    {
+      "label": "candidate boxing positions bytecode",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-c",
+        "-p",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate",
+        "suspension.ModelsKt"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/015.txt"
+    },
+    {
+      "label": "Kotlin consumer against official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/suspend_foundation/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/016.txt"
+    },
+    {
+      "label": "Kotlin consumer official on official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/consumer-official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/017.txt"
+    },
+    {
+      "label": "Kotlin consumer official on candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/consumer-official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/018.txt"
+    },
+    {
+      "label": "Kotlin consumer against candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/suspend_foundation/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/019.txt"
+    },
+    {
+      "label": "Kotlin consumer candidate on official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/consumer-candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/020.txt"
+    },
+    {
+      "label": "Kotlin consumer candidate on candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/consumer-candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/021.txt"
+    },
+    {
+      "label": "official decoded logical suspend metadata",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "suspension.MetadataCheck"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/022.txt"
+    },
+    {
+      "label": "candidate decoded logical suspend metadata",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/java:/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "suspension.MetadataCheck"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/023.txt"
+    },
+    {
+      "label": "official public logical JVM signatures",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/official",
+        "suspension.ModelsKt"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/024.txt"
+    },
+    {
+      "label": "candidate public logical JVM signatures",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/candidate",
+        "suspension.ModelsKt"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/025.txt"
+    },
+    {
+      "label": "oracle invalid 0",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid0.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-official-0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/026.txt"
+    },
+    {
+      "label": "candidate invalid 0",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid0.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-candidate-0",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/027.txt"
+    },
+    {
+      "label": "oracle invalid 1",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid1.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-official-1",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/028.txt"
+    },
+    {
+      "label": "candidate invalid 1",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid1.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-candidate-1",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/029.txt"
+    },
+    {
+      "label": "oracle invalid 2",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid2.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-official-2",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/030.txt"
+    },
+    {
+      "label": "candidate invalid 2",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid2.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-candidate-2",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/031.txt"
+    },
+    {
+      "label": "oracle invalid 3",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid3.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-official-3",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/032.txt"
+    },
+    {
+      "label": "candidate invalid 3",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid3.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-candidate-3",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/033.txt"
+    },
+    {
+      "label": "oracle invalid 4",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid4.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-official-4",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/034.txt"
+    },
+    {
+      "label": "candidate invalid 4",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid4.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-candidate-4",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/035.txt"
+    },
+    {
+      "label": "oracle accepts boundary 0",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported0.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/036.txt"
+    },
+    {
+      "label": "candidate unsupported 0",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported0.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-0",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/037.txt"
+    },
+    {
+      "label": "oracle accepts boundary 1",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported1.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-1",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/038.txt"
+    },
+    {
+      "label": "candidate unsupported 1",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported1.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-1",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/039.txt"
+    },
+    {
+      "label": "oracle accepts boundary 2",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported2.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-2",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/040.txt"
+    },
+    {
+      "label": "candidate unsupported 2",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported2.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-2",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/041.txt"
+    },
+    {
+      "label": "oracle accepts boundary 3",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported3.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-3",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/042.txt"
+    },
+    {
+      "label": "candidate unsupported 3",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported3.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-3",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/043.txt"
+    },
+    {
+      "label": "oracle accepts boundary 4",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported4.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-4",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/044.txt"
+    },
+    {
+      "label": "candidate unsupported 4",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported4.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-4",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/045.txt"
+    },
+    {
+      "label": "oracle accepts boundary 5",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported5.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-5",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/046.txt"
+    },
+    {
+      "label": "candidate unsupported 5",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported5.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-5",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/047.txt"
+    },
+    {
+      "label": "oracle accepts boundary 6",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported6.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-6",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/048.txt"
+    },
+    {
+      "label": "candidate unsupported 6",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported6.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-6",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/049.txt"
+    },
+    {
+      "label": "oracle accepts boundary 7",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported7.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-7",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/050.txt"
+    },
+    {
+      "label": "candidate unsupported 7",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported7.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-7",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/051.txt"
+    },
+    {
+      "label": "oracle accepts boundary 8",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported8.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/052.txt"
+    },
+    {
+      "label": "candidate unsupported 8",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported8.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-8",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/053.txt"
+    },
+    {
+      "label": "oracle accepts boundary 9",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported9.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-9",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/054.txt"
+    },
+    {
+      "label": "candidate unsupported 9",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported9.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-9",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/055.txt"
+    },
+    {
+      "label": "oracle accepts boundary 10",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported10.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-10",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/056.txt"
+    },
+    {
+      "label": "candidate unsupported 10",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported10.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-10",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/057.txt"
+    },
+    {
+      "label": "oracle accepts boundary 11",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported11.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-11",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/058.txt"
+    },
+    {
+      "label": "candidate unsupported 11",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported11.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-11",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/059.txt"
+    },
+    {
+      "label": "oracle accepts boundary 12",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported12.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-12",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/060.txt"
+    },
+    {
+      "label": "candidate unsupported 12",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported12.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-12",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/061.txt"
+    },
+    {
+      "label": "oracle accepts boundary 13",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported13.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-official-13",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "target/resume-final-differential/suspend-foundation/commands/062.txt"
+    },
+    {
+      "label": "candidate unsupported 13",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Unsupported13.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/unsupported-candidate-13",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "target/resume-final-differential/suspend-foundation/commands/063.txt"
+    }
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_suspend_foundation.py",
+    "--candidate",
+    "target/resume-final-validation/frozen-root/target/release/korrust",
+    "--output",
+    "target/resume-final-differential/suspend-foundation"
+  ],
+  "runtime_boxing_oracle": {
+    "source": "references/kotlin/libraries/stdlib/jvm/src/kotlin/coroutines/jvm/internal/boxing.kt",
+    "source_sha256": "2a9315306f718ca0786c9fdd3b722a087db68bc1e14b19c6ae6a3f0c0c8907c9",
+    "evidence": "Java asserts coroutine Int input/result wrappers, boxed Any local, listOf element and nullable-call input are fresh, while a separate ordinary boxing function retains Integer.valueOf cache identity"
+  },
+  "scope": "Bounded suspend functions with real delayed continuation resumption, saved state, ordinary source/compiled suspend calls, function types, public JVM ABI and logical Kotlin metadata",
+  "limitations": [
+    "Source suspend lambdas/references/conversions, suspend member/extension/generic/default/vararg/inline declarations and nested suspension control flow are unsupported",
+    "Imported suspend inline/default-mask/member calls are unsupported",
+    "Nullable Unit and Unit-valued suspend callback parameters are unsupported; no source generic kotlin.Result/value-class support or frame DebugMetadata/debugger/stacktrace equivalence claim",
+    "Public logical function ABI and metadata are compared; generated frame names and spill layouts need not match",
+    "Authored dependency is an identical external library classpath for both providers; unchanged upstream CoroutineHelpers.kt must be compiled separately by the upstream adapter"
+  ],
+  "counts": {
+    "pass": 9,
+    "invalid_rejected": 5,
+    "unsupported_language": 14
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "java_caller_hashes": {
+    "target/resume-final-differential/suspend-foundation/java/suspension/Calls$Completion.class": "8046c87d7705f55cde83c2e088a37f7e28471302ba897dadfac853c74d695d4e",
+    "target/resume-final-differential/suspend-foundation/java/suspension/MetadataCheck.class": "4121eb42069d5c17ee29e04b89184852ffba6fb552f87605946b9f124b19175a",
+    "target/resume-final-differential/suspend-foundation/java/suspension/Calls$Step0.class": "c4ffbd04f75419916971a45e4322d072abbcade091c760c37b9dc7ea9c787b69",
+    "target/resume-final-differential/suspend-foundation/java/suspension/Calls.class": "cdf746a05d104990a1437a7ff5fef4f0931c16badbd8017192df5c0ecd186244",
+    "target/resume-final-differential/suspend-foundation/java/suspension/Calls$Step.class": "fe018d2c7895ba2b64a94ebdaaa731e4ae14b939040df9b047ec55a6740fccf7"
+  },
+  "external_dependency_hashes": {
+    "target/resume-final-differential/suspend-foundation/dependency/suspend_dependency/DependencyKt$fetch$1.class": "0e0f3fe7d196404d1ab78bc1fc06cda9764dde359daf4d8dfe1ec2db94d2d999",
+    "target/resume-final-differential/suspend-foundation/dependency/suspend_dependency/DependencyKt.class": "766c37cde195d653dd042b649acee122cdbe10a43941911ad5db639eafc520e1"
+  }
+}

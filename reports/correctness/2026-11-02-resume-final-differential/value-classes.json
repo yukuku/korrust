@@ -1,0 +1,3507 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T20:02:32.841143+00:00",
+  "status": "complete",
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 139,
+      "output": "OK 139"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 139,
+      "output": "OK 139"
+    },
+    {
+      "id": "fixed_caller_integrity",
+      "outcome": "pass",
+      "class_hashes": {
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/java/Check.class": "1a79e5bcc54f99ec94ee592b6e2dc8aab35400231171875607ed80bbad7a6fef"
+      }
+    },
+    {
+      "id": "metadata",
+      "outcome": "pass",
+      "owners": [
+        "valuecases.Id",
+        "valuecases.Wide",
+        "valuecases.Text",
+        "valuecases.MaybeText",
+        "valuecases.Tracked",
+        "valuecases.Secret"
+      ],
+      "snapshot": "valuecases.Id FLAGS 8199 PROPERTY raw\nvaluecases.Id CARRIER kotlin/Int NULLABLE false\nvaluecases.Id CONSTRUCTOR constructor-impl(I)I\nvaluecases.Wide FLAGS 8199 PROPERTY raw\nvaluecases.Wide CARRIER kotlin/Long NULLABLE false\nvaluecases.Wide CONSTRUCTOR constructor-impl(J)J\nvaluecases.Text FLAGS 8199 PROPERTY raw\nvaluecases.Text CARRIER kotlin/String NULLABLE false\nvaluecases.Text CONSTRUCTOR constructor-impl(Ljava/lang/String;)Ljava/lang/String;\nvaluecases.MaybeText FLAGS 8199 PROPERTY raw\nvaluecases.MaybeText CARRIER kotlin/String NULLABLE true\nvaluecases.MaybeText CONSTRUCTOR constructor-impl(Ljava/lang/String;)Ljava/lang/String;\nvaluecases.Tracked FLAGS 8199 PROPERTY raw\nvaluecases.Tracked CARRIER kotlin/Int NULLABLE false\nvaluecases.Tracked CONSTRUCTOR constructor-impl(I)I\nvaluecases.Secret FLAGS 8199 PROPERTY raw\nvaluecases.Secret CARRIER kotlin/Int NULLABLE false\nvaluecases.Secret CONSTRUCTOR constructor-impl(I)I"
+    },
+    {
+      "id": "abi",
+      "outcome": "pass",
+      "owners": [
+        "valuecases.Id",
+        "valuecases.Wide",
+        "valuecases.Text",
+        "valuecases.MaybeText",
+        "valuecases.Tracked",
+        "valuecases.Secret",
+        "valuecases.Holder",
+        "valuecases.Pair",
+        "valuecases.Mixed",
+        "valuecases.ValuesKt"
+      ],
+      "snapshot": "valuecases.Holder CLASS 17\nvaluecases.Holder CTOR (I)V 2 [int]\nvaluecases.Holder CTOR (ILkotlin/jvm/internal/DefaultConstructorMarker;)V 4097 [int, class kotlin.jvm.internal.DefaultConstructorMarker]\nvaluecases.Holder FIELD value I 18 int\nvaluecases.Holder METHOD capture()Lkotlin/jvm/functions/Function0; 17 kotlin.jvm.functions.Function0<valuecases.Id> []\nvaluecases.Holder METHOD getValue-zP0CK5Y()I 17 int []\nvaluecases.Id CLASS 17\nvaluecases.Id FIELD raw I 18 int\nvaluecases.Id METHOD add-BskOqUQ(II)I 25 int [int, int]\nvaluecases.Id METHOD box-impl(I)Lvaluecases/Id; 4121 valuecases.Id [int]\nvaluecases.Id METHOD constructor-impl(I)I 9 int [int]\nvaluecases.Id METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Id METHOD equals-impl(ILjava/lang/Object;)Z 9 boolean [int, class java.lang.Object]\nvaluecases.Id METHOD equals-impl0(II)Z 25 boolean [int, int]\nvaluecases.Id METHOD format-impl(ILjava/util/List;)Ljava/lang/String; 25 java.lang.String [int, java.util.List<java.lang.String>]\nvaluecases.Id METHOD getRaw()I 17 int []\nvaluecases.Id METHOD hashCode()I 1 int []\nvaluecases.Id METHOD hashCode-impl(I)I 9 int [int]\nvaluecases.Id METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Id METHOD toString-impl(I)Ljava/lang/String; 9 java.lang.String [int]\nvaluecases.Id METHOD unbox-impl()I 4113 int []\nvaluecases.MaybeText CLASS 17\nvaluecases.MaybeText FIELD raw Ljava/lang/String; 18 java.lang.String\nvaluecases.MaybeText METHOD box-impl(Ljava/lang/String;)Lvaluecases/MaybeText; 4121 valuecases.MaybeText [class java.lang.String]\nvaluecases.MaybeText METHOD constructor-impl(Ljava/lang/String;)Ljava/lang/String; 9 java.lang.String [class java.lang.String]\nvaluecases.MaybeText METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.MaybeText METHOD equals-impl(Ljava/lang/String;Ljava/lang/Object;)Z 9 boolean [class java.lang.String, class java.lang.Object]\nvaluecases.MaybeText METHOD equals-impl0(Ljava/lang/String;Ljava/lang/String;)Z 25 boolean [class java.lang.String, class java.lang.String]\nvaluecases.MaybeText METHOD getRaw()Ljava/lang/String; 17 java.lang.String []\nvaluecases.MaybeText METHOD hashCode()I 1 int []\nvaluecases.MaybeText METHOD hashCode-impl(Ljava/lang/String;)I 9 int [class java.lang.String]\nvaluecases.MaybeText METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.MaybeText METHOD toString-impl(Ljava/lang/String;)Ljava/lang/String; 9 java.lang.String [class java.lang.String]\nvaluecases.MaybeText METHOD unbox-impl()Ljava/lang/String; 4113 java.lang.String []\nvaluecases.Mixed CLASS 17\nvaluecases.Mixed CTOR ()V 1 []\nvaluecases.Mixed METHOD keep-l_SpL-w(Ljava/util/List;Lvaluecases/Id;)Lvaluecases/Id; 17 valuecases.Id [java.util.List<java.lang.String>, class valuecases.Id]\nvaluecases.Pair CLASS 17\nvaluecases.Pair CTOR (IJLjava/lang/String;)V 2 [int, long, class java.lang.String]\nvaluecases.Pair CTOR (IJLjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V 4097 [int, long, class java.lang.String, class kotlin.jvm.internal.DefaultConstructorMarker]\nvaluecases.Pair FIELD id I 18 int\nvaluecases.Pair FIELD text Ljava/lang/String; 18 java.lang.String\nvaluecases.Pair FIELD wide J 18 long\nvaluecases.Pair METHOD component1-zP0CK5Y()I 17 int []\nvaluecases.Pair METHOD component2-xvjNKjo()J 17 long []\nvaluecases.Pair METHOD component3-dc_CzQI()Ljava/lang/String; 17 java.lang.String []\nvaluecases.Pair METHOD copy-hN-PzLM$default(Lvaluecases/Pair;IJLjava/lang/String;ILjava/lang/Object;)Lvaluecases/Pair; 4105 valuecases.Pair [class valuecases.Pair, int, long, class java.lang.String, int, class java.lang.Object]\nvaluecases.Pair METHOD copy-hN-PzLM(IJLjava/lang/String;)Lvaluecases/Pair; 17 valuecases.Pair [int, long, class java.lang.String]\nvaluecases.Pair METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Pair METHOD getId-zP0CK5Y()I 17 int []\nvaluecases.Pair METHOD getText-dc_CzQI()Ljava/lang/String; 17 java.lang.String []\nvaluecases.Pair METHOD getWide-xvjNKjo()J 17 long []\nvaluecases.Pair METHOD hashCode()I 1 int []\nvaluecases.Pair METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Secret CLASS 17\nvaluecases.Secret FIELD raw I 18 int\nvaluecases.Secret METHOD box-impl(I)Lvaluecases/Secret; 4121 valuecases.Secret [int]\nvaluecases.Secret METHOD constructor-impl(I)I 9 int [int]\nvaluecases.Secret METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Secret METHOD equals-impl(ILjava/lang/Object;)Z 9 boolean [int, class java.lang.Object]\nvaluecases.Secret METHOD equals-impl0(II)Z 25 boolean [int, int]\nvaluecases.Secret METHOD hashCode()I 1 int []\nvaluecases.Secret METHOD hashCode-impl(I)I 9 int [int]\nvaluecases.Secret METHOD read-impl(I)I 25 int [int]\nvaluecases.Secret METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Secret METHOD toString-impl(I)Ljava/lang/String; 9 java.lang.String [int]\nvaluecases.Secret METHOD unbox-impl()I 4113 int []\nvaluecases.Text CLASS 17\nvaluecases.Text FIELD raw Ljava/lang/String; 18 java.lang.String\nvaluecases.Text METHOD box-impl(Ljava/lang/String;)Lvaluecases/Text; 4121 valuecases.Text [class java.lang.String]\nvaluecases.Text METHOD constructor-impl(Ljava/lang/String;)Ljava/lang/String; 9 java.lang.String [class java.lang.String]\nvaluecases.Text METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Text METHOD equals-impl(Ljava/lang/String;Ljava/lang/Object;)Z 9 boolean [class java.lang.String, class java.lang.Object]\nvaluecases.Text METHOD equals-impl0(Ljava/lang/String;Ljava/lang/String;)Z 25 boolean [class java.lang.String, class java.lang.String]\nvaluecases.Text METHOD getRaw()Ljava/lang/String; 17 java.lang.String []\nvaluecases.Text METHOD hashCode()I 1 int []\nvaluecases.Text METHOD hashCode-impl(Ljava/lang/String;)I 9 int [class java.lang.String]\nvaluecases.Text METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Text METHOD toString-impl(Ljava/lang/String;)Ljava/lang/String; 9 java.lang.String [class java.lang.String]\nvaluecases.Text METHOD unbox-impl()Ljava/lang/String; 4113 java.lang.String []\nvaluecases.Tracked CLASS 17\nvaluecases.Tracked FIELD raw I 18 int\nvaluecases.Tracked METHOD box-impl(I)Lvaluecases/Tracked; 4121 valuecases.Tracked [int]\nvaluecases.Tracked METHOD constructor-impl(I)I 9 int [int]\nvaluecases.Tracked METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Tracked METHOD equals-impl(ILjava/lang/Object;)Z 9 boolean [int, class java.lang.Object]\nvaluecases.Tracked METHOD equals-impl0(II)Z 25 boolean [int, int]\nvaluecases.Tracked METHOD getRaw()I 17 int []\nvaluecases.Tracked METHOD hashCode()I 1 int []\nvaluecases.Tracked METHOD hashCode-impl(I)I 9 int [int]\nvaluecases.Tracked METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Tracked METHOD toString-impl(I)Ljava/lang/String; 9 java.lang.String [int]\nvaluecases.Tracked METHOD unbox-impl()I 4113 int []\nvaluecases.ValuesKt CLASS 17\nvaluecases.ValuesKt METHOD asAny-iRHAk-E(I)Ljava/lang/Object; 25 java.lang.Object [int]\nvaluecases.ValuesKt METHOD asShow-ihQjY_g(J)Lvaluecases/Show; 25 valuecases.Show [long]\nvaluecases.ValuesKt METHOD boxedNullMaybe()Lvaluecases/MaybeText; 25 valuecases.MaybeText []\nvaluecases.ValuesKt METHOD capture-iRHAk-E(I)Lkotlin/jvm/functions/Function0; 25 kotlin.jvm.functions.Function0<valuecases.Id> [int]\nvaluecases.ValuesKt METHOD createId(I)I 25 int [int]\nvaluecases.ValuesKt METHOD createMaybeText(Ljava/lang/String;)Ljava/lang/String; 25 java.lang.String [class java.lang.String]\nvaluecases.ValuesKt METHOD createText(Ljava/lang/String;)Ljava/lang/String; 25 java.lang.String [class java.lang.String]\nvaluecases.ValuesKt METHOD createWide(J)J 25 long [long]\nvaluecases.ValuesKt METHOD fromAny(Ljava/lang/Object;)I 25 int [class java.lang.Object]\nvaluecases.ValuesKt METHOD fromShow(Lvaluecases/Show;)J 25 long [interface valuecases.Show]\nvaluecases.ValuesKt METHOD generic-iRHAk-E(I)Lvaluecases/Box; 25 valuecases.Box<valuecases.Id> [int]\nvaluecases.ValuesKt METHOD list-iRHAk-E(I)Ljava/util/List; 25 java.util.List<valuecases.Id> [int]\nvaluecases.ValuesKt METHOD mixed-CMbc2x0(Ljava/util/List;Lvaluecases/Id;)Ljava/util/List; 25 java.util.List<valuecases.Id> [java.util.List<java.lang.String>, class valuecases.Id]\nvaluecases.ValuesKt METHOD nullMaybe()Lvaluecases/MaybeText; 25 valuecases.MaybeText []\nvaluecases.ValuesKt METHOD nullableId-cf9GXdU(Lvaluecases/Id;)Lvaluecases/Id; 25 valuecases.Id [class valuecases.Id]\nvaluecases.ValuesKt METHOD nullableMaybeText-RU6d98Q(Lvaluecases/MaybeText;)Lvaluecases/MaybeText; 25 valuecases.MaybeText [class valuecases.MaybeText]\nvaluecases.ValuesKt METHOD nullableText-RIVotzo(Ljava/lang/String;)Ljava/lang/String; 25 java.lang.String [class java.lang.String]\nvaluecases.ValuesKt METHOD tracked(I)I 25 int [int]\nvaluecases.Wide CLASS 17\nvaluecases.Wide FIELD raw J 18 long\nvaluecases.Wide INTERFACE valuecases.Show\nvaluecases.Wide METHOD box-impl(J)Lvaluecases/Wide; 4121 valuecases.Wide [long]\nvaluecases.Wide METHOD constructor-impl(J)J 9 long [long]\nvaluecases.Wide METHOD equals(Ljava/lang/Object;)Z 1 boolean [class java.lang.Object]\nvaluecases.Wide METHOD equals-impl(JLjava/lang/Object;)Z 9 boolean [long, class java.lang.Object]\nvaluecases.Wide METHOD equals-impl0(JJ)Z 25 boolean [long, long]\nvaluecases.Wide METHOD getRaw()J 17 long []\nvaluecases.Wide METHOD hashCode()I 1 int []\nvaluecases.Wide METHOD hashCode-impl(J)I 9 int [long]\nvaluecases.Wide METHOD show()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Wide METHOD show-impl(J)Ljava/lang/String; 9 java.lang.String [long]\nvaluecases.Wide METHOD toString()Ljava/lang/String; 1 java.lang.String []\nvaluecases.Wide METHOD toString-impl(J)Ljava/lang/String; 9 java.lang.String [long]\nvaluecases.Wide METHOD unbox-impl()J 4113 long []"
+    },
+    {
+      "id": "kotlin_consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "imported_compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "imported_compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "imported_runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 5
+    },
+    {
+      "id": "imported_runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 5
+    },
+    {
+      "id": "unchanged_app_compile/official",
+      "outcome": "pass",
+      "sources": [
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt"
+      ]
+    },
+    {
+      "id": "unchanged_app_compile/candidate",
+      "outcome": "pass",
+      "sources": [
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt"
+      ]
+    },
+    {
+      "id": "unchanged_app_consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "unchanged_app_consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "unchanged_app_consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "unchanged_app_consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "direct_context/object/official",
+      "outcome": "pass",
+      "source_sha256": "efde8fc2e6902b0b12ca5743c0795213cdea67973e255ce384b0e5a89f3946fb",
+      "expected_result": 7,
+      "fixed_java_caller_sha256": "8ce1bd7631d1086fa99bd81a297f019332fd874954c5d012cac838116f8ca90b"
+    },
+    {
+      "id": "direct_context/object/candidate",
+      "outcome": "pass",
+      "source_sha256": "efde8fc2e6902b0b12ca5743c0795213cdea67973e255ce384b0e5a89f3946fb",
+      "expected_result": 7,
+      "fixed_java_caller_sha256": "8ce1bd7631d1086fa99bd81a297f019332fd874954c5d012cac838116f8ca90b"
+    },
+    {
+      "id": "direct_context/companion/official",
+      "outcome": "pass",
+      "source_sha256": "3761d0c7e67f093f6cbac73df7abc8fa45ecd6438c31ee9f386530b4ebe5c3f9",
+      "expected_result": 11,
+      "fixed_java_caller_sha256": "6effa1dc9e0d4dd0480d7743891d82bf79d074dc2dee8568186208ffb066f7c1"
+    },
+    {
+      "id": "direct_context/companion/candidate",
+      "outcome": "pass",
+      "source_sha256": "3761d0c7e67f093f6cbac73df7abc8fa45ecd6438c31ee9f386530b4ebe5c3f9",
+      "expected_result": 11,
+      "fixed_java_caller_sha256": "6effa1dc9e0d4dd0480d7743891d82bf79d074dc2dee8568186208ffb066f7c1"
+    },
+    {
+      "id": "direct_context/enum_method/official",
+      "outcome": "pass",
+      "source_sha256": "227b3cc79c7d26d5e4b88790d5ad48ec9cd358b47bedec919e067496da1ad707",
+      "expected_result": 13,
+      "fixed_java_caller_sha256": "f8594640acc834780e690f60dd0b45f6d5a42fa43402fc45f20964f986138443"
+    },
+    {
+      "id": "direct_context/enum_method/candidate",
+      "outcome": "pass",
+      "source_sha256": "227b3cc79c7d26d5e4b88790d5ad48ec9cd358b47bedec919e067496da1ad707",
+      "expected_result": 13,
+      "fixed_java_caller_sha256": "f8594640acc834780e690f60dd0b45f6d5a42fa43402fc45f20964f986138443"
+    },
+    {
+      "id": "direct_context/enum_initializer/official",
+      "outcome": "pass",
+      "source_sha256": "a5d6af5eb2593fa5ff3fff39b564da529fe2406e7be7b39c7caf4bd0bc110550",
+      "expected_result": 17,
+      "fixed_java_caller_sha256": "60834fbb2314becfbd40952bcdc5eae544f35f9c7f51e46e56ab4cad6074804a"
+    },
+    {
+      "id": "direct_context/enum_initializer/candidate",
+      "outcome": "pass",
+      "source_sha256": "a5d6af5eb2593fa5ff3fff39b564da529fe2406e7be7b39c7caf4bd0bc110550",
+      "expected_result": 17,
+      "fixed_java_caller_sha256": "60834fbb2314becfbd40952bcdc5eae544f35f9c7f51e46e56ab4cad6074804a"
+    },
+    {
+      "id": "direct_context/interface_default/official",
+      "outcome": "pass",
+      "source_sha256": "2cffe78ec499bedf43b37fad90bf7fb9152610dd4f362a146065c8262488efa2",
+      "expected_result": 19,
+      "fixed_java_caller_sha256": "1dfcff88b13e5726820609c9c19b4030eca507c8bb54205636dee204accf2231"
+    },
+    {
+      "id": "direct_context/interface_default/candidate",
+      "outcome": "pass",
+      "source_sha256": "2cffe78ec499bedf43b37fad90bf7fb9152610dd4f362a146065c8262488efa2",
+      "expected_result": 19,
+      "fixed_java_caller_sha256": "1dfcff88b13e5726820609c9c19b4030eca507c8bb54205636dee204accf2231"
+    },
+    {
+      "id": "boundary/object_physical_call",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_OBJECT_MEMBER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/object_physical_call.kt",
+      "source_sha256": "0bc9876520682f460763074c024b412103e75fb0e691d010ca67609ef596eea6"
+    },
+    {
+      "id": "boundary/object_physical_initializer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_OBJECT_MEMBER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/object_physical_initializer.kt",
+      "source_sha256": "43a59e669e52ebdd8dd310612f977805505879ac699510897dc1e410da184818"
+    },
+    {
+      "id": "boundary/companion_physical_call",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_COMPANION_MEMBER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/companion_physical_call.kt",
+      "source_sha256": "be9647d9f9c5a92f8807491c57bfb65440fbe11e0286b67ba503753a3398c974"
+    },
+    {
+      "id": "boundary/companion_physical_initializer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_COMPANION_MEMBER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/companion_physical_initializer.kt",
+      "source_sha256": "2fe8014981164e9c465031343b805448ae8204f7f878417dd551e162958c9fa2"
+    },
+    {
+      "id": "boundary/interface_physical_call",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/interface_physical_call.kt",
+      "source_sha256": "5143c7e95a8caa86ec9feb8d1440ca249cb7d960bd0107cdffbfd94d1759b4fa"
+    },
+    {
+      "id": "boundary/interface_companion_physical_initializer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/interface_companion_physical_initializer.kt",
+      "source_sha256": "db7ed298b1b347a13c03e235c9a3f1c34ff1d9c2f8c6f65568c908e604bc1895"
+    },
+    {
+      "id": "boundary/enum_physical_call",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_physical_call.kt",
+      "source_sha256": "19a02771656af5a88c983e5bc08ece48cd781c5ed5a6d0cdd8fc933f36a2841e"
+    },
+    {
+      "id": "boundary/enum_physical_initializer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_physical_initializer.kt",
+      "source_sha256": "0e865e48be3d11ed01834282d98bfc76e9344771945c95475267fb8b9b7fe951"
+    },
+    {
+      "id": "boundary/enum_physical_default",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_physical_default.kt",
+      "source_sha256": "dddeb0f4acc7fca8589d19cbcfb1e07177bb56efb834a8ae79b02e3d4adf963e"
+    },
+    {
+      "id": "boundary/enum_entry_physical_call",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_entry_physical_call.kt",
+      "source_sha256": "d73c27c30772b162853264b2cbb852ec13ef77d69a0ef55d74e3f61d353829e7"
+    },
+    {
+      "id": "boundary/enum_companion_physical_closure",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_ENUM_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_companion_physical_closure.kt",
+      "source_sha256": "dba86ea25d19ace1d3f76bb8cb2c214b599714391ded8833d649f1822672adef"
+    },
+    {
+      "id": "boundary/inner_value_modifier",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_MODIFIERS_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/inner_value_modifier.kt",
+      "source_sha256": "9ee6640891bff1e0aa60ec7dc8fe14035516295071aea34594f663ff1fcf42cf"
+    },
+    {
+      "id": "boundary/inner_consumer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CONSUMER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/inner_consumer.kt",
+      "source_sha256": "9e583ec733757308e565638366d37eb11fe5274176fb86bc47dc3dd8accc7015"
+    },
+    {
+      "id": "boundary/enum_consumer",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CONSUMER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/enum_consumer.kt",
+      "source_sha256": "b6bec7b05a682b0f7afd202a8c9e027e326e9bee1c1ab26fb7a3b289b29f1985"
+    },
+    {
+      "id": "boundary/missing_marker",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_JVM_INLINE_REQUIRED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/missing_marker.kt",
+      "source_sha256": "77f54114cfed5ef11b439af2cdbac15dd8e511adc0196b416a57a35af83b4e9d"
+    },
+    {
+      "id": "boundary/marker_on_ordinary",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_JVM_INLINE_PLACEMENT_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/marker_on_ordinary.kt",
+      "source_sha256": "141631b0eb22fedb7d5bf8d036a3a62927926b0e3643120c165974e28a2ab0d4"
+    },
+    {
+      "id": "boundary/shadow_marker",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_JVM_INLINE_REQUIRED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/shadow_marker.kt",
+      "source_sha256": "a72df47c5d0bb695976c0719ab2713ebc614c95cd229fa6d93f8e7d9fa76c537"
+    },
+    {
+      "id": "boundary/mutable_carrier",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_CARRIER_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/mutable_carrier.kt",
+      "source_sha256": "4970a333967560de82e7e6f7b126a15cb7719d2fdcba2ed594bd95aa7e880bbc"
+    },
+    {
+      "id": "boundary/plain_parameter",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_CARRIER_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/plain_parameter.kt",
+      "source_sha256": "3b05d5e8ea6170c9b6c6ad55690d7a13fee2114efbff09454d49a3f15c93df11"
+    },
+    {
+      "id": "boundary/two_carriers",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_CARRIER_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/two_carriers.kt",
+      "source_sha256": "33d60870224ace75d026aedaef9df20322427955fdfc34b41bda7a839c444a1f"
+    },
+    {
+      "id": "boundary/data_modifier",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_MODIFIERS_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/data_modifier.kt",
+      "source_sha256": "ef3d30ca88cec5a047add36da765cfd21092b53f40bd6fe8f8d78f41956398e6"
+    },
+    {
+      "id": "boundary/backing_field",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_STORAGE_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/backing_field.kt",
+      "source_sha256": "f93ae1dbbbace767bec66bd4ec132b07187cf9cf32a54b7fe1b266412f225f42"
+    },
+    {
+      "id": "boundary/reserved_hash",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_RESERVED_METHOD",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/reserved_hash.kt",
+      "source_sha256": "b3696dc7748dd0a2030c3a597c565b2dd30e07f2c90ab968d3cb8fa7aad4e39b"
+    },
+    {
+      "id": "boundary/identity",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "candidate_code": "VALUE_IDENTITY_EQUALITY_INVALID",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/identity.kt",
+      "source_sha256": "cf80c277669dcc9278c2ebb830d75ad280564370ce516c09ee581d640d34597b"
+    },
+    {
+      "id": "boundary/generic_carrier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/generic_carrier.kt",
+      "source_sha256": "3f6d547f097edd0808899d355d51ad459b96b4a185b46cecb2e4580c2f809843"
+    },
+    {
+      "id": "boundary/default_carrier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/default_carrier.kt",
+      "source_sha256": "e345f89378bbcc5b547230c2478ed8c14ede6ef1a1523cf942c2d096f1b733c1"
+    },
+    {
+      "id": "boundary/secondary",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/secondary.kt",
+      "source_sha256": "3e2592925166dce51abb4d6e741ecaaca9a524354a767709f4a8b51f0f6535ef"
+    },
+    {
+      "id": "boundary/companion",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_DECLARATION_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/companion.kt",
+      "source_sha256": "5579351142a318bee7bf56ddc122ba703515903805fd3188086927099981491a"
+    },
+    {
+      "id": "boundary/array_carrier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CARRIER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/array_carrier.kt",
+      "source_sha256": "961e9aede970f35c570a52edb5de912b188030f7e5c518cbe0a7f7880c876c87"
+    },
+    {
+      "id": "boundary/float_carrier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CARRIER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/float_carrier.kt",
+      "source_sha256": "420244b3616fcede059118fc538a47ee65a57881cd854a686fd0a84f98bf9d30"
+    },
+    {
+      "id": "boundary/nullable_int_carrier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CARRIER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/nullable_int_carrier.kt",
+      "source_sha256": "af767c952b39279bfbc4d9685c1c4dba58f37c56ae887c843a9237cd9218dea2"
+    },
+    {
+      "id": "boundary/private_constructor",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/private_constructor.kt",
+      "source_sha256": "bac810d1d2c84e41dc5c56fcc002ae31f9e469ee6411b28a7a318cef3b60da87"
+    },
+    {
+      "id": "boundary/inline_member",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/inline_member.kt",
+      "source_sha256": "9044fec693655f382b75ce4777067f946846cee5454b416e419a6a360664e5f3"
+    },
+    {
+      "id": "boundary/generic_interface",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_GENERIC_SUPERTYPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/generic_interface.kt",
+      "source_sha256": "8f18715f9b852e9ac9b0b56d8df1ed1c5faf3c5e638fca0913f87004d9058686"
+    },
+    {
+      "id": "boundary/interface_signature",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/interface_signature.kt",
+      "source_sha256": "30ae2011db419beaf5fa2e10166d3577c202503028d0444fedda62135ec2f7ef"
+    },
+    {
+      "id": "boundary/object_signature",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_OBJECT_MEMBER_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/object_signature.kt",
+      "source_sha256": "9f8cda6f57ef61cb611cd5fa4c552ae357e8a4269f013f8cb77845be8eb6ffca"
+    },
+    {
+      "id": "boundary/top_property",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_PACKAGE_PROPERTY_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/top_property.kt",
+      "source_sha256": "61e5d41d4424480c3c6aa475ddf7094583ee281de0818b81b24d55daf652393a"
+    },
+    {
+      "id": "boundary/nested_classifier",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_NESTED_DECLARATION_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/nested_classifier.kt",
+      "source_sha256": "239b150a4b4fdb9762442f021b0c42182a2846c4fdda3db85e05c5ddec0c0c8a"
+    },
+    {
+      "id": "boundary/generic_value_bound",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_GENERIC_BOUND_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/generic_value_bound.kt",
+      "source_sha256": "679a75d4a9241c5ac1c46bfb5ade93453626d29406658a4ad7b98b0f9ebe6121"
+    },
+    {
+      "id": "boundary/consumer_defaults",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "candidate_code": "VALUE_CONSUMER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+      "source": "reports/correctness/2026-11-02-resume-final-differential/value-classes/consumer_defaults.kt",
+      "source_sha256": "c82194fe08b069570d36a0b2f4b61d15c93915635526bfc9bc21e34017c2f218"
+    },
+    {
+      "id": "kt54656",
+      "family": "single_field_values",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt54656.kt",
+        "sha256": "44c7e30cc0de52985174775482c02a9b04f68f3f7d8b32a3299ffecbc724bebb"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM_IR",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt54656/sources/main/J.java.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt54656/sources/main/1.kt.source-map.json"
+      ],
+      "reasons": [
+        "Java dependency cannot compile independently; mixed cyclic Java/Kotlin requires adapter support"
+      ],
+      "acceptance_scope": "unchanged_original_assessment"
+    },
+    {
+      "id": "kt51353",
+      "family": "single_field_values",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51353.kt",
+        "sha256": "24b23272da5159be02fde68e360bf6b2ec8929a88f3cb11fb4117468836d31ed"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51353/sources/main/1.kt.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51353/sources/main/2.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51353/sources/main/1.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_PACKAGE_PROPERTY_UNSUPPORTED",
+          "message": "Top-level value class properties are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51353/sources/main/1.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51353.kt",
+            "char_offset": 52,
+            "byte_offset": 52,
+            "line": 4,
+            "column": 1
+          }
+        }
+      ],
+      "acceptance_scope": "unchanged_original_assessment"
+    },
+    {
+      "id": "kt51672",
+      "family": "single_field_values",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51672.kt",
+        "sha256": "68bd204d03e717b997831b170c36ff646f2b9aef69c326823e01c38c15d1a295"
+      },
+      "modules": [
+        {
+          "name": "lib",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 2
+            },
+            {
+              "name": "TARGET_BACKEND",
+              "value": "JVM",
+              "original_line": 3
+            }
+          ]
+        },
+        {
+          "name": "main",
+          "dependencies": [
+            "lib"
+          ],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51672/sources/lib/lib.kt.source-map.json",
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51672/sources/main/main.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "lib": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51672/sources/lib/lib.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VALUE_INTERFACE_SIGNATURE_UNSUPPORTED",
+          "message": "Source interface value class signatures and physical ABI calls are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51672/sources/lib/lib.kt",
+          "line": 1,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51672.kt",
+            "char_offset": 69,
+            "byte_offset": 69,
+            "line": 5,
+            "column": 1
+          }
+        }
+      ],
+      "acceptance_scope": "unchanged_original_assessment"
+    },
+    {
+      "id": "kt51254",
+      "family": "single_field_values",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51254.kt",
+        "sha256": "13050932801f9ed3e7200d83de7e99a611a78b3f714c2ed7fa1de667c6b2d067"
+      },
+      "preprocessors": [
+        {
+          "path": "references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/preprocessors/JvmInlineSourceTransformer.kt",
+          "sha256": "4ba19b9c5fc19f22f2d9619d43571455174ebd1d9bce2ec7ca48577d3227d9e3"
+        },
+        {
+          "path": "references/kotlin/compiler/test-infrastructure-utils/testFixtures/org/jetbrains/kotlin/test/utils/TransformersFunctions.kt",
+          "sha256": "c6ceec7e43fdf440a7d81f2e310a8b31b09d25e23705c33d6c87060b7c89cad4"
+        },
+        {
+          "path": "references/kotlin/compiler/test-infrastructure-utils/testFixtures/org/jetbrains/kotlin/test/utils/ReplacingSourceTransformer.kt",
+          "sha256": "173727d11bc3dce72847f427fecd83fa785be45859dfa7e1c86c86dc23e08d36"
+        }
+      ],
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            },
+            {
+              "name": "WORKS_WHEN_VALUE_CLASS",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51254/sources/main/kt51254.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51254/sources/main/kt51254.kt",
+          "offset": 134,
+          "category": "unsupported_language",
+          "code": "SEALED_GENERIC_CLASSIFIER_UNSUPPORTED",
+          "message": "Source generic sealed classifiers are unsupported",
+          "path": "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/kt51254/sources/main/kt51254.kt",
+          "line": 7,
+          "column": 33,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51254.kt",
+            "char_offset": 142,
+            "byte_offset": 142,
+            "line": 7,
+            "column": 33
+          }
+        }
+      ],
+      "acceptance_scope": "unchanged_original_assessment"
+    },
+    {
+      "id": "boxImplDoesNotExecuteInitBlock",
+      "family": "single_field_values",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "harness_unsupported",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInitBlock.kt",
+        "sha256": "f6c25ee8fb9b594a970a01960090681b01dc1749062766f34b4d17d7ec0e9f9c"
+      },
+      "preprocessors": [
+        {
+          "path": "references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/preprocessors/JvmInlineSourceTransformer.kt",
+          "sha256": "4ba19b9c5fc19f22f2d9619d43571455174ebd1d9bce2ec7ca48577d3227d9e3"
+        },
+        {
+          "path": "references/kotlin/compiler/test-infrastructure-utils/testFixtures/org/jetbrains/kotlin/test/utils/TransformersFunctions.kt",
+          "sha256": "c6ceec7e43fdf440a7d81f2e310a8b31b09d25e23705c33d6c87060b7c89cad4"
+        },
+        {
+          "path": "references/kotlin/compiler/test-infrastructure-utils/testFixtures/org/jetbrains/kotlin/test/utils/ReplacingSourceTransformer.kt",
+          "sha256": "173727d11bc3dce72847f427fecd83fa785be45859dfa7e1c86c86dc23e08d36"
+        }
+      ],
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            },
+            {
+              "name": "WORKS_WHEN_VALUE_CLASS",
+              "value": "",
+              "original_line": 2
+            },
+            {
+              "name": "LANGUAGE",
+              "value": "+ValueClasses",
+              "original_line": 3
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-resume-final-differential/value-classes/upstream/boxImplDoesNotExecuteInitBlock/sources/main/boxImplDoesNotExecuteInitBlock.kt.source-map.json"
+      ],
+      "reasons": [
+        "Candidate CLI cannot match requested language/JVM settings"
+      ],
+      "settings": [
+        {
+          "name": "LANGUAGE",
+          "value": "+ValueClasses",
+          "original_line": 3
+        }
+      ],
+      "acceptance_scope": "unchanged_original_assessment"
+    }
+  ],
+  "commands": [
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0000-stderr.txt"
+    },
+    {
+      "label": "Official compiler identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0001-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/value_classes/Values.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0002-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/tests/value_classes/Values.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0003-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official output",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/java",
+        "/Users/yuku/f/git/korrust/tests/value_classes/Check.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0004-stderr.txt"
+    },
+    {
+      "label": "Run fixed caller official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/java:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0005-stderr.txt"
+    },
+    {
+      "label": "Run fixed caller candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/java:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0006-stderr.txt"
+    },
+    {
+      "label": "Compile metadata and ABI readers",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/metadata",
+        "/Users/yuku/f/git/korrust/tests/value_classes/MetadataDump.java",
+        "/Users/yuku/f/git/korrust/tests/value_classes/AbiDump.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0007-stderr.txt"
+    },
+    {
+      "label": "Read metadata/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/metadata:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "MetadataDump",
+        "valuecases.Id",
+        "valuecases.Wide",
+        "valuecases.Text",
+        "valuecases.MaybeText",
+        "valuecases.Tracked",
+        "valuecases.Secret"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0008-stderr.txt"
+    },
+    {
+      "label": "Read metadata/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/metadata:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "MetadataDump",
+        "valuecases.Id",
+        "valuecases.Wide",
+        "valuecases.Text",
+        "valuecases.MaybeText",
+        "valuecases.Tracked",
+        "valuecases.Secret"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0009-stderr.txt"
+    },
+    {
+      "label": "Read abi/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/metadata:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "AbiDump",
+        "valuecases.Id",
+        "valuecases.Wide",
+        "valuecases.Text",
+        "valuecases.MaybeText",
+        "valuecases.Tracked",
+        "valuecases.Secret",
+        "valuecases.Holder",
+        "valuecases.Pair",
+        "valuecases.Mixed",
+        "valuecases.ValuesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0010-stderr.txt"
+    },
+    {
+      "label": "Read abi/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/metadata:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "AbiDump",
+        "valuecases.Id",
+        "valuecases.Wide",
+        "valuecases.Text",
+        "valuecases.MaybeText",
+        "valuecases.Tracked",
+        "valuecases.Secret",
+        "valuecases.Holder",
+        "valuecases.Pair",
+        "valuecases.Mixed",
+        "valuecases.ValuesKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0011-stderr.txt"
+    },
+    {
+      "label": "Compile official/consumer-official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/value_classes/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/consumer-official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0012-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin consumer compiled against official/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/consumer-official:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "valueconsumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0013-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin consumer compiled against official/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/consumer-official:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "valueconsumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0014-stderr.txt"
+    },
+    {
+      "label": "Compile official/consumer-candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/value_classes/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/consumer-candidate",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0015-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin consumer compiled against candidate/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/consumer-candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "valueconsumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0016-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin consumer compiled against candidate/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/consumer-candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "valueconsumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0017-stderr.txt"
+    },
+    {
+      "label": "Compile official/imported-official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/value_classes/Imported.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/imported-official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0018-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/imported-candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/tests/value_classes/Imported.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/imported-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0019-stderr.txt"
+    },
+    {
+      "label": "Compile imported fixed Java caller",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/imported-official:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/imported-java",
+        "/Users/yuku/f/git/korrust/tests/value_classes/ImportedCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0020-stderr.txt"
+    },
+    {
+      "label": "Run imported calls official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/imported-java:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/imported-official:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ImportedCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0021-stderr.txt"
+    },
+    {
+      "label": "Run imported calls candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/imported-java:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/imported-candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ImportedCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0022-stderr.txt"
+    },
+    {
+      "label": "Compile official/app-official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0023-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/app-candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+        "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0024-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/value_classes/AppConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-consumer/official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0025-stderr.txt"
+    },
+    {
+      "label": "Run unchanged app consumer official/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-consumer/official:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "AppConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0026-stderr.txt"
+    },
+    {
+      "label": "Run unchanged app consumer official/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-consumer/official:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "AppConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0027-stderr.txt"
+    },
+    {
+      "label": "Compile official/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/value_classes/AppConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-consumer/candidate",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0028-stderr.txt"
+    },
+    {
+      "label": "Run unchanged app consumer candidate/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-consumer/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "AppConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0029-stderr.txt"
+    },
+    {
+      "label": "Run unchanged app consumer candidate/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-consumer/candidate:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/app-candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "AppConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0030-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/Context.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0031-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/Context.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0032-stderr.txt"
+    },
+    {
+      "label": "Compile direct-context fixed caller/object",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/callers",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/ContextCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0033-stderr.txt"
+    },
+    {
+      "label": "Run direct-context fixed caller/object/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/callers:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ContextCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0034-stderr.txt"
+    },
+    {
+      "label": "Run direct-context fixed caller/object/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/callers:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-object/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ContextCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0035-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/Context.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0036-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/Context.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0037-stderr.txt"
+    },
+    {
+      "label": "Compile direct-context fixed caller/companion",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/callers",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/ContextCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0038-stderr.txt"
+    },
+    {
+      "label": "Run direct-context fixed caller/companion/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/callers:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ContextCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0039-stderr.txt"
+    },
+    {
+      "label": "Run direct-context fixed caller/companion/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/callers:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-companion/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ContextCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0040-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/Context.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0041-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/Context.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0042-stderr.txt"
+    },
+    {
+      "label": "Compile direct-context fixed caller/enum_method",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/callers",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/ContextCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0043-stderr.txt"
+    },
+    {
+      "label": "Run direct-context fixed caller/enum_method/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/callers:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ContextCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0044-stderr.txt"
+    },
+    {
+      "label": "Run direct-context fixed caller/enum_method/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/callers:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_method/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ContextCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0045-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/Context.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0046-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/Context.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0047-stderr.txt"
+    },
+    {
+      "label": "Compile direct-context fixed caller/enum_initializer",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/callers",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/ContextCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0048-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0048-stderr.txt"
+    },
+    {
+      "label": "Run direct-context fixed caller/enum_initializer/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/callers:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ContextCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0049-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0049-stderr.txt"
+    },
+    {
+      "label": "Run direct-context fixed caller/enum_initializer/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/callers:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-enum_initializer/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ContextCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0050-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0050-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/Context.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0051-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0051-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/Context.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0052-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0052-stderr.txt"
+    },
+    {
+      "label": "Compile direct-context fixed caller/interface_default",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/callers",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/ContextCheck.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0053-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0053-stderr.txt"
+    },
+    {
+      "label": "Run direct-context fixed caller/interface_default/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/callers:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ContextCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0054-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0054-stderr.txt"
+    },
+    {
+      "label": "Run direct-context fixed caller/interface_default/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/callers:/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/direct-context-interface_default/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ContextCheck"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 240,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0055-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0055-stderr.txt"
+    },
+    {
+      "label": "Boundary official/object_physical_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/object_physical_call.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-object_physical_call"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0056-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0056-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/object_physical_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/object_physical_call.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-object_physical_call",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0057-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0057-stderr.txt"
+    },
+    {
+      "label": "Boundary official/object_physical_initializer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/object_physical_initializer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-object_physical_initializer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0058-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0058-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/object_physical_initializer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/object_physical_initializer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-object_physical_initializer",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0059-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0059-stderr.txt"
+    },
+    {
+      "label": "Boundary official/companion_physical_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/companion_physical_call.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-companion_physical_call"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0060-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0060-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/companion_physical_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/companion_physical_call.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-companion_physical_call",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0061-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0061-stderr.txt"
+    },
+    {
+      "label": "Boundary official/companion_physical_initializer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/companion_physical_initializer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-companion_physical_initializer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0062-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0062-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/companion_physical_initializer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/companion_physical_initializer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-companion_physical_initializer",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0063-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0063-stderr.txt"
+    },
+    {
+      "label": "Boundary official/interface_physical_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/interface_physical_call.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-interface_physical_call"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0064-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0064-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/interface_physical_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/interface_physical_call.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-interface_physical_call",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0065-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0065-stderr.txt"
+    },
+    {
+      "label": "Boundary official/interface_companion_physical_initializer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/interface_companion_physical_initializer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-interface_companion_physical_initializer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0066-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0066-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/interface_companion_physical_initializer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/interface_companion_physical_initializer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-interface_companion_physical_initializer",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0067-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0067-stderr.txt"
+    },
+    {
+      "label": "Boundary official/enum_physical_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_physical_call.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-enum_physical_call"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0068-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0068-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/enum_physical_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_physical_call.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-enum_physical_call",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0069-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0069-stderr.txt"
+    },
+    {
+      "label": "Boundary official/enum_physical_initializer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_physical_initializer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-enum_physical_initializer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0070-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0070-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/enum_physical_initializer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_physical_initializer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-enum_physical_initializer",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0071-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0071-stderr.txt"
+    },
+    {
+      "label": "Boundary official/enum_physical_default",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_physical_default.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-enum_physical_default"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0072-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0072-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/enum_physical_default",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_physical_default.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-enum_physical_default",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0073-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0073-stderr.txt"
+    },
+    {
+      "label": "Boundary official/enum_entry_physical_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_entry_physical_call.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-enum_entry_physical_call"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0074-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0074-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/enum_entry_physical_call",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_entry_physical_call.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-enum_entry_physical_call",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0075-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0075-stderr.txt"
+    },
+    {
+      "label": "Boundary official/enum_companion_physical_closure",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_companion_physical_closure.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-enum_companion_physical_closure"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0076-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0076-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/enum_companion_physical_closure",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_companion_physical_closure.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-enum_companion_physical_closure",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0077-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0077-stderr.txt"
+    },
+    {
+      "label": "Boundary official/inner_value_modifier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/inner_value_modifier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-inner_value_modifier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0078-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0078-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/inner_value_modifier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/inner_value_modifier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-inner_value_modifier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0079-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0079-stderr.txt"
+    },
+    {
+      "label": "Boundary official/inner_consumer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/inner_consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-inner_consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0080-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0080-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/inner_consumer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/inner_consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-inner_consumer",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0081-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0081-stderr.txt"
+    },
+    {
+      "label": "Boundary official/enum_consumer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-enum_consumer"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0082-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0082-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/enum_consumer",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/enum_consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-enum_consumer",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0083-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0083-stderr.txt"
+    },
+    {
+      "label": "Boundary official/missing_marker",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/missing_marker.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-missing_marker"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0084-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0084-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/missing_marker",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/missing_marker.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-missing_marker",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0085-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0085-stderr.txt"
+    },
+    {
+      "label": "Boundary official/marker_on_ordinary",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/marker_on_ordinary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-marker_on_ordinary"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0086-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0086-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/marker_on_ordinary",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/marker_on_ordinary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-marker_on_ordinary",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0087-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0087-stderr.txt"
+    },
+    {
+      "label": "Boundary official/shadow_marker",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/shadow_marker.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-shadow_marker"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0088-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0088-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/shadow_marker",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/shadow_marker.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-shadow_marker",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0089-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0089-stderr.txt"
+    },
+    {
+      "label": "Boundary official/mutable_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/mutable_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-mutable_carrier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0090-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0090-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/mutable_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/mutable_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-mutable_carrier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0091-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0091-stderr.txt"
+    },
+    {
+      "label": "Boundary official/plain_parameter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/plain_parameter.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-plain_parameter"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0092-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0092-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/plain_parameter",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/plain_parameter.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-plain_parameter",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0093-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0093-stderr.txt"
+    },
+    {
+      "label": "Boundary official/two_carriers",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/two_carriers.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-two_carriers"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0094-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0094-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/two_carriers",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/two_carriers.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-two_carriers",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0095-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0095-stderr.txt"
+    },
+    {
+      "label": "Boundary official/data_modifier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/data_modifier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-data_modifier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0096-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0096-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/data_modifier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/data_modifier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-data_modifier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0097-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0097-stderr.txt"
+    },
+    {
+      "label": "Boundary official/backing_field",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/backing_field.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-backing_field"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0098-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0098-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/backing_field",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/backing_field.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-backing_field",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0099-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0099-stderr.txt"
+    },
+    {
+      "label": "Boundary official/reserved_hash",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/reserved_hash.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-reserved_hash"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0100-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0100-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/reserved_hash",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/reserved_hash.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-reserved_hash",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0101-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0101-stderr.txt"
+    },
+    {
+      "label": "Boundary official/identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/identity.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-identity"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0102-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0102-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/identity.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-identity",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0103-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0103-stderr.txt"
+    },
+    {
+      "label": "Boundary official/generic_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/generic_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-generic_carrier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0104-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0104-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/generic_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/generic_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-generic_carrier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0105-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0105-stderr.txt"
+    },
+    {
+      "label": "Boundary official/default_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/default_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-default_carrier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0106-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0106-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/default_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/default_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-default_carrier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0107-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0107-stderr.txt"
+    },
+    {
+      "label": "Boundary official/secondary",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/secondary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-secondary"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0108-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0108-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/secondary",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/secondary.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-secondary",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0109-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0109-stderr.txt"
+    },
+    {
+      "label": "Boundary official/companion",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/companion.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-companion"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0110-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0110-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/companion",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/companion.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-companion",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0111-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0111-stderr.txt"
+    },
+    {
+      "label": "Boundary official/array_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/array_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-array_carrier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0112-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0112-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/array_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/array_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-array_carrier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0113-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0113-stderr.txt"
+    },
+    {
+      "label": "Boundary official/float_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/float_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-float_carrier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0114-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0114-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/float_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/float_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-float_carrier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0115-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0115-stderr.txt"
+    },
+    {
+      "label": "Boundary official/nullable_int_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/nullable_int_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-nullable_int_carrier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0116-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0116-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/nullable_int_carrier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/nullable_int_carrier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-nullable_int_carrier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0117-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0117-stderr.txt"
+    },
+    {
+      "label": "Boundary official/private_constructor",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/private_constructor.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-private_constructor"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0118-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0118-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/private_constructor",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/private_constructor.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-private_constructor",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0119-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0119-stderr.txt"
+    },
+    {
+      "label": "Boundary official/inline_member",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/inline_member.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-inline_member"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0120-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0120-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/inline_member",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/inline_member.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-inline_member",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0121-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0121-stderr.txt"
+    },
+    {
+      "label": "Boundary official/generic_interface",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/generic_interface.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-generic_interface"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0122-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0122-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/generic_interface",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/generic_interface.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-generic_interface",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0123-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0123-stderr.txt"
+    },
+    {
+      "label": "Boundary official/interface_signature",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/interface_signature.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-interface_signature"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0124-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0124-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/interface_signature",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/interface_signature.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-interface_signature",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0125-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0125-stderr.txt"
+    },
+    {
+      "label": "Boundary official/object_signature",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/object_signature.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-object_signature"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0126-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0126-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/object_signature",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/object_signature.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-object_signature",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0127-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0127-stderr.txt"
+    },
+    {
+      "label": "Boundary official/top_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/top_property.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-top_property"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0128-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0128-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/top_property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/top_property.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-top_property",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0129-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0129-stderr.txt"
+    },
+    {
+      "label": "Boundary official/nested_classifier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/nested_classifier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-nested_classifier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0130-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0130-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/nested_classifier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/nested_classifier.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-nested_classifier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0131-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0131-stderr.txt"
+    },
+    {
+      "label": "Boundary official/generic_value_bound",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/generic_value_bound.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-generic_value_bound"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0132-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0132-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/generic_value_bound",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/generic_value_bound.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-generic_value_bound",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0133-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0133-stderr.txt"
+    },
+    {
+      "label": "Boundary official/consumer_defaults",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/consumer_defaults.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/oracle-consumer_defaults"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0134-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0134-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/consumer_defaults",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/consumer_defaults.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/candidate-consumer_defaults",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0135-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0135-stderr.txt"
+    },
+    {
+      "label": "kt54656/javac-dependency",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt54656/java-dependencies/main",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt54656/sources/main/J.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0136-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0136-stderr.txt"
+    },
+    {
+      "label": "kt51353/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51353/sources/main/1.kt",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51353/sources/main/2.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51353/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0137-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0137-stderr.txt"
+    },
+    {
+      "label": "kt51353/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51353/sources/main/1.kt",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51353/sources/main/2.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51353/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0138-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0138-stderr.txt"
+    },
+    {
+      "label": "kt51672/official/lib",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51672/sources/lib/lib.kt",
+        "-module-name",
+        "lib",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51672/official/lib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0139-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0139-stderr.txt"
+    },
+    {
+      "label": "kt51672/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51672/sources/main/main.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51672/official/lib:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51672/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0140-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0140-stderr.txt"
+    },
+    {
+      "label": "kt51672/candidate/lib",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51672/sources/lib/lib.kt",
+        "--module-name",
+        "lib",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51672/candidate/lib",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0141-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0141-stderr.txt"
+    },
+    {
+      "label": "kt51254/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51254/sources/main/kt51254.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51254/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0142-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0142-stderr.txt"
+    },
+    {
+      "label": "kt51254/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51254/sources/main/kt51254.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/kt51254/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0143-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0143-stderr.txt"
+    },
+    {
+      "label": "boxImplDoesNotExecuteInitBlock/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/boxImplDoesNotExecuteInitBlock/sources/main/boxImplDoesNotExecuteInitBlock.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-final-differential/value-classes/upstream/boxImplDoesNotExecuteInitBlock/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-XXLanguage:+ValueClasses",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0144-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-final-differential/value-classes/commands/0144-stderr.txt"
+    }
+  ],
+  "compiler": {
+    "path": "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust",
+    "sha256": "362e12fd88ea493a1132d85a618a656f916242ef7ba4f48d002ea64fb054105b"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "claims": "Bounded single-field value-class source and imported JVM ABI with boxed internal temporaries; no optimization, full reflection, Android runtime or full-app claim.",
+  "abi_scope": "Exact reflection signatures/modifiers/generic signatures of public/protected nonsynthetic methods, carrier fields, required box/unbox/constructor/default helpers and marker constructors. Additional private synthetic implementation members are excluded and disclosed.",
+  "limitations": [
+    "Source carriers Int, Long, String and nullable String; nongeneric declarations and nongeneric interfaces.",
+    "Generic or nested source value classifiers, secondary/default/explicit constructor visibility, companions, parameterized supertypes and decorated/inline/generic/vararg member shapes are explicit boundaries.",
+    "Source interface/object/companion signatures and enum storage containing value classes remain explicit boundaries. Physical carrier calls in those emitter contexts are rejected; direct boxed value construction/getters returning ordinary types are exercised. Package value properties remain unsupported; generic collections and ordinary class/data-class consumers are exercised.",
+    "Inner/enum/defaulted/secondary value-consuming constructors remain explicit boundaries. Unsigned source semantics are a separate unaccepted family; imported value carrier metadata supplies a reusable foundation."
+  ],
+  "reference_discrepancy": {
+    "spec": "references/kotlin-spec/docs/src/md/kotlin.core/declarations.md:710-739",
+    "observed": "Pinned JVM compiler default toString uses Wrapper(property=value), permits nonpublic carrier properties and pure box-impl does not rerun init. Older spec text describes property-delegating toString, public carriers and possible primary-constructor boxing. Match pinned JVM behavior and record the discrepancy."
+  },
+  "frozen_input_hashes": {
+    "/Users/yuku/f/git/korrust/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "/Users/yuku/f/git/korrust/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "/Users/yuku/f/git/korrust/src/annotation_declarations.rs": "1c50fb5e94df8a4d48d14d03a00d411c33b402bbc847d0df45ac622d39b7be01",
+    "/Users/yuku/f/git/korrust/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "/Users/yuku/f/git/korrust/src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "/Users/yuku/f/git/korrust/src/bytecode/annotations.rs": "397e6b298ce180be4f6e733e2240da2f23f36bc975be46e5700ced1162d9741c",
+    "/Users/yuku/f/git/korrust/src/bytecode/class_companion.rs": "a5756a0c46cc33fa449bebe330ef5748789da70b4b941c21c7f72aa923802fc2",
+    "/Users/yuku/f/git/korrust/src/bytecode/data.rs": "703ed86a9cda8f219aa57869043e0537d20e1e6866bace28049f01467afd133b",
+    "/Users/yuku/f/git/korrust/src/bytecode/defaults.rs": "f8eb6d73077c057a293d676723c2801007d9d0fa21dd6784ae16730b1637e0d9",
+    "/Users/yuku/f/git/korrust/src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "/Users/yuku/f/git/korrust/src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "/Users/yuku/f/git/korrust/src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+    "/Users/yuku/f/git/korrust/src/bytecode/interfaces.rs": "1cfee2e8d5d0847eb719dedde5b429953c3f9d24697fcee653aa278efa1d4c49",
+    "/Users/yuku/f/git/korrust/src/bytecode/lambdas.rs": "50d5de628118856e96b21d69b555b626e23608838dc4fca1eef22acca96fcc65",
+    "/Users/yuku/f/git/korrust/src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "/Users/yuku/f/git/korrust/src/bytecode/suspend.rs": "ec4fb43e1402edeb4e85b60ed3a360408ad2dccdb408caca5e27287115a1e0c4",
+    "/Users/yuku/f/git/korrust/src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "/Users/yuku/f/git/korrust/src/bytecode.rs": "433fd46a2ca3c7c0a2bf3de0d62ea3eb761cdcaee91bcb1ce9eb81bbbe54a757",
+    "/Users/yuku/f/git/korrust/src/check.rs": "7a2c66bb6210f61d6062f2230f5d1b87f87d5bcf1773fdb3ca74f9e51c940b13",
+    "/Users/yuku/f/git/korrust/src/check_annotation_placements.rs": "003f33a33ee64b2fc939e07f6c54f3e1e0acee4138582c186de258499698c840",
+    "/Users/yuku/f/git/korrust/src/check_annotations.rs": "862647750f7f11a048d9cfae0df11cb931078fb56409939a902222d6b5f336be",
+    "/Users/yuku/f/git/korrust/src/check_captures.rs": "d1bc5a311e720072df4eb38bef24ff253a01c4bee4d6ca5690f51455024ff1ba",
+    "/Users/yuku/f/git/korrust/src/check_class_delegation.rs": "05355235cd6de1998c890c17fe9615c1a020f6e8faee704af48a243e8e957741",
+    "/Users/yuku/f/git/korrust/src/check_classes.rs": "a1f83cc6ade810a6227503cd7fe88f9f6d69af0e86784d0e47d4dc0c8737e473",
+    "/Users/yuku/f/git/korrust/src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+    "/Users/yuku/f/git/korrust/src/check_declarations.rs": "bdc6377e186d0a9f71561e33d238e9d042eddea14f77405d9daf417be58cf1b4",
+    "/Users/yuku/f/git/korrust/src/check_delegates.rs": "094b9bdc43d4cecb0fb3dcef1681181f8e7737804f3808582192b3190d01dc92",
+    "/Users/yuku/f/git/korrust/src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "/Users/yuku/f/git/korrust/src/check_functions.rs": "ce6c57f2a6b5e0765aa1e20efbe5f0d5ac0825d4353e1f1d4501698c26435834",
+    "/Users/yuku/f/git/korrust/src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "/Users/yuku/f/git/korrust/src/check_interfaces.rs": "8c31ef564cf99b24fd0e6a9416886e60abc0c96e9214834c1501692d883b6de5",
+    "/Users/yuku/f/git/korrust/src/check_ir_walk.rs": "358a447f20e6957785a582f3a2842e937b1db7bf204afcac9ee5fc1ba1779e68",
+    "/Users/yuku/f/git/korrust/src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "/Users/yuku/f/git/korrust/src/check_library.rs": "f84ed384f7c93a10bb0d44cacb01f8e8569f776606252680f12d64e9efe738a6",
+    "/Users/yuku/f/git/korrust/src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+    "/Users/yuku/f/git/korrust/src/check_objects.rs": "a4cd8542a749e0dc670f571363df5fe260e83fa7c2cd6ccd9e1ed5bb79cbf5d3",
+    "/Users/yuku/f/git/korrust/src/check_operations.rs": "4ce334fcf91a6d65683c1b9354d6a2df64b170c556e0330790920a4309a30363",
+    "/Users/yuku/f/git/korrust/src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+    "/Users/yuku/f/git/korrust/src/check_references.rs": "dd677362351c02d61f48ff4466ff0418ab9eb33a3152f5947640fc14ee12b5b2",
+    "/Users/yuku/f/git/korrust/src/check_relations.rs": "3915c7cc3637126fb82acd68714025ea81e1289663a0b4cfce9840483b2b13a5",
+    "/Users/yuku/f/git/korrust/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "/Users/yuku/f/git/korrust/src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "/Users/yuku/f/git/korrust/src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "/Users/yuku/f/git/korrust/src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "/Users/yuku/f/git/korrust/src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "/Users/yuku/f/git/korrust/src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "/Users/yuku/f/git/korrust/src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "/Users/yuku/f/git/korrust/src/classpath/metadata.rs": "da9a12ea565853f297f1bc7e6fb1dba6cf55670f43380873090719c23af51ca5",
+    "/Users/yuku/f/git/korrust/src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+    "/Users/yuku/f/git/korrust/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "/Users/yuku/f/git/korrust/src/classpath/signature.rs": "8b9017fa76bb300363825f6db7057c7f67218da83ebac6a27568b792d58e1142",
+    "/Users/yuku/f/git/korrust/src/classpath/source.rs": "b70e8ea77a4c689dbe3164efb5217fa298e2d99f535c7dad6147f79a10a684ee",
+    "/Users/yuku/f/git/korrust/src/classpath/source_enums.rs": "3366b5ad4fc96e61e95b398e72dbb6c6a3de8e734247b6e7cdba7d937ef527f4",
+    "/Users/yuku/f/git/korrust/src/classpath/value_names.rs": "a13518357c7c68a8e9df0ee09dc114fbc51de37d1cf12407ba84a77b6a93a2ba",
+    "/Users/yuku/f/git/korrust/src/classpath.rs": "e9948e6ce0b3879c13313078295c41c0aed9ba12304d608acba1eb63dd87e691",
+    "/Users/yuku/f/git/korrust/src/compiled_inline.rs": "06250c79ae618989985360ced0235cca4628f0f7c4d92630a00295d217310102",
+    "/Users/yuku/f/git/korrust/src/const_eval.rs": "bd03e7339e107ee39f061225d9e838c24bbad37a012d3c2dc8d3cbed8779980d",
+    "/Users/yuku/f/git/korrust/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "/Users/yuku/f/git/korrust/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "/Users/yuku/f/git/korrust/src/jvm_descriptor.rs": "a665e290c4777ceacb0a986f03975491d8d5e51bcaed3a322606b65d8d571dfb",
+    "/Users/yuku/f/git/korrust/src/lib.rs": "edfca3d553ee9bfd6232863b3df7b807f20f23d71a68b5e822d2b8900a6373e3",
+    "/Users/yuku/f/git/korrust/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "/Users/yuku/f/git/korrust/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "/Users/yuku/f/git/korrust/src/metadata.rs": "8ba7c67e78229b4626f1cc32539d24e6fcf6f6026d5e658cc0537dddea66c8f7",
+    "/Users/yuku/f/git/korrust/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "/Users/yuku/f/git/korrust/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "/Users/yuku/f/git/korrust/src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "/Users/yuku/f/git/korrust/src/syntax.rs": "80e3f98b938bcfa76e58d9912a34b56097e203ed4dafdf861d3f59b549fd7ba9",
+    "/Users/yuku/f/git/korrust/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "/Users/yuku/f/git/korrust/src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "/Users/yuku/f/git/korrust/tests/value_classes/AbiDump.java": "e3dff66754b0b606183c4413f7c42e58022639e6a1520955c2524edd2cf5dbe6",
+    "/Users/yuku/f/git/korrust/tests/value_classes/AppConsumer.kt": "756c9da3853c40521b94ae24f0625cde6a2d08e61233ec44acd759a5f3a579e4",
+    "/Users/yuku/f/git/korrust/tests/value_classes/Check.java": "762dfc558575b49ec8cdd2c43a1e1d216cad03abe400291619005d9100b411f8",
+    "/Users/yuku/f/git/korrust/tests/value_classes/Consumer.kt": "bbb8ac14aec0ad18a899ac57347f4d5d518a19c4e5d3c343d6e769cf09688d7e",
+    "/Users/yuku/f/git/korrust/tests/value_classes/Imported.kt": "6f62683660fd6c66051c0a68a566f168310ef03336c7cacc19327c5b13670664",
+    "/Users/yuku/f/git/korrust/tests/value_classes/ImportedCheck.java": "5ef2439f6deeee26d34cb40fff225078986c034493a769f811fc6124796987da",
+    "/Users/yuku/f/git/korrust/tests/value_classes/MetadataDump.java": "99071205c84859fdba7e49b936f5d959d09d7bec2beb0bf846b4122195c1027e",
+    "/Users/yuku/f/git/korrust/tests/value_classes/Values.kt": "adcb5279ffb7c8c38126a3686bbcd9db87cb2b206e84ad6d631801cc5dd35438",
+    "/Users/yuku/f/git/korrust/tests/value_classes.rs": "7473a090e8945ec99b8b96f179f2fe20e907833d2ca31fc818b611360de2ccee",
+    "/Users/yuku/f/git/korrust/tools/check_value_classes.py": "dd7cc235e192a1b00515db00b8729c05abd07e698963476e0cfcba728bd3ec9c",
+    "/Users/yuku/f/git/korrust/tools/upstream_jvm.py": "10a550964853b0b4bfdcbdc48f3522b6b3122d36dde2bb5d5bda26a9855a6674",
+    "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/inlineClasses/kt54656.kt": "44c7e30cc0de52985174775482c02a9b04f68f3f7d8b32a3299ffecbc724bebb",
+    "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51353.kt": "24b23272da5159be02fde68e360bf6b2ec8929a88f3cb11fb4117468836d31ed",
+    "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51672.kt": "68bd204d03e717b997831b170c36ff646f2b9aef69c326823e01c38c15d1a295",
+    "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/inlineClasses/kt51254.kt": "13050932801f9ed3e7200d83de7e99a611a78b3f714c2ed7fa1de667c6b2d067",
+    "/Users/yuku/f/git/korrust/references/kotlin/compiler/testData/codegen/box/inlineClasses/boxImplDoesNotExecuteInitBlock.kt": "f6c25ee8fb9b594a970a01960090681b01dc1749062766f34b4d17d7ec0e9f9c",
+    "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt": "487b8ecadfe52f276154df2c2fabe3d4bdea0deb550ad5cd7400dd63fe0ddc0c",
+    "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt": "edaa027f6e6f053e85ae87a9afe7e9a6ded54e0fb09f98a1fe2db12391ecf37d",
+    "/Users/yuku/f/git/korrust/references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "/Users/yuku/f/git/korrust/references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "/Users/yuku/f/git/korrust/references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/preprocessors/JvmInlineSourceTransformer.kt": "4ba19b9c5fc19f22f2d9619d43571455174ebd1d9bce2ec7ca48577d3227d9e3",
+    "/Users/yuku/f/git/korrust/target/resume-final-validation/frozen-root/target/release/korrust": "362e12fd88ea493a1132d85a618a656f916242ef7ba4f48d002ea64fb054105b",
+    "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "counts": {
+    "harness_unsupported": 2,
+    "invalid_kotlin": 11,
+    "pass": 31,
+    "unsupported_language": 32
+  },
+  "archived_from": "target/resume-final-differential/value-classes"
+}

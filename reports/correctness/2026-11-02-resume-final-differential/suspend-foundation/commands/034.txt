@@ -1,0 +1,4 @@
+$ /Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc /Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/Invalid4.kt -cp /Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /Users/yuku/f/git/korrust/target/resume-final-differential/suspend-foundation/invalid-official-4 -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+target/resume-final-differential/suspend-foundation/Invalid4.kt:1:66: error: suspend function 'suspend fun invoke(): String' can only be called from a coroutine or another suspend function.
+object Holder { fun broken(step: suspend () -> String): String = step() }
+                                                                 ^^^^
