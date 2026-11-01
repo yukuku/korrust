@@ -1,0 +1,727 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T18:26:34.361796+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/resume-root-build/release/korrust",
+    "sha256": "6074a3e18891493a827e5bdd712c73c25897593236354e1d628f168d74d8ec73"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "eeceb4147f17677e93217ddd50024c4bda8e78a4cb5c3cd9e91f23e3db7eb4b8",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "8a245914527e0c6f69e4ac8b158f6d8ad4c72ae327596664417a1b95c25fbd31",
+    "src/bytecode/annotations.rs": "3a8a701cfbcd205509c6e41d3893c370d6dbe957b340aec70bc8295f0b576075",
+    "src/bytecode/class_companion.rs": "5a2a3e7d7464473d406d012f4805d1776a6ba3980589f5cb8332c0e7fdb326e7",
+    "src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+    "src/bytecode/defaults.rs": "7bc9216367008af8bd35ac2b7e6fe923b873b36b58124546341d3c45f0442747",
+    "src/bytecode/enums.rs": "cfedeea65cc8d7fbf6a611447f27aeb8ce25bdb08f5d4e2c62d8a92bcdff207a",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+    "src/bytecode/interfaces.rs": "7f3892aa6ecd55b8ef27878b7978dbff74d203403dd83330f5b9b5291910cf57",
+    "src/bytecode/lambdas.rs": "9ad745acc30498f417c247a7576d8bd5e4649fe5b7de8d54a3fcd09fc6b45611",
+    "src/bytecode/objects.rs": "c4bfee42d5d0839ec66d5192688a8b9922e26474e11ca242b055a1f13e0f6139",
+    "src/bytecode.rs": "eb9d2befaec3794ef5b8c6456452d104ab5eeb6973b8f4966aac637ddae566e1",
+    "src/check.rs": "024e03f051385bb1dfd2bfdb58eb4dce4e1ea5da2e8ec99e302015804cf97a98",
+    "src/check_annotation_placements.rs": "003f33a33ee64b2fc939e07f6c54f3e1e0acee4138582c186de258499698c840",
+    "src/check_annotations.rs": "6f3509f695ac6283a0db471b4811b7ee8c851e3a53564cadfe134431144efa8b",
+    "src/check_captures.rs": "d1bc5a311e720072df4eb38bef24ff253a01c4bee4d6ca5690f51455024ff1ba",
+    "src/check_class_delegation.rs": "4865b9e2f979bc564efd56073684bd6f50f0507f36a192ef7cb61be5cc27c24e",
+    "src/check_classes.rs": "a1f83cc6ade810a6227503cd7fe88f9f6d69af0e86784d0e47d4dc0c8737e473",
+    "src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+    "src/check_declarations.rs": "ff0ceac97ed30b4685406ee85b3a07d39ec7a10357b13ebc4723c5f2506f469b",
+    "src/check_delegates.rs": "60c4f8e759ad7823d12a3a5de6dc38379ec84fa02d54973d9941a96a689500e7",
+    "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "src/check_functions.rs": "93d5cac8d9d235040475bbb66358263ac66785e3762b1ba1901b8e5959aac08c",
+    "src/check_interfaces.rs": "68d547c2bf813ade11bfe751e29976496a2e1ed4cd4faf015f9b5e04f9a45382",
+    "src/check_ir_walk.rs": "c4fcf80b264ea1cd561a3a049611b45b79a032713455a7070d9b4bf1065328c2",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_library.rs": "5419e766d0fcd77cc2905647c48acdb2aa0863f49bbdc4c9a7a38f967d9f7b8c",
+    "src/check_member_extensions.rs": "1b20fcbae63e864bad3301e2760bbd3994447a274de988e5a3ea60883c12bff8",
+    "src/check_objects.rs": "c3f6607e79e0b5ba26f21cb133f737a1bb49a321145e0de860f27fe96f9525cc",
+    "src/check_operations.rs": "35e8f93cb80446c830fd28936f1381ba32d2e85f95e2bd92e5f47182e196f755",
+    "src/check_overloads.rs": "1ef7076a63672e2b7a6343034324e29082716f5ab0e27d31b3df6adf615ebdfa",
+    "src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+    "src/check_relations.rs": "02e8784642f3533fc5b0539306484828f1edc0cf4c9decdb466ef70bdd194438",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/classpath/aliases.rs": "f28a407ee6d461b9a0127fe8adeadb0f1b908336fa70bf96c2c528da513d1c2f",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "a78eccda89f5f7c9bdb5916ba5444a7a35cc2bfc9f4750a0e04d9026fdadd407",
+    "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "df9eb2a4366325dcd7ea37467ffdc8c97e3304917bcb86feec5bd1cc43575765",
+    "src/classpath/source.rs": "c081a73039b1af750be55c1b8bbe6f6277c7d90dc0d70d6469289e8f6059c203",
+    "src/classpath/source_enums.rs": "4665b7060acf59984bb80ef5f7e41de1a0e093dd1c18445dec0bed5dd5eb2ccc",
+    "src/classpath/value_names.rs": "a13518357c7c68a8e9df0ee09dc114fbc51de37d1cf12407ba84a77b6a93a2ba",
+    "src/classpath.rs": "f34eb082679bd436e76c4929601afd8861dbf5d0a177f3f820318e6608643f20",
+    "src/compiled_inline.rs": "934bc403f7ded02a406c8b9cf6e1c72651b5e71c99c00b05b2667fa17d68b5ba",
+    "src/const_eval.rs": "044fc1cd3f1a40c951f7456baeab58608a259244f57668b20036db29b2691ce0",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/jvm_descriptor.rs": "a665e290c4777ceacb0a986f03975491d8d5e51bcaed3a322606b65d8d571dfb",
+    "src/lib.rs": "ff430d3a46d360c8b717b3d1b635f1ac4a2814f288ffecbd704d58e01651a520",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "6a0cc2c710a41cde3db746c6c3619d59634fd542f6f472801cefb370aeaa402e",
+    "src/object_lowering.rs": "ead1b3e529533d441e08d57b5252a0ea04bfbbe2015d9e3ff820418b9cbc771d",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "src/syntax.rs": "661815d9f4a8731c7548becd5421c1bac0d482b3a24ae2c0cdf5d21c4fdf5b67",
+    "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "tests/fixtures/enum_polymorphism/Calls.java": "4c47a5e9cc616f1d47bdab644a8705ee03c3994477d117b98b397b04ac5e5f4c",
+    "tests/fixtures/enum_polymorphism/Consumer.kt": "43f9104152b1f22ee0d2a4089855831b07e88ec7674b4ddfa02c132c4864353c",
+    "tests/fixtures/enum_polymorphism/MetadataCheck.java": "3b54885677b6a62b70d43236f3d7b32ae1429247b0466e502fd806a0f28cebc9",
+    "tests/fixtures/enum_polymorphism/Models.kt": "b3f3879b3d0186d790315d377afed65abc5991fb79064807afa08c51be3ba801",
+    "tools/check_enum_polymorphism.py": "377155263b6c79a993e773e07bae9274a029941852ababeb2cef4aad170941fa",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "tools/upstream_enum_polymorphism.json": "ceb2a826af8a64b577634f2ddad3fdb5aa3048c2aa33b1a1f90882641e0db894",
+    "target/resume-root-build/release/korrust": "6074a3e18891493a827e5bdd712c73c25897593236354e1d628f168d74d8ec73",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "cases": [
+    {
+      "id": "independent_java_runtime",
+      "outcome": "pass",
+      "detail": "Identical Java bytecode, compiled against official only, passes independent initialization, dispatch, defaults, enum and reflection assertions under -Xverify:all"
+    },
+    {
+      "id": "kotlin_consumer_official",
+      "outcome": "pass",
+      "detail": "Official Kotlin consumer compiled against official and verified against both outputs"
+    },
+    {
+      "id": "kotlin_consumer_candidate",
+      "outcome": "pass",
+      "detail": "Official Kotlin consumer compiled against candidate and verified against both outputs"
+    },
+    {
+      "id": "kotlin_metadata",
+      "outcome": "pass",
+      "detail": "Decoded class kind/modality/identity, enum entry list, member flags and constructor parameter default flags match pinned metadata"
+    },
+    {
+      "id": "jvm_signatures",
+      "outcome": "pass",
+      "detail": "All selected enum and entry class JVM fields, constructors and method signatures match javap -p -s"
+    },
+    {
+      "id": "invalid_0",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid0.kt",
+            "offset": 15,
+            "category": "invalid_kotlin",
+            "code": "ENUM_ENTRY_ABSTRACT_MEMBER_MISSING",
+            "message": "Enum entry must implement abstract members",
+            "path": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid0.kt",
+            "line": 1,
+            "column": 16
+          }
+        ]
+      }
+    },
+    {
+      "id": "invalid_1",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid1.kt",
+            "offset": 15,
+            "category": "invalid_kotlin",
+            "code": "ENUM_ENTRY_ABSTRACT_MEMBER_MISSING",
+            "message": "Enum entry must implement abstract members",
+            "path": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid1.kt",
+            "line": 1,
+            "column": 16
+          }
+        ]
+      }
+    },
+    {
+      "id": "invalid_2",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid2.kt",
+            "offset": 19,
+            "category": "invalid_kotlin",
+            "code": "FINAL_MEMBER_OVERRIDE",
+            "message": "Cannot override a final member",
+            "path": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid2.kt",
+            "line": 1,
+            "column": 20
+          }
+        ]
+      }
+    },
+    {
+      "id": "invalid_3",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid3.kt",
+            "offset": 32,
+            "category": "invalid_kotlin",
+            "code": "MISSING_INTERFACE_IMPLEMENTATION",
+            "message": "Missing interface implementation: run",
+            "path": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid3.kt",
+            "line": 1,
+            "column": 33
+          }
+        ]
+      }
+    },
+    {
+      "id": "invalid_4",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid4.kt",
+            "offset": 19,
+            "category": "invalid_kotlin",
+            "code": "NOTHING_TO_OVERRIDE",
+            "message": "Member overrides no supported interface declaration",
+            "path": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid4.kt",
+            "line": 1,
+            "column": 20
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported_abstract_property",
+      "outcome": "unsupported_language",
+      "detail": {
+        "oracle": "valid Kotlin",
+        "diagnostics": [
+          {
+            "source_identity": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/UnsupportedAbstractProperty.kt",
+            "offset": 50,
+            "category": "unsupported_language",
+            "code": "ABSTRACT_CLASS_PROPERTY_UNSUPPORTED",
+            "message": "Abstract class and enum properties require unsupported abstract accessor declarations",
+            "path": "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/UnsupportedAbstractProperty.kt",
+            "line": 1,
+            "column": 51
+          }
+        ]
+      }
+    }
+  ],
+  "commands": [
+    {
+      "label": "official model",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/enum_polymorphism/Models.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/000.txt"
+    },
+    {
+      "label": "candidate model",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/tests/fixtures/enum_polymorphism/Models.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/001.txt"
+    },
+    {
+      "label": "Java caller against official only",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/java",
+        "/Users/yuku/f/git/korrust/tests/fixtures/enum_polymorphism/Calls.java",
+        "/Users/yuku/f/git/korrust/tests/fixtures/enum_polymorphism/MetadataCheck.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/002.txt"
+    },
+    {
+      "label": "official verified independent assertions",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/official:/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/java:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "enums.polymorphism.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/003.txt"
+    },
+    {
+      "label": "candidate verified independent assertions",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/candidate:/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/java:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "enums.polymorphism.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/004.txt"
+    },
+    {
+      "label": "Kotlin consumer against official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/enum_polymorphism/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/005.txt"
+    },
+    {
+      "label": "Kotlin consumer official runs on official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/consumer-official:/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/006.txt"
+    },
+    {
+      "label": "Kotlin consumer official runs on candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/consumer-official:/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/007.txt"
+    },
+    {
+      "label": "Kotlin consumer against candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/enum_polymorphism/Consumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/008.txt"
+    },
+    {
+      "label": "Kotlin consumer candidate runs on official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/consumer-candidate:/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/official:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/009.txt"
+    },
+    {
+      "label": "Kotlin consumer candidate runs on candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/consumer-candidate:/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/candidate:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/010.txt"
+    },
+    {
+      "label": "official decoded Kotlin metadata",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/official:/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/java:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "enums.polymorphism.MetadataCheck",
+        "enums.polymorphism.Task$Companion",
+        "enums.polymorphism.Trace",
+        "enums.polymorphism.Task",
+        "enums.polymorphism.Task$LEFT",
+        "enums.polymorphism.Task$RIGHT",
+        "enums.polymorphism.AbstractAction",
+        "enums.polymorphism.AbstractAction$A",
+        "enums.polymorphism.AbstractAction$B",
+        "enums.polymorphism.PerEntry",
+        "enums.polymorphism.PerEntry$A",
+        "enums.polymorphism.PerEntry$B",
+        "enums.polymorphism.DefaultOnly"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/011.txt"
+    },
+    {
+      "label": "candidate decoded Kotlin metadata",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/candidate:/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/java:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "enums.polymorphism.MetadataCheck",
+        "enums.polymorphism.Task$Companion",
+        "enums.polymorphism.Trace",
+        "enums.polymorphism.Task",
+        "enums.polymorphism.Task$LEFT",
+        "enums.polymorphism.Task$RIGHT",
+        "enums.polymorphism.AbstractAction",
+        "enums.polymorphism.AbstractAction$A",
+        "enums.polymorphism.AbstractAction$B",
+        "enums.polymorphism.PerEntry",
+        "enums.polymorphism.PerEntry$A",
+        "enums.polymorphism.PerEntry$B",
+        "enums.polymorphism.DefaultOnly"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/012.txt"
+    },
+    {
+      "label": "official JVM signatures",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/official",
+        "enums.polymorphism.Task$Companion",
+        "enums.polymorphism.Trace",
+        "enums.polymorphism.Task",
+        "enums.polymorphism.Task$LEFT",
+        "enums.polymorphism.Task$RIGHT",
+        "enums.polymorphism.AbstractAction",
+        "enums.polymorphism.AbstractAction$A",
+        "enums.polymorphism.AbstractAction$B",
+        "enums.polymorphism.PerEntry",
+        "enums.polymorphism.PerEntry$A",
+        "enums.polymorphism.PerEntry$B",
+        "enums.polymorphism.DefaultOnly"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/013.txt"
+    },
+    {
+      "label": "candidate JVM signatures",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/candidate",
+        "enums.polymorphism.Task$Companion",
+        "enums.polymorphism.Trace",
+        "enums.polymorphism.Task",
+        "enums.polymorphism.Task$LEFT",
+        "enums.polymorphism.Task$RIGHT",
+        "enums.polymorphism.AbstractAction",
+        "enums.polymorphism.AbstractAction$A",
+        "enums.polymorphism.AbstractAction$B",
+        "enums.polymorphism.PerEntry",
+        "enums.polymorphism.PerEntry$A",
+        "enums.polymorphism.PerEntry$B",
+        "enums.polymorphism.DefaultOnly"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/014.txt"
+    },
+    {
+      "label": "oracle rejects invalid 0",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid0.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/invalid-official-0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/015.txt"
+    },
+    {
+      "label": "candidate rejects invalid 0",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid0.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/invalid-candidate-0",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/016.txt"
+    },
+    {
+      "label": "oracle rejects invalid 1",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid1.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/invalid-official-1",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/017.txt"
+    },
+    {
+      "label": "candidate rejects invalid 1",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid1.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/invalid-candidate-1",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/018.txt"
+    },
+    {
+      "label": "oracle rejects invalid 2",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid2.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/invalid-official-2",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/019.txt"
+    },
+    {
+      "label": "candidate rejects invalid 2",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid2.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/invalid-candidate-2",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/020.txt"
+    },
+    {
+      "label": "oracle rejects invalid 3",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid3.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/invalid-official-3",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/021.txt"
+    },
+    {
+      "label": "candidate rejects invalid 3",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid3.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/invalid-candidate-3",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/022.txt"
+    },
+    {
+      "label": "oracle rejects invalid 4",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid4.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/invalid-official-4",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/023.txt"
+    },
+    {
+      "label": "candidate rejects invalid 4",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/Invalid4.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/invalid-candidate-4",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/024.txt"
+    },
+    {
+      "label": "oracle accepts abstract enum property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/UnsupportedAbstractProperty.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/unsupported-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/025.txt"
+    },
+    {
+      "label": "candidate explicitly rejects abstract enum property",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/UnsupportedAbstractProperty.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v3/unsupported-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/commands/026.txt"
+    }
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_enum_polymorphism.py",
+    "--candidate",
+    "target/resume-root-build/release/korrust",
+    "--output",
+    "target/resume-adapter/enum-integrated-v3"
+  ],
+  "scope": "Enum entry subclasses, abstract and concrete method dispatch, interface properties, defaults, ordering, JVM ABI and Kotlin metadata consumers",
+  "limitations": [
+    "No abstract enum property declarations, secondary enum constructors, nested declarations in entries, super property access, or interface delegation",
+    "No Android or complete Kotlin language compatibility claim"
+  ],
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "java_caller_hashes": {
+    "target/resume-adapter/enum-integrated-v3/java/enums/polymorphism/MetadataCheck.class": "bebdbe79c6837aebede8a75c991b7bb52e1911efd9f04c059a59147ebf0204fb",
+    "target/resume-adapter/enum-integrated-v3/java/enums/polymorphism/Calls.class": "3b13535137f768ae4c8732d1b1369b6e09ecf6062dc8bae091055755d96917b0"
+  },
+  "counts": {
+    "pass": 5,
+    "invalid_rejected": 5,
+    "unsupported_language": 1
+  },
+  "source_archive": {
+    "path": "reports/correctness/2026-11-02-expanded-enums-v3/enum-final-v3-sources.zip",
+    "sha256": "8a5101f9cbee40abc19c1d101f444cebe2f14d5350878dcb045769de72e000ce"
+  },
+  "regressions": {
+    "clippy": {
+      "status": "pass",
+      "log": "reports/correctness/2026-11-02-expanded-enums-v3/enum-clippy-v3.log"
+    },
+    "format": "pass"
+  },
+  "archived_from": "target/resume-adapter/enum-integrated-v3"
+}

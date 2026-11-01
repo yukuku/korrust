@@ -1,4 +1,4 @@
-mod enums;
+pub(crate) mod enums;
 pub(crate) use enums::for_enum;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -1279,7 +1279,13 @@ fn class_metadata(
                     .map(|method| &method.result)
             })
             .unwrap_or(&property.ty);
-        let flags = property.visibility().metadata() | if property.open { 16 } else { 0 };
+        let flags = property.visibility().metadata()
+            | if property.open { 16 } else { 0 }
+            | if !property.mutable && literal_initializer(property.initializer.as_ref()) {
+                8192
+            } else {
+                0
+            };
         declaration.number(
             11,
             flags
@@ -1799,6 +1805,11 @@ pub(crate) fn for_class_companion(
             (property.visibility().metadata() | 512)
                 | u32::from(property_has_annotations(&property.annotations))
                 | if property.mutable { 256 | 1024 } else { 0 }
+                | if !property.mutable && literal_initializer(property.initializer.as_ref()) {
+                    8192
+                } else {
+                    0
+                }
                 | if property.lateinit { 4096 } else { 0 }
                 | if property.delegate.is_some() {
                     32768
@@ -3099,6 +3110,21 @@ pub(crate) fn for_annotation(
     }
     proto.message(8, &constructor);
     strings.finish(1, proto)
+}
+
+fn literal_initializer(expression: Option<&crate::syntax::Expr>) -> bool {
+    expression.is_some_and(|expression| {
+        matches!(
+            expression.kind,
+            crate::syntax::ExprKind::Int(_)
+                | crate::syntax::ExprKind::Long(_)
+                | crate::syntax::ExprKind::Float(_)
+                | crate::syntax::ExprKind::Double(_)
+                | crate::syntax::ExprKind::Char(_)
+                | crate::syntax::ExprKind::Boolean(_)
+                | crate::syntax::ExprKind::String(_)
+        )
+    })
 }
 
 #[cfg(test)]

@@ -1,0 +1,362 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running tests/enum_frontend.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/enum_frontend-e2ed8a53602ed44e)
+
+running 3 tests
+test enum_constructors_members_and_companions_use_ordinary_types ... FAILED
+test enum_members_cannot_hide_the_final_core_contract ... ok
+test enum_initialization_dependencies_and_argument_types_reject_at_original_source has been running for over 60 seconds
+test enum_initialization_dependencies_and_argument_types_reject_at_original_source ... ok
+
+failures:
+
+---- enum_constructors_members_and_companions_use_ordinary_types stdout ----
+
+thread 'enum_constructors_members_and_companions_use_ordinary_types' (10398137) panicked at tests/enum_frontend.rs:17:14:
+called `Result::unwrap()` on an `Err` value: Diagnostic { offset: 562, message: "Unsupported property: RED", source_identity: Some("EnumModel.kt"), kind: Unclassified, code: "UNCLASSIFIED", type_name: None }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    enum_constructors_members_and_companions_use_ordinary_types
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 128.65s
+
+error: test failed, to rerun pass `--test enum_frontend`
+     Running tests/expanded_objects.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/expanded_objects-406d14fe7e46df7a)
+
+running 4 tests
+test object_class_inheritance_is_an_explicit_boundary ... ok
+test data_object_equality_redefinitions_are_invalid ... ok
+test data_object_contracts_are_emitted_with_nested_interface_implementations ... ok
+test imported_input_type_constraints_are_checked_without_replacing_library_calls has been running for over 60 seconds
+test imported_input_type_constraints_are_checked_without_replacing_library_calls ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 71.87s
+
+     Running tests/frontend.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/frontend-83cf33eb91de89b7)
+
+running 59 tests
+test accepts_nested_comments_shadowing_and_minimum_int ... ok
+test accepts_abstract_mutable_interface_properties ... ok
+test accepts_string_literals_calls_and_internal_functions ... ok
+test accepts_ordinary_final_classes_with_constructor_fields_and_instance_members ... ok
+test accepts_abstract_and_default_interface_declarations ... ok
+test bounds_enum_entry_counts ... ok
+test accepts_objects_with_typed_and_inferred_literal_constants ... ok
+test accepts_unit_allocation_and_explicit_copy_ranges ... ok
+test accepts_annotated_overloaded_object_methods_and_lazy_array_fields ... ok
+test checks_modified_utf8_constant_limit ... ok
+test classes_require_valid_imports_even_when_unused ... ok
+test accepts_bare_enums_and_uses_the_declaration_name has been running for over 60 seconds
+test accepts_byte_arrays_char_array_construction_and_hexadecimal_ints has been running for over 60 seconds
+test accepts_chars_arrays_comparisons_and_extension_receivers has been running for over 60 seconds
+test accepts_statement_when_and_checks_return_paths_and_scopes has been running for over 60 seconds
+test accepts_ten_bounded_androidbible_language_additions ... ok
+test accepts_statement_when_and_checks_return_paths_and_scopes ... ok
+test extension_functions_require_receiver_syntax ... ok
+test computed_constant_declarations_compile ... ok
+test limits_interface_nesting_and_template_complexity ... ok
+test accepts_twenty_bounded_language_additions has been running for over 60 seconds
+test accepts_chars_arrays_comparisons_and_extension_receivers ... ok
+test compiles_all_nested_object_classes_without_a_facade ... ok
+test compound_addition_requires_supported_mutable_locals ... FAILED
+test module_mapping_filenames_stay_bounded_for_long_packages ... ok
+test object_imports_remain_fail_closed ... ok
+test object_member_names_share_one_namespace_and_preserve_locations ... ok
+test object_string_constants_obey_modified_utf8_limits ... ok
+test checks_constructor_fields_array_operations_and_getter_returns has been running for over 60 seconds
+test long_parameters_and_locals_enforce_jvm_slot_widths ... ok
+test object_depth_class_and_constant_counts_obey_limits ... ok
+test preserves_abstract_member_and_bodyless_nested_interface_boundaries ... ok
+test checks_constructor_fields_array_operations_and_getter_returns ... ok
+test rejects_declared_classifiers_shadowing_builtin_types ... ok
+test rejects_duplicate_enum_entries_at_the_second_declaration ... ok
+test formerly_rejected_declaration_forms_compile_through_shared_rules has been running for over 60 seconds
+test interfaces_emit_generic_nested_companion_and_anonymous_classes has been running for over 60 seconds
+test accepts_bare_enums_and_uses_the_declaration_name ... ok
+test output_artifacts_include_module_mapping_only_for_function_facades ... ok
+test preserves_statement_boundaries_and_rejects_unsupported_syntax ... ok
+test newly_supported_operations_replace_previous_rejection_boundaries ... ok
+test interfaces_emit_generic_nested_companion_and_anonymous_classes ... ok
+test rejects_reserved_names_and_excessive_nesting_without_panicking ... ok
+test accepts_byte_arrays_char_array_construction_and_hexadecimal_ints ... ok
+test accepts_twenty_bounded_language_additions ... ok
+test rejects_unsupported_object_and_constant_forms ... FAILED
+test rejects_invalid_strings_and_string_operations ... FAILED
+test rejects_unsupported_interface_and_companion_forms ... ok
+test rejects_unsupported_class_surface_and_mixed_declarations ... FAILED
+test rejects_invalid_or_still_unsupported_enum_forms ... ok
+test promoted_enum_interface_and_internal_member_forms_remain_supported has been running for over 60 seconds
+test rejects_invalid_bindings_and_types has been running for over 60 seconds
+test rejects_unsupported_or_invalid_ten_feature_boundaries ... ok
+test requires_classpath_for_imported_java_classes ... ok
+test rejects_unsupported_when_forms_and_malformed_entries ... ok
+test rejects_invalid_bindings_and_types ... ok
+test resolves_declared_extensions_before_implicit_library_extensions ... ok
+test requires_legal_output_names_and_keeps_locations ... ok
+test validates_even_unused_enum_imports ... ok
+test rejects_invalid_loop_membership_increment_and_when_boundaries has been running for over 60 seconds
+test rejects_invalid_loop_membership_increment_and_when_boundaries ... ok
+test rejects_malformed_chars_and_implicit_char_conversions has been running for over 60 seconds
+test rejects_unsupported_object_annotations_initializers_and_overloads ... ok
+test requires_valid_overrides_of_inherited_any_and_object_members ... ok
+test when_generated_locals_and_nesting_obey_limits ... ok
+test promoted_enum_interface_and_internal_member_forms_remain_supported ... ok
+test requires_definite_assignment_before_every_local_read ... ok
+test rejects_malformed_chars_and_implicit_char_conversions ... ok
+test supports_if_expressions_integer_strings_templates_and_explicit_throws ... ok
+test supports_ranges_when_expressions_loops_and_incremented_array_indices ... ok
+test formerly_rejected_declaration_forms_compile_through_shared_rules ... ok
+
+failures:
+
+---- compound_addition_requires_supported_mutable_locals stdout ----
+
+thread 'compound_addition_requires_supported_mutable_locals' (10417734) panicked at tests/frontend.rs:10:5:
+fun f() { var n = 'a'; n += 2 }: No supported compound operator is applicable
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- rejects_unsupported_object_and_constant_forms stdout ----
+
+thread 'rejects_unsupported_object_and_constant_forms' (10422552) panicked at tests/frontend.rs:623:9:
+accepted data object E
+
+---- rejects_invalid_strings_and_string_operations stdout ----
+
+thread 'rejects_invalid_strings_and_string_operations' (10422461) panicked at tests/frontend.rs:122:9:
+accepted fun f(x: String): Int = x.length()
+
+---- rejects_unsupported_class_surface_and_mixed_declarations stdout ----
+
+thread 'rejects_unsupported_class_surface_and_mixed_declarations' (10422470) panicked at tests/frontend.rs:786:9:
+accepted class E() { fun String.extension(): Int = 1 }
+
+
+failures:
+    compound_addition_requires_supported_mutable_locals
+    rejects_invalid_strings_and_string_operations
+    rejects_unsupported_class_surface_and_mixed_declarations
+    rejects_unsupported_object_and_constant_forms
+
+test result: FAILED. 55 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 293.74s
+
+error: test failed, to rerun pass `--test frontend`
+     Running tests/generic_aliases.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/generic_aliases-c5c91da01a30a60c)
+
+running 4 tests
+test projected_nested_alias_arguments_are_explicitly_unsupported ... ok
+test generic_source_aliases_substitute_function_lists_arrays_and_nullable_parameters ... ok
+test generic_alias_arity_recursion_and_parameter_scope_reject_invalid_kotlin ... ok
+test source_generic_aliases_are_visible_across_files_but_private_aliases_are_not ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 43.31s
+
+     Running tests/jvm_overloads.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/jvm_overloads-bbfe0d064b370300)
+
+running 3 tests
+test jvm_overloads_accepts_an_ordinary_method_without_defaults ... ok
+test static_annotations_reject_non_object_member_contexts ... ok
+test overload_collisions_reject_before_outputs_are_returned ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 35.76s
+
+     Running tests/jvm_representation.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/jvm_representation-d04e07638da1c2d1)
+
+running 1 test
+test interface_default_bridges_preserve_physical_widths ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.14s
+
+     Running tests/library_member_contracts.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/library_member_contracts-ca7fd2985ec393bd)
+
+running 1 test
+test annotated_java_and_mapped_builtin_calls_execute_actual_methods has been running for over 60 seconds
+test annotated_java_and_mapped_builtin_calls_execute_actual_methods ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 197.02s
+
+     Running tests/local_delegation_boundary.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/local_delegation_boundary-e00b94ab27df22a4)
+
+running 1 test
+test local_property_delegates_are_explicit_boundaries ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/member_extensions.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/member_extensions-3e24bd25e416e711)
+
+running 10 tests
+test source_extension_declaration_identity_includes_the_receiver_type ... ok
+test class_extensions_keep_dispatch_and_extension_receivers_distinct ... ok
+test member_extension_properties_and_defaults_compile ... ok
+test compiled_generic_extension_properties_preserve_inference_and_write_boundaries has been running for over 60 seconds
+test escaping_lambdas_capture_each_receiver_and_shared_mutable_locals has been running for over 60 seconds
+test imported_named_companion_uses_declared_metadata_name has been running for over 60 seconds
+test member_extensions_execute_with_distinct_receivers_and_virtual_dispatch has been running for over 60 seconds
+test properties_objects_companions_and_default_masks_match_official_consumers has been running for over 60 seconds
+test receiver_tower_labels_and_implicit_mutation_compile has been running for over 60 seconds
+test unchanged_upstream_member_extensions_and_properties_match_box_results has been running for over 60 seconds
+test receiver_tower_labels_and_implicit_mutation_compile ... ok
+test imported_named_companion_uses_declared_metadata_name ... ok
+test escaping_lambdas_capture_each_receiver_and_shared_mutable_locals ... ok
+test properties_objects_companions_and_default_masks_match_official_consumers ... ok
+test member_extensions_execute_with_distinct_receivers_and_virtual_dispatch ... ok
+test compiled_generic_extension_properties_preserve_inference_and_write_boundaries ... ok
+test unchanged_upstream_member_extensions_and_properties_match_box_results ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 165.84s
+
+     Running tests/next_frontend.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/next_frontend-42440a7e267d43fa)
+
+running 10 tests
+test loop_scopes_and_continue_initialization_are_checked ... ok
+test generic_iterable_element_types_follow_the_declared_signature ... ok
+test rejects_erased_type_tests_and_casts ... ok
+test generic_infix_calls_and_runtime_iteration_use_resolved_declarations has been running for over 60 seconds
+test imported_generic_results_use_constructor_and_function_expected_types has been running for over 60 seconds
+test member_extension_fallback_preserves_diagnostics_and_selects_source_extensions has been running for over 60 seconds
+test nullable_and_boxed_type_operations_compile has been running for over 60 seconds
+test numeric_operations_preserve_assignment_and_comparison_types has been running for over 60 seconds
+test renamed_imports_hide_original_names_and_keep_explicit_original_imports has been running for over 60 seconds
+test type_smartcasts_require_stable_locals_and_correct_branches has been running for over 60 seconds
+test numeric_operations_preserve_assignment_and_comparison_types ... ok
+test nullable_and_boxed_type_operations_compile ... ok
+test type_smartcasts_require_stable_locals_and_correct_branches ... FAILED
+test member_extension_fallback_preserves_diagnostics_and_selects_source_extensions ... ok
+test imported_generic_results_use_constructor_and_function_expected_types ... ok
+test generic_infix_calls_and_runtime_iteration_use_resolved_declarations ... ok
+test renamed_imports_hide_original_names_and_keep_explicit_original_imports ... ok
+
+failures:
+
+---- type_smartcasts_require_stable_locals_and_correct_branches stdout ----
+
+thread 'type_smartcasts_require_stable_locals_and_correct_branches' (10496631) panicked at tests/next_frontend.rs:6:5:
+fun f(input: Any?): Int { var value = input; if(value is String) return value.length; return 0 }: Unresolved or unsupported applicable extension: length
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    type_smartcasts_require_stable_locals_and_correct_branches
+
+test result: FAILED. 9 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 219.84s
+
+error: test failed, to rerun pass `--test next_frontend`
+     Running tests/next_syntax.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/next_syntax-0d5cbcba98c17bb3)
+
+running 6 tests
+test rejects_unsupported_update_targets_and_invalid_type_tokens ... ok
+test accepts_numeric_updates_and_do_while ... ok
+test source_infix_calls_follow_the_declaration_modifier ... ok
+test accepts_iteration_over_supported_values ... ok
+test accepts_identity_casts_and_type_conditions ... ok
+test accepts_stdlib_progressions_with_an_explicit_classpath ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.44s
+
+     Running tests/primitive_arrays.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/primitive_arrays-6080a1966296b9b9)
+
+running 3 tests
+test primitive_arrays_are_distinct_from_boxed_arrays_and_each_other ... ok
+test short_arrays_and_effectful_initializer_boundaries_are_explicit ... ok
+test remaining_primitive_array_representations_compile_consistently has been running for over 60 seconds
+test remaining_primitive_array_representations_compile_consistently ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 72.89s
+
+     Running tests/property_visibility.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/property_visibility-f5de29f014559865)
+
+running 4 tests
+test newly_modified_unmodeled_contexts_are_explicit ... ok
+test inaccessible_and_invalid_accessor_forms_reject ... ok
+test generic_default_storage_keeps_logical_types_and_bounds_physical_adaptation ... ok
+test ordinary_property_and_independent_setter_visibility_compile has been running for over 60 seconds
+test ordinary_property_and_independent_setter_visibility_compile ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 86.91s
+
+     Running tests/protected_bridges.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/protected_bridges-4c3cdb57aa9bbc0c)
+
+running 1 test
+test protected_helpers_follow_deferred_calls_and_do_not_change_unused_enum_abi ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 50.52s
+
+     Running tests/sealed_diagnostics.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/sealed_diagnostics-e6b05cf724bced84)
+
+running 5 tests
+test source_batch_resource_limit_is_an_explicit_boundary ... ok
+test valid_unsupported_sealed_shapes_fail_explicitly_at_the_source ... ok
+test data_objects_close_sealed_interfaces ... ok
+test sealed_source_batch_tracks_direct_children_across_files ... ok
+test invalid_closed_when_and_constructor_boundaries_are_structured ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.05s
+
+     Running tests/source_filenames.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/source_filenames-20aec3a53cfde05f)
+
+running 4 tests
+test unsupported_filename_forms_and_file_annotations_reject_explicitly ... ok
+test sanitized_facade_collisions_preserve_deterministic_source_identity ... ok
+test official_filename_facades_match_java_signatures_and_kotlin_consumers ... ok
+test ascii_source_names_use_kotlin_facade_sanitization has been running for over 60 seconds
+test ascii_source_names_use_kotlin_facade_sanitization ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 98.80s
+
+     Running tests/source_generic_diagnostics.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/source_generic_diagnostics-f14597eb6f0e1180)
+
+running 3 tests
+test generic_override_bridges_and_classifier_metadata_compile_together ... ok
+test unsupported_classifier_shapes_have_structured_boundaries ... ok
+test classifier_bound_and_override_failures_do_not_return_artifacts ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.07s
+
+     Running tests/static_import_diagnostics.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/static_import_diagnostics-d503e066ce56ce2c)
+
+running 1 test
+test explicit_static_members_compile_and_missing_members_remain_dependencies ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 29.08s
+
+     Running tests/string_factories.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/string_factories-8454ea5a8841c111)
+
+running 1 test
+test ordinary_factories_and_builtin_constructor_contracts_match_the_pin has been running for over 60 seconds
+test ordinary_factories_and_builtin_constructor_contracts_match_the_pin ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 83.05s
+
+     Running tests/unsupported_syntax_diagnostics.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/unsupported_syntax_diagnostics-02f0f58dc0c8f771)
+
+running 8 tests
+test unsigned_sources_retain_explicit_unsupported_boundaries ... ok
+test unsigned_test_cli_reports_the_file_annotation_boundary_without_outputs ... ok
+test unchanged_androidbible_generic_source_without_its_classpath_reports_missing_dependency ... ok
+test pinned_official_compiler_accepts_reductions_and_unchanged_sources ... ok
+test ordinary_class_literals_compile_with_an_explicit_kotlin_runtime ... ok
+test supported_accessor_visibility_compiles ... ok
+test parameterized_class_and_interface_supertypes_require_their_library ... ok
+test newline_qualified_expressions_compile ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.17s
+
+     Running tests/upstream_boundaries.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/upstream_boundaries-4449ec8019e964b6)
+
+running 1 test
+test unchanged_upstream_reference_varargs_and_generic_interface_properties_are_explicit ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running tests/value_resolution.rs (/Users/yuku/f/git/korrust/target/next5-root-build/debug/deps/value_resolution-af882bac3b3bee41)
+
+running 1 test
+test value_names_use_kotlin_import_priority_and_constant_visibility has been running for over 60 seconds
+test value_names_use_kotlin_import_priority_and_constant_visibility ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 209.34s
+
+error: 3 targets failed:
+    `--test enum_frontend`
+    `--test frontend`
+    `--test next_frontend`

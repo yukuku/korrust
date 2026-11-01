@@ -123,6 +123,16 @@ pub(super) fn constructors(
     owner: &str,
     lambdas: &[crate::check::LambdaDecl],
 ) -> Result<Vec<Vec<u8>>> {
+    constructors_with_offset(pool, class, owner, lambdas, 0)
+}
+
+pub(super) fn constructors_with_offset(
+    pool: &mut Pool,
+    class: &crate::check::ClassDecl,
+    owner: &str,
+    lambdas: &[crate::check::LambdaDecl],
+    hidden: usize,
+) -> Result<Vec<Vec<u8>>> {
     if !class.defaults.iter().any(Option::is_some) {
         return Ok(Vec::new());
     }
@@ -157,7 +167,7 @@ pub(super) fn constructors(
         if let Some(value) = class.defaults.get(index).and_then(Option::as_ref) {
             let next = body.label();
             body.bytes.extend([0x15, slots as u8]);
-            body.integer((1u32 << index) as i32)?;
+            body.integer((1u32 << (index - hidden)) as i32)?;
             body.bytes.push(0x7e);
             body.branch(0x99, next);
             body.value(value)?;
@@ -199,7 +209,15 @@ pub(super) fn constructors(
             .map(|(_, ty)| ty.descriptor())
             .collect::<String>()
     );
-    let mut method = simple_method(pool, 0x1001, "<init>", &descriptor, code, None, false)?;
+    let mut method = simple_method(
+        pool,
+        if hidden == 0 { 0x1001 } else { 0x1000 },
+        "<init>",
+        &descriptor,
+        code,
+        None,
+        false,
+    )?;
     frames::attach_constructor(pool, &mut method, owner, &params, locals)?;
     let mut methods = vec![method];
     if class.defaults.len() == class.params.len() && class.defaults.iter().all(Option::is_some) {

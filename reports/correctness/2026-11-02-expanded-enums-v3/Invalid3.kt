@@ -1,0 +1,1 @@
+interface I { fun run(): Int }; enum class E : I { A {} }

@@ -14,7 +14,10 @@ pub(super) fn members(pool: &mut Pool, owner: &str, checked: &CheckedEnum) -> Re
     let entries_descriptor = "Lkotlin/enums/EnumEntries;";
     let mut fields = Vec::new();
     for (name, _) in &checked.entries {
-        fields.extend(class_field(pool, name, &Type::Java(owner.into()), 0x4019)?);
+        u2(&mut fields, 0x4019);
+        u2(&mut fields, pool.utf8(name)?);
+        u2(&mut fields, pool.utf8(&descriptor)?);
+        u2(&mut fields, 0);
     }
     for (name, descriptor) in [
         ("$VALUES", array_descriptor.as_str()),
@@ -168,7 +171,8 @@ pub(crate) fn emit(
             0x0002,
             &checked.lambdas,
             Some(checked),
-            |_| Ok(Vec::new()),
+            false,
+            |pool| entry_attributes(pool, owner, checked),
         )?,
     }];
     if let Some(companion) = &checked.class.companion {
@@ -180,8 +184,53 @@ pub(crate) fn emit(
             &checked.lambdas,
         )?);
     }
+    for entry in &checked.entry_classes {
+        let metadata = crate::metadata::enums::for_enum_entry(entry)?;
+        let bytes = emit_class_with(
+            &entry.class,
+            &entry.owner,
+            file,
+            &metadata,
+            0,
+            &checked.lambdas,
+            None,
+            true,
+            |pool| entry_attributes(pool, owner, checked),
+        )?;
+        files.push(crate::ClassFile {
+            internal_name: entry.owner.clone(),
+            bytes,
+        });
+    }
     for lambda in &checked.lambdas {
         files.push(lambdas::emit(lambda, &[], owner, file, &checked.lambdas)?);
     }
     Ok(files)
+}
+
+fn entry_attributes(pool: &mut Pool, owner: &str, checked: &CheckedEnum) -> Result<Vec<Vec<u8>>> {
+    if checked.entry_classes.is_empty() {
+        return Ok(Vec::new());
+    }
+    let mut attribute = Vec::new();
+    u2(&mut attribute, pool.utf8("InnerClasses")?);
+    let count = checked.entry_classes.len() + usize::from(checked.class.companion.is_some());
+    u4(&mut attribute, (2 + count * 8) as u32);
+    u2(&mut attribute, count as u16);
+    for entry in &checked.entry_classes {
+        u2(&mut attribute, pool.class(&entry.owner)?);
+        u2(&mut attribute, pool.class(owner)?);
+        u2(
+            &mut attribute,
+            pool.utf8(entry.owner.rsplit('$').next().unwrap())?,
+        );
+        u2(&mut attribute, 0x0018);
+    }
+    if let Some(companion) = &checked.class.companion {
+        u2(&mut attribute, pool.class(&companion.owner)?);
+        u2(&mut attribute, pool.class(owner)?);
+        u2(&mut attribute, pool.utf8("Companion")?);
+        u2(&mut attribute, 0x0019);
+    }
+    Ok(vec![attribute])
 }

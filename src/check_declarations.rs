@@ -508,17 +508,19 @@ pub(super) fn check_class_with_constants(
         initializer_checker.declare(name, ty.clone(), false, source.offset)?;
     }
     if source.defaults.iter().any(Option::is_some) {
-        if params.len() > 32 {
-            return Err(Diagnostic::new(
-                source.offset,
-                "Default arguments support at most 32 parameters",
-            ));
-        }
         initializer_checker.next += 2;
     }
     initializer_checker.dispatch_receiver = None;
-    let defaults =
-        initializer_checker.checked_defaults(&source.defaults, &params, source.offset)?;
+    let defaults = initializer_checker.checked_defaults_with_hidden(
+        &source.defaults,
+        &params,
+        source.offset,
+        if super_class == "java/lang/Enum" {
+            2
+        } else {
+            0
+        },
+    )?;
     let mut super_args = Vec::new();
     if let Some((_, arguments)) = &source.super_class {
         initializer_checker.dispatch_receiver = None;
@@ -1266,7 +1268,11 @@ pub(super) fn check_class_with_constants(
         match required.get(&member_key(&method.name, &method.descriptor())) {
             Some(required) => {
                 if required.access & 0x0010 != 0 {
-                    return Err(Diagnostic::new(offset, "Cannot override a final member"));
+                    return Err(Diagnostic::new(offset, "Cannot override a final member")
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "FINAL_MEMBER_OVERRIDE",
+                        ));
                 }
                 if !is_override
                     || private
@@ -1510,6 +1516,9 @@ pub(super) fn check_class_with_constants(
                 crate::DiagnosticKind::InvalidKotlin,
                 "MISSING_INTERFACE_IMPLEMENTATION",
             ));
+        }
+        if method.access & 0x0400 != 0 {
+            continue;
         }
         if classes
             .get(&method.owner)

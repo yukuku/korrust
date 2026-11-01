@@ -10,7 +10,13 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
     context.enum_decl = None;
     context.class_decl = Some(source.body.clone());
     let mut class = super::header(&context, owner, cp)?;
-    class.access = 0x4031;
+    class.access = if source.body.methods.iter().any(|method| !method.has_body) {
+        0x4421
+    } else if source.entry_bodies.iter().any(Option::is_some) {
+        0x4021
+    } else {
+        0x4031
+    };
     class.super_name = Some("java/lang/Enum".into());
     for method in &mut class.methods {
         if method.name == "<init>" {

@@ -1,0 +1,1 @@
+enum class E { A { override val value: Int = 1 }; abstract val value: Int }

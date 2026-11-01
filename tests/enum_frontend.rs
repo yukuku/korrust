@@ -108,3 +108,94 @@ fn enum_members_cannot_hide_the_final_core_contract() {
         error.message
     );
 }
+
+#[test]
+fn polymorphic_enum_entries_reuse_class_dispatch_and_default_arguments() {
+    let standard = standard();
+    if !standard.is_file() {
+        return;
+    }
+    let outputs = compile_all_with_classpath(
+        include_str!("fixtures/enum_polymorphism/Models.kt"),
+        "Models.kt",
+        std::slice::from_ref(&standard),
+    )
+    .unwrap();
+    for name in ["Task$LEFT", "Task$RIGHT", "AbstractAction$A", "PerEntry$B"] {
+        assert!(
+            outputs
+                .iter()
+                .any(|class| class.internal_name == format!("enums/polymorphism/{name}")),
+            "{name}"
+        );
+    }
+}
+
+#[test]
+fn invalid_enum_entry_implementations_reject_as_invalid_kotlin() {
+    let standard = standard();
+    if !standard.is_file() {
+        return;
+    }
+    for source in [
+        "enum class E { A; abstract fun run(): Int }",
+        "enum class E { A {}; abstract fun run(): Int }",
+        "enum class E { A { override fun run(): Int = 1 }; fun run(): Int = 0 }",
+        "interface I { fun run(): Int }; enum class E : I { A {} }",
+        "enum class E { A { override fun missing(): Int = 1 } }",
+    ] {
+        let error =
+            compile_all_with_classpath(source, "Invalid.kt", std::slice::from_ref(&standard))
+                .err()
+                .expect(source);
+        assert!(
+            !error.message.to_lowercase().contains("unsupported"),
+            "{source}: {}",
+            error.message
+        );
+    }
+}
+
+#[test]
+fn enum_entry_declaration_boundaries_are_explicitly_unsupported() {
+    let standard = standard();
+    if !standard.is_file() {
+        return;
+    }
+    for (source, code) in [
+        (
+            "enum class E { A { class Nested } }",
+            "ENUM_ENTRY_DECLARATION_UNSUPPORTED",
+        ),
+        (
+            "enum class E { A { override val value: Int = 1 }; abstract val value: Int }",
+            "ABSTRACT_CLASS_PROPERTY_UNSUPPORTED",
+        ),
+    ] {
+        let error =
+            compile_all_with_classpath(source, "Unsupported.kt", std::slice::from_ref(&standard))
+                .err()
+                .expect(source);
+        assert_eq!(error.kind, korrust::DiagnosticKind::UnsupportedLanguage);
+        assert_eq!(error.code, code);
+    }
+}
+
+#[test]
+fn enum_entry_constructors_without_defaults_do_not_limit_parameter_mask_width() {
+    let standard = standard();
+    if !standard.is_file() {
+        return;
+    }
+    let params = (0..66)
+        .map(|index| format!("p{index}: Int"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let arguments = (0..66)
+        .map(|index| index.to_string())
+        .collect::<Vec<_>>()
+        .join(", ");
+    let source =
+        format!("enum class Wide({params}) {{ A({arguments}) {{ fun value(): Int = 1 }} }}");
+    compile_all_with_classpath(&source, "Wide.kt", std::slice::from_ref(&standard)).unwrap();
+}

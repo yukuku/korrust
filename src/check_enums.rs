@@ -4,7 +4,15 @@ pub(crate) struct CheckedEnum {
     pub class: ClassDecl,
     pub entries: Vec<(String, Value)>,
     pub initializer_locals: u16,
+    pub entry_classes: Vec<CheckedEntry>,
     pub lambdas: Vec<LambdaDecl>,
+}
+
+pub(crate) struct CheckedEntry {
+    pub owner: String,
+    pub source: syntax::ClassDecl,
+    pub imports: Vec<(String, String, usize)>,
+    pub class: ClassDecl,
 }
 
 /// Check enum user declarations with the ordinary class/expression machinery.
@@ -19,6 +27,16 @@ pub(crate) fn check_enum(
         .enum_decl
         .as_ref()
         .ok_or_else(|| Diagnostic::new(0, "Missing enum declaration"))?;
+    if source.body.params.len() > 32 && source.body.defaults.iter().any(Option::is_some) {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Enum constructor defaults support at most 32 parameters",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "ENUM_DEFAULT_PARAMETER_LIMIT_UNSUPPORTED",
+        ));
+    }
     if source.entries.len() > 1024 {
         return Err(Diagnostic::new(
             source.offset,
@@ -70,6 +88,8 @@ pub(crate) fn check_enum(
     }
     imports.insert("entries".into(), format!("{owner}::entries"));
     let mut body = source.body.clone();
+    let polymorphic = source.entry_bodies.iter().any(Option::is_some);
+    body.abstract_ = polymorphic || body.methods.iter().any(|method| !method.has_body);
     body.params.splice(
         0..0,
         [
@@ -104,6 +124,26 @@ pub(crate) fn check_enum(
         Some(owner),
         &lambdas,
     )?;
+    let declared_header = classpath.load(owner)?;
+    class.abstract_ = !class.abstract_methods.is_empty()
+        || (polymorphic
+            && classpath.methods(owner)?.iter().any(|method| {
+                method.access & 0x0400 != 0
+                    && !class.methods.iter().any(|implementation| {
+                        implementation.name == method.name
+                            && implementation.descriptor() == method.descriptor
+                    })
+                    && !declared_header.methods.iter().any(|implementation| {
+                        implementation.access & 0x0400 == 0
+                            && implementation.name == method.name
+                            && implementation.descriptor == method.descriptor
+                    })
+                    && !class.generic_bridges.iter().any(|bridge| {
+                        bridge.erased.name == method.name
+                            && bridge.erased.descriptor == method.descriptor
+                    })
+            }));
+    class.open = polymorphic;
     let enum_base = classpath.load("java/lang/Enum")?;
     // Kotlin Enum exposes these final functions; other JVM Enum/Object
     // implementation methods are not additional Kotlin declaration symbols.
@@ -227,6 +267,7 @@ pub(crate) fn check_enum(
     let context =
         declarations::DeclarationContext::new(owner, classpath, &imports, &classes, &lambdas);
     let mut entries = Vec::new();
+    let mut entry_classes = Vec::new();
     let mut initializer_locals = 0;
     for (ordinal, ((name, offset), arguments)) in source
         .entries
@@ -239,30 +280,220 @@ pub(crate) fn check_enum(
             .map(|(name, _)| name.clone())
             .chain(companion_names.iter().cloned())
             .collect::<HashSet<_>>();
-        let mut arguments = arguments.clone();
-        arguments.splice(
-            0..0,
-            [
-                Expr {
-                    offset: *offset,
-                    kind: ExprKind::String(name.encode_utf16().collect()),
-                },
-                Expr {
-                    offset: *offset,
-                    kind: ExprKind::Int(ordinal as i64),
-                },
-            ],
+        let mut checker = context.checker(
+            false,
+            if source.entry_bodies[ordinal].is_some() {
+                3
+            } else {
+                0
+            },
+            Type::Unit,
         );
-        let mut checker = context.checker(false, 0, Type::Unit);
         checker.allow_return = false;
-        let value = checker.construct_value(
-            owner,
-            &class.params,
-            &vec![false; class.params.len()],
-            &arguments,
-            true,
-            *offset,
-        )?;
+        let defaults = source
+            .body
+            .defaults
+            .iter()
+            .map(Option::is_some)
+            .collect::<Vec<_>>();
+        let (arguments, mut lets, mask) =
+            checker.arguments(&class.params[2..], &defaults, arguments, true, *offset)?;
+        let dependency_value = Checker::wrap_lets(
+            Value {
+                ty: Type::Java(owner.into()),
+                kind: ValueKind::New {
+                    owner: owner.into(),
+                    descriptor: String::new(),
+                    args: arguments.clone(),
+                },
+            },
+            lets.clone(),
+        );
+        if let Some(dependency) =
+            uninitialized_read(&dependency_value, owner, &uninitialized, &lambdas.borrow())
+        {
+            return Err(Diagnostic::new(
+                source.entry_arguments[ordinal]
+                    .first()
+                    .map_or(*offset, |argument| argument.offset),
+                format!("Enum declaration {dependency} is uninitialized in this entry argument"),
+            ));
+        }
+        let hidden = vec![
+            Value {
+                ty: Type::String,
+                kind: ValueKind::String(name.encode_utf16().collect()),
+            },
+            Value {
+                ty: Type::Int,
+                kind: ValueKind::Int(ordinal as i32),
+            },
+        ];
+        let mut values = hidden;
+        let mut constructor_owner = owner.to_owned();
+        let mut constructor_params = class.params.clone();
+        if let Some(entry_body) = &source.entry_bodies[ordinal] {
+            let entry_owner = format!("{owner}${name}");
+            let mut entry_source = entry_body.clone();
+            entry_source.params = class.params[..2].to_vec();
+            entry_source.defaults = vec![None; entry_source.params.len()];
+            entry_source.param_annotations = vec![Vec::new(); entry_source.params.len()];
+            entry_source.super_class = Some((
+                owner.into(),
+                entry_source
+                    .params
+                    .iter()
+                    .map(|(name, _)| Expr {
+                        offset: *offset,
+                        kind: ExprKind::Name(name.clone()),
+                    })
+                    .collect(),
+            ));
+            entry_source.super_types = vec![Type::Java(owner.into())];
+            let mut parent = classpath.load(owner)?;
+            let original_parent = parent.clone();
+            parent.access = (parent.access & !0x0010) | 0x0400;
+            parent.methods.retain(|method| method.name != "<init>");
+            let mut constructor = original_parent
+                .methods
+                .iter()
+                .find(|method| method.name == "<init>")
+                .cloned()
+                .ok_or_else(|| Diagnostic::new(*offset, "Missing enum constructor"))?;
+            constructor.access = 4;
+            constructor.descriptor = format!(
+                "({})V",
+                entry_source
+                    .params
+                    .iter()
+                    .map(|(_, ty)| ty.descriptor())
+                    .collect::<String>()
+            );
+            constructor.kotlin_params = Some(
+                entry_source
+                    .params
+                    .iter()
+                    .map(|(name, ty)| (name.clone(), ty.clone(), false))
+                    .collect(),
+            );
+            parent.methods.push(constructor);
+            classpath.register_source(parent);
+            let checked_entry = (|| {
+                let mut entry_module = module.clone();
+                entry_module.enum_decl = None;
+                entry_module.class_decl = Some(entry_source.clone());
+                classpath.source_header(&entry_module, &entry_owner)?;
+                loop {
+                    let progress = declarations::infer_source_results(
+                        &mut entry_module,
+                        classpath,
+                        &entry_owner,
+                    )?;
+                    classpath.source_header(&entry_module, &entry_owner)?;
+                    if progress == 0 {
+                        break;
+                    }
+                }
+                if let Some(error) =
+                    declarations::source_inference_error(&entry_module, classpath, &entry_owner)?
+                {
+                    return Err(error);
+                }
+                entry_source = entry_module.class_decl.take().unwrap();
+                let mut entry_classes = classes.clone();
+                entry_classes.insert(entry_owner.clone(), classpath.load(&entry_owner)?);
+                declarations::check_class(
+                    &entry_source,
+                    &module.package,
+                    classpath,
+                    &imports,
+                    &entry_classes,
+                    &HashMap::new(),
+                    Some(&entry_owner),
+                    &lambdas,
+                )
+            })();
+            classpath.register_source(original_parent);
+            let mut checked_entry = checked_entry?;
+            let mut super_args = vec![
+                Checker::wrap_lets(
+                    Value {
+                        ty: Type::String,
+                        kind: ValueKind::Local(1),
+                    },
+                    std::mem::take(&mut lets),
+                ),
+                Value {
+                    ty: Type::Int,
+                    kind: ValueKind::Local(2),
+                },
+            ];
+            super_args.extend(arguments);
+            if mask != 0 {
+                super_args.push(Value {
+                    ty: Type::Int,
+                    kind: ValueKind::Int(mask as i32),
+                });
+            }
+            super_args.push(Value {
+                ty: Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
+                kind: ValueKind::Null,
+            });
+            checked_entry.super_args = super_args;
+            checked_entry.constructor_locals = checked_entry.constructor_locals.max(checker.next);
+            constructor_params = entry_source.params.clone();
+            constructor_owner = entry_owner.clone();
+            entry_classes.push(CheckedEntry {
+                owner: entry_owner,
+                source: entry_source,
+                imports: module.imports.clone(),
+                class: checked_entry,
+            });
+        } else {
+            if class.abstract_ {
+                return Err(
+                    Diagnostic::new(*offset, "Enum entry must implement abstract members")
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "ENUM_ENTRY_ABSTRACT_MEMBER_MISSING",
+                        ),
+                );
+            }
+            values.extend(arguments);
+            if mask != 0 {
+                values.push(Value {
+                    ty: Type::Int,
+                    kind: ValueKind::Int(mask as i32),
+                });
+                values.push(Value {
+                    ty: Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
+                    kind: ValueKind::Null,
+                });
+                constructor_params.push(("$mask".into(), Type::Int));
+                constructor_params.push((
+                    "$marker".into(),
+                    Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
+                ));
+            }
+        }
+        let descriptor = format!(
+            "({})V",
+            constructor_params
+                .iter()
+                .map(|(_, ty)| ty.descriptor())
+                .collect::<String>()
+        );
+        let value = Checker::wrap_lets(
+            Value {
+                ty: Type::Java(owner.into()),
+                kind: ValueKind::New {
+                    owner: constructor_owner,
+                    descriptor,
+                    args: values,
+                },
+            },
+            lets,
+        );
         if let Some(dependency) =
             uninitialized_read(&value, owner, &uninitialized, &lambdas.borrow())
         {
@@ -281,6 +512,7 @@ pub(crate) fn check_enum(
         class,
         entries,
         initializer_locals,
+        entry_classes,
         lambdas: Rc::try_unwrap(lambdas).ok().unwrap().into_inner(),
     })
 }
@@ -302,11 +534,15 @@ pub(super) fn property(
     let Some(owner) = library::type_owner(&receiver.ty) else {
         return Ok(None);
     };
-    if !checker
-        .classpath
-        .load(owner)
-        .is_ok_and(|class| class.access & 0x4000 != 0)
-    {
+    if !checker.classpath.load(owner).is_ok_and(|class| {
+        class.access & 0x4000 != 0
+            || class.super_name.as_deref().is_some_and(|parent| {
+                checker
+                    .classpath
+                    .load(parent)
+                    .is_ok_and(|parent| parent.access & 0x4000 != 0)
+            })
+    }) {
         return Ok(None);
     }
     let mut method = checker

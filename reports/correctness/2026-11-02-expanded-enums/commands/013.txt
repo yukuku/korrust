@@ -1,0 +1,280 @@
+$ /Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap -p -s -classpath /Users/yuku/f/git/korrust/target/resume-adapter/enum-integrated-v1/official enums.polymorphism.Task$Companion enums.polymorphism.Trace enums.polymorphism.Task enums.polymorphism.Task$LEFT enums.polymorphism.Task$RIGHT enums.polymorphism.AbstractAction enums.polymorphism.AbstractAction$A enums.polymorphism.AbstractAction$B enums.polymorphism.PerEntry enums.polymorphism.PerEntry$A enums.polymorphism.PerEntry$B enums.polymorphism.DefaultOnly
+Compiled from "Models.kt"
+public final class enums.polymorphism.Task$Companion {
+  private enums.polymorphism.Task$Companion();
+    descriptor: ()V
+
+  public final java.lang.String getMarker();
+    descriptor: ()Ljava/lang/String;
+
+  public final enums.polymorphism.Task first();
+    descriptor: ()Lenums/polymorphism/Task;
+
+  public enums.polymorphism.Task$Companion(kotlin.jvm.internal.DefaultConstructorMarker);
+    descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+Compiled from "Models.kt"
+public final class enums.polymorphism.Trace {
+  public static final enums.polymorphism.Trace INSTANCE;
+    descriptor: Lenums/polymorphism/Trace;
+  private static java.lang.String log;
+    descriptor: Ljava/lang/String;
+  private enums.polymorphism.Trace();
+    descriptor: ()V
+
+  public final java.lang.String getLog();
+    descriptor: ()Ljava/lang/String;
+
+  public final void setLog(java.lang.String);
+    descriptor: (Ljava/lang/String;)V
+
+  public final int mark(java.lang.String, int);
+    descriptor: (Ljava/lang/String;I)I
+
+  static {};
+    descriptor: ()V
+}
+Compiled from "Models.kt"
+public class enums.polymorphism.Task extends java.lang.Enum<enums.polymorphism.Task> implements enums.polymorphism.Action {
+  public static final enums.polymorphism.Task$Companion Companion;
+    descriptor: Lenums/polymorphism/Task$Companion;
+  private final int first;
+    descriptor: I
+  private final int second;
+    descriptor: I
+  private static final java.lang.String marker;
+    descriptor: Ljava/lang/String;
+  public static final enums.polymorphism.Task LEFT;
+    descriptor: Lenums/polymorphism/Task;
+  public static final enums.polymorphism.Task RIGHT;
+    descriptor: Lenums/polymorphism/Task;
+  public static final enums.polymorphism.Task EMPTY;
+    descriptor: Lenums/polymorphism/Task;
+  private static final enums.polymorphism.Task[] $VALUES;
+    descriptor: [Lenums/polymorphism/Task;
+  private static final kotlin.enums.EnumEntries $ENTRIES;
+    descriptor: Lkotlin/enums/EnumEntries;
+  private enums.polymorphism.Task(int, int);
+    descriptor: (Ljava/lang/String;III)V
+
+  enums.polymorphism.Task(java.lang.String, int, int, int, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    descriptor: (Ljava/lang/String;IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+
+  public final int getFirst();
+    descriptor: ()I
+
+  public final int getSecond();
+    descriptor: ()I
+
+  public java.lang.String run(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public java.lang.String getCaption();
+    descriptor: ()Ljava/lang/String;
+
+  public static enums.polymorphism.Task[] values();
+    descriptor: ()[Lenums/polymorphism/Task;
+
+  public static enums.polymorphism.Task valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lenums/polymorphism/Task;
+
+  public static kotlin.enums.EnumEntries<enums.polymorphism.Task> getEntries();
+    descriptor: ()Lkotlin/enums/EnumEntries;
+
+  private static final enums.polymorphism.Task[] $values();
+    descriptor: ()[Lenums/polymorphism/Task;
+
+  public static final java.lang.String access$getMarker$cp();
+    descriptor: ()Ljava/lang/String;
+
+  public enums.polymorphism.Task(java.lang.String, int, int, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    descriptor: (Ljava/lang/String;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+
+  static {};
+    descriptor: ()V
+}
+Compiled from "Models.kt"
+final class enums.polymorphism.Task$LEFT extends enums.polymorphism.Task {
+  private final int initialized;
+    descriptor: I
+  enums.polymorphism.Task$LEFT();
+    descriptor: (Ljava/lang/String;I)V
+
+  public final int getInitialized();
+    descriptor: ()I
+
+  public java.lang.String run(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public java.lang.String getCaption();
+    descriptor: ()Ljava/lang/String;
+}
+Compiled from "Models.kt"
+final class enums.polymorphism.Task$RIGHT extends enums.polymorphism.Task {
+  enums.polymorphism.Task$RIGHT();
+    descriptor: (Ljava/lang/String;I)V
+
+  public java.lang.String run(int);
+    descriptor: (I)Ljava/lang/String;
+}
+Compiled from "Models.kt"
+public abstract class enums.polymorphism.AbstractAction extends java.lang.Enum<enums.polymorphism.AbstractAction> {
+  private final long number;
+    descriptor: J
+  private final double fraction;
+    descriptor: D
+  public static final enums.polymorphism.AbstractAction A;
+    descriptor: Lenums/polymorphism/AbstractAction;
+  public static final enums.polymorphism.AbstractAction B;
+    descriptor: Lenums/polymorphism/AbstractAction;
+  private static final enums.polymorphism.AbstractAction[] $VALUES;
+    descriptor: [Lenums/polymorphism/AbstractAction;
+  private static final kotlin.enums.EnumEntries $ENTRIES;
+    descriptor: Lkotlin/enums/EnumEntries;
+  private enums.polymorphism.AbstractAction(long, double);
+    descriptor: (Ljava/lang/String;IJD)V
+
+  public final long getNumber();
+    descriptor: ()J
+
+  public final double getFraction();
+    descriptor: ()D
+
+  public abstract double score();
+    descriptor: ()D
+
+  public double adjust();
+    descriptor: ()D
+
+  public static enums.polymorphism.AbstractAction[] values();
+    descriptor: ()[Lenums/polymorphism/AbstractAction;
+
+  public static enums.polymorphism.AbstractAction valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lenums/polymorphism/AbstractAction;
+
+  public static kotlin.enums.EnumEntries<enums.polymorphism.AbstractAction> getEntries();
+    descriptor: ()Lkotlin/enums/EnumEntries;
+
+  private static final enums.polymorphism.AbstractAction[] $values();
+    descriptor: ()[Lenums/polymorphism/AbstractAction;
+
+  public enums.polymorphism.AbstractAction(java.lang.String, int, long, double, kotlin.jvm.internal.DefaultConstructorMarker);
+    descriptor: (Ljava/lang/String;IJDLkotlin/jvm/internal/DefaultConstructorMarker;)V
+
+  static {};
+    descriptor: ()V
+}
+Compiled from "Models.kt"
+final class enums.polymorphism.AbstractAction$A extends enums.polymorphism.AbstractAction {
+  enums.polymorphism.AbstractAction$A();
+    descriptor: (Ljava/lang/String;I)V
+
+  public double score();
+    descriptor: ()D
+}
+Compiled from "Models.kt"
+final class enums.polymorphism.AbstractAction$B extends enums.polymorphism.AbstractAction {
+  enums.polymorphism.AbstractAction$B();
+    descriptor: (Ljava/lang/String;I)V
+
+  public double score();
+    descriptor: ()D
+}
+Compiled from "Models.kt"
+public abstract class enums.polymorphism.PerEntry extends java.lang.Enum<enums.polymorphism.PerEntry> implements enums.polymorphism.Action {
+  public static final enums.polymorphism.PerEntry A;
+    descriptor: Lenums/polymorphism/PerEntry;
+  public static final enums.polymorphism.PerEntry B;
+    descriptor: Lenums/polymorphism/PerEntry;
+  private static final enums.polymorphism.PerEntry[] $VALUES;
+    descriptor: [Lenums/polymorphism/PerEntry;
+  private static final kotlin.enums.EnumEntries $ENTRIES;
+    descriptor: Lkotlin/enums/EnumEntries;
+  private enums.polymorphism.PerEntry();
+    descriptor: (Ljava/lang/String;I)V
+
+  public static enums.polymorphism.PerEntry[] values();
+    descriptor: ()[Lenums/polymorphism/PerEntry;
+
+  public static enums.polymorphism.PerEntry valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lenums/polymorphism/PerEntry;
+
+  public static kotlin.enums.EnumEntries<enums.polymorphism.PerEntry> getEntries();
+    descriptor: ()Lkotlin/enums/EnumEntries;
+
+  private static final enums.polymorphism.PerEntry[] $values();
+    descriptor: ()[Lenums/polymorphism/PerEntry;
+
+  public enums.polymorphism.PerEntry(java.lang.String, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    descriptor: (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+
+  static {};
+    descriptor: ()V
+}
+Compiled from "Models.kt"
+final class enums.polymorphism.PerEntry$A extends enums.polymorphism.PerEntry {
+  enums.polymorphism.PerEntry$A();
+    descriptor: (Ljava/lang/String;I)V
+
+  public java.lang.String run(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public java.lang.String getCaption();
+    descriptor: ()Ljava/lang/String;
+}
+Compiled from "Models.kt"
+final class enums.polymorphism.PerEntry$B extends enums.polymorphism.PerEntry {
+  private final java.lang.String caption;
+    descriptor: Ljava/lang/String;
+  enums.polymorphism.PerEntry$B();
+    descriptor: (Ljava/lang/String;I)V
+
+  public java.lang.String run(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public java.lang.String getCaption();
+    descriptor: ()Ljava/lang/String;
+}
+Compiled from "Models.kt"
+public final class enums.polymorphism.DefaultOnly extends java.lang.Enum<enums.polymorphism.DefaultOnly> {
+  private final int value;
+    descriptor: I
+  private final int following;
+    descriptor: I
+  public static final enums.polymorphism.DefaultOnly A;
+    descriptor: Lenums/polymorphism/DefaultOnly;
+  public static final enums.polymorphism.DefaultOnly B;
+    descriptor: Lenums/polymorphism/DefaultOnly;
+  public static final enums.polymorphism.DefaultOnly C;
+    descriptor: Lenums/polymorphism/DefaultOnly;
+  private static final enums.polymorphism.DefaultOnly[] $VALUES;
+    descriptor: [Lenums/polymorphism/DefaultOnly;
+  private static final kotlin.enums.EnumEntries $ENTRIES;
+    descriptor: Lkotlin/enums/EnumEntries;
+  private enums.polymorphism.DefaultOnly(int, int);
+    descriptor: (Ljava/lang/String;III)V
+
+  enums.polymorphism.DefaultOnly(java.lang.String, int, int, int, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    descriptor: (Ljava/lang/String;IIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+
+  public final int getValue();
+    descriptor: ()I
+
+  public final int getFollowing();
+    descriptor: ()I
+
+  public static enums.polymorphism.DefaultOnly[] values();
+    descriptor: ()[Lenums/polymorphism/DefaultOnly;
+
+  public static enums.polymorphism.DefaultOnly valueOf(java.lang.String);
+    descriptor: (Ljava/lang/String;)Lenums/polymorphism/DefaultOnly;
+
+  public static kotlin.enums.EnumEntries<enums.polymorphism.DefaultOnly> getEntries();
+    descriptor: ()Lkotlin/enums/EnumEntries;
+
+  private static final enums.polymorphism.DefaultOnly[] $values();
+    descriptor: ()[Lenums/polymorphism/DefaultOnly;
+
+  static {};
+    descriptor: ()V
+}

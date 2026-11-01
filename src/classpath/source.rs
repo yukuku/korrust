@@ -1028,8 +1028,13 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
         let mut context = module.clone();
         context.class_decl = Some(enumeration.body.clone());
         defaults(&mut context, cp);
+        enumeration.body = context.class_decl.take().unwrap();
+        for entry in enumeration.entry_bodies.iter_mut().flatten() {
+            context.class_decl = Some(entry.clone());
+            defaults(&mut context, cp);
+            *entry = context.class_decl.take().unwrap();
+        }
         module.imports = context.imports;
-        enumeration.body = context.class_decl.unwrap();
         module.enum_decl = Some(enumeration);
         return;
     }

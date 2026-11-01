@@ -370,6 +370,7 @@ pub enum CompanionValue {
 pub struct EnumDecl {
     pub body: ClassDecl,
     pub entry_arguments: Vec<Vec<Expr>>,
+    pub entry_bodies: Vec<Option<ClassDecl>>,
     pub annotations: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
@@ -2583,21 +2584,20 @@ impl Parser {
         body.annotations = annotations.clone();
         body.internal = visibility.as_deref() == Some("internal");
         body.primary_constructor = true;
-        if body.defaults.iter().any(Option::is_some) {
-            return Err(self.error("Enum constructor default arguments are unsupported"));
-        }
         if body.super_class.is_some() {
             return Err(self.error("Explicit enum superclass constructors are unsupported"));
         }
         let name = body.name.clone();
         let mut entries = Vec::new();
         let mut entry_arguments = Vec::new();
+        let mut entry_bodies = Vec::new();
         if !self.take("{") {
             self.pos = after_header;
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
                 return Ok(EnumDecl {
                     body,
                     entry_arguments,
+                    entry_bodies,
                     annotations,
                     name,
                     offset,
@@ -2630,14 +2630,41 @@ impl Parser {
                 Vec::new()
             };
             self.lines();
-            if self.at("{") {
-                return Err(self
-                    .error("Enum entry-specific class bodies are unsupported")
-                    .with_kind(
-                        DiagnosticKind::UnsupportedLanguage,
-                        "ENUM_ENTRY_BODY_UNSUPPORTED",
-                    ));
-            }
+            let entry_body = if self.take("{") {
+                let mut declaration = body.clone();
+                declaration.name = entry.clone();
+                declaration.offset = entry_offset;
+                declaration.annotations.clear();
+                declaration.params.clear();
+                declaration.defaults.clear();
+                declaration.param_annotations.clear();
+                declaration.public_params.clear();
+                declaration.param_properties.clear();
+                declaration.override_params.clear();
+                declaration.mutable_params.clear();
+                declaration.interfaces.clear();
+                declaration.super_types.clear();
+                self.class_members(&mut declaration, &mut std::collections::HashSet::new())?;
+                if declaration.companion.is_some()
+                    || !declaration.nested.is_empty()
+                    || !declaration.secondary_constructors.is_empty()
+                {
+                    return Err(Diagnostic::new(entry_offset, "Nested declarations, companions, and secondary constructors in enum entries are unsupported")
+                        .with_kind(DiagnosticKind::UnsupportedLanguage, "ENUM_ENTRY_DECLARATION_UNSUPPORTED"));
+                }
+                if declaration.methods.is_empty()
+                    && declaration.properties.is_empty()
+                    && declaration.initializers.is_empty()
+                {
+                    None
+                } else {
+                    Some(declaration)
+                }
+            } else {
+                None
+            };
+            self.lines();
+            entry_bodies.push(entry_body);
             entries.push((entry, entry_offset));
             entry_arguments.push(arguments);
             if entries.len() > 1024 {
@@ -2676,11 +2703,17 @@ impl Parser {
             self.expect("}")?;
         }
         if !body.secondary_constructors.is_empty() {
-            return Err(self.error("Secondary constructors in enums are unsupported"));
+            return Err(self
+                .error("Secondary constructors in enums are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "ENUM_SECONDARY_CONSTRUCTOR_UNSUPPORTED",
+                ));
         }
         Ok(EnumDecl {
             body,
             entry_arguments,
+            entry_bodies,
             annotations,
             name,
             offset,
@@ -3781,6 +3814,10 @@ impl Parser {
                         has_body,
                     });
                 } else if self.at("val") || self.at("var") {
+                    if abstract_ {
+                        return Err(Diagnostic::new(offset, "Abstract class and enum properties require unsupported abstract accessor declarations")
+                            .with_kind(DiagnosticKind::UnsupportedLanguage, "ABSTRACT_CLASS_PROPERTY_UNSUPPORTED"));
+                    }
                     if infix {
                         return Err(self.error("The infix modifier applies only to functions"));
                     }
@@ -7489,11 +7526,6 @@ mod tests {
                 "VALUE_CLASS_JVM_BOXING_UNSUPPORTED",
             ),
             (
-                "enum class E { A { fun answer() = 1 } }",
-                "{ fun",
-                "ENUM_ENTRY_BODY_UNSUPPORTED",
-            ),
-            (
                 "fun f(input: @Mark String) {}",
                 "@",
                 "ANNOTATION_TYPE_USE_UNSUPPORTED",
@@ -7605,14 +7637,6 @@ mod tests {
         }
         for (source, message) in [
             ("enum class E { A, A }", "Duplicate enum entry"),
-            (
-                "enum class E { A { fun answer() = 1 } }",
-                "entry-specific class bodies",
-            ),
-            (
-                "enum class E(val value: Int = 1) { A }",
-                "default arguments",
-            ),
             (
                 "enum class E { A; constructor(value: Int) {} }",
                 "Secondary constructors",

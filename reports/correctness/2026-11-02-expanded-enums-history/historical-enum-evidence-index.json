@@ -1,0 +1,4397 @@
+{
+  "schema_version": 1,
+  "scope": "Historical isolated enum validation attempts, preserved separately from authoritative integrated acceptance",
+  "runs": [
+    {
+      "path": "target/resume-enums/target/enum-proof-v1/report.json",
+      "status": "aborted_before_report",
+      "counts": null,
+      "input_integrity": null,
+      "compiler": null
+    },
+    {
+      "path": "target/resume-enums/target/enum-proof-v2/report.json",
+      "status": "failed",
+      "counts": {
+        "pass": 6,
+        "correctness_failure": 4
+      },
+      "input_integrity": {
+        "status": "changed",
+        "changed_paths": [
+          "src/metadata/enums.rs",
+          "src/syntax.rs",
+          "tests/fixtures/enum_polymorphism/Calls.java",
+          "tests/fixtures/enum_polymorphism/MetadataCheck.java",
+          "tools/check_enum_polymorphism.py",
+          "target/release/korrust"
+        ]
+      },
+      "compiler": {
+        "path": "target/release/korrust",
+        "sha256": "9505dafaaafc2e258aa556110997f255f4a25cef5aa0a964bdf2c4647f4f76be"
+      }
+    },
+    {
+      "path": "target/resume-enums/target/enum-proof-v3/report.json",
+      "status": "failed",
+      "counts": {
+        "pass": 7,
+        "correctness_failure": 3,
+        "unsupported_language": 1
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      },
+      "compiler": {
+        "path": "target/release/korrust",
+        "sha256": "82465a7b117c080f53b34840490f59680d641edeb4e11c703efa174b585843b4"
+      }
+    },
+    {
+      "path": "target/resume-enums/target/upstream-enums-v1/report.json",
+      "status": "invalidated",
+      "counts": {
+        "correctness_failure": 8,
+        "excluded_target": 1,
+        "pass": 3,
+        "unsupported_language": 3
+      },
+      "input_integrity": {
+        "status": "changed",
+        "changed_paths": [
+          "target/resume-enums/target/release/korrust"
+        ]
+      },
+      "compiler": {
+        "path": "target/resume-enums/target/release/korrust",
+        "sha256": "3e698fc28ab6069e9d3cbfa8e15e81920ec1586e584cf1f0eff849b895e09681"
+      }
+    },
+    {
+      "path": "target/resume-enums/target/upstream-enums-v2/report.json",
+      "status": "invalidated",
+      "counts": {
+        "correctness_failure": 3,
+        "excluded_target": 1,
+        "pass": 6,
+        "timeout": 1,
+        "unsupported_language": 4
+      },
+      "input_integrity": {
+        "status": "changed",
+        "changed_paths": [
+          "target/resume-enums/target/release/korrust"
+        ]
+      },
+      "compiler": {
+        "path": "target/resume-enums/target/release/korrust",
+        "sha256": "9505dafaaafc2e258aa556110997f255f4a25cef5aa0a964bdf2c4647f4f76be"
+      }
+    },
+    {
+      "path": "target/resume-enums/target/upstream-enums-v4/report.json",
+      "status": "invalidated",
+      "counts": {
+        "correctness_failure": 1,
+        "excluded_target": 1,
+        "pass": 9,
+        "unsupported_language": 4
+      },
+      "input_integrity": {
+        "status": "changed",
+        "changed_paths": [
+          "tools/upstream_jvm.py"
+        ]
+      },
+      "compiler": {
+        "path": "target/resume-enums/target/frozen-v4/korrust",
+        "sha256": "4bb910a675e9e8fd37738f93a430c18bf9d58d95178cb2503318cdfcf6e3946e"
+      }
+    }
+  ],
+  "limitations": [
+    "V1 focused script failed before writing a report; command logs preserve oracle/candidate failure",
+    "V2 and V3 focused reports preserve exact input hash manifests but earlier full compiler source snapshots and overwritten binaries were not archived at those revisions",
+    "V1/V2 upstream reports were invalidated by compiler changes; V4 upstream was invalidated by shared adapter changes. Integrated root upstream run is authoritative.",
+    "Archive excludes generated classes, Kotlin package mappings, jars and compiler binaries"
+  ],
+  "files": [
+    {
+      "path": "enum-handoff-manifest.json",
+      "sha256": "bf00342b6bc722f087f9ea531f58f8237f62b4a57ee71d7a17cfd76a3ec0809c",
+      "size_bytes": 7777
+    },
+    {
+      "path": "enum-handoff.patch",
+      "sha256": "b51b213929f55c2e15a7cfe03c5d6592613e3d25cea1e458051b9eba2539bb29",
+      "size_bytes": 63773
+    },
+    {
+      "path": "target/enum-proof-v1/commands/000.txt",
+      "sha256": "fda682580ca7ca5fb303e4f13d633beb4b92c73b72e357017c23373d1493d661",
+      "size_bytes": 393
+    },
+    {
+      "path": "target/enum-proof-v1/commands/001.txt",
+      "sha256": "52196f5043fc21f63ad6ce1c48bf03bd9fe6296d7c2fb75da0f94e6fa11c8096",
+      "size_bytes": 461
+    },
+    {
+      "path": "target/enum-proof-v2/Invalid0.kt",
+      "sha256": "329ff9613c1496600432464570141faafadba36959cbb4ca00d6f071dcf16590",
+      "size_bytes": 43
+    },
+    {
+      "path": "target/enum-proof-v2/Invalid1.kt",
+      "sha256": "ed4ac380735060d224bef395ae45cf9ded4e9e67cba3e6552742030b688630f7",
+      "size_bytes": 46
+    },
+    {
+      "path": "target/enum-proof-v2/Invalid2.kt",
+      "sha256": "74cfb1e72fa0b0da86374228308e23e39d9aff25cae547a7d6da000f643b147a",
+      "size_bytes": 70
+    },
+    {
+      "path": "target/enum-proof-v2/Invalid3.kt",
+      "sha256": "a632a840ea42e33c6f8965ec1bc5c4962ce3ec09a9cdf2550ada03387b3a77f1",
+      "size_bytes": 57
+    },
+    {
+      "path": "target/enum-proof-v2/Invalid4.kt",
+      "sha256": "df465ea8eae8460fd05227cbb37750b9a3298c1a19da3a04ceaad9fe99b8d94f",
+      "size_bytes": 54
+    },
+    {
+      "path": "target/enum-proof-v2/candidate/.korrust/index",
+      "sha256": "91f50afbc9505ef54ee501807aa803f9d57b1d1c2f3b88ebbcd76b6770d12781",
+      "size_bytes": 3751
+    },
+    {
+      "path": "target/enum-proof-v2/commands/000.txt",
+      "sha256": "0aefdc29755574cff4c7b16068e48cbccfb67cc42953d1405b6c6dcdbd3d02bc",
+      "size_bytes": 393
+    },
+    {
+      "path": "target/enum-proof-v2/commands/001.txt",
+      "sha256": "67d74d153ae303dc8d9921ebaf8b0eef9acf7dee9903f68e4024594fdb5a3676",
+      "size_bytes": 1916
+    },
+    {
+      "path": "target/enum-proof-v2/commands/002.txt",
+      "sha256": "755ab2967db8356a28986c519ad106dbc22b45f42541337df52c990b8b5ca031",
+      "size_bytes": 601
+    },
+    {
+      "path": "target/enum-proof-v2/commands/003.txt",
+      "sha256": "61b84a817c323c8f3c5d460a947ce8689ec44012fc531761bfaa1e5c175c9e9f",
+      "size_bytes": 361
+    },
+    {
+      "path": "target/enum-proof-v2/commands/004.txt",
+      "sha256": "07bd88391061a7ed3603b9cb8e807dddaa54234498af91f5e5868e279fd6995f",
+      "size_bytes": 362
+    },
+    {
+      "path": "target/enum-proof-v2/commands/005.txt",
+      "sha256": "50f0ded84035e061a8b7efe1ca02602d094c3d1b925ebf266ce75241c71fdafb",
+      "size_bytes": 480
+    },
+    {
+      "path": "target/enum-proof-v2/commands/006.txt",
+      "sha256": "fdf13b5482138bcec4f65708f6a1d66dac263f130ee1695b1af2fbe2ffeb0bed",
+      "size_bytes": 369
+    },
+    {
+      "path": "target/enum-proof-v2/commands/007.txt",
+      "sha256": "440326c7c5fef6fd5fabfed0a9282e1162b146e01e573ac557b3b81bcd9f7890",
+      "size_bytes": 370
+    },
+    {
+      "path": "target/enum-proof-v2/commands/008.txt",
+      "sha256": "209a5b17bf8663392f945a4e7522df7c6620c7c5f90f220f3311187538382b51",
+      "size_bytes": 819
+    },
+    {
+      "path": "target/enum-proof-v2/commands/009.txt",
+      "sha256": "ec286631db8f7602c252646fe0465523b91c66e0564fe6a88bc64eac29849f9b",
+      "size_bytes": 1794
+    },
+    {
+      "path": "target/enum-proof-v2/commands/010.txt",
+      "sha256": "ecddcb98de3e1e46b585c57f772973529a2eae24fa221f44b156b1c702823fe0",
+      "size_bytes": 9629
+    },
+    {
+      "path": "target/enum-proof-v2/commands/011.txt",
+      "sha256": "b4a7d48923f2bfdc119b1cad7c386a6a773b1b9677e8b61ae29f66f5baa6e5e9",
+      "size_bytes": 9907
+    },
+    {
+      "path": "target/enum-proof-v2/commands/012.txt",
+      "sha256": "40a314f6bb92aad2003f604514add16e8d2231531d2c1ee4c524e1f600923bd6",
+      "size_bytes": 568
+    },
+    {
+      "path": "target/enum-proof-v2/commands/013.txt",
+      "sha256": "8bb9037d30d21943979309f74cf611b614dbb756329b389c5c362b359f3ffff0",
+      "size_bytes": 705
+    },
+    {
+      "path": "target/enum-proof-v2/commands/014.txt",
+      "sha256": "1bdb65438a1310dcb2a9849225ae1811da48f8d9d13ac0b67b868bf2e91ffb64",
+      "size_bytes": 571
+    },
+    {
+      "path": "target/enum-proof-v2/commands/015.txt",
+      "sha256": "2633e07da4cb37e1a226a505829c13539e236cc26998c2dd983fda706b943754",
+      "size_bytes": 698
+    },
+    {
+      "path": "target/enum-proof-v2/commands/016.txt",
+      "sha256": "197f3824e28fdeabf79eee6e82583c94f08ca5de592f5ae38cab03b1d5b8a54f",
+      "size_bytes": 586
+    },
+    {
+      "path": "target/enum-proof-v2/commands/017.txt",
+      "sha256": "f79ac0c5dae287b32943b946b0a23fa9f1a52c6a5a1b1418eafbe3b637212f93",
+      "size_bytes": 669
+    },
+    {
+      "path": "target/enum-proof-v2/commands/018.txt",
+      "sha256": "c6df3a45b1c7d697460732ccafeed1f62a13a47e42bde89751a024ffc100e18c",
+      "size_bytes": 618
+    },
+    {
+      "path": "target/enum-proof-v2/commands/019.txt",
+      "sha256": "3e37f70ab1a9d23d70aaa65bda0f963e1147f532c641ce415362f364144c5970",
+      "size_bytes": 698
+    },
+    {
+      "path": "target/enum-proof-v2/commands/020.txt",
+      "sha256": "9ad4d88067519c5b402bf279f59cd9a257f1f8ac8a34aaced411db5b90eadc4f",
+      "size_bytes": 551
+    },
+    {
+      "path": "target/enum-proof-v2/commands/021.txt",
+      "sha256": "930e5bcd3d23946004a5a8e35869a0081c95681a23203e1c2bb3e7ab16b91a6b",
+      "size_bytes": 699
+    },
+    {
+      "path": "target/enum-proof-v2/report.json",
+      "sha256": "5f2fecfd9c97bdd5d0a61d889990ec9d27a106d0b664cdd2a8cd3bb31cce3bc1",
+      "size_bytes": 29027
+    },
+    {
+      "path": "target/enum-proof-v3/Invalid0.kt",
+      "sha256": "329ff9613c1496600432464570141faafadba36959cbb4ca00d6f071dcf16590",
+      "size_bytes": 43
+    },
+    {
+      "path": "target/enum-proof-v3/Invalid1.kt",
+      "sha256": "ed4ac380735060d224bef395ae45cf9ded4e9e67cba3e6552742030b688630f7",
+      "size_bytes": 46
+    },
+    {
+      "path": "target/enum-proof-v3/Invalid2.kt",
+      "sha256": "74cfb1e72fa0b0da86374228308e23e39d9aff25cae547a7d6da000f643b147a",
+      "size_bytes": 70
+    },
+    {
+      "path": "target/enum-proof-v3/Invalid3.kt",
+      "sha256": "a632a840ea42e33c6f8965ec1bc5c4962ce3ec09a9cdf2550ada03387b3a77f1",
+      "size_bytes": 57
+    },
+    {
+      "path": "target/enum-proof-v3/Invalid4.kt",
+      "sha256": "df465ea8eae8460fd05227cbb37750b9a3298c1a19da3a04ceaad9fe99b8d94f",
+      "size_bytes": 54
+    },
+    {
+      "path": "target/enum-proof-v3/UnsupportedAbstractProperty.kt",
+      "sha256": "71aef9cd5ef02ea4be333dce7c84c3d8f41a2d8a7b1d6690cb68c5169e95c31e",
+      "size_bytes": 75
+    },
+    {
+      "path": "target/enum-proof-v3/candidate/.korrust/index",
+      "sha256": "2f36f98007e75b8ad5d6daa3822f7e6e788d60c8701aaa0b936c90b5e6c30006",
+      "size_bytes": 3486
+    },
+    {
+      "path": "target/enum-proof-v3/commands/000.txt",
+      "sha256": "b5313350dcd568a6be08c85b74a475cdcfa7e4835384dc55a1fec38f93d8d16f",
+      "size_bytes": 393
+    },
+    {
+      "path": "target/enum-proof-v3/commands/001.txt",
+      "sha256": "1126607fcaf77c45e6b98cf68d025fd4699f8bfdfdbbb8bceb5e66529b5b0c83",
+      "size_bytes": 1803
+    },
+    {
+      "path": "target/enum-proof-v3/commands/002.txt",
+      "sha256": "e458cd7874f334718943a061176a707cceca44ec1136daecb5ac9ce458f1be3c",
+      "size_bytes": 601
+    },
+    {
+      "path": "target/enum-proof-v3/commands/003.txt",
+      "sha256": "06bc5e164fa2958c167bb4ff28daaba6189e5f86b78eb16f7d5254e855889cdb",
+      "size_bytes": 361
+    },
+    {
+      "path": "target/enum-proof-v3/commands/004.txt",
+      "sha256": "afca7870b13aed6054402e5fbacb2558819acbc9fe435f8a38c2642b7d156f65",
+      "size_bytes": 362
+    },
+    {
+      "path": "target/enum-proof-v3/commands/005.txt",
+      "sha256": "a8b2a1215e1c20fa80d375bc01b894aa2f4cd0e05a740167b8570c52d04f86ea",
+      "size_bytes": 480
+    },
+    {
+      "path": "target/enum-proof-v3/commands/006.txt",
+      "sha256": "7f29d89f5eedc55ad1fc843a600ec96dbe23e9c7843d3e022cc4561e42312968",
+      "size_bytes": 369
+    },
+    {
+      "path": "target/enum-proof-v3/commands/007.txt",
+      "sha256": "d297e0ff7ee0f13a9808ecac3e3fe499b802016e130dfb2f06d611faf50ab113",
+      "size_bytes": 370
+    },
+    {
+      "path": "target/enum-proof-v3/commands/008.txt",
+      "sha256": "cd5f4e1a5e9b2e282fcf904035342f6fecb416d733067bb7961f27d5d2e7a22f",
+      "size_bytes": 482
+    },
+    {
+      "path": "target/enum-proof-v3/commands/009.txt",
+      "sha256": "6069598d484706b8191cfc33c2209814d5eefae6ffb213c764a230cfee89b939",
+      "size_bytes": 370
+    },
+    {
+      "path": "target/enum-proof-v3/commands/010.txt",
+      "sha256": "121f1b2a31063465505ab14a936ec13ebb5c6599d98d1a848da69808fe84607c",
+      "size_bytes": 371
+    },
+    {
+      "path": "target/enum-proof-v3/commands/011.txt",
+      "sha256": "212dd6389cf23f6f1da3e0c8d87aca0cdfefdd87127389afb057c7f90aea42b2",
+      "size_bytes": 2455
+    },
+    {
+      "path": "target/enum-proof-v3/commands/012.txt",
+      "sha256": "d3622c1c106d97f1bc07a6d1035ab1632ea5b30e36c77f9eca4379497a343667",
+      "size_bytes": 2455
+    },
+    {
+      "path": "target/enum-proof-v3/commands/013.txt",
+      "sha256": "388a198f79d322ebc00469ab3065eb27762f725cdf3811b3692efcd06350b81b",
+      "size_bytes": 9545
+    },
+    {
+      "path": "target/enum-proof-v3/commands/014.txt",
+      "sha256": "140144329bfee4d7080ed22ef069fe24da46ece6b70898d8aab7a76c4c141fa4",
+      "size_bytes": 9699
+    },
+    {
+      "path": "target/enum-proof-v3/commands/015.txt",
+      "sha256": "4eaaa61cd8258a15ba136a30c9a355c372907998e2bbb9fe21adf48353f56993",
+      "size_bytes": 568
+    },
+    {
+      "path": "target/enum-proof-v3/commands/016.txt",
+      "sha256": "0a00460e8e655fb6e816002993378f9d4f25e54e7bab3a1b098a2ec790bbfa3e",
+      "size_bytes": 705
+    },
+    {
+      "path": "target/enum-proof-v3/commands/017.txt",
+      "sha256": "8ff8a282b2517469a25f64aa4111dab2a747652e0d533e83930378eda77bcae2",
+      "size_bytes": 571
+    },
+    {
+      "path": "target/enum-proof-v3/commands/018.txt",
+      "sha256": "19369b2759309435ae0ce9795a217c1e0b3c4238657b76aea4e16aa6c6f4eed6",
+      "size_bytes": 705
+    },
+    {
+      "path": "target/enum-proof-v3/commands/019.txt",
+      "sha256": "b675e342f36a59ed6edd42d59db92597f008014cf939abf2c9eea9950480f070",
+      "size_bytes": 586
+    },
+    {
+      "path": "target/enum-proof-v3/commands/020.txt",
+      "sha256": "1a7c4512401d22042a265c58ed52ef92cef8130c3da384784f1df042a73529b0",
+      "size_bytes": 669
+    },
+    {
+      "path": "target/enum-proof-v3/commands/021.txt",
+      "sha256": "a84862b4326f1fb7ff8cdd627a1365e393b33db9daa0f56e72692d0376afdc03",
+      "size_bytes": 618
+    },
+    {
+      "path": "target/enum-proof-v3/commands/022.txt",
+      "sha256": "6ef41fefd97b51c00213eba0066f8e2b7613b4e4d52554dbeee2d5bc04138c7c",
+      "size_bytes": 698
+    },
+    {
+      "path": "target/enum-proof-v3/commands/023.txt",
+      "sha256": "88eaa968891354b2dc0b674beb12d6d63fe99f365c72379febeaf25fcd0a89da",
+      "size_bytes": 551
+    },
+    {
+      "path": "target/enum-proof-v3/commands/024.txt",
+      "sha256": "182cc37067ecf1c7cb976643b67b238a7a3d573cfa9bca19a0b62bb20838403a",
+      "size_bytes": 699
+    },
+    {
+      "path": "target/enum-proof-v3/commands/025.txt",
+      "sha256": "8513135281dbb96418fc7e430fabeb985ee7a615f6d9cdd7a4096ab0b152aa8a",
+      "size_bytes": 414
+    },
+    {
+      "path": "target/enum-proof-v3/commands/026.txt",
+      "sha256": "3279810a1a2d34c702a952f591353355e45537c9fe2868f0dab015934399278f",
+      "size_bytes": 814
+    },
+    {
+      "path": "target/enum-proof-v3/report.json",
+      "sha256": "2c7d104cd33a17bedac115288b1feccf1d179b48442598f1e0574162ea599b64",
+      "size_bytes": 35312
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0000-stderr.txt",
+      "sha256": "e87512a7caa6fababe3827466cad5cf2d326e9ee0de9bb198e404a7fe19662b3",
+      "size_bytes": 216
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0000-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0001-stderr.txt",
+      "sha256": "4660d72e074d8835c7fbae3f7490bdc0bee7314a56e40974e6162b7a611d7db3",
+      "size_bytes": 49
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0001-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0002-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0003-stderr.txt",
+      "sha256": "acbff06918a2ba88dde0e0eaea269fa76ac5193894cf2f963a618bd102d4550f",
+      "size_bytes": 434
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0003-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0004-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0005-stderr.txt",
+      "sha256": "1d957aa8f5822de917f369d220b0d7575406eb1e37034b12c8bdbc225c85ae72",
+      "size_bytes": 468
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0005-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0006-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0006-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0007-stderr.txt",
+      "sha256": "5de67edd5621a24fe943cbeca0ecebcc676fe377b0e1f7dee22bc9f5fdbc8ad2",
+      "size_bytes": 447
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0007-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0008-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0008-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0009-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0009-stdout.txt",
+      "sha256": "7af11e55054f91a3def3a6d934ac50201fea6c2aa87f93bc547d6b48f2be9fb5",
+      "size_bytes": 484
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0010-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0010-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0011-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0011-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0012-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0012-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0013-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0013-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0014-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0014-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0015-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0015-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0016-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0016-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0017-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0017-stdout.txt",
+      "sha256": "5e9ea8b0662dce71e59fca8ef350b8192cc4d2fb4e69a7015891f7c9f6155faa",
+      "size_bytes": 191
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0018-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0018-stdout.txt",
+      "sha256": "5e9ea8b0662dce71e59fca8ef350b8192cc4d2fb4e69a7015891f7c9f6155faa",
+      "size_bytes": 191
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0019-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0019-stdout.txt",
+      "sha256": "64847c4fe3e802dbe4d4ae04933538c26cd892c314bdc76f7605c1e05b397e65",
+      "size_bytes": 500
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0020-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0020-stdout.txt",
+      "sha256": "64847c4fe3e802dbe4d4ae04933538c26cd892c314bdc76f7605c1e05b397e65",
+      "size_bytes": 500
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0021-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0021-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0022-stderr.txt",
+      "sha256": "6cf2116bf4d6ce3c9c5277d1b4d60c7c01df73d5e181646f287a46b93cda9ffa",
+      "size_bytes": 522
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0022-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0023-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0023-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0024-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0024-stdout.txt",
+      "sha256": "291b4aa2f0ff0423877874a8559c1907e92007ad6a63de622bb612f72e2b8326",
+      "size_bytes": 457
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0025-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0025-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0026-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0026-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0027-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0027-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0028-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0028-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0029-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0029-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0030-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0030-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0031-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0031-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0032-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0032-stdout.txt",
+      "sha256": "4cd746fdd6705b4d553f3e3e537bfca2a04f90261f5d0a5b18a9f4dc92c06cdb",
+      "size_bytes": 343
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0033-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0033-stdout.txt",
+      "sha256": "4cd746fdd6705b4d553f3e3e537bfca2a04f90261f5d0a5b18a9f4dc92c06cdb",
+      "size_bytes": 343
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0034-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0034-stdout.txt",
+      "sha256": "880a4d3d79e6342626c0deb70ce83b1dc35797aa56b88454a79221c6653ebc0e",
+      "size_bytes": 542
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0035-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0035-stdout.txt",
+      "sha256": "880a4d3d79e6342626c0deb70ce83b1dc35797aa56b88454a79221c6653ebc0e",
+      "size_bytes": 542
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0036-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0036-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0037-stderr.txt",
+      "sha256": "d18b6271062de4416fd88b2858b98774f4abb25a7e542f31eb9b86be7faead17",
+      "size_bytes": 452
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0037-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0038-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0038-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0039-stderr.txt",
+      "sha256": "119a70a6d0d7cc04a57c435be03fae53c5092254c06d0d6697045d1edeede2ce",
+      "size_bytes": 442
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0039-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0040-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0040-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0041-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0041-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0042-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0042-stdout.txt",
+      "sha256": "70add40576d2f4d9c49fdbe5102eca024e7bc7c8ca2a0a5f37d69802923c00d1",
+      "size_bytes": 122
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0043-stderr.txt",
+      "sha256": "023b5f7405e12668781a69b8ac126cebca5d9fb5d089bcb6f5063f1ef2d51b28",
+      "size_bytes": 404
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0043-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0044-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0044-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0045-stderr.txt",
+      "sha256": "32a7b38e9b4a536e1c9359af46d104101e5a289505f4f556fe2e6e0688b75844",
+      "size_bytes": 464
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0045-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0046-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0046-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0047-stderr.txt",
+      "sha256": "35c1220e1666c67fc075c5c99a898d418355c0036c1d38e2999479d523b86e44",
+      "size_bytes": 562
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0047-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0048-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0048-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0049-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0049-stdout.txt",
+      "sha256": "da01a6236a59769c69050b328d86250bab73b86e4400357556102226fd23ff2a",
+      "size_bytes": 521
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0050-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0050-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0051-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0051-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0052-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0052-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0053-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0053-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0054-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0054-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0055-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0055-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0056-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0056-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0057-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0057-stdout.txt",
+      "sha256": "d1173ffa47744768ddeea10dea3a30802c3ce8198e21ae4c9a4b7abcd235be00",
+      "size_bytes": 596
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0058-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0058-stdout.txt",
+      "sha256": "d1173ffa47744768ddeea10dea3a30802c3ce8198e21ae4c9a4b7abcd235be00",
+      "size_bytes": 596
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0059-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0059-stdout.txt",
+      "sha256": "8a12c75e937ade71b9d732ca9f365d662a2829dc1dd1d7cb5a00313a002834d1",
+      "size_bytes": 211
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0060-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0060-stdout.txt",
+      "sha256": "8a12c75e937ade71b9d732ca9f365d662a2829dc1dd1d7cb5a00313a002834d1",
+      "size_bytes": 211
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0061-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0061-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0062-stderr.txt",
+      "sha256": "94b577c5be6c3824e6096bcb1535bb5cc29c9d8e9e4abe3c4e9eebe7b78f667e",
+      "size_bytes": 520
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0062-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0063-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0063-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0064-stderr.txt",
+      "sha256": "e499c1e773da2e7751b67d5c2de1c7d0c653ea53366c1e31096aa417f2df7949",
+      "size_bytes": 475
+    },
+    {
+      "path": "target/upstream-enums-v1/commands/0064-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_constructorWithDefaultArguments/UpstreamBox.java",
+      "sha256": "9677fef59294ee58ef05d7caee2c068754479e8eb4414427aed829afb84f61d9",
+      "size_bytes": 238
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_constructorWithDefaultArguments/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_constructorWithDefaultArguments/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "1a8d04fbe9086f5abd463f20098641606a68443b2d806d9e558cfb769396861b",
+      "size_bytes": 1255
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_constructorWithDefaultArguments/sources/main/constructorWithDefaultArguments.kt",
+      "sha256": "d01c4db63e24798e14a7e693171dbc59832d6b73c6bda98b8e2d62ba30c6328c",
+      "size_bytes": 91
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_constructorWithDefaultArguments/sources/main/constructorWithDefaultArguments.kt.source-map.json",
+      "sha256": "ef32d33f9d0c52a94144e43914a2d0a1b2f709331fcc754179734be5808ef9c6",
+      "size_bytes": 1221
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_constructorWithReordering/UpstreamBox.java",
+      "sha256": "57f66de3531e53692eba05f2e7ae105b75e04fbf555a2d4955a020b5eaeff48e",
+      "size_bytes": 232
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_constructorWithReordering/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_constructorWithReordering/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "daece91a78e192e1a9fad7d6193cc19e7f8c98d869dd0f650176fa1825a8a34b",
+      "size_bytes": 1165
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_constructorWithReordering/sources/main/constructorWithReordering.kt",
+      "sha256": "9cc769223627fd4b71f864422c6a2f17232c8befdda001056bcf86afcdfe2042",
+      "size_bytes": 151
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_constructorWithReordering/sources/main/constructorWithReordering.kt.source-map.json",
+      "sha256": "96d7d44f813c55218f32fbd398121f88a42b7196523a153ac507abb8f05a62f5",
+      "size_bytes": 1722
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_entryClassConstructorWithDefaultArguments/sources/main/entryClassConstructorWithDefaultArguments.kt",
+      "sha256": "d07d61d9f109e0d5276f42100b37b3f372ba1e356993d2e43da356eab0d721e4",
+      "size_bytes": 120
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_entryClassConstructorWithDefaultArguments/sources/main/entryClassConstructorWithDefaultArguments.kt.source-map.json",
+      "sha256": "7e53922b9c69d8536cc02fe10bb48daf8f6915033e088283ee79e7b999c7ea65",
+      "size_bytes": 1503
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_enumConstructorParameterClashWithDefaults/UpstreamBox.java",
+      "sha256": "926d0ebd64833eceb208c69fdfdb9eb1f9e242a77a91dcfa0eff0d0fec3552d2",
+      "size_bytes": 248
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_enumConstructorParameterClashWithDefaults/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_enumConstructorParameterClashWithDefaults/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "0e60e39af9133fdf04363013fbd2f4a9c9288d1f3bf1f62e122f741569d38f54",
+      "size_bytes": 1389
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_enumConstructorParameterClashWithDefaults/sources/main/enumConstructorParameterClashWithDefaults.kt",
+      "sha256": "eac2b9c265aabb21aa698a2d4cd6454d8ef44da21d58734422ac819854159d80",
+      "size_bytes": 426
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_enumConstructorParameterClashWithDefaults/sources/main/enumConstructorParameterClashWithDefaults.kt.source-map.json",
+      "sha256": "3ee8d2b32187be6eefcb6f1dff2380a518e5d2f917afc6d943a1f0f1563c696e",
+      "size_bytes": 4245
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_enumInheritedFromTrait/sources/main/enumInheritedFromTrait.kt",
+      "sha256": "ea9d8a028ca0b351e17df964c2b0b97936cb302762285825ddb163424716e86c",
+      "size_bytes": 212
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_enumInheritedFromTrait/sources/main/enumInheritedFromTrait.kt.source-map.json",
+      "sha256": "58ca13b82e1ffeaa5016e72a855ad7f9696eb479759fcf30473236bc7b0660ba",
+      "size_bytes": 2262
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_innerClassInEnumEntryClass/sources/main/innerClassInEnumEntryClass.kt",
+      "sha256": "6863f0a5361f86eebf10a28e8ee7fec59d69bc47ab5020cc1cb6e74f1a42b81c",
+      "size_bytes": 252
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_innerClassInEnumEntryClass/sources/main/innerClassInEnumEntryClass.kt.source-map.json",
+      "sha256": "f380dd3f8b805c3a50577efc5e5ac71a09aec88ce2be7a13265adafd4da84e02",
+      "size_bytes": 2634
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_interfaceCallWithEntryClass/sources/main/interfaceCallWithEntryClass.kt",
+      "sha256": "f557b70100036251bfc54c081c3eff2dd86a99c3cca3567a875fbc38b1d838ce",
+      "size_bytes": 399
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_interfaceCallWithEntryClass/sources/main/interfaceCallWithEntryClass.kt.source-map.json",
+      "sha256": "0bcef93d07d9e820b22dde9456697742b55fd71c721335cd17103ee0f353ebb2",
+      "size_bytes": 3960
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_manyDefaultParameters/sources/main/manyDefaultParameters.kt",
+      "sha256": "c1ce1610393135a058e53f5cdb2420fcee64a6972358ed355ace3c5442805292",
+      "size_bytes": 1577
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_manyDefaultParameters/sources/main/manyDefaultParameters.kt.source-map.json",
+      "sha256": "70b9b1356a6d05c0c38e28bf3fce6b81c0e13f21419d1f55e8235957bd2d66ed",
+      "size_bytes": 15121
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_openMethodNoOverrides/candidate/lib/.korrust/module-6c6962.index",
+      "sha256": "561baa82961497524a5b84c32fbef6dd4af344bbf7185e58755ad9d4b5efa3ca",
+      "size_bytes": 311
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_openMethodNoOverrides/sources/lib/lib.kt",
+      "sha256": "0b4e1b26879eef2cfd6b366545f751dfd881aed77aeedbea0279e79e465154f6",
+      "size_bytes": 55
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_openMethodNoOverrides/sources/lib/lib.kt.source-map.json",
+      "sha256": "c52f316ac171ebe1e1237e2915262f28ef32a35c3fa5a8da6ed7a638c816205f",
+      "size_bytes": 882
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_openMethodNoOverrides/sources/main/main.kt",
+      "sha256": "447e4a1151ad072cec5987ada82632354e22b948e1b35a820ac8cb20cce5e92d",
+      "size_bytes": 24
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_openMethodNoOverrides/sources/main/main.kt.source-map.json",
+      "sha256": "ccf4b535a3b68881b42b6ccf21540193fca45814a1a73f9c17d217c88e1a3eaa",
+      "size_bytes": 660
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_ordinalsWithEnumEntitiesOverrides/sources/main/ordinalsWithEnumEntitiesOverrides.kt",
+      "sha256": "5b2cea16091abef99e992f57ef272fdabfc49ab7491fd5193f8d00f139ab2736",
+      "size_bytes": 998
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_ordinalsWithEnumEntitiesOverrides/sources/main/ordinalsWithEnumEntitiesOverrides.kt.source-map.json",
+      "sha256": "5b1f62f4aa8de505a04efaf8bd737c8bee124e3797c1e16cc89e85c7388edb40",
+      "size_bytes": 9369
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_reorderedArguments/sources/main/reorderedArguments.kt",
+      "sha256": "8f4afda600254b5dfdd7d77585f1907c7be2a5e71c0b94f21229a4f3540bd6cb",
+      "size_bytes": 1449
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_reorderedArguments/sources/main/reorderedArguments.kt.source-map.json",
+      "sha256": "6da95fd39360434b231d00092f8642c744699e0c66123e7ace262ce833dce95e",
+      "size_bytes": 13832
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_secondaryConstructorWithDefaultArguments/sources/main/secondaryConstructorWithDefaultArguments.kt",
+      "sha256": "3238145865a59864e123a68d59ca8ca785777ad46b56995b1cb1c345470556f9",
+      "size_bytes": 142
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_secondaryConstructorWithDefaultArguments/sources/main/secondaryConstructorWithDefaultArguments.kt.source-map.json",
+      "sha256": "3c323ac86dcf1ec6df76a7fb34d85982c72d80e14821a00e0f4f548f7f13cfc9",
+      "size_bytes": 1698
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_toString/sources/main/toString.kt",
+      "sha256": "8bdeaefffd6977e59a0b006f20dd12a92c3c8986904a8d685450e27175a5f62b",
+      "size_bytes": 66
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_toString/sources/main/toString.kt.source-map.json",
+      "sha256": "857c8531d6b76b2717d1c1a317e890bbd4e4f9f90289ae40aa9206a65dbbf990",
+      "size_bytes": 940
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_vCallWithEntryClass/sources/main/vCallWithEntryClass.kt",
+      "sha256": "288a14a964da13f6cf7a87bc9ee0e8e82fc0f6ba8cc6b04165988ebefcf07d0f",
+      "size_bytes": 267
+    },
+    {
+      "path": "target/upstream-enums-v1/enum_vCallWithEntryClass/sources/main/vCallWithEntryClass.kt.source-map.json",
+      "sha256": "80b49b1410a8041e1e3e9fc800f649d6d35f862c5b4a1762e51790da4970f6e7",
+      "size_bytes": 2748
+    },
+    {
+      "path": "target/upstream-enums-v1/report.json",
+      "sha256": "6d41f56f035f19d00d82f3eef97f83b07f0d54836f8634bdffc0c6712096748b",
+      "size_bytes": 94622
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0000-stderr.txt",
+      "sha256": "e87512a7caa6fababe3827466cad5cf2d326e9ee0de9bb198e404a7fe19662b3",
+      "size_bytes": 216
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0000-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0001-stderr.txt",
+      "sha256": "4660d72e074d8835c7fbae3f7490bdc0bee7314a56e40974e6162b7a611d7db3",
+      "size_bytes": 49
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0001-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0002-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0003-stdout.txt",
+      "sha256": "00d690a414e1fd15087c338f2226b20e63f598e9624bb63e055c88f0336cd0cc",
+      "size_bytes": 683
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0004-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0005-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0005-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0006-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0006-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0007-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0007-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0008-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0008-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0009-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0009-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0010-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0010-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0011-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0011-stdout.txt",
+      "sha256": "f736caa5344aa2cc89715ea77847ce0f6cbff9f447c0530a252dce56f5afe812",
+      "size_bytes": 167
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0012-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0012-stdout.txt",
+      "sha256": "f736caa5344aa2cc89715ea77847ce0f6cbff9f447c0530a252dce56f5afe812",
+      "size_bytes": 167
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0013-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0013-stdout.txt",
+      "sha256": "851cee198c2793da61b237836bd4c4e86aaf655c79b6521b8e028504b1057ab4",
+      "size_bytes": 683
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0014-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0014-stdout.txt",
+      "sha256": "fcdbb3f9d2c4e369f2c83164c24f2f9e1d0b8f4eab6afc849504cbcf5f5c3c8b",
+      "size_bytes": 683
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0015-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0015-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0016-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0016-stdout.txt",
+      "sha256": "3c9dd0f91a7a9673f3247e0b12b9ed7c7398d9afd8a2ac4f8d26633ae85078d6",
+      "size_bytes": 858
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0017-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0017-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0018-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0018-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0019-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0019-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0020-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0020-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0021-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0021-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0022-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0022-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0023-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0023-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0024-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0024-stdout.txt",
+      "sha256": "26193b30a2cee116c39272926a05ca807378aeb9bc8a7199849a69f3c998697c",
+      "size_bytes": 147
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0025-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0025-stdout.txt",
+      "sha256": "26193b30a2cee116c39272926a05ca807378aeb9bc8a7199849a69f3c998697c",
+      "size_bytes": 147
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0026-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0026-stdout.txt",
+      "sha256": "9deaaa503d978a3aa507954a52949a24fabc9e1333a9190be756b5f9b2b06893",
+      "size_bytes": 183
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0027-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0027-stdout.txt",
+      "sha256": "9deaaa503d978a3aa507954a52949a24fabc9e1333a9190be756b5f9b2b06893",
+      "size_bytes": 183
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0028-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0028-stdout.txt",
+      "sha256": "a8899563e469c44a61b24b1b39b21a60150dc5c319c070646722d588d8361645",
+      "size_bytes": 704
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0029-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0029-stdout.txt",
+      "sha256": "f49b1a68128d131bd5a777197acb3f29d787fcabb1637ddf329f6e55f1e3b1c2",
+      "size_bytes": 704
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0030-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0030-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0031-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0031-stdout.txt",
+      "sha256": "11e449b34691d4fae58d34f1a961a75f70d91a865f83f47902c5285493691dad",
+      "size_bytes": 857
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0032-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0032-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0033-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0033-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0034-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0034-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0035-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0035-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0036-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0036-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0037-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0037-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0038-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0038-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0039-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0039-stdout.txt",
+      "sha256": "71935bba76503a102997863d59fdd94ab88c287b3b69b64fea688b5e73268b26",
+      "size_bytes": 178
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0040-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0040-stdout.txt",
+      "sha256": "71935bba76503a102997863d59fdd94ab88c287b3b69b64fea688b5e73268b26",
+      "size_bytes": 178
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0041-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0041-stdout.txt",
+      "sha256": "c17901eb040bcd75b94cbb3d3b5c32185c307a37a52c742d971c48c6e407d91a",
+      "size_bytes": 740
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0042-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0042-stdout.txt",
+      "sha256": "102da09c38885b96186ef02e01cc9edfd9718736e57a6267c4a772cc568a9510",
+      "size_bytes": 809
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0043-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0043-stdout.txt",
+      "sha256": "883b0e78a5cf3482026c40091a425b5dda5a72b149f2f596d8b451cd395c2b80",
+      "size_bytes": 147
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0044-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0044-stdout.txt",
+      "sha256": "883b0e78a5cf3482026c40091a425b5dda5a72b149f2f596d8b451cd395c2b80",
+      "size_bytes": 147
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0045-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0045-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0046-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0046-stdout.txt",
+      "sha256": "2b486936e43ea426047d7b1e0ee6fabc156e8444446350fdd2f76ae8fd73870b",
+      "size_bytes": 484
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0047-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0047-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0048-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0048-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0049-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0049-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0050-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0050-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0051-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0051-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0052-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0052-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0053-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0053-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0054-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0054-stdout.txt",
+      "sha256": "5e9ea8b0662dce71e59fca8ef350b8192cc4d2fb4e69a7015891f7c9f6155faa",
+      "size_bytes": 191
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0055-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0055-stdout.txt",
+      "sha256": "5e9ea8b0662dce71e59fca8ef350b8192cc4d2fb4e69a7015891f7c9f6155faa",
+      "size_bytes": 191
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0056-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0056-stdout.txt",
+      "sha256": "64847c4fe3e802dbe4d4ae04933538c26cd892c314bdc76f7605c1e05b397e65",
+      "size_bytes": 500
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0057-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0057-stdout.txt",
+      "sha256": "64847c4fe3e802dbe4d4ae04933538c26cd892c314bdc76f7605c1e05b397e65",
+      "size_bytes": 500
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0058-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0058-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0059-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0059-stdout.txt",
+      "sha256": "f97c6efa948f079e229849d0109aaae5222d55a4b6c2621e6fd61e1c882eb28b",
+      "size_bytes": 671
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0060-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0060-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0061-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0061-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0062-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0062-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0063-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0063-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0064-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0064-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0065-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0065-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0066-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0066-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0067-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0067-stdout.txt",
+      "sha256": "f0fe86a41d9905e79363568c6dc882baf16c127f33143feb5b4d63ecfef7197d",
+      "size_bytes": 211
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0068-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0068-stdout.txt",
+      "sha256": "f0fe86a41d9905e79363568c6dc882baf16c127f33143feb5b4d63ecfef7197d",
+      "size_bytes": 211
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0069-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0069-stdout.txt",
+      "sha256": "5cf16117f16c394df0bc8628d5bbe5b4442eaf3d89b7379e41b1ce2813f890c5",
+      "size_bytes": 504
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0070-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0070-stdout.txt",
+      "sha256": "5cf16117f16c394df0bc8628d5bbe5b4442eaf3d89b7379e41b1ce2813f890c5",
+      "size_bytes": 504
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0071-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0071-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0072-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0072-stdout.txt",
+      "sha256": "9d59c6816f7271e28cda7fa7655d6cf15e011789a76aa3d76597ac1d11f45705",
+      "size_bytes": 457
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0073-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0073-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0074-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0074-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0075-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0075-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0076-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0076-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0077-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0077-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0078-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0078-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0079-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0079-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0080-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0080-stdout.txt",
+      "sha256": "4cd746fdd6705b4d553f3e3e537bfca2a04f90261f5d0a5b18a9f4dc92c06cdb",
+      "size_bytes": 343
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0081-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0081-stdout.txt",
+      "sha256": "4cd746fdd6705b4d553f3e3e537bfca2a04f90261f5d0a5b18a9f4dc92c06cdb",
+      "size_bytes": 343
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0082-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0082-stdout.txt",
+      "sha256": "880a4d3d79e6342626c0deb70ce83b1dc35797aa56b88454a79221c6653ebc0e",
+      "size_bytes": 542
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0083-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0083-stdout.txt",
+      "sha256": "880a4d3d79e6342626c0deb70ce83b1dc35797aa56b88454a79221c6653ebc0e",
+      "size_bytes": 542
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0084-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0084-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0085-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0085-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0086-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0086-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0087-stderr.txt",
+      "sha256": "9101cc65d79bc64aac47701ba32f09898c90c77a14236fc9d926b888c600503c",
+      "size_bytes": 442
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0087-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0088-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0088-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0089-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0089-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0090-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0090-stdout.txt",
+      "sha256": "8bade73188a024eb02b38ec5f748dbc199f6812d5b7c3efa07e58e3572f8a8dc",
+      "size_bytes": 122
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0091-stderr.txt",
+      "sha256": "b7a26a3f3b17630945fa5eca5247fbeff361e7c2399315573fb9f97569e0d6bd",
+      "size_bytes": 404
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0091-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0092-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0092-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0093-stderr.txt",
+      "sha256": "34984ab63dcc06945f4ef5bd78f5bde556f732cb3c756b80cd1a721c28b0a8b4",
+      "size_bytes": 464
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0093-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0094-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0094-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0095-stderr.txt",
+      "sha256": "d4b1cb30a92abe6a5b38d1a42ef2fadd930a3182ab4def4e726dbccc0de1e15c",
+      "size_bytes": 562
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0095-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0096-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0096-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0097-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0097-stdout.txt",
+      "sha256": "fbd1994e8db7519b38bacbef92cc2084fbe33ce117035ccd886128186d7accc8",
+      "size_bytes": 521
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0098-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0098-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0099-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0099-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0100-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0100-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0101-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0101-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0102-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0102-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0103-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0103-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0104-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0104-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0105-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0105-stdout.txt",
+      "sha256": "d1173ffa47744768ddeea10dea3a30802c3ce8198e21ae4c9a4b7abcd235be00",
+      "size_bytes": 596
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0106-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0106-stdout.txt",
+      "sha256": "d1173ffa47744768ddeea10dea3a30802c3ce8198e21ae4c9a4b7abcd235be00",
+      "size_bytes": 596
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0107-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0107-stdout.txt",
+      "sha256": "8a12c75e937ade71b9d732ca9f365d662a2829dc1dd1d7cb5a00313a002834d1",
+      "size_bytes": 211
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0108-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0108-stdout.txt",
+      "sha256": "8a12c75e937ade71b9d732ca9f365d662a2829dc1dd1d7cb5a00313a002834d1",
+      "size_bytes": 211
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0109-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0109-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0110-stderr.txt",
+      "sha256": "696a9011f56ddc624fcf28b2c4798cb2607a73827767eff946b707534c607bab",
+      "size_bytes": 554
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0110-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0111-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0111-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0112-stderr.txt",
+      "sha256": "34c818c943cc41b9a1148c98e0c769358babb0943ea119d200a4045b6e0b6644",
+      "size_bytes": 475
+    },
+    {
+      "path": "target/upstream-enums-v2/commands/0112-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_constructorWithDefaultArguments/UpstreamBox.java",
+      "sha256": "9677fef59294ee58ef05d7caee2c068754479e8eb4414427aed829afb84f61d9",
+      "size_bytes": 238
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_constructorWithDefaultArguments/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_constructorWithDefaultArguments/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "a3711e81b4cf7308b45a0cff739f7a91f502936a16ee6b201da129efe2b85d07",
+      "size_bytes": 1255
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_constructorWithDefaultArguments/sources/main/constructorWithDefaultArguments.kt",
+      "sha256": "d01c4db63e24798e14a7e693171dbc59832d6b73c6bda98b8e2d62ba30c6328c",
+      "size_bytes": 91
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_constructorWithDefaultArguments/sources/main/constructorWithDefaultArguments.kt.source-map.json",
+      "sha256": "e98fa8f53fa52cf0400ad4cebe41bfec9963b61ec66ae1aea35a7e3bcefffe95",
+      "size_bytes": 1221
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_constructorWithReordering/UpstreamBox.java",
+      "sha256": "57f66de3531e53692eba05f2e7ae105b75e04fbf555a2d4955a020b5eaeff48e",
+      "size_bytes": 232
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_constructorWithReordering/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_constructorWithReordering/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "c488aff9c65d010361b183d4ca62bbd7b28b978fcefcea45a071ddebb05cefbc",
+      "size_bytes": 1165
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_constructorWithReordering/sources/main/constructorWithReordering.kt",
+      "sha256": "9cc769223627fd4b71f864422c6a2f17232c8befdda001056bcf86afcdfe2042",
+      "size_bytes": 151
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_constructorWithReordering/sources/main/constructorWithReordering.kt.source-map.json",
+      "sha256": "e544e4b4141408fc2cf115fffd31436730ae26c50edc9e6303edf020e063f1b4",
+      "size_bytes": 1722
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_entryClassConstructorWithDefaultArguments/UpstreamBox.java",
+      "sha256": "2c97563c2e6a6aa4c26c630118a12bcc8bb8eb26748545e83552625fb1ee90ee",
+      "size_bytes": 248
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_entryClassConstructorWithDefaultArguments/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_entryClassConstructorWithDefaultArguments/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "07ed63df74d86132bd36c94a7ec243d9cd3bd554f3dcf326a323e9c6af802fb9",
+      "size_bytes": 1790
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_entryClassConstructorWithDefaultArguments/sources/main/entryClassConstructorWithDefaultArguments.kt",
+      "sha256": "d07d61d9f109e0d5276f42100b37b3f372ba1e356993d2e43da356eab0d721e4",
+      "size_bytes": 120
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_entryClassConstructorWithDefaultArguments/sources/main/entryClassConstructorWithDefaultArguments.kt.source-map.json",
+      "sha256": "33c6ad3dcfcd0d5e633da9756cf80d6dce41f7616b984bf37510f1650fb48330",
+      "size_bytes": 1503
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_enumConstructorParameterClashWithDefaults/UpstreamBox.java",
+      "sha256": "926d0ebd64833eceb208c69fdfdb9eb1f9e242a77a91dcfa0eff0d0fec3552d2",
+      "size_bytes": 248
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_enumConstructorParameterClashWithDefaults/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_enumConstructorParameterClashWithDefaults/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "9511d5c1f31aeeb29bc95e04333953233ddd23fbc404c7736c09d6e5b4d40cd3",
+      "size_bytes": 1389
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_enumConstructorParameterClashWithDefaults/sources/main/enumConstructorParameterClashWithDefaults.kt",
+      "sha256": "eac2b9c265aabb21aa698a2d4cd6454d8ef44da21d58734422ac819854159d80",
+      "size_bytes": 426
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_enumConstructorParameterClashWithDefaults/sources/main/enumConstructorParameterClashWithDefaults.kt.source-map.json",
+      "sha256": "232026d110374b43719b223a7a0b565163cc2f24d0a4a6797c2bd0b3b2b24ee7",
+      "size_bytes": 4245
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_enumInheritedFromTrait/UpstreamBox.java",
+      "sha256": "9fb149cc8a80336ea1444e898dbfabfbfe32d82d4a74fa2cbb5e72cb48fa518a",
+      "size_bytes": 234
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_enumInheritedFromTrait/UpstreamConsumer.kt",
+      "sha256": "c8bb054c6a14680db8a8be1fb204ff36098f7108a8b718f49a63a6eacf021f8a",
+      "size_bytes": 77
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_enumInheritedFromTrait/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "b0568eb03e8d2b705f8e0b73824e8899b32d5b42072b866da0882519eeb1ddaa",
+      "size_bytes": 2136
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_enumInheritedFromTrait/sources/main/enumInheritedFromTrait.kt",
+      "sha256": "ea9d8a028ca0b351e17df964c2b0b97936cb302762285825ddb163424716e86c",
+      "size_bytes": 212
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_enumInheritedFromTrait/sources/main/enumInheritedFromTrait.kt.source-map.json",
+      "sha256": "9e07f2552ed3f6610948ef1a742265935f8adc28bd426ed55e2bd3cddd094332",
+      "size_bytes": 2262
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_innerClassInEnumEntryClass/sources/main/innerClassInEnumEntryClass.kt",
+      "sha256": "6863f0a5361f86eebf10a28e8ee7fec59d69bc47ab5020cc1cb6e74f1a42b81c",
+      "size_bytes": 252
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_innerClassInEnumEntryClass/sources/main/innerClassInEnumEntryClass.kt.source-map.json",
+      "sha256": "6271176067d7ec7e8bbb1467f967b3a81c78d710501167209fbd6b59e0bfd04f",
+      "size_bytes": 2634
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_interfaceCallWithEntryClass/UpstreamBox.java",
+      "sha256": "75d2b028bbc0386c2fe16e6d1f815dc35c503759f81173b0d6e80b11356d8f40",
+      "size_bytes": 234
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_interfaceCallWithEntryClass/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_interfaceCallWithEntryClass/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "ab0563c3b2d1947273b56d28e6efed41dc3885fe5bd0bec838750f16d892a4ea",
+      "size_bytes": 2198
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_interfaceCallWithEntryClass/sources/main/interfaceCallWithEntryClass.kt",
+      "sha256": "f557b70100036251bfc54c081c3eff2dd86a99c3cca3567a875fbc38b1d838ce",
+      "size_bytes": 399
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_interfaceCallWithEntryClass/sources/main/interfaceCallWithEntryClass.kt.source-map.json",
+      "sha256": "54cf1a4509bd2143a8b8a931e3a7d21f3dd02708d1660094741452f4956ab355",
+      "size_bytes": 3960
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_manyDefaultParameters/sources/main/manyDefaultParameters.kt",
+      "sha256": "c1ce1610393135a058e53f5cdb2420fcee64a6972358ed355ace3c5442805292",
+      "size_bytes": 1577
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_manyDefaultParameters/sources/main/manyDefaultParameters.kt.source-map.json",
+      "sha256": "5b4d1f06c29f1f26053dfd1e6da04fb6581c6eaea7c2d146120f168200c34204",
+      "size_bytes": 15121
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_openMethodNoOverrides/candidate/lib/.korrust/module-6c6962.index",
+      "sha256": "00e803df715402d89676aca4b84ebc6687d6c346e4f1556d064349a34617aa90",
+      "size_bytes": 311
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_openMethodNoOverrides/sources/lib/lib.kt",
+      "sha256": "0b4e1b26879eef2cfd6b366545f751dfd881aed77aeedbea0279e79e465154f6",
+      "size_bytes": 55
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_openMethodNoOverrides/sources/lib/lib.kt.source-map.json",
+      "sha256": "d6adcbfa7e04a4b81dcc94071033c584bb684d748e6f90375263a616e4c857bd",
+      "size_bytes": 882
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_openMethodNoOverrides/sources/main/main.kt",
+      "sha256": "447e4a1151ad072cec5987ada82632354e22b948e1b35a820ac8cb20cce5e92d",
+      "size_bytes": 24
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_openMethodNoOverrides/sources/main/main.kt.source-map.json",
+      "sha256": "2651a0b1c6aa51463f36b943a0d2e2d23c40b408bcf9da6fb97d7f26d6acc814",
+      "size_bytes": 660
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_ordinalsWithEnumEntitiesOverrides/sources/main/ordinalsWithEnumEntitiesOverrides.kt",
+      "sha256": "5b2cea16091abef99e992f57ef272fdabfc49ab7491fd5193f8d00f139ab2736",
+      "size_bytes": 998
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_ordinalsWithEnumEntitiesOverrides/sources/main/ordinalsWithEnumEntitiesOverrides.kt.source-map.json",
+      "sha256": "1c4528fbde6f6632c0f58a86ecbd774a6d7f6cd44d5508fcc2576465f0eb7843",
+      "size_bytes": 9369
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_reorderedArguments/sources/main/reorderedArguments.kt",
+      "sha256": "8f4afda600254b5dfdd7d77585f1907c7be2a5e71c0b94f21229a4f3540bd6cb",
+      "size_bytes": 1449
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_reorderedArguments/sources/main/reorderedArguments.kt.source-map.json",
+      "sha256": "44db1164450c88f02b11d60e949cb34cf268c72cfbef6a72297e0ec060f2e39f",
+      "size_bytes": 13832
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_secondaryConstructorWithDefaultArguments/sources/main/secondaryConstructorWithDefaultArguments.kt",
+      "sha256": "3238145865a59864e123a68d59ca8ca785777ad46b56995b1cb1c345470556f9",
+      "size_bytes": 142
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_secondaryConstructorWithDefaultArguments/sources/main/secondaryConstructorWithDefaultArguments.kt.source-map.json",
+      "sha256": "082f803e6523695cf0c338507e408c512c22db121d4bba40465aa6465e030816",
+      "size_bytes": 1698
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_toString/sources/main/toString.kt",
+      "sha256": "8bdeaefffd6977e59a0b006f20dd12a92c3c8986904a8d685450e27175a5f62b",
+      "size_bytes": 66
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_toString/sources/main/toString.kt.source-map.json",
+      "sha256": "e1111f92f678c04161c6bdf4cf3983aa4f09941bad97d52143cc3b7eb66b5422",
+      "size_bytes": 940
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_vCallWithEntryClass/UpstreamBox.java",
+      "sha256": "0bee9474fb71c7a2bc852c37a065e261c7f61d646d9a9be3c5cbc3bc9bcd1817",
+      "size_bytes": 226
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_vCallWithEntryClass/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_vCallWithEntryClass/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "8912a0a6e35fe107f6a0a6d9f2e1be35df4d3eb82576503b5bbb25059ac738ff",
+      "size_bytes": 1695
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_vCallWithEntryClass/sources/main/vCallWithEntryClass.kt",
+      "sha256": "288a14a964da13f6cf7a87bc9ee0e8e82fc0f6ba8cc6b04165988ebefcf07d0f",
+      "size_bytes": 267
+    },
+    {
+      "path": "target/upstream-enums-v2/enum_vCallWithEntryClass/sources/main/vCallWithEntryClass.kt.source-map.json",
+      "sha256": "7a0a4d3399087947670538147ae530adf38ed4da9faffa51bcd11febdda43c48",
+      "size_bytes": 2748
+    },
+    {
+      "path": "target/upstream-enums-v2/report.json",
+      "sha256": "e6f5016afa50ddc50d4576ca04d8de44619ba50651b0f969ddef4167a05786f9",
+      "size_bytes": 137690
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0000-stderr.txt",
+      "sha256": "e87512a7caa6fababe3827466cad5cf2d326e9ee0de9bb198e404a7fe19662b3",
+      "size_bytes": 216
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0000-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0001-stderr.txt",
+      "sha256": "4660d72e074d8835c7fbae3f7490bdc0bee7314a56e40974e6162b7a611d7db3",
+      "size_bytes": 49
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0001-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0002-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0003-stdout.txt",
+      "sha256": "26935fcf91f28bf606fb05645bf11201de0c6fd75d111d92a3631b992c2470fb",
+      "size_bytes": 683
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0004-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0005-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0005-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0006-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0006-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0007-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0007-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0008-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0008-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0009-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0009-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0010-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0010-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0011-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0011-stdout.txt",
+      "sha256": "f736caa5344aa2cc89715ea77847ce0f6cbff9f447c0530a252dce56f5afe812",
+      "size_bytes": 167
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0012-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0012-stdout.txt",
+      "sha256": "f736caa5344aa2cc89715ea77847ce0f6cbff9f447c0530a252dce56f5afe812",
+      "size_bytes": 167
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0013-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0013-stdout.txt",
+      "sha256": "851cee198c2793da61b237836bd4c4e86aaf655c79b6521b8e028504b1057ab4",
+      "size_bytes": 683
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0014-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0014-stdout.txt",
+      "sha256": "fcdbb3f9d2c4e369f2c83164c24f2f9e1d0b8f4eab6afc849504cbcf5f5c3c8b",
+      "size_bytes": 683
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0015-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0015-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0016-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0016-stdout.txt",
+      "sha256": "8c9b691d2c9cae7aaf940ba46a3cff689d196ac1932ca87d03ffefb999ef7ec9",
+      "size_bytes": 858
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0017-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0017-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0018-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0018-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0019-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0019-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0020-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0020-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0021-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0021-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0022-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0022-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0023-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0023-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0024-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0024-stdout.txt",
+      "sha256": "26193b30a2cee116c39272926a05ca807378aeb9bc8a7199849a69f3c998697c",
+      "size_bytes": 147
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0025-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0025-stdout.txt",
+      "sha256": "26193b30a2cee116c39272926a05ca807378aeb9bc8a7199849a69f3c998697c",
+      "size_bytes": 147
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0026-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0026-stdout.txt",
+      "sha256": "9deaaa503d978a3aa507954a52949a24fabc9e1333a9190be756b5f9b2b06893",
+      "size_bytes": 183
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0027-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0027-stdout.txt",
+      "sha256": "9deaaa503d978a3aa507954a52949a24fabc9e1333a9190be756b5f9b2b06893",
+      "size_bytes": 183
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0028-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0028-stdout.txt",
+      "sha256": "a8899563e469c44a61b24b1b39b21a60150dc5c319c070646722d588d8361645",
+      "size_bytes": 704
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0029-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0029-stdout.txt",
+      "sha256": "f49b1a68128d131bd5a777197acb3f29d787fcabb1637ddf329f6e55f1e3b1c2",
+      "size_bytes": 704
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0030-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0030-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0031-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0031-stdout.txt",
+      "sha256": "44e2d2c8304eefb5492101e179a32f7062871bec8d938c43d6aa42233199b164",
+      "size_bytes": 857
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0032-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0032-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0033-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0033-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0034-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0034-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0035-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0035-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0036-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0036-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0037-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0037-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0038-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0038-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0039-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0039-stdout.txt",
+      "sha256": "71935bba76503a102997863d59fdd94ab88c287b3b69b64fea688b5e73268b26",
+      "size_bytes": 178
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0040-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0040-stdout.txt",
+      "sha256": "71935bba76503a102997863d59fdd94ab88c287b3b69b64fea688b5e73268b26",
+      "size_bytes": 178
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0041-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0041-stdout.txt",
+      "sha256": "c17901eb040bcd75b94cbb3d3b5c32185c307a37a52c742d971c48c6e407d91a",
+      "size_bytes": 740
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0042-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0042-stdout.txt",
+      "sha256": "5e14f4876d953230d9fed2b2dea66f786fe19815896cacc1313bb5677b69deb1",
+      "size_bytes": 740
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0043-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0043-stdout.txt",
+      "sha256": "883b0e78a5cf3482026c40091a425b5dda5a72b149f2f596d8b451cd395c2b80",
+      "size_bytes": 147
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0044-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0044-stdout.txt",
+      "sha256": "883b0e78a5cf3482026c40091a425b5dda5a72b149f2f596d8b451cd395c2b80",
+      "size_bytes": 147
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0045-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0045-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0046-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0046-stdout.txt",
+      "sha256": "193570e7299c503d856219d2bb114f6af1f92595ca985e5a6e3a73079147290d",
+      "size_bytes": 484
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0047-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0047-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0048-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0048-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0049-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0049-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0050-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0050-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0051-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0051-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0052-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0052-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0053-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0053-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0054-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0054-stdout.txt",
+      "sha256": "5e9ea8b0662dce71e59fca8ef350b8192cc4d2fb4e69a7015891f7c9f6155faa",
+      "size_bytes": 191
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0055-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0055-stdout.txt",
+      "sha256": "5e9ea8b0662dce71e59fca8ef350b8192cc4d2fb4e69a7015891f7c9f6155faa",
+      "size_bytes": 191
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0056-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0056-stdout.txt",
+      "sha256": "64847c4fe3e802dbe4d4ae04933538c26cd892c314bdc76f7605c1e05b397e65",
+      "size_bytes": 500
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0057-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0057-stdout.txt",
+      "sha256": "64847c4fe3e802dbe4d4ae04933538c26cd892c314bdc76f7605c1e05b397e65",
+      "size_bytes": 500
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0058-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0058-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0059-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0059-stdout.txt",
+      "sha256": "f3a838a7d91c1081a24b1139e3bdc94f90dcdedb0f2688a51b4e17593b9f4568",
+      "size_bytes": 671
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0060-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0060-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0061-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0061-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0062-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0062-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0063-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0063-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0064-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0064-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0065-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0065-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0066-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0066-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0067-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0067-stdout.txt",
+      "sha256": "f0fe86a41d9905e79363568c6dc882baf16c127f33143feb5b4d63ecfef7197d",
+      "size_bytes": 211
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0068-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0068-stdout.txt",
+      "sha256": "f0fe86a41d9905e79363568c6dc882baf16c127f33143feb5b4d63ecfef7197d",
+      "size_bytes": 211
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0069-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0069-stdout.txt",
+      "sha256": "5cf16117f16c394df0bc8628d5bbe5b4442eaf3d89b7379e41b1ce2813f890c5",
+      "size_bytes": 504
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0070-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0070-stdout.txt",
+      "sha256": "5cf16117f16c394df0bc8628d5bbe5b4442eaf3d89b7379e41b1ce2813f890c5",
+      "size_bytes": 504
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0071-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0071-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0072-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0072-stdout.txt",
+      "sha256": "cd1b3e143cc2a17892a9c5d8b194b934fd4227b959a74b9fa289a5cdd59df70d",
+      "size_bytes": 457
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0073-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0073-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0074-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0074-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0075-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0075-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0076-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0076-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0077-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0077-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0078-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0078-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0079-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0079-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0080-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0080-stdout.txt",
+      "sha256": "4cd746fdd6705b4d553f3e3e537bfca2a04f90261f5d0a5b18a9f4dc92c06cdb",
+      "size_bytes": 343
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0081-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0081-stdout.txt",
+      "sha256": "4cd746fdd6705b4d553f3e3e537bfca2a04f90261f5d0a5b18a9f4dc92c06cdb",
+      "size_bytes": 343
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0082-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0082-stdout.txt",
+      "sha256": "880a4d3d79e6342626c0deb70ce83b1dc35797aa56b88454a79221c6653ebc0e",
+      "size_bytes": 542
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0083-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0083-stdout.txt",
+      "sha256": "880a4d3d79e6342626c0deb70ce83b1dc35797aa56b88454a79221c6653ebc0e",
+      "size_bytes": 542
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0084-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0084-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0085-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0085-stdout.txt",
+      "sha256": "8c07e93731d4884a33701657540f8e44b6d047503c896fbdf472fe52a843d2c6",
+      "size_bytes": 672
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0086-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0086-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0087-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0087-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0088-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0088-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0089-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0089-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0090-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0090-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0091-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0091-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0092-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0092-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0093-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0093-stdout.txt",
+      "sha256": "e5ab6559be04701c55a5745c0f8d27f5cdba48d52cc5b714af353ef69f73449c",
+      "size_bytes": 748
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0094-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0094-stdout.txt",
+      "sha256": "19d934e14b7b4b81904963c9b0b77c8acbe284c70bcabf6705dbca7ec5e3c58d",
+      "size_bytes": 748
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0095-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0095-stdout.txt",
+      "sha256": "3c39e0fa880d3c98e63973b7707fb47bd2bc0af4bc6f88c83266f90fadc029df",
+      "size_bytes": 136
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0096-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0096-stdout.txt",
+      "sha256": "3c39e0fa880d3c98e63973b7707fb47bd2bc0af4bc6f88c83266f90fadc029df",
+      "size_bytes": 136
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0097-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0097-stdout.txt",
+      "sha256": "a45d866d0179289efe0b7eb5c08b6846b60c6045f63848940618e43fd4df19b5",
+      "size_bytes": 745
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0098-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0098-stdout.txt",
+      "sha256": "a45d866d0179289efe0b7eb5c08b6846b60c6045f63848940618e43fd4df19b5",
+      "size_bytes": 745
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0099-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0099-stdout.txt",
+      "sha256": "08b685f5c618087c6bdc9e971d21d1d7e3fc0bdcdc217a7eabeaf7c83fde0cb3",
+      "size_bytes": 165
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0100-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0100-stdout.txt",
+      "sha256": "08b685f5c618087c6bdc9e971d21d1d7e3fc0bdcdc217a7eabeaf7c83fde0cb3",
+      "size_bytes": 165
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0101-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0101-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0102-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0102-stdout.txt",
+      "sha256": "4338fa5a622a824054c53d4e5d69c6587f541c311d61f0a0ce7befa1437b3a70",
+      "size_bytes": 453
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0103-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0103-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0104-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0104-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0105-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0105-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0106-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0106-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0107-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0107-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0108-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0108-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0109-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0109-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0110-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0110-stdout.txt",
+      "sha256": "82f16f6b7d237fb33eb2400ee31e40cc41b15e1ebd951fe5950adf9f691f605d",
+      "size_bytes": 4335
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0111-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0111-stdout.txt",
+      "sha256": "82f16f6b7d237fb33eb2400ee31e40cc41b15e1ebd951fe5950adf9f691f605d",
+      "size_bytes": 4335
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0112-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0112-stdout.txt",
+      "sha256": "1eb3cddb8cc4b905ae2d97bb3acc337fcde6a3352084f0e7b806b362ed576c65",
+      "size_bytes": 171
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0113-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0113-stdout.txt",
+      "sha256": "1eb3cddb8cc4b905ae2d97bb3acc337fcde6a3352084f0e7b806b362ed576c65",
+      "size_bytes": 171
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0114-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0114-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0115-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0115-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0116-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0116-stdout.txt",
+      "sha256": "703ec23e25608f43a0f567dc5007b74e868175c46940ade785e341f46976dba4",
+      "size_bytes": 122
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0117-stderr.txt",
+      "sha256": "2e154bcc7a0bb10ab2984cae3e58a9024eab5be91d857fb614f587a211be313c",
+      "size_bytes": 408
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0117-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0118-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0118-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0119-stderr.txt",
+      "sha256": "7696d71bb574409d41e7e973a5fa49c3c5e9a9d4d7f91ebd639e868c6c4a231a",
+      "size_bytes": 464
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0119-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0120-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0120-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0121-stderr.txt",
+      "sha256": "d0f07a5c24c3e8504e28d319460d90832b667d48136f15af9f872aa74cdf5d5a",
+      "size_bytes": 562
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0121-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0122-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0122-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0123-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0123-stdout.txt",
+      "sha256": "93c82525cc1602071446a7853a661726c191afab8e6aab8f77775a3ee5c09e59",
+      "size_bytes": 521
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0124-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0124-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0125-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0125-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0126-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0126-stdout.txt",
+      "sha256": "a12b7cb43c9d9134b5bb1b35e9096b66775d9e92e7611d1cc92b02edd6782a87",
+      "size_bytes": 3
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0127-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0127-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0128-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0128-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0129-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0129-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0130-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0130-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0131-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0131-stdout.txt",
+      "sha256": "d1173ffa47744768ddeea10dea3a30802c3ce8198e21ae4c9a4b7abcd235be00",
+      "size_bytes": 596
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0132-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0132-stdout.txt",
+      "sha256": "d1173ffa47744768ddeea10dea3a30802c3ce8198e21ae4c9a4b7abcd235be00",
+      "size_bytes": 596
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0133-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0133-stdout.txt",
+      "sha256": "8a12c75e937ade71b9d732ca9f365d662a2829dc1dd1d7cb5a00313a002834d1",
+      "size_bytes": 211
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0134-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0134-stdout.txt",
+      "sha256": "8a12c75e937ade71b9d732ca9f365d662a2829dc1dd1d7cb5a00313a002834d1",
+      "size_bytes": 211
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0135-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0135-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0136-stderr.txt",
+      "sha256": "14574bdbf6376aebfaeb4cc347ff5c27a9468397c8caadfdaed92fe843854216",
+      "size_bytes": 554
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0136-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0137-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0137-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0138-stderr.txt",
+      "sha256": "f31671e166c9d4e1e31f7259e8199d862f3e529829370cb2741ac86d3e62f25d",
+      "size_bytes": 475
+    },
+    {
+      "path": "target/upstream-enums-v4/commands/0138-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_constructorWithDefaultArguments/UpstreamBox.java",
+      "sha256": "9677fef59294ee58ef05d7caee2c068754479e8eb4414427aed829afb84f61d9",
+      "size_bytes": 238
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_constructorWithDefaultArguments/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_constructorWithDefaultArguments/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "65d601f8395f5f2d5ded722c649918c945b93ab91ded1808924d61a93e3f07f1",
+      "size_bytes": 1255
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_constructorWithDefaultArguments/sources/main/constructorWithDefaultArguments.kt",
+      "sha256": "d01c4db63e24798e14a7e693171dbc59832d6b73c6bda98b8e2d62ba30c6328c",
+      "size_bytes": 91
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_constructorWithDefaultArguments/sources/main/constructorWithDefaultArguments.kt.source-map.json",
+      "sha256": "47a92e07abb57160e61bfd78e3156a3f687dd7e456831f633db27f78feab2855",
+      "size_bytes": 1221
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_constructorWithReordering/UpstreamBox.java",
+      "sha256": "57f66de3531e53692eba05f2e7ae105b75e04fbf555a2d4955a020b5eaeff48e",
+      "size_bytes": 232
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_constructorWithReordering/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_constructorWithReordering/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "b0f27168744ffb5dfc5ce42f74e25e269db80306d0c0c7ccb4be8a566ccd3995",
+      "size_bytes": 1165
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_constructorWithReordering/sources/main/constructorWithReordering.kt",
+      "sha256": "9cc769223627fd4b71f864422c6a2f17232c8befdda001056bcf86afcdfe2042",
+      "size_bytes": 151
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_constructorWithReordering/sources/main/constructorWithReordering.kt.source-map.json",
+      "sha256": "b6712ef69cf046f93ab5989b03d345accb8c6f05ea3b016bc5b4c40b36ac11ca",
+      "size_bytes": 1722
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_entryClassConstructorWithDefaultArguments/UpstreamBox.java",
+      "sha256": "2c97563c2e6a6aa4c26c630118a12bcc8bb8eb26748545e83552625fb1ee90ee",
+      "size_bytes": 248
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_entryClassConstructorWithDefaultArguments/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_entryClassConstructorWithDefaultArguments/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "7ed5ffebfe77b9296811ab3a000a819d3d83e552fafaba2db1c3fb4c75701e97",
+      "size_bytes": 1790
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_entryClassConstructorWithDefaultArguments/sources/main/entryClassConstructorWithDefaultArguments.kt",
+      "sha256": "d07d61d9f109e0d5276f42100b37b3f372ba1e356993d2e43da356eab0d721e4",
+      "size_bytes": 120
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_entryClassConstructorWithDefaultArguments/sources/main/entryClassConstructorWithDefaultArguments.kt.source-map.json",
+      "sha256": "dcc1e0e7f2be0947ed962874d26b4a9a786fd767489f1612996a2dd4577eadeb",
+      "size_bytes": 1503
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_enumConstructorParameterClashWithDefaults/UpstreamBox.java",
+      "sha256": "926d0ebd64833eceb208c69fdfdb9eb1f9e242a77a91dcfa0eff0d0fec3552d2",
+      "size_bytes": 248
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_enumConstructorParameterClashWithDefaults/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_enumConstructorParameterClashWithDefaults/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "b33528d3b97eba7088639b3541952ea5f0ee64bd0825aa00d514848945dadd0c",
+      "size_bytes": 1389
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_enumConstructorParameterClashWithDefaults/sources/main/enumConstructorParameterClashWithDefaults.kt",
+      "sha256": "eac2b9c265aabb21aa698a2d4cd6454d8ef44da21d58734422ac819854159d80",
+      "size_bytes": 426
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_enumConstructorParameterClashWithDefaults/sources/main/enumConstructorParameterClashWithDefaults.kt.source-map.json",
+      "sha256": "8cb18b5b8640422c8e9feeaa85c8762ef955fd45e84da4b9acd21d952f8af1c3",
+      "size_bytes": 4245
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_enumInheritedFromTrait/UpstreamBox.java",
+      "sha256": "9fb149cc8a80336ea1444e898dbfabfbfe32d82d4a74fa2cbb5e72cb48fa518a",
+      "size_bytes": 234
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_enumInheritedFromTrait/UpstreamConsumer.kt",
+      "sha256": "c8bb054c6a14680db8a8be1fb204ff36098f7108a8b718f49a63a6eacf021f8a",
+      "size_bytes": 77
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_enumInheritedFromTrait/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "207c0fac771c0801f817858124d9c93988d9c3032a4805778ad4dd83011691ae",
+      "size_bytes": 2136
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_enumInheritedFromTrait/sources/main/enumInheritedFromTrait.kt",
+      "sha256": "ea9d8a028ca0b351e17df964c2b0b97936cb302762285825ddb163424716e86c",
+      "size_bytes": 212
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_enumInheritedFromTrait/sources/main/enumInheritedFromTrait.kt.source-map.json",
+      "sha256": "d7707b18a52f128cd8abc157faa0ee20d9c7eb11db228d511232426753241f11",
+      "size_bytes": 2262
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_innerClassInEnumEntryClass/sources/main/innerClassInEnumEntryClass.kt",
+      "sha256": "6863f0a5361f86eebf10a28e8ee7fec59d69bc47ab5020cc1cb6e74f1a42b81c",
+      "size_bytes": 252
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_innerClassInEnumEntryClass/sources/main/innerClassInEnumEntryClass.kt.source-map.json",
+      "sha256": "7d9a6a694ded28e7b341160d35e3e08c6b84600285208e6638751a5d80c26c10",
+      "size_bytes": 2634
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_interfaceCallWithEntryClass/UpstreamBox.java",
+      "sha256": "75d2b028bbc0386c2fe16e6d1f815dc35c503759f81173b0d6e80b11356d8f40",
+      "size_bytes": 234
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_interfaceCallWithEntryClass/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_interfaceCallWithEntryClass/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "871b84034e72408bbd23c973761a3d01679f3418a5e29f577c1ccf0471217a07",
+      "size_bytes": 2198
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_interfaceCallWithEntryClass/sources/main/interfaceCallWithEntryClass.kt",
+      "sha256": "f557b70100036251bfc54c081c3eff2dd86a99c3cca3567a875fbc38b1d838ce",
+      "size_bytes": 399
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_interfaceCallWithEntryClass/sources/main/interfaceCallWithEntryClass.kt.source-map.json",
+      "sha256": "8b38e95118d6422b802f14979da8348f259e5f64a34b60549eba42aaddd5419e",
+      "size_bytes": 3960
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_manyDefaultParameters/UpstreamBox.java",
+      "sha256": "d5a4d0b4ab9b8f6027972c943f2b54943eca061123d4ecf71916f430d29ae298",
+      "size_bytes": 228
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_manyDefaultParameters/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_manyDefaultParameters/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "9dc1e8dd3566a2bd427a92c0e3e3b7d091aac4dd082b467ae6590b482ce959e2",
+      "size_bytes": 1133
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_manyDefaultParameters/sources/main/manyDefaultParameters.kt",
+      "sha256": "c1ce1610393135a058e53f5cdb2420fcee64a6972358ed355ace3c5442805292",
+      "size_bytes": 1577
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_manyDefaultParameters/sources/main/manyDefaultParameters.kt.source-map.json",
+      "sha256": "22ee1376f2b8e6d03385696cf6a9d5ccf9f093741ef7bdb36900dbf68d3079d1",
+      "size_bytes": 15121
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_openMethodNoOverrides/candidate/lib/.korrust/module-6c6962.index",
+      "sha256": "20208abeb34bc74f6c196478d4438af50deb87d8da02a42500713dfe549b418f",
+      "size_bytes": 311
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_openMethodNoOverrides/sources/lib/lib.kt",
+      "sha256": "0b4e1b26879eef2cfd6b366545f751dfd881aed77aeedbea0279e79e465154f6",
+      "size_bytes": 55
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_openMethodNoOverrides/sources/lib/lib.kt.source-map.json",
+      "sha256": "dd9c3d77d133eb46f409445abdca432ee5034536b3b3420a3d01b85740d48997",
+      "size_bytes": 882
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_openMethodNoOverrides/sources/main/main.kt",
+      "sha256": "447e4a1151ad072cec5987ada82632354e22b948e1b35a820ac8cb20cce5e92d",
+      "size_bytes": 24
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_openMethodNoOverrides/sources/main/main.kt.source-map.json",
+      "sha256": "fe5aa971b98db2c2bb7857d6467d010b2695715f45338f10aba43832f77ab168",
+      "size_bytes": 660
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_ordinalsWithEnumEntitiesOverrides/sources/main/ordinalsWithEnumEntitiesOverrides.kt",
+      "sha256": "5b2cea16091abef99e992f57ef272fdabfc49ab7491fd5193f8d00f139ab2736",
+      "size_bytes": 998
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_ordinalsWithEnumEntitiesOverrides/sources/main/ordinalsWithEnumEntitiesOverrides.kt.source-map.json",
+      "sha256": "9088d52c803c844415784294fa68e2d3b117187e90a48ceb6adef565c2d9df11",
+      "size_bytes": 9369
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_reorderedArguments/UpstreamBox.java",
+      "sha256": "d8c314718b13ff5a54f9cb8ed37cee5af9df53625484502da641146c98ac4322",
+      "size_bytes": 225
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_reorderedArguments/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_reorderedArguments/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "f76dbaefb019f467217885b05c456b40041fab3b145af4a7d87d360940d074d2",
+      "size_bytes": 1663
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_reorderedArguments/sources/main/reorderedArguments.kt",
+      "sha256": "8f4afda600254b5dfdd7d77585f1907c7be2a5e71c0b94f21229a4f3540bd6cb",
+      "size_bytes": 1449
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_reorderedArguments/sources/main/reorderedArguments.kt.source-map.json",
+      "sha256": "9b261ab1fd49ddb5158c9400e39095f841c352fa320ff2cbfef3798a37575892",
+      "size_bytes": 13832
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_secondaryConstructorWithDefaultArguments/sources/main/secondaryConstructorWithDefaultArguments.kt",
+      "sha256": "3238145865a59864e123a68d59ca8ca785777ad46b56995b1cb1c345470556f9",
+      "size_bytes": 142
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_secondaryConstructorWithDefaultArguments/sources/main/secondaryConstructorWithDefaultArguments.kt.source-map.json",
+      "sha256": "f0d6834130e824158d8cf4010380c4a0d7bb57713b296d3332d5b06c86e72a8f",
+      "size_bytes": 1698
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_toString/sources/main/toString.kt",
+      "sha256": "8bdeaefffd6977e59a0b006f20dd12a92c3c8986904a8d685450e27175a5f62b",
+      "size_bytes": 66
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_toString/sources/main/toString.kt.source-map.json",
+      "sha256": "b654ead96520eb351f3ecdb74f1399848cfea4024b1db9048bce313b711c7dcf",
+      "size_bytes": 940
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_vCallWithEntryClass/UpstreamBox.java",
+      "sha256": "0bee9474fb71c7a2bc852c37a065e261c7f61d646d9a9be3c5cbc3bc9bcd1817",
+      "size_bytes": 226
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_vCallWithEntryClass/UpstreamConsumer.kt",
+      "sha256": "8bdbac208ebf2c4298deaf815d2421e75175be0dfbe96e76b56b7315948a1a7d",
+      "size_bytes": 72
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_vCallWithEntryClass/candidate/main/.korrust/module-6d61696e.index",
+      "sha256": "3c4364a79750b8fce8d8025a6eea61ebc28db643db2dc4e621bc4a6cdfc161e4",
+      "size_bytes": 1695
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_vCallWithEntryClass/sources/main/vCallWithEntryClass.kt",
+      "sha256": "288a14a964da13f6cf7a87bc9ee0e8e82fc0f6ba8cc6b04165988ebefcf07d0f",
+      "size_bytes": 267
+    },
+    {
+      "path": "target/upstream-enums-v4/enum_vCallWithEntryClass/sources/main/vCallWithEntryClass.kt.source-map.json",
+      "sha256": "e8272dc82de014119974ddb30769940966ec3e8b1f07496b201358a5a4d30a1f",
+      "size_bytes": 2748
+    },
+    {
+      "path": "target/upstream-enums-v4/report.json",
+      "sha256": "d0f954b82ff668966497781f94e65b9bb6a47236993e1580d6ea214e3492ca25",
+      "size_bytes": 161554
+    }
+  ]
+}

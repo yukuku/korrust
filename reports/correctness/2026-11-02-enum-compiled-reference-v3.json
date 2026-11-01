@@ -1,0 +1,410 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T18:27:10.678343+00:00",
+  "status": "complete",
+  "selection": "Bounded unchanged upstream enum dispatch, constructor defaults and entry subclass originals, plus explicit secondary/nested boundaries",
+  "matrix_sha256": "ceb2a826af8a64b577634f2ddad3fdb5aa3048c2aa33b1a1f90882641e0db894",
+  "limitations": [
+    "Purposive enum family selection; no full Kotlin suite or Android build compatibility claim",
+    "Secondary constructors, abstract enum properties and nested entry declarations remain unsupported"
+  ],
+  "cases": [
+    {
+      "id": "enum_openMethodNoOverrides",
+      "family": "polymorphic_enums",
+      "root": "box",
+      "tier": "family",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/enum/openMethodNoOverrides.kt",
+        "sha256": "6ef9904f18a3946ce847d2c23fa959c89203053bd82d6d4b07838c9e41d4c336"
+      },
+      "modules": [
+        {
+          "name": "lib",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        },
+        {
+          "name": "main",
+          "dependencies": [
+            "lib"
+          ],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "reports/correctness/2026-11-02-enum-compiled-reference-v3/enum_openMethodNoOverrides/sources/lib/lib.kt.source-map.json",
+        "reports/correctness/2026-11-02-enum-compiled-reference-v3/enum_openMethodNoOverrides/sources/main/main.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "lib": [],
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/caller/UpstreamBox.class": "f14461728c4869d930bcc290297216e97001b415ee33173f2b5309e352832b11"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    }
+  ],
+  "commands": [
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0000-stderr.txt"
+    },
+    {
+      "label": "Official compiler identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0001-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/official/lib",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/sources/lib/lib.kt",
+        "-module-name",
+        "lib",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/lib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0002-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/sources/main/main.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/lib:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0003-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/candidate/lib",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/sources/lib/lib.kt",
+        "--module-name",
+        "lib",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/lib",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0004-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/sources/main/main.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/lib:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0005-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/caller",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0006-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/caller:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0007-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/caller:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0008-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0009-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0010-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0011-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0012-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/signatures/official/Foo",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "Foo"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0013-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/signatures/candidate/Foo",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "Foo"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0014-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/signatures/official/MainKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "MainKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0015-stderr.txt"
+    },
+    {
+      "label": "enum_openMethodNoOverrides/signatures/candidate/MainKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/lib:/Users/yuku/f/git/korrust/target/resume-adapter/enum-compiled-reference-v3/enum_openMethodNoOverrides/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "MainKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-enum-compiled-reference-v3/commands/0016-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "reference_source_manifest_sha256": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "compiler_pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "adapter_sha256": "10a550964853b0b4bfdcbdc48f3522b6b3122d36dde2bb5d5bda26a9855a6674",
+    "matrix_sha256": "ceb2a826af8a64b577634f2ddad3fdb5aa3048c2aa33b1a1f90882641e0db894"
+  },
+  "compiler": {
+    "path": "target/resume-root-build/release/korrust",
+    "sha256": "6074a3e18891493a827e5bdd712c73c25897593236354e1d628f168d74d8ec73"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "kotlin_test_sha256": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "java_version": "openjdk version \"21.0.8\" 2025-07-15\nOpenJDK Runtime Environment JBR-21.0.8+9-1138.52-nomod (build 21.0.8+9-b1138.52)\nOpenJDK 64-Bit Server VM JBR-21.0.8+9-1138.52-nomod (build 21.0.8+9-b1138.52, mixed mode, sharing)"
+  },
+  "frozen_input_hashes": {
+    "references/kotlin/compiler/testData/codegen/box/enum/openMethodNoOverrides.kt": "6ef9904f18a3946ce847d2c23fa959c89203053bd82d6d4b07838c9e41d4c336",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+    "target/resume-root-build/release/korrust": "6074a3e18891493a827e5bdd712c73c25897593236354e1d628f168d74d8ec73",
+    "tools/upstream_enum_polymorphism.json": "ceb2a826af8a64b577634f2ddad3fdb5aa3048c2aa33b1a1f90882641e0db894",
+    "tools/upstream_jvm.py": "10a550964853b0b4bfdcbdc48f3522b6b3122d36dde2bb5d5bda26a9855a6674"
+  },
+  "counts": {
+    "pass": 1
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "claims": "Selected upstream fixture outcomes only; no compatibility percentage, full-suite, Android, or performance claim",
+  "archived_from": "target/resume-adapter/enum-compiled-reference-v3",
+  "reproduction_command": [
+    "python3",
+    "tools/upstream_jvm.py",
+    "--candidate",
+    "target/resume-root-build/release/korrust",
+    "--output",
+    "target/upstream-fresh-run"
+  ]
+}

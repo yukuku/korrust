@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-01T18:30:23.809814+00:00",
+  "status": "in_progress",
+  "selection": "One carryover acceptance plus five remaining original families; infrastructure and repairs are uncounted.",
+  "features": [
+    {
+      "name": "member_extensions",
+      "status": "supported",
+      "scope": "Carryover acceptance of distinct dispatch/extension receivers and computed extension properties; not another new implementation.",
+      "restrictions": [
+        "Source named companions, interface extensions, method-generic setters and generic/inferred/annotated source extension properties remain bounded."
+      ],
+      "evidence_report": "reports/correctness/2026-11-02-resume-member-extensions.json"
+    },
+    {
+      "name": "expanded_enums",
+      "status": "supported",
+      "scope": "Entry subclasses, abstract/open methods, interface dispatch/properties, constructor defaults/named arguments, initialization and exceptions, JVM signatures and Kotlin metadata.",
+      "restrictions": [
+        "Abstract enum properties, secondary enum constructors and nested entry declarations remain unsupported.",
+        "Enum string interpolation is not included. No whole DevotionActivity or full-app pass is claimed."
+      ],
+      "evidence_report": "reports/correctness/2026-11-02-expanded-enums-v3.json",
+      "additional_evidence": [
+        "reports/correctness/2026-11-02-enum-initialization-v3.json",
+        "reports/correctness/2026-11-02-enum-compiled-reference-v3.json",
+        "reports/correctness/2026-11-02-enum-devotion-assessment.json"
+      ],
+      "upstream_report": "reports/correctness/2026-11-02-expanded-enums-upstream-v3.json",
+      "upstream_counts": {
+        "pass": 10,
+        "unsupported_language": 4,
+        "excluded_target": 1
+      }
+    },
+    {
+      "name": "value_classes",
+      "status": "partial",
+      "scope": "Single-field value representation, mangling, boxing and Kotlin metadata.",
+      "restrictions": [
+        "Implementation and acceptance are in progress; no validated-family count yet."
+      ]
+    },
+    {
+      "name": "inner_classes",
+      "status": "partial",
+      "scope": "Named inner classes capturing a nongeneric enclosing instance; local classes excluded.",
+      "restrictions": [
+        "Implementation and acceptance are in progress; no validated-family count yet."
+      ]
+    },
+    {
+      "name": "unsigned_values",
+      "status": "unassessed",
+      "scope": "Bounded UInt/ULong scalar semantics through real JVM representation.",
+      "restrictions": [
+        "Implementation and acceptance are in progress; no validated-family count yet."
+      ]
+    },
+    {
+      "name": "suspend_foundation",
+      "status": "partial",
+      "scope": "Real bounded suspension/resumption via Continuation state.",
+      "restrictions": [
+        "Implementation and acceptance are in progress; no validated-family count yet."
+      ]
+    }
+  ],
+  "accepted_carryover_families": 1,
+  "accepted_new_families": 1,
+  "remaining_new_families": 4,
+  "limitations": [
+    "Final combined validation is pending. Supported labels refer to bounded feature acceptance, not unrestricted Kotlin or Android compatibility."
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-02-resume-member-extensions.json",
+    "reports/correctness/2026-11-02-expanded-enums-v3.json",
+    "reports/correctness/2026-11-02-expanded-enums-upstream-v3.json"
+  ]
+}

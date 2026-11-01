@@ -1,0 +1,1 @@
+enum class E { A { override fun run(): Int = 1 }; fun run(): Int = 0 }

@@ -1,0 +1,1 @@
+enum class E { A {}; abstract fun run(): Int }

@@ -1,0 +1,1 @@
+enum class E { A { override fun missing(): Int = 1 } }

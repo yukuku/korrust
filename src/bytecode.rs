@@ -3964,9 +3964,17 @@ pub fn emit_class_files(
 ) -> Result<Vec<crate::ClassFile>> {
     let mut files = vec![crate::ClassFile {
         internal_name: owner.into(),
-        bytes: emit_class_with(class, owner, file, metadata, 0x0001, lambdas, None, |_| {
-            Ok(Vec::new())
-        })?,
+        bytes: emit_class_with(
+            class,
+            owner,
+            file,
+            metadata,
+            0x0001,
+            lambdas,
+            None,
+            false,
+            |_| Ok(Vec::new()),
+        )?,
     }];
     if let Some(companion) = &class.companion {
         files.push(class_companion::emit(
@@ -4033,6 +4041,7 @@ fn emit_class_with(
     constructor_flags: u16,
     lambdas: &[crate::check::LambdaDecl],
     enum_data: Option<&crate::check::enums::CheckedEnum>,
+    enum_entry: bool,
     additional_attributes: impl FnOnce(&mut Pool) -> Result<Vec<Vec<u8>>>,
 ) -> Result<Vec<u8>> {
     let mut pool = Pool::default();
@@ -4194,7 +4203,23 @@ fn emit_class_with(
             code,
             enum_data
                 .map(enums::constructor_signature)
-                .or_else(|| generic_method(&class.params, &Type::Unit))
+                .or_else(|| {
+                    if enum_entry {
+                        Some(
+                            generic_method(&class.params[2..], &Type::Unit).unwrap_or_else(|| {
+                                format!(
+                                    "({})V",
+                                    class.params[2..]
+                                        .iter()
+                                        .map(|(_, ty)| ty.descriptor())
+                                        .collect::<String>()
+                                )
+                            }),
+                        )
+                    } else {
+                        generic_method(&class.params, &Type::Unit)
+                    }
+                })
                 .as_deref(),
             false,
         )?;
@@ -4215,7 +4240,14 @@ fn emit_class_with(
             constructor_locals,
         )?;
         methods.push(constructor);
-        if class.sealed_ {
+        if class.sealed_
+            || enum_data.is_some_and(|enumeration| {
+                enumeration
+                    .entry_classes
+                    .iter()
+                    .any(|entry| entry.class.super_args.len() == class.params.len() + 1)
+            })
+        {
             let slots = 1 + class.params.iter().map(|p| p.1.slots()).sum::<usize>();
             let mut marker = SimpleCode::new(slots as u16, (slots + 1) as u16);
             marker.bytes.push(0x2a);
@@ -4242,7 +4274,11 @@ fn emit_class_with(
             )?);
         }
 
-        methods.extend(defaults::constructors(&mut pool, class, owner, lambdas)?);
+        methods.extend(if enum_data.is_some() {
+            defaults::constructors_with_offset(&mut pool, class, owner, lambdas, 2)?
+        } else {
+            defaults::constructors(&mut pool, class, owner, lambdas)?
+        });
     }
     for secondary in &class.secondary_constructors {
         let mut code = Code {
@@ -4525,11 +4561,13 @@ fn emit_class_with(
             &class.delegated_properties,
             enum_data,
         )?;
-        additional_attributes.push(class_companion::inner_attribute(
-            &mut pool,
-            owner,
-            &companion.owner,
-        )?);
+        if enum_data.is_none_or(|enumeration| enumeration.entry_classes.is_empty()) {
+            additional_attributes.push(class_companion::inner_attribute(
+                &mut pool,
+                owner,
+                &companion.owner,
+            )?);
+        }
     } else if !class.delegated_properties.is_empty() || enum_data.is_some() {
         let mut code = Code {
             pool: &mut pool,
@@ -4578,8 +4616,16 @@ fn emit_class_with(
     pool.write(&mut out);
     u2(
         &mut out,
-        if enum_data.is_some() {
-            0x4031
+        if let Some(enumeration) = enum_data {
+            if class.abstract_ {
+                0x4421
+            } else if enumeration.entry_classes.is_empty() {
+                0x4031
+            } else {
+                0x4021
+            }
+        } else if enum_entry {
+            0x0030
         } else if class.abstract_ {
             0x0421
         } else if class.open {

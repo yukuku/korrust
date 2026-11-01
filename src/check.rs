@@ -874,6 +874,15 @@ impl Checker<'_> {
         params: &[(String, Type)],
         offset: usize,
     ) -> Result<Vec<Option<Value>>> {
+        self.checked_defaults_with_hidden(defaults, params, offset, 0)
+    }
+    fn checked_defaults_with_hidden(
+        &mut self,
+        defaults: &[Option<Expr>],
+        params: &[(String, Type)],
+        offset: usize,
+        hidden: usize,
+    ) -> Result<Vec<Option<Value>>> {
         let receiver_parameter = params
             .first()
             .and_then(|(name, _)| self.local(name))
@@ -883,7 +892,7 @@ impl Checker<'_> {
                     .is_some_and(|receiver| receiver.slot == local.slot)
             });
         if defaults.iter().any(Option::is_some)
-            && params.len() - usize::from(receiver_parameter) > 32
+            && params.len() - usize::from(receiver_parameter) - hidden > 32
         {
             return Err(Diagnostic::new(
                 offset,
@@ -2425,7 +2434,12 @@ impl Checker<'_> {
                 *cursor = end + 1;
                 if name == "java/lang/String" {
                     Type::String
-                } else if self.classes.contains_key(name) {
+                } else if self.classes.contains_key(name)
+                    || self
+                        .classpath
+                        .load(name)
+                        .is_ok_and(|class| !class.unsupported)
+                {
                     Type::Java(name.into())
                 } else {
                     return Err(Diagnostic::new(

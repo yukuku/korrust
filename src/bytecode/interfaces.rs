@@ -912,6 +912,7 @@ fn companion_classes(
                 0,
                 lambdas,
                 None,
+                false,
                 |pool| {
                     let mut attributes = Vec::new();
                     if let Some(inner) = inner_attribute(pool, &relations)? {

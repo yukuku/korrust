@@ -89,10 +89,19 @@ pub(crate) fn for_enum(
             &mut strings,
         )?,
     );
+    for interface in &checked.class.interfaces {
+        let fallback = Type::Java(interface.clone());
+        let ty = checked.class.super_types.iter().find(|ty| matches!(ty, Type::Java(name) | Type::Parameterized { name, .. } if name == interface)).unwrap_or(&fallback);
+        payload.message(6, &type_proto(ty, &bindings, &mut strings)?);
+    }
     let mut constructor = Proto::default();
     constructor.number(1, 2);
-    for (name, ty) in &source.body.params {
-        constructor.message(2, &parameter(name, ty, &bindings, &mut strings)?);
+    for (index, (name, ty)) in source.body.params.iter().enumerate() {
+        let mut parameter = parameter(name, ty, &bindings, &mut strings)?;
+        if source.body.defaults.get(index).is_some_and(Option::is_some) {
+            parameter.number(1, 2);
+        }
+        constructor.message(2, &parameter);
     }
     let descriptor = format!(
         "(Ljava/lang/String;I{})V",
@@ -124,4 +133,53 @@ fn read_varint(bytes: &[u8], cursor: &mut usize) -> Result<u64> {
         }
     }
     Err(Diagnostic::new(0, "Invalid generated enum metadata varint"))
+}
+
+pub(crate) fn for_enum_entry(entry: &crate::check::enums::CheckedEntry) -> Result<Metadata> {
+    let mut bindings = entry.imports.clone();
+    bindings.push((
+        entry.class.super_class.clone(),
+        entry.class.super_class.clone(),
+        entry.source.offset,
+    ));
+    bindings.push((
+        entry.owner.clone(),
+        entry.owner.clone(),
+        entry.source.offset,
+    ));
+    let mut metadata = class_metadata(
+        &entry.source,
+        &entry.owner,
+        &bindings,
+        true,
+        Some(&entry.class),
+    )?;
+    let bytes = metadata
+        .data1
+        .iter()
+        .flatten()
+        .skip(1)
+        .map(|unit| *unit as u8)
+        .collect::<Vec<_>>();
+    let mut cursor = 0;
+    let table_length = read_varint(&bytes, &mut cursor)? as usize;
+    cursor += table_length;
+    let mut encoded = Proto(bytes[..cursor].to_vec());
+    encoded.number(1, 202);
+    let flags = read_varint(&bytes, &mut cursor)?;
+    if flags != 8 {
+        return Err(Diagnostic::new(
+            entry.source.offset,
+            "Missing enum entry metadata flags",
+        ));
+    }
+    read_varint(&bytes, &mut cursor)?;
+    encoded.0.extend(&bytes[cursor..]);
+    metadata.data1 = encode_bytes(&encoded.0);
+    for value in &mut metadata.data2 {
+        if *value == entry.owner {
+            *value = entry.owner.replace('$', ".");
+        }
+    }
+    Ok(metadata)
 }

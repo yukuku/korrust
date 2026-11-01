@@ -1,0 +1,2067 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T18:23:08.065954+00:00",
+  "status": "failed",
+  "selection": "Complete previously interrupted Rust regression on frozen stopped-v2 compiler sources. After the first integration binary failure, only unrun integration binaries are selected with --no-fail-fast; no prior passing binary is repeated. All35unit/integration targets and0doc-tests completed.",
+  "compiler": {
+    "source_commit": "a404f53775fe3ed937464a33e95d29baa9d69322",
+    "binary_sha256": "1e5d68a026b34a15242e0fdccd09dc8b2bbeaa0f3f69c7b661b3a4d2c2cd34ef",
+    "frozen_source_root": "target/resume-validation-baseline",
+    "source_manifest": "reports/correctness/2026-11-02-resume-member-extensions/freeze.json",
+    "source_archive": "reports/correctness/2026-10-30-next-five-stop-checkpoint/final-sources.zip",
+    "source_archive_sha256": "27ddf91487daa224b7414e9f5de2108a4d4e0540ee0aa653ab943447268d7511",
+    "rust_test_binaries_sha256": {
+      "target/next5-root-build/debug/deps/korrust-f58e2056262cfb0c": "b04082e91e21da8f102a22cfe9b66bd07d5e7e3bff5893a850b69f708feaacab",
+      "target/next5-root-build/debug/deps/korrust-3e4b1e27c234f736": "88416302d67b053f1370893132e5894896aa28fda70446ceba57ce683119de3a",
+      "target/next5-root-build/debug/deps/alias_constructors-1b3020d34280dfc0": "f247d91a41f88cae9bf626b14e7079ac5c20d0fc1c0821088ed186bda2695d4d",
+      "target/next5-root-build/debug/deps/archive_policy-bee67ba66ea15601": "d0bfceec61b3cdb38f3dbebc097e5290e80a7a05e3debbe5de77cc415d3ff1ae",
+      "target/next5-root-build/debug/deps/batch_frontend-b858fc35a6c28927": "5167dfe107a9228a8ca698562ffb3e72d0af6b1b4dc24ef1f3ea6b1707d63de1",
+      "target/next5-root-build/debug/deps/call_frontend-3e0cd3c55ee93e70": "c86e83a06a313c0255a76a0dfd0e125ca97d5978d10dd220da385d32394ae9d4",
+      "target/next5-root-build/debug/deps/call_resolution-f1fb0c45d61a6aaa": "04ec4755b9c29c8b30da80b7185d950a03adb665cdb55fea6c094a0fb513cdc5",
+      "target/next5-root-build/debug/deps/callable_properties-e77bee76e01d1866": "dab093bb9bcbb5869955431d33466cc595c87c21f4e3b17780edc254d830d551",
+      "target/next5-root-build/debug/deps/class_delegation_diagnostics-5900ba5d32ca5bd4": "af6429cf1c27f87cc7a4e3ef30250e17d0aa08122e60b750edf9b6f3b0a1d250",
+      "target/next5-root-build/debug/deps/compound_operators-e2fb5b11eb8e4700": "7672d68f7f0f2c71974e95bab95074165c38545a22d451127df7d75efad0950c",
+      "target/next5-root-build/debug/deps/d_sam_frontend-8b01cbbb2947c0ab": "e96b05006b5aa6d86a0c69cc3c825fd45a549b0e450f9633451e18dd6fec2e7b",
+      "target/next5-root-build/debug/deps/declarations_frontend-d2e84ba7fb2f1175": "0b287531dc2674c0254711ca9d7b260b1e63f34b3bc06ced7d1fbbab00d0c35c",
+      "target/next5-root-build/debug/deps/declarations_syntax-f7eaefdb22dd3565": "f69b57f31b0b2dabb6e2ca631255d3032bc013a4b8f249b3cf8415dbd85255b2",
+      "target/next5-root-build/debug/deps/enum_frontend-e2ed8a53602ed44e": "2174d4d5c15ba5c6c5b11a800a8545d0ef71334137c3ae62b472e6026483634b",
+      "target/next5-root-build/debug/deps/expanded_objects-406d14fe7e46df7a": "16e9799aac5c0cae31ef0b40fc15d5a67c20d857471c161a993e503e68a548cc",
+      "target/next5-root-build/debug/deps/frontend-83cf33eb91de89b7": "8da6f725e8ccfef08c7826350756e6837840ae5b5dd52d83d840569720f510d5",
+      "target/next5-root-build/debug/deps/generic_aliases-c5c91da01a30a60c": "d7089484c986c679a44f8f6ff8f7329cd4d00b028ae1b39ca136ebb13aa137b2",
+      "target/next5-root-build/debug/deps/jvm_overloads-bbfe0d064b370300": "e8156b75b94e8cb8a4bc48d44a260ac8556a4a3f53071e6d8334127fdd762c8c",
+      "target/next5-root-build/debug/deps/jvm_representation-d04e07638da1c2d1": "195e55bc4887801dd4cc8470e9486060817b937dd7dde91bf92ed06101f6965f",
+      "target/next5-root-build/debug/deps/library_member_contracts-ca7fd2985ec393bd": "1450c573f20184bed98f7fb8dc5b5e27804086e3555e18f70caf65bf5a6a25f8",
+      "target/next5-root-build/debug/deps/local_delegation_boundary-e00b94ab27df22a4": "d4db7727761419ebdf7d7cbb43f71348e35d991e1a7315d6acdd7473a9d36631",
+      "target/next5-root-build/debug/deps/member_extensions-3e24bd25e416e711": "f7554fe27d843b286f7e44403ab158f1c79edc411c5ae62c6be8e7431374526b",
+      "target/next5-root-build/debug/deps/next_frontend-42440a7e267d43fa": "89a31e5d5192dd858dfbe286dff692599560dba66b1a04c96733c567fee73953",
+      "target/next5-root-build/debug/deps/next_syntax-0d5cbcba98c17bb3": "4f7ef8a35e1b74b3a35cc083f0374b2e933da0042ccec26b0b4f15b8ee0d2513",
+      "target/next5-root-build/debug/deps/primitive_arrays-6080a1966296b9b9": "ee0d806037d13622f12375c209d450ac83fc28537025ba9975e3005f58031878",
+      "target/next5-root-build/debug/deps/property_visibility-f5de29f014559865": "cd529b720f593c085ebc9b81f706cde0da12447be7356f5385f48b89c4c3d12c",
+      "target/next5-root-build/debug/deps/protected_bridges-4c3cdb57aa9bbc0c": "8d279597b36f6d2d6176034ef628db36b8b578506517235fde92db7bd0e69b1b",
+      "target/next5-root-build/debug/deps/sealed_diagnostics-e6b05cf724bced84": "354735246ec49d880e337fb470e3e579b924fdb410459310eb21838f6ee8ceaf",
+      "target/next5-root-build/debug/deps/source_filenames-20aec3a53cfde05f": "6180b4085de5a68e9b01877eac6ca87cf94ccb87f36348026656070ed703f7ad",
+      "target/next5-root-build/debug/deps/source_generic_diagnostics-f14597eb6f0e1180": "41c912ea84056af786381fa448b45526dce26c809c5f7927be6e20de1f9f2cd4",
+      "target/next5-root-build/debug/deps/static_import_diagnostics-d503e066ce56ce2c": "2fde95c803964bb4dbe6322a4fe061e34ca3ce6e3201f0c51d9a57afb6934387",
+      "target/next5-root-build/debug/deps/string_factories-8454ea5a8841c111": "d5a9ddbeb63d92de7e5540cf99a3e3b48422fb537ee3a7198df95f51b49a5766",
+      "target/next5-root-build/debug/deps/unsupported_syntax_diagnostics-02f0f58dc0c8f771": "de9675c00d3b7b21f45746d7fdfce2057b63135f69b03fe9925c22bf9b825e3b",
+      "target/next5-root-build/debug/deps/upstream_boundaries-4449ec8019e964b6": "1b77ab32451dce34117d723cfaeb607019060916c8bb55e9fb493709c9876762",
+      "target/next5-root-build/debug/deps/value_resolution-af882bac3b3bee41": "98119309be4c4e656e8230e4a243fe996a7ef34f874528ae08631f8dd4093999"
+    }
+  },
+  "environment": {
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+    "java_home": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "rust_min_stack": "16777216",
+    "cargo_home": "target/cargo-home",
+    "rustup_home": "target/rustup",
+    "cargo_target_dir": "target/next5-root-build",
+    "path_prefix": "target/cargo-home/bin"
+  },
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "target/resume-validation-baseline",
+      "stdout": "reports/correctness/2026-11-02-resume-rust-regression/resume-validation-rust.log",
+      "stderr_combined": true,
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/cargo-home/bin/cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--no-fail-fast",
+        "--test",
+        "enum_frontend",
+        "--test",
+        "expanded_objects",
+        "--test",
+        "frontend",
+        "--test",
+        "generic_aliases",
+        "--test",
+        "jvm_overloads",
+        "--test",
+        "jvm_representation",
+        "--test",
+        "library_member_contracts",
+        "--test",
+        "local_delegation_boundary",
+        "--test",
+        "member_extensions",
+        "--test",
+        "next_frontend",
+        "--test",
+        "next_syntax",
+        "--test",
+        "primitive_arrays",
+        "--test",
+        "property_visibility",
+        "--test",
+        "protected_bridges",
+        "--test",
+        "sealed_diagnostics",
+        "--test",
+        "source_filenames",
+        "--test",
+        "source_generic_diagnostics",
+        "--test",
+        "static_import_diagnostics",
+        "--test",
+        "string_factories",
+        "--test",
+        "unsupported_syntax_diagnostics",
+        "--test",
+        "upstream_boundaries",
+        "--test",
+        "value_resolution"
+      ],
+      "cwd": "target/resume-validation-baseline",
+      "stdout": "reports/correctness/2026-11-02-resume-rust-regression/resume-validation-rust-remaining.log",
+      "stderr_combined": true,
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--doc"
+      ],
+      "cwd": "target/resume-validation-baseline",
+      "stdout": "reports/correctness/2026-11-02-resume-rust-regression/resume-validation-rust-doc.log",
+      "stderr_combined": true,
+      "exit_code": 0,
+      "observed_doc_tests": 0
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_reports.py"
+      ],
+      "cwd": "target/resume-validation-baseline",
+      "stdout": "reports/correctness/2026-11-02-resume-rust-regression/resume-validation-report-tests.log",
+      "stderr_combined": true,
+      "exit_code": 0,
+      "observed_python_tests": 8
+    }
+  ],
+  "cases": [
+    {
+      "id": "src/lib.rs/bytecode::annotations::tests::malformed_and_misaligned_existing_attributes_leave_member_unchanged",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::annotations::tests::parameter_merge_preserves_nested_annotations_and_array_values",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::annotations::tests::member_merge_coalesces_both_retentions_and_preserves_other_attributes",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::annotations::tests::nested_array_enum_class_and_primitive_existing_values_are_preserved",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::annotations::tests::parameter_merge_keeps_indices_and_nullability_for_unannotated_parameters",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::annotations::tests::scalar_elements_have_jvm_tags_and_utf8_string_constants",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::annotations::tests::compiler_annotation_guards_use_canonical_identity",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::annotation_files::tests::missing_member_and_incorrect_descriptor_parameter_count_reject",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::annotation_files::tests::duplicate_utf8_attribute_name_still_merges_existing_metadata",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::annotation_files::tests::original_constant_tags_and_two_slot_positions_survive",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::annotation_files::tests::malformed_pool_and_classfile_boundaries_reject_without_panics",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::annotation_files::tests::rewrite_preserves_old_pool_metadata_unknown_attributes_and_member_placement",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::classes::tests::parameter_bound_inspection_preserves_nullability_and_limits_resource_use",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::annotations::tests::compiler_semantics_are_rejected_before_loading_annotation_definitions",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::tests::explicitly_labeled_returns_are_local_to_the_lambda",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::tests::array_initializer_expressions_require_stable_function_values",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::tests::array_constructor_and_receiver_lambda_keep_semantic_element_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::tests::local_function_self_cells_keep_declaration_immutability",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::tests::local_functions_capture_mutable_cells_and_recursive_self",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::tests::loop_labels_cannot_cross_lambda_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::classes::tests::generic_extension_property_metadata_preserves_declaration_scope",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::tests::throwable_values_and_catch_bindings_can_be_rethrown",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::representation_tests::default_bridge_uses_descriptor_when_metadata_has_primitive_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::function_values::shadowing_tests::captured_local_shadows_an_imported_property_getter",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::function_values::tests::lambda_captures_only_free_initialized_names",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::function_values::tests::mutable_captures_share_cells_and_keep_parameter_slots",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::function_values::tests::nonlocal_returns_require_inline_context",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::lambdas::tests::generated_bridges_execute_with_jvm_verification",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::java_lang_tests::imported_java_lang_noarg_constructors_resolve",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::tests::when_bindings_do_not_escape_their_branch_scope",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::tests::mutable_destructured_values_share_capture_cells",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::if_expressions_join_mixed_platform_branches_in_either_order",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::inherited_reference_defaults_share_the_supported_signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::mutable_properties_emit_both_accessors_and_reads_select_the_getter",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::source_default_reference_parameters_share_regular_body_checking",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::classes::tests::class_literal_template_boundary_has_an_explicit_unsupported_diagnostic",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::function_values::tests::same_source_classifiers_validate_recursively_without_classpath_outputs",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::source_interface_overrides_and_conflicts_are_rejected",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::source_interface_scope_and_cycles_are_checked",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::function_values::tests::ordinary_methods_retain_lambdas_and_capture_receivers",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::source_interface_member_access_uses_getters_and_argument_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::ir_walk::tests::declarations_report_the_class_that_emits_each_value",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::ir_walk::tests::statement_visitors_can_replace_stores_after_visiting_their_children",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::ir_walk::tests::values_are_mutable_and_visited_after_their_children_including_abrupt_paths",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::lambdas::tests::nullable_type_arguments_survive_official_kotlin_consumers",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::builtin_resolution_rejects_member_and_classifier_shadowing",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::function_values::tests::source_generic_calls_substitute_explicit_and_inferred_parameters",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::function_values::sam_object_tests::only_exact_object_methods_are_excluded_from_sam_abstract_members",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::source_interfaces_share_expression_checks_and_preserve_nested_inherited_defaults",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::inferred_thread_local_buffers_support_structural_reference_equality",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::control::tests::local_expression_functions_infer_returns_and_literals_keep_context",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/bytecode::lambdas::tests::compiled_inline_methods_verify_in_classes_objects_and_interfaces",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::unsupported_interface_bodies_and_companion_shapes_fail_closed",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::interfaces::tests::source_interface_implementations_require_exact_property_and_function_identity",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::throws_class_literals_cannot_resolve_to_values_or_the_declared_object",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::loop_control_and_indices_keep_types_and_scope",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::standalone_range_bounds_precede_subject_but_when_subject_is_cached_first",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::overloads::tests::crossed_parameter_specificity_is_ambiguous",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::overloads::tests::declared_generic_bounds_precede_specialized_argument_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::overloads::tests::narrower_nullable_parameter_precedes_default_argument_tiebreak",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::operations::infix_tests::source_member_views_preserve_distinct_infix_overloads",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::references::tests::reference_arity_mismatch_rejects",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::references::tests::top_level_reference_uses_expected_parameter_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::relations::tests::generic_variance_nullability_and_function_subtyping_are_checked",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::relations::tests::inference_preserves_explicit_constraints_and_nullable_candidates",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::relations::tests::inherited_generic_receiver_arguments_reach_declaring_methods",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::relations::tests::source_generic_classifiers_reject_invalid_arity_raw_types_and_bounds",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::singletons::tests::marker_hierarchies_preserve_shared_parents_and_reject_behavior_cycles_and_limits",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::aliases::tests::expands_alias_arguments_and_nullability_and_detects_cycles",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::archive::tests::corrupt_entry_payload_is_diagnosed_when_read",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::archive::tests::directories_reject_multi_release_class_overrides_like_archives",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::archive::tests::duplicate_zip_names_are_diagnosed",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::archive::tests::malformed_archive_names_are_diagnosed",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::archive::tests::metadata_and_module_descriptors_follow_the_same_directory_and_archive_policy",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::archive::tests::multi_release_class_overrides_are_diagnosed",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::archive::tests::stored_and_deflated_archives_use_classpath_reader",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::archive::tests::truncated_and_oversized_archives_are_diagnosed",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::jvm_builtins::tests::supported_mappings_match_the_pinned_jvm_contract_table",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::boxed_metadata_results_require_explicit_descriptors_and_matching_parameters",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::builtin_array_declarations_are_selected_by_shape_and_not_name",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::builtin_class_inventory_uses_declared_names_and_signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::builtin_metadata_headers_and_resources_are_checked",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::cyclic_type_tables_are_bounded",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::metadata_decodes_functional_interface_identity_and_abstract_member_modality",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::metadata_exposes_public_aliases_and_keeps_private_aliases_out_of_library_index",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::module_package_remapping_preserves_source_and_jvm_packages",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::only_input_type_metadata_is_narrowly_decoded",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::ordinary_metadata_still_rejects_reified_type_parameters",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::pinned_any_member_inventory_matches_its_jvm_contract",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::implicit_thread_local_get_assertions_preserve_the_expression_name",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::qualified_builtin_names_distinguish_packages_classes_and_cycles",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::signature::tests::declaration_and_type_use_nullability_merge_without_order_dependence",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::signature::tests::generic_method_preserves_variables_and_variance",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::signature::tests::generic_truncations_are_diagnostics",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::signature::tests::implementation_annotation_preserves_platform_and_explicit_nullability",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::signature::tests::nullability_rejects_unknown_and_conflicting_markers",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::signature::tests::wildcard_signatures_preserve_projection_and_platform_arguments",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::source::enums::tests::enum_header_preserves_user_members_private_constructor_and_companion",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::source::enums::tests::generated_enum_members_preserve_named_parameters_and_generic_results",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::actual_junit_test_annotation_retains_runtime_target_and_unsupported_defaulted_parameters",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::annotation_defaults_match_declared_scalar_array_and_classifier_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::annotation_defaults_validate_boolean_constants_and_full_attribute_payloads",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::annotation_numeric_tags_require_matching_pool_constants",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::array_property_metadata_accepts_only_exact_nonnullable_string_elements",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::classpath_order_selects_the_first_class",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::metadata::tests::pinned_builtin_resource_exposes_supported_array_declarations",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::constant_fields_preserve_wide_values_float_bits_and_utf16_units",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::empty_class_annotation_tables_are_supported",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::general_metadata_retains_internal_setter_visibility",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::invalid_identity_and_trailing_data_are_rejected",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::emitted_kotlin_metadata_retains_typed_constructor_names_defaults_and_properties",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::javac_annotation_definitions_preserve_retention_targets_and_member_defaults",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::jdk_implementation_annotations_do_not_hide_public_constructors",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::kotlin_collection_markers_preserve_source_supertypes_and_infix_flags",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::kotlin_interface_binary_mismatches_and_extra_annotations_are_rejected",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::kotlin_interface_metadata_preserves_property_identity_and_default_methods",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::kotlin_interface_module_names_are_validated_without_changing_member_contracts",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::kotlin_interface_nullable_generic_extension_suspend_and_default_arguments_are_rejected",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::kotlin_legacy_markers_validate_version_requirements_without_accepting_members",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::kotlin_enum_imports_retain_class_visibility_and_entry_identity",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::singletons::tests::annotation_and_singleton_extensions_fail_closed",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::kotlin_metadata_version_and_truncated_protobuf_are_rejected",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::malformed_annotation_retention_is_rejected_without_unhiding_ordinary_classes",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::metadata_predefined_names_and_descriptor_operations_are_bounded",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::kotlin_metadata_keeps_internal_class_and_member_visibility_restricted",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::modified_utf8_and_double_slots_are_bounded",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::mutable_property_metadata_names_reject_non_ascii_and_empty_without_panicking",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::mutable_property_metadata_requires_matching_public_abstract_setters",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::oversized_attributes_and_invalid_pool_indices_are_rejected",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::package_lookup_indexes_follow_replaced_source_headers",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::metadata_visibility_distinguishes_private_and_public_callables",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::truncations_are_diagnostics",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::type_annotation_targets_paths_and_parameter_indices_are_checked",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::typed_kotlin_metadata_rejects_mismatched_generic_jvm_signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::unsafe_names_are_rejected",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::unsupported_kotlin_parameters_retain_callable_identity",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::volatile_java_fields_retain_access_flags_and_remain_available",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::accepts_kotlin_parameter_null_check_without_hiding_lambda_uses",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::checks_category_two_local_bounds_and_constant_kinds",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::decodes_backward_branches_and_compact_and_wide_locals",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::decodes_external_construction_and_tracks_lambdas_across_constructor_arguments",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::identifies_erased_lambda_receiver_across_argument_evaluation",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::preserves_lambda_identity_at_branch_merge_and_multiple_calls",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::rejects_allocations_without_a_class_constant",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::rejects_branches_into_operands_and_truncated_instructions",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::rejects_exception_regions_and_unsupported_stack_operations",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::rejects_inline_owner_nested_allocations_requiring_generated_classes",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/compiled_inline::tests::rejects_lambda_aliasing_and_forwarding",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/const_eval::tests::absent_source_names_are_invalid_without_claiming_external_resolution",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/const_eval::tests::class_literals_are_invalid_scalar_constant_initializers",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/const_eval::tests::computed_string_growth_is_bounded_before_large_allocations",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/const_eval::tests::constant_reference_and_expression_depth_are_bounded_across_owner_scopes",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/const_eval::tests::constant_resolution_preserves_lexical_shadowing_and_explicit_import_priority",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/const_eval::tests::private_references_cycles_and_cross_file_error_locations_fail_closed",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/const_eval::tests::scalar_constant_operations_preserve_wrapping_types_and_utf16",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/const_eval::tests::short_circuit_checks_constant_operands_without_dividing_skipped_values",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/const_eval::tests::source_constants_resolve_forward_and_qualified_references_with_declared_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/diagnostic::tests::json_escapes_paths_messages_and_identities",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/diagnostic::tests::rendering_clamps_offsets_to_utf8_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/diagnostic::tests::unclassified_errors_do_not_guess_categories_from_messages",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/jvm_descriptor::tests::array_dimensions_and_parameter_slots_have_jvm_bounds",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/jvm_descriptor::tests::malformed_descriptors_and_invalid_void_positions_are_rejected",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/jvm_descriptor::tests::physical_parameters_preserve_width_boxing_and_nested_arrays",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::annotated_internal_function_metadata_keeps_source_and_physical_names",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::byte_encoding_preserves_all_bytes_and_modified_utf8_limits",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::explicit_receivers_of_static_object_methods_are_evaluated",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::delegated_setters_have_typed_implicit_parameters_only_for_mutable_properties",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::functional_interface_metadata_uses_the_pinned_fun_flag",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::inferred_platform_metadata_preserves_flexible_lower_and_nullable_upper_bounds",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::metadata_keeps_projections_type_parameters_and_nullable_functions",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::module_mapping_groups_sorts_and_deduplicates_facades",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::nested_interface_headers_use_the_enclosing_scope",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::ordinary_annotation_flags_preserve_class_parameter_and_accessor_discovery",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::package_metadata_uses_checked_class_names_for_unimported_source_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::property_annotation_sites_match_oracle_accessor_overrides",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::property_metadata_preserves_lateinit_and_delegated_flags",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::restricted_default_setters_have_non_default_metadata_without_physical_signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::type_alias_metadata_preserves_name_visibility_and_expanded_function_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::package_metadata_exposes_top_level_names_and_defaults",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/module_tests::rejects_duplicate_owners_and_cyclic_inferred_signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/metadata::tests::custom_setters_preserve_named_typed_parameters_in_every_declaration_scope",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::adjacent_nullable_class_literals_have_an_invalid_diagnostic",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::annotation_array_values_have_distinct_literal_nodes",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::annotation_fixture_preserves_class_constructor_property_and_method_targets",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::arrays_receiver_types_and_operators_retain_callable_contracts",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::bodyless_class_companions_keep_empty_state",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::bodyless_superclass_headers_preserve_following_declarations",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::class_literal_guard_preserves_callable_references_and_specialized_throws",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::compound_assignments_and_decrements_keep_operators_and_positions",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::concrete_and_function_aliases_preserve_visibility_offsets_and_chains",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::constructor_annotation_guards_preserve_separate_annotated_declarations",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::constructor_parameters_distinguish_properties_and_initializers",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::control_bodies_local_functions_destructuring_and_labels_keep_scope",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::declaration_annotations_survive_object_interface_enum_and_companion_wrappers",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::declaration_fixture_sources_parse_without_rewriting",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::declaration_order_initializers_and_secondary_constructors_are_preserved",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::discard_fixture_parses_without_rewriting",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::dollar_classifier_names_are_explicitly_unsupported_without_restricting_members",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::enum_entries_keep_empty_semicolon_forms_and_explicit_unsupported_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::enum_model_reuses_constructor_members_and_companion_shapes",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::escaped_identifiers_preserve_names_and_original_offsets",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::escaped_identifiers_reject_invalid_jvm_names_with_source_locations",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::escaped_method_declarations_and_references_parse_in_classes",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::escaped_names_in_braced_templates_do_not_close_interpolation",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::escaped_names_preserve_existing_unsupported_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::escaped_unbraced_templates_use_identifier_rules_and_actual_token_offsets",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::excessive_statement_nesting_is_rejected_on_the_default_thread_stack",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::expression_bodies_reject_explicit_returns",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::foreach_ranges_and_do_while_preserve_structure",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::function_annotations_keep_targets_arguments_and_method_locations",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::functional_interface_identity_is_separate_from_ordinary_interfaces",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::functional_interfaces_aliases_and_annotated_backticks_parse_unchanged",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::generic_function_types_and_projections_preserve_structure",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::generic_type_alias_parameters_are_scoped_and_reject_invalid_declarations",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::implicit_lambda_labels_follow_the_resolved_callee_name",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::infix_calls_accept_identifiers_and_use_kotlin_precedence",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::infix_declarations_preserve_modifiers_and_reject_invalid_signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::inherited_and_nested_declarations_keep_virtual_and_visibility_information",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::integer_radices_and_separators_preserve_signed_magnitudes",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::internal_property_visibility_is_preserved_and_unsupported_contexts_fail_explicitly",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::lambdas_callable_references_and_comparisons_remain_distinct",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::malformed_escaped_templates_keep_source_offsets_through_public_compilation",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::multi_dollar_strings_remain_an_explicit_unsupported_boundary",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::named_types_record_their_actual_tokens_including_nested_and_qualified_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::new_class_forms_preserve_unsupported_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::new_expression_offsets_shift_inside_string_templates",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::newline_expression_modes_preserve_statement_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::nullable_primitives_use_reference_descriptors_and_slots",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::override_members_are_open_unless_explicitly_final",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::parameter_annotation_vectors_preserve_empty_positions_and_unknown_target_names",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::property_and_accessor_visibility_remain_independent_from_custom_bodies",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::property_assignments_preserve_receiver_expressions",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::raw_discards_and_escaped_underscore_bindings_remain_distinct",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::raw_literals_preserve_utf16_backslashes_quotes_and_normalize_line_endings",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::raw_templates_allow_nested_quotes_raw_literals_and_multiline_expressions",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::repeated_enum_entry_terminators_are_rejected_at_the_second_semicolon",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::safe_call_assignment_has_a_distinct_source_statement",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::scalar_constants_and_float_exponents_preserve_values",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::spread_arguments_keep_locations_and_named_argument_structure",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::state_and_accessor_shapes_are_uniform_in_classes_objects_and_companions",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::subject_when_conditions_require_parenthesized_boolean_operations",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::terminal_elvis_named_defaults_and_generic_factory_parse",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::trailing_lambda_newlines_follow_call_suffixes_without_crossing_parentheses",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::type_operations_identity_and_when_type_conditions_keep_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::typed_destructuring_entries_distinguish_discard_and_named_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::typed_when_subjects_and_setters_preserve_type_checks",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::unchanged_goto_tab_preserves_enum_arguments_and_function_alias",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::unsupported_constructs_have_stable_codes_and_source_offsets",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::unsupported_generic_modifiers_and_function_arities_are_diagnosed",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::unsupported_syntax_guards_preserve_supported_neighbors",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/syntax::tests::vararg_parameters_record_physical_arrays_and_reject_unsupported_forms",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/visibility::tests::a_custom_private_getter_uses_a_method_bridge",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/visibility::tests::a_required_private_bridge_cannot_overwrite_a_source_method",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/module_tests::resolves_cyclic_type_signatures_and_emits_the_package_facade_first",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/classpath::tests::kotlin_metadata_preserves_generic_type_alias_expansions",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/module_tests::nested_simple_names_follow_the_containing_declaration",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/visibility::tests::private_facade_bridges_follow_actual_lambda_uses",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/visibility::tests::private_field_bridges_are_requested_for_reads_and_writes_separately",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/visibility::tests::top_level_internal_functions_keep_their_source_names",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/visibility::tests::unrelated_lambdas_do_not_create_private_bridges",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/visibility::tests::wide_default_descriptors_keep_every_value_parameter_mask",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/visibility::tests::default_methods_cannot_overwrite_a_source_method",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/visibility::tests::internal_member_names_and_default_calls_share_the_module_suffix",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/visibility::tests::mangled_internal_names_cannot_overwrite_a_source_method",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::object_reference_equality_and_instance_calls_keep_the_actual_receiver",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::uninitialized_locals_require_assignment_on_every_reachable_branch",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::object_and_class_overloads_do_not_override_unrelated_inherited_signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::exceptions_conversions_and_range_expressions_have_bounded_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::object_buffers_and_exact_overloads_share_regular_expression_checking",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/lib.rs/check::objects::tests::suppliers_and_builtin_annotation_shadowing_fail_closed",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/main.rs/output::tests::unsafe_batch_artifact_paths_reject_before_filesystem_access",
+      "outcome": "pass"
+    },
+    {
+      "id": "src/main.rs/output::tests::duplicate_batch_outputs_reject_before_destination_creation",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/alias_constructors.rs/alias_constructor_inference_remains_an_explicit_language_boundary",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/alias_constructors.rs/aliases_preserve_callables_bounds_and_private_constructors",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/alias_constructors.rs/unchanged_upstream_alias_constructors_match_runtime_signatures_and_metadata",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/alias_constructors.rs/alias_constructors_expand_before_loading_classifiers",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/archive_policy.rs/genuine_multi_release_overrides_reject_before_dependency_resolution",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/archive_policy.rs/duplicate_classes_preserve_first_classpath_entry_precedence",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/archive_policy.rs/official_kotlin_library_is_equivalent_in_directories_and_ordinary_jars",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/batch_frontend.rs/module_identity_is_stored_and_input_validation_keeps_provenance",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/batch_frontend.rs/batch_scopes_names_by_package_and_reports_the_original_source",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/batch_frontend.rs/source_classifiers_and_generated_helpers_cannot_silently_replace_each_other",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/batch_frontend.rs/batch_rejects_duplicate_owners_and_cyclic_inferred_signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/batch_frontend.rs/batch_discovers_forward_signatures_and_infers_across_files_independent_of_order",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/call_frontend.rs/same_package_compiled_classes_resolve_from_directories_and_jars",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/call_frontend.rs/projected_builtin_collections_resolve_their_jvm_classifier",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/call_frontend.rs/builtin_array_metadata_resolves_identically_from_jar_and_directory",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/call_frontend.rs/source_and_library_varargs_preserve_array_contracts",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/call_resolution.rs/lexical_members_shadow_explicit_generic_imports_without_changing_top_level_priority",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/callable_properties.rs/top_level_function_properties_are_invoked_through_their_value",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/class_delegation_diagnostics.rs/generic_interface_delegation_builds_forwarders_properties_and_bridges",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/class_delegation_diagnostics.rs/delegation_cannot_turn_a_var_override_into_a_val_or_hide_contract_members",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/class_delegation_diagnostics.rs/valid_unimplemented_delegation_shapes_have_explicit_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/class_delegation_diagnostics.rs/invalid_delegation_contracts_do_not_return_artifacts",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/compound_operators.rs/primitive_and_string_assignment_extensions_obey_mutability_and_ambiguity",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/compound_operators.rs/compound_operators_and_unchanged_history_match_the_pinned_runtime",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/d_sam_frontend.rs/function_value_and_callable_reference_sam_adapters_reject_explicitly",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/d_sam_frontend.rs/inherited_sam_defaults_preserve_captures_for_java_and_kotlin_consumers",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_frontend.rs/operator_syntax_requires_operator_declarations",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_frontend.rs/labels_and_backing_fields_obey_their_scope",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_frontend.rs/declaration_visibility_and_inheritance_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_frontend.rs/lateinit_restrictions_and_subject_scopes",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_frontend.rs/declaration_forms_compile_to_real_class_outputs",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_syntax.rs/source_operator_calls_and_inheritance_preserve_declarations",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_syntax.rs/mixed_declarations_resolve_forward_references_and_inferred_results",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_syntax.rs/when_subject_annotations_are_checked_before_binding",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_syntax.rs/custom_accessors_lateinit_and_secondary_constructors_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_syntax.rs/delegated_properties_resolve_source_operator_protocols",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_syntax.rs/delegated_read_only_properties_do_not_require_provide_delegate",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_syntax.rs/local_functions_destructuring_and_scoped_when_subjects_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_syntax.rs/labels_and_try_finally_compile_with_structured_blocks",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/declarations_syntax.rs/initialized_state_and_nested_declarations_use_uniform_bodies",
+      "outcome": "correctness_failure",
+      "failure": "thread 'initialized_state_and_nested_declarations_use_uniform_bodies' (10382689) panicked at tests/declarations_syntax.rs:9:33:\nUnsupported property: Holder\nclass Outer(val seed: Int) { val first = seed; init { first.toString() }; class Nested(val value: Int); object Holder { var value = 3 }; fun result(): Int = Nested(first).value + Holder.value; companion object { var count = 2; fun next(): Int { count += 1; return count } } }\nobject State { var count = 1; init { count += 1 }; fun next(): Int { count += 1; return count } }\nfun result(): Int = Outer(2).result() + State.next() + Outer.next()\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+      "assessment": "Compiler correctness regression or unexpected acceptance; requires source repair and fresh validation."
+    },
+    {
+      "id": "tests/declarations_syntax.rs/invalid_delegate_operator_contracts_are_rejected",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/enum_frontend.rs/enum_constructors_members_and_companions_use_ordinary_types",
+      "outcome": "correctness_failure",
+      "failure": "thread 'enum_constructors_members_and_companions_use_ordinary_types' (10398137) panicked at tests/enum_frontend.rs:17:14:\ncalled `Result::unwrap()` on an `Err` value: Diagnostic { offset: 562, message: \"Unsupported property: RED\", source_identity: Some(\"EnumModel.kt\"), kind: Unclassified, code: \"UNCLASSIFIED\", type_name: None }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+      "assessment": "Compiler correctness regression or unexpected acceptance; requires source repair and fresh validation."
+    },
+    {
+      "id": "tests/enum_frontend.rs/enum_members_cannot_hide_the_final_core_contract",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/enum_frontend.rs/enum_initialization_dependencies_and_argument_types_reject_at_original_source",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/expanded_objects.rs/object_class_inheritance_is_an_explicit_boundary",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/expanded_objects.rs/data_object_equality_redefinitions_are_invalid",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/expanded_objects.rs/data_object_contracts_are_emitted_with_nested_interface_implementations",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/expanded_objects.rs/imported_input_type_constraints_are_checked_without_replacing_library_calls",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_nested_comments_shadowing_and_minimum_int",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_abstract_mutable_interface_properties",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_string_literals_calls_and_internal_functions",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_ordinary_final_classes_with_constructor_fields_and_instance_members",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_abstract_and_default_interface_declarations",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/bounds_enum_entry_counts",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_objects_with_typed_and_inferred_literal_constants",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_unit_allocation_and_explicit_copy_ranges",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_annotated_overloaded_object_methods_and_lazy_array_fields",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/checks_modified_utf8_constant_limit",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/classes_require_valid_imports_even_when_unused",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_ten_bounded_androidbible_language_additions",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_statement_when_and_checks_return_paths_and_scopes",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/extension_functions_require_receiver_syntax",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/computed_constant_declarations_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/limits_interface_nesting_and_template_complexity",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_chars_arrays_comparisons_and_extension_receivers",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/compiles_all_nested_object_classes_without_a_facade",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/compound_addition_requires_supported_mutable_locals",
+      "outcome": "correctness_failure",
+      "failure": "thread 'compound_addition_requires_supported_mutable_locals' (10417734) panicked at tests/frontend.rs:10:5:\nfun f() { var n = 'a'; n += 2 }: No supported compound operator is applicable\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+      "assessment": "Stale diagnostic wording assertion; compiler still rejects the tested unsupported operation."
+    },
+    {
+      "id": "tests/frontend.rs/module_mapping_filenames_stay_bounded_for_long_packages",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/object_imports_remain_fail_closed",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/object_member_names_share_one_namespace_and_preserve_locations",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/object_string_constants_obey_modified_utf8_limits",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/long_parameters_and_locals_enforce_jvm_slot_widths",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/object_depth_class_and_constant_counts_obey_limits",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/preserves_abstract_member_and_bodyless_nested_interface_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/checks_constructor_fields_array_operations_and_getter_returns",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_declared_classifiers_shadowing_builtin_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_duplicate_enum_entries_at_the_second_declaration",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_bare_enums_and_uses_the_declaration_name",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/output_artifacts_include_module_mapping_only_for_function_facades",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/preserves_statement_boundaries_and_rejects_unsupported_syntax",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/newly_supported_operations_replace_previous_rejection_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/interfaces_emit_generic_nested_companion_and_anonymous_classes",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_reserved_names_and_excessive_nesting_without_panicking",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_byte_arrays_char_array_construction_and_hexadecimal_ints",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/accepts_twenty_bounded_language_additions",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_unsupported_object_and_constant_forms",
+      "outcome": "correctness_failure",
+      "failure": "thread 'rejects_unsupported_object_and_constant_forms' (10422552) panicked at tests/frontend.rs:623:9:\naccepted data object E",
+      "assessment": "Stale negative test rejects an independently accepted feature family; requires test correction followed by fresh validation."
+    },
+    {
+      "id": "tests/frontend.rs/rejects_invalid_strings_and_string_operations",
+      "outcome": "correctness_failure",
+      "failure": "thread 'rejects_invalid_strings_and_string_operations' (10422461) panicked at tests/frontend.rs:122:9:\naccepted fun f(x: String): Int = x.length()",
+      "assessment": "Compiler correctness regression or unexpected acceptance; requires source repair and fresh validation."
+    },
+    {
+      "id": "tests/frontend.rs/rejects_unsupported_interface_and_companion_forms",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_unsupported_class_surface_and_mixed_declarations",
+      "outcome": "correctness_failure",
+      "failure": "thread 'rejects_unsupported_class_surface_and_mixed_declarations' (10422470) panicked at tests/frontend.rs:786:9:\naccepted class E() { fun String.extension(): Int = 1 }",
+      "assessment": "Stale negative test rejects an independently accepted feature family; requires test correction followed by fresh validation."
+    },
+    {
+      "id": "tests/frontend.rs/rejects_invalid_or_still_unsupported_enum_forms",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_unsupported_or_invalid_ten_feature_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/requires_classpath_for_imported_java_classes",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_unsupported_when_forms_and_malformed_entries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_invalid_bindings_and_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/resolves_declared_extensions_before_implicit_library_extensions",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/requires_legal_output_names_and_keeps_locations",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/validates_even_unused_enum_imports",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_invalid_loop_membership_increment_and_when_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_unsupported_object_annotations_initializers_and_overloads",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/requires_valid_overrides_of_inherited_any_and_object_members",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/when_generated_locals_and_nesting_obey_limits",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/promoted_enum_interface_and_internal_member_forms_remain_supported",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/requires_definite_assignment_before_every_local_read",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/rejects_malformed_chars_and_implicit_char_conversions",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/supports_if_expressions_integer_strings_templates_and_explicit_throws",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/supports_ranges_when_expressions_loops_and_incremented_array_indices",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/frontend.rs/formerly_rejected_declaration_forms_compile_through_shared_rules",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/generic_aliases.rs/projected_nested_alias_arguments_are_explicitly_unsupported",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/generic_aliases.rs/generic_source_aliases_substitute_function_lists_arrays_and_nullable_parameters",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/generic_aliases.rs/generic_alias_arity_recursion_and_parameter_scope_reject_invalid_kotlin",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/generic_aliases.rs/source_generic_aliases_are_visible_across_files_but_private_aliases_are_not",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/jvm_overloads.rs/jvm_overloads_accepts_an_ordinary_method_without_defaults",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/jvm_overloads.rs/static_annotations_reject_non_object_member_contexts",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/jvm_overloads.rs/overload_collisions_reject_before_outputs_are_returned",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/jvm_representation.rs/interface_default_bridges_preserve_physical_widths",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/library_member_contracts.rs/annotated_java_and_mapped_builtin_calls_execute_actual_methods",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/local_delegation_boundary.rs/local_property_delegates_are_explicit_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/member_extensions.rs/source_extension_declaration_identity_includes_the_receiver_type",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/member_extensions.rs/class_extensions_keep_dispatch_and_extension_receivers_distinct",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/member_extensions.rs/member_extension_properties_and_defaults_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/member_extensions.rs/receiver_tower_labels_and_implicit_mutation_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/member_extensions.rs/imported_named_companion_uses_declared_metadata_name",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/member_extensions.rs/escaping_lambdas_capture_each_receiver_and_shared_mutable_locals",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/member_extensions.rs/properties_objects_companions_and_default_masks_match_official_consumers",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/member_extensions.rs/member_extensions_execute_with_distinct_receivers_and_virtual_dispatch",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/member_extensions.rs/compiled_generic_extension_properties_preserve_inference_and_write_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/member_extensions.rs/unchanged_upstream_member_extensions_and_properties_match_box_results",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_frontend.rs/loop_scopes_and_continue_initialization_are_checked",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_frontend.rs/generic_iterable_element_types_follow_the_declared_signature",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_frontend.rs/rejects_erased_type_tests_and_casts",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_frontend.rs/numeric_operations_preserve_assignment_and_comparison_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_frontend.rs/nullable_and_boxed_type_operations_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_frontend.rs/type_smartcasts_require_stable_locals_and_correct_branches",
+      "outcome": "correctness_failure",
+      "failure": "thread 'type_smartcasts_require_stable_locals_and_correct_branches' (10496631) panicked at tests/next_frontend.rs:6:5:\nfun f(input: Any?): Int { var value = input; if(value is String) return value.length; return 0 }: Unresolved or unsupported applicable extension: length\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+      "assessment": "Stale diagnostic wording assertion; compiler still rejects the tested unsupported operation."
+    },
+    {
+      "id": "tests/next_frontend.rs/member_extension_fallback_preserves_diagnostics_and_selects_source_extensions",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_frontend.rs/imported_generic_results_use_constructor_and_function_expected_types",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_frontend.rs/generic_infix_calls_and_runtime_iteration_use_resolved_declarations",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_frontend.rs/renamed_imports_hide_original_names_and_keep_explicit_original_imports",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_syntax.rs/rejects_unsupported_update_targets_and_invalid_type_tokens",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_syntax.rs/accepts_numeric_updates_and_do_while",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_syntax.rs/source_infix_calls_follow_the_declaration_modifier",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_syntax.rs/accepts_iteration_over_supported_values",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_syntax.rs/accepts_identity_casts_and_type_conditions",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/next_syntax.rs/accepts_stdlib_progressions_with_an_explicit_classpath",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/primitive_arrays.rs/primitive_arrays_are_distinct_from_boxed_arrays_and_each_other",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/primitive_arrays.rs/short_arrays_and_effectful_initializer_boundaries_are_explicit",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/primitive_arrays.rs/remaining_primitive_array_representations_compile_consistently",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/property_visibility.rs/newly_modified_unmodeled_contexts_are_explicit",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/property_visibility.rs/inaccessible_and_invalid_accessor_forms_reject",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/property_visibility.rs/generic_default_storage_keeps_logical_types_and_bounds_physical_adaptation",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/property_visibility.rs/ordinary_property_and_independent_setter_visibility_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/protected_bridges.rs/protected_helpers_follow_deferred_calls_and_do_not_change_unused_enum_abi",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/sealed_diagnostics.rs/source_batch_resource_limit_is_an_explicit_boundary",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/sealed_diagnostics.rs/valid_unsupported_sealed_shapes_fail_explicitly_at_the_source",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/sealed_diagnostics.rs/data_objects_close_sealed_interfaces",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/sealed_diagnostics.rs/sealed_source_batch_tracks_direct_children_across_files",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/sealed_diagnostics.rs/invalid_closed_when_and_constructor_boundaries_are_structured",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/source_filenames.rs/unsupported_filename_forms_and_file_annotations_reject_explicitly",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/source_filenames.rs/sanitized_facade_collisions_preserve_deterministic_source_identity",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/source_filenames.rs/official_filename_facades_match_java_signatures_and_kotlin_consumers",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/source_filenames.rs/ascii_source_names_use_kotlin_facade_sanitization",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/source_generic_diagnostics.rs/generic_override_bridges_and_classifier_metadata_compile_together",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/source_generic_diagnostics.rs/unsupported_classifier_shapes_have_structured_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/source_generic_diagnostics.rs/classifier_bound_and_override_failures_do_not_return_artifacts",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/static_import_diagnostics.rs/explicit_static_members_compile_and_missing_members_remain_dependencies",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/string_factories.rs/ordinary_factories_and_builtin_constructor_contracts_match_the_pin",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/unsupported_syntax_diagnostics.rs/unsigned_sources_retain_explicit_unsupported_boundaries",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/unsupported_syntax_diagnostics.rs/unsigned_test_cli_reports_the_file_annotation_boundary_without_outputs",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/unsupported_syntax_diagnostics.rs/unchanged_androidbible_generic_source_without_its_classpath_reports_missing_dependency",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/unsupported_syntax_diagnostics.rs/pinned_official_compiler_accepts_reductions_and_unchanged_sources",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/unsupported_syntax_diagnostics.rs/ordinary_class_literals_compile_with_an_explicit_kotlin_runtime",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/unsupported_syntax_diagnostics.rs/supported_accessor_visibility_compiles",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/unsupported_syntax_diagnostics.rs/parameterized_class_and_interface_supertypes_require_their_library",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/unsupported_syntax_diagnostics.rs/newline_qualified_expressions_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/upstream_boundaries.rs/unchanged_upstream_reference_varargs_and_generic_interface_properties_are_explicit",
+      "outcome": "pass"
+    },
+    {
+      "id": "tests/value_resolution.rs/value_names_use_kotlin_import_priority_and_constant_visibility",
+      "outcome": "pass"
+    }
+  ],
+  "counts": {
+    "pass": 440,
+    "correctness_failure": 7
+  },
+  "inputs": {
+    "baseline_freeze_unchanged": true,
+    "changed_files": [],
+    "previous_v2_manifest_matching_files": 821
+  },
+  "evidence": [
+    "reports/correctness/2026-11-02-resume-rust-regression/resume-validation-report-tests.log",
+    "reports/correctness/2026-11-02-resume-rust-regression/resume-validation-rust-doc.log",
+    "reports/correctness/2026-11-02-resume-rust-regression/resume-validation-rust-remaining.log",
+    "reports/correctness/2026-11-02-resume-rust-regression/resume-validation-rust.log"
+  ],
+  "limitations": [
+    "This is a baseline regression snapshot, not acceptance of the subsequent compiler repairs or newly implemented families. Failed/stale assertions remain failures in these counts.",
+    "The member-extension differential acceptance is recorded separately:62positive,9invalid-rejected,11unsupported; that focused pass does not override the full-suite failures.",
+    "No runtime optimization, Android APK/device/full-app compatibility or incremental speedup claim."
+  ],
+  "execution_status": "completed",
+  "rust_test_targets": 35,
+  "reproduction_commands": [
+    [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline"
+    ],
+    [
+      "/Users/yuku/f/git/korrust/target/cargo-home/bin/cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "--no-fail-fast",
+      "--test",
+      "enum_frontend",
+      "--test",
+      "expanded_objects",
+      "--test",
+      "frontend",
+      "--test",
+      "generic_aliases",
+      "--test",
+      "jvm_overloads",
+      "--test",
+      "jvm_representation",
+      "--test",
+      "library_member_contracts",
+      "--test",
+      "local_delegation_boundary",
+      "--test",
+      "member_extensions",
+      "--test",
+      "next_frontend",
+      "--test",
+      "next_syntax",
+      "--test",
+      "primitive_arrays",
+      "--test",
+      "property_visibility",
+      "--test",
+      "protected_bridges",
+      "--test",
+      "sealed_diagnostics",
+      "--test",
+      "source_filenames",
+      "--test",
+      "source_generic_diagnostics",
+      "--test",
+      "static_import_diagnostics",
+      "--test",
+      "string_factories",
+      "--test",
+      "unsupported_syntax_diagnostics",
+      "--test",
+      "upstream_boundaries",
+      "--test",
+      "value_resolution"
+    ],
+    [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "--doc"
+    ],
+    [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_reports.py"
+    ]
+  ]
+}
