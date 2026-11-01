@@ -929,6 +929,10 @@ pub enum ExprKind {
     WhenBinding(String, Box<Expr>, Vec<(Vec<Expr>, Expr)>, Box<Expr>),
     Indices(Box<Expr>, Vec<Expr>),
     Int(i64),
+    Unsigned {
+        bits: u64,
+        long: bool,
+    },
     Float(u32),
     Double(u64),
     NamedArgument(String, Box<Expr>),
@@ -6991,36 +6995,44 @@ impl Parser {
     }
 }
 fn numeric_literal(text: &str, offset: usize) -> Result<ExprKind> {
-    if let Some(digits) = ["uL", "UL", "u", "U"]
-        .iter()
-        .find_map(|suffix| text.strip_suffix(suffix))
+    if let Some((digits, suffix)) = ["uL", "UL", "u", "U"]
+        .into_iter()
+        .find_map(|suffix| text.strip_suffix(suffix).map(|digits| (digits, suffix)))
     {
-        let (digits, radix) = if let Some(value) = digits
+        let (digits, radix) = if let Some(digits) = digits
             .strip_prefix("0x")
             .or_else(|| digits.strip_prefix("0X"))
         {
-            (value, 16)
-        } else if let Some(value) = digits
+            (digits, 16)
+        } else if let Some(digits) = digits
             .strip_prefix("0b")
             .or_else(|| digits.strip_prefix("0B"))
         {
-            (value, 2)
+            (digits, 2)
         } else {
             (digits, 10)
         };
-        if !digits.is_empty()
-            && !digits.starts_with('_')
-            && !digits.ends_with('_')
-            && !(radix == 10 && digits.len() > 1 && digits.starts_with('0'))
-            && u64::from_str_radix(&digits.replace('_', ""), radix).is_ok()
+        if digits.is_empty()
+            || digits.starts_with('_')
+            || radix == 10 && digits.len() > 1 && digits.starts_with('0')
         {
-            return Err(
-                Diagnostic::new(offset, "Unsigned numeric literals are unsupported").with_kind(
-                    DiagnosticKind::UnsupportedLanguage,
-                    "UNSIGNED_LITERAL_UNSUPPORTED",
-                ),
-            );
+            return Err(Diagnostic::new(offset, "Invalid unsigned literal spelling")
+                .with_kind(DiagnosticKind::InvalidKotlin, "UNSIGNED_LITERAL_INVALID"));
         }
+        let bits = u64::from_str_radix(&digits.replace('_', ""), radix).map_err(|error| {
+            Diagnostic::new(
+                offset,
+                format!("Unsigned literal cannot be represented: {error}"),
+            )
+            .with_kind(
+                DiagnosticKind::InvalidKotlin,
+                "UNSIGNED_LITERAL_OUT_OF_RANGE",
+            )
+        })?;
+        return Ok(ExprKind::Unsigned {
+            bits,
+            long: suffix.ends_with('L'),
+        });
     }
     let radix_literal = text.starts_with("0x")
         || text.starts_with("0X")
@@ -8874,6 +8886,24 @@ mod tests {
     }
 
     #[test]
+    fn unsigned_literals_preserve_all_carrier_bits_and_width_suffixes() {
+        for (source, bits, long) in [
+            ("1u", 1, false),
+            ("0xffff_ffffU", u32::MAX as u64, false),
+            ("18446744073709551615uL", u64::MAX, true),
+            ("0b1111_0000UL", 240, true),
+            ("1_u", 1, false),
+        ] {
+            assert!(
+                matches!(numeric_literal(source, 0).unwrap(), ExprKind::Unsigned { bits: actual, long: wide } if actual == bits && wide == long)
+            );
+        }
+        for source in ["18446744073709551616u", "0x_1u", "00u", "1ul", "1Lu"] {
+            assert!(numeric_literal(source, 0).is_err(), "{source}");
+        }
+    }
+
+    #[test]
     fn integer_radices_and_separators_preserve_signed_magnitudes() {
         for (source, expected) in [
             ("0xff_ff80ab", 0xffff80ab),
@@ -8892,7 +8922,7 @@ mod tests {
             numeric_literal("9223372036854775808L", 0).unwrap(),
             ExprKind::Long(9223372036854775808)
         ));
-        for source in ["0x_ff", "0b_1", "1_", "1_L", "0b12", "00", "1u", "1UL"] {
+        for source in ["0x_ff", "0b_1", "1_", "1_L", "0b12", "00"] {
             assert!(numeric_literal(source, 0).is_err(), "{source}");
         }
         let module = parse("const val long = 0xff_ff80ab\nconst val explicit: Long = 1\nconst val min = -2147483648").unwrap();

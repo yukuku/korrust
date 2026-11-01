@@ -50,6 +50,8 @@ mod references;
 #[path = "check_relations.rs"]
 mod relations;
 
+#[path = "check_unsigned.rs"]
+mod unsigned;
 #[path = "check_varargs.rs"]
 mod varargs;
 
@@ -2078,7 +2080,7 @@ impl Checker<'_> {
                     self.subtype(&current.ty, &Type::Java(method.owner.clone()))
                         && self.subtype(&receiver.ty, &current.ty)
                 });
-            if !private_allowed && !protected_allowed {
+            if !private_allowed && !protected_allowed && !method.inline_value_dispatch() {
                 return Err(Diagnostic::new(
                     offset,
                     "Member is inaccessible from this receiver",
@@ -2210,11 +2212,24 @@ impl Checker<'_> {
                 .as_ref()
                 .is_some_and(|library| library.value_dispatch)
             {
-                ValueKind::StaticCall {
-                    owner: method.owner,
-                    name: method.name,
-                    descriptor: method.descriptor,
-                    args: values,
+                if method.inline_value_dispatch() {
+                    self.compiled_value_member(method, values, offset)?
+                } else if method.access & 1 != 0 {
+                    ValueKind::StaticCall {
+                        owner: method.owner,
+                        name: method.name,
+                        descriptor: method.descriptor,
+                        args: values,
+                    }
+                } else {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Private JVM value member requires complete inline expansion",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "VALUE_INLINE_EXPANSION_REQUIRED",
+                    ));
                 }
             } else if interface {
                 ValueKind::MemberCall {
@@ -2612,6 +2627,7 @@ impl Checker<'_> {
                     && m.source_name() == name
                     && (m.instance_dispatch() || singleton)
                     && (m.access & 1 != 0
+                        || m.inline_value_dispatch()
                         || m.access & 4 != 0
                             && self.dispatch_receiver.as_ref().is_some_and(|current| {
                                 self.subtype(&current.ty, &Type::Java(m.owner.clone()))
@@ -3818,6 +3834,9 @@ impl Checker<'_> {
             ExprKind::TypeOperation(op, value, target) => {
                 return self.check_type_operation(op, value, target, offset);
             }
+            ExprKind::Unsigned { bits, long } => {
+                return self.unsigned_literal(*bits, *long, None, offset);
+            }
             ExprKind::Int(value) => {
                 if let Ok(value) = i32::try_from(*value) {
                     (Type::Int, ValueKind::Int(value))
@@ -4420,7 +4439,11 @@ impl Checker<'_> {
                     ) {
                         return Err(Diagnostic::new(
                             offset,
-                            "Unary arithmetic requires Int or Long",
+                            "Nominal unary arithmetic requires operator resolution",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::UnsupportedLanguage,
+                            "NOMINAL_UNARY_OPERATOR_UNSUPPORTED",
                         ));
                     }
                     if op == "+" {
@@ -4449,6 +4472,13 @@ impl Checker<'_> {
                     let start = self.value(a)?;
                     let end = self.value(b)?;
                     self.require(&end, start.ty.clone(), offset)?;
+                    if unsigned::owner(&start.ty).is_some() {
+                        return Err(Diagnostic::new(offset, "Unsigned ranges are unsupported")
+                            .with_kind(
+                                crate::DiagnosticKind::UnsupportedLanguage,
+                                "UNSIGNED_RANGE_UNSUPPORTED",
+                            ));
+                    }
                     let (owner, descriptor) = match start.ty {
                         Type::Int => ("kotlin/ranges/IntRange", "(II)V"),
                         Type::Char => ("kotlin/ranges/CharRange", "(CC)V"),
@@ -4476,6 +4506,11 @@ impl Checker<'_> {
                 }
                 let source_left = a;
                 let a = self.value(a)?;
+                if matches!(a.ty.base(), Type::Java(_) | Type::Parameterized { .. })
+                    && !matches!(op.as_str(), "==" | "!=" | "===" | "!==" | "&&" | "||")
+                {
+                    return self.nominal_binary(op, a, b, offset);
+                }
                 let refinements = self.refinements.clone();
                 if op == "&&" || op == "||" {
                     self.refine(source_left, op == "&&");
@@ -4510,10 +4545,34 @@ impl Checker<'_> {
                 {
                     return self.check_float_binary(op, a, b, offset);
                 }
+                if a.ty.is_nullable() && unsigned::owner(&a.ty).is_some() {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Nullable nominal operator resolution is unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "NOMINAL_NULLABLE_OPERATOR_UNSUPPORTED",
+                    ));
+                }
                 if a.ty.is_nullable() || b.ty.is_nullable() {
                     return Err(Diagnostic::new(
                         offset,
                         "Nullable operands support only equality with null and Elvis",
+                    ));
+                }
+                if matches!(
+                    (&a.ty, &b.ty),
+                    (Type::Int, Type::Long) | (Type::Long, Type::Int)
+                ) && matches!(op.as_str(), "+" | "-" | "*" | "/" | "%")
+                {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Mixed signed integer arithmetic is unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "MIXED_INTEGER_ARITHMETIC_UNSUPPORTED",
                     ));
                 }
                 if matches!(a.ty, Type::Unit | Type::Float)
@@ -5645,6 +5704,21 @@ impl Checker<'_> {
     }
 }
 fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> Result<Type> {
+    if let Type::Java(name) = ty {
+        let owner = imports.get(name).map_or(name.as_str(), String::as_str);
+        if matches!(
+            owner,
+            "kotlin/UIntArray" | "kotlin/ULongArray" | "kotlin/UByteArray" | "kotlin/UShortArray"
+        ) {
+            return Err(
+                Diagnostic::new(offset, "Unsigned array representations are unsupported")
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "UNSIGNED_ARRAY_UNSUPPORTED",
+                    ),
+            );
+        }
+    }
     match ty {
         Type::Parameter { name, upper_bound } => Ok(Type::Parameter {
             name: name.clone(),
@@ -5864,6 +5938,7 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
         }
         ExprKind::Name(_)
         | ExprKind::Int(_)
+        | ExprKind::Unsigned { .. }
         | ExprKind::Long(_)
         | ExprKind::Float(_)
         | ExprKind::Double(_)

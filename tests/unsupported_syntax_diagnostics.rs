@@ -122,8 +122,6 @@ fn unsigned_sources_retain_explicit_unsupported_boundaries() {
     let file = "@file:OptIn(ExperimentalUnsignedTypes::class)\nfun unsignedValues(): UIntArray = uintArrayOf(1u)";
     assert_unsupported(file, "@file", "FILE_ANNOTATION_UNSUPPORTED");
     assert_unsupported(UNSIGNED_TEST_SOURCE, "@file", "FILE_ANNOTATION_UNSUPPORTED");
-    let declaration = "@OptIn(ExperimentalUnsignedTypes::class)\nfun unsignedValue(): UInt = 1u";
-    assert_unsupported(declaration, "1u", "UNSIGNED_LITERAL_UNSUPPORTED");
 }
 
 #[test]

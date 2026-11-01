@@ -70,11 +70,24 @@
     },
     {
       "name": "unsigned_values",
-      "status": "unassessed",
-      "scope": "Bounded UInt/ULong scalar semantics through real JVM representation.",
+      "status": "supported",
+      "scope": "UInt/ULong scalar literals, arithmetic, comparison, bitwise operations, integral conversion and nullable/generic boxing through actual metadata-backed JVM carriers and compiled-inline bodies.",
       "restrictions": [
-        "Implementation and acceptance are in progress; no validated-family count yet."
-      ]
+        "Contextual UByte/UShort literals, unsigned const evaluation, arrays, ranges, generic value-class bounds and nullable operator resolution remain excluded.",
+        "Function/reified compiled-inline value parameters and inaccessible nested JVM references reject explicitly. Other inherited value-class source context bounds still apply.",
+        "Six unchanged upstream originals pass; two encounter language boundaries and one has an unsupported harness directive. No unchanged AndroidBible unsigned-array source pass is claimed."
+      ],
+      "evidence_report": "reports/correctness/2026-11-02-unsigned-scalars.json",
+      "additional_evidence": [
+        "reports/correctness/2026-11-02-unsigned-isolated-history/index.json",
+        "reports/correctness/2026-11-02-unsigned-suspend-review/review.json"
+      ],
+      "counts": {
+        "pass": 20,
+        "unsupported_language": 11,
+        "invalid_kotlin": 7,
+        "harness_unsupported": 1
+      }
     },
     {
       "name": "suspend_foundation",
@@ -128,10 +141,10 @@
     }
   ],
   "accepted_carryover_families": 1,
-  "accepted_new_families": 4,
-  "remaining_new_families": 1,
+  "accepted_new_families": 5,
+  "remaining_new_families": 0,
   "limitations": [
-    "Final combined validation is pending. Supported labels refer to bounded feature acceptance, not unrestricted Kotlin or Android compatibility."
+    "All selected bounded families have checkpoint acceptance. Final combined regression, app/module assessment and diagnostic repairs are still in progress; support is not unrestricted Kotlin or Android compatibility."
   ],
   "evidence": [
     "reports/correctness/2026-11-02-resume-member-extensions.json",
@@ -146,6 +159,7 @@
     "reports/correctness/2026-11-02-suspend-capacity-boundary-v1/report.json",
     "reports/correctness/2026-11-02-suspend-foundation/rust-v1.log",
     "reports/correctness/2026-11-02-suspend-foundation/clippy-v1.log",
-    "reports/correctness/2026-11-02-suspend-isolated-history/index.json"
+    "reports/correctness/2026-11-02-suspend-isolated-history/index.json",
+    "reports/correctness/2026-11-02-unsigned-scalars.json"
   ]
 }

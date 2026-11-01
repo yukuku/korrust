@@ -91,6 +91,11 @@ impl Checker<'_> {
                         && matches!(second, Type::Int | Type::Byte | Type::Short | Type::Long)
                     {
                         first == second || first == &Type::Int
+                    } else if matches!(unsigned::owner(first), Some("kotlin/UInt" | "kotlin/ULong"))
+                        && matches!(unsigned::owner(second), Some("kotlin/UInt" | "kotlin/ULong"))
+                        && matches!(args[argument_index].kind, ExprKind::Unsigned { bits, long: false } if bits <= u64::from(u32::MAX))
+                    {
+                        first == second || unsigned::owner(first) == Some("kotlin/UInt")
                     } else if self.subtype(first, second) {
                         true
                     } else {

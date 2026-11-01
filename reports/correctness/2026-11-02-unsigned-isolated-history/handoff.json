@@ -1,0 +1,109 @@
+{
+  "status": "ready_for_root_review",
+  "base": "accepted immutable isolated value family",
+  "base_manifest": "target/resume-unsigned/base-manifest.json",
+  "source_changes": "target/resume-unsigned/changed-source-files.json",
+  "integration_base": "target/resume-unsigned/integration-base",
+  "changed_files": 22,
+  "candidate": {
+    "path": "target/resume-unsigned/target/release/korrust",
+    "sha256": "8a004ad6f3948dcd25c921bd6643953c32b74055d3734a322ef2e9ccd0a50a7f"
+  },
+  "final_report": "target/resume-unsigned/evidence-final-v4/report.json",
+  "counts": {
+    "pass": 20,
+    "unsupported_language": 11,
+    "invalid_kotlin": 7,
+    "harness_unsupported": 1
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "validation": {
+    "rust_lib": 273,
+    "rust_unsigned": 2,
+    "rust_unsupported_diagnostics": 8,
+    "rust_log": "target/resume-unsigned/evidence-final-v4/rust-final-v4.log",
+    "rust_log_sha256": "1ba3ce21547399e675931f916259b8e528d3035ce9177c0cb8814b1f92ccd49c",
+    "all_target_release_clippy": "pass -D warnings",
+    "clippy_log": "target/resume-unsigned/evidence-final-v4/clippy-final-v4.log",
+    "format_check": "pass",
+    "main_independent_assertions_per_provider": 950,
+    "arbitrary_inline_assertions_per_provider": 4,
+    "kotlin_consumers": {
+      "provider_combinations": 4,
+      "assertions_each": 15
+    },
+    "abi_owners": 3
+  },
+  "architecture": [
+    "Real nominal kotlin/UInt and kotlin/ULong types use actual imported value-class metadata and Int/Long JVM carriers; unsigned literals preserve u64 bits and expected UInt/ULong context.",
+    "Scalar operations resolve actual mangled methods. Private JVM inline value dispatch expands actual Code through the general compiled-inline engine, including inferred-return checking; no API operation body substitution.",
+    "General operator resolver handles non-infix nominal operators and source extensions; scalar bitwise dispatch requires actual infix metadata.",
+    "Nested referenced method/field/class access is checked, including reference-array components. Context-sensitive invokespecial and array-owned inline method references remain explicit boundaries.",
+    "Constructor metadata replay remains idempotent and distinguishes actual private constructors from logical public constructor declarations."
+  ],
+  "integration_notes": [
+    "Preserve current root enum/inner/lexical/adapter fixes; use integration-base for three-way merge, not whole old file replacement.",
+    "tools/upstream_jvm.py is unchanged from accepted value base and is not in changed-file manifest; never overwrite current root adapter.",
+    "Bridge gate and nullable-value identity-to-null repair are included from parent directions; root already has them.",
+    "Constructor idempotency and replay access identity repairs were already ported by root; retain them.",
+    "Root must add Type::SuspendFunction to compiled_value_member function-parameter exclusions after merging suspend support; this variant is absent from isolated base."
+  ],
+  "limits": [
+    "Binary UInt/ULong scalar semantics and integral conversion/boxing bounds only; no optimization, full reflection, Android runtime or full-app claim.",
+    "UByte/UShort conversion ABI is covered; contextual literals remain unsupported.",
+    "Unsigned const evaluation, arrays, ranges, generic value-class bounds, nullable operator resolution and inherited bounded value-class source contexts remain unsupported.",
+    "No unchanged AndroidBible source pass: actual unsigned app test requires UIntArray and sorted-array semantics; the unchanged file-annotation diagnostic regression remains preserved."
+  ],
+  "upstream": [
+    [
+      "boxedUnsignedEqualsZero",
+      "pass"
+    ],
+    [
+      "literalEqualsNullableUnsigned",
+      "pass"
+    ],
+    [
+      "nullableUnsignedEqualsLiteral",
+      "pass"
+    ],
+    [
+      "unsignedLiteralsForMaxLongValue",
+      "pass"
+    ],
+    [
+      "unsignedLongToString",
+      "pass"
+    ],
+    [
+      "unsignedIntToString",
+      "pass"
+    ],
+    [
+      "checkBasicUnsignedLiterals",
+      "unsupported_language"
+    ],
+    [
+      "unsignedToSignedConversion",
+      "unsupported_language"
+    ],
+    [
+      "generic",
+      "harness_unsupported"
+    ]
+  ],
+  "historical_reports": [
+    "evidence-dev-v1",
+    "evidence-final-v1",
+    "evidence-final-v2",
+    "evidence-final-v3",
+    "evidence-final-v4"
+  ],
+  "history": {
+    "index": "target/resume-unsigned/history-index.json",
+    "archive": "target/resume-unsigned/text-and-source-history.zip"
+  }
+}

@@ -1,0 +1,1 @@
+suspend fun probe(step: suspend () -> Int): Int { val value: Any = 1u; val x = step(); return x }

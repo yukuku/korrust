@@ -335,6 +335,15 @@ fn evaluate_inner(
         ExprKind::AnnotationConstant { value, .. } => {
             return evaluate(value, resolve, enabled, depth);
         }
+        ExprKind::Unsigned { .. } => {
+            return Err(
+                Diagnostic::new(offset, "Unsigned compile-time constants are unsupported")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "UNSIGNED_CONSTANT_UNSUPPORTED",
+                    ),
+            );
+        }
         ExprKind::Int(value) => numeric_literal(i128::from(*value), false, offset)?,
         ExprKind::Long(value) => numeric_literal(*value, true, offset)?,
         ExprKind::Float(value) => ConstValue::Float(*value),

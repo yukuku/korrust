@@ -255,6 +255,14 @@ impl JavaMethod {
                 .as_ref()
                 .is_some_and(|library| library.value_dispatch)
     }
+    pub(crate) fn inline_value_dispatch(&self) -> bool {
+        self.library.as_ref().is_some_and(|library| {
+            library.inline
+                && library.kotlin_public
+                && library.value_dispatch
+                && self.access & 8 != 0
+        })
+    }
     pub(crate) fn source_name(&self) -> &str {
         self.library
             .as_ref()

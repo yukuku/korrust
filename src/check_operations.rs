@@ -1268,7 +1268,7 @@ impl Checker<'_> {
                             .into_iter()
                             .filter(|m| {
                                 m.source_name() == name
-                                    && m.access & 8 == 0
+                                    && m.instance_dispatch()
                                     && m.library.as_ref().is_some_and(|l| l.infix)
                                     && !relations::projected_input(
                                         m,
@@ -1386,10 +1386,11 @@ impl Checker<'_> {
                         .unwrap_or_else(|_| class.methods.clone());
                 let mut eligible = Vec::new();
                 let mut ordinary = Vec::new();
-                for method in inherited
-                    .into_iter()
-                    .filter(|m| m.source_name() == name && m.access & 9 == 1)
-                {
+                for method in inherited.into_iter().filter(|m| {
+                    m.source_name() == name
+                        && m.instance_dispatch()
+                        && (m.access & 1 != 0 || m.inline_value_dispatch())
+                }) {
                     let kotlin = self
                         .classes
                         .get(&method.owner)

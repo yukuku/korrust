@@ -1,0 +1,1 @@
+suspend fun probe(value: UInt): Int = 1

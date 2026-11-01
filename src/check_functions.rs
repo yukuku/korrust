@@ -14,6 +14,10 @@ impl Checker<'_> {
         result
     }
     pub(super) fn expected_value(&mut self, expr: &Expr, expected: &Type) -> Result<Value> {
+        if let ExprKind::Unsigned { bits, long } = &expr.kind {
+            let value = self.unsigned_literal(*bits, *long, Some(expected), expr.offset)?;
+            return self.coerce(value, expected.clone(), expr.offset);
+        }
         if let Some(labeled) = member_extensions::labeled_call(expr) {
             return self.expected_value(&labeled, expected);
         }

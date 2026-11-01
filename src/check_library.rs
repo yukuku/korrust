@@ -554,7 +554,7 @@ impl Checker<'_> {
             .is_some_and(|m| m.inline && !m.builtin_array)
             && !self.inline_analysis;
         if inline {
-            crate::compiled_inline::validate(&method)?;
+            crate::compiled_inline::validate_access(&method, self.classpath, &self.lambda_owner)?;
         }
         let old_inline = self.inline_result.clone();
         self.inline_result = if inline && (self.allow_return || self.nonlocal_result.is_some()) {

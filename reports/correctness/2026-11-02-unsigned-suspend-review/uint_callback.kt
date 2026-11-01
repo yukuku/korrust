@@ -1,0 +1,1 @@
+suspend fun probe(step: suspend (UInt) -> Int): Int = step(1u)

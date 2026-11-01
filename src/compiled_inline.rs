@@ -555,6 +555,103 @@ fn descriptor_width(bytes: &[u8], cursor: &mut usize, allow_void: bool) -> Resul
     }
 }
 
+pub(crate) fn validate_access(
+    method: &JavaMethod,
+    classpath: &crate::classpath::Classpath,
+    caller: &str,
+) -> Result<()> {
+    validate(method)?;
+    let package = |owner: &str| {
+        owner
+            .rsplit_once('/')
+            .map_or("", |(package, _)| package)
+            .to_owned()
+    };
+    let accessible = |access: u16, owner: &str| {
+        access & 1 != 0 || owner == caller || access & 2 == 0 && package(owner) == package(caller)
+    };
+    let code = method
+        .library
+        .as_ref()
+        .and_then(|library| library.code.as_ref())
+        .ok_or_else(|| unsupported("missing inline bytecode"))?;
+    for instruction in decode(code)?.instructions {
+        let (opcode, constant) = match instruction.kind {
+            InlineOp::Reference {
+                opcode, constant, ..
+            } => (opcode, constant),
+            InlineOp::Constant(InlineConstant::Class(owner)) => {
+                (0x12, InlineConstant::Class(owner))
+            }
+            _ => continue,
+        };
+        let (owner, member_access) = match constant {
+            InlineConstant::Method {
+                owner,
+                name,
+                descriptor,
+                ..
+            } => {
+                if owner.starts_with('[') {
+                    return Err(unsupported(
+                        "array-owned inline method references are unsupported",
+                    ));
+                }
+                if opcode == 0xb7 && name != "<init>" {
+                    return Err(unsupported("context-sensitive invokespecial reference"));
+                }
+                if !accessible(classpath.load(&owner)?.access, &owner) {
+                    return Err(unsupported("inaccessible JVM method owner"));
+                }
+                let target = classpath
+                    .methods(&owner)?
+                    .into_iter()
+                    .find(|target| target.name == name && target.descriptor == descriptor)
+                    .ok_or_else(|| unsupported("unresolved inline method reference"))?;
+                (target.owner, target.access)
+            }
+            InlineConstant::Field {
+                owner,
+                name,
+                descriptor,
+            } => {
+                let class = classpath.load(&owner)?;
+                let field = class
+                    .fields
+                    .iter()
+                    .find(|field| field.name == name && field.descriptor == descriptor)
+                    .ok_or_else(|| unsupported("unresolved inline field reference"))?;
+                (owner, field.access)
+            }
+            InlineConstant::Class(owner) => {
+                if owner.starts_with('[') {
+                    let component = owner.trim_start_matches('[');
+                    if component.len() == 1 && "BCDFIJSZ".contains(component) {
+                        continue;
+                    }
+                    let component = component
+                        .strip_prefix('L')
+                        .and_then(|component| component.strip_suffix(';'))
+                        .filter(|component| !component.is_empty())
+                        .ok_or_else(|| unsupported("malformed array class reference"))?;
+                    (component.to_owned(), 1)
+                } else {
+                    (owner, 1)
+                }
+            }
+            _ => continue,
+        };
+        let class = classpath.load(&owner)?;
+        if !accessible(class.access, &owner) || !accessible(member_access, &owner) {
+            return Err(unsupported(format!(
+                "inaccessible JVM reference in {}/{}",
+                method.owner, method.name
+            )));
+        }
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
