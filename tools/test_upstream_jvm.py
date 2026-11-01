@@ -23,6 +23,39 @@ class UpstreamAdapterTests(unittest.TestCase):
         self.assertEqual([file['name'] for module in fixture['modules'] for file in module['files']], ['a.kt', 'b.kt'])
         self.assertEqual(adapter.assess(fixture, 'box'), ('ready', []))
 
+    def test_coroutine_helpers_match_pinned_provider_and_keep_origin(self):
+        fixture = self.fixture('// WITH_COROUTINES\n// CHECK_STATE_MACHINE\n// CHECK_TAIL_CALL_OPTIMIZATION\nfun box() = "OK"\n')
+        self.assertEqual(adapter.assess(fixture, 'box'), ('ready', []))
+        records = adapter.attach_coroutine_helpers(fixture)
+        self.assertEqual([Path(item['path']).name for item in records],
+                         ['CoroutineHelpers.kt', 'CoroutineUtil.kt', 'StateMachineChecker.kt',
+                          'TailCallOptimizationChecker.kt'])
+        self.assertTrue(all(item['compilation'] == 'source_with_each_provider' for item in records))
+        with tempfile.TemporaryDirectory() as directory:
+            sources = adapter.write_sources(fixture, Path(directory))
+            helper = fixture['modules'][0]['files'][1]
+            original = adapter.ROOT / records[0]['path']
+            self.assertEqual(sources['main']['paths'][1].read_bytes(), original.read_bytes())
+            mapping = json.loads(Path(sources['main']['source_maps'][1]).read_text())
+            self.assertEqual(mapping['original'], records[0]['path'])
+            position = helper['text'].index('runBlocking')
+            location = adapter.source_location(fixture, helper, position)
+            self.assertEqual(location['path'], records[0]['path'])
+            self.assertEqual(location['char_offset'], position)
+
+    def test_coroutine_helper_module_scope_and_collision(self):
+        fixture = self.fixture('// MODULE: lib\n// WITH_COROUTINES\nfun a() = 1\n// MODULE: main(lib)\nfun box() = "OK"\n')
+        records = adapter.attach_coroutine_helpers(fixture)
+        self.assertEqual([item['module'] for item in records], ['lib'])
+        self.assertEqual(len(fixture['modules'][1]['files']), 1)
+        fixture = self.fixture('// WITH_COROUTINES\n// FILE: CoroutineHelpers.kt\nfun box() = "OK"\n')
+        with self.assertRaisesRegex(ValueError, 'collision'):
+            adapter.attach_coroutine_helpers(fixture)
+        fixture = self.fixture('// CHECK_STATE_MACHINE\nfun box() = "OK"\n')
+        self.assertEqual(adapter.assess(fixture, 'box')[0], 'harness_unsupported')
+        fixture = self.fixture('// WITH_CONTINUATION\nfun box() = "OK"\n')
+        self.assertEqual(adapter.assess(fixture, 'box')[0], 'harness_unsupported')
+
     def test_unknown_directives_are_not_silently_ignored(self):
         fixture = self.fixture('// SOME_FUTURE_SETTING: true\nfun box() = "OK"\n')
         status, reasons = adapter.assess(fixture, 'box')

@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T17:41:00.539394+00:00",
+  "status": "failed",
+  "selection": "Unchanged coroutine original with pinned helper source; baseline language assessment only",
+  "matrix_sha256": "015730a57955c3fcf749d30f6993104946a38bdf1af1bb28da5aec8b96d9295d",
+  "limitations": [
+    "No suspend capability claim. Both providers receive unchanged helper source."
+  ],
+  "cases": [
+    {
+      "id": "coroutine_simple",
+      "family": "suspend_foundation",
+      "root": "box",
+      "tier": "assessment",
+      "kind": "box",
+      "outcome": "correctness_failure",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/coroutines/suspendFunctionAsCoroutine/simple.kt",
+        "sha256": "1ebc3c7460388dd15484a941ee824e7d79c04da1eda3665cd37fbf1ccd87a6ef"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_COROUTINES",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "additional_sources": [
+        {
+          "module": "main",
+          "path": "references/kotlin/compiler/testData/diagnostics/helpers/coroutines/CoroutineHelpers.kt",
+          "sha256": "d375bd036523c7b8a0a1ac34388fe8acef11f7517716fc94e98ed14827f3a882",
+          "compilation": "source_with_each_provider"
+        }
+      ],
+      "additional_source_provider": {
+        "path": "references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/services/sourceProviders/CoroutineHelpersSourceFilesProvider.kt",
+        "sha256": "4163873cbb90dc5dea86ca095848945e782e4583f5ebcf7c4f6e18b0ee305648"
+      },
+      "source_maps": [
+        "reports/correctness/2026-11-02-coroutine-helper-baseline/coroutine_simple/sources/main/simple.kt.source-map.json",
+        "reports/correctness/2026-11-02-coroutine-helper-baseline/coroutine_simple/sources/main/CoroutineHelpers.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-adapter/original-v1/coroutine_simple/sources/main/CoroutineHelpers.kt",
+          "offset": 110,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Suspend function types are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-adapter/original-v1/coroutine_simple/sources/main/CoroutineHelpers.kt",
+          "line": 6,
+          "column": 28,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/diagnostics/helpers/coroutines/CoroutineHelpers.kt",
+            "char_offset": 110,
+            "byte_offset": 110,
+            "line": 6,
+            "column": 28
+          }
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-coroutine-helper-baseline/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-coroutine-helper-baseline/commands/0000-stderr.txt"
+    },
+    {
+      "label": "Official compiler identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-coroutine-helper-baseline/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-coroutine-helper-baseline/commands/0001-stderr.txt"
+    },
+    {
+      "label": "coroutine_simple/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/original-v1/coroutine_simple/sources/main/simple.kt",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/original-v1/coroutine_simple/sources/main/CoroutineHelpers.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/original-v1/coroutine_simple/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-coroutine-helper-baseline/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-coroutine-helper-baseline/commands/0002-stderr.txt"
+    },
+    {
+      "label": "coroutine_simple/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/next5-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/original-v1/coroutine_simple/sources/main/simple.kt",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/original-v1/coroutine_simple/sources/main/CoroutineHelpers.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-adapter/original-v1/coroutine_simple/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-02-coroutine-helper-baseline/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-coroutine-helper-baseline/commands/0003-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "reference_source_manifest_sha256": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "compiler_pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "adapter_sha256": "b81c0ac94693f722bbb62845e8a2524212dbef29b347f70886add5c14b91fdb4",
+    "matrix_sha256": "015730a57955c3fcf749d30f6993104946a38bdf1af1bb28da5aec8b96d9295d"
+  },
+  "compiler": {
+    "path": "target/next5-root-build/release/korrust",
+    "sha256": "1e5d68a026b34a15242e0fdccd09dc8b2bbeaa0f3f69c7b661b3a4d2c2cd34ef"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "kotlin_test_sha256": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "java_version": "openjdk version \"21.0.8\" 2025-07-15\nOpenJDK Runtime Environment JBR-21.0.8+9-1138.52-nomod (build 21.0.8+9-b1138.52)\nOpenJDK 64-Bit Server VM JBR-21.0.8+9-1138.52-nomod (build 21.0.8+9-b1138.52, mixed mode, sharing)"
+  },
+  "frozen_input_hashes": {
+    "references/kotlin/compiler/testData/codegen/box/coroutines/suspendFunctionAsCoroutine/simple.kt": "1ebc3c7460388dd15484a941ee824e7d79c04da1eda3665cd37fbf1ccd87a6ef",
+    "references/kotlin/compiler/testData/diagnostics/helpers/coroutines/CoroutineHelpers.kt": "d375bd036523c7b8a0a1ac34388fe8acef11f7517716fc94e98ed14827f3a882",
+    "references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/services/sourceProviders/CoroutineHelpersSourceFilesProvider.kt": "4163873cbb90dc5dea86ca095848945e782e4583f5ebcf7c4f6e18b0ee305648",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+    "target/next5-root-build/release/korrust": "1e5d68a026b34a15242e0fdccd09dc8b2bbeaa0f3f69c7b661b3a4d2c2cd34ef",
+    "target/resume-adapter/matrix.json": "015730a57955c3fcf749d30f6993104946a38bdf1af1bb28da5aec8b96d9295d",
+    "tools/upstream_jvm.py": "b81c0ac94693f722bbb62845e8a2524212dbef29b347f70886add5c14b91fdb4"
+  },
+  "counts": {
+    "correctness_failure": 1
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "claims": "Selected upstream fixture outcomes only; no compatibility percentage, full-suite, Android, or performance claim",
+  "archived_from": "target/resume-adapter/original-v1",
+  "reproduction_command": [
+    "python3",
+    "tools/upstream_jvm.py",
+    "--candidate",
+    "target/next5-root-build/release/korrust",
+    "--output",
+    "target/upstream-fresh-run"
+  ]
+}

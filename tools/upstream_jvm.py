@@ -17,9 +17,12 @@ MARKER = re.compile(r'<!>|<!([^\n]*?)!>')
 SUPPORTED = {
     'WITH_STDLIB', 'FULL_JDK', 'WITH_RUNTIME', 'TARGET_BACKEND', 'JVM_TARGET',
     'LANGUAGE', 'LANGUAGE_VERSION', 'API_VERSION', 'FILE', 'MODULE',
+    'WITH_COROUTINES', 'CHECK_STATE_MACHINE', 'CHECK_TAIL_CALL_OPTIMIZATION',
 }
 EXCLUDED = {'IGNORE_BACKEND', 'IGNORE_BACKEND_K1', 'IGNORE_BACKEND_K2'}
 METADATA = {'FIR_IDENTICAL', 'RUN_PIPELINE_TILL'}
+COROUTINE_HELPERS = Path('references/kotlin/compiler/testData/diagnostics/helpers/coroutines')
+COROUTINE_PROVIDER = Path('references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/services/sourceProviders/CoroutineHelpersSourceFilesProvider.kt')
 
 
 def sha(path):
@@ -132,11 +135,43 @@ def parse_fixture(path):
     return {'path': relative(path), 'sha256': sha(path), 'original': original, 'modules': modules}
 
 
+def coroutine_helpers(module):
+    directives = {item['name'] for item in module['directives']}
+    if 'WITH_COROUTINES' not in directives:
+        return []
+    names = ['CoroutineHelpers.kt']
+    if 'CHECK_STATE_MACHINE' in directives:
+        names.extend(['CoroutineUtil.kt', 'StateMachineChecker.kt'])
+    if 'CHECK_TAIL_CALL_OPTIMIZATION' in directives:
+        names.append('TailCallOptimizationChecker.kt')
+    return [COROUTINE_HELPERS / name for name in names]
+
+
+def attach_coroutine_helpers(fixture):
+    records = []
+    for module in fixture['modules']:
+        for path in coroutine_helpers(module):
+            helper = parse_fixture(ROOT / path)
+            if len(helper['modules']) != 1 or len(helper['modules'][0]['files']) != 1:
+                raise ValueError('Coroutine helper structure changed: ' + str(path))
+            source = helper['modules'][0]['files'][0]
+            if any(item['name'] == source['name'] for item in module['files']):
+                raise ValueError('Coroutine helper filename collision: ' + source['name'])
+            source['origin'] = {key: helper[key] for key in ['path', 'sha256', 'original']}
+            module['files'].append(source)
+            records.append({'module': module['name'], 'path': helper['path'],
+                            'sha256': helper['sha256'], 'compilation': 'source_with_each_provider'})
+    return records
+
+
 def assess(fixture, kind):
     reasons = []
     excluded = []
     names = {module['name'] for module in fixture['modules']}
     for module in fixture['modules']:
+        directive_names = {item['name'] for item in module['directives']}
+        if directive_names & {'CHECK_STATE_MACHINE', 'CHECK_TAIL_CALL_OPTIMIZATION'} and 'WITH_COROUTINES' not in directive_names:
+            reasons.append('Coroutine checker requires WITH_COROUTINES')
         if module['depends_on']:
             reasons.append('dependsOn module refinement requires multiplatform harness')
         for dependency in module['dependencies'] + module['friends']:
@@ -165,6 +200,7 @@ def assess(fixture, kind):
 
 
 def source_location(fixture, file, clean_char):
+    fixture = file.get('origin', fixture)
     mapping = file['original_char_offsets']
     clean_char = min(max(clean_char, 0), len(mapping))
     origin = mapping[clean_char] if clean_char < len(mapping) else (mapping[-1] + 1 if mapping else 0)
@@ -274,7 +310,8 @@ def write_sources(fixture, directory):
             path.write_text(source['text'])
             paths.append(path)
             mapping_path = path.with_suffix(path.suffix + '.source-map.json')
-            mapping_path.write_text(json.dumps({'original': fixture['path'], 'original_sha256': fixture['sha256'],
+            origin = source.get('origin', fixture)
+            mapping_path.write_text(json.dumps({'original': origin['path'], 'original_sha256': origin['sha256'],
                 'materialized': relative(path), 'sha256': sha(path),
                 'original_char_offsets': source['original_char_offsets'],
                 'expected_diagnostics': source['expected_diagnostics']}, indent=2) + '\n')
@@ -323,6 +360,14 @@ def run_case(entry, context):
     if outcome != 'ready':
         case.update(outcome=outcome, reasons=reasons)
         return case
+    try:
+        helpers = attach_coroutine_helpers(fixture)
+    except (OSError, ValueError) as error:
+        case.update(outcome='harness_unsupported', reasons=[str(error)])
+        return case
+    if helpers:
+        case['additional_sources'] = helpers
+        case['additional_source_provider'] = {'path': str(COROUTINE_PROVIDER), 'sha256': sha(ROOT / COROUTINE_PROVIDER)}
     sources = write_sources(fixture, directory / 'sources')
     case['source_maps'] = [item for module in sources.values() for item in module['source_maps']]
     stdlib, testlib = context['stdlib'], context['testlib']
@@ -589,6 +634,12 @@ def main():
         if entry['kind'] in {'java_consumer', 'kotlin_consumer'} and sibling.is_file():
             frozen_paths.add(sibling.resolve())
         frozen_paths.update((ROOT / helper).resolve() for helper in entry.get('helpers', []))
+        fixture = parse_fixture(ROOT / entry['path'])
+        for module in fixture['modules']:
+            helpers = coroutine_helpers(module)
+            if helpers:
+                frozen_paths.add((ROOT / COROUTINE_PROVIDER).resolve())
+                frozen_paths.update((ROOT / helper).resolve() for helper in helpers)
     frozen = {str(path): sha(path) for path in sorted(frozen_paths)}
     report['frozen_input_hashes'] = {relative(path): value for path, value in frozen.items()}
     for entry in entries:
