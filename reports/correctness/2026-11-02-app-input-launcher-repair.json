@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T18:53:37.137756+00:00",
+  "status": "completed",
+  "selection": "Oracle launcher repair evidence; no language-family support claim. Historical reports are unchanged.",
+  "compiler": {
+    "status": "not_modified",
+    "harness": "tools/assess_androidbible.py",
+    "harness_sha256": "70cea94c0430c6fa2f1762c669ab18f40bf3161cd4bce3eac8d590560e75563a"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "distribution": "Captured Gradle embeddable runtime with validated artifact hashes and actual CLI version identity."
+  },
+  "inputs": {
+    "historical_report": "reports/correctness/2026-11-02-enum-devotion-assessment.json",
+    "historical_report_sha256": "820f64df4209ad0eaa44604329bfbcf7f9d45b27b78caac72f7efbfb22707239",
+    "historical_stderr": "reports/correctness/2026-11-02-enum-devotion-assessment/00003-stderr.txt",
+    "historical_stderr_sha256": "2f72feb05f5e8f9206d3bef6ddbd0b1dcbf56fface6a5eb3abadd978f4999c43"
+  },
+  "cases": [
+    {
+      "id": "historical_mixed_distribution_classloader_exception",
+      "outcome": "setup_failure",
+      "historical_outcome": "compiler_failure",
+      "new_classification": "setup_failure",
+      "reason": "Standalone non-embeddable compiler/preloader was combined with captured embeddable plugins/runtime. Known WeakBindingTrace/relocated IntelliJ Key ClassCastException is harness setup evidence, not source invalidity or a Korrust language failure."
+    },
+    {
+      "id": "matching_captured_runtime_with_all_plugins",
+      "outcome": "pass",
+      "reports": [
+        "reports/correctness/2026-11-02-app-input-devotion-final.json",
+        "reports/correctness/2026-11-02-app-input-backforward-inner-final.json"
+      ],
+      "official_exit_codes": [
+        0,
+        0
+      ],
+      "emitted_class_counts": [
+        13,
+        5
+      ],
+      "scope": "Exactly two independently reported single-file probes with real existing sibling/generated dependencies; no source-batch/full-app compilation."
+    },
+    {
+      "id": "assessment_regressions",
+      "outcome": "pass",
+      "tests": 31
+    },
+    {
+      "id": "report_generator_regressions",
+      "outcome": "pass",
+      "tests": 8
+    }
+  ],
+  "counts": {
+    "setup_failure": 1,
+    "pass": 3
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_androidbible_assessment.py"
+    ],
+    [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_reports.py"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-02-enum-devotion-assessment.json",
+    "reports/correctness/2026-11-02-enum-devotion-assessment/00003-stderr.txt",
+    "reports/correctness/2026-11-02-app-input-availability.json",
+    "reports/correctness/2026-11-02-app-input-devotion-final.json",
+    "reports/correctness/2026-11-02-app-input-backforward-inner-final.json"
+  ],
+  "limitations": [
+    "Candidate source rejection remains independent and unchanged by oracle setup correction.",
+    "Existing precompiled app output directories support isolated file resolution, not a fresh full-app build."
+  ]
+}

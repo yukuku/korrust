@@ -106,6 +106,10 @@ def dependency_diagnostic(text):
     ])
 
 
+def oracle_setup_diagnostic(text):
+    return all(marker in text for marker in ['ClassCastException', 'WeakBindingTrace', 'org.jetbrains.kotlin.com.intellij', 'MemoryBasedClassLoader'])
+
+
 def classify(candidate, official, setup_error=None):
     if setup_error:
         return 'setup_failure'
@@ -122,6 +126,8 @@ def classify(candidate, official, setup_error=None):
     candidate_text = diagnostic['message'] if diagnostic is not None else candidate.get('stderr', '')
     official_text = official.get('stderr', '')
     if official.get('exit_code') not in [0, 1]:
+        if official.get('setup_error') or oracle_setup_diagnostic(official_text):
+            return 'setup_failure'
         return 'compiler_failure'
     if candidate.get('exit_code') != 0 and category in ['setup', 'io']:
         return 'setup_failure'
@@ -202,7 +208,7 @@ def resolved_setup_errors(module, name, task):
 
 def official_options(options):
     if isinstance(options, list):
-        return options
+        return list(options)
     result = []
     for key, flag in [('languageVersion', '-language-version'), ('apiVersion', '-api-version'), ('jvmTarget', '-jvm-target'), ('module_name', '-module-name'), ('jvmDefault', '-jvm-default')]:
         value = options.get(key)
@@ -222,6 +228,39 @@ def official_options(options):
         result.append('-opt-in=' + value)
     result += options.get('freeCompilerArgs') or []
     return result
+
+
+def official_launcher(module, plugins, pinned_version, bundled_kotlinc, java):
+    version = module.get('resolved_kotlin_compiler_version')
+    paths = module.get('resolved_kotlin_compiler_classpath') or []
+    if version is not None and version != pinned_version:
+        raise ValueError('Captured official compiler version differs from the pinned version: ' + str(version))
+    if not paths:
+        if plugins:
+            raise ValueError('Captured compiler plugins require their captured resolved_kotlin_compiler_classpath; refusing a mixed compiler/plugin launcher.')
+        return {'kind': 'bundled_cli', 'argv_prefix': [str(bundled_kotlinc)], 'runtime_classpath': [], 'gradle_default_options': []}
+    if version != pinned_version or not isinstance(paths, list) or any(not isinstance(path, str) or not path for path in paths):
+        raise ValueError('Captured official compiler runtime needs an ordered classpath and pinned version provenance.')
+    expected = module.get('resolved_kotlin_compiler_files_sha256') or {}
+    recorded = {}
+    providers = []
+    for name in paths:
+        path = Path(name)
+        if not path.is_file():
+            raise ValueError('Missing captured official compiler runtime: ' + name)
+        digest = sha(path)
+        if expected.get(name) != digest:
+            raise ValueError('Captured official compiler runtime hash mismatch or absent provenance: ' + name)
+        recorded[name] = digest
+        with zipfile.ZipFile(path) as archive:
+            if 'org/jetbrains/kotlin/cli/jvm/K2JVMCompiler.class' in archive.namelist():
+                providers.append({'path': name, 'embeddable': 'org/jetbrains/kotlin/com/intellij/openapi/util/Key.class' in archive.namelist()})
+    if len(providers) != 1:
+        raise ValueError('Captured official compiler runtime must contain exactly one K2JVMCompiler provider.')
+    if any('embeddable' in Path(path).name for path in plugins) and not providers[0]['embeddable']:
+        raise ValueError('Captured embeddable plugins require an embeddable compiler runtime.')
+    defaults_source = ROOT / 'references/kotlin/libraries/tools/kotlin-gradle-plugin/src/common/kotlin/org/jetbrains/kotlin/gradle/dsl/KotlinJvmCompilerOptionsHelper.kt'
+    return {'kind': 'captured_gradle_runtime', 'argv_prefix': [str(java), '-cp', os.pathsep.join(paths), 'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler'], 'runtime_classpath': paths, 'runtime_files_sha256': recorded, 'compiler_provider': providers[0], 'pinned_version': pinned_version, 'gradle_default_options': ['-no-stdlib', '-no-reflect'], 'gradle_defaults_source': relative(defaults_source), 'gradle_defaults_source_sha256': sha(defaults_source)}
 
 
 def tree_hashes(path, suffix=None):
@@ -244,9 +283,12 @@ class Assessment:
         self.lock = threading.Lock()
         self.classpath_inputs = {}
         self.validated_classpaths = {}
+        self.oracle_lock = threading.Lock()
+        self.oracle_launchers = {}
         self.pin = json.loads((ROOT / 'references/compiler.json').read_text())
         self.kotlinc = ROOT / self.pin['path'] / 'bin/kotlinc'
         self.stdlib = ROOT / self.pin['path'] / 'lib/kotlin-stdlib.jar'
+        self.java = Path(os.environ['JAVA_HOME']) / 'bin/java' if os.environ.get('JAVA_HOME') else Path(shutil.which('java') or 'java')
         self.regression = json.loads(args.regression_report.read_text()) if args.regression_report else None
         self.model = json.loads(args.model.read_text()) if args.model else None
 
@@ -325,13 +367,33 @@ class Assessment:
         with self.lock:
             if friend_policy_key not in self.validated_classpaths:
                 self.validated_classpaths[friend_policy_key] = validate_classpath(friends)
+        launcher = None
+        launcher_error = None
+        launcher_key = json.dumps({'version': module.get('resolved_kotlin_compiler_version'), 'runtime': module.get('resolved_kotlin_compiler_classpath'), 'hashes': module.get('resolved_kotlin_compiler_files_sha256'), 'plugins': list(map(str, plugins))}, sort_keys=True)
+        try:
+            with self.oracle_lock:
+                if launcher_key not in self.oracle_launchers:
+                    captured = official_launcher(module, plugins, self.pin['version'], self.kotlinc, self.java)
+                    if captured['kind'] == 'captured_gradle_runtime':
+                        identity = self.run('Captured official compiler identity', [*captured['argv_prefix'], '-version', *captured['gradle_default_options']])
+                        if identity['exit_code'] != 0 or 'kotlinc-jvm ' + self.pin['version'] + ' ' not in identity['stdout'] + identity['stderr']:
+                            raise ValueError('Captured official compiler runtime identity did not match the pinned version.')
+                        captured['identity'] = {key: value for key, value in identity.items() if key not in ['stdout', 'stderr']}
+                        captured['identity']['version_output'] = (identity['stdout'] + identity['stderr']).strip()
+                    self.oracle_launchers[launcher_key] = captured
+                launcher = self.oracle_launchers[launcher_key]
+        except (OSError, ValueError, KeyError, zipfile.BadZipFile) as error:
+            launcher_error = str(error)
         options = official_options(task.get('compiler_options', module.get('options', {})))
+        if launcher:
+            options = [*launcher['gradle_default_options'], *options]
         if friends:
             options.append('-Xfriend-paths=' + ','.join(map(str, friends)))
         options += ['-Xplugin=' + str(path) for path in plugins]
         for option in task.get('compiler_plugin_options', []):
             options += ['-P', option]
-        return paths, options, {'mode': 'resolved', 'task': name, 'friend_paths': list(map(str, friends)), 'friend_paths_provenance': task.get('friend_paths_provenance', {'captured': False, 'scope': 'No friend inputs captured for this production task; no friend access granted.'}), 'friend_paths_policy': self.validated_classpaths[friend_policy_key], 'classpath_policy': self.validated_classpaths[policy_key], 'resolved_compiler_version': module.get('resolved_kotlin_compiler_version'), 'compiler_options': task.get('compiler_options'), 'plugin_classpath': list(map(str, plugins)), 'plugin_options': task.get('compiler_plugin_options', []), 'source_roots': task.get('source_roots', []), 'generated_source_roots': task.get('generated_source_roots', []), 'candidate_option_gaps': 'Candidate invocation replays captured friend paths with source/classpath/output; JVM target, language/API, plugins and remaining Gradle options are recorded, not silently claimed equivalent.', 'source_dependency_scope': 'Single-file probe; candidate-owned sibling sources and generated sources are not precompiled as dependencies. Unresolved sibling references are dependency gaps, not intrinsic invalidity.'}
+        bindings = task.get('derived_assessment_scope', {}).get('source_binding_outputs', [])
+        return paths, options, {'mode': 'resolved', 'task': name, 'official_launcher': launcher, 'official_setup_error': launcher_error, 'friend_paths': list(map(str, friends)), 'friend_paths_provenance': task.get('friend_paths_provenance', {'captured': False, 'scope': 'No friend inputs captured for this production task; no friend access granted.'}), 'friend_paths_policy': self.validated_classpaths[friend_policy_key], 'classpath_policy': self.validated_classpaths[policy_key], 'resolved_compiler_version': module.get('resolved_kotlin_compiler_version'), 'compiler_options': task.get('compiler_options'), 'plugin_classpath': list(map(str, plugins)), 'plugin_options': task.get('compiler_plugin_options', []), 'source_roots': task.get('source_roots', []), 'generated_source_roots': task.get('generated_source_roots', []), 'precompiled_source_bindings': [path for path in bindings if Path(path) in paths], 'unavailable_source_bindings': [path for path in bindings if Path(path) not in paths or not Path(path).exists()], 'candidate_option_gaps': 'Candidate invocation replays captured friend paths with source/classpath/output; JVM target, language/API, plugins and remaining Gradle options are recorded, not silently claimed equivalent.', 'source_dependency_scope': 'Single-file probe. Captured dependency paths, including explicitly listed real precompiled sibling/generated source-binding outputs when present, are supplied unchanged to both compilers. Missing sibling/generated inputs remain dependency or setup gaps; neither per-file acceptance nor precompiled dependencies establish a fresh source-batch or full-app build.'}
 
     def probe(self, pair):
         index, source = pair
@@ -340,7 +402,7 @@ class Assessment:
             paths, options, context = self.inputs(source)
             case['input_context'] = context
             with self.lock:
-                for path in [*paths, *[Path(path) for path in context['plugin_classpath']], *[Path(path) for path in context['friend_paths']]]:
+                for path in [*paths, *[Path(path) for path in context['plugin_classpath']], *[Path(path) for path in context['friend_paths']], *[Path(path) for path in (context.get('official_launcher') or {}).get('runtime_classpath', [])]]:
                     key = str(path.resolve())
                     if key not in self.classpath_inputs:
                         self.classpath_inputs[key] = {'kind': 'file', 'sha256': sha(path)} if path.is_file() else {'kind': 'directory', 'files_sha256': tree_hashes(path)}
@@ -355,9 +417,15 @@ class Assessment:
             candidate['diagnostic_format'] = 'structured_json' if candidate['diagnostic'] is not None else ('invalid_structured_json' if candidate['stderr'].lstrip().startswith(('{', '[')) else ('legacy_text' if candidate['stderr'].strip() else 'none'))
             candidate['classification_basis'] = 'structured_category_code' if candidate['diagnostic'] is not None and diagnostic_category(candidate['diagnostic']) != 'unclassified' else 'legacy_or_unclassified_fallback'
             official_output = self.work / 'official' / str(index)
-            official = self.run('Pinned official ' + case['id'], [self.kotlinc, source, *options, '-cp', cp, '-d', official_output], self.args.official_timeout)
+            if context.get('official_setup_error'):
+                official = {'exit_code': None, 'setup_error': context['official_setup_error'], 'stdout': '', 'stderr': context['official_setup_error']}
+            else:
+                launcher = (context.get('official_launcher') or {}).get('argv_prefix', [self.kotlinc])
+                official = self.run('Pinned official ' + case['id'], [*launcher, source, *options, '-cp', cp, '-d', official_output], self.args.official_timeout)
             official['emitted_classes_sha256'] = tree_hashes(official_output, '.class')
             case['outcome'] = classify(candidate, official)
+            case['candidate_first_diagnostic'] = first_diagnostic(candidate['stderr'])
+            case['official_first_diagnostic'] = first_diagnostic(official['stderr'])
             case['first_diagnostic'] = first_diagnostic(candidate['stderr'] or official['stderr'])
             case['checks']['emission'] = {'outcome': 'emitted' if candidate.get('exit_code') == 0 and candidate['emitted_classes_sha256'] else 'not_emitted'}
             for provider, value in [('candidate', candidate), ('official', official)]:

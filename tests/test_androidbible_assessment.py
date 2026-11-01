@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from pathlib import Path
 import sys
 import unittest
+import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 import assess_androidbible as assessment
@@ -161,6 +162,10 @@ class AndroidBibleAssessmentTests(unittest.TestCase):
         harness.args = SimpleNamespace(mode='resolved', compiler=Path('/mock/korrust'), official_timeout=30)
         harness.model = {'modules': {'AlkitabYes2': {'compilation_tasks': {'compileDebugUnitTestKotlin': task}}}}
         harness.lock = threading.Lock()
+        harness.oracle_lock = threading.Lock()
+        harness.oracle_launchers = {}
+        harness.pin = {'version': '2.3.21'}
+        harness.java = Path('/mock/java')
         harness.validated_classpaths = {}
         harness.classpath_inputs = {}
         harness.work = directory / 'work'
@@ -237,10 +242,118 @@ class AndroidBibleAssessmentTests(unittest.TestCase):
         options = assessment.official_options({'jvmTarget': '21', 'languageVersion': '2.3', 'apiVersion': '2.3', 'javaParameters': 'true', 'allWarningsAsErrors': 'false', 'module_name': 'selected', 'freeCompilerArgs': ['-Xjvm-default=all']})
         self.assertEqual(options, ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '21', '-module-name', 'selected', '-java-parameters', '-Xjvm-default=all'])
 
+    def test_recorded_option_lists_are_not_mutated_by_replay(self):
+        captured = ['-jvm-target', '21']
+        replay = assessment.official_options(captured)
+        replay.append('-Xplugin=plugin.jar')
+        self.assertEqual(captured, ['-jvm-target', '21'])
+
     def test_gradle_enum_values_from_captured_model_become_cli_values(self):
         options = assessment.official_options({'jvmTarget': 'JVM_21', 'languageVersion': 'KOTLIN_2_3', 'apiVersion': 'KOTLIN_2_3', 'jvmDefault': 'NO_COMPATIBILITY'})
         self.assertEqual(options, ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '21', '-jvm-default', 'no-compatibility'])
         self.assertEqual(assessment.official_options({'jvmTarget': 'JVM_1_8', 'languageVersion': None, 'apiVersion': None}), ['-jvm-target', '1.8'])
+
+    def captured_runtime(self, directory):
+        compiler = directory / 'compiler-embeddable.jar'
+        with zipfile.ZipFile(compiler, 'w') as archive:
+            archive.writestr('org/jetbrains/kotlin/cli/jvm/K2JVMCompiler.class', b'compiler')
+            archive.writestr('org/jetbrains/kotlin/com/intellij/openapi/util/Key.class', b'shaded')
+        module = {'resolved_kotlin_compiler_version': '2.3.21', 'resolved_kotlin_compiler_classpath': [str(compiler)], 'resolved_kotlin_compiler_files_sha256': {str(compiler): assessment.sha(compiler)}}
+        return module, compiler
+
+    def test_captured_runtime_keeps_compiler_and_plugins_in_one_pinned_distribution(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            module, compiler = self.captured_runtime(directory)
+            launcher = assessment.official_launcher(module, [directory / 'compose-embeddable.jar'], '2.3.21', Path('/bundled/kotlinc'), Path('/jdk/java'))
+            self.assertEqual(launcher['argv_prefix'], ['/jdk/java', '-cp', str(compiler), 'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler'])
+            self.assertTrue(launcher['compiler_provider']['embeddable'])
+            self.assertEqual(launcher['gradle_default_options'], ['-no-stdlib', '-no-reflect'])
+            self.assertEqual(launcher['runtime_files_sha256'], module['resolved_kotlin_compiler_files_sha256'])
+
+    def test_runtime_version_hash_missing_input_and_duplicate_compiler_providers_reject(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            module, compiler = self.captured_runtime(directory)
+            for changed, message in [
+                ({**module, 'resolved_kotlin_compiler_version': '2.3.20'}, 'version differs'),
+                ({**module, 'resolved_kotlin_compiler_files_sha256': {}}, 'hash mismatch'),
+                ({**module, 'resolved_kotlin_compiler_classpath': [str(directory / 'missing.jar')]}, 'Missing captured'),
+            ]:
+                with self.subTest(message=message), self.assertRaisesRegex(ValueError, message):
+                    assessment.official_launcher(changed, [], '2.3.21', Path('/bundled/kotlinc'), Path('/jdk/java'))
+            duplicate = directory / 'duplicate.jar'
+            duplicate.write_bytes(compiler.read_bytes())
+            module['resolved_kotlin_compiler_classpath'].append(str(duplicate))
+            module['resolved_kotlin_compiler_files_sha256'][str(duplicate)] = assessment.sha(duplicate)
+            with self.assertRaisesRegex(ValueError, 'exactly one'):
+                assessment.official_launcher(module, [], '2.3.21', Path('/bundled/kotlinc'), Path('/jdk/java'))
+
+    def test_plugins_without_captured_runtime_are_not_loaded_into_bundled_compiler(self):
+        with self.assertRaisesRegex(ValueError, 'refusing a mixed'):
+            assessment.official_launcher({}, ['/compose-embeddable.jar'], '2.3.21', Path('/bundled/kotlinc'), Path('/jdk/java'))
+        self.assertEqual(assessment.official_launcher({}, [], '2.3.21', Path('/bundled/kotlinc'), Path('/jdk/java'))['argv_prefix'], ['/bundled/kotlinc'])
+
+    def test_known_embeddable_plugin_classloader_failure_is_setup_not_language(self):
+        crash = 'ClassCastException WeakBindingTrace org.jetbrains.kotlin.com.intellij org.jetbrains.kotlin.preloading.MemoryBasedClassLoader'
+        self.assertEqual(assessment.classify(result(), result(2, crash)), 'setup_failure')
+        self.assertEqual(assessment.classify(result(1, 'Unsupported expression'), result(2, crash)), 'setup_failure')
+        self.assertEqual(assessment.classify(result(), result(2, 'ClassCastException in compiler frontend')), 'compiler_failure')
+
+    def test_probe_replays_all_plugin_inputs_and_caches_captured_runtime_identity(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            harness, source, task = self.resolved_assessment(directory, [])
+            module, _ = self.captured_runtime(directory)
+            harness.model['modules']['AlkitabYes2'].update(module)
+            plugin = directory / 'compose-embeddable.jar'
+            plugin.write_bytes(b'plugin bytes')
+            task['compiler_plugin_classpath'] = [str(plugin)]
+            task['compiler_plugin_options'] = ['plugin:compose:sourceInformation=true']
+            commands = []
+            def run(label, argv, timeout=None):
+                commands.append(list(map(str, argv)))
+                if '-version' in argv:
+                    return {'exit_code': 0, 'stdout': '', 'stderr': 'info: kotlinc-jvm 2.3.21 (JRE 21)', 'command_index': len(commands) - 1}
+                output = Path(argv[-1]); output.mkdir(parents=True)
+                (output / 'test.class').write_bytes(b'emitted')
+                return {'exit_code': 0, 'stdout': '', 'stderr': '', 'command_index': len(commands) - 1}
+            harness.run = run
+            first = harness.probe((0, source)); second = harness.probe((1, source))
+            self.assertEqual((first['outcome'], second['outcome']), ('emitted', 'emitted'))
+            self.assertEqual(sum('-version' in command for command in commands), 1)
+            candidate, official = commands[1:3]
+            self.assertFalse(any(arg.startswith('-Xplugin') for arg in candidate))
+            self.assertIn('-Xplugin=' + str(plugin), official)
+            self.assertIn('plugin:compose:sourceInformation=true', official)
+            self.assertIn('-no-stdlib', official)
+            self.assertEqual(official[:4], first['input_context']['official_launcher']['argv_prefix'])
+
+    def test_oracle_runtime_setup_failure_preserves_independent_candidate_result(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            harness, source, _ = self.resolved_assessment(directory, [])
+            harness.model['modules']['AlkitabYes2'].update({'resolved_kotlin_compiler_version': '2.3.21', 'resolved_kotlin_compiler_classpath': [str(directory / 'missing.jar')]})
+            commands = []
+            def run(label, argv, timeout=None):
+                commands.append(label)
+                return {'exit_code': 1, 'stdout': '', 'stderr': json.dumps(self.diagnostic()), 'command_index': 0}
+            harness.run = run
+            case = harness.probe((0, source))
+            self.assertEqual(case['outcome'], 'setup_failure')
+            self.assertEqual(len(commands), 1)
+            self.assertEqual(case['candidate']['diagnostic']['category'], 'unsupported_language')
+            self.assertIn('Missing captured', case['official']['setup_error'])
+
+    def test_real_precompiled_sibling_bindings_are_disclosed(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            harness, source, task = self.resolved_assessment(directory, [])
+            task['derived_assessment_scope'] = {'source_binding_outputs': task['compile_classpath'] + [str(directory / 'absent-sibling')]}
+            _, _, context = harness.inputs(source)
+            self.assertEqual(context['precompiled_source_bindings'], task['compile_classpath'])
+            self.assertEqual(context['unavailable_source_bindings'], [str(directory / 'absent-sibling')])
+            self.assertIn('real precompiled sibling/generated', context['source_dependency_scope'])
 
     def test_comparison_preserves_changed_stable_codes_without_message_change(self):
         before = assessment.first_diagnostic(json.dumps(self.diagnostic()))

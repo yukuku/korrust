@@ -1,0 +1,2016 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T18:47:28.893889+00:00",
+  "status": "completed",
+  "selection": "Read-only availability audit of normalized selected debug production inputs against original Gradle capture and normalization provenance. No app corpus compilation.",
+  "inputs": {
+    "model": "target/final-androidbible-debug-model/model.json",
+    "model_sha256": "d0749b90575377f44ed42402ede0865ea76aef4445477bd4c267e90d3775397f",
+    "raw_capture_model": "target/new-families-full-app-prerequisite-artifacts/capture/build.json",
+    "raw_capture_sha256": "a99f93782a2f34549596802539fe3893d23f5455983954f43bab3ebb96756bdc",
+    "normalization_provenance": "target/final-androidbible-debug-model/provenance.json",
+    "normalization_provenance_sha256": "20fa7b898de35f4b8c4095f16c2157a8dec90ef28b6c50eaa0869d2e1ea5c303",
+    "raw_capture_status": "failed",
+    "derived_model_status": "selected_inputs_verified",
+    "audit_script_sha256": "b259a6a7ef769688c622e9669377f3cdf65f87d9c7b742b87bef6122bce6731f"
+  },
+  "cases": [
+    {
+      "id": "AlkitabModel/compileDebugKotlin",
+      "outcome": "inputs_available",
+      "original_source_counts": {
+        ".kt": 1
+      },
+      "original_captured_source_count": 1,
+      "derived_source_count": 1,
+      "input_groups": {
+        "compile_classpath": [
+          {
+            "path": "/Users/yuku/Library/Android/sdk/platforms/android-36/android.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+          },
+          {
+            "path": "/Users/yuku/Library/Android/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2feb8df434cae3218ed9ffe9bae01ddec101d1dc5e12824c4209f61e283e0d3d"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/debug/generateDebugRFile/R.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "16aac87d200ab186fb701fcec8cffbb0f271d9b845dec8d3303c8a49ab50be32"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "60b10b5ef5769b79570172e015b8159405c92f034ba88b9391a977589c9deb4e"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 7,
+            "class_count": 6,
+            "tree_manifest_sha256": "b87900a6bb0aec64b9f5c98408e47c6919c9eede433ee112c9be160f8bd6da75"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/javac/debug/compileDebugJavaWithJavac/classes",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 19,
+            "class_count": 19,
+            "tree_manifest_sha256": "dd43c75e1b4bc529d974cfcc48e0b556f791fac601ff9ae25fe2aeee372cc2e7"
+          }
+        ],
+        "compiler_plugin_classpath": [],
+        "friend_paths": [],
+        "generated_source_roots": [],
+        "source_roots": [
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabModel/src/debug/java",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabModel/src/debug/kotlin",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabModel/src/main/java",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 16,
+            "class_count": 0,
+            "tree_manifest_sha256": "3397e870d85e04b6f28e433a93de55fad1e9db51ebd4e6b5f53d890d9e064c3d"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabModel/src/main/kotlin",
+            "availability": "missing"
+          }
+        ],
+        "compiler_runtime": [
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-compat/2.3.21/d96ec659bcf373765197eddfcf19995bfeed9896/kotlin-build-tools-compat-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "99632b777b8a85a7a3f8431def497e31f7604a1475bba3c011abe305f585d8d6"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-impl/2.3.21/c6c11fd63ff15677c11f14dbdbad624f8d8dbf04/kotlin-build-tools-impl-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2cd70396404a0e43c05aaf79a8b35ff3a8ff2e296aedf770f6e5923fbfacae3b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-tooling-core/2.3.21/7a050c09910ee587944bc2a7413e2d97d751f647/kotlin-tooling-core-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "367142781299bc0f9120c1deec0e62934a1af9ea7f01aaa9c5a5354dc5d8d7d9"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-cri-impl/2.3.21/15fb91d42e1985323b900ed0e0c24e70e601387a/kotlin-build-tools-cri-impl-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "cff0a9b665851a325c2195857e2e1a5a747954c9437d00de0ba15519a4294c46"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.3.21/9b0a49a4d4c570c63a3a2553816bf0539536ab69/kotlin-build-tools-api-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b2e5cc2666c100079ed343618528eb820dcfa5095095e30f2dd19c60dff7e462"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-runner/2.3.21/3245f77bb78bff349c35e0f4dfaede07e9d1249c/kotlin-compiler-runner-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6db7086229db89d07183a9b476e0992f86120dbc21f66092cd124c7ed6d74434"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.3.21/c4b47f8e33cdbeedd8c1415ab9f9ade870388162/kotlin-compiler-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d3e70fb011675e77ef00f1a68918d3cd91eed26058977d1e3ea2a37a293233af"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-client/2.3.21/8bd63e265ea5e6472f96f7e9e2431d02b4e69f3e/kotlin-daemon-client-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.3.21/8dafd7f0eb5efef35a446683a2774fef61c68aeb/kotlin-script-runtime-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.3.21/384c12222b10aaa06fdd2163435709efdade5a02/kotlin-daemon-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "222fc10a3c22e74d30369bf8a0ca6c4f9372eac7d4a0081e290c256fa4d30fb2"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+          }
+        ]
+      },
+      "precompiled_source_bindings": [
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes",
+          "availability": "present",
+          "kind": "directory",
+          "file_count": 7,
+          "class_count": 6,
+          "tree_manifest_sha256": "b87900a6bb0aec64b9f5c98408e47c6919c9eede433ee112c9be160f8bd6da75"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/javac/debug/compileDebugJavaWithJavac/classes",
+          "availability": "present",
+          "kind": "directory",
+          "file_count": 19,
+          "class_count": 19,
+          "tree_manifest_sha256": "dd43c75e1b4bc529d974cfcc48e0b556f791fac601ff9ae25fe2aeee372cc2e7"
+        }
+      ],
+      "raw_capture_missing_classpath": [],
+      "original_capture_setup_failures": [
+        {
+          "field": "compileReleaseUnitTestKotlin",
+          "diagnostic": "Required selected variant task is missing"
+        }
+      ],
+      "optional_empty_omissions": [],
+      "derived_setup_failures": [],
+      "runtime_hash_drift": [],
+      "missing_declared_source_roots": [
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabModel/src/debug/java",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabModel/src/debug/kotlin",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabModel/src/main/kotlin",
+          "availability": "missing"
+        }
+      ],
+      "source_root_policy": "An absent conventional source-set directory is not a missing declared source file or a Kotlin language failure. Generated source/provider availability remains distinct from original-source counts.",
+      "scope": "No compiler invocation. Existing app Kotlin/Java sibling and generated class outputs are real precompiled dependencies for isolated probes, not fresh source-batch/full-app compilation."
+    },
+    {
+      "id": "AlkitabIo/compileDebugKotlin",
+      "outcome": "inputs_available",
+      "original_source_counts": {
+        ".kt": 1
+      },
+      "original_captured_source_count": 1,
+      "derived_source_count": 1,
+      "input_groups": {
+        "compile_classpath": [
+          {
+            "path": "/Users/yuku/Library/Android/sdk/platforms/android-36/android.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+          },
+          {
+            "path": "/Users/yuku/Library/Android/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2feb8df434cae3218ed9ffe9bae01ddec101d1dc5e12824c4209f61e283e0d3d"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/debug/generateDebugRFile/R.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "abeff073929aa4f0d082f641d5bc39de0372ce9480b34bebe62b8d7365ec2804"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "1c4441f5cea6e05d7e3ded0a5e920c528b742fb9280a641f05fd80dcb4c22df4"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Bintex/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "a94964515b553bdccbc6ff68c46416384c3214584d2e898ab78821e0a1327c06"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabIo/module-build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 2,
+            "class_count": 1,
+            "tree_manifest_sha256": "244cd95350c9765981643a35db31014d87d6c63fc7fb9bf51fbd48e3025e3dd4"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabIo/module-build/intermediates/javac/debug/compileDebugJavaWithJavac/classes",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 3,
+            "class_count": 3,
+            "tree_manifest_sha256": "d00c02df8c5cbf3654f0e3a4508be879867b6aec2e1d51fafda502996df0c8fa"
+          }
+        ],
+        "compiler_plugin_classpath": [],
+        "friend_paths": [],
+        "generated_source_roots": [],
+        "source_roots": [
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIo/src/debug/java",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIo/src/debug/kotlin",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIo/src/main/java",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 3,
+            "class_count": 0,
+            "tree_manifest_sha256": "654fef9a52a66d844b370c45318a8fa7a5ea283b47a3ac65d90fae29c26c4894"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIo/src/main/kotlin",
+            "availability": "missing"
+          }
+        ],
+        "compiler_runtime": [
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-compat/2.3.21/d96ec659bcf373765197eddfcf19995bfeed9896/kotlin-build-tools-compat-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "99632b777b8a85a7a3f8431def497e31f7604a1475bba3c011abe305f585d8d6"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-impl/2.3.21/c6c11fd63ff15677c11f14dbdbad624f8d8dbf04/kotlin-build-tools-impl-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2cd70396404a0e43c05aaf79a8b35ff3a8ff2e296aedf770f6e5923fbfacae3b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-tooling-core/2.3.21/7a050c09910ee587944bc2a7413e2d97d751f647/kotlin-tooling-core-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "367142781299bc0f9120c1deec0e62934a1af9ea7f01aaa9c5a5354dc5d8d7d9"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-cri-impl/2.3.21/15fb91d42e1985323b900ed0e0c24e70e601387a/kotlin-build-tools-cri-impl-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "cff0a9b665851a325c2195857e2e1a5a747954c9437d00de0ba15519a4294c46"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.3.21/9b0a49a4d4c570c63a3a2553816bf0539536ab69/kotlin-build-tools-api-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b2e5cc2666c100079ed343618528eb820dcfa5095095e30f2dd19c60dff7e462"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-runner/2.3.21/3245f77bb78bff349c35e0f4dfaede07e9d1249c/kotlin-compiler-runner-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6db7086229db89d07183a9b476e0992f86120dbc21f66092cd124c7ed6d74434"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.3.21/c4b47f8e33cdbeedd8c1415ab9f9ade870388162/kotlin-compiler-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d3e70fb011675e77ef00f1a68918d3cd91eed26058977d1e3ea2a37a293233af"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-client/2.3.21/8bd63e265ea5e6472f96f7e9e2431d02b4e69f3e/kotlin-daemon-client-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.3.21/8dafd7f0eb5efef35a446683a2774fef61c68aeb/kotlin-script-runtime-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.3.21/384c12222b10aaa06fdd2163435709efdade5a02/kotlin-daemon-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "222fc10a3c22e74d30369bf8a0ca6c4f9372eac7d4a0081e290c256fa4d30fb2"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+          }
+        ]
+      },
+      "precompiled_source_bindings": [
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabIo/module-build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes",
+          "availability": "present",
+          "kind": "directory",
+          "file_count": 2,
+          "class_count": 1,
+          "tree_manifest_sha256": "244cd95350c9765981643a35db31014d87d6c63fc7fb9bf51fbd48e3025e3dd4"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabIo/module-build/intermediates/javac/debug/compileDebugJavaWithJavac/classes",
+          "availability": "present",
+          "kind": "directory",
+          "file_count": 3,
+          "class_count": 3,
+          "tree_manifest_sha256": "d00c02df8c5cbf3654f0e3a4508be879867b6aec2e1d51fafda502996df0c8fa"
+        }
+      ],
+      "raw_capture_missing_classpath": [],
+      "original_capture_setup_failures": [
+        {
+          "field": "compileReleaseUnitTestKotlin",
+          "diagnostic": "Required selected variant task is missing"
+        }
+      ],
+      "optional_empty_omissions": [],
+      "derived_setup_failures": [],
+      "runtime_hash_drift": [],
+      "missing_declared_source_roots": [
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIo/src/debug/java",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIo/src/debug/kotlin",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIo/src/main/kotlin",
+          "availability": "missing"
+        }
+      ],
+      "source_root_policy": "An absent conventional source-set directory is not a missing declared source file or a Kotlin language failure. Generated source/provider availability remains distinct from original-source counts.",
+      "scope": "No compiler invocation. Existing app Kotlin/Java sibling and generated class outputs are real precompiled dependencies for isolated probes, not fresh source-batch/full-app compilation."
+    },
+    {
+      "id": "AlkitabYes2/compileDebugKotlin",
+      "outcome": "inputs_available",
+      "original_source_counts": {
+        ".kt": 2
+      },
+      "original_captured_source_count": 2,
+      "derived_source_count": 2,
+      "input_groups": {
+        "compile_classpath": [
+          {
+            "path": "/Users/yuku/Library/Android/sdk/platforms/android-36/android.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+          },
+          {
+            "path": "/Users/yuku/Library/Android/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2feb8df434cae3218ed9ffe9bae01ddec101d1dc5e12824c4209f61e283e0d3d"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabYes2/module-build/intermediates/compile_r_class_jar/debug/generateDebugRFile/R.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "580a34c03342920b216c12dfd21bdc681df63f79e0bd74f89674bad8f0d0a0c7"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabIo/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "e650ffd1598119db77f3358dd4b78b6ec8a3fbb51f6d0ace23cb534bcd1242a8"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "1c4441f5cea6e05d7e3ded0a5e920c528b742fb9280a641f05fd80dcb4c22df4"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Bintex/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "a94964515b553bdccbc6ff68c46416384c3214584d2e898ab78821e0a1327c06"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Snappy/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "21df2c80f9bc137e10bc815595728984903fcc03dd633e1b6640c8c91b179e05"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabYes2/module-build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 3,
+            "class_count": 2,
+            "tree_manifest_sha256": "78043afa2a42726a5af3cad0387e5409f5f17a3a46e76dbcd350fcb269178d6a"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabYes2/module-build/intermediates/javac/debug/compileDebugJavaWithJavac/classes",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 35,
+            "class_count": 35,
+            "tree_manifest_sha256": "2dae9ec2c04b0e7896883ea6ec881bc3a351dcbb1e53baa1f13625c4a601a26c"
+          }
+        ],
+        "compiler_plugin_classpath": [],
+        "friend_paths": [],
+        "generated_source_roots": [],
+        "source_roots": [
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabYes2/src/debug/java",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabYes2/src/debug/kotlin",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabYes2/src/main/java",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 24,
+            "class_count": 0,
+            "tree_manifest_sha256": "e7c1ea84e2d9368c885600cedd21c9742ee4143d83a3e7a337a9f14ff6628c12"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabYes2/src/main/kotlin",
+            "availability": "missing"
+          }
+        ],
+        "compiler_runtime": [
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-compat/2.3.21/d96ec659bcf373765197eddfcf19995bfeed9896/kotlin-build-tools-compat-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "99632b777b8a85a7a3f8431def497e31f7604a1475bba3c011abe305f585d8d6"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-impl/2.3.21/c6c11fd63ff15677c11f14dbdbad624f8d8dbf04/kotlin-build-tools-impl-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2cd70396404a0e43c05aaf79a8b35ff3a8ff2e296aedf770f6e5923fbfacae3b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-tooling-core/2.3.21/7a050c09910ee587944bc2a7413e2d97d751f647/kotlin-tooling-core-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "367142781299bc0f9120c1deec0e62934a1af9ea7f01aaa9c5a5354dc5d8d7d9"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-cri-impl/2.3.21/15fb91d42e1985323b900ed0e0c24e70e601387a/kotlin-build-tools-cri-impl-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "cff0a9b665851a325c2195857e2e1a5a747954c9437d00de0ba15519a4294c46"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.3.21/9b0a49a4d4c570c63a3a2553816bf0539536ab69/kotlin-build-tools-api-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b2e5cc2666c100079ed343618528eb820dcfa5095095e30f2dd19c60dff7e462"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-runner/2.3.21/3245f77bb78bff349c35e0f4dfaede07e9d1249c/kotlin-compiler-runner-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6db7086229db89d07183a9b476e0992f86120dbc21f66092cd124c7ed6d74434"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.3.21/c4b47f8e33cdbeedd8c1415ab9f9ade870388162/kotlin-compiler-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d3e70fb011675e77ef00f1a68918d3cd91eed26058977d1e3ea2a37a293233af"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-client/2.3.21/8bd63e265ea5e6472f96f7e9e2431d02b4e69f3e/kotlin-daemon-client-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.3.21/8dafd7f0eb5efef35a446683a2774fef61c68aeb/kotlin-script-runtime-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.3.21/384c12222b10aaa06fdd2163435709efdade5a02/kotlin-daemon-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "222fc10a3c22e74d30369bf8a0ca6c4f9372eac7d4a0081e290c256fa4d30fb2"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+          }
+        ]
+      },
+      "precompiled_source_bindings": [
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabYes2/module-build/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes",
+          "availability": "present",
+          "kind": "directory",
+          "file_count": 3,
+          "class_count": 2,
+          "tree_manifest_sha256": "78043afa2a42726a5af3cad0387e5409f5f17a3a46e76dbcd350fcb269178d6a"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabYes2/module-build/intermediates/javac/debug/compileDebugJavaWithJavac/classes",
+          "availability": "present",
+          "kind": "directory",
+          "file_count": 35,
+          "class_count": 35,
+          "tree_manifest_sha256": "2dae9ec2c04b0e7896883ea6ec881bc3a351dcbb1e53baa1f13625c4a601a26c"
+        }
+      ],
+      "raw_capture_missing_classpath": [],
+      "original_capture_setup_failures": [
+        {
+          "field": "compileReleaseUnitTestKotlin",
+          "diagnostic": "Required selected variant task is missing"
+        }
+      ],
+      "optional_empty_omissions": [],
+      "derived_setup_failures": [],
+      "runtime_hash_drift": [],
+      "missing_declared_source_roots": [
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabYes2/src/debug/java",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabYes2/src/debug/kotlin",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabYes2/src/main/kotlin",
+          "availability": "missing"
+        }
+      ],
+      "source_root_policy": "An absent conventional source-set directory is not a missing declared source file or a Kotlin language failure. Generated source/provider availability remains distinct from original-source counts.",
+      "scope": "No compiler invocation. Existing app Kotlin/Java sibling and generated class outputs are real precompiled dependencies for isolated probes, not fresh source-batch/full-app compilation."
+    },
+    {
+      "id": "Alkitab/compilePlainDebugKotlin",
+      "outcome": "inputs_available",
+      "original_source_counts": {
+        ".java": 120,
+        ".kt": 245
+      },
+      "original_captured_source_count": 365,
+      "derived_source_count": 365,
+      "input_groups": {
+        "compile_classpath": [
+          {
+            "path": "/Users/yuku/Library/Android/sdk/platforms/android-36/android.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+          },
+          {
+            "path": "/Users/yuku/Library/Android/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2feb8df434cae3218ed9ffe9bae01ddec101d1dc5e12824c4209f61e283e0d3d"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/intermediates/compile_r_class_jar/plainDebug/generatePlainDebugRFile/R.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "0d3883aeac179561d8d1aba99eaa431294c5d85ff2a780f95d577f3c51f5cbf7"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/AlkitabIntegration/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "324eeb3708d04824f4c87b068b96036645b12a65ef07dc97e0426a3e4407075b"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabIo/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "e650ffd1598119db77f3358dd4b78b6ec8a3fbb51f6d0ace23cb534bcd1242a8"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabModel/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "1c4441f5cea6e05d7e3ded0a5e920c528b742fb9280a641f05fd80dcb4c22df4"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/AlkitabYes2/module-build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "e512860f54e47e1f1ec41f7004734b65fdaaabd5f0f2950aec95856379deb8b5"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Bintex/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "a94964515b553bdccbc6ff68c46416384c3214584d2e898ab78821e0a1327c06"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/a9ed68492ca585fc10cc3f9876aeee22/transformed/preference-ktx-1.2.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "093d3cc7923bf4c5420b2b9d7cb23c512e44079c8c76c71883afaf49325fee3c"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/edf0b359b0872023c4bf841c6fc1b072/transformed/material-1.13.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b81b187114ca4b56ed810e4123a66140f213aca93e17bd199d2fa2f25778c852"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/ea32da85060e63b612cb8501bd1d3b70/transformed/appcompat-resources-1.7.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "70f3a24f10ceee3f514f594e1dde463753805fb2f4c76b9143564b5e4bedc3fb"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/46ffc9f5fd0faeb48c77d2579ac0b344/transformed/preference-1.2.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ac65fc505f78004d79136fd919be7cd540eb438976406fe66f31d47c9cf6b58b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/ed68d937b65ed8bc7608ba0e0e1d6648/transformed/appcompat-1.7.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "94f9deedb60d99dcfbdbe5d07d4b4a69ee7bbb4ec4270ad925277fdcb5482cdd"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/7dab49e3729134bd0eb1048476d9da39/transformed/viewpager2-1.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "60c8a5105f3620a75812373197451a0d2074e3a1165d13dbd9594eaa9b34d503"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3564239ded549fc983cfce2838ff19df/transformed/firebase-crashlytics-20.0.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2b267851e47cf5a1d9f6f720519859b1495b63235a2c0d324f098954d9be0b89"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/f59ead5bee89ae59c395cf82ba9560d4/transformed/firebase-messaging-25.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b68acac86d9c8931dffeb932748b0d449269692c3f8b51ed0b59a5182229a627"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/0090133f3c89ce380c09766c4c256d54/transformed/firebase-sessions-3.0.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "9379cb9aa11c517eafc1ebba09aa9e3d577acf56cb46c1294091aff49cc8f7cb"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/e30facc6a648da6aae92a7067d277d6e/transformed/firebase-installations-19.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "e27d14ca3a6b3558905e9bb1c9d191d88a11a0d4fe595e4d3cb2d0a95591a27d"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/b42b9b137999b3ec457d1a80aec590c3/transformed/firebase-installations-interop-17.2.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "a58906ff9b02bdb24091e266f52a4a61447667c6753beab9c17868237a5b655f"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/00e1522f16ab693eeb98f2a25878d40a/transformed/firebase-iid-interop-17.1.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "04ab55dbd90d79a8bdd545881a5caadae891185e0e1f91a0c96d2ad44229ae86"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/c1ab6272e1e3cc54a9f4ab96045c33d0/transformed/firebase-common-22.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "257ffae02b71f1c3cd91b62f472525020f4e858417f0177ff1975e0b21c0260b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.room/room-common-jvm/2.7.0/46a9845444d0b849131baeb85bfe4051828261ad/room-common-jvm-2.7.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b2a00b88c8b8d810d07ecbdf92fdff47db7f0ea884efe5c31cda7a526c9b1ae5"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/892e545d2aa2914687d616e4bbed3487/transformed/room-runtime-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "90d262b1678b094f7593dba2f44bc60ea975b4dc7c5279b29138ca000f8c4a54"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/aad6e4bf2856cc09fd5e4bf37bec4c68/transformed/room-ktx-2.7.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "57ef57577608e30569869f27268d282355cdb94725e7f90d736d2351b257ea75"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/0645bfcd96e7d2bd0c09ac58aac600e3/transformed/work-runtime-ktx-2.10.4-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "38aa01dff711ab800128564173c7d1ab327b030f527521e6c5275cdf814de77b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/9156cdbb1f234c88470dd450386a6efb/transformed/work-runtime-2.10.4-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "bfd123b72a1c188ce80c1fd4d1f6ea643d602d10cd1ce22fa62e13ea7a4b43b9"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/e4f97e2c091b625b838cfe5db8b4bcd4/transformed/coil-2.7.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "69c4d7168ecdc7df351e3796c3c83073a24f2c8c7bdf2eba548b43f0309e765f"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/05e9858c90aefb541a499cd2999f38db/transformed/coil-base-2.7.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "29ee6046279ad7d0a02aa690fd4245f265d3fa6ccacad1c98dd42a09dc62d10a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/5c03fff715078af0eb7f9746f802419f/transformed/material3-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "c3f879d944bcaced24d4d9d389839bf6cdeccd7d1bf7fca7ff4d9fd7feb830ad"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/af76055845755772c58a69b5efa238a3/transformed/animation-core-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b8d0667af5404421ba7db77dab40ae155d88469356d2c013114f6391c699d097"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/0d0fbe27da544673d615f993a646207f/transformed/animation-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "36b9299a9169c6dec7ba351f85c9ff59301d8dd223d2d60926134fd73f5261d8"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/6c99ab36c49eb52cf604a8575773cbdb/transformed/foundation-layout-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6a4f2fa6be95a36c6d2049462128200ec92cfa4b84a80632cae4491be610e345"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/08b49689b988d8ac692addee2b2d663b/transformed/material-ripple-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "da3e4edb81f0add80ede47b53af59acaa26c2f02e65d753ef7af9dc97ec7b98d"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/55356a5ba4677d2d89a930a54470f7a7/transformed/foundation-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d180718b984c60bb8de277e7cfcd12252d615e4f036ad28e806a4e450681efc6"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/75f9eaa88e02368d048e40abc6bbe91e/transformed/ui-tooling-data-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "5ea0b4e2f2e0313dc118cfe68a077aee5b7d70f50972885938b0c8e768f33956"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/c00a11f77155c75d0dd8a0f48c02bdf1/transformed/ui-util-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "112f196a366273cd0e0e28e3002da67326962b929592c40b86156cdb23b07f2f"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/ec5d9e2846467c20d248fa245996adfb/transformed/ui-unit-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d3be324943d98e6a3c5b74fb0cebc7e5b62946303ee315fc4ffdd685ddbdcd25"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/ff583e8ce42e52285e0309cbc87342d6/transformed/ui-geometry-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "026ee7401e347b43a8e3aae4cf06929f583f245f8024867e14fbfe4092f19c05"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/ee70e136249d39e8cce6af5b62d5b9e6/transformed/ui-text-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "76eae4814d73a23df6772dea19e8b1ee87abb52246038891b2d47685667b0ca2"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/591448e7ed8f86467452b8c5717b6eb1/transformed/ui-tooling-preview-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "c871eabe897198831b0db5bc24d0aa6f41a4afd40d4f8c5c8a3ba00e3a9a20c7"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/96f9cdd6d19ca5252879e1dce38f0509/transformed/ui-graphics-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "0c5d0a6ca0a488827f2e822de823bd64957c26cae062fa9ccf1830f93a7fdf81"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3ec19c357184c94232be732c284c9724/transformed/material-icons-extended-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "f02b1ce6d69dd020669993145a14ab0abd55843a4cd502eb8afc4e85ae60b2d1"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3fa78f071fe33050fb02d4f9c7c936f0/transformed/material-icons-core-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "288bc21645a7f1b05dd88bb8bbf8b0f7f8d8afdcd2476bdfc140f3b4acee85ff"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/6e0889122490d072c87bb5689f928caa/transformed/activity-1.13.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "45742fb8e6141eaa35b9a6dbf0474913a47c6c615d718b5ed4518834ad801993"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3174bb428a2dc373db6ea9e8fe5d9679/transformed/loader-1.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "7b8d130a2134503e4153a9fcf0d6ce4ca7e995c57bafbb12e5f85cd796f2e31e"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/2b5dcd62c469c3fc7df70ca5d45e554e/transformed/media3-session-1.10.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "c99933c0306e798238b25d5f404b90f6f79388882f2d8f64d191ee07686e4702"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/b7d7a807bfa31df95520656fa4446aa1/transformed/percentlayout-1.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ceec6837f0372868565398ca4ed699efbe4013072247ba294c674bf2afb73305"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/28cd8eb79b1fa54fe416fb142ec092c6/transformed/recyclerview-1.4.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "45fa8879627a04a9a3d5e901af808f35391af94d3e58a5069026ee1e8e094a3f"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/7f7cd57a3d224b57bf8489fbf2689064/transformed/swiperefreshlayout-1.1.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "efb99ef17234d1ab84527541d52189a672b5cd5c3efff322f8fca9d54468f7cd"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/dd5e4f6448c5675a81701e29e42d994a/transformed/lifecycle-runtime-ktx-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "e52c14aead36b8c3bb89e4ca23b21b7fade8426437db554f0a5a9fa43aa45f2c"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/dd28c008482e07f4dd8c5abbaffd9055/transformed/lifecycle-runtime-compose-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "0528efaf8aeeee6d7565317f71e4e9f686866ed6341c6ba13ea24d61cd0e369f"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/df28c65a127826e8fccbb67e82c10249/transformed/lifecycle-runtime-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "145375e2d95077bc2bd8ab69dd2cb99a6188b2882186df63584c31130df5cdd4"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3103f3748bfbe10539bff45555b1988f/transformed/lifecycle-viewmodel-savedstate-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "17c7560e1153e2aa87e68dd815dd6b39efc182aeaa897cf8bfc463ea6e9824d0"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/cc0165ce2585cdff5362f425ef7fde51/transformed/core-ktx-1.18.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "29b3d8980608ec3910338c0da3335cc32af13b59c61fe3de4e0d229f50ddf895"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/f68a179d39ebe551aa5901b0dc39bb81/transformed/drawerlayout-1.1.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "e528985a7fc2b89b5e47ddab09a76d59cef4a5736a14cd5dce19baf609be1c85"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/adaf93e511adc7cd785ba16ebf908764/transformed/coordinatorlayout-1.1.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "3bc1e5825071f4ff5a8c6b78e2bcc37a704bafdcd26080418bbe90c9482c8e19"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/88bf78ded7849b0b74d6edbd0cab0626/transformed/dynamicanimation-1.1.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "4a6cf21f6209a86518a8567c48b9f11880a3c4e500e629f33ae602ea96259f5b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/d3dfd8cdda745f1b8cf67beba77b836b/transformed/transition-1.5.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "346a6b76c1c712552634c63a28f2582306eb386c7e45b9910a065084221a1899"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/2ea812b5d9f555497b803a6a3e621f3a/transformed/vectordrawable-animated-1.1.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "7fb48b12b5cfefd6cab0972eaf5b358a9edd2ed68322e37bbb5ed9dc9f86d3a4"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/0cc20a8b797074538c42451a746ca638/transformed/vectordrawable-1.1.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d4ab4b9fc7a598dd2e8cf60e8517a6234e5cc9b6a0515565dc338885d7564c01"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/7cfe2b8d59d1aa7374ae0919f4871611/transformed/viewpager-1.1.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "fc60c1262e78803becf4c10ead82b9a07193c1d1ce3f61958b43549c7471962b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/631f89cb9fba3b0742d26635d2424eaf/transformed/slidingpanelayout-1.2.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "e169bafcb71e8627ff11b5d9bb2b732e711956e2a10f826c06c29c44adeed53b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/2acec95fd498348ebdc905b2e9265b39/transformed/customview-1.1.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "72d31f12c192c189087dc9e3c8e720055479ed125ee1193a12fc35d5c9bea0c5"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/623dc510c8a8b524e50df4f30c15baf9/transformed/core-1.18.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "e40dc80e32472b7b615052e79a5372c8e553d2d76edadab64f36c03ea8ffd7dc"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common-jvm/2.9.4/ab739bccdb3541983385af169565c7c035d897e7/lifecycle-common-jvm-2.9.4.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "37d89b2101f074ac6c260917dabb185607645ee200aa3018c7c5bde70edcf184"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/af354d8ca6ce3e5fdc097cce7de8663a/transformed/lifecycle-viewmodel-ktx-2.9.4-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "1ade561b240bda93eefeb24e2fd1c5e783e078f3216f205d2fa29c51cc3126f9"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3992b8bdde160d8844a4c8dface67db9/transformed/lifecycle-service-2.9.4-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "dbbe3f9fc3defd9b18d2e5f511ec288d451a15bf272714f33b710410bd8e1b0b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/f2bf963aff4a8feea1e275a642a022f4/transformed/lifecycle-livedata-core-ktx-2.9.4-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "a18c22c55a9b43e3d19f10059dcb6883e4908147d858ec318f9f56d9b15c9507"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/0c56473f457124aec0b979f83252973e/transformed/lifecycle-livedata-core-2.9.4-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "3777f6a0364b8bf64f86a300fa5817f432189bdb06d6db1d3fa2357eae8694ca"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/38c07936870f6c26ef578c5c692fd56c/transformed/lifecycle-livedata-2.9.4-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "84aa103467d6e986553f04cb38bb1b1f1234eeb63c7b1b93ed0a50962dbec475"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3ef2958d3810d2b691b0769d3a7bb4c2/transformed/lifecycle-viewmodel-2.9.4-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/c1733171cfd9347725571079b5b21b9a/transformed/lifecycle-viewmodel-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "df3d89010ce3b970954fca798a18ea98c9c3bbf5c490c039b28a749ac8b542f3"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/5e7ba575d327c1c51f83465e5ca5cb2e/transformed/lifecycle-viewmodel-compose-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "a51f9a9e64c7a6e79db3255bf4ef41252aa01068fdc16ec8cf11ad79aef4c344"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/54e93c26190f1f80d3346c7f724c42fd/transformed/ui-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "3a2d709dad4cc82f60772ddb690c4a07f944b52e84fe646f83600f7e01e881c1"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/f8772389ac6124f5ea7e9f09d6ee47d4/transformed/ui-tooling-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "db76faf23efa1af62db1ba25e6b6f99750767a4133e628ac9b7202cd5293a252"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/cf5ba46bd19e035dd3fbd114c3129118/transformed/navigationevent-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "8860e665522d9564703bdaf4ecc105e02e73f3a1e9919e50984d1b162c97cc1c"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/18108d505677a9296cafbbd8f7e3eefd/transformed/navigationevent-compose-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b1f2e8d9316d754feeb92d08b4ad0a510fca2a2fd995881a2672ea12fdfede22"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3b89c8140c6795188ac2f8d128d1286a/transformed/runtime-retain-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "18b2068db1dc7ab579b269b461f978fa56e36f0b1278150039ae370ca6c145cf"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/ef64ffdc4dbf2810f4da14b9c7501c2e/transformed/runtime-annotation-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "170c4da3a8d2afadf0ed5174849278a6216f9fb7f15a8aec9fa7b5528d8f8657"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/777f8873815ac7ab8e2258270dd71644/transformed/runtime-saveable-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "fcc32296db17879df4ca694fb5714c1f2a73f093b99c1d54fe1d6e3c9c684520"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/7b4981831f6235e9c2abd519791faa01/transformed/savedstate-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ebfa68e340ae7cda489eb168623a8a268f279a0ec146ca9262af3fe47b892cdd"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/da27e6fa37c3e81e66919be32910eb24/transformed/savedstate-ktx-1.3.2-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "8882edfda27e22bc67405aa458bb03aadf1ca0e008d108f5e56270f6530f07c6"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/4bf6719ecd7915d00cc1e56cbd35cade/transformed/savedstate-compose-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "224573f5835b062436f15f8e98003b3fa5c8a3f4b4788ac7cb8adb8f377d7bce"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/29ef014947a3b2b649a061e7ed9e2905/transformed/runtime-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ae6caa9675046526701e8d10bb82bfc095a9b9f3c99ca2e7b9a71828c816b2b3"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-android/1.9.0/6cf3b8df5a2ce8c6b0dffe55657a827c405ee2fe/kotlinx-coroutines-android-1.9.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "bd783acd2f9738845d58380f46f45b5cde95d0cb03027d56725338b26bfc4d72"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.9.0/9beade4c1c1569e4f36cbd2c37e02e3e41502601/kotlinx-coroutines-core-jvm-1.9.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ad89c2892235e670f222d819cb3d81188143cb19a05b59df9889ae4269f5c70a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-play-services/1.9.0/9d715295c29dddf8c381565c513fb2d9923f9f41/kotlinx-coroutines-play-services-1.9.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "4cb6b6321df1664b99fee756de63f6af65ccb4f68936f26cf76c211dea1b23ae"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/b440518a4e460e85d50558c710a925a6/transformed/play-services-tasks-18.1.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "17fa1cb4bb77361de553da1b1ccf2e5eb18dd3ac1a0f072054b272fbc23b16b1"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3a458da4c83d7d701f3904192eec4b92/transformed/firebase-measurement-connector-20.0.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "0462dc4dd21104d9493994afec19df0569901b5f69fd5484bedf7b1584296019"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/8f882bfee3a753db9ef9af08f8aae306/transformed/play-services-basement-18.3.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "8f67ed0820acf42ea3e88e907a40ec0a16d9341f6dc68da0bd294266f082e21d"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/f1341e0039585558025be5d145e64d36/transformed/fragment-1.8.9-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "e449e2594ec40a3944ce7b80569eab1be85457211373e04d5e4404d76ff48257"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/64fb97c9f2f4649b2d91d07332ca47f2/transformed/fragment-ktx-1.8.9-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "5ab11881a22e91a7863e713d7c4e1739ee712bfdbf14249f308f15ddee4d90bc"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/5723e22997d06277a3ad3848480fcfcb/transformed/activity-ktx-1.13.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "f3af72458a483c151f25e5f132728b6370c2fc48c99988d75672005a5ac24d99"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/9a0539f2561e189bf7489d93b6ff3c16/transformed/activity-compose-1.13.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ecf64116e2b8e5747fabca04b757d394738bc02201dcef095c6ce6f396a11b0c"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/7755c2451e35d17a05052ba38d24d5e1/transformed/core-splashscreen-1.2.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "4767f0cca684ea881b72075d8fdd91df079007911daf57f403aaa462570b4b1f"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/c9e6c15e097b54d15ded3b21703a74c8/transformed/media3-exoplayer-midi-1.10.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "617888caf5d6c1be131baf90e3fa2e319aa1eb0f9ed3cb8a7166418dd2cd5ff7"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/df135483f10b29895829224260cce9ea/transformed/media3-exoplayer-1.10.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "f744ad900c8d1c7b0f5c7ad613a0fdebf1825132d6dfe4e7d8fe0a5ff51a9c5b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-parcelize-runtime/2.3.21/5eeb7fbd98f9b6a762d45a93636b87f31fc6dd17/kotlin-parcelize-runtime-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "a21d5f85475efb27f17dd97d1a289d64874f2ddfdb508ea484477a4cf1afe969"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/8ba9ddb7176d6122092c37c935898f2f/transformed/leakcanary-android-2.14-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "0511a469f4cd606bc45b53a3ea4c2e8ef91741cf8e358fd1ac1a8d665fe3e651"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/e3a37dd53632c77ed15c7e35b8227183/transformed/leakcanary-object-watcher-android-2.14-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "97224ed08c6621eb64d3a1586cc348aa3a09b65a7559be0a5b3dce36cdafcac7"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3a5b2c602c8a779314ddb16c74348652/transformed/media3-datasource-okhttp-1.10.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "566c58fbc0f03147aabdacb98be3993d2a63181dff7ff9b7c995c48b83eea6d5"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/eb9468ad9e44baa970438c43b4949ec9/transformed/okhttp-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "cd30f982342dbeb6e3b34a680501e3c095f35c47dbf32a26cb963c80efe28bed"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/c766b83d0bcfb02aaa10495cc1172be3/transformed/core-viewtree-1.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "edb97285f289307f89297649222fcf647bd091b32ebc764edd6ba5afaeef6b2a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/35b9dac2582c58c34436a908bfe9d5de/transformed/media3-extractor-1.10.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "f9ee5c20605b361694f1edc64ca134d67523a8d7913e5040d81060befb6ec16d"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/5afaa7ccd06472e5b024ce6531bb2274/transformed/media3-container-1.10.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "3bc7caf92070c75136faf7a6986ab3fe94d014003e196cb61baa2123a2c4560f"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/89e99dc47c6888b4609e89c55e23afa4/transformed/media3-datasource-1.10.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b0d2c6b68550806ef40edf107e025adf79d8622538ba3837734eb1efc59f1642"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/51da9df0b620fa34c77cb731ef7e2aa1/transformed/media3-decoder-1.10.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "30b42528521206d2d357d0233cf673d9651d7ca6384862820bc093303c5f5a55"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/0b3df73ebbb63f2b4928217a98deaa3a/transformed/media3-database-1.10.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "a7020ba4b8e7d59d20bcc4a8f236429be902682f9de8a50f71c55ebe7d9330f0"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/d134777f6e8ff6dfe66b352e54ae9b7d/transformed/media3-common-1.10.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "9845b9955bcc3678b2462610dbefe9a1dbdb8f2c0dc17987e6a8a606bd4ab5cd"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/c7c5676f4101ca3766fdbecf9bfa42f7/transformed/annotation-experimental-1.4.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "bf4cbf3c5951f25298ca8e02436bd8ae88aa5ab161d2718f297691ce552adb0f"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.15.0/cb3c285187640f543150fcac1ae012bdd778c0e1/okio-jvm-3.15.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "483dc383b1049d220892322a0d6a4308425f09bb05b48c43d4eaa9ff82b1cd16"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/70ddf1be339f5356eb32b6690e326227/transformed/versionedparcelable-1.1.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ffa7b07e41fa6e83e9f6f7dedd7b3a7f084e33420fa2b0f61599a3da816d170c"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-ktx/1.5.0/27c78a926a16a1bf792b2285cf2834e8caae4a07/collection-ktx-1.5.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "939b4a8697640e77d83e4e8b4c4a9d18f8130198c5961194af8dd9db9dc7c353"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.5.0/7ba2c69414d46ebc2dd76598bdd0a75c54281a57/collection-jvm-1.5.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "70b35924e4babcdffa37d0e575ee039c56a2d97123342624c48b603233704341"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/6203c1c04698ffa88eb6296e2ae5c063/transformed/cursoradapter-1.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "cd51036ac1b49da0613a4766e8c870b43da6b61802151449cd7c65663ce497a5"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/f03f78e0833a1a50dd3362f07598f7d8/transformed/interpolator-1.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "41afedcf53756d2b0c05cc3479263a2d00bb981e1a4691be8649855919a199d1"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/353f57181bab40e0e9904504bb8a17d1/transformed/cardview-1.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "fce09f3efb3ba739aabe7a7e63f317a5d28530209f789ea10fa998d8b98a4331"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/d891afb4156966970623df3be1ddde1a/transformed/firebase-config-interop-16.0.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6d3f2777e92bb980475ab4b789e45374405bfad69abb3bcaead1e2537fd670d1"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/99da32edda83f0a8b286d55b7cc47881/transformed/firebase-datatransport-18.2.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2c2167e9b6cd95aad274dfca342056fcdde1eb686bfae52583626db8e2e04874"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/d1b1fedecfdd258d0ff63fb8dc350634/transformed/transport-backend-cct-3.1.9-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "836be2e1d57ed7ee0f5760b2588c07ded2e8bc4b71efaaf3a371bc3cfef6a869"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/86125809f9cf44985b7fc0a4916ab89f/transformed/firebase-encoders-json-18.0.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "763db3973210d939c35889b4f7cb51d3a52ad15a70f37025c149eb1f8aaac84d"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/deaef11fb710996de94bce7c0a7bbf77/transformed/transport-runtime-3.1.9-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "af72190b9ec204642624560ff154b4d4fb4f0c3e149bf19df4a4cdfbfb242bde"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders-proto/16.0.0/a42d5fd83b96ae7b73a8617d29c94703e18c9992/firebase-encoders-proto-16.0.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "293db96a0d1d43f033167881b638d8fde844e4e5495f5101cf52295765295e0e"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders/17.0.0/26f52dc549c42575b155f8c720e84059ee600a85/firebase-encoders-17.0.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "282a5a703f9b7eb56508dde97ea918e95d73318b157050f457f7a86dca750150"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/f9faf517679aac55e925ba8fd20f1b0e/transformed/sqlite-framework-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "1655755be96e7773eae2665a4aa279ba6b9f3f21bf9db598f56dbe07c0c88c34"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/57feac86df3b957150f118d70b1dff4c/transformed/sqlite-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "27828d6bca8afe8f8527bd12030acaa37e6f61da1224b08a3337d4ea97903c45"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/f1fe02a9cc0f616a469a9f014037a4f8/transformed/transport-api-3.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "869115ad7657e39b116742b853bc1660183d7b345e450a17bfe607f40feab5b8"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/4ea0cd1c405a9e097163ea404346c3fc/transformed/core-runtime-2.2.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "e7800bf258bd590b9e25455391535b9f3a692035c11dc7699611be747abb0387"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.2.0/5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3/core-common-2.2.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "65308a06b1c00ee186cb9e19321383f043b993813f1522c47f4a3e3303bdba41"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.9.1/b17951747e38bf3986a24431b9ba0d039958aa5f/annotation-jvm-1.9.1.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "1e343917ebf27ba96fe4dc52b1cad7fd32b738fbc6355bb6cd5b3b305d7212d0"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.8.0/ed04f49e186a116753ad70d34f0ac2925d1d8020/kotlin-stdlib-jdk8-1.8.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "05b62804441b0c9a1920b6b7d5cf7329a4e24b6258478e32b1f046ca01900946"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.8.0/3c91271347f678c239607abb676d4032a7898427/kotlin-stdlib-jdk7-1.8.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "4c889d1d9803f5f2eb6c1592a6b7e62369ac7660c9eee15aba16fec059163666"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.7.3/6701e8c68d9e82387ce72ee96e8ddf058208d58f/kotlinx-serialization-json-jvm-1.7.3.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b1e9138499ed8d20375edda3f2b1c95f3103a258eff6af9edc5ea07100f2b29c"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.7.3/1f226780b845ff9206474c05159245d861556249/kotlinx-serialization-core-jvm-1.7.3.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "f0adde45864144475385cf4aa7e0b7feb27f61fcf9472665ed98cc971b06b1eb"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/d8db848666c32ca4cb2b585c617e687d/transformed/constraintlayout-2.2.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6e88a00c750df359599665063fb4fcce89099b26eaf37f8c8cec5b806d192993"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.12.1/4e773a317740b83b43cfc3d652962856041697cb/gson-2.12.1.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ebee13d5fb7477cd7f1cc010e0c356df8ca80709715248da97f79e35ccb4fbec"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/c32d87dc0f4bed9cb89732751ceceffb/transformed/library-1.3.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "44629a1ba7c44e0c497402cc3e6935090ff508debf978edac40d282b407c6f1b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/574747cbefbefaed326fab998bd4dc10/transformed/FancyShowCaseView-1.4.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "7ef0dd6b01622ad424f98fe9a260232941a53a7025e85545e0137127d0872662"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/16ebcf8a81c437a1a5f30af5e7cb84fc/transformed/leakcanary-android-core-2.14-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "274bd3010cbd7202eb48c3cc67c68f0fa6e863de6771c7397c0b9723736356b4"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/androidx.resourceinspection/resourceinspection-annotation/1.0.1/8c21f8ff5d96d5d52c948707f7e4d6ca6773feef/resourceinspection-annotation-1.0.1.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "8cff870ec6fb31db48a52f4a792335b4bf8de07e03bd37823181526433ccd5cb"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.36.0/227d4d4957ccc3dc5761bd897e3a0ee587e750a7/error_prone_annotations-2.36.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "77440e270b0bc9a249903c5a076c36a722c4886ca4f42675f2903a1c53ed61a5"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-android/2.14/6fb0b4ab27c085678a3d26ce2b9350fb77c32407/shark-android-2.14.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b79dfb05903e69018d598bb4da4f41e0f7732a585cb66a0a5ffb5b89d2076c72"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/0e904cbd2566cb658ab936fd429c0023/transformed/leakcanary-object-watcher-android-androidx-2.14-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ec3f7ccfa3f0436f76632db209a3a240210c8723808de2d5b646d57f4c88c99e"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/9a41bde09e2f0c9b6d39e5dd918086dc/transformed/leakcanary-object-watcher-android-support-fragments-2.14-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "9d5739411df6d44c75bd8368ccefbe02f03533a17713d36023a5f8d0ab72ca37"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/7abfc44fd274b2ec61dee42981f6a2b5/transformed/leakcanary-object-watcher-android-core-2.14-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "74e1c4357f1379193429e737da13d22b5a3c1e85807976d2af924dac2f7910cf"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/388cd814d28282086642b1d9bb0b69d7/transformed/startup-runtime-1.1.1-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "a3c09dd3aa31c2366e5a7890444f20db2dcb78394c2a2a7622ce13c1f1762460"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/33.3.1-android/36162b3b4e9df67dae90db62a2c54616ca42c1bd/guava-33.3.1-android.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2c3e41d1b380f2044d257947a3aa82dabf3ae4b978622745254aa18b6cf89ab0"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "1fad6e6be7557781e4d33729d49ae1cdc8fdda6fe477bb0cc68ce351eafdfbab"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/3a5a55f609d1cbad2f3e765b09564458/transformed/graphics-shapes-release-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "c2d441cdddf6dab0f38ea9f32ba00615ab8177ada776b9b85d0e5c501bcb9aa9"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/7f0838d27a7b16f6a062b5d1cf423bba/transformed/firebase-components-19.0.0-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "cab1bab028bb16716dc070a8c9db625d7cecf376d4978fd5ef522751f1b3d11f"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-annotations/17.0.0/fd04a6accd970e0fcf9baf2424abe2926e00d0e2/firebase-annotations-17.0.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "f80305e6f7b5d111278d4df9504f51f7230e06c6457a0fa7c16e236c7613cc71"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark/2.14/768be00911a64d2314345115687fe0d14924bd87/shark-2.14.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ffadb874b3a4d4d0033afd302e37b26ade2b63d6e23f9bcd568f727304845f01"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/leakcanary-object-watcher/2.14/4e9e9ea14da4e86321b1369c7aea6528f0ef2/leakcanary-object-watcher-2.14.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "575a046bcc362916fa6f106373f393bacf5578f13640419a464b4c81d89e646e"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/9.7.1/transforms/6f86fd3bfea59b45aa267dc023f0ff9c/transformed/leakcanary-android-utils-2.14-api.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "82bc7e35c0cc00ffc41291d57dcc15061e1a4a46e49827f9483f38ca3e0d2a4f"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.2/c4a06a64e650562f30b7bf9aaec1bfed43aca12b/failureaccess-1.0.2.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "8a8f81cf9b359e3f6dfa691a1e776985c061ef2f223c9b2c80753e1b458e8064"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-graph/2.14/ed8d34d03693373e1e9e1bcdcd52e2a63391e6d9/shark-graph-2.14.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "7596fc9caea47e95f6001f57098b66c64beaa968c1354ab6c0aa98dee901681b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-hprof/2.14/561aba011e38279be7e068f6760f816baab0ccb9/shark-hprof-2.14.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "8f19f11585b0fb34fb8cac021504208ed1c73dfe8cb1f69b2bdb0437bb1191fa"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-log/2.14/25574b6474a61c3d0a5df80272ecfa51c560bd7e/shark-log-2.14.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ba1011ae450664f7e8e37c5b6e5e01660b11456ddca8960b5cbe6df0e3f99926"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/intermediates/built_in_kotlinc/plainDebug/compilePlainDebugKotlin/classes",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 1008,
+            "class_count": 1007,
+            "tree_manifest_sha256": "029229655b6f726be64199fecb976ef82e3b29489bce71fc77de31cbbafb93d3"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/intermediates/javac/plainDebug/compilePlainDebugJavaWithJavac/classes",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 293,
+            "class_count": 293,
+            "tree_manifest_sha256": "028b2f774c14691d76e705b2487bb1b06b4d3ae63d8f6d74b1b1a2cc73959796"
+          }
+        ],
+        "compiler_plugin_classpath": [
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-parcelize-compiler/2.3.21/10cd03e4a85ec5f6122cf9d5e170c7cb2b91106a/kotlin-parcelize-compiler-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2bd41f4c24006c9b553393ac86d323a94b91aace7437bd44793245fa66357919"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-serialization-compiler-plugin-embeddable/2.3.21/973ceb6ece211cc75d4bc877e1a2edb5fe2be012/kotlin-serialization-compiler-plugin-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "542a36fe5ae5c35b7bb4cc297100f3634d3b5f97c7b5f78ce443621830bbbef4"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compose-compiler-plugin-embeddable/2.3.21/96eb34ab9364f1c4291f35b38b1b98d0fc70170c/kotlin-compose-compiler-plugin-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6658edfd25de3dec89bdedc0308014a2ebd97731c6f749df0827c5be1ef95515"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/com.google.devtools.ksp/symbol-processing-api/2.3.8/17799fb29499ca8f2a6e8e26d5d4b47c8af9d617/symbol-processing-api-2.3.8.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "53e4bb74b7e65d065222739735f9f2f57eedbaebbd314fa69167bd43dadcb659"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.3.21/c4b47f8e33cdbeedd8c1415ab9f9ade870388162/kotlin-compiler-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d3e70fb011675e77ef00f1a68918d3cd91eed26058977d1e3ea2a37a293233af"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.3.21/8dafd7f0eb5efef35a446683a2774fef61c68aeb/kotlin-script-runtime-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.3.21/384c12222b10aaa06fdd2163435709efdade5a02/kotlin-daemon-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "222fc10a3c22e74d30369bf8a0ca6c4f9372eac7d4a0081e290c256fa4d30fb2"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+          }
+        ],
+        "friend_paths": [],
+        "generated_source_roots": [],
+        "source_roots": [
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/debug/java",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/debug/kotlin",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/main/java",
+            "availability": "present",
+            "kind": "directory",
+            "file_count": 365,
+            "class_count": 0,
+            "tree_manifest_sha256": "14b412abaee914cfad9a597192be940ec9deab39386fddd780baa19114ac6c64"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/main/kotlin",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/plain/java",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/plain/kotlin",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/plainDebug/java",
+            "availability": "missing"
+          },
+          {
+            "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/plainDebug/kotlin",
+            "availability": "missing"
+          }
+        ],
+        "compiler_runtime": [
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-compat/2.3.21/d96ec659bcf373765197eddfcf19995bfeed9896/kotlin-build-tools-compat-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "99632b777b8a85a7a3f8431def497e31f7604a1475bba3c011abe305f585d8d6"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-impl/2.3.21/c6c11fd63ff15677c11f14dbdbad624f8d8dbf04/kotlin-build-tools-impl-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "2cd70396404a0e43c05aaf79a8b35ff3a8ff2e296aedf770f6e5923fbfacae3b"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-tooling-core/2.3.21/7a050c09910ee587944bc2a7413e2d97d751f647/kotlin-tooling-core-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "367142781299bc0f9120c1deec0e62934a1af9ea7f01aaa9c5a5354dc5d8d7d9"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-cri-impl/2.3.21/15fb91d42e1985323b900ed0e0c24e70e601387a/kotlin-build-tools-cri-impl-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "cff0a9b665851a325c2195857e2e1a5a747954c9437d00de0ba15519a4294c46"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.3.21/9b0a49a4d4c570c63a3a2553816bf0539536ab69/kotlin-build-tools-api-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "b2e5cc2666c100079ed343618528eb820dcfa5095095e30f2dd19c60dff7e462"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-runner/2.3.21/3245f77bb78bff349c35e0f4dfaede07e9d1249c/kotlin-compiler-runner-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6db7086229db89d07183a9b476e0992f86120dbc21f66092cd124c7ed6d74434"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.3.21/c4b47f8e33cdbeedd8c1415ab9f9ade870388162/kotlin-compiler-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "d3e70fb011675e77ef00f1a68918d3cd91eed26058977d1e3ea2a37a293233af"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-client/2.3.21/8bd63e265ea5e6472f96f7e9e2431d02b4e69f3e/kotlin-daemon-client-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.3.21/8dafd7f0eb5efef35a446683a2774fef61c68aeb/kotlin-script-runtime-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.3.21/384c12222b10aaa06fdd2163435709efdade5a02/kotlin-daemon-embeddable-2.3.21.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "222fc10a3c22e74d30369bf8a0ca6c4f9372eac7d4a0081e290c256fa4d30fb2"
+          },
+          {
+            "path": "/Users/yuku/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "availability": "present",
+            "kind": "file",
+            "sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+          }
+        ]
+      },
+      "precompiled_source_bindings": [
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/intermediates/built_in_kotlinc/plainDebug/compilePlainDebugKotlin/classes",
+          "availability": "present",
+          "kind": "directory",
+          "file_count": 1008,
+          "class_count": 1007,
+          "tree_manifest_sha256": "029229655b6f726be64199fecb976ef82e3b29489bce71fc77de31cbbafb93d3"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/intermediates/javac/plainDebug/compilePlainDebugJavaWithJavac/classes",
+          "availability": "present",
+          "kind": "directory",
+          "file_count": 293,
+          "class_count": 293,
+          "tree_manifest_sha256": "028b2f774c14691d76e705b2487bb1b06b4d3ae63d8f6d74b1b1a2cc73959796"
+        }
+      ],
+      "raw_capture_missing_classpath": [
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/generated/ksp/plainDebug/classes",
+          "availability": "missing"
+        }
+      ],
+      "original_capture_setup_failures": [
+        {
+          "field": "compilePlainDebugKotlin.sources",
+          "diagnostic": "Querying the mapped value of property(org.gradle.api.file.Directory, property(org.gradle.api.file.Directory, property(org.gradle.api.file.Directory, map(org.gradle.api.file.Directory flatmap(provider(task 'generatePlainDebugBuildConfig', class com.android.build.gradle.tasks.GenerateBuildConfig)) check-type())))) before task ':Alkitab:generatePlainDebugBuildConfig' has completed is not supported"
+        },
+        {
+          "field": "compilePlainReleaseKotlin.sources",
+          "diagnostic": "Querying the mapped value of property(org.gradle.api.file.Directory, property(org.gradle.api.file.Directory, property(org.gradle.api.file.Directory, map(org.gradle.api.file.Directory flatmap(provider(task 'generatePlainReleaseBuildConfig', class com.android.build.gradle.tasks.GenerateBuildConfig)) check-type())))) before task ':Alkitab:generatePlainReleaseBuildConfig' has completed is not supported"
+        },
+        {
+          "field": "compilePlainDebugUnitTestKotlin.sources",
+          "diagnostic": "Querying the mapped value of flatmap(provider(task 'kspPlainDebugUnitTestKotlin', class com.google.devtools.ksp.gradle.KspAATask)) before task ':Alkitab:kspPlainDebugUnitTestKotlin' has completed is not supported"
+        },
+        {
+          "field": "compilePlainReleaseUnitTestKotlin.sources",
+          "diagnostic": "Querying the mapped value of flatmap(provider(task 'kspPlainReleaseUnitTestKotlin', class com.google.devtools.ksp.gradle.KspAATask)) before task ':Alkitab:kspPlainReleaseUnitTestKotlin' has completed is not supported"
+        }
+      ],
+      "optional_empty_omissions": [
+        "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisite-artifacts/capture/modules/Alkitab/module-build/generated/ksp/plainDebug/classes"
+      ],
+      "derived_setup_failures": [],
+      "runtime_hash_drift": [],
+      "missing_declared_source_roots": [
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/debug/java",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/debug/kotlin",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/main/kotlin",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/plain/java",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/plain/kotlin",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/plainDebug/java",
+          "availability": "missing"
+        },
+        {
+          "path": "/Users/yuku/f/git/korrust/target/new-families-full-app-prerequisites/Alkitab/src/plainDebug/kotlin",
+          "availability": "missing"
+        }
+      ],
+      "source_root_policy": "An absent conventional source-set directory is not a missing declared source file or a Kotlin language failure. Generated source/provider availability remains distinct from original-source counts.",
+      "scope": "No compiler invocation. Existing app Kotlin/Java sibling and generated class outputs are real precompiled dependencies for isolated probes, not fresh source-batch/full-app compilation."
+    }
+  ],
+  "counts": {
+    "inputs_available": 4
+  },
+  "evidence": [
+    "target/final-androidbible-debug-model/model.json",
+    "target/new-families-full-app-prerequisite-artifacts/capture/build.json",
+    "target/final-androidbible-debug-model/provenance.json",
+    "reports/correctness/2026-11-02-app-input-availability/audit.py",
+    "reports/correctness/2026-11-02-app-input-availability/audit.log"
+  ],
+  "limitations": [
+    "Availability is not compilation, runtime, Android or source-batch compatibility.",
+    "Raw unrelated release/test capture failures remain preserved and are not promoted to debug task language failures.",
+    "Derived model omits only documented optional-empty inputs and includes the explicitly listed real precompiled source bindings."
+  ],
+  "compiler": {
+    "status": "not_run",
+    "reason": "Read-only input availability audit; no source compilation."
+  },
+  "commands": [
+    {
+      "label": "Read-only captured input audit",
+      "argv": [
+        "python3",
+        "target/resume-app-inputs/audit.py"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-02-app-input-availability/audit.log"
+    }
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "target/resume-app-inputs/audit.py"
+    ]
+  ]
+}
