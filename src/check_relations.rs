@@ -79,6 +79,13 @@ pub(super) fn substitute(ty: &Type, substitutions: &HashMap<String, Type>) -> Ty
                 .collect(),
             result: Box::new(substitute(result, substitutions)),
         },
+        Type::SuspendFunction { params, result } => Type::SuspendFunction {
+            params: params
+                .iter()
+                .map(|ty| substitute(ty, substitutions))
+                .collect(),
+            result: Box::new(substitute(result, substitutions)),
+        },
         _ => ty.clone(),
     }
 }
@@ -478,7 +485,9 @@ fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> b
     }
     fn function_parts(ty: &Type) -> Option<(Vec<&Type>, &Type)> {
         match ty {
-            Type::Function { params, result } => Some((params.iter().collect(), result)),
+            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+                Some((params.iter().collect(), result))
+            }
             Type::ReceiverFunction {
                 receiver,
                 params,
@@ -490,6 +499,11 @@ fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> b
             }
             _ => None,
         }
+    }
+    if matches!(actual, Type::SuspendFunction { .. })
+        != matches!(expected, Type::SuspendFunction { .. })
+    {
+        return false;
     }
     if let (Some((a, ar)), Some((e, er))) = (function_parts(actual), function_parts(expected)) {
         return a.len() == e.len()
@@ -1170,6 +1184,7 @@ impl Checker<'_> {
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
                 value_dispatch: false,
+                suspend_: false,
                 kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),

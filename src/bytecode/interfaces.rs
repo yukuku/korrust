@@ -382,6 +382,7 @@ fn helper_body(
     let mut prefix = helper_prefix(&mut builder.pool, interface, &function.params)?;
     parameter_checks(&mut builder.pool, &mut prefix, &function.params)?;
     let mut code = Code {
+        coroutine: false,
         pool: &mut builder.pool,
         functions: &[],
         owner: &interface.owner,
@@ -834,6 +835,7 @@ fn companion_classes(
         );
     }
     let mut code = Code {
+        coroutine: false,
         pool: &mut builder.pool,
         functions: &[],
         owner: &companion.owner,

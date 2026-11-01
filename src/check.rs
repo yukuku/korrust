@@ -259,6 +259,7 @@ pub struct ClassDecl {
     pub bridges: Vec<JavaMethod>,
 }
 pub struct Function {
+    pub suspend_: bool,
     pub extension_receiver: bool,
     pub class_type_params: Vec<String>,
     pub jvm_result: Option<Type>,
@@ -287,11 +288,16 @@ impl Function {
     }
     pub fn descriptor(&self) -> String {
         format!(
-            "({}){}",
+            "({}{}){}",
             self.params
                 .iter()
                 .map(|p| p.1.descriptor())
                 .collect::<String>(),
+            if self.suspend_ {
+                "Lkotlin/coroutines/Continuation;"
+            } else {
+                ""
+            },
             self.physical_result().descriptor()
         )
     }
@@ -5659,6 +5665,13 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
                 .collect::<Result<Vec<_>>>()?,
             result: Box::new(resolve_type(result, imports, offset)?),
         }),
+        Type::SuspendFunction { params, result } => Ok(Type::SuspendFunction {
+            params: params
+                .iter()
+                .map(|p| resolve_type(p, imports, offset))
+                .collect::<Result<Vec<_>>>()?,
+            result: Box::new(resolve_type(result, imports, offset)?),
+        }),
         Type::Function { params, result } => Ok(Type::Function {
             params: params
                 .iter()
@@ -6312,7 +6325,7 @@ pub fn check_with_owner(
                     }
                 }
             }
-            Type::Function { params, result } => {
+            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 for ty in params {
                     collect_type(ty, names);
                 }
@@ -6850,6 +6863,9 @@ pub fn check_with_owner(
         for (name, ty) in &params {
             checker.declare(name, ty.clone(), false, function.offset)?;
         }
+        if function.suspend_ {
+            checker.next += 1;
+        }
         if function.receiver.is_some() {
             let receiver = checker.local(&params[0].0).unwrap();
             checker.extension_receivers.push(receiver.clone());
@@ -6883,9 +6899,12 @@ pub fn check_with_owner(
             params[0].0 = "<this>".into();
         }
         result.push(Function {
+            suspend_: function.suspend_,
             extension_receiver: function.receiver.is_some(),
             class_type_params: Vec::new(),
-            jvm_result: None,
+            jvm_result: function
+                .suspend_
+                .then(|| Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))),
             jvm_name: None,
             annotations: annotations::declaration_annotations(
                 &function.annotations,

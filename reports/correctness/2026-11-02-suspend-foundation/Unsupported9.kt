@@ -1,0 +1,1 @@
+suspend fun bounded(step: suspend (Unit) -> String): String = step(Unit)

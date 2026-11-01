@@ -174,6 +174,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 134. Enum entry-specific subclasses, abstract/open method and interface dispatch, constructor defaults and named arguments, with JVM signatures and Kotlin metadata.
 135. Named inner classes with a stored enclosing instance, outer-state access, qualified construction, bounded constructor references, and JVM/Kotlin consumer metadata.
 136. Nongeneric single-field JVM value classes with Int, Long, String and nullable String carriers, nullable/generic/interface boxing, mangled JVM signatures, and Kotlin metadata.
+137. Bounded top-level suspend functions and suspend function parameters with real continuation state, up to eight sequential suspension points, delayed resumption and exception propagation, JVM signatures and Kotlin metadata.
 
 ## Project contract
 

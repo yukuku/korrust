@@ -200,6 +200,7 @@ pub(crate) struct LibraryTypeAlias {
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryMethod {
     pub value_dispatch: bool,
+    pub suspend_: bool,
     pub kotlin_declared: bool,
     pub has_annotations: bool,
     pub parameter_modes: Vec<crate::syntax::InlineParameterMode>,

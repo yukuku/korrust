@@ -1,0 +1,1 @@
+fun broken(step: suspend () -> String): String = step()

@@ -106,6 +106,21 @@ impl Checker<'_> {
             }
         }
         let mut value = self.value(expr)?;
+        if matches!(expected.base(), Type::SuspendFunction { .. })
+            && matches!(
+                value.ty.base(),
+                Type::Function { .. } | Type::ReceiverFunction { .. }
+            )
+        {
+            return Err(Diagnostic::new(
+                expr.offset,
+                "Ordinary-to-suspend function value adaptation is unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "SUSPEND_FUNCTION_ADAPTER_UNSUPPORTED",
+            ));
+        }
         if control::expression_terminates(expr) {
             value.ty = expected.clone();
             return Ok(value);
@@ -143,6 +158,16 @@ impl Checker<'_> {
         local_return: bool,
         label: Option<&str>,
     ) -> Result<Value> {
+        if matches!(expected.base(), Type::SuspendFunction { .. }) {
+            return Err(Diagnostic::new(
+                expr.offset,
+                "Source suspend lambdas and references are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "SUSPEND_LAMBDA_UNSUPPORTED",
+            ));
+        }
         let (params, result, receiver_type) = match expected.base() {
             Type::Function { params, result } => (params, result, None),
             Type::ReceiverFunction {
@@ -501,6 +526,7 @@ impl Checker<'_> {
             owner: owner.clone(),
             captures: fields,
             function: Function {
+                suspend_: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -538,7 +564,9 @@ impl Checker<'_> {
             ));
         }
         let (params, result) = match function.ty.base() {
-            Type::Function { params, result } => (params.clone(), result.as_ref().clone()),
+            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+                (params.clone(), result.as_ref().clone())
+            }
             Type::ReceiverFunction {
                 receiver,
                 params,
@@ -809,6 +837,7 @@ mod shadowing_tests {
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
                         value_dispatch: false,
+                        suspend_: false,
                         kotlin_declared: true,
                         has_annotations: false,
                         parameter_modes: Vec::new(),

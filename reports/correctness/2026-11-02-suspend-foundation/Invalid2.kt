@@ -1,0 +1,1 @@
+suspend fun broken(step: suspend (Int) -> Int): Int = step("wrong")

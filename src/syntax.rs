@@ -2,6 +2,10 @@ use crate::{Diagnostic, DiagnosticKind, Result};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Type {
+    SuspendFunction {
+        params: Vec<Type>,
+        result: Box<Type>,
+    },
     Int,
     Long,
     Byte,
@@ -77,6 +81,25 @@ pub struct LambdaParameter {
 }
 
 impl Type {
+    pub fn continuation(result: &Type, variance: Variance) -> Type {
+        Type::Parameterized {
+            name: "kotlin/coroutines/Continuation".into(),
+            arguments: vec![TypeArgument {
+                variance,
+                ty: Some(result.clone()),
+            }],
+        }
+    }
+    pub fn suspend_runtime(params: &[Type], result: &Type) -> Type {
+        let mut params = params.to_vec();
+        params.push(Self::continuation(result, Variance::In));
+        Type::Function {
+            params,
+            result: Box::new(Type::Nullable(Box::new(Type::Java(
+                "java/lang/Object".into(),
+            )))),
+        }
+    }
     pub fn primitive_array_named(name: &str) -> Option<Type> {
         match name.strip_prefix("kotlin/").unwrap_or(name) {
             "IntArray" => Some(Self::IntArray),
@@ -161,6 +184,7 @@ impl Type {
                 | Self::Parameterized { .. }
                 | Self::Parameter { .. }
                 | Self::Function { .. }
+                | Self::SuspendFunction { .. }
                 | Self::ThreadLocal(_)
                 | Self::Null
                 | Self::List(_)
@@ -221,6 +245,9 @@ impl Type {
                 } else {
                     Self::Nullable(upper_bound.clone()).descriptor()
                 }
+            }
+            Self::SuspendFunction { params, .. } => {
+                format!("Lkotlin/jvm/functions/Function{};", params.len() + 1)
             }
             Self::Function { params, .. } => {
                 format!("Lkotlin/jvm/functions/Function{};", params.len())
@@ -638,6 +665,7 @@ pub struct ExtensionProperty {
 }
 #[derive(Clone, Debug)]
 pub struct Function {
+    pub suspend_: bool,
     pub inline: bool,
     pub parameter_modes: Vec<InlineParameterMode>,
     pub extension_property: Option<ExtensionProperty>,
@@ -726,6 +754,7 @@ fn extension_property_accessors(property: &PropertyDecl) -> Result<Vec<Function>
             Vec::new()
         };
         Function {
+            suspend_: false,
             inline: false,
             parameter_modes: vec![InlineParameterMode::Ordinary; params.len()],
             extension_property: Some(ExtensionProperty {
@@ -1814,7 +1843,10 @@ impl Parser {
         let ty = self.nonnullable_ty()?;
         let ty = if self.take("?") {
             if ty == Type::Unit {
-                return Err(self.error("Nullable Unit is not supported"));
+                return Err(self.error("Nullable Unit is not supported").with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "NULLABLE_UNIT_UNSUPPORTED",
+                ));
             }
             Type::Nullable(Box::new(ty))
         } else {
@@ -1923,8 +1955,21 @@ impl Parser {
                 Err(self.error("Parenthesized types require one type or a function arrow"))
             };
         }
-        if self.at("suspend") {
-            return Err(self.error("Suspend function types are unsupported"));
+        if self.take("suspend") {
+            self.lines();
+            return match self.ty()? {
+                Type::Function { params, result }
+                    if params.len() < 22 && params.iter().all(|ty| ty != &Type::Unit) =>
+                {
+                    Ok(Type::SuspendFunction { params, result })
+                }
+                _ => Err(self
+                    .error("Suspend function types require at most 21 ordinary parameters")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "SUSPEND_FUNCTION_TYPE_SHAPE_UNSUPPORTED",
+                    )),
+            };
         }
         let offset = self.token().offset;
         let mut name = self.name()?;
@@ -2235,6 +2280,7 @@ impl Parser {
                     | "actual"
                     | "external"
                     | "inline"
+                    | "suspend"
                     | "infix"
                     | "operator"
                     | "lateinit"
@@ -3154,6 +3200,16 @@ impl Parser {
                 ));
         }
         let mut function = self.function()?;
+        if function.suspend_ {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Source suspend member declarations are unsupported",
+            )
+            .with_kind(
+                DiagnosticKind::UnsupportedLanguage,
+                "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
+            ));
+        }
         function.annotations.splice(0..0, annotations);
         function.offset = offset;
         function.private = visibility.as_deref() == Some("private");
@@ -3899,6 +3955,14 @@ impl Parser {
                     return Err(self.error("Conflicting open/abstract and final modifiers"));
                 }
                 open = !final_ && (open || is_override);
+                if self.at("suspend") {
+                    return Err(self
+                        .error("Source suspend member declarations are unsupported")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
+                        ));
+                }
                 if self.at("inline") {
                     return Err(self
                         .error("Source member inline functions are unsupported")
@@ -4638,6 +4702,16 @@ impl Parser {
                 }
                 if self.at("fun") {
                     let (mut function, has_body) = self.function_body(true)?;
+                    if function.suspend_ {
+                        return Err(Diagnostic::new(
+                            function.offset,
+                            "Source suspend interface declarations are unsupported",
+                        )
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
+                        ));
+                    }
                     function.annotations = annotations;
                     function.infix = infix;
                     function.operator = operator;
@@ -4779,7 +4853,7 @@ impl Parser {
             }
             if self.starts_declaration("fun") {
                 methods.push(ClassMethod {
-                    function: self.function()?,
+                    function: self.member_function()?,
                     is_override: false,
                     open: false,
                     has_body: true,
@@ -5002,6 +5076,20 @@ impl Parser {
         }
         Ok(())
     }
+    fn member_function(&mut self) -> Result<Function> {
+        let function = self.function()?;
+        if function.suspend_ {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Source suspend member declarations are unsupported",
+            )
+            .with_kind(
+                DiagnosticKind::UnsupportedLanguage,
+                "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
+            ));
+        }
+        Ok(function)
+    }
     fn function(&mut self) -> Result<Function> {
         self.function_body(false).map(|(function, _)| function)
     }
@@ -5012,6 +5100,7 @@ impl Parser {
         let mut infix = false;
         let mut operator = false;
         let mut inline = false;
+        let mut suspend_ = false;
         loop {
             if self.at("@") {
                 annotations.extend(self.annotations()?);
@@ -5024,6 +5113,13 @@ impl Parser {
                 }
                 visibility = Some(self.token().text.clone());
                 self.pos += 1;
+            } else if self.take("suspend") {
+                if suspend_ {
+                    return Err(self
+                        .error("Repeated suspend modifier")
+                        .with_kind(DiagnosticKind::InvalidKotlin, "REPEATED_SUSPEND_MODIFIER"));
+                }
+                suspend_ = true;
             } else if self.take("inline") {
                 if inline {
                     return Err(self
@@ -5207,6 +5303,7 @@ impl Parser {
         self.type_parameters.truncate(type_parameter_count);
         Ok((
             Function {
+                suspend_,
                 inline,
                 parameter_modes,
                 extension_property: None,
@@ -5280,7 +5377,18 @@ impl Parser {
                     "LOCAL_CLASS_UNSUPPORTED",
                 ));
         } else if self.starts_declaration("fun") {
-            StatementKind::LocalFunction(Box::new(self.function()?))
+            let function = self.function()?;
+            if function.suspend_ {
+                return Err(Diagnostic::new(
+                    function.offset,
+                    "Local suspend function declarations are unsupported",
+                )
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "SUSPEND_LOCAL_DECLARATION_UNSUPPORTED",
+                ));
+            }
+            StatementKind::LocalFunction(Box::new(function))
         } else if self.at("val") || self.at("var") {
             let mutable = self.take("var");
             if !mutable {
@@ -5774,6 +5882,14 @@ impl Parser {
         Ok(result)
     }
     fn prefix(&mut self) -> Result<Expr> {
+        if self.at("object") {
+            return Err(self
+                .error("General anonymous object expressions are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "ANONYMOUS_OBJECT_EXPRESSION_UNSUPPORTED",
+                ));
+        }
         let offset = self.token().offset;
         if self.annotation_context && self.take("[") {
             let mut values = Vec::new();
@@ -8380,7 +8496,7 @@ mod tests {
             "fun <T: Int?> f(value: T): T = value",
             "fun <T: Unit> f(value: T): T = value",
             "fun <T> f(value: T): T where T: Any = value",
-            "fun f(value: suspend () -> Unit): Unit {}",
+            "fun f(value: suspend String.() -> Unit): Unit {}",
             "fun f(value: List<in String>): Unit {}",
             "fun f(value: Comparable<out String>): Unit {}",
         ] {

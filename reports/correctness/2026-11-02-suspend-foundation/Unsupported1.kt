@@ -1,0 +1,1 @@
+suspend fun bounded(step: suspend () -> String): String { while (true) { step() }; return "x" }

@@ -635,6 +635,7 @@ mod tests {
         JavaMethod {
             library: Some(crate::classpath::LibraryMethod {
                 value_dispatch: false,
+                suspend_: false,
                 kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),

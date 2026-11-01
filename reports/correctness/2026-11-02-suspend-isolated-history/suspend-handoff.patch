@@ -1,0 +1,2887 @@
+--- a/src/annotation_declarations.rs
++++ b/src/annotation_declarations.rs
+@@ -1112,6 +1112,7 @@
+                 kotlin_result: Some(logical),
+                 kotlin_internal: false,
+                 library: Some(LibraryMethod {
++                    suspend_: false,
+                     parameter_modes: Vec::new(),
+                     reified_arguments: Vec::new(),
+                     kotlin_declared: true,
+--- a/src/bytecode/class_companion.rs
++++ b/src/bytecode/class_companion.rs
+@@ -128,6 +128,7 @@
+                 code.bytes.extend([load_opcode(ty), slot as u8]);
+             }
+             let reduced = crate::check::Function {
++                suspend_: false,
+                 extension_receiver: false,
+                 class_type_params: Vec::new(),
+                 jvm_result: None,
+@@ -165,6 +166,7 @@
+         }
+     }
+     let mut code = Code {
++        coroutine: false,
+         pool,
+         functions: &[],
+         owner,
+@@ -342,6 +344,7 @@
+             )?);
+         }
+         let mut code = Code {
++            coroutine: false,
+             pool: &mut pool,
+             functions: &companion.methods,
+             owner: &companion.owner,
+--- a/src/bytecode/data.rs
++++ b/src/bytecode/data.rs
+@@ -2,6 +2,7 @@
+ 
+ fn code<'a>(pool: &'a mut Pool, owner: &'a str) -> Code<'a> {
+     Code {
++        coroutine: false,
+         pool,
+         functions: &[],
+         owner,
+--- a/src/bytecode/defaults.rs
++++ b/src/bytecode/defaults.rs
+@@ -20,6 +20,7 @@
+             .sum::<usize>();
+     let locals = function.locals.max((slots + 2) as u16);
+     let mut body = Code {
++        coroutine: false,
+         pool,
+         functions,
+         owner,
+@@ -129,6 +130,7 @@
+     let slots = 1 + class.params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
+     let locals = class.constructor_locals.max((slots + 2) as u16);
+     let mut body = Code {
++        coroutine: false,
+         pool,
+         functions: &class.methods,
+         owner,
+@@ -204,6 +206,7 @@
+     let mut methods = vec![method];
+     if class.defaults.len() == class.params.len() && class.defaults.iter().all(Option::is_some) {
+         let mut body = Code {
++            coroutine: false,
+             pool,
+             functions: &[],
+             owner,
+@@ -278,6 +281,7 @@
+         }
+         omitted.insert(index);
+         let reduced = crate::check::Function {
++            suspend_: false,
+             extension_receiver: function.extension_receiver,
+             class_type_params: function.class_type_params.clone(),
+             jvm_result: function.jvm_result.clone(),
+--- a/src/bytecode/interfaces.rs
++++ b/src/bytecode/interfaces.rs
+@@ -382,6 +382,7 @@
+     let mut prefix = helper_prefix(&mut builder.pool, interface, &function.params)?;
+     parameter_checks(&mut builder.pool, &mut prefix, &function.params)?;
+     let mut code = Code {
++        coroutine: false,
+         pool: &mut builder.pool,
+         functions: &[],
+         owner: &interface.owner,
+@@ -834,6 +835,7 @@
+         );
+     }
+     let mut code = Code {
++        coroutine: false,
+         pool: &mut builder.pool,
+         functions: &[],
+         owner: &companion.owner,
+--- a/src/bytecode/lambdas.rs
++++ b/src/bytecode/lambdas.rs
+@@ -82,6 +82,7 @@
+         false,
+     )?;
+     let mut code = Code {
++        coroutine: false,
+         pool: &mut pool,
+         functions,
+         owner: facade,
+@@ -155,6 +156,7 @@
+         }
+         let locals = 1 + params.iter().map(Type::slots).sum::<usize>();
+         let mut code = Code {
++            coroutine: false,
+             pool: &mut pool,
+             functions,
+             owner: facade,
+@@ -276,6 +278,7 @@
+         locals: u16,
+     ) -> crate::check::Function {
+         crate::check::Function {
++            suspend_: false,
+             extension_receiver: false,
+             class_type_params: Vec::new(),
+             jvm_result: None,
+--- a/src/bytecode/objects.rs
++++ b/src/bytecode/objects.rs
+@@ -49,6 +49,7 @@
+         ));
+     }
+     let mut code = Code {
++        coroutine: false,
+         pool,
+         functions: &[],
+         owner,
+@@ -184,6 +185,7 @@
+         return Err(failure("Expected a ThreadLocal array initializer"));
+     };
+     let mut code = Code {
++        coroutine: false,
+         pool,
+         functions: &[],
+         owner,
+@@ -579,6 +581,7 @@
+         );
+     }
+     let mut code = Code {
++        coroutine: false,
+         pool: &mut builder.pool,
+         functions: &[],
+         owner,
+--- /dev/null
++++ b/src/bytecode/suspend.rs
+@@ -0,0 +1,915 @@
++use super::*;
++use std::collections::BTreeMap;
++
++struct Point {
++    value: Value,
++    destination: Destination,
++    spills: Vec<(u8, Type)>,
++}
++
++enum Destination {
++    Store(u8),
++    Discard,
++    Return,
++}
++
++struct Plan {
++    segments: Vec<Vec<Statement>>,
++    points: Vec<Point>,
++    fields: BTreeMap<u8, Type>,
++}
++
++fn unsupported(message: &str) -> Diagnostic {
++    Diagnostic::new(0, message).with_kind(
++        crate::DiagnosticKind::UnsupportedLanguage,
++        "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
++    )
++}
++
++pub(super) fn suspension(value: &Value, functions: &[crate::check::Function]) -> bool {
++    match &value.kind {
++        ValueKind::Call(index, _) => functions[*index].suspend_,
++        ValueKind::JavaCall { method, .. } | ValueKind::MemberCall { method, .. } => method
++            .library
++            .as_ref()
++            .is_some_and(|method| method.suspend_),
++        ValueKind::FunctionInvoke { function, .. } => {
++            matches!(function.ty.base(), Type::SuspendFunction { .. })
++        }
++        _ => false,
++    }
++}
++
++fn contains_suspension(body: &[Statement], functions: &[crate::check::Function]) -> bool {
++    let mut found = false;
++    crate::check::ir_walk::statements(&mut body.to_vec(), "", &mut |value: &mut Value, _: &str| {
++        found |= suspension(value, functions);
++    });
++    found
++}
++
++fn boxed_return(value: &Value) -> Value {
++    if value.ty == Type::Unit {
++        Value {
++            ty: Type::Java("kotlin/Unit".into()),
++            kind: ValueKind::StaticField {
++                owner: "kotlin/Unit".into(),
++                name: "INSTANCE".into(),
++            },
++        }
++    } else {
++        Value {
++            ty: Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))),
++            kind: ValueKind::Box(Box::new(value.clone())),
++        }
++    }
++}
++
++fn plan(function: &crate::check::Function, functions: &[crate::check::Function]) -> Result<Plan> {
++    let mut fields = parameter_slots(&function.params, 0)
++        .into_iter()
++        .zip(&function.params)
++        .map(|(slot, (_, ty))| (slot as u8, ty.clone()))
++        .collect::<BTreeMap<_, _>>();
++    let mut active = fields.clone();
++    let mut segments = Vec::new();
++    let mut segment = Vec::new();
++    let mut points = Vec::new();
++    for statement in &function.body {
++        let point = match statement {
++            Statement::Store(slot, value) if suspension(value, functions) => {
++                Some((value, Destination::Store(*slot)))
++            }
++            Statement::Expression(value) if suspension(value, functions) => {
++                Some((value, Destination::Discard))
++            }
++            Statement::Return(value) if suspension(value, functions) => {
++                Some((value, Destination::Return))
++            }
++            _ => None,
++        };
++        if let Some((value, destination)) = point {
++            let mut count = 0;
++            crate::check::ir_walk::value(
++                &mut value.clone(),
++                "",
++                &mut |value: &mut Value, _: &str| {
++                    count += usize::from(suspension(value, functions));
++                },
++            );
++            if count != 1 {
++                return Err(unsupported(
++                    "Nested suspension arguments and expressions are unsupported",
++                ));
++            }
++            if !function.suspend_ {
++                return Err(
++                    Diagnostic::new(0, "Suspend calls require a suspend function context")
++                        .with_kind(
++                            crate::DiagnosticKind::InvalidKotlin,
++                            "SUSPEND_CALL_CONTEXT_INVALID",
++                        ),
++                );
++            }
++            if matches!(value.kind, ValueKind::MemberCall { .. }) {
++                return Err(unsupported("Imported suspend member calls are unsupported"));
++            }
++            if matches!(&value.kind, ValueKind::JavaCall { method, .. } if method.name.ends_with("$default"))
++            {
++                return Err(unsupported(
++                    "Imported suspend default argument calls are unsupported",
++                ));
++            }
++            if let Destination::Store(slot) = destination {
++                if value.ty == Type::Unit {
++                    return Err(unsupported(
++                        "Saved Unit locals in suspend functions are unsupported",
++                    ));
++                }
++                fields.insert(slot, value.ty.clone());
++            }
++            segments.push(std::mem::take(&mut segment));
++            points.push(Point {
++                value: value.clone(),
++                destination,
++                spills: active
++                    .iter()
++                    .map(|(slot, ty)| (*slot, ty.clone()))
++                    .collect(),
++            });
++            if let Some(Point {
++                destination: Destination::Store(slot),
++                ..
++            }) = points.last()
++            {
++                active.insert(*slot, value.ty.clone());
++            }
++            continue;
++        }
++        if contains_suspension(std::slice::from_ref(statement), functions) {
++            if !function.suspend_ {
++                return Err(
++                    Diagnostic::new(0, "Suspend calls require a suspend function context")
++                        .with_kind(
++                            crate::DiagnosticKind::InvalidKotlin,
++                            "SUSPEND_CALL_CONTEXT_INVALID",
++                        ),
++                );
++            }
++            return Err(unsupported(
++                "Suspension in nested control flow, lambdas, or expression trees is unsupported",
++            ));
++        }
++        match statement {
++            Statement::Store(slot, value) => {
++                if value.ty == Type::Unit {
++                    return Err(unsupported(
++                        "Saved Unit locals in suspend functions are unsupported",
++                    ));
++                }
++                active.insert(*slot, value.ty.clone());
++                fields.insert(*slot, value.ty.clone());
++                segment.push(statement.clone());
++            }
++            Statement::Return(value) if function.suspend_ => {
++                segment.push(Statement::Return(boxed_return(value)))
++            }
++            Statement::Expression(_)
++            | Statement::ThrowValue(_)
++            | Statement::ThrowException { .. }
++            | Statement::Return(_) => segment.push(statement.clone()),
++            _ if function.suspend_ => {
++                return Err(unsupported(
++                    "Suspend function bodies currently require straight-line statements",
++                ));
++            }
++            _ => segment.push(statement.clone()),
++        }
++    }
++    segments.push(segment);
++    if points.len() > 8 {
++        return Err(unsupported(
++            "Suspend functions support at most eight suspension points",
++        ));
++    }
++    Ok(Plan {
++        segments,
++        points,
++        fields,
++    })
++}
++
++fn unsupported_unit_type(ty: &Type) -> bool {
++    match ty {
++        Type::Nullable(inner) => inner.as_ref() == &Type::Unit || unsupported_unit_type(inner),
++        Type::Platform(inner)
++        | Type::Array(inner)
++        | Type::List(inner)
++        | Type::MutableList(inner)
++        | Type::ThreadLocal(inner)
++        | Type::Parameter {
++            upper_bound: inner, ..
++        } => unsupported_unit_type(inner),
++        Type::Parameterized { arguments, .. } => arguments
++            .iter()
++            .filter_map(|argument| argument.ty.as_ref())
++            .any(unsupported_unit_type),
++        Type::SuspendFunction { params, result } => {
++            params
++                .iter()
++                .any(|ty| ty == &Type::Unit || unsupported_unit_type(ty))
++                || unsupported_unit_type(result)
++        }
++        Type::Function { params, result } => {
++            params.iter().any(unsupported_unit_type) || unsupported_unit_type(result)
++        }
++        Type::ReceiverFunction {
++            receiver,
++            params,
++            result,
++        } => {
++            unsupported_unit_type(receiver)
++                || params.iter().any(unsupported_unit_type)
++                || unsupported_unit_type(result)
++        }
++        _ => false,
++    }
++}
++
++fn forbidden_type(ty: &Type, owners: &std::collections::BTreeSet<String>) -> bool {
++    match ty {
++        Type::Java(owner) => owners.contains(owner),
++        Type::Parameterized { name, arguments } => {
++            owners.contains(name)
++                || arguments
++                    .iter()
++                    .filter_map(|argument| argument.ty.as_ref())
++                    .any(|ty| forbidden_type(ty, owners))
++        }
++        Type::Nullable(inner)
++        | Type::Platform(inner)
++        | Type::Array(inner)
++        | Type::List(inner)
++        | Type::MutableList(inner)
++        | Type::ThreadLocal(inner)
++        | Type::Parameter {
++            upper_bound: inner, ..
++        } => forbidden_type(inner, owners),
++        Type::Function { params, result } | Type::SuspendFunction { params, result } => {
++            params.iter().any(|ty| forbidden_type(ty, owners)) || forbidden_type(result, owners)
++        }
++        Type::ReceiverFunction {
++            receiver,
++            params,
++            result,
++        } => {
++            forbidden_type(receiver, owners)
++                || params.iter().any(|ty| forbidden_type(ty, owners))
++                || forbidden_type(result, owners)
++        }
++        _ => false,
++    }
++}
++
++fn forbidden_value(value: &Value, owners: &std::collections::BTreeSet<String>) -> bool {
++    forbidden_type(&value.ty, owners)
++        || match &value.kind {
++            ValueKind::JavaCall { method, .. }
++            | ValueKind::MemberCall { method, .. }
++            | ValueKind::SuperCall { method, .. }
++            | ValueKind::CompiledInline { method, .. } => {
++                owners.contains(&method.owner)
++                    || method.kotlin_params.as_ref().is_some_and(|params| {
++                        params.iter().any(|(_, ty, _)| forbidden_type(ty, owners))
++                    })
++                    || method
++                        .kotlin_result
++                        .as_ref()
++                        .is_some_and(|ty| forbidden_type(ty, owners))
++                    || method.library.as_ref().is_some_and(|library| {
++                        library
++                            .reified_arguments
++                            .iter()
++                            .any(|(_, ty)| forbidden_type(ty, owners))
++                    })
++            }
++            ValueKind::ClassLiteral(ty)
++            | ValueKind::TypeTest { target: ty, .. }
++            | ValueKind::Cast { target: ty, .. } => forbidden_type(ty, owners),
++            ValueKind::StaticCall { owner, .. }
++            | ValueKind::CompanionArray { owner, .. }
++            | ValueKind::New { owner, .. }
++            | ValueKind::ObjectInstance(owner)
++            | ValueKind::StaticField { owner, .. }
++            | ValueKind::JavaField { owner, .. } => owners.contains(owner),
++            _ => false,
++        }
++}
++
++pub(crate) fn validate(
++    module: &Module,
++    source: &crate::syntax::Module,
++    forbidden_owners: &std::collections::BTreeSet<String>,
++) -> Result<()> {
++    for function in &source.functions {
++        if function.suspend_
++            && (function.receiver.is_some()
++                || !function.type_params.is_empty()
++                || function.inline
++                || function.vararg
++                || function.defaults.iter().any(Option::is_some))
++        {
++            return Err(Diagnostic::new(function.offset, "Generic, extension, inline, vararg, and defaulted suspend declarations are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SUSPEND_DECLARATION_SHAPE_UNSUPPORTED"));
++        }
++    }
++    let mut signatures = std::collections::BTreeSet::new();
++    for function in &module.functions {
++        if !signatures.insert((function.jvm_name(), function.descriptor())) {
++            return Err(
++                Diagnostic::new(0, "Conflicting physical JVM function signatures")
++                    .with_kind(crate::DiagnosticKind::InvalidKotlin, "JVM_SIGNATURE_CLASH"),
++            );
++        }
++        if function.suspend_ {
++            let mut unsupported_unit = function
++                .params
++                .iter()
++                .any(|(_, ty)| unsupported_unit_type(ty))
++                || unsupported_unit_type(&function.result);
++            crate::check::ir_walk::statements(
++                &mut function.body.clone(),
++                "",
++                &mut |value: &mut Value, _: &str| {
++                    unsupported_unit |= unsupported_unit_type(&value.ty);
++                },
++            );
++            if unsupported_unit {
++                return Err(unsupported(
++                    "Nullable Unit and Unit-valued suspend callback parameters are unsupported",
++                ));
++            }
++            if function
++                .params
++                .iter()
++                .map(|(_, ty)| ty.slots())
++                .sum::<usize>()
++                >= 255
++            {
++                return Err(unsupported(
++                    "Suspend function parameters exceed the JVM limit including the continuation",
++                ));
++            }
++            let mut forbidden = function
++                .params
++                .iter()
++                .any(|(_, ty)| forbidden_type(ty, forbidden_owners))
++                || forbidden_type(&function.result, forbidden_owners);
++            crate::check::ir_walk::statements(
++                &mut function.body.clone(),
++                "",
++                &mut |value: &mut Value, _: &str| {
++                    forbidden |= forbidden_value(value, forbidden_owners);
++                },
++            );
++            if forbidden {
++                return Err(Diagnostic::new(source.functions.iter().find(|source| source.name == function.name).map_or(0, |source| source.offset), "Value-class types in suspend declarations, callbacks, or saved values are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SUSPEND_VALUE_CLASS_INTERACTION_UNSUPPORTED"));
++            }
++        }
++        if !function.suspend_ && !contains_suspension(&function.body, &module.functions) {
++            continue;
++        }
++        plan(function, &module.functions).map_err(|mut error| {
++            error.offset = source
++                .functions
++                .iter()
++                .find(|source| source.name == function.name)
++                .map_or(0, |source| source.offset);
++            error
++        })?;
++    }
++    for lambda in &module.lambdas {
++        if contains_suspension(&lambda.function.body, &module.functions) {
++            return Err(Diagnostic::new(
++                0,
++                "Suspension inside source lambda bodies is unsupported",
++            )
++            .with_kind(
++                crate::DiagnosticKind::UnsupportedLanguage,
++                "SUSPEND_LAMBDA_BODY_UNSUPPORTED",
++            ));
++        }
++    }
++    Ok(())
++}
++
++fn frame_owner(owner: &str, index: usize) -> String {
++    format!("{owner}$suspend${index}")
++}
++
++fn code<'a>(pool: &'a mut Pool, module: &'a Module, owner: &'a str) -> Code<'a> {
++    Code {
++        coroutine: true,
++        pool,
++        functions: &module.functions,
++        owner,
++        bytes: Vec::new(),
++        labels: Vec::new(),
++        branches: Vec::new(),
++        loops: Vec::new(),
++        loop_finally_depths: Vec::new(),
++        loop_names: Vec::new(),
++        pending_loop_name: None,
++        finalizers: Vec::new(),
++        exceptions: Vec::new(),
++        temporary_count: 0,
++        temporary_patches: Vec::new(),
++        lambdas: &module.lambdas,
++        inline_local_maps: Vec::new(),
++        inline_returns: Vec::new(),
++        in_lambda: false,
++        max_stack: 32,
++    }
++}
++
++fn spill_name(slot: u8) -> String {
++    format!("spill${slot}")
++}
++
++fn throw_on_failure(code: &mut Code<'_>, result: u8) -> Result<()> {
++    code.bytes.extend([0x19, result]);
++    code.method_reference(
++        0xb8,
++        "kotlin/ResultKt",
++        "throwOnFailure",
++        "(Ljava/lang/Object;)V",
++    )
++}
++
++fn call(
++    code: &mut Code<'_>,
++    point: &Point,
++    frame: u8,
++    frame_owner: &str,
++    next_state: usize,
++    temporary: u8,
++) -> Result<()> {
++    let (receiver, args) = match &point.value.kind {
++        ValueKind::Call(_, args) | ValueKind::JavaCall { args, .. } => (None, args),
++        ValueKind::FunctionInvoke { function, args } => (Some(function.as_ref()), args),
++        _ => return Err(unsupported("Unsupported suspension invocation")),
++    };
++    let mut next = temporary as u16;
++    let receiver_slot = if let Some(receiver) = receiver {
++        code.value(receiver)?;
++        let slot = next as u8;
++        next += 1;
++        code.bytes.extend([0x3a, slot]);
++        Some(slot)
++    } else {
++        None
++    };
++    let mut slots = Vec::new();
++    for argument in args {
++        if next + argument.ty.slots() as u16 > 255 {
++            return Err(unsupported(
++                "Suspend invocation temporaries exceed JVM local limit",
++            ));
++        }
++        let slot = next as u8;
++        next += argument.ty.slots() as u16;
++        code.value(argument)?;
++        code.bytes.extend([store_opcode(&argument.ty), slot]);
++        slots.push(slot);
++    }
++    for (slot, ty) in &point.spills {
++        code.bytes.extend([0x19, frame, load_opcode(ty), *slot]);
++        code.field_reference(0xb5, frame_owner, &spill_name(*slot), &ty.descriptor())?;
++    }
++    code.bytes.extend([0x19, frame]);
++    code.integer(next_state as i32)?;
++    code.field_reference(0xb5, frame_owner, "label", "I")?;
++    if let Some(slot) = receiver_slot {
++        code.bytes.extend([0x19, slot]);
++    }
++    let physical = match &point.value.kind {
++        ValueKind::Call(index, _) => invocation_types(&code.functions[*index].descriptor())?.0,
++        ValueKind::JavaCall { method, .. } => invocation_types(&method.descriptor)?.0,
++        ValueKind::FunctionInvoke { .. } => {
++            vec![Type::Java("java/lang/Object".into()); args.len() + 1]
++        }
++        _ => unreachable!(),
++    };
++    if physical.len() != args.len() + 1 {
++        return Err(unsupported(
++            "Suspension invocation has an unsupported physical parameter layout",
++        ));
++    }
++    for ((argument, slot), expected) in args.iter().zip(slots).zip(&physical) {
++        code.bytes.extend([load_opcode(&argument.ty), slot]);
++        code.adapt_value(&argument.ty, expected)?;
++    }
++    code.bytes.extend([0x19, frame]);
++    match &point.value.kind {
++        ValueKind::Call(index, _) => {
++            let function = &code.functions[*index];
++            code.method_reference(
++                0xb8,
++                code.owner,
++                function.jvm_name(),
++                &function.descriptor(),
++            )?;
++        }
++        ValueKind::JavaCall { method, .. } => {
++            code.method_reference(0xb8, &method.owner, &method.name, &method.descriptor)?;
++        }
++        ValueKind::FunctionInvoke { args, .. } => {
++            let arity = args.len() + 1;
++            let method = code.pool.interface_method(
++                &format!("kotlin/jvm/functions/Function{arity}"),
++                "invoke",
++                &format!("({})Ljava/lang/Object;", "Ljava/lang/Object;".repeat(arity)),
++            )?;
++            code.reference(0xb9, method);
++            code.bytes.extend([(arity + 1) as u8, 0]);
++        }
++        _ => unreachable!(),
++    }
++    code.max_stack = code.max_stack.max(
++        2 + args
++            .iter()
++            .map(|argument| argument.ty.slots())
++            .sum::<usize>(),
++    );
++    Ok(())
++}
++
++pub(super) fn method(
++    pool: &mut Pool,
++    module: &Module,
++    owner: &str,
++    index: usize,
++) -> Result<Vec<u8>> {
++    let function = &module.functions[index];
++    let plan = plan(function, &module.functions)?;
++    let mut code = code(pool, module, owner);
++    let mut locals = function.locals;
++    if plan.points.is_empty() {
++        code.block(&plan.segments[0])?;
++    } else {
++        let incoming = function
++            .params
++            .iter()
++            .map(|(_, ty)| ty.slots())
++            .sum::<usize>() as u8;
++        let temporaries = plan
++            .points
++            .iter()
++            .map(|point| match &point.value.kind {
++                ValueKind::Call(_, args) | ValueKind::JavaCall { args, .. } => args
++                    .iter()
++                    .map(|argument| argument.ty.slots())
++                    .sum::<usize>(),
++                ValueKind::FunctionInvoke { args, .. } => {
++                    1 + args
++                        .iter()
++                        .map(|argument| argument.ty.slots())
++                        .sum::<usize>()
++                }
++                _ => 0,
++            })
++            .max()
++            .unwrap_or(0);
++        if function.locals as usize + 3 + temporaries > 255 {
++            return Err(unsupported("Suspend frame exceeds JVM local limit"));
++        }
++        let frame = function.locals as u8;
++        let result = frame + 1;
++        let marker = frame + 2;
++        let temporary = frame + 3;
++        locals = function.locals + 3 + temporaries as u16;
++        let frame_owner = frame_owner(owner, index);
++        let create = code.label();
++        let ready = code.label();
++        let suspended = code.label();
++        code.bytes.extend([0x19, incoming]);
++        code.class_reference(0xc1, &frame_owner)?;
++        code.branch(0x99, create);
++        code.bytes.extend([0x19, incoming]);
++        code.class_reference(0xc0, &frame_owner)?;
++        code.bytes.extend([0x3a, frame]);
++        code.bytes.extend([0x19, frame]);
++        code.field_reference(0xb4, &frame_owner, "label", "I")?;
++        code.integer(i32::MIN)?;
++        code.bytes.push(0x7e);
++        code.branch(0x99, create);
++        code.bytes.extend([0x19, frame, 0x59]);
++        code.field_reference(0xb4, &frame_owner, "label", "I")?;
++        code.integer(i32::MIN)?;
++        code.bytes.push(0x64);
++        code.field_reference(0xb5, &frame_owner, "label", "I")?;
++        code.branch(0xa7, ready);
++        code.mark(create);
++        code.class_reference(0xbb, &frame_owner)?;
++        code.bytes.push(0x59);
++        code.bytes.extend([0x19, incoming]);
++        code.method_reference(
++            0xb7,
++            &frame_owner,
++            "<init>",
++            "(Lkotlin/coroutines/Continuation;)V",
++        )?;
++        code.bytes.extend([0x3a, frame]);
++        code.mark(ready);
++        code.bytes.extend([0x19, frame]);
++        code.field_reference(0xb4, &frame_owner, "result", "Ljava/lang/Object;")?;
++        code.bytes.extend([0x3a, result]);
++        code.method_reference(
++            0xb8,
++            "kotlin/coroutines/intrinsics/IntrinsicsKt",
++            "getCOROUTINE_SUSPENDED",
++            "()Ljava/lang/Object;",
++        )?;
++        code.bytes.extend([0x3a, marker]);
++        let states = (0..=plan.points.len())
++            .map(|_| code.label())
++            .collect::<Vec<_>>();
++        let after = (0..plan.points.len())
++            .map(|_| code.label())
++            .collect::<Vec<_>>();
++        for (index, state) in states.iter().enumerate() {
++            code.bytes.extend([0x19, frame]);
++            code.field_reference(0xb4, &frame_owner, "label", "I")?;
++            code.integer(index as i32)?;
++            code.branch(0x9f, *state);
++        }
++        code.class_reference(0xbb, "java/lang/IllegalStateException")?;
++        code.bytes.push(0x59);
++        code.value(&Value {
++            ty: Type::String,
++            kind: ValueKind::String(
++                "call to 'resume' before 'invoke' with coroutine"
++                    .encode_utf16()
++                    .collect(),
++            ),
++        })?;
++        code.method_reference(
++            0xb7,
++            "java/lang/IllegalStateException",
++            "<init>",
++            "(Ljava/lang/String;)V",
++        )?;
++        code.bytes.push(0xbf);
++        code.mark(states[0]);
++        throw_on_failure(&mut code, result)?;
++        code.block(&plan.segments[0])?;
++        for (index, point) in plan.points.iter().enumerate() {
++            call(&mut code, point, frame, &frame_owner, index + 1, temporary)?;
++            code.bytes
++                .extend([0x3a, result, 0x19, result, 0x19, marker]);
++            code.branch(0xa5, suspended);
++            code.branch(0xa7, after[index]);
++            code.mark(states[index + 1]);
++            for (slot, ty) in &point.spills {
++                code.bytes.extend([0x19, frame]);
++                code.field_reference(0xb4, &frame_owner, &spill_name(*slot), &ty.descriptor())?;
++                code.bytes.extend([store_opcode(ty), *slot]);
++            }
++            throw_on_failure(&mut code, result)?;
++            code.mark(after[index]);
++            match point.destination {
++                Destination::Store(slot) => {
++                    code.bytes.extend([0x19, result]);
++                    code.adapt_value(&Type::Java("java/lang/Object".into()), &point.value.ty)?;
++                    code.bytes.extend([store_opcode(&point.value.ty), slot]);
++                }
++                Destination::Discard => {}
++                Destination::Return => {
++                    if function.result == Type::Unit {
++                        code.field_reference(0xb2, "kotlin/Unit", "INSTANCE", "Lkotlin/Unit;")?;
++                    } else {
++                        code.bytes.extend([0x19, result]);
++                    }
++                    code.bytes.push(0xb0);
++                }
++            }
++            code.block(&plan.segments[index + 1])?;
++        }
++        code.mark(suspended);
++        code.bytes.extend([0x19, marker, 0xb0]);
++    }
++    let stack = code.max_stack as u16;
++    let code = code.into_simple(locals, stack)?;
++    let mut method = simple_method(
++        pool,
++        if function.private { 0x001a } else { 0x0019 },
++        function.jvm_name(),
++        &function.descriptor(),
++        code,
++        generic_function(function).as_deref(),
++        false,
++    )?;
++    let mut params = function.params.clone();
++    params.push((
++        "$completion".into(),
++        Type::continuation(&function.result, crate::syntax::Variance::In),
++    ));
++    parameter_annotations(pool, &mut method, &params)?;
++    annotations::append_annotations(pool, &mut method, &function.annotations)?;
++    nullable_result(pool, &mut method, function.physical_result())?;
++    Ok(method)
++}
++
++pub(super) fn access_bridge(
++    pool: &mut Pool,
++    function: &crate::check::Function,
++    owner: &str,
++    index: usize,
++) -> Result<Vec<u8>> {
++    let mut params = function.params.clone();
++    params.push((
++        "$completion".into(),
++        Type::Java("kotlin/coroutines/Continuation".into()),
++    ));
++    let slots = params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
++    let mut code = SimpleCode::new(slots as u16, slots as u16);
++    for (slot, (_, ty)) in parameter_slots(&params, 0).into_iter().zip(&params) {
++        code.bytes.extend([load_opcode(ty), slot as u8]);
++    }
++    code.reference(
++        0xb8,
++        pool.method(owner, function.jvm_name(), &function.descriptor())?,
++    );
++    code.bytes.push(0xb0);
++    simple_method(
++        pool,
++        0x1009,
++        &format!("access$suspend${index}"),
++        &function.descriptor(),
++        code,
++        None,
++        false,
++    )
++}
++
++pub(crate) fn frames(module: &Module, owner: &str, file: &str) -> Result<Vec<crate::ClassFile>> {
++    let mut files = Vec::new();
++    for (index, function) in module
++        .functions
++        .iter()
++        .enumerate()
++        .filter(|(_, function)| function.suspend_)
++    {
++        let plan = plan(function, &module.functions)?;
++        if plan.points.is_empty() {
++            continue;
++        }
++        let frame_owner = frame_owner(owner, index);
++        let mut pool = Pool::default();
++        let this = pool.class(&frame_owner)?;
++        let parent = pool.class("kotlin/coroutines/jvm/internal/ContinuationImpl")?;
++        let mut fields = Vec::new();
++        for (slot, ty) in &plan.fields {
++            fields.extend(class_field_scoped(&mut pool, &spill_name(*slot), ty, 0)?);
++        }
++        fields.extend(class_field(
++            &mut pool,
++            "result",
++            &Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))),
++            0,
++        )?);
++        fields.extend(class_field(&mut pool, "label", &Type::Int, 0)?);
++        let mut constructor = SimpleCode::new(2, 2);
++        constructor.bytes.extend([0x2a, 0x2b]);
++        constructor.reference(
++            0xb7,
++            pool.method(
++                "kotlin/coroutines/jvm/internal/ContinuationImpl",
++                "<init>",
++                "(Lkotlin/coroutines/Continuation;)V",
++            )?,
++        );
++        constructor.bytes.push(0xb1);
++        let constructor = simple_method(
++            &mut pool,
++            0,
++            "<init>",
++            "(Lkotlin/coroutines/Continuation;)V",
++            constructor,
++            None,
++            false,
++        )?;
++        let mut invoke = SimpleCode::new(
++            (2 + function
++                .params
++                .iter()
++                .map(|(_, ty)| ty.slots())
++                .sum::<usize>()) as u16,
++            2,
++        );
++        invoke.bytes.extend([0x2a, 0x2b]);
++        invoke.reference(
++            0xb5,
++            pool.field(&frame_owner, "result", "Ljava/lang/Object;")?,
++        );
++        invoke.bytes.extend([0x2a, 0x59]);
++        invoke.reference(0xb4, pool.field(&frame_owner, "label", "I")?);
++        invoke.reference(0x13, pool.add(Constant::Integer(i32::MIN))?);
++        invoke.bytes.push(0x80);
++        invoke.reference(0xb5, pool.field(&frame_owner, "label", "I")?);
++        for (_, ty) in &function.params {
++            invoke.bytes.push(if ty.is_reference() {
++                0x01
++            } else if ty == &Type::Long {
++                0x09
++            } else if ty == &Type::Double {
++                0x0e
++            } else if ty == &Type::Float {
++                0x0b
++            } else {
++                0x03
++            });
++        }
++        invoke.bytes.push(0x2a);
++        let callable = if function.private {
++            format!("access$suspend${index}")
++        } else {
++            function.jvm_name().to_owned()
++        };
++        invoke.reference(0xb8, pool.method(owner, &callable, &function.descriptor())?);
++        invoke.bytes.push(0xb0);
++        let invoke = simple_method(
++            &mut pool,
++            0x0011,
++            "invokeSuspend",
++            "(Ljava/lang/Object;)Ljava/lang/Object;",
++            invoke,
++            None,
++            false,
++        )?;
++        let source_name = pool.utf8("SourceFile")?;
++        let source_file = pool.utf8(file)?;
++        let metadata = metadata_attribute(
++            &mut pool,
++            &crate::metadata::Metadata {
++                kind: 3,
++                data1: Vec::new(),
++                data2: Vec::new(),
++                raw_data2: Default::default(),
++            },
++        )?;
++        let mut bytes = Vec::new();
++        u4(&mut bytes, 0xcafebabe);
++        u2(&mut bytes, 0);
++        u2(&mut bytes, 49);
++        pool.write(&mut bytes);
++        u2(&mut bytes, 0x0030);
++        u2(&mut bytes, this);
++        u2(&mut bytes, parent);
++        u2(&mut bytes, 0);
++        u2(&mut bytes, (plan.fields.len() + 2) as u16);
++        bytes.extend(fields);
++        u2(&mut bytes, 2);
++        bytes.extend(constructor);
++        bytes.extend(invoke);
++        u2(&mut bytes, 2);
++        u2(&mut bytes, source_name);
++        u4(&mut bytes, 2);
++        u2(&mut bytes, source_file);
++        bytes.extend(metadata);
++        files.push(crate::ClassFile {
++            internal_name: frame_owner,
++            bytes,
++        });
++    }
++    Ok(files)
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn forbidden_carriers_reject_parameters_callbacks_and_saved_locals() {
++        let classpath = crate::classpath::Classpath::new(&[]).unwrap();
++        classpath
++            .source_header(&crate::syntax::parse("class Token").unwrap(), "Token")
++            .unwrap();
++        for source in [
++            "suspend fun blocked(value: Token): Token = value",
++            "suspend fun blocked(step: suspend () -> Token): String { val result = step(); return \"x\" }",
++            "suspend fun blocked(step: suspend () -> String): String { val kept = Token(); val result = step(); return result }",
++        ] {
++            let mut syntax = crate::syntax::parse(source).unwrap();
++            syntax.imports.push(("Token".into(), "Token".into(), 0));
++            let checked = crate::check::check_with_owner(&syntax, &classpath, "BlockedKt").unwrap();
++            let error = validate(
++                &checked,
++                &syntax,
++                &std::collections::BTreeSet::from(["Token".into()]),
++            )
++            .unwrap_err();
++            assert_eq!(error.kind, crate::DiagnosticKind::UnsupportedLanguage);
++            assert_eq!(error.code, "SUSPEND_VALUE_CLASS_INTERACTION_UNSUPPORTED");
++        }
++    }
++}
+--- a/src/bytecode.rs
++++ b/src/bytecode.rs
+@@ -1,3 +1,5 @@
++mod suspend;
++pub(crate) use suspend::{frames as emit_suspend_frames, validate as validate_suspend};
+ pub(crate) mod annotation_classes;
+ pub(crate) mod annotation_files;
+ mod annotations;
+@@ -131,6 +133,9 @@
+             format!("Ljava/util/List<{}>;", generic_argument(inner))
+         }
+         Type::Array(inner) => format!("[{}", generic_argument(inner)),
++        Type::SuspendFunction { params, result } => {
++            generic_type(&Type::suspend_runtime(params, result))
++        }
+         Type::Function { params, result } => format!(
+             "Lkotlin/jvm/functions/Function{}<{}{}>;",
+             params.len(),
+@@ -242,6 +247,9 @@
+         Type::Nullable(inner) | Type::Platform(inner) if inner.is_reference() => {
+             generic_parameter(inner)
+         }
++        Type::SuspendFunction { params, result } => {
++            generic_parameter(&Type::suspend_runtime(params, result))
++        }
+         Type::Function { params, result } => format!(
+             "Lkotlin/jvm/functions/Function{}<{}{}{}>;",
+             params.len(),
+@@ -310,6 +318,10 @@
+                 })
+                 .collect(),
+         },
++        Type::SuspendFunction { params, result } => Type::SuspendFunction {
++            params: params.iter().map(erase_generic_variables).collect(),
++            result: Box::new(erase_generic_variables(result)),
++        },
+         Type::Function { params, result } => Type::Function {
+             params: params.iter().map(erase_generic_variables).collect(),
+             result: Box::new(erase_generic_variables(result)),
+@@ -328,6 +340,20 @@
+ }
+ 
+ fn generic_function(function: &crate::check::Function) -> Option<String> {
++    if function.suspend_ {
++        return Some(format!(
++            "({}{})Ljava/lang/Object;",
++            function
++                .params
++                .iter()
++                .map(|(_, ty)| generic_parameter(ty))
++                .collect::<String>(),
++            generic_parameter(&Type::continuation(
++                &function.result,
++                crate::syntax::Variance::In
++            ))
++        ));
++    }
+     if function.type_params.is_empty() && function.class_type_params.is_empty() {
+         return generic_method(
+             &function
+@@ -724,6 +750,7 @@
+     }
+ }
+ struct Code<'a> {
++    coroutine: bool,
+     pool: &'a mut Pool,
+     functions: &'a [crate::check::Function],
+     owner: &'a str,
+@@ -1017,6 +1044,28 @@
+         Ok(())
+     }
+     fn box_value(&mut self, ty: &Type) -> Result<()> {
++        if self.coroutine {
++            if ty == &Type::Unit {
++                return self.field_reference(0xb2, "kotlin/Unit", "INSTANCE", "Lkotlin/Unit;");
++            }
++            let suffix = match ty.base() {
++                Type::Int => "Int",
++                Type::Long => "Long",
++                Type::Byte => "Byte",
++                Type::Short => "Short",
++                Type::Char => "Char",
++                Type::Boolean => "Boolean",
++                Type::Float => "Float",
++                Type::Double => "Double",
++                _ => return Err(failure("Unsupported coroutine primitive boxing type")),
++            };
++            return self.method_reference(
++                0xb8,
++                "kotlin/coroutines/jvm/internal/Boxing",
++                &format!("box{suffix}"),
++                &format!("({}){}", ty.descriptor(), boxed_descriptor(ty)),
++            );
++        }
+         self.method_reference(
+             0xb8,
+             boxed_owner(ty),
+@@ -1385,6 +1434,14 @@
+         Ok(true)
+     }
+     fn value(&mut self, value: &Value) -> Result<()> {
++        if !self.coroutine && suspend::suspension(value, self.functions) {
++            return Err(
++                Diagnostic::new(0, "Suspend calls require a suspend function context").with_kind(
++                    crate::DiagnosticKind::InvalidKotlin,
++                    "SUSPEND_CALL_CONTEXT_INVALID",
++                ),
++            );
++        }
+         self.max_stack = self.max_stack.max(value.stack());
+         match &value.kind {
+             ValueKind::ClassLiteral(ty) => {
+@@ -2721,7 +2778,7 @@
+     let source_name = pool.utf8("SourceFile")?;
+     let source_file = pool.utf8(file)?;
+     let mut methods = Vec::new();
+-    for function in &module.functions {
++    for (index, function) in module.functions.iter().enumerate() {
+         if defaults::annotated(function, "JvmStatic") {
+             return Err(
+                 Diagnostic::new(0, "JvmStatic requires an object or companion member").with_kind(
+@@ -2729,6 +2786,13 @@
+                     "JVM_STATIC_PLACEMENT_INVALID",
+                 ),
+             );
++        }
++        if function.suspend_ {
++            methods.push(suspend::method(&mut pool, module, owner, index)?);
++            if function.private {
++                methods.push(suspend::access_bridge(&mut pool, function, owner, index)?);
++            }
++            continue;
+         }
+         methods.extend(defaults::overloads(
+             &mut pool,
+@@ -2738,6 +2802,7 @@
+             if function.private { 0x001a } else { 0x0019 },
+         )?);
+         let mut code = Code {
++            coroutine: false,
+             pool: &mut pool,
+             functions: &module.functions,
+             owner,
+@@ -2833,6 +2898,7 @@
+     }
+     if !module.properties.is_empty() || !module.initializers.is_empty() {
+         let mut code = Code {
++            coroutine: false,
+             pool: &mut pool,
+             functions: &module.functions,
+             owner,
+@@ -3010,6 +3076,7 @@
+         };
+     let is_static = flags & 8 != 0;
+     let mut code = Code {
++        coroutine: false,
+         pool,
+         functions,
+         owner,
+@@ -4100,6 +4167,7 @@
+         let constructor_slots = 1 + class.params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
+         let constructor_locals = class.constructor_locals.max(constructor_slots as u16);
+         let mut code = Code {
++            coroutine: false,
+             pool: &mut pool,
+             functions: &class.methods,
+             owner,
+@@ -4246,6 +4314,7 @@
+     }
+     for secondary in &class.secondary_constructors {
+         let mut code = Code {
++            coroutine: false,
+             pool: &mut pool,
+             functions: &class.methods,
+             owner,
+@@ -4393,6 +4462,7 @@
+             continue;
+         }
+         let mut code = Code {
++            coroutine: false,
+             pool: &mut pool,
+             functions: &class.methods,
+             owner,
+@@ -4532,6 +4602,7 @@
+         )?);
+     } else if !class.delegated_properties.is_empty() || enum_data.is_some() {
+         let mut code = Code {
++            coroutine: false,
+             pool: &mut pool,
+             functions: &class.methods,
+             owner,
+--- a/src/check.rs
++++ b/src/check.rs
+@@ -254,6 +254,7 @@
+     pub bridges: Vec<JavaMethod>,
+ }
+ pub struct Function {
++    pub suspend_: bool,
+     pub extension_receiver: bool,
+     pub class_type_params: Vec<String>,
+     pub jvm_result: Option<Type>,
+@@ -282,11 +283,16 @@
+     }
+     pub fn descriptor(&self) -> String {
+         format!(
+-            "({}){}",
++            "({}{}){}",
+             self.params
+                 .iter()
+                 .map(|p| p.1.descriptor())
+                 .collect::<String>(),
++            if self.suspend_ {
++                "Lkotlin/coroutines/Continuation;"
++            } else {
++                ""
++            },
+             self.physical_result().descriptor()
+         )
+     }
+@@ -5483,6 +5489,13 @@
+                 .collect::<Result<Vec<_>>>()?,
+             result: Box::new(resolve_type(result, imports, offset)?),
+         }),
++        Type::SuspendFunction { params, result } => Ok(Type::SuspendFunction {
++            params: params
++                .iter()
++                .map(|p| resolve_type(p, imports, offset))
++                .collect::<Result<Vec<_>>>()?,
++            result: Box::new(resolve_type(result, imports, offset)?),
++        }),
+         Type::Function { params, result } => Ok(Type::Function {
+             params: params
+                 .iter()
+@@ -6116,7 +6129,7 @@
+                     }
+                 }
+             }
+-            Type::Function { params, result } => {
++            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+                 for ty in params {
+                     collect_type(ty, names);
+                 }
+@@ -6654,6 +6667,9 @@
+         for (name, ty) in &params {
+             checker.declare(name, ty.clone(), false, function.offset)?;
+         }
++        if function.suspend_ {
++            checker.next += 1;
++        }
+         if function.receiver.is_some() {
+             let receiver = checker.local(&params[0].0).unwrap();
+             checker.extension_receivers.push(receiver.clone());
+@@ -6687,9 +6703,12 @@
+             params[0].0 = "<this>".into();
+         }
+         result.push(Function {
++            suspend_: function.suspend_,
+             extension_receiver: function.receiver.is_some(),
+             class_type_params: Vec::new(),
+-            jvm_result: None,
++            jvm_result: function
++                .suspend_
++                .then(|| Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))),
+             jvm_name: None,
+             annotations: annotations::declaration_annotations(
+                 &function.annotations,
+--- a/src/check_class_delegation.rs
++++ b/src/check_class_delegation.rs
+@@ -541,6 +541,7 @@
+             vec![Statement::Return(invocation)]
+         };
+         let function = Function {
++            suspend_: false,
+             extension_receiver: false,
+             class_type_params: Vec::new(),
+             jvm_result,
+--- a/src/check_declarations.rs
++++ b/src/check_declarations.rs
+@@ -908,6 +908,7 @@
+                     .iter()
+                     .find(|m| m.function.offset == *offset && m.function.name == *name)
+                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
++                suspend_: false,
+                 kotlin_declared: true,
+                         has_annotations: false,
+                 parameter_modes: Vec::new(),
+@@ -1219,6 +1220,7 @@
+             .iter()
+             .find(|method| method.function.offset == offset && method.function.name == name);
+         let method = Function {
++            suspend_: false,
+             extension_receiver: source_method
+                 .is_some_and(|method| method.function.receiver.is_some()),
+             class_type_params: Vec::new(),
+@@ -1352,6 +1354,7 @@
+                 .any(|m| m.name == getter && m.params.is_empty())
+             {
+                 methods.push(Function {
++                    suspend_: false,
+                     extension_receiver: false,
+                     class_type_params: Vec::new(),
+                     jvm_result: None,
+@@ -1396,6 +1399,7 @@
+                     .any(|m| m.name == setter_name(&field.name) && m.params.len() == 1)
+             {
+                 methods.push(Function {
++                    suspend_: false,
+                     extension_receiver: false,
+                     class_type_params: Vec::new(),
+                     jvm_result: None,
+@@ -1732,6 +1736,7 @@
+             },
+             initializer_local_base,
+             function: Function {
++                suspend_: false,
+                 extension_receiver: false,
+                 class_type_params: Vec::new(),
+                 jvm_result: None,
+@@ -2087,6 +2092,7 @@
+             params[0].0 = "<this>".into();
+         }
+         Ok(Function {
++            suspend_: false,
+             extension_receiver: source.receiver.is_some(),
+             class_type_params: Vec::new(),
+             jvm_result: None,
+@@ -2807,6 +2813,7 @@
+         property.setter_visibility()
+     };
+     syntax::Function {
++        suspend_: false,
+         inline: false,
+         parameter_modes: Vec::new(),
+         param_annotations: vec![Vec::new(); params.len()],
+@@ -3134,6 +3141,7 @@
+         };
+         let mut getter = if property.body.is_empty() {
+             Function {
++                suspend_: false,
+                 extension_receiver: false,
+                 class_type_params: Vec::new(),
+                 jvm_result: None,
+@@ -3210,6 +3218,7 @@
+                     }
+                 };
+                 Function {
++                    suspend_: false,
+                     extension_receiver: false,
+                     class_type_params: Vec::new(),
+                     jvm_result: None,
+--- a/src/check_delegates.rs
++++ b/src/check_delegates.rs
+@@ -139,6 +139,7 @@
+     }
+     let result = getter_checker.coerce(result, property_type.clone(), source.offset)?;
+     let getter = Function {
++        suspend_: false,
+         extension_receiver: false,
+         class_type_params: Vec::new(),
+         jvm_result: None,
+@@ -176,6 +177,7 @@
+         )?;
+         setter_checker.require(&result, Type::Unit, source.offset)?;
+         methods.push(Function {
++            suspend_: false,
+             extension_receiver: false,
+             class_type_params: Vec::new(),
+             jvm_result: None,
+--- a/src/check_functions.rs
++++ b/src/check_functions.rs
+@@ -106,6 +106,21 @@
+             }
+         }
+         let mut value = self.value(expr)?;
++        if matches!(expected.base(), Type::SuspendFunction { .. })
++            && matches!(
++                value.ty.base(),
++                Type::Function { .. } | Type::ReceiverFunction { .. }
++            )
++        {
++            return Err(Diagnostic::new(
++                expr.offset,
++                "Ordinary-to-suspend function value adaptation is unsupported",
++            )
++            .with_kind(
++                crate::DiagnosticKind::UnsupportedLanguage,
++                "SUSPEND_FUNCTION_ADAPTER_UNSUPPORTED",
++            ));
++        }
+         if control::expression_terminates(expr) {
+             value.ty = expected.clone();
+             return Ok(value);
+@@ -143,6 +158,16 @@
+         local_return: bool,
+         label: Option<&str>,
+     ) -> Result<Value> {
++        if matches!(expected.base(), Type::SuspendFunction { .. }) {
++            return Err(Diagnostic::new(
++                expr.offset,
++                "Source suspend lambdas and references are unsupported",
++            )
++            .with_kind(
++                crate::DiagnosticKind::UnsupportedLanguage,
++                "SUSPEND_LAMBDA_UNSUPPORTED",
++            ));
++        }
+         let (params, result, receiver_type) = match expected.base() {
+             Type::Function { params, result } => (params, result, None),
+             Type::ReceiverFunction {
+@@ -501,6 +526,7 @@
+             owner: owner.clone(),
+             captures: fields,
+             function: Function {
++                suspend_: false,
+                 extension_receiver: false,
+                 class_type_params: Vec::new(),
+                 jvm_result: None,
+@@ -538,7 +564,9 @@
+             ));
+         }
+         let (params, result) = match function.ty.base() {
+-            Type::Function { params, result } => (params.clone(), result.as_ref().clone()),
++            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
++                (params.clone(), result.as_ref().clone())
++            }
+             Type::ReceiverFunction {
+                 receiver,
+                 params,
+@@ -807,6 +835,7 @@
+                 kotlin_interface: false,
+                 methods: vec![JavaMethod {
+                     library: Some(crate::classpath::LibraryMethod {
++                        suspend_: false,
+                         kotlin_declared: true,
+                         has_annotations: false,
+                         parameter_modes: Vec::new(),
+--- a/src/check_interfaces.rs
++++ b/src/check_interfaces.rs
+@@ -314,6 +314,7 @@
+             JavaMethod {
+                 library: (function.infix || function.operator).then(|| {
+                     crate::classpath::LibraryMethod {
++                        suspend_: false,
+                         kotlin_declared: true,
+                         has_annotations: false,
+                         parameter_modes: Vec::new(),
+@@ -949,6 +950,7 @@
+         Vec::new()
+     };
+     Ok(Function {
++        suspend_: false,
+         extension_receiver: false,
+         class_type_params: Vec::new(),
+         jvm_result: None,
+--- a/src/check_ir_walk.rs
++++ b/src/check_ir_walk.rs
+@@ -318,6 +318,7 @@
+ 
+     fn function_with(number: i32) -> Function {
+         Function {
++            suspend_: false,
+             extension_receiver: false,
+             class_type_params: Vec::new(),
+             jvm_result: None,
+--- a/src/check_library.rs
++++ b/src/check_library.rs
+@@ -488,6 +488,18 @@
+         args: &[Expr],
+         offset: usize,
+     ) -> Result<Value> {
++        if method
++            .library
++            .as_ref()
++            .is_some_and(|library| library.suspend_ && library.inline)
++        {
++            return Err(
++                Diagnostic::new(offset, "Compiled suspend inline calls are unsupported").with_kind(
++                    crate::DiagnosticKind::UnsupportedLanguage,
++                    "SUSPEND_INLINE_CALL_UNSUPPORTED",
++                ),
++            );
++        }
+         let labeled = member_extensions::call_labels(method.source_name(), args);
+         let args = labeled.as_slice();
+         let normalized = self.vararg_arguments(&method, args, offset)?;
+@@ -900,7 +912,7 @@
+             | Type::MutableList(inner)
+             | Type::ThreadLocal(inner) => visit(inner, imports, classpath),
+             Type::Parameter { upper_bound, .. } => visit(upper_bound, imports, classpath),
+-            Type::Function { params, result } => {
++            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+                 for param in params {
+                     visit(param, imports, classpath);
+                 }
+--- a/src/check_objects.rs
++++ b/src/check_objects.rs
+@@ -115,6 +115,7 @@
+         }
+         overloads.push(JavaMethod {
+             library: function.infix.then(|| crate::classpath::LibraryMethod {
++                suspend_: false,
+                 kotlin_declared: true,
+                 has_annotations: false,
+                 parameter_modes: Vec::new(),
+@@ -410,6 +411,7 @@
+         }
+         methods.push(ObjectMethod {
+             function: Function {
++                suspend_: false,
+                 extension_receiver: false,
+                 class_type_params: Vec::new(),
+                 jvm_result: None,
+@@ -615,6 +617,7 @@
+             kotlin_result: Some(result),
+             kotlin_internal: function.internal,
+             library: Some(crate::classpath::LibraryMethod {
++                suspend_: false,
+                 kotlin_declared: true,
+                 has_annotations: false,
+                 parameter_modes: Vec::new(),
+@@ -1067,6 +1070,7 @@
+         };
+         let function = if field.body.is_empty() {
+             Function {
++                suspend_: false,
+                 extension_receiver: false,
+                 class_type_params: Vec::new(),
+                 jvm_result: None,
+@@ -1128,6 +1132,7 @@
+             }
+             methods.push(ObjectMethod {
+                 function: Function {
++                    suspend_: false,
+                     extension_receiver: false,
+                     class_type_params: Vec::new(),
+                     jvm_result: None,
+--- a/src/check_references.rs
++++ b/src/check_references.rs
+@@ -2,6 +2,16 @@
+ 
+ impl Checker<'_> {
+     pub(super) fn callable_reference(&mut self, expr: &Expr, expected: &Type) -> Result<Value> {
++        if matches!(expected.base(), Type::SuspendFunction { .. }) {
++            return Err(Diagnostic::new(
++                expr.offset,
++                "Source suspend callable references are unsupported",
++            )
++            .with_kind(
++                crate::DiagnosticKind::UnsupportedLanguage,
++                "SUSPEND_REFERENCE_UNSUPPORTED",
++            ));
++        }
+         let Type::Function { params, .. } = expected.base() else {
+             return Err(Diagnostic::new(
+                 expr.offset,
+--- a/src/check_relations.rs
++++ b/src/check_relations.rs
+@@ -79,6 +79,13 @@
+                 .collect(),
+             result: Box::new(substitute(result, substitutions)),
+         },
++        Type::SuspendFunction { params, result } => Type::SuspendFunction {
++            params: params
++                .iter()
++                .map(|ty| substitute(ty, substitutions))
++                .collect(),
++            result: Box::new(substitute(result, substitutions)),
++        },
+         _ => ty.clone(),
+     }
+ }
+@@ -478,7 +485,9 @@
+     }
+     fn function_parts(ty: &Type) -> Option<(Vec<&Type>, &Type)> {
+         match ty {
+-            Type::Function { params, result } => Some((params.iter().collect(), result)),
++            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
++                Some((params.iter().collect(), result))
++            }
+             Type::ReceiverFunction {
+                 receiver,
+                 params,
+@@ -490,6 +499,11 @@
+             }
+             _ => None,
+         }
++    }
++    if matches!(actual, Type::SuspendFunction { .. })
++        != matches!(expected, Type::SuspendFunction { .. })
++    {
++        return false;
+     }
+     if let (Some((a, ar)), Some((e, er))) = (function_parts(actual), function_parts(expected)) {
+         return a.len() == e.len()
+@@ -1169,6 +1183,7 @@
+             ),
+             kotlin_result: Some(result.clone()),
+             library: Some(crate::classpath::LibraryMethod {
++                suspend_: false,
+                 kotlin_declared: true,
+                 has_annotations: false,
+                 parameter_modes: Vec::new(),
+--- a/src/classpath/metadata.rs
++++ b/src/classpath/metadata.rs
+@@ -139,7 +139,8 @@
+         }
+         let p = Proto::parse(bytes)?;
+         p.allowed(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 100])?;
+-        if p.integer(1)?.unwrap_or(0) != 0 || p.bytes(10)?.is_some() || p.integer(11)?.is_some() {
++        let suspend_function = p.integer(1)?.unwrap_or(0) == 1;
++        if p.integer(1)?.unwrap_or(0) > 1 || p.bytes(10)?.is_some() || p.integer(11)?.is_some() {
+             return Err(invalid());
+         }
+         let mut ty = if let Some(id) = p.integer(7)? {
+@@ -304,6 +305,29 @@
+                 }
+             }
+         };
++        if suspend_function {
++            let Type::Function { mut params, result } = ty else {
++                return Err(invalid());
++            };
++            if *result != Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))) {
++                return Err(invalid());
++            }
++            let Some(Type::Parameterized { name, arguments }) = params.pop() else {
++                return Err(invalid());
++            };
++            if name != "kotlin/coroutines/Continuation" || arguments.len() != 1 {
++                return Err(invalid());
++            }
++            let result = arguments
++                .into_iter()
++                .next()
++                .and_then(|argument| argument.ty)
++                .ok_or_else(invalid)?;
++            ty = Type::SuspendFunction {
++                params,
++                result: Box::new(result),
++            };
++        }
+         if p.integer(3)?.unwrap_or(0) > 1 {
+             return Err(invalid());
+         }
+@@ -578,6 +602,7 @@
+             kotlin_result: Some(array),
+             kotlin_internal: false,
+             library: Some(LibraryMethod {
++                suspend_: false,
+                 kotlin_declared: true,
+                 has_annotations: false,
+                 parameter_modes: Vec::new(),
+@@ -771,6 +796,7 @@
+             kotlin_result: Some(returned),
+             kotlin_internal: false,
+             library: requested_name.map(|_| LibraryMethod {
++                suspend_: false,
+                 parameter_modes: Vec::new(),
+                 reified_arguments: Vec::new(),
+                 kotlin_declared: false,
+@@ -904,7 +930,15 @@
+         all.push(ty.descriptor());
+     }
+     all.extend(params.iter().map(|(_, ty, _)| ty.descriptor()));
+-    let descriptor = format!("({}){}", all.concat(), result.descriptor());
++    let suspend_ = flags & (1 << 13) != 0;
++    let descriptor = if suspend_ {
++        format!(
++            "({}Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
++            all.concat()
++        )
++    } else {
++        format!("({}){}", all.concat(), result.descriptor())
++    };
+     let (jvm_name, jvm_descriptor, explicit_descriptor) = if let Some(bytes) = signature {
+         let p = Proto::parse(bytes)?;
+         p.allowed(&[1, 2])?;
+@@ -1008,10 +1042,7 @@
+         return Err(invalid());
+     }
+     let method = &mut class.methods[*index];
+-    if flags & (1 << 13 | 1 << 14 | 1 << 12) != 0
+-        || flags & 14 == 2
+-        || attributes[*index].unsupported
+-    {
++    if flags & (1 << 14 | 1 << 12) != 0 || flags & 14 == 2 || attributes[*index].unsupported {
+         return Err(invalid());
+     }
+     method.kotlin_params = Some(params);
+@@ -1023,6 +1054,7 @@
+         parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
+     }
+     method.library = Some(LibraryMethod {
++        suspend_,
+         kotlin_declared: true,
+         has_annotations: flags & 1 != 0,
+         parameter_modes,
+@@ -1069,6 +1101,7 @@
+             && method.library.is_none()
+         {
+             method.library = Some(LibraryMethod {
++                suspend_: false,
+                 kotlin_declared: true,
+                 has_annotations: false,
+                 parameter_modes: Vec::new(),
+--- a/src/classpath/signature.rs
++++ b/src/classpath/signature.rs
+@@ -464,6 +464,7 @@
+                     method.kotlin_params = Some(params);
+                     method.kotlin_result = Some(result);
+                     method.library = Some(LibraryMethod {
++                        suspend_: false,
+                         kotlin_declared: false,
+                         has_annotations: false,
+                         parameter_modes: Vec::new(),
+--- a/src/classpath/source.rs
++++ b/src/classpath/source.rs
+@@ -67,6 +67,10 @@
+             name: name.clone(),
+             upper_bound: Box::new(resolve(upper_bound, module, cp)),
+         },
++        Type::SuspendFunction { params, result } => Type::SuspendFunction {
++            params: params.iter().map(|t| resolve(t, module, cp)).collect(),
++            result: Box::new(resolve(result, module, cp)),
++        },
+         Type::Function { params, result } => Type::Function {
+             params: params.iter().map(|t| resolve(t, module, cp)).collect(),
+             result: Box::new(resolve(result, module, cp)),
+@@ -106,16 +110,26 @@
+     let result = resolve(&function.result, module, cp);
+     let receiver = function.receiver.as_ref().map(|t| resolve(t, module, cp));
+     let descriptor = format!(
+-        "({}{}){}",
++        "({}{}{}){}",
+         receiver.as_ref().map(Type::descriptor).unwrap_or_default(),
+         params
+             .iter()
+             .map(|(_, t, _)| t.descriptor())
+             .collect::<String>(),
+-        result.descriptor()
++        if function.suspend_ {
++            "Lkotlin/coroutines/Continuation;"
++        } else {
++            ""
++        },
++        if function.suspend_ {
++            "Ljava/lang/Object;".into()
++        } else {
++            result.descriptor()
++        }
+     );
+     JavaMethod {
+         library: Some(LibraryMethod {
++            suspend_: function.suspend_,
+             kotlin_declared: true,
+             has_annotations: !function.annotations.is_empty()
+                 || function.param_annotations.iter().any(|a| !a.is_empty()),
+@@ -526,6 +540,7 @@
+                 let name = format!("component{}", index + 1);
+                 class.methods.push(JavaMethod {
+                     library: Some(LibraryMethod {
++                        suspend_: false,
+                         kotlin_declared: true,
+                         has_annotations: false,
+                         parameter_modes: Vec::new(),
+@@ -632,6 +647,7 @@
+             if !p.annotations.is_empty() {
+                 for method in &mut methods {
+                     method.library = Some(LibraryMethod {
++                        suspend_: false,
+                         parameter_modes: Vec::new(),
+                         reified_arguments: Vec::new(),
+                         kotlin_declared: true,
+@@ -894,6 +910,7 @@
+                     library.code = None;
+                 } else {
+                     method.library = Some(LibraryMethod {
++                        suspend_: false,
+                         parameter_modes: Vec::new(),
+                         reified_arguments: Vec::new(),
+                         kotlin_declared: true,
+@@ -1053,7 +1070,7 @@
+             | Type::MutableList(value)
+             | Type::ThreadLocal(value) => ty(value, names),
+             Type::Parameter { upper_bound, .. } => ty(upper_bound, names),
+-            Type::Function { params, result } => {
++            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+                 for value in params {
+                     ty(value, names);
+                 }
+--- a/src/classpath/source_enums.rs
++++ b/src/classpath/source_enums.rs
+@@ -53,6 +53,7 @@
+     ] {
+         class.methods.push(JavaMethod {
+             library: Some(LibraryMethod {
++                suspend_: false,
+                 kotlin_declared: true,
+                 has_annotations: false,
+                 parameter_modes: Vec::new(),
+--- a/src/classpath.rs
++++ b/src/classpath.rs
+@@ -189,6 +189,7 @@
+ 
+ #[derive(Clone, Debug)]
+ pub(crate) struct LibraryMethod {
++    pub suspend_: bool,
+     pub kotlin_declared: bool,
+     pub has_annotations: bool,
+     pub parameter_modes: Vec<crate::syntax::InlineParameterMode>,
+--- a/src/compiled_inline.rs
++++ b/src/compiled_inline.rs
+@@ -634,6 +634,7 @@
+     fn inline_method(code: JavaCode) -> JavaMethod {
+         JavaMethod {
+             library: Some(crate::classpath::LibraryMethod {
++                suspend_: false,
+                 kotlin_declared: true,
+                 has_annotations: false,
+                 parameter_modes: Vec::new(),
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -1159,6 +1159,7 @@
+     let CheckedUnit::Module(typed) = checked else {
+         return Err(Diagnostic::new(0, "Expected checked declaration"));
+     };
++    bytecode::validate_suspend(typed, module, &Default::default())?;
+     let mut generated_owners = typed
+         .lambdas
+         .iter()
+@@ -1291,10 +1292,16 @@
+             bridges,
+         )?,
+     };
+-    with_lambdas(vec![ClassFile {
++    let mut files = vec![ClassFile {
+         internal_name: internal_name.to_owned(),
+         bytes,
+-    }])
++    }];
++    files.extend(bytecode::emit_suspend_frames(
++        typed,
++        internal_name,
++        file_name,
++    )?);
++    with_lambdas(files)
+ }
+ 
+ fn add_nested_attributes(
+--- a/src/metadata.rs
++++ b/src/metadata.rs
+@@ -673,6 +673,19 @@
+             );
+             return Ok(proto);
+         }
++        Type::SuspendFunction { params, result } => {
++            let mut arguments = params.clone();
++            arguments.push(Type::continuation(result, Variance::Invariant));
++            let runtime = Type::Function {
++                params: arguments,
++                result: Box::new(Type::Nullable(Box::new(Type::Java(
++                    "java/lang/Object".into(),
++                )))),
++            };
++            let mut proto = type_proto(&runtime, imports, strings)?;
++            proto.number(1, 1);
++            return Ok(proto);
++        }
+         Type::Function { params, result } => {
+             for ty in params.iter().chain(std::iter::once(result.as_ref())) {
+                 let mut argument = Proto::default();
+@@ -875,7 +888,8 @@
+             }
+             | if function.infix { 512 } else { 0 }
+             | if function.operator { 256 } else { 0 }
+-            | if function.inline { 1024 } else { 0 },
++            | if function.inline { 1024 } else { 0 }
++            | if function.suspend_ { 8192 } else { 0 },
+     );
+     proto.number(2, strings.id(&function.name)?);
+     for (index, parameter) in function.type_params.iter().enumerate() {
+@@ -3665,6 +3679,7 @@
+             lambdas: Vec::new(),
+             constants: Vec::new(),
+             functions: vec![crate::check::Function {
++                suspend_: false,
+                 extension_receiver: false,
+                 class_type_params: Vec::new(),
+                 jvm_result: None,
+--- a/src/object_lowering.rs
++++ b/src/object_lowering.rs
+@@ -72,6 +72,7 @@
+             inline: false,
+             suppress: Vec::new(),
+             function: Function {
++                suspend_: false,
+                 inline: false,
+                 parameter_modes: Vec::new(),
+                 extension_property: None,
+--- a/src/syntax.rs
++++ b/src/syntax.rs
+@@ -2,6 +2,10 @@
+ 
+ #[derive(Clone, Debug, PartialEq, Eq)]
+ pub enum Type {
++    SuspendFunction {
++        params: Vec<Type>,
++        result: Box<Type>,
++    },
+     Int,
+     Long,
+     Byte,
+@@ -77,6 +81,25 @@
+ }
+ 
+ impl Type {
++    pub fn continuation(result: &Type, variance: Variance) -> Type {
++        Type::Parameterized {
++            name: "kotlin/coroutines/Continuation".into(),
++            arguments: vec![TypeArgument {
++                variance,
++                ty: Some(result.clone()),
++            }],
++        }
++    }
++    pub fn suspend_runtime(params: &[Type], result: &Type) -> Type {
++        let mut params = params.to_vec();
++        params.push(Self::continuation(result, Variance::In));
++        Type::Function {
++            params,
++            result: Box::new(Type::Nullable(Box::new(Type::Java(
++                "java/lang/Object".into(),
++            )))),
++        }
++    }
+     pub fn primitive_array_named(name: &str) -> Option<Type> {
+         match name.strip_prefix("kotlin/").unwrap_or(name) {
+             "IntArray" => Some(Self::IntArray),
+@@ -161,6 +184,7 @@
+                 | Self::Parameterized { .. }
+                 | Self::Parameter { .. }
+                 | Self::Function { .. }
++                | Self::SuspendFunction { .. }
+                 | Self::ThreadLocal(_)
+                 | Self::Null
+                 | Self::List(_)
+@@ -221,6 +245,9 @@
+                 } else {
+                     Self::Nullable(upper_bound.clone()).descriptor()
+                 }
++            }
++            Self::SuspendFunction { params, .. } => {
++                format!("Lkotlin/jvm/functions/Function{};", params.len() + 1)
+             }
+             Self::Function { params, .. } => {
+                 format!("Lkotlin/jvm/functions/Function{};", params.len())
+@@ -635,6 +662,7 @@
+ }
+ #[derive(Clone, Debug)]
+ pub struct Function {
++    pub suspend_: bool,
+     pub inline: bool,
+     pub parameter_modes: Vec<InlineParameterMode>,
+     pub extension_property: Option<ExtensionProperty>,
+@@ -723,6 +751,7 @@
+             Vec::new()
+         };
+         Function {
++            suspend_: false,
+             inline: false,
+             parameter_modes: vec![InlineParameterMode::Ordinary; params.len()],
+             extension_property: Some(ExtensionProperty {
+@@ -1811,7 +1840,10 @@
+         let ty = self.nonnullable_ty()?;
+         let ty = if self.take("?") {
+             if ty == Type::Unit {
+-                return Err(self.error("Nullable Unit is not supported"));
++                return Err(self.error("Nullable Unit is not supported").with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "NULLABLE_UNIT_UNSUPPORTED",
++                ));
+             }
+             Type::Nullable(Box::new(ty))
+         } else {
+@@ -1920,8 +1952,21 @@
+                 Err(self.error("Parenthesized types require one type or a function arrow"))
+             };
+         }
+-        if self.at("suspend") {
+-            return Err(self.error("Suspend function types are unsupported"));
++        if self.take("suspend") {
++            self.lines();
++            return match self.ty()? {
++                Type::Function { params, result }
++                    if params.len() < 22 && params.iter().all(|ty| ty != &Type::Unit) =>
++                {
++                    Ok(Type::SuspendFunction { params, result })
++                }
++                _ => Err(self
++                    .error("Suspend function types require at most 21 ordinary parameters")
++                    .with_kind(
++                        DiagnosticKind::UnsupportedLanguage,
++                        "SUSPEND_FUNCTION_TYPE_SHAPE_UNSUPPORTED",
++                    )),
++            };
+         }
+         let offset = self.token().offset;
+         let mut name = self.name()?;
+@@ -2232,6 +2277,7 @@
+                     | "actual"
+                     | "external"
+                     | "inline"
++                    | "suspend"
+                     | "infix"
+                     | "operator"
+                     | "lateinit"
+@@ -3118,6 +3164,16 @@
+                 ));
+         }
+         let mut function = self.function()?;
++        if function.suspend_ {
++            return Err(Diagnostic::new(
++                function.offset,
++                "Source suspend member declarations are unsupported",
++            )
++            .with_kind(
++                DiagnosticKind::UnsupportedLanguage,
++                "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
++            ));
++        }
+         function.annotations.splice(0..0, annotations);
+         function.offset = offset;
+         function.private = visibility.as_deref() == Some("private");
+@@ -3753,6 +3809,14 @@
+                     return Err(self.error("Conflicting open/abstract and final modifiers"));
+                 }
+                 open = !final_ && (open || is_override);
++                if self.at("suspend") {
++                    return Err(self
++                        .error("Source suspend member declarations are unsupported")
++                        .with_kind(
++                            DiagnosticKind::UnsupportedLanguage,
++                            "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
++                        ));
++                }
+                 if self.at("inline") {
+                     return Err(self
+                         .error("Source member inline functions are unsupported")
+@@ -4486,6 +4550,16 @@
+                 }
+                 if self.at("fun") {
+                     let (mut function, has_body) = self.function_body(true)?;
++                    if function.suspend_ {
++                        return Err(Diagnostic::new(
++                            function.offset,
++                            "Source suspend interface declarations are unsupported",
++                        )
++                        .with_kind(
++                            DiagnosticKind::UnsupportedLanguage,
++                            "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
++                        ));
++                    }
+                     function.annotations = annotations;
+                     function.infix = infix;
+                     function.operator = operator;
+@@ -4627,7 +4701,7 @@
+             }
+             if self.starts_declaration("fun") {
+                 methods.push(ClassMethod {
+-                    function: self.function()?,
++                    function: self.member_function()?,
+                     is_override: false,
+                     open: false,
+                     has_body: true,
+@@ -4848,6 +4922,20 @@
+         }
+         Ok(())
+     }
++    fn member_function(&mut self) -> Result<Function> {
++        let function = self.function()?;
++        if function.suspend_ {
++            return Err(Diagnostic::new(
++                function.offset,
++                "Source suspend member declarations are unsupported",
++            )
++            .with_kind(
++                DiagnosticKind::UnsupportedLanguage,
++                "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
++            ));
++        }
++        Ok(function)
++    }
+     fn function(&mut self) -> Result<Function> {
+         self.function_body(false).map(|(function, _)| function)
+     }
+@@ -4858,6 +4946,7 @@
+         let mut infix = false;
+         let mut operator = false;
+         let mut inline = false;
++        let mut suspend_ = false;
+         loop {
+             if self.at("@") {
+                 annotations.extend(self.annotations()?);
+@@ -4870,6 +4959,13 @@
+                 }
+                 visibility = Some(self.token().text.clone());
+                 self.pos += 1;
++            } else if self.take("suspend") {
++                if suspend_ {
++                    return Err(self
++                        .error("Repeated suspend modifier")
++                        .with_kind(DiagnosticKind::InvalidKotlin, "REPEATED_SUSPEND_MODIFIER"));
++                }
++                suspend_ = true;
+             } else if self.take("inline") {
+                 if inline {
+                     return Err(self
+@@ -5053,6 +5149,7 @@
+         self.type_parameters.truncate(type_parameter_count);
+         Ok((
+             Function {
++                suspend_,
+                 inline,
+                 parameter_modes,
+                 extension_property: None,
+@@ -5115,7 +5212,18 @@
+         } else if self.at("{") {
+             StatementKind::Block(self.block()?)
+         } else if self.starts_declaration("fun") {
+-            StatementKind::LocalFunction(Box::new(self.function()?))
++            let function = self.function()?;
++            if function.suspend_ {
++                return Err(Diagnostic::new(
++                    function.offset,
++                    "Local suspend function declarations are unsupported",
++                )
++                .with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "SUSPEND_LOCAL_DECLARATION_UNSUPPORTED",
++                ));
++            }
++            StatementKind::LocalFunction(Box::new(function))
+         } else if self.at("val") || self.at("var") {
+             let mutable = self.take("var");
+             if !mutable {
+@@ -5609,6 +5717,14 @@
+         Ok(result)
+     }
+     fn prefix(&mut self) -> Result<Expr> {
++        if self.at("object") {
++            return Err(self
++                .error("General anonymous object expressions are unsupported")
++                .with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "ANONYMOUS_OBJECT_EXPRESSION_UNSUPPORTED",
++                ));
++        }
+         let offset = self.token().offset;
+         if self.annotation_context && self.take("[") {
+             let mut values = Vec::new();
+@@ -8229,7 +8345,7 @@
+             "fun <T: Int?> f(value: T): T = value",
+             "fun <T: Unit> f(value: T): T = value",
+             "fun <T> f(value: T): T where T: Any = value",
+-            "fun f(value: suspend () -> Unit): Unit {}",
++            "fun f(value: suspend String.() -> Unit): Unit {}",
+             "fun f(value: List<in String>): Unit {}",
+             "fun f(value: Comparable<out String>): Unit {}",
+         ] {
+--- /dev/null
++++ b/tests/fixtures/suspend_foundation/Calls.java
+@@ -0,0 +1,132 @@
++package suspension;
++
++import java.util.Objects;
++import kotlin.ResultKt;
++import kotlin.Unit;
++import kotlin.coroutines.Continuation;
++import kotlin.coroutines.CoroutineContext;
++import kotlin.coroutines.EmptyCoroutineContext;
++import kotlin.coroutines.intrinsics.IntrinsicsKt;
++import kotlin.jvm.functions.Function1;
++import kotlin.jvm.functions.Function2;
++
++public final class Calls {
++    static final Object SUSPENDED = IntrinsicsKt.getCOROUTINE_SUSPENDED();
++    static final class Completion implements Continuation<Object> {
++        Object result;
++        int count;
++        public CoroutineContext getContext() { return EmptyCoroutineContext.INSTANCE; }
++        public void resumeWith(Object result) { this.result = result; count++; }
++    }
++    static final class Step<A, R> implements Function2<A, Continuation<? super R>, Object> {
++        A input;
++        Continuation<? super R> continuation;
++        int count;
++        public Object invoke(A input, Continuation<? super R> continuation) {
++            this.input = input;
++            this.continuation = continuation;
++            count++;
++            return SUSPENDED;
++        }
++    }
++    static final class Step0<R> implements Function1<Continuation<? super R>, Object> {
++        Continuation<? super R> continuation;
++        public Object invoke(Continuation<? super R> continuation) { this.continuation = continuation; return SUSPENDED; }
++    }
++    static void expect(Object expected, Object actual) {
++        if (!Objects.equals(expected, actual)) throw new AssertionError(expected + " != " + actual);
++    }
++    static void failureIdentity(Throwable expected, Completion completion) {
++        expect(1, completion.count);
++        try { ResultKt.throwOnFailure(completion.result); throw new AssertionError("Missing failure"); }
++        catch (Throwable actual) { if (actual != expected) throw new AssertionError("Failure identity changed", actual); }
++    }
++    static void delayedChain() {
++        ModelsKt.setTrace("");
++        Step<Integer, String> first = new Step<>();
++        Step<String, Long> second = new Step<>();
++        Completion completion = new Completion();
++        expect(SUSPENDED, ModelsKt.combine(4, first, second, completion));
++        expect(4, first.input); expect(false, first.input == Integer.valueOf(4)); expect(1, first.count); expect(0, second.count); expect(0, completion.count); expect("", ModelsKt.getTrace());
++        first.continuation.resumeWith("text");
++        expect("text-8", second.input); expect(1, second.count); expect(0, completion.count); expect("a", ModelsKt.getTrace());
++        second.continuation.resumeWith(42L);
++        expect(1, completion.count); expect("text-8:42", completion.result); expect("ab", ModelsKt.getTrace());
++        Step<Integer, Integer> nested = new Step<>(); completion = new Completion();
++        expect(SUSPENDED, ModelsKt.outer(3, nested, completion)); expect(6, nested.input); expect(0, completion.count);
++        nested.continuation.resumeWith(5);
++        expect(1, completion.count); expect(16, completion.result); expect(false, completion.result == Integer.valueOf(16));
++        Step<String, String> imported = new Step<>(); completion = new Completion();
++        expect(SUSPENDED, ModelsKt.imported("source", imported, completion)); expect("source", imported.input); expect(0, completion.count);
++        imported.continuation.resumeWith("value"); expect(1, completion.count); expect("[valuedep]", completion.result);
++        Step<Integer, Integer> mutation = new Step<>(); completion = new Completion();
++        expect(SUSPENDED, ModelsKt.mutation(mutation, completion)); expect(3, mutation.input);
++        mutation.continuation.resumeWith(5); expect(1, completion.count); expect(45, completion.result);
++    }
++    static void scalarResults() {
++        ModelsKt.setTrace("");
++        Step<Double, Double> wide = new Step<>(); Completion completion = new Completion();
++        expect(SUSPENDED, ModelsKt.wide(8L, 0.5, wide, completion)); expect(8.5, wide.input);
++        wide.continuation.resumeWith(2.25); expect(1, completion.count); expect(10.75, completion.result);
++        Step0<String> nullable = new Step0<>(); completion = new Completion();
++        expect(SUSPENDED, ModelsKt.nullable(nullable, completion)); nullable.continuation.resumeWith(null);
++        expect(1, completion.count); expect(null, completion.result); expect("n", ModelsKt.getTrace());
++        Step0<Unit> unit = new Step0<>(); completion = new Completion();
++        expect(SUSPENDED, ModelsKt.unit(unit, completion)); expect("n", ModelsKt.getTrace());
++        unit.continuation.resumeWith(Unit.INSTANCE); expect(1, completion.count); expect(Unit.INSTANCE, completion.result); expect("nu", ModelsKt.getTrace());
++        completion = new Completion();
++        expect("value-4:9", ModelsKt.combine(2, (input, continuation) -> "value", (input, continuation) -> 9L, completion));
++        expect(0, completion.count); expect("nuab", ModelsKt.getTrace());
++        expect("now", ModelsKt.immediate("now", null));
++        completion = new Completion();
++        expect(Unit.INSTANCE, ModelsKt.unitTail(continuation -> Unit.INSTANCE, completion)); expect(0, completion.count);
++        Step0<Unit> tail = new Step0<>(); completion = new Completion();
++        expect(SUSPENDED, ModelsKt.unitTail(tail, completion)); tail.continuation.resumeWith(Unit.INSTANCE);
++        expect(Unit.INSTANCE, completion.result); expect(1, completion.count);
++    }
++    static void failures() {
++        RuntimeException failure = new RuntimeException("identity");
++        Completion completion = new Completion();
++        try { ModelsKt.leaf(1, (input, continuation) -> { throw failure; }, completion); throw new AssertionError("Missing immediate failure"); }
++        catch (RuntimeException actual) { if (actual != failure) throw new AssertionError("Immediate identity changed", actual); }
++        expect(0, completion.count);
++        Step<Integer, Integer> step = new Step<>(); completion = new Completion();
++        expect(SUSPENDED, ModelsKt.outer(2, step, completion));
++        step.continuation.resumeWith(ResultKt.createFailure(failure)); failureIdentity(failure, completion);
++        ModelsKt.setTrace(""); Step0<String> after = new Step0<>(); completion = new Completion();
++        expect(SUSPENDED, ModelsKt.throwAfter(after, failure, completion));
++        after.continuation.resumeWith("after"); expect("after", ModelsKt.getTrace()); failureIdentity(failure, completion);
++        completion = new Completion();
++        try { ModelsKt.throwAfter(continuation -> "sync", failure, completion); throw new AssertionError("Missing synchronous post-call failure"); }
++        catch (RuntimeException actual) { if (actual != failure) throw new AssertionError("Post-call identity changed", actual); }
++        expect(0, completion.count);
++    }
++    static void privateInterop() {
++        Step0<String> step = new Step0<>(); Completion completion = new Completion();
++        expect(SUSPENDED, ModelsKt.privatePath(step, completion)); expect(0, completion.count);
++        step.continuation.resumeWith("value"); expect(1, completion.count); expect("valuehidden!", completion.result);
++    }
++    static void boxingPositions() {
++        Step0<Unit> step = new Step0<>(); Completion completion = new Completion();
++        expect(SUSPENDED, ModelsKt.boxingPositions(7, step, completion));
++        expect(0, completion.count); step.continuation.resumeWith(Unit.INSTANCE); expect(1, completion.count);
++        Object[] values = (Object[]) completion.result;
++        expect(4, values.length);
++        for (Object value : values) expect(7, value);
++        expect(false, values[0] == Integer.valueOf(7));
++        expect(false, values[1] == Integer.valueOf(7));
++        expect(false, values[2] == Integer.valueOf(7));
++        expect(true, values[3] == Integer.valueOf(7));
++    }
++    public static void main(String[] args) {
++        switch (args[0]) {
++            case "delayed": delayedChain(); break;
++            case "scalars": scalarResults(); break;
++            case "failures": failures(); break;
++            case "private": privateInterop(); break;
++            case "boxing": boxingPositions(); break;
++            default: throw new AssertionError(args[0]);
++        }
++        System.out.println("OK");
++    }
++}
+--- /dev/null
++++ b/tests/fixtures/suspend_foundation/Consumer.kt
+@@ -0,0 +1,34 @@
++package consumer
++
++import suspension.*
++import kotlin.coroutines.*
++
++fun main() {
++    var first: Continuation<String>? = null
++    var second: Continuation<Long>? = null
++    var outcome: String? = null
++    var completed = 0
++    val operation: suspend () -> String = {
++        combine(3, { input ->
++            check(input == 3)
++            suspendCoroutine { continuation -> first = continuation }
++        }, { input ->
++            check(input == "K-6")
++            suspendCoroutine { continuation -> second = continuation }
++        })
++    }
++    operation.startCoroutine(object : Continuation<String> {
++        override val context: CoroutineContext = EmptyCoroutineContext
++        override fun resumeWith(result: Result<String>) {
++            outcome = result.getOrThrow()
++            completed++
++        }
++    })
++    check(completed == 0)
++    first!!.resume("K")
++    check(completed == 0)
++    second!!.resume(11L)
++    check(completed == 1)
++    check(outcome == "K-6:11")
++    println("OK")
++}
+--- /dev/null
++++ b/tests/fixtures/suspend_foundation/Dependency.kt
+@@ -0,0 +1,6 @@
++package suspend_dependency
++
++suspend fun fetch(input: String, callback: suspend (String) -> String): String {
++    val value = callback(input)
++    return value + "dep"
++}
+--- /dev/null
++++ b/tests/fixtures/suspend_foundation/MetadataCheck.java
+@@ -0,0 +1,34 @@
++package suspension;
++
++import java.util.ArrayList;
++import java.util.Collections;
++import kotlin.Metadata;
++import org.jetbrains.kotlin.metadata.ProtoBuf;
++import org.jetbrains.kotlin.metadata.deserialization.TypeTable;
++import org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil;
++
++public final class MetadataCheck {
++    static String type(ProtoBuf.Type type, org.jetbrains.kotlin.metadata.jvm.deserialization.JvmNameResolver names, TypeTable table) {
++        StringBuilder result = new StringBuilder();
++        result.append(type.hasClassName() ? names.getQualifiedClassName(type.getClassName()) : "T" + type.getTypeParameter());
++        result.append(" flags=").append(type.getFlags()).append(" nullable=").append(type.getNullable());
++        for (ProtoBuf.Type.Argument argument : type.getArgumentList()) result.append(" [").append(argument.getProjection()).append(':').append(type(argument.hasType() ? argument.getType() : table.get(argument.getTypeId()), names, table)).append(']');
++        return result.toString();
++    }
++    public static void main(String[] args) throws Exception {
++        Metadata metadata = Class.forName("suspension.ModelsKt").getAnnotation(Metadata.class);
++        var decoded = JvmProtoBufUtil.readPackageDataFrom(metadata.d1(), metadata.d2());
++        var names = decoded.getFirst();
++        var table = new TypeTable(decoded.getSecond().getTypeTable());
++        ArrayList<String> functions = new ArrayList<>();
++        for (ProtoBuf.Function function : decoded.getSecond().getFunctionList()) {
++            StringBuilder result = new StringBuilder(names.getString(function.getName()));
++            result.append(" flags=").append(function.getFlags()).append(" result=").append(type(function.hasReturnType() ? function.getReturnType() : table.get(function.getReturnTypeId()), names, table));
++            for (ProtoBuf.ValueParameter parameter : function.getValueParameterList()) result.append(" PARAM ").append(names.getString(parameter.getName())).append(" flags=").append(parameter.getFlags()).append(" type=").append(type(parameter.hasType() ? parameter.getType() : table.get(parameter.getTypeId()), names, table));
++            result.append(" JVM ").append(JvmProtoBufUtil.INSTANCE.getJvmMethodSignature(function, names, table).asString());
++            functions.add(result.toString());
++        }
++        Collections.sort(functions);
++        for (String function : functions) System.out.println(function);
++    }
++}
+--- /dev/null
++++ b/tests/fixtures/suspend_foundation/Models.kt
+@@ -0,0 +1,86 @@
++package suspension
++
++import suspend_dependency.fetch
++
++var trace: String = ""
++
++suspend fun combine(input: Int, first: suspend (Int) -> String, second: suspend (String) -> Long): String {
++    val before = input * 2
++    val text = first(input)
++    trace += "a"
++    val tag = text + "-" + before
++    val number = second(tag)
++    trace += "b"
++    return tag + ":" + number
++}
++
++suspend fun leaf(input: Int, step: suspend (Int) -> Int): Int {
++    val answer = step(input)
++    return answer + 10
++}
++
++suspend fun outer(seed: Int, step: suspend (Int) -> Int): Int {
++    val before = seed * 2
++    val got = leaf(before, step)
++    return got + 1
++}
++
++suspend fun imported(input: String, step: suspend (String) -> String): String {
++    val got = fetch(input, step)
++    return "[" + got + "]"
++}
++
++suspend fun wide(input: Long, fraction: Double, step: suspend (Double) -> Double): Double {
++    val before = input.toDouble() + fraction
++    val got = step(before)
++    return got + before
++}
++
++suspend fun nullable(step: suspend () -> String?): String? {
++    val result = step()
++    trace += "n"
++    return result
++}
++
++suspend fun unit(step: suspend () -> Unit) {
++    step()
++    trace += "u"
++}
++
++suspend fun immediate(input: String): String = input
++
++private suspend fun hidden(step: suspend () -> String): String {
++    val result = step()
++    return result + "hidden"
++}
++
++suspend fun privatePath(step: suspend () -> String): String {
++    val result = hidden(step)
++    return result + "!"
++}
++
++suspend fun throwAfter(step: suspend () -> String, error: RuntimeException): String {
++    val value = step()
++    trace += value
++    throw error
++}
++
++suspend fun mutation(step: suspend (Int) -> Int): Int {
++    var number = 3
++    val value = step(number++)
++    return number * 10 + value
++}
++
++suspend fun unitTail(step: suspend () -> Unit): Unit = step()
++
++fun receive(value: Int?): Int? = value
++fun ordinaryBox(value: Int): Any = value
++
++suspend fun boxingPositions(value: Int, step: suspend () -> Unit): Array<Any?> {
++    val boxed: Any = value
++    val values = listOf(value)
++    val nullable = receive(value)
++    val ordinary = ordinaryBox(value)
++    step()
++    return arrayOf(boxed, values[0], nullable, ordinary)
++}
+--- /dev/null
++++ b/tests/suspend_frontend.rs
+@@ -0,0 +1,82 @@
++use korrust::{DiagnosticKind, compile_all_with_classpath};
++use std::path::PathBuf;
++
++fn standard() -> PathBuf {
++    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc/lib/kotlin-stdlib.jar")
++}
++
++#[test]
++fn suspend_entry_points_emit_continuation_frames_only_when_needed() {
++    let standard = standard();
++    if !standard.is_file() {
++        return;
++    }
++    let classes = compile_all_with_classpath(
++        "package example\nsuspend fun immediate(value: String): String = value\nsuspend fun delayed(step: suspend () -> String): String { val value = step(); return value + \"!\" }",
++        "Suspend.kt", std::slice::from_ref(&standard)).unwrap();
++    assert!(
++        classes
++            .iter()
++            .any(|class| class.internal_name == "example/SuspendKt")
++    );
++    assert_eq!(
++        classes
++            .iter()
++            .filter(|class| class
++                .internal_name
++                .starts_with("example/SuspendKt$suspend$"))
++            .count(),
++        1
++    );
++}
++
++#[test]
++fn ordinary_call_context_and_suspend_argument_types_remain_invalid_kotlin() {
++    let standard = standard();
++    if !standard.is_file() {
++        return;
++    }
++    for source in [
++        "fun broken(step: suspend () -> String): String = step()",
++        "suspend fun broken(step: suspend () -> Int): String = step()",
++        "suspend fun broken(step: suspend (Int) -> Int): Int = step(\"wrong\")",
++    ] {
++        let error =
++            compile_all_with_classpath(source, "Broken.kt", std::slice::from_ref(&standard))
++                .err()
++                .expect(source);
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{source}: {}",
++            error.message
++        );
++    }
++}
++
++#[test]
++fn suspension_outside_the_bounded_state_machine_rejects_explicitly() {
++    let standard = standard();
++    if !standard.is_file() {
++        return;
++    }
++    for source in [
++        "suspend fun bounded(step: suspend () -> String): String = if (true) step() else \"x\"",
++        "suspend fun bounded(step: suspend () -> String): String = try { step() } finally { }",
++        "suspend fun <T> bounded(value: T): T = value",
++        "suspend fun bounded(value: Int = 1): Int = value",
++        "class Member { suspend fun bounded(): String = \"x\" }",
++        "suspend fun original(): String = \"x\"\nfun bounded(): suspend () -> String = ::original",
++    ] {
++        let error =
++            compile_all_with_classpath(source, "Bounded.kt", std::slice::from_ref(&standard))
++                .err()
++                .expect(source);
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::UnsupportedLanguage,
++            "{source}: {}",
++            error.message
++        );
++    }
++}
+--- /dev/null
++++ b/tools/check_suspend_foundation.py
+@@ -0,0 +1,205 @@
++#!/usr/bin/env python3
++import argparse
++from collections import Counter
++from datetime import datetime, timezone
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++import zipfile
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURES = ROOT / 'tests/fixtures/suspend_foundation'
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def relative(path):
++    try:
++        return str(Path(path).resolve().relative_to(ROOT))
++    except ValueError:
++        return str(Path(path).resolve())
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--candidate', type=Path, default=ROOT / 'target/release/korrust')
++    parser.add_argument('--output', required=True, type=Path)
++    args = parser.parse_args()
++    directory = args.output.resolve()
++    directory.mkdir(parents=True, exist_ok=False)
++    (directory / 'commands').mkdir()
++    java_home = Path(os.environ['JAVA_HOME'])
++    official = ROOT / 'references/kotlinc/bin/kotlinc'
++    standard = ROOT / 'references/kotlinc/lib/kotlin-stdlib.jar'
++    compiler = ROOT / 'references/kotlinc/lib/kotlin-compiler.jar'
++    candidate = args.candidate.resolve()
++    source_paths = [*sorted((ROOT / 'src').rglob('*.rs')), *sorted(FIXTURES.iterdir()), Path(__file__).resolve(), ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', ROOT / 'references/compiler.json', ROOT / 'references/sources.json', ROOT / 'references/kotlin/libraries/stdlib/jvm/src/kotlin/coroutines/jvm/internal/boxing.kt']
++    matrix = ROOT / 'tools/upstream_suspend_foundation.json'
++    if matrix.is_file():
++        source_paths.append(matrix)
++    frozen_paths = [*source_paths, candidate, standard, compiler]
++    frozen = {relative(path): sha(path) for path in frozen_paths}
++    with zipfile.ZipFile(directory / 'inputs.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
++        for path in source_paths:
++            archive.writestr(str(path.relative_to(ROOT)), path.read_bytes())
++    report = dict(schema_version=1, kind='correctness', created_at=datetime.now(timezone.utc).isoformat(), status='running',
++                  compiler=dict(path=relative(candidate), sha256=sha(candidate)), reference_compiler=json.loads((ROOT / 'references/compiler.json').read_text()),
++                  frozen_input_hashes=frozen, input_bundle=dict(path=relative(directory / 'inputs.zip'), sha256=sha(directory / 'inputs.zip')),
++                  cases=[], commands=[], reproduction_command=['python3', relative(__file__), '--candidate', relative(candidate), '--output', relative(directory)],
++                  runtime_boxing_oracle=dict(source='references/kotlin/libraries/stdlib/jvm/src/kotlin/coroutines/jvm/internal/boxing.kt', source_sha256=sha(ROOT / 'references/kotlin/libraries/stdlib/jvm/src/kotlin/coroutines/jvm/internal/boxing.kt'), evidence='Java asserts coroutine Int input/result wrappers, boxed Any local, listOf element and nullable-call input are fresh, while a separate ordinary boxing function retains Integer.valueOf cache identity'),
++                  scope='Bounded suspend functions with real delayed continuation resumption, saved state, ordinary source/compiled suspend calls, function types, public JVM ABI and logical Kotlin metadata',
++                  limitations=['Source suspend lambdas/references/conversions, suspend member/extension/generic/default/vararg/inline declarations and nested suspension control flow are unsupported', 'Imported suspend inline/default-mask/member calls are unsupported', 'Nullable Unit and Unit-valued suspend callback parameters are unsupported; no source generic kotlin.Result/value-class support or frame DebugMetadata/debugger/stacktrace equivalence claim', 'Public logical function ABI and metadata are compared; generated frame names and spill layouts need not match', 'Authored dependency is an identical external library classpath for both providers; unchanged upstream CoroutineHelpers.kt must be compiled separately by the upstream adapter'])
++    options = ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8']
++
++    def save():
++        report['counts'] = dict(Counter(item['outcome'] for item in report['cases']))
++        (directory / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
++
++    def run(label, command, accepted=(0,)):
++        number = len(report['commands'])
++        command = [str(part) for part in command]
++        try:
++            result = subprocess.run(command, capture_output=True, text=True, timeout=180, cwd=ROOT)
++        except subprocess.TimeoutExpired as error:
++            raise AssertionError(label + ': timeout') from error
++        log = directory / 'commands' / f'{number:03d}.txt'
++        log.write_text('$ ' + ' '.join(command) + '\n' + result.stdout + result.stderr)
++        report['commands'].append(dict(label=label, argv=command, exit_code=result.returncode, log=relative(log)))
++        save()
++        if result.returncode not in accepted:
++            raise AssertionError(label + ': ' + result.stdout + result.stderr)
++        return result
++
++    def case(name, operation):
++        try:
++            detail = operation()
++            outcome = detail.pop('outcome', 'pass') if isinstance(detail, dict) else 'pass'
++            report['cases'].append(dict(id=name, outcome=outcome, detail=detail))
++        except Exception as error:
++            report['cases'].append(dict(id=name, outcome='correctness_failure', detail=str(error)))
++        save()
++
++    save()
++    dependency = directory / 'dependency'
++    run('authored external suspend dependency compiled once with pinned Kotlin', [official, FIXTURES / 'Dependency.kt', '-cp', standard, '-d', dependency, *options])
++    dependency_hashes = {relative(path): sha(path) for path in dependency.rglob('*.class')}
++    cp = os.pathsep.join(map(str, [standard, dependency]))
++    official_out, candidate_out = directory / 'official', directory / 'candidate'
++    run('official model', [official, FIXTURES / 'Models.kt', '-cp', cp, '-d', official_out, *options])
++    run('candidate model', [candidate, FIXTURES / 'Models.kt', '-cp', cp, '-d', candidate_out])
++    java_out = directory / 'java'
++    run('Java driver and metadata decoder against official output only', [java_home / 'bin/javac', '-cp', os.pathsep.join(map(str, [official_out, standard, compiler])), '-d', java_out, FIXTURES / 'Calls.java', FIXTURES / 'MetadataCheck.java'])
++    callers = {relative(path): sha(path) for path in java_out.rglob('*.class')}
++    providers = [('official', official_out), ('candidate', candidate_out)]
++    for group in ['delayed', 'scalars', 'failures', 'private', 'boxing']:
++        def runtime(group=group):
++            for provider, output in providers:
++                result = run(provider + ' independent ' + group, [java_home / 'bin/java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [output, java_out, dependency, standard])), 'suspension.Calls', group])
++                assert result.stdout == 'OK\n', result.stdout
++                if group == 'boxing':
++                    bytecode = run(provider + ' boxing positions bytecode', [java_home / 'bin/javap', '-c', '-p', '-classpath', output, 'suspension.ModelsKt']).stdout
++                    ordinary = bytecode.split(' ordinaryBox(', 1)[1].split('\n  public ', 1)[0]
++                    coroutine = bytecode.split(' boxingPositions(', 1)[1].split('\n  public ', 1)[0]
++                    assert 'java/lang/Integer.valueOf' in ordinary, ordinary
++                    assert 'kotlin/coroutines/jvm/internal/Boxing.boxInt' in coroutine, coroutine
++                    assert 'java/lang/Integer.valueOf' not in coroutine, coroutine
++            return 'Identical Java caller bytecode compiled against official only; real delayed resumption and independent assertions under -Xverify:all'
++        case('runtime_' + group, runtime)
++
++    for compile_provider, compile_output in providers:
++        def kotlin_consumer(compile_provider=compile_provider, compile_output=compile_output):
++            consumer_out = directory / ('consumer-' + compile_provider)
++            run('Kotlin consumer against ' + compile_provider, [official, FIXTURES / 'Consumer.kt', '-cp', os.pathsep.join(map(str, [compile_output, dependency, standard])), '-d', consumer_out, *options])
++            for runtime_provider, runtime_output in providers:
++                result = run('Kotlin consumer ' + compile_provider + ' on ' + runtime_provider, [java_home / 'bin/java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [consumer_out, runtime_output, dependency, standard])), 'consumer.ConsumerKt'])
++                assert result.stdout == 'OK\n', result.stdout
++            return 'Official Kotlin consumer compiles against ' + compile_provider + ', suspends twice using standard suspendCoroutine, then resumes and completes on both outputs'
++        case('kotlin_consumer_' + compile_provider, kotlin_consumer)
++
++    def metadata():
++        results = [run(provider + ' decoded logical suspend metadata', [java_home / 'bin/java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [output, java_out, dependency, standard, compiler])), 'suspension.MetadataCheck']).stdout for provider, output in providers]
++        assert results[0] == results[1], '\nOFFICIAL\n' + results[0] + '\nCANDIDATE\n' + results[1]
++        return 'Function visibility/suspend flags, logical return and parameter types, names, nested suspend type flags/projections/nullability and resolved JVM signatures match pinned Kotlin metadata'
++    case('logical_metadata', metadata)
++
++    def abi():
++        selected = set(re.findall(r'(?:suspend fun|private suspend fun|fun)\s+(\w+)\s*\(', (FIXTURES / 'Models.kt').read_text())) | {'getTrace', 'setTrace'}
++        selected.discard('hidden')
++        results = []
++        for provider, output in providers:
++            result = run(provider + ' public logical JVM signatures', [java_home / 'bin/javap', '-public', '-s', '-classpath', output, 'suspension.ModelsKt'])
++            lines = result.stdout.splitlines()
++            declarations = []
++            for index, line in enumerate(lines):
++                if '(' not in line:
++                    continue
++                name = line.split('(', 1)[0].split()[-1]
++                if name in selected:
++                    declarations.append((name, line.strip(), lines[index + 1].strip()))
++            results.append(sorted(declarations))
++        assert results[0] == results[1], str(results)
++        assert {item[0] for item in results[0]} == selected, results[0]
++        return 'Public Kotlin declarations have exact JVM descriptors and generic signatures, including Continuation/Object and runtime FunctionN continuation parameters; generated synthetic bridges/frames excluded explicitly'
++    case('public_jvm_abi', abi)
++
++    invalid = [
++        'fun broken(step: suspend () -> String): String = step()',
++        'suspend fun broken(step: suspend () -> Int): String = step()',
++        'suspend fun broken(step: suspend (Int) -> Int): Int = step("wrong")',
++        'class Holder { fun broken(step: suspend () -> String): String = step() }',
++        'object Holder { fun broken(step: suspend () -> String): String = step() }',
++    ]
++    for index, source in enumerate(invalid):
++        def rejection(index=index, source=source):
++            path = directory / f'Invalid{index}.kt'
++            path.write_text(source)
++            run('oracle invalid ' + str(index), [official, path, '-cp', standard, '-d', directory / f'invalid-official-{index}', *options], accepted=(1,))
++            result = run('candidate invalid ' + str(index), [candidate, path, '-cp', standard, '-d', directory / f'invalid-candidate-{index}', '--diagnostic-format', 'json'], accepted=(1,))
++            diagnostics = [json.loads(line) for line in result.stderr.splitlines() if line.startswith('{')]
++            assert diagnostics and diagnostics[0]['category'] == 'invalid_kotlin', diagnostics
++            return dict(outcome='invalid_rejected', diagnostics=diagnostics)
++        case('invalid_' + str(index), rejection)
++
++    unsupported = [
++        'suspend fun bounded(step: suspend () -> String): String = if (true) step() else "x"',
++        'suspend fun bounded(step: suspend () -> String): String { while (true) { step() }; return "x" }',
++        'suspend fun bounded(step: suspend () -> String): String = try { step() } finally { }',
++        'suspend fun <T> bounded(value: T): T = value',
++        'suspend fun bounded(value: Int = 1): Int = value',
++        'class Member { suspend fun bounded(): String = "x" }',
++        'suspend fun bounded(step: suspend () -> String): String { val value: suspend () -> String = { "x" }; return step() }',
++        'suspend fun original(): String = "x"\nfun bounded(): suspend () -> String = ::original',
++        'suspend fun bounded(step: suspend () -> String): String = step() + step()',
++        'suspend fun bounded(step: suspend (Unit) -> String): String = step(Unit)',
++        'suspend fun bounded(): Unit? = null',
++    ]
++    for index, source in enumerate(unsupported):
++        def boundary(index=index, source=source):
++            path = directory / f'Unsupported{index}.kt'
++            path.write_text(source)
++            run('oracle accepts boundary ' + str(index), [official, path, '-cp', standard, '-d', directory / f'unsupported-official-{index}', *options])
++            result = run('candidate unsupported ' + str(index), [candidate, path, '-cp', standard, '-d', directory / f'unsupported-candidate-{index}', '--diagnostic-format', 'json'], accepted=(1,))
++            diagnostics = [json.loads(line) for line in result.stderr.splitlines() if line.startswith('{')]
++            assert diagnostics and diagnostics[0]['category'] == 'unsupported_language', diagnostics
++            return dict(outcome='unsupported_language', oracle='valid Kotlin', diagnostics=diagnostics)
++        case('unsupported_' + str(index), boundary)
++
++    assert callers == {relative(path): sha(path) for path in java_out.rglob('*.class')}
++    assert dependency_hashes == {relative(path): sha(path) for path in dependency.rglob('*.class')}
++    changed = [path for path, value in frozen.items() if sha(ROOT / path) != value]
++    report['input_integrity'] = dict(status='changed' if changed else 'unchanged', changed_paths=changed)
++    report['java_caller_hashes'] = callers
++    report['external_dependency_hashes'] = dependency_hashes
++    report['status'] = 'complete' if not changed and all(item['outcome'] in {'pass', 'invalid_rejected', 'unsupported_language'} for item in report['cases']) else 'failed'
++    save()
++    print(json.dumps(dict(status=report['status'], counts=report['counts'])))
++    return int(report['status'] != 'complete')
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+--- /dev/null
++++ b/tools/upstream_suspend_foundation.json
+@@ -0,0 +1,47 @@
++{
++  "schema_version": 1,
++  "selection": "Unchanged complete coroutine originals with preserved helpers/directives; unsupported language and helper prerequisites are not passes",
++  "limitations": [
++    "Source suspend lambdas, receiver suspend types and suspension in nested expressions/control flow remain bounded-language gaps",
++    "WITH_COROUTINES retains unchanged CoroutineHelpers.kt compiled with each provider; source Result/getOrThrow or other helper prerequisites are recorded honestly",
++    "Successful authored continuation fixtures do not imply these unchanged originals or full coroutine source compatibility"
++  ],
++  "cases": [
++    {
++      "id": "suspend_original_0_simple",
++      "family": "suspend_foundation",
++      "root": "box",
++      "path": "references/kotlin/compiler/testData/codegen/box/coroutines/simple.kt",
++      "kind": "box",
++      "tier": "family",
++      "sha256": "129af22b768b640a23fd1a91d347d869d9e30290c7101d1d0bc4e151f4464ba9"
++    },
++    {
++      "id": "suspend_original_1_simple",
++      "family": "suspend_foundation",
++      "root": "box",
++      "path": "references/kotlin/compiler/testData/codegen/box/coroutines/suspendFunctionTypeCall/simple.kt",
++      "kind": "box",
++      "tier": "family",
++      "sha256": "9c113b182baff50f7e17b016166e68cf3f4da021096c8af7d789b15b1d5206a0"
++    },
++    {
++      "id": "suspend_original_2_kt49834",
++      "family": "suspend_foundation",
++      "root": "box",
++      "path": "references/kotlin/compiler/testData/codegen/box/coroutines/varSpilling/kt49834.kt",
++      "kind": "box",
++      "tier": "family",
++      "sha256": "b2c404bb9d633b2325fe5dea303b72a66fbaf85a408804b609601982998d1a01"
++    },
++    {
++      "id": "suspend_original_3_inlineUnitFunction",
++      "family": "suspend_foundation",
++      "root": "box",
++      "path": "references/kotlin/compiler/testData/codegen/box/coroutines/unitTypeReturn/inlineUnitFunction.kt",
++      "kind": "box",
++      "tier": "family",
++      "sha256": "33d1510077a0507d83ccac476c564d1b947eb44a7b009440a7a95afb0f12e791"
++    }
++  ]
++}

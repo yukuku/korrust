@@ -2,6 +2,7 @@ use super::*;
 
 fn code<'a>(pool: &'a mut Pool, owner: &'a str) -> Code<'a> {
     Code {
+        coroutine: false,
         pool,
         functions: &[],
         owner,

@@ -20,6 +20,7 @@ pub(super) fn function(
             .sum::<usize>();
     let locals = function.locals.max((slots + 2) as u16);
     let mut body = Code {
+        coroutine: false,
         pool,
         functions,
         owner,
@@ -139,6 +140,7 @@ pub(super) fn constructors_with_offset(
     let slots = 1 + class.params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
     let locals = class.constructor_locals.max((slots + 2) as u16);
     let mut body = Code {
+        coroutine: false,
         pool,
         functions: &class.methods,
         owner,
@@ -222,6 +224,7 @@ pub(super) fn constructors_with_offset(
     let mut methods = vec![method];
     if class.defaults.len() == class.params.len() && class.defaults.iter().all(Option::is_some) {
         let mut body = Code {
+            coroutine: false,
             pool,
             functions: &[],
             owner,
@@ -296,6 +299,7 @@ pub(super) fn overloads(
         }
         omitted.insert(index);
         let reduced = crate::check::Function {
+            suspend_: false,
             extension_receiver: function.extension_receiver,
             class_type_params: function.class_type_params.clone(),
             jvm_result: function.jvm_result.clone(),

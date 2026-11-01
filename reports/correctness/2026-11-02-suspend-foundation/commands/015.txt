@@ -1,0 +1,1446 @@
+$ /Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap -c -p -classpath /Users/yuku/f/git/korrust/target/resume-suspend-final-v1/candidate suspension.ModelsKt
+Compiled from "Models.kt"
+public final class suspension.ModelsKt {
+  private static java.lang.String trace;
+
+  public static final int valueNeighbor(int);
+    Code:
+       0: iload         0
+       2: invokestatic  #12                 // Method suspension/Unrelated."constructor-impl":(I)I
+       5: invokestatic  #16                 // Method suspension/Unrelated."box-impl":(I)Lsuspension/Unrelated;
+       8: checkcast     #8                  // class suspension/Unrelated
+      11: invokevirtual #20                 // Method suspension/Unrelated.getValue:()I
+      14: ireturn
+      15: aconst_null
+      16: athrow
+
+  public static final java.lang.Object combine(int, kotlin.jvm.functions.Function2<? super java.lang.Integer, ? super kotlin.coroutines.Continuation<? super java.lang.String>, ? extends java.lang.Object>, kotlin.jvm.functions.Function2<? super java.lang.String, ? super kotlin.coroutines.Continuation<? super java.lang.Long>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super java.lang.String>);
+    Code:
+       0: aload         3
+       2: instanceof    #24                 // class suspension/ModelsKt$suspend$1
+       5: ifeq          43
+       8: aload         3
+      10: checkcast     #24                 // class suspension/ModelsKt$suspend$1
+      13: astore        13
+      15: aload         13
+      17: getfield      #28                 // Field suspension/ModelsKt$suspend$1.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         13
+      29: dup
+      30: getfield      #28                 // Field suspension/ModelsKt$suspend$1.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #28                 // Field suspension/ModelsKt$suspend$1.label:I
+      40: goto          54
+      43: new           #24                 // class suspension/ModelsKt$suspend$1
+      46: dup
+      47: aload         3
+      49: invokespecial #33                 // Method suspension/ModelsKt$suspend$1."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        13
+      54: aload         13
+      56: getfield      #37                 // Field suspension/ModelsKt$suspend$1.result:Ljava/lang/Object;
+      59: astore        14
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        15
+      66: aload         13
+      68: getfield      #28                 // Field suspension/ModelsKt$suspend$1.label:I
+      71: iconst_0
+      72: if_icmpeq     104
+      75: aload         13
+      77: getfield      #28                 // Field suspension/ModelsKt$suspend$1.label:I
+      80: iconst_1
+      81: if_icmpeq     183
+      84: aload         13
+      86: getfield      #28                 // Field suspension/ModelsKt$suspend$1.label:I
+      89: iconst_2
+      90: if_icmpeq     385
+      93: new           #45                 // class java/lang/IllegalStateException
+      96: dup
+      97: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+     100: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+     103: athrow
+     104: aload         14
+     106: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     109: iload         0
+     111: iconst_2
+     112: imul
+     113: istore        4
+     115: aload         1
+     117: astore        16
+     119: iload         0
+     121: istore        17
+     123: aload         13
+     125: iload         0
+     127: putfield      #59                 // Field suspension/ModelsKt$suspend$1.spill$0:I
+     130: aload         13
+     132: aload         1
+     134: putfield      #63                 // Field suspension/ModelsKt$suspend$1.spill$1:Lkotlin/jvm/functions/Function2;
+     137: aload         13
+     139: aload         2
+     141: putfield      #66                 // Field suspension/ModelsKt$suspend$1.spill$2:Lkotlin/jvm/functions/Function2;
+     144: aload         13
+     146: iload         4
+     148: putfield      #69                 // Field suspension/ModelsKt$suspend$1.spill$4:I
+     151: aload         13
+     153: iconst_1
+     154: putfield      #28                 // Field suspension/ModelsKt$suspend$1.label:I
+     157: aload         16
+     159: iload         17
+     161: invokestatic  #75                 // Method kotlin/coroutines/jvm/internal/Boxing.boxInt:(I)Ljava/lang/Integer;
+     164: aload         13
+     166: invokeinterface #81,  3           // InterfaceMethod kotlin/jvm/functions/Function2.invoke:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     171: astore        14
+     173: aload         14
+     175: aload         15
+     177: if_acmpeq     521
+     180: goto          216
+     183: aload         13
+     185: getfield      #59                 // Field suspension/ModelsKt$suspend$1.spill$0:I
+     188: istore        0
+     190: aload         13
+     192: getfield      #63                 // Field suspension/ModelsKt$suspend$1.spill$1:Lkotlin/jvm/functions/Function2;
+     195: astore        1
+     197: aload         13
+     199: getfield      #66                 // Field suspension/ModelsKt$suspend$1.spill$2:Lkotlin/jvm/functions/Function2;
+     202: astore        2
+     204: aload         13
+     206: getfield      #69                 // Field suspension/ModelsKt$suspend$1.spill$4:I
+     209: istore        4
+     211: aload         14
+     213: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     216: aload         14
+     218: checkcast     #83                 // class java/lang/String
+     221: astore        5
+     223: getstatic     #87                 // Field trace:Ljava/lang/String;
+     226: checkcast     #83                 // class java/lang/String
+     229: astore        6
+     231: new           #89                 // class java/lang/StringBuilder
+     234: dup
+     235: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     238: aload         6
+     240: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     243: ldc_w         #98                 // String a
+     246: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     249: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     252: checkcast     #83                 // class java/lang/String
+     255: astore        7
+     257: aload         7
+     259: putstatic     #87                 // Field trace:Ljava/lang/String;
+     262: new           #89                 // class java/lang/StringBuilder
+     265: dup
+     266: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     269: new           #89                 // class java/lang/StringBuilder
+     272: dup
+     273: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     276: aload         5
+     278: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     281: ldc_w         #104                // String -
+     284: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     287: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     290: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     293: iload         4
+     295: invokevirtual #107                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     298: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     301: checkcast     #83                 // class java/lang/String
+     304: astore        8
+     306: aload         2
+     308: astore        16
+     310: aload         8
+     312: astore        17
+     314: aload         13
+     316: iload         0
+     318: putfield      #59                 // Field suspension/ModelsKt$suspend$1.spill$0:I
+     321: aload         13
+     323: aload         1
+     325: putfield      #63                 // Field suspension/ModelsKt$suspend$1.spill$1:Lkotlin/jvm/functions/Function2;
+     328: aload         13
+     330: aload         2
+     332: putfield      #66                 // Field suspension/ModelsKt$suspend$1.spill$2:Lkotlin/jvm/functions/Function2;
+     335: aload         13
+     337: iload         4
+     339: putfield      #69                 // Field suspension/ModelsKt$suspend$1.spill$4:I
+     342: aload         13
+     344: aload         5
+     346: putfield      #110                // Field suspension/ModelsKt$suspend$1.spill$5:Ljava/lang/String;
+     349: aload         13
+     351: aload         8
+     353: putfield      #113                // Field suspension/ModelsKt$suspend$1.spill$8:Ljava/lang/String;
+     356: aload         13
+     358: iconst_2
+     359: putfield      #28                 // Field suspension/ModelsKt$suspend$1.label:I
+     362: aload         16
+     364: aload         17
+     366: aload         13
+     368: invokeinterface #81,  3           // InterfaceMethod kotlin/jvm/functions/Function2.invoke:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     373: astore        14
+     375: aload         14
+     377: aload         15
+     379: if_acmpeq     521
+     382: goto          432
+     385: aload         13
+     387: getfield      #59                 // Field suspension/ModelsKt$suspend$1.spill$0:I
+     390: istore        0
+     392: aload         13
+     394: getfield      #63                 // Field suspension/ModelsKt$suspend$1.spill$1:Lkotlin/jvm/functions/Function2;
+     397: astore        1
+     399: aload         13
+     401: getfield      #66                 // Field suspension/ModelsKt$suspend$1.spill$2:Lkotlin/jvm/functions/Function2;
+     404: astore        2
+     406: aload         13
+     408: getfield      #69                 // Field suspension/ModelsKt$suspend$1.spill$4:I
+     411: istore        4
+     413: aload         13
+     415: getfield      #110                // Field suspension/ModelsKt$suspend$1.spill$5:Ljava/lang/String;
+     418: astore        5
+     420: aload         13
+     422: getfield      #113                // Field suspension/ModelsKt$suspend$1.spill$8:Ljava/lang/String;
+     425: astore        8
+     427: aload         14
+     429: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     432: aload         14
+     434: checkcast     #115                // class java/lang/Number
+     437: invokevirtual #119                // Method java/lang/Number.longValue:()J
+     440: lstore        9
+     442: getstatic     #87                 // Field trace:Ljava/lang/String;
+     445: checkcast     #83                 // class java/lang/String
+     448: astore        11
+     450: new           #89                 // class java/lang/StringBuilder
+     453: dup
+     454: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     457: aload         11
+     459: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     462: ldc_w         #121                // String b
+     465: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     468: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     471: checkcast     #83                 // class java/lang/String
+     474: astore        12
+     476: aload         12
+     478: putstatic     #87                 // Field trace:Ljava/lang/String;
+     481: new           #89                 // class java/lang/StringBuilder
+     484: dup
+     485: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     488: new           #89                 // class java/lang/StringBuilder
+     491: dup
+     492: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     495: aload         8
+     497: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     500: ldc_w         #123                // String :
+     503: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     506: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     509: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     512: lload         9
+     514: invokevirtual #126                // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+     517: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     520: areturn
+     521: aload         15
+     523: areturn
+     524: aconst_null
+     525: athrow
+
+  public static final java.lang.Object leaf(int, kotlin.jvm.functions.Function2<? super java.lang.Integer, ? super kotlin.coroutines.Continuation<? super java.lang.Integer>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super java.lang.Integer>);
+    Code:
+       0: aload         2
+       2: instanceof    #136                // class suspension/ModelsKt$suspend$2
+       5: ifeq          43
+       8: aload         2
+      10: checkcast     #136                // class suspension/ModelsKt$suspend$2
+      13: astore        4
+      15: aload         4
+      17: getfield      #137                // Field suspension/ModelsKt$suspend$2.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         4
+      29: dup
+      30: getfield      #137                // Field suspension/ModelsKt$suspend$2.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #137                // Field suspension/ModelsKt$suspend$2.label:I
+      40: goto          54
+      43: new           #136                // class suspension/ModelsKt$suspend$2
+      46: dup
+      47: aload         2
+      49: invokespecial #138                // Method suspension/ModelsKt$suspend$2."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        4
+      54: aload         4
+      56: getfield      #139                // Field suspension/ModelsKt$suspend$2.result:Ljava/lang/Object;
+      59: astore        5
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        6
+      66: aload         4
+      68: getfield      #137                // Field suspension/ModelsKt$suspend$2.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         4
+      77: getfield      #137                // Field suspension/ModelsKt$suspend$2.label:I
+      80: iconst_1
+      81: if_icmpeq     154
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         5
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: aload         1
+     102: astore        7
+     104: iload         0
+     106: istore        8
+     108: aload         4
+     110: iload         0
+     112: putfield      #140                // Field suspension/ModelsKt$suspend$2.spill$0:I
+     115: aload         4
+     117: aload         1
+     119: putfield      #141                // Field suspension/ModelsKt$suspend$2.spill$1:Lkotlin/jvm/functions/Function2;
+     122: aload         4
+     124: iconst_1
+     125: putfield      #137                // Field suspension/ModelsKt$suspend$2.label:I
+     128: aload         7
+     130: iload         8
+     132: invokestatic  #75                 // Method kotlin/coroutines/jvm/internal/Boxing.boxInt:(I)Ljava/lang/Integer;
+     135: aload         4
+     137: invokeinterface #81,  3           // InterfaceMethod kotlin/jvm/functions/Function2.invoke:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     142: astore        5
+     144: aload         5
+     146: aload         6
+     148: if_acmpeq     192
+     151: goto          173
+     154: aload         4
+     156: getfield      #140                // Field suspension/ModelsKt$suspend$2.spill$0:I
+     159: istore        0
+     161: aload         4
+     163: getfield      #141                // Field suspension/ModelsKt$suspend$2.spill$1:Lkotlin/jvm/functions/Function2;
+     166: astore        1
+     168: aload         5
+     170: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     173: aload         5
+     175: checkcast     #115                // class java/lang/Number
+     178: invokevirtual #144                // Method java/lang/Number.intValue:()I
+     181: istore        3
+     183: iload         3
+     185: bipush        10
+     187: iadd
+     188: invokestatic  #75                 // Method kotlin/coroutines/jvm/internal/Boxing.boxInt:(I)Ljava/lang/Integer;
+     191: areturn
+     192: aload         6
+     194: areturn
+     195: aconst_null
+     196: athrow
+
+  public static final java.lang.Object outer(int, kotlin.jvm.functions.Function2<? super java.lang.Integer, ? super kotlin.coroutines.Continuation<? super java.lang.Integer>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super java.lang.Integer>);
+    Code:
+       0: aload         2
+       2: instanceof    #149                // class suspension/ModelsKt$suspend$3
+       5: ifeq          43
+       8: aload         2
+      10: checkcast     #149                // class suspension/ModelsKt$suspend$3
+      13: astore        5
+      15: aload         5
+      17: getfield      #150                // Field suspension/ModelsKt$suspend$3.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         5
+      29: dup
+      30: getfield      #150                // Field suspension/ModelsKt$suspend$3.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #150                // Field suspension/ModelsKt$suspend$3.label:I
+      40: goto          54
+      43: new           #149                // class suspension/ModelsKt$suspend$3
+      46: dup
+      47: aload         2
+      49: invokespecial #151                // Method suspension/ModelsKt$suspend$3."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        5
+      54: aload         5
+      56: getfield      #152                // Field suspension/ModelsKt$suspend$3.result:Ljava/lang/Object;
+      59: astore        6
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        7
+      66: aload         5
+      68: getfield      #150                // Field suspension/ModelsKt$suspend$3.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         5
+      77: getfield      #150                // Field suspension/ModelsKt$suspend$3.label:I
+      80: iconst_1
+      81: if_icmpeq     162
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         6
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: iload         0
+     102: iconst_2
+     103: imul
+     104: istore        3
+     106: iload         3
+     108: istore        8
+     110: aload         1
+     112: astore        9
+     114: aload         5
+     116: iload         0
+     118: putfield      #153                // Field suspension/ModelsKt$suspend$3.spill$0:I
+     121: aload         5
+     123: aload         1
+     125: putfield      #154                // Field suspension/ModelsKt$suspend$3.spill$1:Lkotlin/jvm/functions/Function2;
+     128: aload         5
+     130: iload         3
+     132: putfield      #157                // Field suspension/ModelsKt$suspend$3.spill$3:I
+     135: aload         5
+     137: iconst_1
+     138: putfield      #150                // Field suspension/ModelsKt$suspend$3.label:I
+     141: iload         8
+     143: aload         9
+     145: aload         5
+     147: invokestatic  #159                // Method leaf:(ILkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+     150: astore        6
+     152: aload         6
+     154: aload         7
+     156: if_acmpeq     206
+     159: goto          188
+     162: aload         5
+     164: getfield      #153                // Field suspension/ModelsKt$suspend$3.spill$0:I
+     167: istore        0
+     169: aload         5
+     171: getfield      #154                // Field suspension/ModelsKt$suspend$3.spill$1:Lkotlin/jvm/functions/Function2;
+     174: astore        1
+     176: aload         5
+     178: getfield      #157                // Field suspension/ModelsKt$suspend$3.spill$3:I
+     181: istore        3
+     183: aload         6
+     185: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     188: aload         6
+     190: checkcast     #115                // class java/lang/Number
+     193: invokevirtual #144                // Method java/lang/Number.intValue:()I
+     196: istore        4
+     198: iload         4
+     200: iconst_1
+     201: iadd
+     202: invokestatic  #75                 // Method kotlin/coroutines/jvm/internal/Boxing.boxInt:(I)Ljava/lang/Integer;
+     205: areturn
+     206: aload         7
+     208: areturn
+     209: aconst_null
+     210: athrow
+
+  public static final java.lang.Object imported(java.lang.String, kotlin.jvm.functions.Function2<? super java.lang.String, ? super kotlin.coroutines.Continuation<? super java.lang.String>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super java.lang.String>);
+    Code:
+       0: aload         2
+       2: instanceof    #162                // class suspension/ModelsKt$suspend$4
+       5: ifeq          43
+       8: aload         2
+      10: checkcast     #162                // class suspension/ModelsKt$suspend$4
+      13: astore        4
+      15: aload         4
+      17: getfield      #163                // Field suspension/ModelsKt$suspend$4.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         4
+      29: dup
+      30: getfield      #163                // Field suspension/ModelsKt$suspend$4.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #163                // Field suspension/ModelsKt$suspend$4.label:I
+      40: goto          54
+      43: new           #162                // class suspension/ModelsKt$suspend$4
+      46: dup
+      47: aload         2
+      49: invokespecial #164                // Method suspension/ModelsKt$suspend$4."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        4
+      54: aload         4
+      56: getfield      #165                // Field suspension/ModelsKt$suspend$4.result:Ljava/lang/Object;
+      59: astore        5
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        6
+      66: aload         4
+      68: getfield      #163                // Field suspension/ModelsKt$suspend$4.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         4
+      77: getfield      #163                // Field suspension/ModelsKt$suspend$4.label:I
+      80: iconst_1
+      81: if_icmpeq     149
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         5
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: aload         0
+     102: astore        7
+     104: aload         1
+     106: astore        8
+     108: aload         4
+     110: aload         0
+     112: putfield      #167                // Field suspension/ModelsKt$suspend$4.spill$0:Ljava/lang/String;
+     115: aload         4
+     117: aload         1
+     119: putfield      #168                // Field suspension/ModelsKt$suspend$4.spill$1:Lkotlin/jvm/functions/Function2;
+     122: aload         4
+     124: iconst_1
+     125: putfield      #163                // Field suspension/ModelsKt$suspend$4.label:I
+     128: aload         7
+     130: aload         8
+     132: aload         4
+     134: invokestatic  #174                // Method suspend_dependency/DependencyKt.fetch:(Ljava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+     137: astore        5
+     139: aload         5
+     141: aload         6
+     143: if_acmpeq     216
+     146: goto          168
+     149: aload         4
+     151: getfield      #167                // Field suspension/ModelsKt$suspend$4.spill$0:Ljava/lang/String;
+     154: astore        0
+     156: aload         4
+     158: getfield      #168                // Field suspension/ModelsKt$suspend$4.spill$1:Lkotlin/jvm/functions/Function2;
+     161: astore        1
+     163: aload         5
+     165: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     168: aload         5
+     170: checkcast     #83                 // class java/lang/String
+     173: astore        3
+     175: new           #89                 // class java/lang/StringBuilder
+     178: dup
+     179: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     182: new           #89                 // class java/lang/StringBuilder
+     185: dup
+     186: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     189: ldc_w         #176                // String [
+     192: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     195: aload         3
+     197: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     200: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     203: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     206: ldc_w         #178                // String ]
+     209: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     212: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     215: areturn
+     216: aload         6
+     218: areturn
+     219: aconst_null
+     220: athrow
+
+  public static final java.lang.Object wide(long, double, kotlin.jvm.functions.Function2<? super java.lang.Double, ? super kotlin.coroutines.Continuation<? super java.lang.Double>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super java.lang.Double>);
+    Code:
+       0: aload         5
+       2: instanceof    #182                // class suspension/ModelsKt$suspend$5
+       5: ifeq          43
+       8: aload         5
+      10: checkcast     #182                // class suspension/ModelsKt$suspend$5
+      13: astore        10
+      15: aload         10
+      17: getfield      #183                // Field suspension/ModelsKt$suspend$5.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         10
+      29: dup
+      30: getfield      #183                // Field suspension/ModelsKt$suspend$5.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #183                // Field suspension/ModelsKt$suspend$5.label:I
+      40: goto          54
+      43: new           #182                // class suspension/ModelsKt$suspend$5
+      46: dup
+      47: aload         5
+      49: invokespecial #184                // Method suspension/ModelsKt$suspend$5."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        10
+      54: aload         10
+      56: getfield      #185                // Field suspension/ModelsKt$suspend$5.result:Ljava/lang/Object;
+      59: astore        11
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        12
+      66: aload         10
+      68: getfield      #183                // Field suspension/ModelsKt$suspend$5.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         10
+      77: getfield      #183                // Field suspension/ModelsKt$suspend$5.label:I
+      80: iconst_1
+      81: if_icmpeq     176
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         11
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: lload         0
+     102: l2d
+     103: dload         2
+     105: dadd
+     106: dstore        6
+     108: aload         4
+     110: astore        13
+     112: dload         6
+     114: dstore        14
+     116: aload         10
+     118: lload         0
+     120: putfield      #188                // Field suspension/ModelsKt$suspend$5.spill$0:J
+     123: aload         10
+     125: dload         2
+     127: putfield      #191                // Field suspension/ModelsKt$suspend$5.spill$2:D
+     130: aload         10
+     132: aload         4
+     134: putfield      #193                // Field suspension/ModelsKt$suspend$5.spill$4:Lkotlin/jvm/functions/Function2;
+     137: aload         10
+     139: dload         6
+     141: putfield      #196                // Field suspension/ModelsKt$suspend$5.spill$6:D
+     144: aload         10
+     146: iconst_1
+     147: putfield      #183                // Field suspension/ModelsKt$suspend$5.label:I
+     150: aload         13
+     152: dload         14
+     154: invokestatic  #200                // Method kotlin/coroutines/jvm/internal/Boxing.boxDouble:(D)Ljava/lang/Double;
+     157: aload         10
+     159: invokeinterface #81,  3           // InterfaceMethod kotlin/jvm/functions/Function2.invoke:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     164: astore        11
+     166: aload         11
+     168: aload         12
+     170: if_acmpeq     228
+     173: goto          209
+     176: aload         10
+     178: getfield      #188                // Field suspension/ModelsKt$suspend$5.spill$0:J
+     181: lstore        0
+     183: aload         10
+     185: getfield      #191                // Field suspension/ModelsKt$suspend$5.spill$2:D
+     188: dstore        2
+     190: aload         10
+     192: getfield      #193                // Field suspension/ModelsKt$suspend$5.spill$4:Lkotlin/jvm/functions/Function2;
+     195: astore        4
+     197: aload         10
+     199: getfield      #196                // Field suspension/ModelsKt$suspend$5.spill$6:D
+     202: dstore        6
+     204: aload         11
+     206: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     209: aload         11
+     211: checkcast     #115                // class java/lang/Number
+     214: invokevirtual #204                // Method java/lang/Number.doubleValue:()D
+     217: dstore        8
+     219: dload         8
+     221: dload         6
+     223: dadd
+     224: invokestatic  #200                // Method kotlin/coroutines/jvm/internal/Boxing.boxDouble:(D)Ljava/lang/Double;
+     227: areturn
+     228: aload         12
+     230: areturn
+     231: aconst_null
+     232: athrow
+
+  public static final java.lang.Object nullable(kotlin.jvm.functions.Function1<? super kotlin.coroutines.Continuation<? super java.lang.String>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super java.lang.String>);
+    Code:
+       0: aload         1
+       2: instanceof    #209                // class suspension/ModelsKt$suspend$6
+       5: ifeq          43
+       8: aload         1
+      10: checkcast     #209                // class suspension/ModelsKt$suspend$6
+      13: astore        5
+      15: aload         5
+      17: getfield      #210                // Field suspension/ModelsKt$suspend$6.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         5
+      29: dup
+      30: getfield      #210                // Field suspension/ModelsKt$suspend$6.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #210                // Field suspension/ModelsKt$suspend$6.label:I
+      40: goto          54
+      43: new           #209                // class suspension/ModelsKt$suspend$6
+      46: dup
+      47: aload         1
+      49: invokespecial #211                // Method suspension/ModelsKt$suspend$6."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        5
+      54: aload         5
+      56: getfield      #212                // Field suspension/ModelsKt$suspend$6.result:Ljava/lang/Object;
+      59: astore        6
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        7
+      66: aload         5
+      68: getfield      #210                // Field suspension/ModelsKt$suspend$6.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         5
+      77: getfield      #210                // Field suspension/ModelsKt$suspend$6.label:I
+      80: iconst_1
+      81: if_icmpeq     138
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         6
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: aload         0
+     102: astore        8
+     104: aload         5
+     106: aload         0
+     108: putfield      #215                // Field suspension/ModelsKt$suspend$6.spill$0:Lkotlin/jvm/functions/Function1;
+     111: aload         5
+     113: iconst_1
+     114: putfield      #210                // Field suspension/ModelsKt$suspend$6.label:I
+     117: aload         8
+     119: aload         5
+     121: invokeinterface #220,  2          // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+     126: astore        6
+     128: aload         6
+     130: aload         7
+     132: if_acmpeq     199
+     135: goto          150
+     138: aload         5
+     140: getfield      #215                // Field suspension/ModelsKt$suspend$6.spill$0:Lkotlin/jvm/functions/Function1;
+     143: astore        0
+     145: aload         6
+     147: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     150: aload         6
+     152: checkcast     #83                 // class java/lang/String
+     155: astore        2
+     157: getstatic     #87                 // Field trace:Ljava/lang/String;
+     160: checkcast     #83                 // class java/lang/String
+     163: astore        3
+     165: new           #89                 // class java/lang/StringBuilder
+     168: dup
+     169: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     172: aload         3
+     174: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     177: ldc_w         #222                // String n
+     180: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     183: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     186: checkcast     #83                 // class java/lang/String
+     189: astore        4
+     191: aload         4
+     193: putstatic     #87                 // Field trace:Ljava/lang/String;
+     196: aload         2
+     198: areturn
+     199: aload         7
+     201: areturn
+     202: aconst_null
+     203: athrow
+
+  public static final java.lang.Object unit(kotlin.jvm.functions.Function1<? super kotlin.coroutines.Continuation<? super kotlin.Unit>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super kotlin.Unit>);
+    Code:
+       0: aload         1
+       2: instanceof    #227                // class suspension/ModelsKt$suspend$7
+       5: ifeq          43
+       8: aload         1
+      10: checkcast     #227                // class suspension/ModelsKt$suspend$7
+      13: astore        4
+      15: aload         4
+      17: getfield      #228                // Field suspension/ModelsKt$suspend$7.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         4
+      29: dup
+      30: getfield      #228                // Field suspension/ModelsKt$suspend$7.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #228                // Field suspension/ModelsKt$suspend$7.label:I
+      40: goto          54
+      43: new           #227                // class suspension/ModelsKt$suspend$7
+      46: dup
+      47: aload         1
+      49: invokespecial #229                // Method suspension/ModelsKt$suspend$7."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        4
+      54: aload         4
+      56: getfield      #230                // Field suspension/ModelsKt$suspend$7.result:Ljava/lang/Object;
+      59: astore        5
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        6
+      66: aload         4
+      68: getfield      #228                // Field suspension/ModelsKt$suspend$7.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         4
+      77: getfield      #228                // Field suspension/ModelsKt$suspend$7.label:I
+      80: iconst_1
+      81: if_icmpeq     138
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         5
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: aload         0
+     102: astore        7
+     104: aload         4
+     106: aload         0
+     108: putfield      #231                // Field suspension/ModelsKt$suspend$7.spill$0:Lkotlin/jvm/functions/Function1;
+     111: aload         4
+     113: iconst_1
+     114: putfield      #228                // Field suspension/ModelsKt$suspend$7.label:I
+     117: aload         7
+     119: aload         4
+     121: invokeinterface #220,  2          // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+     126: astore        5
+     128: aload         5
+     130: aload         6
+     132: if_acmpeq     193
+     135: goto          150
+     138: aload         4
+     140: getfield      #231                // Field suspension/ModelsKt$suspend$7.spill$0:Lkotlin/jvm/functions/Function1;
+     143: astore        0
+     145: aload         5
+     147: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     150: getstatic     #87                 // Field trace:Ljava/lang/String;
+     153: checkcast     #83                 // class java/lang/String
+     156: astore        2
+     158: new           #89                 // class java/lang/StringBuilder
+     161: dup
+     162: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     165: aload         2
+     167: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     170: ldc_w         #233                // String u
+     173: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     176: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     179: checkcast     #83                 // class java/lang/String
+     182: astore        3
+     184: aload         3
+     186: putstatic     #87                 // Field trace:Ljava/lang/String;
+     189: getstatic     #239                // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+     192: areturn
+     193: aload         6
+     195: areturn
+     196: aconst_null
+     197: athrow
+
+  public static final java.lang.Object immediate(java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>);
+    Code:
+       0: aload         0
+       2: areturn
+       3: aconst_null
+       4: athrow
+
+  private static final java.lang.Object hidden(kotlin.jvm.functions.Function1<? super kotlin.coroutines.Continuation<? super java.lang.String>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super java.lang.String>);
+    Code:
+       0: aload         1
+       2: instanceof    #246                // class suspension/ModelsKt$suspend$9
+       5: ifeq          43
+       8: aload         1
+      10: checkcast     #246                // class suspension/ModelsKt$suspend$9
+      13: astore        3
+      15: aload         3
+      17: getfield      #247                // Field suspension/ModelsKt$suspend$9.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         3
+      29: dup
+      30: getfield      #247                // Field suspension/ModelsKt$suspend$9.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #247                // Field suspension/ModelsKt$suspend$9.label:I
+      40: goto          54
+      43: new           #246                // class suspension/ModelsKt$suspend$9
+      46: dup
+      47: aload         1
+      49: invokespecial #248                // Method suspension/ModelsKt$suspend$9."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        3
+      54: aload         3
+      56: getfield      #249                // Field suspension/ModelsKt$suspend$9.result:Ljava/lang/Object;
+      59: astore        4
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        5
+      66: aload         3
+      68: getfield      #247                // Field suspension/ModelsKt$suspend$9.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         3
+      77: getfield      #247                // Field suspension/ModelsKt$suspend$9.label:I
+      80: iconst_1
+      81: if_icmpeq     138
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         4
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: aload         0
+     102: astore        6
+     104: aload         3
+     106: aload         0
+     108: putfield      #250                // Field suspension/ModelsKt$suspend$9.spill$0:Lkotlin/jvm/functions/Function1;
+     111: aload         3
+     113: iconst_1
+     114: putfield      #247                // Field suspension/ModelsKt$suspend$9.label:I
+     117: aload         6
+     119: aload         3
+     121: invokeinterface #220,  2          // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+     126: astore        4
+     128: aload         4
+     130: aload         5
+     132: if_acmpeq     179
+     135: goto          150
+     138: aload         3
+     140: getfield      #250                // Field suspension/ModelsKt$suspend$9.spill$0:Lkotlin/jvm/functions/Function1;
+     143: astore        0
+     145: aload         4
+     147: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     150: aload         4
+     152: checkcast     #83                 // class java/lang/String
+     155: astore        2
+     157: new           #89                 // class java/lang/StringBuilder
+     160: dup
+     161: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     164: aload         2
+     166: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     169: ldc_w         #252                // String hidden
+     172: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     175: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     178: areturn
+     179: aload         5
+     181: areturn
+     182: aconst_null
+     183: athrow
+
+  public static java.lang.Object access$suspend$9(kotlin.jvm.functions.Function1, kotlin.coroutines.Continuation);
+    Code:
+       0: aload         0
+       2: aload         1
+       4: invokestatic  #254                // Method hidden:(Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+       7: areturn
+
+  public static final java.lang.Object privatePath(kotlin.jvm.functions.Function1<? super kotlin.coroutines.Continuation<? super java.lang.String>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super java.lang.String>);
+    Code:
+       0: aload         1
+       2: instanceof    #257                // class suspension/ModelsKt$suspend$10
+       5: ifeq          43
+       8: aload         1
+      10: checkcast     #257                // class suspension/ModelsKt$suspend$10
+      13: astore        3
+      15: aload         3
+      17: getfield      #258                // Field suspension/ModelsKt$suspend$10.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         3
+      29: dup
+      30: getfield      #258                // Field suspension/ModelsKt$suspend$10.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #258                // Field suspension/ModelsKt$suspend$10.label:I
+      40: goto          54
+      43: new           #257                // class suspension/ModelsKt$suspend$10
+      46: dup
+      47: aload         1
+      49: invokespecial #259                // Method suspension/ModelsKt$suspend$10."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        3
+      54: aload         3
+      56: getfield      #260                // Field suspension/ModelsKt$suspend$10.result:Ljava/lang/Object;
+      59: astore        4
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        5
+      66: aload         3
+      68: getfield      #258                // Field suspension/ModelsKt$suspend$10.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         3
+      77: getfield      #258                // Field suspension/ModelsKt$suspend$10.label:I
+      80: iconst_1
+      81: if_icmpeq     136
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         4
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: aload         0
+     102: astore        6
+     104: aload         3
+     106: aload         0
+     108: putfield      #261                // Field suspension/ModelsKt$suspend$10.spill$0:Lkotlin/jvm/functions/Function1;
+     111: aload         3
+     113: iconst_1
+     114: putfield      #258                // Field suspension/ModelsKt$suspend$10.label:I
+     117: aload         6
+     119: aload         3
+     121: invokestatic  #254                // Method hidden:(Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+     124: astore        4
+     126: aload         4
+     128: aload         5
+     130: if_acmpeq     177
+     133: goto          148
+     136: aload         3
+     138: getfield      #261                // Field suspension/ModelsKt$suspend$10.spill$0:Lkotlin/jvm/functions/Function1;
+     141: astore        0
+     143: aload         4
+     145: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     148: aload         4
+     150: checkcast     #83                 // class java/lang/String
+     153: astore        2
+     155: new           #89                 // class java/lang/StringBuilder
+     158: dup
+     159: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     162: aload         2
+     164: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     167: ldc_w         #263                // String !
+     170: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     173: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     176: areturn
+     177: aload         5
+     179: areturn
+     180: aconst_null
+     181: athrow
+
+  public static final java.lang.Object throwAfter(kotlin.jvm.functions.Function1<? super kotlin.coroutines.Continuation<? super java.lang.String>, ? extends java.lang.Object>, java.lang.RuntimeException, kotlin.coroutines.Continuation<? super java.lang.String>);
+    Code:
+       0: aload         2
+       2: instanceof    #266                // class suspension/ModelsKt$suspend$11
+       5: ifeq          43
+       8: aload         2
+      10: checkcast     #266                // class suspension/ModelsKt$suspend$11
+      13: astore        6
+      15: aload         6
+      17: getfield      #267                // Field suspension/ModelsKt$suspend$11.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         6
+      29: dup
+      30: getfield      #267                // Field suspension/ModelsKt$suspend$11.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #267                // Field suspension/ModelsKt$suspend$11.label:I
+      40: goto          54
+      43: new           #266                // class suspension/ModelsKt$suspend$11
+      46: dup
+      47: aload         2
+      49: invokespecial #268                // Method suspension/ModelsKt$suspend$11."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        6
+      54: aload         6
+      56: getfield      #269                // Field suspension/ModelsKt$suspend$11.result:Ljava/lang/Object;
+      59: astore        7
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        8
+      66: aload         6
+      68: getfield      #267                // Field suspension/ModelsKt$suspend$11.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         6
+      77: getfield      #267                // Field suspension/ModelsKt$suspend$11.label:I
+      80: iconst_1
+      81: if_icmpeq     145
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         7
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: aload         0
+     102: astore        9
+     104: aload         6
+     106: aload         0
+     108: putfield      #270                // Field suspension/ModelsKt$suspend$11.spill$0:Lkotlin/jvm/functions/Function1;
+     111: aload         6
+     113: aload         1
+     115: putfield      #273                // Field suspension/ModelsKt$suspend$11.spill$1:Ljava/lang/RuntimeException;
+     118: aload         6
+     120: iconst_1
+     121: putfield      #267                // Field suspension/ModelsKt$suspend$11.label:I
+     124: aload         9
+     126: aload         6
+     128: invokeinterface #220,  2          // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+     133: astore        7
+     135: aload         7
+     137: aload         8
+     139: if_acmpeq     212
+     142: goto          164
+     145: aload         6
+     147: getfield      #270                // Field suspension/ModelsKt$suspend$11.spill$0:Lkotlin/jvm/functions/Function1;
+     150: astore        0
+     152: aload         6
+     154: getfield      #273                // Field suspension/ModelsKt$suspend$11.spill$1:Ljava/lang/RuntimeException;
+     157: astore        1
+     159: aload         7
+     161: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     164: aload         7
+     166: checkcast     #83                 // class java/lang/String
+     169: astore        3
+     171: getstatic     #87                 // Field trace:Ljava/lang/String;
+     174: checkcast     #83                 // class java/lang/String
+     177: astore        4
+     179: new           #89                 // class java/lang/StringBuilder
+     182: dup
+     183: invokespecial #92                 // Method java/lang/StringBuilder."<init>":()V
+     186: aload         4
+     188: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     191: aload         3
+     193: invokevirtual #96                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     196: invokevirtual #102                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     199: checkcast     #83                 // class java/lang/String
+     202: astore        5
+     204: aload         5
+     206: putstatic     #87                 // Field trace:Ljava/lang/String;
+     209: aload         1
+     211: athrow
+     212: aload         8
+     214: areturn
+     215: aconst_null
+     216: athrow
+
+  public static final java.lang.Object mutation(kotlin.jvm.functions.Function2<? super java.lang.Integer, ? super kotlin.coroutines.Continuation<? super java.lang.Integer>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super java.lang.Integer>);
+    Code:
+       0: aload         1
+       2: instanceof    #278                // class suspension/ModelsKt$suspend$12
+       5: ifeq          43
+       8: aload         1
+      10: checkcast     #278                // class suspension/ModelsKt$suspend$12
+      13: astore        4
+      15: aload         4
+      17: getfield      #279                // Field suspension/ModelsKt$suspend$12.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         4
+      29: dup
+      30: getfield      #279                // Field suspension/ModelsKt$suspend$12.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #279                // Field suspension/ModelsKt$suspend$12.label:I
+      40: goto          54
+      43: new           #278                // class suspension/ModelsKt$suspend$12
+      46: dup
+      47: aload         1
+      49: invokespecial #280                // Method suspension/ModelsKt$suspend$12."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        4
+      54: aload         4
+      56: getfield      #281                // Field suspension/ModelsKt$suspend$12.result:Ljava/lang/Object;
+      59: astore        5
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        6
+      66: aload         4
+      68: getfield      #279                // Field suspension/ModelsKt$suspend$12.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         4
+      77: getfield      #279                // Field suspension/ModelsKt$suspend$12.label:I
+      80: iconst_1
+      81: if_icmpeq     160
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         5
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: iconst_3
+     101: istore        2
+     103: aload         0
+     105: astore        7
+     107: iload         2
+     109: iinc          2, 1
+     112: istore        8
+     114: aload         4
+     116: aload         0
+     118: putfield      #283                // Field suspension/ModelsKt$suspend$12.spill$0:Lkotlin/jvm/functions/Function2;
+     121: aload         4
+     123: iload         2
+     125: putfield      #285                // Field suspension/ModelsKt$suspend$12.spill$2:I
+     128: aload         4
+     130: iconst_1
+     131: putfield      #279                // Field suspension/ModelsKt$suspend$12.label:I
+     134: aload         7
+     136: iload         8
+     138: invokestatic  #75                 // Method kotlin/coroutines/jvm/internal/Boxing.boxInt:(I)Ljava/lang/Integer;
+     141: aload         4
+     143: invokeinterface #81,  3           // InterfaceMethod kotlin/jvm/functions/Function2.invoke:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+     148: astore        5
+     150: aload         5
+     152: aload         6
+     154: if_acmpeq     201
+     157: goto          179
+     160: aload         4
+     162: getfield      #283                // Field suspension/ModelsKt$suspend$12.spill$0:Lkotlin/jvm/functions/Function2;
+     165: astore        0
+     167: aload         4
+     169: getfield      #285                // Field suspension/ModelsKt$suspend$12.spill$2:I
+     172: istore        2
+     174: aload         5
+     176: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     179: aload         5
+     181: checkcast     #115                // class java/lang/Number
+     184: invokevirtual #144                // Method java/lang/Number.intValue:()I
+     187: istore        3
+     189: iload         2
+     191: bipush        10
+     193: imul
+     194: iload         3
+     196: iadd
+     197: invokestatic  #75                 // Method kotlin/coroutines/jvm/internal/Boxing.boxInt:(I)Ljava/lang/Integer;
+     200: areturn
+     201: aload         6
+     203: areturn
+     204: aconst_null
+     205: athrow
+
+  public static final java.lang.Object unitTail(kotlin.jvm.functions.Function1<? super kotlin.coroutines.Continuation<? super kotlin.Unit>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super kotlin.Unit>);
+    Code:
+       0: aload         1
+       2: instanceof    #290                // class suspension/ModelsKt$suspend$13
+       5: ifeq          43
+       8: aload         1
+      10: checkcast     #290                // class suspension/ModelsKt$suspend$13
+      13: astore        2
+      15: aload         2
+      17: getfield      #291                // Field suspension/ModelsKt$suspend$13.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         2
+      29: dup
+      30: getfield      #291                // Field suspension/ModelsKt$suspend$13.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #291                // Field suspension/ModelsKt$suspend$13.label:I
+      40: goto          54
+      43: new           #290                // class suspension/ModelsKt$suspend$13
+      46: dup
+      47: aload         1
+      49: invokespecial #292                // Method suspension/ModelsKt$suspend$13."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        2
+      54: aload         2
+      56: getfield      #293                // Field suspension/ModelsKt$suspend$13.result:Ljava/lang/Object;
+      59: astore        3
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        4
+      66: aload         2
+      68: getfield      #291                // Field suspension/ModelsKt$suspend$13.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         2
+      77: getfield      #291                // Field suspension/ModelsKt$suspend$13.label:I
+      80: iconst_1
+      81: if_icmpeq     138
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         3
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: aload         0
+     102: astore        5
+     104: aload         2
+     106: aload         0
+     108: putfield      #294                // Field suspension/ModelsKt$suspend$13.spill$0:Lkotlin/jvm/functions/Function1;
+     111: aload         2
+     113: iconst_1
+     114: putfield      #291                // Field suspension/ModelsKt$suspend$13.label:I
+     117: aload         5
+     119: aload         2
+     121: invokeinterface #220,  2          // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+     126: astore        3
+     128: aload         3
+     130: aload         4
+     132: if_acmpeq     154
+     135: goto          150
+     138: aload         2
+     140: getfield      #294                // Field suspension/ModelsKt$suspend$13.spill$0:Lkotlin/jvm/functions/Function1;
+     143: astore        0
+     145: aload         3
+     147: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     150: getstatic     #239                // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+     153: areturn
+     154: aload         4
+     156: areturn
+     157: aconst_null
+     158: athrow
+
+  public static final java.lang.Integer receive(java.lang.Integer);
+    Code:
+       0: aload         0
+       2: areturn
+       3: aconst_null
+       4: athrow
+
+  public static final java.lang.Object ordinaryBox(int);
+    Code:
+       0: iload         0
+       2: invokestatic  #302                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       5: areturn
+       6: aconst_null
+       7: athrow
+
+  public static final java.lang.Object boxingPositions(int, kotlin.jvm.functions.Function1<? super kotlin.coroutines.Continuation<? super kotlin.Unit>, ? extends java.lang.Object>, kotlin.coroutines.Continuation<? super java.lang.Object[]>);
+    Code:
+       0: aload         2
+       2: instanceof    #306                // class suspension/ModelsKt$suspend$16
+       5: ifeq          43
+       8: aload         2
+      10: checkcast     #306                // class suspension/ModelsKt$suspend$16
+      13: astore        8
+      15: aload         8
+      17: getfield      #307                // Field suspension/ModelsKt$suspend$16.label:I
+      20: ldc_w         #29                 // int -2147483648
+      23: iand
+      24: ifeq          43
+      27: aload         8
+      29: dup
+      30: getfield      #307                // Field suspension/ModelsKt$suspend$16.label:I
+      33: ldc_w         #29                 // int -2147483648
+      36: isub
+      37: putfield      #307                // Field suspension/ModelsKt$suspend$16.label:I
+      40: goto          54
+      43: new           #306                // class suspension/ModelsKt$suspend$16
+      46: dup
+      47: aload         2
+      49: invokespecial #308                // Method suspension/ModelsKt$suspend$16."<init>":(Lkotlin/coroutines/Continuation;)V
+      52: astore        8
+      54: aload         8
+      56: getfield      #309                // Field suspension/ModelsKt$suspend$16.result:Ljava/lang/Object;
+      59: astore        9
+      61: invokestatic  #43                 // Method kotlin/coroutines/intrinsics/IntrinsicsKt.getCOROUTINE_SUSPENDED:()Ljava/lang/Object;
+      64: astore        10
+      66: aload         8
+      68: getfield      #307                // Field suspension/ModelsKt$suspend$16.label:I
+      71: iconst_0
+      72: if_icmpeq     95
+      75: aload         8
+      77: getfield      #307                // Field suspension/ModelsKt$suspend$16.label:I
+      80: iconst_1
+      81: if_icmpeq     219
+      84: new           #45                 // class java/lang/IllegalStateException
+      87: dup
+      88: ldc_w         #47                 // String call to \'resume\' before \'invoke\' with coroutine
+      91: invokespecial #50                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+      94: athrow
+      95: aload         9
+      97: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     100: iload         0
+     102: invokestatic  #75                 // Method kotlin/coroutines/jvm/internal/Boxing.boxInt:(I)Ljava/lang/Integer;
+     105: checkcast     #4                  // class java/lang/Object
+     108: astore        3
+     110: iload         0
+     112: invokestatic  #75                 // Method kotlin/coroutines/jvm/internal/Boxing.boxInt:(I)Ljava/lang/Integer;
+     115: invokestatic  #315                // Method kotlin/collections/CollectionsKt.listOf:(Ljava/lang/Object;)Ljava/util/List;
+     118: checkcast     #317                // class java/util/List
+     121: astore        4
+     123: iload         0
+     125: invokestatic  #75                 // Method kotlin/coroutines/jvm/internal/Boxing.boxInt:(I)Ljava/lang/Integer;
+     128: invokestatic  #319                // Method receive:(Ljava/lang/Integer;)Ljava/lang/Integer;
+     131: checkcast     #299                // class java/lang/Integer
+     134: astore        5
+     136: iload         0
+     138: invokestatic  #321                // Method ordinaryBox:(I)Ljava/lang/Object;
+     141: checkcast     #4                  // class java/lang/Object
+     144: astore        6
+     146: aload         1
+     148: astore        11
+     150: aload         8
+     152: iload         0
+     154: putfield      #322                // Field suspension/ModelsKt$suspend$16.spill$0:I
+     157: aload         8
+     159: aload         1
+     161: putfield      #324                // Field suspension/ModelsKt$suspend$16.spill$1:Lkotlin/jvm/functions/Function1;
+     164: aload         8
+     166: aload         3
+     168: putfield      #326                // Field suspension/ModelsKt$suspend$16.spill$3:Ljava/lang/Object;
+     171: aload         8
+     173: aload         4
+     175: putfield      #329                // Field suspension/ModelsKt$suspend$16.spill$4:Ljava/util/List;
+     178: aload         8
+     180: aload         5
+     182: putfield      #332                // Field suspension/ModelsKt$suspend$16.spill$5:Ljava/lang/Integer;
+     185: aload         8
+     187: aload         6
+     189: putfield      #334                // Field suspension/ModelsKt$suspend$16.spill$6:Ljava/lang/Object;
+     192: aload         8
+     194: iconst_1
+     195: putfield      #307                // Field suspension/ModelsKt$suspend$16.label:I
+     198: aload         11
+     200: aload         8
+     202: invokeinterface #220,  2          // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+     207: astore        9
+     209: aload         9
+     211: aload         10
+     213: if_acmpeq     314
+     216: goto          266
+     219: aload         8
+     221: getfield      #322                // Field suspension/ModelsKt$suspend$16.spill$0:I
+     224: istore        0
+     226: aload         8
+     228: getfield      #324                // Field suspension/ModelsKt$suspend$16.spill$1:Lkotlin/jvm/functions/Function1;
+     231: astore        1
+     233: aload         8
+     235: getfield      #326                // Field suspension/ModelsKt$suspend$16.spill$3:Ljava/lang/Object;
+     238: astore        3
+     240: aload         8
+     242: getfield      #329                // Field suspension/ModelsKt$suspend$16.spill$4:Ljava/util/List;
+     245: astore        4
+     247: aload         8
+     249: getfield      #332                // Field suspension/ModelsKt$suspend$16.spill$5:Ljava/lang/Integer;
+     252: astore        5
+     254: aload         8
+     256: getfield      #334                // Field suspension/ModelsKt$suspend$16.spill$6:Ljava/lang/Object;
+     259: astore        6
+     261: aload         9
+     263: invokestatic  #56                 // Method kotlin/ResultKt.throwOnFailure:(Ljava/lang/Object;)V
+     266: iconst_4
+     267: anewarray     #4                  // class java/lang/Object
+     270: checkcast     #336                // class "[Ljava/lang/Object;"
+     273: astore        7
+     275: aload         7
+     277: iconst_0
+     278: aload         3
+     280: aastore
+     281: aload         7
+     283: iconst_1
+     284: aload         4
+     286: checkcast     #317                // class java/util/List
+     289: iconst_0
+     290: invokeinterface #339,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     295: checkcast     #299                // class java/lang/Integer
+     298: aastore
+     299: aload         7
+     301: iconst_2
+     302: aload         5
+     304: aastore
+     305: aload         7
+     307: iconst_3
+     308: aload         6
+     310: aastore
+     311: aload         7
+     313: areturn
+     314: aload         10
+     316: areturn
+     317: aconst_null
+     318: athrow
+
+  public static final java.lang.String getTrace();
+    Code:
+       0: getstatic     #87                 // Field trace:Ljava/lang/String;
+       3: areturn
+       4: aconst_null
+       5: athrow
+
+  public static final void setTrace(java.lang.String);
+    Code:
+       0: aload         0
+       2: ldc_w         #345                // String value
+       5: invokestatic  #351                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       8: aload         0
+      10: putstatic     #87                 // Field trace:Ljava/lang/String;
+      13: return
+      14: aconst_null
+      15: athrow
+
+  static {};
+    Code:
+       0: ldc_w         #383                // String
+       3: putstatic     #87                 // Field trace:Ljava/lang/String;
+       6: return
+       7: aconst_null
+       8: athrow
+}

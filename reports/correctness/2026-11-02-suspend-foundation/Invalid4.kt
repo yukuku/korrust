@@ -1,0 +1,1 @@
+object Holder { fun broken(step: suspend () -> String): String = step() }

@@ -1,0 +1,1 @@
+suspend fun <T> bounded(value: T): T = value

@@ -128,6 +128,7 @@ pub(super) fn outer(
                 code.bytes.extend([load_opcode(ty), slot as u8]);
             }
             let reduced = crate::check::Function {
+                suspend_: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -165,6 +166,7 @@ pub(super) fn outer(
         }
     }
     let mut code = Code {
+        coroutine: false,
         pool,
         functions: &[],
         owner,
@@ -342,6 +344,7 @@ pub(super) fn emit(
             )?);
         }
         let mut code = Code {
+            coroutine: false,
             pool: &mut pool,
             functions: &companion.methods,
             owner: &companion.owner,

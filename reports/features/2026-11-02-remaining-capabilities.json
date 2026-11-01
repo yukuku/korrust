@@ -78,16 +78,58 @@
     },
     {
       "name": "suspend_foundation",
-      "status": "partial",
-      "scope": "Real bounded suspension/resumption via Continuation state.",
+      "status": "supported",
+      "scope": "Nongeneric top-level suspend functions with straight-line bodies and ordinary primitive/reference values, suspend function parameters, real ContinuationImpl state and up to eight sequential suspension points; delayed resumption, saved state, ordinary source/compiled top-level suspend calls, exception identity, JVM ABI and logical Kotlin metadata.",
       "restrictions": [
-        "Implementation and acceptance are in progress; no validated-family count yet."
-      ]
+        "Source suspend lambdas/references/conversions, member/extension/generic/defaulted/vararg/inline suspend declarations and receiver suspend types remain unsupported.",
+        "Suspension in nested control flow, arguments or expression trees and imported suspend inline/default/member calls remain unsupported. Suspend function types allow at most 21 parameters. Nullable Unit, Unit-valued suspend callback inputs and value-class types anywhere in suspend IR are explicit boundaries.",
+        "Both WITH_COROUTINES upstream originals retain complete unchanged helper sources compiled by each provider and stop at the helper anonymous-object prerequisite. Source generic Result and complete coroutine-library compatibility remain unclaimed.",
+        "The one passing upstream original executes box without invoking its suspend function; it establishes its tested source/ABI contracts. Authored continuation and capacity fixtures establish real delayed execution.",
+        "Generated frame names, spill layouts, DebugMetadata, debugger and stacktrace equivalence are unassessed. No unchanged whole AndroidBible file, full-app or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-02-suspend-foundation.json",
+      "counts": {
+        "pass": 9,
+        "invalid_rejected": 5,
+        "unsupported_language": 14
+      },
+      "upstream_report": "reports/correctness/2026-11-02-suspend-upstream.json",
+      "upstream_counts": {
+        "pass": 1,
+        "unsupported_language": 3
+      },
+      "additional_evidence": [
+        "reports/correctness/2026-11-02-suspend-capacity-runtime-v1/report.json",
+        "reports/correctness/2026-11-02-suspend-capacity-boundary-v1/report.json",
+        "reports/correctness/2026-11-02-suspend-foundation/rust-v1.log",
+        "reports/correctness/2026-11-02-suspend-foundation/clippy-v1.log",
+        "reports/correctness/2026-11-02-suspend-isolated-history/index.json"
+      ],
+      "capacity_validation": {
+        "eight_points": "Same official-compiled Java caller verifies eight immediate callbacks and eight delayed resumptions against both providers with -Xverify:all, exact input/trace/result and completion count assertions.",
+        "nine_points": "Oracle-valid source rejects explicitly with SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED and the eight-point-limit message.",
+        "counts": {
+          "verified_provider_pass": 2,
+          "unsupported_language": 1
+        },
+        "scope": "Additional assertions for the existing family; no extra feature count."
+      },
+      "integration_validation": {
+        "rust_tests_passed": 102,
+        "rust_test_groups": {
+          "suspend_frontend": 3,
+          "recursive_carrier_guard": 1,
+          "metadata": 28,
+          "syntax": 70
+        },
+        "clippy": "Release all targets with warnings denied passed",
+        "value_interaction": "An ordinary valueNeighbor function executes beside suspend declarations. Three actual loaded-value-class declaration/callback/saved-local boundaries reject explicitly."
+      }
     }
   ],
   "accepted_carryover_families": 1,
-  "accepted_new_families": 3,
-  "remaining_new_families": 2,
+  "accepted_new_families": 4,
+  "remaining_new_families": 1,
   "limitations": [
     "Final combined validation is pending. Supported labels refer to bounded feature acceptance, not unrestricted Kotlin or Android compatibility."
   ],
@@ -97,6 +139,13 @@
     "reports/correctness/2026-11-02-expanded-enums-upstream-v3.json",
     "reports/correctness/2026-11-01T183844319464Z-inner-classes.json",
     "reports/correctness/2026-11-02-value-classes.json",
-    "reports/correctness/2026-11-02-value-inner-interaction.json"
+    "reports/correctness/2026-11-02-value-inner-interaction.json",
+    "reports/correctness/2026-11-02-suspend-foundation.json",
+    "reports/correctness/2026-11-02-suspend-upstream.json",
+    "reports/correctness/2026-11-02-suspend-capacity-runtime-v1/report.json",
+    "reports/correctness/2026-11-02-suspend-capacity-boundary-v1/report.json",
+    "reports/correctness/2026-11-02-suspend-foundation/rust-v1.log",
+    "reports/correctness/2026-11-02-suspend-foundation/clippy-v1.log",
+    "reports/correctness/2026-11-02-suspend-isolated-history/index.json"
   ]
 }

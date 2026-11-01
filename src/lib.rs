@@ -1565,6 +1565,7 @@ fn emit_unit_without_annotations(
             ));
         }
     }
+    bytecode::validate_suspend(typed, module, &values.keys().cloned().collect())?;
     let mut generated_owners = typed
         .lambdas
         .iter()
@@ -1705,10 +1706,16 @@ fn emit_unit_without_annotations(
             bridges,
         )?,
     };
-    with_lambdas(vec![ClassFile {
+    let mut files = vec![ClassFile {
         internal_name: internal_name.to_owned(),
         bytes,
-    }])
+    }];
+    files.extend(bytecode::emit_suspend_frames(
+        typed,
+        internal_name,
+        file_name,
+    )?);
+    with_lambdas(files)
 }
 
 fn add_nested_attributes(

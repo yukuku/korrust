@@ -139,6 +139,7 @@ pub(super) fn check_property(
     }
     let result = getter_checker.coerce(result, property_type.clone(), source.offset)?;
     let getter = Function {
+        suspend_: false,
         extension_receiver: false,
         class_type_params: Vec::new(),
         jvm_result: None,
@@ -176,6 +177,7 @@ pub(super) fn check_property(
         )?;
         setter_checker.require(&result, Type::Unit, source.offset)?;
         methods.push(Function {
+            suspend_: false,
             extension_receiver: false,
             class_type_params: Vec::new(),
             jvm_result: None,

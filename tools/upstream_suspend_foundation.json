@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "selection": "Unchanged complete coroutine originals with preserved helpers/directives; unsupported language and helper prerequisites are not passes",
+  "limitations": [
+    "Source suspend lambdas, receiver suspend types and suspension in nested expressions/control flow remain bounded-language gaps",
+    "WITH_COROUTINES retains unchanged CoroutineHelpers.kt compiled with each provider; source Result/getOrThrow or other helper prerequisites are recorded honestly",
+    "Successful authored continuation fixtures do not imply these unchanged originals or full coroutine source compatibility"
+  ],
+  "cases": [
+    {
+      "id": "suspend_original_0_simple",
+      "family": "suspend_foundation",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/coroutines/simple.kt",
+      "kind": "box",
+      "tier": "family",
+      "sha256": "129af22b768b640a23fd1a91d347d869d9e30290c7101d1d0bc4e151f4464ba9"
+    },
+    {
+      "id": "suspend_original_1_simple",
+      "family": "suspend_foundation",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/coroutines/suspendFunctionTypeCall/simple.kt",
+      "kind": "box",
+      "tier": "family",
+      "sha256": "9c113b182baff50f7e17b016166e68cf3f4da021096c8af7d789b15b1d5206a0"
+    },
+    {
+      "id": "suspend_original_2_kt49834",
+      "family": "suspend_foundation",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/coroutines/varSpilling/kt49834.kt",
+      "kind": "box",
+      "tier": "family",
+      "sha256": "b2c404bb9d633b2325fe5dea303b72a66fbaf85a408804b609601982998d1a01"
+    },
+    {
+      "id": "suspend_original_3_inlineUnitFunction",
+      "family": "suspend_foundation",
+      "root": "box",
+      "path": "references/kotlin/compiler/testData/codegen/box/coroutines/unitTypeReturn/inlineUnitFunction.kt",
+      "kind": "box",
+      "tier": "family",
+      "sha256": "33d1510077a0507d83ccac476c564d1b947eb44a7b009440a7a95afb0f12e791"
+    }
+  ]
+}

@@ -504,6 +504,18 @@ impl Checker<'_> {
         }
 
         let method = self.classpath.source_value_method(method, false);
+        if method
+            .library
+            .as_ref()
+            .is_some_and(|library| library.suspend_ && library.inline)
+        {
+            return Err(
+                Diagnostic::new(offset, "Compiled suspend inline calls are unsupported").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "SUSPEND_INLINE_CALL_UNSUPPORTED",
+                ),
+            );
+        }
         let labeled = member_extensions::call_labels(method.source_name(), args);
         let args = labeled.as_slice();
         let normalized = self.vararg_arguments(&method, args, offset)?;
@@ -916,7 +928,7 @@ pub(super) fn default_type_imports(
             | Type::MutableList(inner)
             | Type::ThreadLocal(inner) => visit(inner, imports, classpath),
             Type::Parameter { upper_bound, .. } => visit(upper_bound, imports, classpath),
-            Type::Function { params, result } => {
+            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 for param in params {
                     visit(param, imports, classpath);
                 }

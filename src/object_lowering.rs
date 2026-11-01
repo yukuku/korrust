@@ -72,6 +72,7 @@ pub(crate) fn lower(object: &mut ObjectDecl, owner: &str) -> Result<()> {
             inline: false,
             suppress: Vec::new(),
             function: Function {
+                suspend_: false,
                 inline: false,
                 parameter_modes: Vec::new(),
                 extension_property: None,

@@ -1,0 +1,1 @@
+class Member { suspend fun bounded(): String = "x" }

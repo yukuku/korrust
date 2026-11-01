@@ -139,7 +139,8 @@ impl<'a> Context<'a> {
         }
         let p = Proto::parse(bytes)?;
         p.allowed(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 100])?;
-        if p.integer(1)?.unwrap_or(0) != 0 || p.bytes(10)?.is_some() || p.integer(11)?.is_some() {
+        let suspend_function = p.integer(1)?.unwrap_or(0) == 1;
+        if p.integer(1)?.unwrap_or(0) > 1 || p.bytes(10)?.is_some() || p.integer(11)?.is_some() {
             return Err(invalid());
         }
         let mut ty = if let Some(id) = p.integer(7)? {
@@ -304,6 +305,29 @@ impl<'a> Context<'a> {
                 }
             }
         };
+        if suspend_function {
+            let Type::Function { mut params, result } = ty else {
+                return Err(invalid());
+            };
+            if *result != Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))) {
+                return Err(invalid());
+            }
+            let Some(Type::Parameterized { name, arguments }) = params.pop() else {
+                return Err(invalid());
+            };
+            if name != "kotlin/coroutines/Continuation" || arguments.len() != 1 {
+                return Err(invalid());
+            }
+            let result = arguments
+                .into_iter()
+                .next()
+                .and_then(|argument| argument.ty)
+                .ok_or_else(invalid)?;
+            ty = Type::SuspendFunction {
+                params,
+                result: Box::new(result),
+            };
+        }
         if p.integer(3)?.unwrap_or(0) > 1 {
             return Err(invalid());
         }
@@ -579,6 +603,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             kotlin_internal: false,
             library: Some(LibraryMethod {
                 value_dispatch: false,
+                suspend_: false,
                 kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
@@ -773,6 +798,7 @@ fn builtin_declarations(
             kotlin_internal: false,
             library: requested_name.map(|_| LibraryMethod {
                 value_dispatch: false,
+                suspend_: false,
                 parameter_modes: Vec::new(),
                 reified_arguments: Vec::new(),
                 kotlin_declared: false,
@@ -1018,7 +1044,15 @@ fn attach_member(
             all.insert(0, format!("L{outer};"));
         }
     }
-    let descriptor = format!("({}){}", all.concat(), result.descriptor());
+    let suspend_ = flags & (1 << 13) != 0;
+    let descriptor = if suspend_ {
+        format!(
+            "({}Lkotlin/coroutines/Continuation;)Ljava/lang/Object;",
+            all.concat()
+        )
+    } else {
+        format!("({}){}", all.concat(), result.descriptor())
+    };
     let (jvm_name, jvm_descriptor, explicit_descriptor) = if let Some(bytes) = signature {
         let p = Proto::parse(bytes)?;
         p.allowed(&[1, 2])?;
@@ -1155,10 +1189,7 @@ fn attach_member(
         return Err(invalid());
     }
     let method = &mut class.methods[*index];
-    if flags & (1 << 13 | 1 << 14 | 1 << 12) != 0
-        || flags & 14 == 2
-        || attributes[*index].unsupported
-    {
+    if flags & (1 << 14 | 1 << 12) != 0 || flags & 14 == 2 || attributes[*index].unsupported {
         return Err(invalid());
     }
     method.kotlin_params = Some(params);
@@ -1171,6 +1202,7 @@ fn attach_member(
     }
     method.library = Some(LibraryMethod {
         value_dispatch,
+        suspend_,
         kotlin_declared: true,
         has_annotations: flags & 1 != 0,
         parameter_modes,
@@ -1218,6 +1250,7 @@ fn remember_callable(
         {
             method.library = Some(LibraryMethod {
                 value_dispatch: false,
+                suspend_: false,
                 kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),

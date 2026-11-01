@@ -116,6 +116,7 @@ fn legacy_check(
         overloads.push(JavaMethod {
             library: function.infix.then(|| crate::classpath::LibraryMethod {
                 value_dispatch: false,
+                suspend_: false,
                 kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
@@ -411,6 +412,7 @@ fn legacy_check(
         }
         methods.push(ObjectMethod {
             function: Function {
+                suspend_: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -617,6 +619,7 @@ pub(super) fn check(
             kotlin_internal: function.internal,
             library: Some(crate::classpath::LibraryMethod {
                 value_dispatch: false,
+                suspend_: false,
                 kotlin_declared: true,
                 has_annotations: false,
                 parameter_modes: Vec::new(),
@@ -1069,6 +1072,7 @@ pub(super) fn check(
         };
         let function = if field.body.is_empty() {
             Function {
+                suspend_: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -1130,6 +1134,7 @@ pub(super) fn check(
             }
             methods.push(ObjectMethod {
                 function: Function {
+                    suspend_: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,

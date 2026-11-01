@@ -1,3 +1,5 @@
+mod suspend;
+pub(crate) use suspend::{frames as emit_suspend_frames, validate as validate_suspend};
 pub(crate) mod annotation_classes;
 pub(crate) mod annotation_files;
 mod annotations;
@@ -132,6 +134,9 @@ fn generic_type(ty: &Type) -> String {
             format!("Ljava/util/List<{}>;", generic_argument(inner))
         }
         Type::Array(inner) => format!("[{}", generic_argument(inner)),
+        Type::SuspendFunction { params, result } => {
+            generic_type(&Type::suspend_runtime(params, result))
+        }
         Type::Function { params, result } => format!(
             "Lkotlin/jvm/functions/Function{}<{}{}>;",
             params.len(),
@@ -243,6 +248,9 @@ fn generic_parameter(ty: &Type) -> String {
         Type::Nullable(inner) | Type::Platform(inner) if inner.is_reference() => {
             generic_parameter(inner)
         }
+        Type::SuspendFunction { params, result } => {
+            generic_parameter(&Type::suspend_runtime(params, result))
+        }
         Type::Function { params, result } => format!(
             "Lkotlin/jvm/functions/Function{}<{}{}{}>;",
             params.len(),
@@ -311,6 +319,10 @@ fn erase_generic_variables(ty: &Type) -> Type {
                 })
                 .collect(),
         },
+        Type::SuspendFunction { params, result } => Type::SuspendFunction {
+            params: params.iter().map(erase_generic_variables).collect(),
+            result: Box::new(erase_generic_variables(result)),
+        },
         Type::Function { params, result } => Type::Function {
             params: params.iter().map(erase_generic_variables).collect(),
             result: Box::new(erase_generic_variables(result)),
@@ -329,6 +341,20 @@ fn erase_generic_variables(ty: &Type) -> Type {
 }
 
 fn generic_function(function: &crate::check::Function) -> Option<String> {
+    if function.suspend_ {
+        return Some(format!(
+            "({}{})Ljava/lang/Object;",
+            function
+                .params
+                .iter()
+                .map(|(_, ty)| generic_parameter(ty))
+                .collect::<String>(),
+            generic_parameter(&Type::continuation(
+                &function.result,
+                crate::syntax::Variance::In
+            ))
+        ));
+    }
     if function.type_params.is_empty() && function.class_type_params.is_empty() {
         return generic_method(
             &function
@@ -726,6 +752,7 @@ impl Pool {
     }
 }
 struct Code<'a> {
+    coroutine: bool,
     pool: &'a mut Pool,
     functions: &'a [crate::check::Function],
     owner: &'a str,
@@ -1096,6 +1123,28 @@ impl Code<'_> {
         Ok(())
     }
     fn box_value(&mut self, ty: &Type) -> Result<()> {
+        if self.coroutine {
+            if ty == &Type::Unit {
+                return self.field_reference(0xb2, "kotlin/Unit", "INSTANCE", "Lkotlin/Unit;");
+            }
+            let suffix = match ty.base() {
+                Type::Int => "Int",
+                Type::Long => "Long",
+                Type::Byte => "Byte",
+                Type::Short => "Short",
+                Type::Char => "Char",
+                Type::Boolean => "Boolean",
+                Type::Float => "Float",
+                Type::Double => "Double",
+                _ => return Err(failure("Unsupported coroutine primitive boxing type")),
+            };
+            return self.method_reference(
+                0xb8,
+                "kotlin/coroutines/jvm/internal/Boxing",
+                &format!("box{suffix}"),
+                &format!("({}){}", ty.descriptor(), boxed_descriptor(ty)),
+            );
+        }
         self.method_reference(
             0xb8,
             boxed_owner(ty),
@@ -1464,6 +1513,14 @@ impl Code<'_> {
         Ok(true)
     }
     fn value(&mut self, value: &Value) -> Result<()> {
+        if !self.coroutine && suspend::suspension(value, self.functions) {
+            return Err(
+                Diagnostic::new(0, "Suspend calls require a suspend function context").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "SUSPEND_CALL_CONTEXT_INVALID",
+                ),
+            );
+        }
         self.max_stack = self.max_stack.max(value.stack());
         match &value.kind {
             ValueKind::ClassLiteral(ty) => {
@@ -2810,7 +2867,7 @@ pub(crate) fn emit_with_bridges(
     let source_name = pool.utf8("SourceFile")?;
     let source_file = pool.utf8(file)?;
     let mut methods = Vec::new();
-    for function in &module.functions {
+    for (index, function) in module.functions.iter().enumerate() {
         if defaults::annotated(function, "JvmStatic") {
             return Err(
                 Diagnostic::new(0, "JvmStatic requires an object or companion member").with_kind(
@@ -2818,6 +2875,13 @@ pub(crate) fn emit_with_bridges(
                     "JVM_STATIC_PLACEMENT_INVALID",
                 ),
             );
+        }
+        if function.suspend_ {
+            methods.push(suspend::method(&mut pool, module, owner, index)?);
+            if function.private {
+                methods.push(suspend::access_bridge(&mut pool, function, owner, index)?);
+            }
+            continue;
         }
         methods.extend(defaults::overloads(
             &mut pool,
@@ -2827,6 +2891,7 @@ pub(crate) fn emit_with_bridges(
             if function.private { 0x001a } else { 0x0019 },
         )?);
         let mut code = Code {
+            coroutine: false,
             pool: &mut pool,
             functions: &module.functions,
             owner,
@@ -2936,6 +3001,7 @@ pub(crate) fn emit_with_bridges(
     }
     if !module.properties.is_empty() || !module.initializers.is_empty() {
         let mut code = Code {
+            coroutine: false,
             pool: &mut pool,
             functions: &module.functions,
             owner,
@@ -3113,6 +3179,7 @@ fn checked_method(
         };
     let is_static = flags & 8 != 0;
     let mut code = Code {
+        coroutine: false,
         pool,
         functions,
         owner,
@@ -4225,6 +4292,7 @@ fn emit_class_with(
             .constructor_locals
             .max((constructor_slots + usize::from(class.value_)) as u16);
         let mut code = Code {
+            coroutine: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4433,6 +4501,7 @@ fn emit_class_with(
     }
     for secondary in &class.secondary_constructors {
         let mut code = Code {
+            coroutine: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4589,6 +4658,7 @@ fn emit_class_with(
             continue;
         }
         let mut code = Code {
+            coroutine: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4730,6 +4800,7 @@ fn emit_class_with(
         }
     } else if !class.delegated_properties.is_empty() || enum_data.is_some() {
         let mut code = Code {
+            coroutine: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,

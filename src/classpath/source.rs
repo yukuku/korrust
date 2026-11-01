@@ -67,6 +67,10 @@ fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
             name: name.clone(),
             upper_bound: Box::new(resolve(upper_bound, module, cp)),
         },
+        Type::SuspendFunction { params, result } => Type::SuspendFunction {
+            params: params.iter().map(|t| resolve(t, module, cp)).collect(),
+            result: Box::new(resolve(result, module, cp)),
+        },
         Type::Function { params, result } => Type::Function {
             params: params.iter().map(|t| resolve(t, module, cp)).collect(),
             result: Box::new(resolve(result, module, cp)),
@@ -106,17 +110,27 @@ fn method(
     let result = resolve(&function.result, module, cp);
     let receiver = function.receiver.as_ref().map(|t| resolve(t, module, cp));
     let descriptor = format!(
-        "({}{}){}",
+        "({}{}{}){}",
         receiver.as_ref().map(Type::descriptor).unwrap_or_default(),
         params
             .iter()
             .map(|(_, t, _)| t.descriptor())
             .collect::<String>(),
-        result.descriptor()
+        if function.suspend_ {
+            "Lkotlin/coroutines/Continuation;"
+        } else {
+            ""
+        },
+        if function.suspend_ {
+            "Ljava/lang/Object;".into()
+        } else {
+            result.descriptor()
+        }
     );
     JavaMethod {
         library: Some(LibraryMethod {
             value_dispatch: false,
+            suspend_: function.suspend_,
             kotlin_declared: true,
             has_annotations: !function.annotations.is_empty()
                 || function.param_annotations.iter().any(|a| !a.is_empty()),
@@ -555,6 +569,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 class.methods.push(JavaMethod {
                     library: Some(LibraryMethod {
                         value_dispatch: false,
+                        suspend_: false,
                         kotlin_declared: true,
                         has_annotations: false,
                         parameter_modes: Vec::new(),
@@ -662,6 +677,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 for method in &mut methods {
                     method.library = Some(LibraryMethod {
                         value_dispatch: false,
+                        suspend_: false,
                         parameter_modes: Vec::new(),
                         reified_arguments: Vec::new(),
                         kotlin_declared: true,
@@ -926,6 +942,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 } else {
                     method.library = Some(LibraryMethod {
                         value_dispatch: false,
+                        suspend_: false,
                         parameter_modes: Vec::new(),
                         reified_arguments: Vec::new(),
                         kotlin_declared: true,
@@ -1091,7 +1108,7 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
             | Type::MutableList(value)
             | Type::ThreadLocal(value) => ty(value, names),
             Type::Parameter { upper_bound, .. } => ty(upper_bound, names),
-            Type::Function { params, result } => {
+            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 for value in params {
                     ty(value, names);
                 }

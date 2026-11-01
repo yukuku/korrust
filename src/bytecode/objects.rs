@@ -49,6 +49,7 @@ fn method(
         ));
     }
     let mut code = Code {
+        coroutine: false,
         pool,
         functions: &[],
         owner,
@@ -184,6 +185,7 @@ fn factory(
         return Err(failure("Expected a ThreadLocal array initializer"));
     };
     let mut code = Code {
+        coroutine: false,
         pool,
         functions: &[],
         owner,
@@ -580,6 +582,7 @@ pub fn emit_dynamic_object(
         );
     }
     let mut code = Code {
+        coroutine: false,
         pool: &mut builder.pool,
         functions: &[],
         owner,

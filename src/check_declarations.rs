@@ -973,6 +973,7 @@ pub(super) fn check_class_with_constants(
                     .find(|m| m.function.offset == *offset && m.function.name == *name)
                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
             value_dispatch: false,
+                suspend_: false,
                 kotlin_declared: true,
                         has_annotations: false,
                 parameter_modes: Vec::new(),
@@ -1284,6 +1285,7 @@ pub(super) fn check_class_with_constants(
             .iter()
             .find(|method| method.function.offset == offset && method.function.name == name);
         let method = Function {
+            suspend_: false,
             extension_receiver: source_method
                 .is_some_and(|method| method.function.receiver.is_some()),
             class_type_params: Vec::new(),
@@ -1421,6 +1423,7 @@ pub(super) fn check_class_with_constants(
                 .any(|m| m.name == getter && m.params.is_empty())
             {
                 methods.push(Function {
+                    suspend_: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
@@ -1465,6 +1468,7 @@ pub(super) fn check_class_with_constants(
                     .any(|m| m.name == setter_name(&field.name) && m.params.len() == 1)
             {
                 methods.push(Function {
+                    suspend_: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
@@ -1804,6 +1808,7 @@ pub(super) fn check_class_with_constants(
             },
             initializer_local_base,
             function: Function {
+                suspend_: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -2164,6 +2169,7 @@ impl<'a> DeclarationContext<'a> {
             params[0].0 = "<this>".into();
         }
         Ok(Function {
+            suspend_: false,
             extension_receiver: source.receiver.is_some(),
             class_type_params: Vec::new(),
             jvm_result: None,
@@ -2884,6 +2890,7 @@ pub(super) fn accessor_source(
         property.setter_visibility()
     };
     syntax::Function {
+        suspend_: false,
         inline: false,
         parameter_modes: Vec::new(),
         param_annotations: vec![Vec::new(); params.len()],
@@ -3211,6 +3218,7 @@ pub(super) fn check_static_state(
         };
         let mut getter = if property.body.is_empty() {
             Function {
+                suspend_: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -3287,6 +3295,7 @@ pub(super) fn check_static_state(
                     }
                 };
                 Function {
+                    suspend_: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,

@@ -675,6 +675,19 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
             );
             return Ok(proto);
         }
+        Type::SuspendFunction { params, result } => {
+            let mut arguments = params.clone();
+            arguments.push(Type::continuation(result, Variance::Invariant));
+            let runtime = Type::Function {
+                params: arguments,
+                result: Box::new(Type::Nullable(Box::new(Type::Java(
+                    "java/lang/Object".into(),
+                )))),
+            };
+            let mut proto = type_proto(&runtime, imports, strings)?;
+            proto.number(1, 1);
+            return Ok(proto);
+        }
         Type::Function { params, result } => {
             for ty in params.iter().chain(std::iter::once(result.as_ref())) {
                 let mut argument = Proto::default();
@@ -877,7 +890,8 @@ fn function_with_jvm_name(
             }
             | if function.infix { 512 } else { 0 }
             | if function.operator { 256 } else { 0 }
-            | if function.inline { 1024 } else { 0 },
+            | if function.inline { 1024 } else { 0 }
+            | if function.suspend_ { 8192 } else { 0 },
     );
     proto.number(2, strings.id(&function.name)?);
     for (index, parameter) in function.type_params.iter().enumerate() {
@@ -3706,6 +3720,7 @@ mod tests {
             lambdas: Vec::new(),
             constants: Vec::new(),
             functions: vec![crate::check::Function {
+                suspend_: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,

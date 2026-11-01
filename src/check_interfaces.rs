@@ -315,6 +315,7 @@ fn register_classes(
                 library: (function.infix || function.operator).then(|| {
                     crate::classpath::LibraryMethod {
                         value_dispatch: false,
+                        suspend_: false,
                         kotlin_declared: true,
                         has_annotations: false,
                         parameter_modes: Vec::new(),
@@ -951,6 +952,7 @@ fn check_function(
         Vec::new()
     };
     Ok(Function {
+        suspend_: false,
         extension_receiver: false,
         class_type_params: Vec::new(),
         jvm_result: None,

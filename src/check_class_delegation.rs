@@ -541,6 +541,7 @@ pub(super) fn forwarders(
             vec![Statement::Return(invocation)]
         };
         let function = Function {
+            suspend_: false,
             extension_receiver: false,
             class_type_params: Vec::new(),
             jvm_result,

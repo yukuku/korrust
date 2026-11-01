@@ -100,6 +100,7 @@ pub(super) fn emit(
         false,
     )?;
     let mut code = Code {
+        coroutine: false,
         pool: &mut pool,
         functions,
         owner: facade,
@@ -173,6 +174,7 @@ pub(super) fn emit(
         }
         let locals = 1 + params.iter().map(Type::slots).sum::<usize>();
         let mut code = Code {
+            coroutine: false,
             pool: &mut pool,
             functions,
             owner: facade,
@@ -294,6 +296,7 @@ mod tests {
         locals: u16,
     ) -> crate::check::Function {
         crate::check::Function {
+            suspend_: false,
             extension_receiver: false,
             class_type_params: Vec::new(),
             jvm_result: None,

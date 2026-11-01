@@ -1,0 +1,1 @@
+suspend fun bounded(step: suspend () -> String): String { val value: suspend () -> String = { "x" }; return step() }

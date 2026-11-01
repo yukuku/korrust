@@ -1,0 +1,651 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T19:48:12.010124+00:00",
+  "status": "complete",
+  "selection": "Unchanged complete coroutine originals with preserved helpers/directives; unsupported language and helper prerequisites are not passes",
+  "matrix_sha256": "3d806850dc87ab46b0b67a976bbb929d81d84aa04d780b55e3254baa943d3707",
+  "limitations": [
+    "Source suspend lambdas, receiver suspend types and suspension in nested expressions/control flow remain bounded-language gaps",
+    "WITH_COROUTINES retains unchanged CoroutineHelpers.kt compiled with each provider; source Result/getOrThrow or other helper prerequisites are recorded honestly",
+    "Successful authored continuation fixtures do not imply these unchanged originals or full coroutine source compatibility"
+  ],
+  "cases": [
+    {
+      "id": "suspend_original_0_simple",
+      "family": "suspend_foundation",
+      "root": "box",
+      "tier": "family",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/coroutines/simple.kt",
+        "sha256": "129af22b768b640a23fd1a91d347d869d9e30290c7101d1d0bc4e151f4464ba9"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_COROUTINES",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "additional_sources": [
+        {
+          "module": "main",
+          "path": "references/kotlin/compiler/testData/diagnostics/helpers/coroutines/CoroutineHelpers.kt",
+          "sha256": "d375bd036523c7b8a0a1ac34388fe8acef11f7517716fc94e98ed14827f3a882",
+          "compilation": "source_with_each_provider"
+        }
+      ],
+      "additional_source_provider": {
+        "path": "references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/services/sourceProviders/CoroutineHelpersSourceFilesProvider.kt",
+        "sha256": "4163873cbb90dc5dea86ca095848945e782e4583f5ebcf7c4f6e18b0ee305648"
+      },
+      "source_maps": [
+        "target/resume-suspend-upstream-v1/suspend_original_0_simple/sources/main/simple.kt.source-map.json",
+        "target/resume-suspend-upstream-v1/suspend_original_0_simple/sources/main/CoroutineHelpers.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_0_simple/sources/main/CoroutineHelpers.kt",
+          "offset": 351,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_EXPRESSION_UNSUPPORTED",
+          "message": "General anonymous object expressions are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_0_simple/sources/main/CoroutineHelpers.kt",
+          "line": 14,
+          "column": 69,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/diagnostics/helpers/coroutines/CoroutineHelpers.kt",
+            "char_offset": 351,
+            "byte_offset": 351,
+            "line": 14,
+            "column": 69
+          }
+        }
+      ]
+    },
+    {
+      "id": "suspend_original_1_simple",
+      "family": "suspend_foundation",
+      "root": "box",
+      "tier": "family",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/coroutines/suspendFunctionTypeCall/simple.kt",
+        "sha256": "9c113b182baff50f7e17b016166e68cf3f4da021096c8af7d789b15b1d5206a0"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            },
+            {
+              "name": "WITH_COROUTINES",
+              "value": "",
+              "original_line": 2
+            }
+          ]
+        }
+      ],
+      "additional_sources": [
+        {
+          "module": "main",
+          "path": "references/kotlin/compiler/testData/diagnostics/helpers/coroutines/CoroutineHelpers.kt",
+          "sha256": "d375bd036523c7b8a0a1ac34388fe8acef11f7517716fc94e98ed14827f3a882",
+          "compilation": "source_with_each_provider"
+        }
+      ],
+      "additional_source_provider": {
+        "path": "references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/services/sourceProviders/CoroutineHelpersSourceFilesProvider.kt",
+        "sha256": "4163873cbb90dc5dea86ca095848945e782e4583f5ebcf7c4f6e18b0ee305648"
+      },
+      "source_maps": [
+        "target/resume-suspend-upstream-v1/suspend_original_1_simple/sources/main/simple.kt.source-map.json",
+        "target/resume-suspend-upstream-v1/suspend_original_1_simple/sources/main/CoroutineHelpers.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_1_simple/sources/main/CoroutineHelpers.kt",
+          "offset": 351,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_EXPRESSION_UNSUPPORTED",
+          "message": "General anonymous object expressions are unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_1_simple/sources/main/CoroutineHelpers.kt",
+          "line": 14,
+          "column": 69,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/diagnostics/helpers/coroutines/CoroutineHelpers.kt",
+            "char_offset": 351,
+            "byte_offset": 351,
+            "line": 14,
+            "column": 69
+          }
+        }
+      ]
+    },
+    {
+      "id": "suspend_original_2_kt49834",
+      "family": "suspend_foundation",
+      "root": "box",
+      "tier": "family",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/coroutines/varSpilling/kt49834.kt",
+        "sha256": "b2c404bb9d633b2325fe5dea303b72a66fbaf85a408804b609601982998d1a01"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": [
+            {
+              "name": "WITH_STDLIB",
+              "value": "",
+              "original_line": 1
+            }
+          ]
+        }
+      ],
+      "source_maps": [
+        "target/resume-suspend-upstream-v1/suspend_original_2_kt49834/sources/main/kt49834.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_2_kt49834/sources/main/kt49834.kt",
+          "offset": 82,
+          "category": "unsupported_language",
+          "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+          "message": "Suspension in nested control flow, lambdas, or expression trees is unsupported",
+          "path": "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_2_kt49834/sources/main/kt49834.kt",
+          "line": 6,
+          "column": 1,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/coroutines/varSpilling/kt49834.kt",
+            "char_offset": 82,
+            "byte_offset": 82,
+            "line": 6,
+            "column": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "suspend_original_3_inlineUnitFunction",
+      "family": "suspend_foundation",
+      "root": "box",
+      "tier": "family",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/coroutines/unitTypeReturn/inlineUnitFunction.kt",
+        "sha256": "33d1510077a0507d83ccac476c564d1b947eb44a7b009440a7a95afb0f12e791"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/sources/main/inlineUnitFunction.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/caller/UpstreamBox.class": "a82016c20cbbbf22f15a4fc6caa28a86db4846f42264abae0ab41127c1263b0d"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors"
+    }
+  ],
+  "commands": [
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0000-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0000-stderr.txt"
+    },
+    {
+      "label": "Official compiler identity",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0001-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0001-stderr.txt"
+    },
+    {
+      "label": "suspend_original_0_simple/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_0_simple/sources/main/simple.kt",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_0_simple/sources/main/CoroutineHelpers.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_0_simple/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0002-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0002-stderr.txt"
+    },
+    {
+      "label": "suspend_original_0_simple/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_0_simple/sources/main/simple.kt",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_0_simple/sources/main/CoroutineHelpers.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_0_simple/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0003-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0003-stderr.txt"
+    },
+    {
+      "label": "suspend_original_1_simple/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_1_simple/sources/main/simple.kt",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_1_simple/sources/main/CoroutineHelpers.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_1_simple/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0004-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0004-stderr.txt"
+    },
+    {
+      "label": "suspend_original_1_simple/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_1_simple/sources/main/simple.kt",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_1_simple/sources/main/CoroutineHelpers.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_1_simple/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0005-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0005-stderr.txt"
+    },
+    {
+      "label": "suspend_original_2_kt49834/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_2_kt49834/sources/main/kt49834.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_2_kt49834/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0006-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0006-stderr.txt"
+    },
+    {
+      "label": "suspend_original_2_kt49834/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_2_kt49834/sources/main/kt49834.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_2_kt49834/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0007-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0007-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/official/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/sources/main/inlineUnitFunction.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0008-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0008-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/candidate/main",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-root-build/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/sources/main/inlineUnitFunction.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0009-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0009-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/compile-box-caller-against-official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/caller",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0010-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0010-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/verify-box/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/caller:/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0011-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0011-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/verify-box/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/caller:/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0012-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0012-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0013-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0013-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/kotlin-consumer-official:/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0014-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0014-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/UpstreamConsumer.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0015-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0015-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/kotlin-consumer-candidate:/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0016-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0016-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/signatures/official/InlineUnitFunctionKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/official/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "InlineUnitFunctionKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0017-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0017-stderr.txt"
+    },
+    {
+      "label": "suspend_original_3_inlineUnitFunction/signatures/candidate/InlineUnitFunctionKt",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/Users/yuku/f/git/korrust/target/resume-suspend-upstream-v1/suspend_original_3_inlineUnitFunction/candidate/main:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "InlineUnitFunctionKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "target/resume-suspend-upstream-v1/commands/0018-stdout.txt",
+      "stderr": "target/resume-suspend-upstream-v1/commands/0018-stderr.txt"
+    }
+  ],
+  "inputs": {
+    "reference_source_manifest_sha256": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "compiler_pin_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "adapter_sha256": "10a550964853b0b4bfdcbdc48f3522b6b3122d36dde2bb5d5bda26a9855a6674",
+    "matrix_sha256": "3d806850dc87ab46b0b67a976bbb929d81d84aa04d780b55e3254baa943d3707"
+  },
+  "compiler": {
+    "path": "target/resume-root-build/release/korrust",
+    "sha256": "1837b8f5044d6b84acd6213ffc6d1cdccc43874b68f2f746aac4d18c68ba83b9"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "kotlin_test_sha256": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "java_version": "openjdk version \"21.0.8\" 2025-07-15\nOpenJDK Runtime Environment JBR-21.0.8+9-1138.52-nomod (build 21.0.8+9-b1138.52)\nOpenJDK 64-Bit Server VM JBR-21.0.8+9-1138.52-nomod (build 21.0.8+9-b1138.52, mixed mode, sharing)"
+  },
+  "frozen_input_hashes": {
+    "references/kotlin/compiler/testData/codegen/box/coroutines/simple.kt": "129af22b768b640a23fd1a91d347d869d9e30290c7101d1d0bc4e151f4464ba9",
+    "references/kotlin/compiler/testData/codegen/box/coroutines/suspendFunctionTypeCall/simple.kt": "9c113b182baff50f7e17b016166e68cf3f4da021096c8af7d789b15b1d5206a0",
+    "references/kotlin/compiler/testData/codegen/box/coroutines/unitTypeReturn/inlineUnitFunction.kt": "33d1510077a0507d83ccac476c564d1b947eb44a7b009440a7a95afb0f12e791",
+    "references/kotlin/compiler/testData/codegen/box/coroutines/varSpilling/kt49834.kt": "b2c404bb9d633b2325fe5dea303b72a66fbaf85a408804b609601982998d1a01",
+    "references/kotlin/compiler/testData/diagnostics/helpers/coroutines/CoroutineHelpers.kt": "d375bd036523c7b8a0a1ac34388fe8acef11f7517716fc94e98ed14827f3a882",
+    "references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/services/sourceProviders/CoroutineHelpersSourceFilesProvider.kt": "4163873cbb90dc5dea86ca095848945e782e4583f5ebcf7c4f6e18b0ee305648",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+    "target/resume-root-build/release/korrust": "1837b8f5044d6b84acd6213ffc6d1cdccc43874b68f2f746aac4d18c68ba83b9",
+    "tools/upstream_jvm.py": "10a550964853b0b4bfdcbdc48f3522b6b3122d36dde2bb5d5bda26a9855a6674",
+    "tools/upstream_suspend_foundation.json": "3d806850dc87ab46b0b67a976bbb929d81d84aa04d780b55e3254baa943d3707"
+  },
+  "counts": {
+    "pass": 1,
+    "unsupported_language": 3
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "claims": "Selected upstream fixture outcomes only; no compatibility percentage, full-suite, Android, or performance claim"
+}
