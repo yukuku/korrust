@@ -1,0 +1,120 @@
+Classfile /Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T182911732258Z-inner-classes/batch_import/candidate/innerconsumer/BatchConsumerKt.class
+  Last modified Nov 2, 2026; size 1021 bytes
+  SHA-256 checksum 9abacfcdf954fe490b5124d13019b9d8e271c8127a81b7d47a5ac0bd4e71841b
+  Compiled from "BatchConsumer.kt"
+public final class innerconsumer.BatchConsumerKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // innerconsumer/BatchConsumerKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 2, attributes: 2
+Constant pool:
+   #1 = Utf8               innerconsumer/BatchConsumerKt
+   #2 = Class              #1             // innerconsumer/BatchConsumerKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               BatchConsumer.kt
+   #7 = Utf8               inner
+   #8 = String             #7             // inner
+   #9 = Utf8               kotlin/jvm/internal/Intrinsics
+  #10 = Class              #9             // kotlin/jvm/internal/Intrinsics
+  #11 = Utf8               checkNotNullParameter
+  #12 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #13 = NameAndType        #11:#12        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #14 = Methodref          #10.#13        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #15 = Utf8               innerprobe/Outer$Inner
+  #16 = Class              #15            // innerprobe/Outer$Inner
+  #17 = Utf8               read
+  #18 = Utf8               ()I
+  #19 = NameAndType        #17:#18        // read:()I
+  #20 = Methodref          #16.#19        // innerprobe/Outer$Inner.read:()I
+  #21 = Utf8               batchRead
+  #22 = Utf8               (Linnerprobe/Outer$Inner;)I
+  #23 = Utf8               Code
+  #24 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #25 = Utf8               RuntimeInvisibleParameterAnnotations
+  #26 = Utf8               outer
+  #27 = String             #26            // outer
+  #28 = Utf8               innerprobe/Outer
+  #29 = Class              #28            // innerprobe/Outer
+  #30 = Utf8               <init>
+  #31 = Utf8               (Linnerprobe/Outer;I)V
+  #32 = NameAndType        #30:#31        // "<init>":(Linnerprobe/Outer;I)V
+  #33 = Methodref          #16.#32        // innerprobe/Outer$Inner."<init>":(Linnerprobe/Outer;I)V
+  #34 = Utf8               batchMake
+  #35 = Utf8               (Linnerprobe/Outer;)Linnerprobe/Outer$Inner;
+  #36 = Utf8               RuntimeInvisibleAnnotations
+  #37 = Utf8               Lkotlin/Metadata;
+  #38 = Utf8               mv
+  #39 = Integer            2
+  #40 = Integer            3
+  #41 = Integer            0
+  #42 = Utf8               k
+  #43 = Utf8               xi
+  #44 = Integer            48
+  #45 = Utf8               d1
+  #46 = Utf8               \u0000\b\n\u0002\b\t\n\u0002\b\u0001\u001a\u0017H\u0006\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0000\u0010\u0004\u001a\u0017H\u0006\u0010\u0005\u001a\u00020\u00032\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0004\b\u0005\u0010\b¨\u0006\t
+  #47 = Utf8               d2
+  #48 = Utf8               kotlin/Int
+  #49 = Utf8               innerprobe/Outer.Inner
+  #50 = Utf8               inner_classes
+  #51 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final int batchRead(innerprobe.Outer$Inner);
+    descriptor: (Linnerprobe/Outer$Inner;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: ldc_w         #8                  // String inner
+         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: checkcast     #16                 // class innerprobe/Outer$Inner
+        13: invokevirtual #20                 // Method innerprobe/Outer$Inner.read:()I
+        16: ireturn
+        17: aconst_null
+        18: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #24()
+          org.jetbrains.annotations.NotNull
+
+  public static final innerprobe.Outer$Inner batchMake(innerprobe.Outer);
+    descriptor: (Linnerprobe/Outer;)Linnerprobe/Outer$Inner;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=2, args_size=1
+         0: aload         0
+         2: ldc_w         #27                 // String outer
+         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: checkcast     #29                 // class innerprobe/Outer
+        13: astore        1
+        15: new           #16                 // class innerprobe/Outer$Inner
+        18: dup
+        19: aload         1
+        21: iconst_2
+        22: invokespecial #33                 // Method innerprobe/Outer$Inner."<init>":(Linnerprobe/Outer;I)V
+        25: areturn
+        26: aconst_null
+        27: athrow
+    RuntimeInvisibleAnnotations:
+      0: #24()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #24()
+          org.jetbrains.annotations.NotNull
+}
+SourceFile: "BatchConsumer.kt"
+RuntimeVisibleAnnotations:
+  0: #37(#38=[I#39,I#40,I#41],#42=I#39,#43=I#44,#45=[s#46],#47=[s#21,s#48,s#7,s#49,s#22,s#34,s#26,s#28,s#35,s#50])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\b\n\u0002\b\t\n\u0002\b\u0001\u001a\u0017H\u0006\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0000\u0010\u0004\u001a\u0017H\u0006\u0010\u0005\u001a\u00020\u00032\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0004\b\u0005\u0010\b¨\u0006\t"]
+      d2=["batchRead","kotlin/Int","inner","innerprobe/Outer.Inner","(Linnerprobe/Outer$Inner;)I","batchMake","outer","innerprobe/Outer","(Linnerprobe/Outer;)Linnerprobe/Outer$Inner;","inner_classes"]
+    )

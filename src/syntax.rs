@@ -465,6 +465,7 @@ pub enum ConstValue {
 }
 #[derive(Clone, Debug)]
 pub struct ClassDecl {
+    pub inner: bool,
     pub interface_delegates: Vec<InterfaceDelegate>,
     pub sealed_: bool,
     pub type_params: Vec<TypeParameter>,
@@ -2238,6 +2239,7 @@ impl Parser {
                     | "lateinit"
                     | "override"
                     | "value"
+                    | "inner"
                     | "companion"
                     | "\n"
             ) {
@@ -3379,6 +3381,7 @@ impl Parser {
         let mut annotations = self.annotations()?;
         let mut visibility = None;
         let mut final_modifier = false;
+        let mut inner = false;
         let mut data = false;
         let mut open = false;
         let mut abstract_ = false;
@@ -3399,6 +3402,11 @@ impl Parser {
                 }
                 visibility = Some(self.token().text.clone());
                 self.pos += 1;
+            } else if self.take("inner") {
+                if inner {
+                    return Err(self.error("Repeated inner modifier"));
+                }
+                inner = true;
             } else if self.take("data") {
                 if data {
                     return Err(self.error("Repeated data modifier"));
@@ -3652,6 +3660,7 @@ impl Parser {
                 ));
         }
         let declaration = ClassDecl {
+            inner,
             interface_delegates,
             sealed_,
             type_params,
@@ -3694,15 +3703,6 @@ impl Parser {
     ) -> Result<()> {
         self.separators();
         while !self.at("}") {
-            if self.at("inner") {
-                return Err(self
-                    .error("Inner class declarations are unsupported")
-                    .with_kind(
-                        DiagnosticKind::UnsupportedLanguage,
-                        "INNER_CLASS_UNSUPPORTED",
-                    ));
-            }
-
             if self.at("<eof>") {
                 return Err(self.error("Unterminated class body"));
             }
@@ -4268,6 +4268,7 @@ impl Parser {
                 ));
         }
         let mut declaration = ClassDecl {
+            inner: false,
             interface_delegates: Vec::new(),
             sealed_: false,
             type_params: Vec::new(),
@@ -4816,6 +4817,7 @@ impl Parser {
                 self.lines();
                 self.expect("{")?;
                 let mut object = ClassDecl {
+                    inner: false,
                     interface_delegates: Vec::new(),
                     sealed_: false,
                     type_params: Vec::new(),
@@ -5151,6 +5153,17 @@ impl Parser {
             StatementKind::Labeled(label, Box::new(self.statement()?))
         } else if self.at("{") {
             StatementKind::Block(self.block()?)
+        } else if self.at("inner") {
+            return Err(self
+                .error("Inner modifier requires a class member declaration")
+                .with_kind(DiagnosticKind::InvalidKotlin, "INNER_CLASS_CONTEXT_INVALID"));
+        } else if self.starts_class() {
+            return Err(self
+                .error("Local class declarations with lexical captures are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "LOCAL_CLASS_UNSUPPORTED",
+                ));
         } else if self.starts_declaration("fun") {
             StatementKind::LocalFunction(Box::new(self.function()?))
         } else if self.at("val") || self.at("var") {

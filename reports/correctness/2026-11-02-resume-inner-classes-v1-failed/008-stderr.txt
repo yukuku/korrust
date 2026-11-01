@@ -1,0 +1,27 @@
+/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java:7: error: cannot access Inner
+        Outer.Inner first = outer.new Inner(2);
+             ^
+  bad class file: /Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/candidate/innerprobe/Outer$Inner.class
+    bad RuntimeInvisibleParameterAnnotations attribute: Inner(int)
+    Please remove or make sure it appears in the correct subdirectory of the classpath.
+/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java:7: error: cannot find symbol
+        Outer.Inner first = outer.new Inner(2);
+                                      ^
+  symbol:   class Inner
+  location: class Outer
+/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java:8: error: cannot find symbol
+        Outer.Inner second = outer.make(5);
+             ^
+  symbol:   class Inner
+  location: class Outer
+/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java:9: error: cannot find symbol
+        Outer.Inner third = innerprobe.OuterKt.qualified(outer, 3);
+             ^
+  symbol:   class Inner
+  location: class Outer
+/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java:15: error: cannot find symbol
+        Outer other = new Outer(100); eq(103, other.new Inner(3).read()); eq(22, first.read());
+                                                        ^
+  symbol:   class Inner
+  location: class Outer
+5 errors

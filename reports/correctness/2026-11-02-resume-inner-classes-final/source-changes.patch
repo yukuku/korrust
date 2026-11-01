@@ -1,0 +1,1781 @@
+diff --git a/src/bytecode.rs b/src/bytecode.rs
+index 5c33731eb..0786e93de 100644
+--- a/src/bytecode.rs
++++ b/src/bytecode.rs
+@@ -1776,7 +1776,11 @@ impl Code<'_> {
+                     self.adapt_value(&result, &value.ty)?;
+                     return Ok(());
+                 }
+-                if self.in_lambda && method.access & 2 != 0 {
++                if (self.in_lambda
++                    || self.owner != method.owner
++                        && self.owner.starts_with(&format!("{}$", method.owner)))
++                    && method.access & 2 != 0
++                {
+                     self.method_reference(
+                         0xb8,
+                         &method.owner,
+@@ -2082,7 +2086,11 @@ impl Code<'_> {
+                             .map_err(|_| failure("Too many interface call arguments"))?,
+                         0,
+                     ]);
+-                } else if self.in_lambda && method.access & 2 != 0 {
++                } else if (self.in_lambda
++                    || self.owner != method.owner
++                        && self.owner.starts_with(&format!("{}$", method.owner)))
++                    && method.access & 2 != 0
++                {
+                     self.method_reference(
+                         0xb8,
+                         &method.owner,
+@@ -4048,12 +4056,15 @@ fn emit_class_with(
+             &mut pool,
+             &field.name,
+             &field.ty,
+-            class
+-                .exposed_fields
+-                .get(&field.name)
+-                .copied()
+-                .unwrap_or(0x0002)
+-                | if field.mutable { 0 } else { 0x0010 },
++            if class.inner && field.name == "this$0" {
++                0x1000
++            } else {
++                class
++                    .exposed_fields
++                    .get(&field.name)
++                    .copied()
++                    .unwrap_or(0x0002)
++            } | if field.mutable { 0 } else { 0x0010 },
+         )?);
+     }
+     for (name, value) in &class.delegated_properties {
+@@ -4068,7 +4079,7 @@ fn emit_class_with(
+         )?);
+     }
+     let mut methods = Vec::new();
+-    if !lambdas.is_empty() {
++    if !lambdas.is_empty() || class.lexical_bridges {
+         for function in class.methods.iter().filter(|function| function.private) {
+             methods.push(private_method_bridge(&mut pool, owner, function, false)?);
+         }
+@@ -4124,7 +4135,7 @@ fn emit_class_with(
+             .into_iter()
+             .zip(&class.params)
+         {
+-            if !class.sealed_ && nonnull(ty) {
++            if !class.sealed_ && !(class.inner && name == "this$0") && nonnull(ty) {
+                 code.bytes.extend([0x19, slot as u8]);
+                 let name = code.pool.string(name)?;
+                 code.reference(0x13, name);
+@@ -4136,6 +4147,10 @@ fn emit_class_with(
+                 )?;
+             }
+         }
++        if class.inner {
++            code.bytes.extend([0x2a, 0x2b]);
++            code.field_reference(0xb5, owner, "this$0", &class.params[0].1.descriptor())?;
++        }
+         code.bytes.push(0x2a);
+         let super_descriptor = format!(
+             "({})V",
+@@ -4168,6 +4183,9 @@ fn emit_class_with(
+         }
+         let slots = parameter_slots(&class.params, 1);
+         for field in &class.fields {
++            if class.inner && field.name == "this$0" {
++                continue;
++            }
+             if field.param.is_none() && field.initializer.is_none() {
+                 continue;
+             }
+@@ -4194,7 +4212,21 @@ fn emit_class_with(
+             code,
+             enum_data
+                 .map(enums::constructor_signature)
+-                .or_else(|| generic_method(&class.params, &Type::Unit))
++                .or_else(|| {
++                    if class.inner {
++                        Some(format!(
++                            "({})V",
++                            class
++                                .params
++                                .iter()
++                                .skip(1)
++                                .map(|(_, ty)| ty.descriptor())
++                                .collect::<String>()
++                        ))
++                    } else {
++                        generic_method(&class.params, &Type::Unit)
++                    }
++                })
+                 .as_deref(),
+             false,
+         )?;
+@@ -4203,6 +4235,8 @@ fn emit_class_with(
+             &mut constructor,
+             if enum_data.is_some() {
+                 &class.params[2..]
++            } else if class.inner {
++                &class.params[1..]
+             } else {
+                 &class.params
+             },
+diff --git a/src/check.rs b/src/check.rs
+index 9d4493b49..1034eea7b 100644
+--- a/src/check.rs
++++ b/src/check.rs
+@@ -31,6 +31,8 @@ mod classes;
+ mod control;
+ #[path = "check_functions.rs"]
+ mod function_values;
++#[path = "check_inner_classes.rs"]
++mod inner_classes;
+ #[path = "check_ir_walk.rs"]
+ pub(crate) mod ir_walk;
+ #[path = "check_java_properties.rs"]
+@@ -224,6 +226,8 @@ pub struct InterfaceDelegatedMember {
+     pub jvm_descriptor: String,
+ }
+ pub struct ClassDecl {
++    pub lexical_bridges: bool,
++    pub inner: bool,
+     pub interface_delegate_storage: Vec<InterfaceDelegateStorage>,
+     pub interface_delegated_members: Vec<InterfaceDelegatedMember>,
+     pub sealed_: bool,
+@@ -705,6 +709,13 @@ impl Checker<'_> {
+         if let Some(receiver) = self.receiver_labels.get(label) {
+             return Ok(Self::local_receiver(receiver));
+         }
++        if let Some(receiver) = self.enclosing_receiver(offset)? {
++            if library::type_owner(&receiver.ty).and_then(|owner| owner.rsplit(['/', '$']).next())
++                == Some(label)
++            {
++                return Ok(receiver);
++            }
++        }
+         if self.lambda_owner.rsplit(['/', '$']).next() == Some(label) {
+             return self.dispatch_receiver_value(offset);
+         }
+@@ -1570,6 +1581,9 @@ impl Checker<'_> {
+                 "Enum constructors can only be called by enum entry initialization",
+             ));
+         }
++        if let Some(value) = self.implicit_inner_constructor(owner, args, offset)? {
++            return Ok(value);
++        }
+         self.construct_value(owner, params, defaults, args, named, offset)
+     }
+     fn construct_value(
+@@ -1869,7 +1883,39 @@ impl Checker<'_> {
+         } else {
+             receiver
+         };
+-        let result = if field.companion_bridge {
++        let result = if let Some(receiver) = receiver.as_ref().filter(|_| {
++            self.lambda_owner != field.owner
++                && self.lambda_owner.starts_with(&format!("{}$", field.owner))
++        }) {
++            let mut values = vec![receiver.clone()];
++            values.extend(args);
++            Value {
++                ty: if setter { Type::Unit } else { logical.clone() },
++                kind: ValueKind::StaticCall {
++                    owner: field.owner.clone(),
++                    name: format!(
++                        "access${}${}$p",
++                        if setter { "set" } else { "get" },
++                        field.name
++                    ),
++                    descriptor: format!(
++                        "(L{};{}){}",
++                        field.owner,
++                        if setter {
++                            field.ty.descriptor()
++                        } else {
++                            String::new()
++                        },
++                        if setter {
++                            "V".into()
++                        } else {
++                            field.ty.descriptor()
++                        }
++                    ),
++                    args: values,
++                },
++            }
++        } else if field.companion_bridge {
+             Value {
+                 ty: if setter { Type::Unit } else { logical.clone() },
+                 kind: ValueKind::StaticCall {
+@@ -2584,6 +2630,20 @@ impl Checker<'_> {
+         args: &[Expr],
+         offset: usize,
+     ) -> Result<Value> {
++        if self
++            .classpath
++            .load(&format!("{owner}${name}"))
++            .is_ok_and(|class| class.enclosing_instance().is_some())
++        {
++            return Err(Diagnostic::new(
++                offset,
++                "Inner constructor requires an enclosing instance",
++            )
++            .with_kind(
++                crate::DiagnosticKind::InvalidKotlin,
++                "INNER_CONSTRUCTOR_RECEIVER_REQUIRED",
++            ));
++        }
+         let methods = self
+             .classpath
+             .methods(owner)?
+@@ -3202,6 +3262,12 @@ impl Checker<'_> {
+                     }
+                 }
+                 StatementKind::Assign(name, expr) => {
++                    if name != "field" {
++                        if let Some(value) = self.outer_assignment(name, expr, offset)? {
++                            body.push(value);
++                            continue;
++                        }
++                    }
+                     if name == "field" {
+                         if let Some(backing) = self.members.get("#backing") {
+                             let name = backing.name.clone();
+@@ -4229,7 +4295,9 @@ impl Checker<'_> {
+                     if let Some(value) = self.imported_value(name, offset)? {
+                         return Ok(value);
+                     }
+-                    if self.dispatch_receiver.is_some() {
++                    if self.dispatch_receiver.is_some()
++                        || self.enclosing_receiver(offset)?.is_some()
++                    {
+                         return self.receiver_property(name, offset);
+                     }
+                     return Err(Diagnostic::new(offset, format!("Unresolved local: {name}")));
+@@ -4972,7 +5040,10 @@ impl Checker<'_> {
+                         let receiver = self.dispatch_receiver_value(offset)?;
+                         return self.member_call(method, receiver, args, offset);
+                     }
+-                    if self.dispatch_receiver.is_some() && !self.functions.contains_key(name) {
++                    if (self.dispatch_receiver.is_some()
++                        || self.enclosing_receiver(offset)?.is_some())
++                        && !self.functions.contains_key(name)
++                    {
+                         if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
+                             return Ok(call);
+                         }
+@@ -5024,7 +5095,10 @@ impl Checker<'_> {
+                         let function = self.value(target)?;
+                         return self.function_invoke(function, args, offset);
+                     }
+-                    if self.dispatch_receiver.is_some() && !self.functions.contains_key(name) {
++                    if (self.dispatch_receiver.is_some()
++                        || self.enclosing_receiver(offset)?.is_some())
++                        && !self.functions.contains_key(name)
++                    {
+                         if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
+                             return Ok(call);
+                         }
+@@ -5032,6 +5106,29 @@ impl Checker<'_> {
+                     return self.source_call(name, args, &[], offset);
+                 }
+                 ExprKind::Property(receiver, name) => {
++                    if self.qualified_java_class(receiver).is_none() {
++                        let saved_next = self.next;
++                        let saved_initialized = self.initialized.clone();
++                        let saved_refinements = self.refinements.clone();
++                        let saved_lambdas = self.lambdas.borrow().len();
++                        if let Ok(value) = self.value(receiver) {
++                            let receiver_type = match value.ty.base() {
++                                Type::Nullable(inner) => inner.as_ref(),
++                                ty => ty,
++                            };
++                            if let Some(owner) = library::type_owner(receiver_type) {
++                                if let Ok(class) = self.classpath.load(&format!("{owner}${name}")) {
++                                    if class.enclosing_instance().is_some() {
++                                        return self.inner_constructor(&class, value, args, offset);
++                                    }
++                                }
++                            }
++                        }
++                        self.next = saved_next;
++                        self.initialized = saved_initialized;
++                        self.refinements = saved_refinements;
++                        self.lambdas.borrow_mut().truncate(saved_lambdas);
++                    }
+                     if let Some(owner) = self.qualified_java_class(receiver) {
+                         return self.java_static(&owner, name, args, offset);
+                     }
+diff --git a/src/check_declarations.rs b/src/check_declarations.rs
+index 8f05d942e..71ee190a0 100644
+--- a/src/check_declarations.rs
++++ b/src/check_declarations.rs
+@@ -36,6 +36,25 @@ pub(super) fn check_class_with_constants(
+     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
+     constants: &HashMap<String, (Type, Expr)>,
+ ) -> Result<ClassDecl> {
++    let mut captured_source;
++    let source = if source.inner {
++        captured_source = source.clone();
++        let outer = owner_override
++            .and_then(|owner| owner.rsplit_once('$'))
++            .map(|(outer, _)| outer)
++            .ok_or_else(|| {
++                Diagnostic::new(source.offset, "Inner class requires an enclosing class")
++            })?;
++        captured_source
++            .params
++            .insert(0, ("this$0".into(), Type::Java(outer.into())));
++        captured_source.param_properties.insert(0, "this$0".into());
++        captured_source.param_annotations.insert(0, Vec::new());
++        captured_source.defaults.insert(0, None);
++        &captured_source
++    } else {
++        source
++    };
+     if source.sealed_
+         && (!source.secondary_constructors.is_empty()
+             || source.defaults.iter().any(Option::is_some))
+@@ -123,6 +142,25 @@ pub(super) fn check_class_with_constants(
+         .iter()
+         .map(|t| resolve_type_checked(t, imports, source.offset, classpath, classes))
+         .collect::<Result<Vec<_>>>()?;
++    if source.inner
++        && super_types
++            .iter()
++            .filter_map(library::type_owner)
++            .any(|owner| {
++                classpath
++                    .load(owner)
++                    .is_ok_and(|class| class.enclosing_instance().is_some())
++            })
++    {
++        return Err(Diagnostic::new(
++            source.offset,
++            "Inner superclasses require unsupported enclosing instance delegation",
++        )
++        .with_kind(
++            crate::DiagnosticKind::UnsupportedLanguage,
++            "INNER_SUPERCLASS_OUTER_UNSUPPORTED",
++        ));
++    }
+     if !source.type_params.is_empty()
+         && source
+             .methods
+@@ -1852,6 +1890,10 @@ pub(super) fn check_class_with_constants(
+     }
+     let abstract_methods = method_keys(|m| !m.has_body);
+     Ok(ClassDecl {
++        lexical_bridges: source.nested.iter().any(
++            |declaration| matches!(declaration, syntax::Declaration::Class(class) if class.inner),
++        ),
++        inner: source.inner,
+         interface_delegate_storage,
+         interface_delegated_members,
+         sealed_: source.sealed_,
+diff --git a/src/check_inner_classes.rs b/src/check_inner_classes.rs
+new file mode 100644
+index 000000000..5601c8475
+--- /dev/null
++++ b/src/check_inner_classes.rs
+@@ -0,0 +1,198 @@
++use super::*;
++
++impl Checker<'_> {
++    pub(super) fn enclosing_receiver(&self, offset: usize) -> Result<Option<Value>> {
++        if let Some(receiver) = self.local("this$0") {
++            return Ok(Some(Self::local_receiver(&receiver)));
++        }
++        let Ok(receiver) = self.dispatch_receiver_value(offset) else {
++            return Ok(None);
++        };
++        let Some(owner) = library::type_owner(&receiver.ty).map(str::to_owned) else {
++            return Ok(None);
++        };
++        let class = self
++            .classpath
++            .load(&owner)
++            .or_else(|error| self.classes.get(&owner).cloned().ok_or(error))?;
++        Ok(class.enclosing_instance().map(|outer| Value {
++            ty: Type::Java(outer.into()),
++            kind: ValueKind::JavaField {
++                owner,
++                name: "this$0".into(),
++                receiver: Some(Box::new(receiver)),
++            },
++        }))
++    }
++
++    pub(super) fn outer_assignment(
++        &mut self,
++        name: &str,
++        value: &Expr,
++        offset: usize,
++    ) -> Result<Option<Statement>> {
++        if self.local(name).is_some()
++            || self.captured.contains_key(name)
++            || self.fields.contains_key(name)
++            || self
++                .members
++                .values()
++                .any(|method| method.source_property.as_deref() == Some(name))
++        {
++            return Ok(None);
++        }
++        let Some(outer) = self.enclosing_receiver(offset)? else {
++            return Ok(None);
++        };
++        let label = library::type_owner(&outer.ty)
++            .unwrap()
++            .rsplit(['/', '$'])
++            .next()
++            .unwrap();
++        self.field_assignment(
++            &Expr {
++                offset,
++                kind: ExprKind::Name(format!("this@{label}")),
++            },
++            name,
++            value,
++            offset,
++        )
++        .map(Some)
++    }
++
++    pub(super) fn inner_constructor(
++        &mut self,
++        class: &JavaClass,
++        receiver: Value,
++        args: &[Expr],
++        offset: usize,
++    ) -> Result<Value> {
++        let outer = class
++            .enclosing_instance()
++            .ok_or_else(|| Diagnostic::new(offset, "Constructor has no enclosing instance"))?;
++        if receiver.ty.is_nullable() || !self.subtype(&receiver.ty, &Type::Java(outer.into())) {
++            return Err(Diagnostic::new(
++                offset,
++                "Inner constructor requires a non-null enclosing instance",
++            )
++            .with_kind(
++                crate::DiagnosticKind::InvalidKotlin,
++                "INNER_CONSTRUCTOR_RECEIVER_INVALID",
++            ));
++        }
++        if class.unsupported || class.access & 0x401 != 1 {
++            return Err(
++                Diagnostic::new(offset, "Unsupported inner constructor classifier").with_kind(
++                    crate::DiagnosticKind::UnsupportedLanguage,
++                    "INNER_CONSTRUCTOR_CLASS_UNSUPPORTED",
++                ),
++            );
++        }
++        let outer_class = self.classpath.load(outer)?;
++        if !class.kotlin_class
++            || class
++                .library
++                .as_ref()
++                .is_some_and(|library| !library.type_parameters.is_empty())
++            || outer_class
++                .library
++                .as_ref()
++                .is_some_and(|library| !library.type_parameters.is_empty())
++            || outer_class.enclosing_instance().is_some()
++        {
++            return Err(Diagnostic::new(
++                offset,
++                "Java, generic and chained compiled inner constructors are unsupported",
++            )
++            .with_kind(
++                crate::DiagnosticKind::UnsupportedLanguage,
++                "INNER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
++            ));
++        }
++        let methods = class
++            .methods
++            .iter()
++            .filter(|method| {
++                method.name == "<init>" && method.access & 1 != 0 && !method.unsupported
++            })
++            .cloned()
++            .collect::<Vec<_>>();
++        let method = self.select_method(&methods, args, offset)?;
++        let normalized = self.vararg_arguments(&method, args, offset)?;
++        let (params, defaults) = Self::method_parameters(&method)?;
++        if defaults.iter().any(|default| *default)
++            || !class
++                .library
++                .as_ref()
++                .is_none_or(|library| library.type_parameters.is_empty())
++        {
++            return Err(Diagnostic::new(
++                offset,
++                "Generic and defaulted compiled inner constructors are unsupported",
++            )
++            .with_kind(
++                crate::DiagnosticKind::UnsupportedLanguage,
++                "INNER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
++            ));
++        }
++        let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
++        let mut value = self.construct_value(
++            &class.name,
++            &params,
++            &defaults,
++            &normalized,
++            self.method_named(&method),
++            offset,
++        )?;
++        fn prepend(value: &mut Value, outer: &str, slot: u8) -> Result<()> {
++            match &mut value.kind {
++                ValueKind::Let { body, .. } => prepend(body, outer, slot),
++                ValueKind::New {
++                    descriptor, args, ..
++                } => {
++                    descriptor.insert_str(1, &format!("L{outer};"));
++                    args.insert(
++                        0,
++                        Value {
++                            ty: Type::Java(outer.into()),
++                            kind: ValueKind::Local(slot),
++                        },
++                    );
++                    Ok(())
++                }
++                _ => Err(Diagnostic::new(0, "Invalid inner constructor lowering")),
++            }
++        }
++        prepend(&mut value, outer, slot)?;
++        Ok(Self::wrap_lets(value, vec![(slot, receiver)]))
++    }
++
++    pub(super) fn implicit_inner_constructor(
++        &mut self,
++        owner: &str,
++        args: &[Expr],
++        offset: usize,
++    ) -> Result<Option<Value>> {
++        let class = self
++            .classpath
++            .load(owner)
++            .or_else(|error| self.classes.get(owner).cloned().ok_or(error))?;
++        let Some(outer) = class.enclosing_instance() else {
++            return Ok(None);
++        };
++        let receiver = self
++            .implicit_receiver_values(offset)?
++            .into_iter()
++            .find(|receiver| self.subtype(&receiver.ty, &Type::Java(outer.into())))
++            .ok_or_else(|| {
++                Diagnostic::new(offset, "Inner constructor requires an enclosing instance")
++                    .with_kind(
++                        crate::DiagnosticKind::InvalidKotlin,
++                        "INNER_CONSTRUCTOR_RECEIVER_REQUIRED",
++                    )
++            })?;
++        self.inner_constructor(&class, receiver, args, offset)
++            .map(Some)
++    }
++}
+diff --git a/src/check_ir_walk.rs b/src/check_ir_walk.rs
+index 8451a982b..681f53135 100644
+--- a/src/check_ir_walk.rs
++++ b/src/check_ir_walk.rs
+@@ -479,6 +479,8 @@ mod tests {
+                 interface: None,
+             }],
+             class_decl: Some(ClassDecl {
++                lexical_bridges: false,
++                inner: false,
+                 sealed_: false,
+                 sealed_subclasses: Vec::new(),
+                 type_params: Vec::new(),
+diff --git a/src/check_member_extensions.rs b/src/check_member_extensions.rs
+index 0e441e226..fdcc9f48c 100644
+--- a/src/check_member_extensions.rs
++++ b/src/check_member_extensions.rs
+@@ -419,6 +419,9 @@ impl Checker<'_> {
+                 .transpose()?
+                 .flatten();
+             receivers.push(dispatch);
++            if let Some(outer) = self.enclosing_receiver(offset)? {
++                receivers.push(outer);
++            }
+             if let Some(companion) = companion {
+                 receivers.push(companion);
+             }
+diff --git a/src/check_operations.rs b/src/check_operations.rs
+index 3ce68d048..1874fcec2 100644
+--- a/src/check_operations.rs
++++ b/src/check_operations.rs
+@@ -1818,19 +1818,44 @@ impl Checker<'_> {
+ 
+ impl Checker<'_> {
+     pub(super) fn receiver_property(&mut self, name: &str, offset: usize) -> Result<Value> {
+-        if self.dispatch_receiver.is_none() {
+-            return Err(Diagnostic::new(offset, format!("Unresolved name: {name}")));
++        let result = if self.dispatch_receiver.is_none() {
++            Err(Diagnostic::new(offset, format!("Unresolved name: {name}")))
++        } else {
++            self.value(&Expr {
++                offset,
++                kind: ExprKind::Property(
++                    Box::new(Expr {
++                        offset,
++                        kind: ExprKind::Name("this".into()),
++                    }),
++                    name.into(),
++                ),
++            })
++        };
++        if let Err(error) = &result {
++            if error.message.starts_with("Unresolved")
++                || error.message.starts_with("Unsupported property")
++            {
++                if let Some(outer) = self.enclosing_receiver(offset)? {
++                    let label = library::type_owner(&outer.ty)
++                        .unwrap()
++                        .rsplit(['/', '$'])
++                        .next()
++                        .unwrap();
++                    return self.value(&Expr {
++                        offset,
++                        kind: ExprKind::Property(
++                            Box::new(Expr {
++                                offset,
++                                kind: ExprKind::Name(format!("this@{label}")),
++                            }),
++                            name.into(),
++                        ),
++                    });
++                }
++            }
+         }
+-        self.value(&Expr {
+-            offset,
+-            kind: ExprKind::Property(
+-                Box::new(Expr {
+-                    offset,
+-                    kind: ExprKind::Name("this".into()),
+-                }),
+-                name.into(),
+-            ),
+-        })
++        result
+     }
+ 
+     pub(super) fn implicit_receiver_call(
+@@ -1839,7 +1864,10 @@ impl Checker<'_> {
+         args: &[Expr],
+         offset: usize,
+     ) -> Result<Value> {
+-        let receiver = self.default_receiver_value(offset)?;
++        let receiver = match self.default_receiver_value(offset) {
++            Ok(receiver) => receiver,
++            Err(error) => self.enclosing_receiver(offset)?.ok_or(error)?,
++        };
+         let next = self.next;
+         let initialized = self.initialized.clone();
+         let refinements = self.refinements.clone();
+@@ -1850,6 +1878,9 @@ impl Checker<'_> {
+             self.initialized = initialized;
+             self.refinements = refinements;
+             self.lambdas.borrow_mut().truncate(count);
++            if let Some(outer) = self.enclosing_receiver(offset)? {
++                return self.java_call(outer, name, args, offset);
++            }
+         }
+         result
+     }
+diff --git a/src/classpath/metadata.rs b/src/classpath/metadata.rs
+index c31d8f7ec..221d2661e 100644
+--- a/src/classpath/metadata.rs
++++ b/src/classpath/metadata.rs
+@@ -904,6 +904,11 @@ fn attach_member(
+         all.push(ty.descriptor());
+     }
+     all.extend(params.iter().map(|(_, ty, _)| ty.descriptor()));
++    if name == "<init>" {
++        if let Some(outer) = class.enclosing_instance() {
++            all.insert(0, format!("L{outer};"));
++        }
++    }
+     let descriptor = format!("({}){}", all.concat(), result.descriptor());
+     let (jvm_name, jvm_descriptor, explicit_descriptor) = if let Some(bytes) = signature {
+         let p = Proto::parse(bytes)?;
+@@ -960,7 +965,11 @@ fn attach_member(
+                 .collect::<String>(),
+             signature_result.descriptor()
+         );
+-        if erased != jvm_descriptor {
++        let inner_signature = name == "<init>"
++            && class
++                .enclosing_instance()
++                .is_some_and(|outer| jvm_descriptor == format!("(L{outer};{}", &erased[1..]));
++        if erased != jvm_descriptor && !inner_signature {
+             return Err(invalid());
+         }
+     }
+@@ -1270,7 +1279,7 @@ pub(super) fn attach(
+     class.kotlin_fun_interface = kind == 1 && class.kotlin_interface && class_flags & 16384 != 0;
+     class.unsupported = kind == 1
+         && (class_flags & 14 == 0
+-            || class_flags & (512 | 2048 | 4096 | 8192) != 0
++            || class_flags & (2048 | 4096 | 8192) != 0
+             || !matches!((class_flags >> 6) & 7, 0 | 1 | 2 | 5 | 6)
+             || (class_flags >> 6) & 7 == 2
+                 && (class.access & 0x4000 == 0
+diff --git a/src/classpath/source.rs b/src/classpath/source.rs
+index c9af40387..f0c40b7d7 100644
+--- a/src/classpath/source.rs
++++ b/src/classpath/source.rs
+@@ -406,13 +406,33 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
+                 )
+             })
+             .collect::<Vec<_>>();
++        if source.inner {
++            let outer = owner
++                .rsplit_once('$')
++                .map(|(outer, _)| outer)
++                .ok_or_else(invalid)?;
++            class.fields.push(JavaField {
++                kotlin: None,
++                constant: None,
++                owner: owner.into(),
++                name: "this$0".into(),
++                descriptor: format!("L{outer};"),
++                access: 0x1010,
++                unsupported: false,
++            });
++        }
+         if source.primary_constructor {
+             class.methods.push(JavaMethod {
+                 library: None,
+                 owner: owner.into(),
+                 name: "<init>".into(),
+                 descriptor: format!(
+-                    "({})V",
++                    "({}{})V",
++                    if source.inner {
++                        format!("L{};", owner.rsplit_once('$').unwrap().0)
++                    } else {
++                        String::new()
++                    },
+                     params
+                         .iter()
+                         .map(|(_, t, _)| t.descriptor())
+diff --git a/src/classpath.rs b/src/classpath.rs
+index 15d493a55..8d4cbc1b7 100644
+--- a/src/classpath.rs
++++ b/src/classpath.rs
+@@ -127,6 +127,15 @@ pub(crate) struct JavaClass {
+     pub kotlin_interface: bool,
+ }
+ 
++impl JavaClass {
++    pub(crate) fn enclosing_instance(&self) -> Option<&str> {
++        self.fields
++            .iter()
++            .find(|field| field.name == "this$0" && field.access & 0x1018 == 0x1010)
++            .and_then(|field| field.descriptor.strip_prefix('L')?.strip_suffix(';'))
++    }
++}
++
+ #[derive(Clone, Debug)]
+ pub(crate) struct JavaField {
+     pub kotlin: Option<KotlinField>,
+diff --git a/src/inner_classes.rs b/src/inner_classes.rs
+new file mode 100644
+index 000000000..6f7e1c63e
+--- /dev/null
++++ b/src/inner_classes.rs
+@@ -0,0 +1,109 @@
++use crate::{Diagnostic, DiagnosticKind, syntax};
++use std::collections::HashMap;
++
++pub(crate) fn validate(
++    units: &[(String, syntax::Module)],
++    parents: &HashMap<String, String>,
++) -> Result<(), (String, Diagnostic)> {
++    for (owner, unit) in units {
++        let Some(class) = unit.class_decl.as_ref().filter(|class| class.inner) else {
++            continue;
++        };
++        let invalid = |message: &str| {
++            (
++                owner.clone(),
++                Diagnostic::new(class.offset, message)
++                    .with_kind(DiagnosticKind::InvalidKotlin, "INNER_CLASS_CONTEXT_INVALID"),
++            )
++        };
++        let unsupported = |message: &str| {
++            (
++                owner.clone(),
++                Diagnostic::new(class.offset, message).with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "INNER_CLASS_SHAPE_UNSUPPORTED",
++                ),
++            )
++        };
++        let Some(parent) = parents
++            .get(owner)
++            .and_then(|parent| units.iter().find(|(owner, _)| owner == parent))
++            .map(|(_, unit)| unit)
++        else {
++            return Err(invalid("Inner classes require an enclosing class instance"));
++        };
++        if parent.object_decl.is_some() || parent.interface_decl.is_some() {
++            return Err(invalid(
++                "Inner classes cannot occur in objects or interfaces",
++            ));
++        }
++        if class.data || class.sealed_ {
++            return Err(invalid("Inner classes cannot be data or sealed classes"));
++        }
++        if class.companion.is_some() || class.nested.iter().any(|declaration| !matches!(declaration, syntax::Declaration::Class(class) if class.inner)) { return Err(invalid("Static nested declarations cannot occur inside inner classes")); }
++        let Some(outer) = &parent.class_decl else {
++            return Err(unsupported(
++                "Inner classes inside enum declarations are unsupported",
++            ));
++        };
++        let mut generated = outer
++            .methods
++            .iter()
++            .filter(|method| method.function.private)
++            .map(|method| format!("access${}", method.function.name))
++            .collect::<Vec<_>>();
++        for name in outer
++            .param_properties
++            .iter()
++            .filter(|name| !outer.public_params.contains(name))
++            .chain(
++                outer
++                    .properties
++                    .iter()
++                    .filter(|property| property.private)
++                    .map(|property| &property.name),
++            )
++        {
++            generated.push(format!("access$get${name}$p"));
++            generated.push(format!("access$set${name}$p"));
++        }
++        if outer
++            .methods
++            .iter()
++            .any(|method| generated.contains(&method.function.name))
++        {
++            return Err(unsupported(
++                "Outer member names conflict with generated lexical access bridges",
++            ));
++        }
++        if class
++            .param_annotations
++            .iter()
++            .any(|annotations| !annotations.is_empty())
++            || outer.inner
++            || !outer.type_params.is_empty()
++            || !class.type_params.is_empty()
++            || !class.nested.is_empty()
++            || class.companion.is_some()
++            || !class.secondary_constructors.is_empty()
++            || class.defaults.iter().any(Option::is_some)
++            || class.abstract_
++            || class.open
++        {
++            return Err(unsupported(
++                "Generic, chained, open, abstract, annotated, defaulted and secondary inner constructors are unsupported",
++            ));
++        }
++        if class.params.iter().any(|(name, _)| name == "this$0")
++            || class
++                .properties
++                .iter()
++                .any(|property| property.name == "this$0")
++        {
++            return Err(unsupported(
++                "An inner member conflicts with the enclosing instance field",
++            ));
++        }
++    }
++    Ok(())
++}
+diff --git a/src/lib.rs b/src/lib.rs
+index 7ffff36ac..b3d2581b8 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -4,6 +4,7 @@ mod check;
+ mod classpath;
+ mod compiled_inline;
+ mod const_eval;
++mod inner_classes;
+ mod jvm_descriptor;
+ mod metadata;
+ mod object_lowering;
+@@ -266,6 +267,8 @@ pub fn compile_batch_with_options(
+             }
+         }
+     }
++    inner_classes::validate(&units, &lexical_parents)
++        .map_err(|(owner, error)| error.for_source(&sources[owner_sources[&owner]].identity))?;
+     validate_alias_classifiers(&modules, &sources)?;
+     let type_locations = units
+         .iter()
+@@ -330,6 +333,27 @@ pub fn compile_batch_with_options(
+                 .map(|name| (name, owner.clone()))
+         })
+         .collect::<Vec<_>>();
++    let normalize_imports = |module: &mut syntax::Module| {
++        for (_, path, _) in &mut module.imports {
++            if let Some((_, owner)) = source_names.iter().find(|(_, owner)| {
++                lexical_parents.contains_key(owner) && owner.replace('$', "/") == *path
++            }) {
++                *path = owner.clone();
++            }
++        }
++    };
++    for module in &mut modules {
++        normalize_imports(module);
++    }
++    for (owner, unit) in &mut units {
++        normalize_imports(unit);
++        if lexical_parents.contains_key(owner) {
++            if let Some((name, _)) = source_names.iter().find(|(_, path)| path == owner) {
++                unit.imports
++                    .retain(|(alias, path, _)| alias != name || path != owner);
++            }
++        }
++    }
+     for (owner, unit) in &units {
+         classpath.register_value_scope(owner, &modules[owner_sources[owner]]);
+         classpath.register_source_file(
+@@ -1277,6 +1301,11 @@ fn add_nested_attributes(
+             } else {
+                 0x19
+             };
++            let access = if unit.class_decl.as_ref().is_some_and(|class| class.inner) {
++                access & !8
++            } else {
++                access
++            };
+             Some((owner.clone(), outer.to_owned(), short.to_owned(), access))
+         })
+         .collect::<Vec<_>>();
+diff --git a/src/metadata.rs b/src/metadata.rs
+index 3053054dc..a15a8824d 100644
+--- a/src/metadata.rs
++++ b/src/metadata.rs
+@@ -968,6 +968,7 @@ fn class_metadata(
+             6
+         }) | u32::from(!class.annotations.is_empty())
+             | if class.data { 1024 } else { 0 }
++            | if class.inner { 512 } else { 0 }
+             | if class.sealed_ {
+                 48
+             } else if class.abstract_ {
+@@ -1031,6 +1032,9 @@ fn class_metadata(
+         let mut constructor = Proto::default();
+         constructor.number(1, if class.sealed_ { 4 } else { 6 });
+         let mut constructor_desc = String::from("(");
++        if class.inner {
++            constructor_desc.push_str(&format!("L{};", internal_name.rsplit_once('$').unwrap().0));
++        }
+         if let Some(checked) = checked {
+             interface_delegation_members(&mut proto, checked, imports, &mut strings)?;
+         }
+@@ -1693,7 +1697,11 @@ pub(crate) fn for_checked_class(
+             bind(source, checked, &mut bindings);
+         }
+     }
+-    for ((_, source), (_, checked)) in source.params.iter().zip(&checked.params) {
++    for ((_, source), (_, checked)) in source
++        .params
++        .iter()
++        .zip(checked.params.iter().skip(usize::from(source.inner)))
++    {
+         bind(source, checked, &mut bindings);
+     }
+     for property in &source.properties {
+diff --git a/src/syntax.rs b/src/syntax.rs
+index 054e2d33e..6de2ceffd 100644
+--- a/src/syntax.rs
++++ b/src/syntax.rs
+@@ -464,6 +464,7 @@ pub enum ConstValue {
+ }
+ #[derive(Clone, Debug)]
+ pub struct ClassDecl {
++    pub inner: bool,
+     pub interface_delegates: Vec<InterfaceDelegate>,
+     pub sealed_: bool,
+     pub type_params: Vec<TypeParameter>,
+@@ -2237,6 +2238,7 @@ impl Parser {
+                     | "lateinit"
+                     | "override"
+                     | "value"
++                    | "inner"
+                     | "companion"
+                     | "\n"
+             ) {
+@@ -3346,6 +3348,7 @@ impl Parser {
+         let mut annotations = self.annotations()?;
+         let mut visibility = None;
+         let mut final_modifier = false;
++        let mut inner = false;
+         let mut data = false;
+         let mut open = false;
+         let mut abstract_ = false;
+@@ -3366,6 +3369,11 @@ impl Parser {
+                 }
+                 visibility = Some(self.token().text.clone());
+                 self.pos += 1;
++            } else if self.take("inner") {
++                if inner {
++                    return Err(self.error("Repeated inner modifier"));
++                }
++                inner = true;
+             } else if self.take("data") {
+                 if data {
+                     return Err(self.error("Repeated data modifier"));
+@@ -3619,6 +3627,7 @@ impl Parser {
+                 ));
+         }
+         let declaration = ClassDecl {
++            inner,
+             interface_delegates,
+             sealed_,
+             type_params,
+@@ -3661,15 +3670,6 @@ impl Parser {
+     ) -> Result<()> {
+         self.separators();
+         while !self.at("}") {
+-            if self.at("inner") {
+-                return Err(self
+-                    .error("Inner class declarations are unsupported")
+-                    .with_kind(
+-                        DiagnosticKind::UnsupportedLanguage,
+-                        "INNER_CLASS_UNSUPPORTED",
+-                    ));
+-            }
+-
+             if self.at("<eof>") {
+                 return Err(self.error("Unterminated class body"));
+             }
+@@ -4231,6 +4231,7 @@ impl Parser {
+                 ));
+         }
+         let mut declaration = ClassDecl {
++            inner: false,
+             interface_delegates: Vec::new(),
+             sealed_: false,
+             type_params: Vec::new(),
+@@ -4779,6 +4780,7 @@ impl Parser {
+                 self.lines();
+                 self.expect("{")?;
+                 let mut object = ClassDecl {
++                    inner: false,
+                     interface_delegates: Vec::new(),
+                     sealed_: false,
+                     type_params: Vec::new(),
+@@ -5114,6 +5116,17 @@ impl Parser {
+             StatementKind::Labeled(label, Box::new(self.statement()?))
+         } else if self.at("{") {
+             StatementKind::Block(self.block()?)
++        } else if self.at("inner") {
++            return Err(self
++                .error("Inner modifier requires a class member declaration")
++                .with_kind(DiagnosticKind::InvalidKotlin, "INNER_CLASS_CONTEXT_INVALID"));
++        } else if self.starts_class() {
++            return Err(self
++                .error("Local class declarations with lexical captures are unsupported")
++                .with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "LOCAL_CLASS_UNSUPPORTED",
++                ));
+         } else if self.starts_declaration("fun") {
+             StatementKind::LocalFunction(Box::new(self.function()?))
+         } else if self.at("val") || self.at("var") {
+diff --git a/tests/inner_classes.rs b/tests/inner_classes.rs
+new file mode 100644
+index 000000000..907bca405
+--- /dev/null
++++ b/tests/inner_classes.rs
+@@ -0,0 +1,82 @@
++use korrust::{DiagnosticKind, SourceInput, compile_batch_with_classpath};
++use std::path::PathBuf;
++
++fn standard() -> PathBuf {
++    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc/lib/kotlin-stdlib.jar")
++}
++
++#[test]
++fn inner_instances_capture_outer_state_and_retain_source_identity() {
++    let input = SourceInput {
++        identity: "/original/Outer.kt".into(),
++        file_name: "Outer.kt".into(),
++        source: include_str!("inner_classes/Outer.kt").into(),
++    };
++    let outputs = compile_batch_with_classpath(&[input], &[standard()], "inner_test").unwrap();
++    for name in [
++        "innerprobe/Outer.class",
++        "innerprobe/Outer$Inner.class",
++        "innerprobe/OuterKt.class",
++    ] {
++        assert!(
++            outputs
++                .iter()
++                .any(|output| output.source_identity == "/original/Outer.kt"
++                    && output.output.relative_path == name),
++            "{name}"
++        );
++    }
++}
++
++#[test]
++fn inner_construction_requires_the_correct_nonnull_outer() {
++    for source in [
++        "class Outer { inner class Inner }\nfun bad(): Outer.Inner = Outer.Inner()",
++        "class Outer { inner class Inner }\nfun bad(outer: Outer?): Outer.Inner = outer.Inner()",
++        "import Outer.Inner\nclass Outer { inner class Inner }\nclass Other { fun bad(): Outer.Inner = Inner() }",
++    ] {
++        let input = SourceInput {
++            identity: "/original/Invalid.kt".into(),
++            file_name: "Invalid.kt".into(),
++            source: source.into(),
++        };
++        let error = compile_batch_with_classpath(&[input], &[standard()], "inner_test")
++            .err()
++            .expect("Missing enclosing receiver must reject");
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{source}: {}",
++            error.message
++        );
++        assert_eq!(
++            error.source_identity.as_deref(),
++            Some("/original/Invalid.kt")
++        );
++    }
++}
++
++#[test]
++fn local_capture_and_generic_inner_boundaries_remain_explicit() {
++    for source in [
++        "class Outer<T> { inner class Inner }",
++        "class Outer { inner class Inner<T> }",
++        "class Outer { inner class Inner(val x: Int = 1) }",
++        "fun f(): Int { class Local(val x: Int); return Local(3).x }",
++    ] {
++        let input = SourceInput {
++            identity: "/original/Unsupported.kt".into(),
++            file_name: "Unsupported.kt".into(),
++            source: source.into(),
++        };
++        let error = compile_batch_with_classpath(&[input], &[standard()], "inner_test")
++            .err()
++            .expect("Unsupported captures must reject");
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::UnsupportedLanguage,
++            "{}",
++            error.message
++        );
++    }
++}
+diff --git a/tools/check_inner_classes.py b/tools/check_inner_classes.py
+new file mode 100644
+index 000000000..9ae9e6c32
+--- /dev/null
++++ b/tools/check_inner_classes.py
+@@ -0,0 +1,188 @@
++#!/usr/bin/env python3
++import argparse
++from collections import Counter
++from datetime import datetime, timezone
++import hashlib
++import json
++import os
++from pathlib import Path
++import platform
++import re
++import subprocess
++import time
++from upstream_jvm import parse_fixture, assess, options_for
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURES = ROOT / 'tests/inner_classes'
++UPSTREAM = ROOT / 'references/kotlin/compiler/testData/codegen/box'
++DECLARED_INNERS = {'innerprobe.Outer$Inner', 'innerprobe.Initialization$Child', 'innerprobe.Shadow$Item', 'innerprobe.PairOuter$Pair', 'innerprobe.ReferenceOuter$Entry'}
++APPS = [('Alkitab/src/main/java/yuku/alkitab/base/dialog/ProgressMarkListDialog.kt', 'Inner adapter uses Android RecyclerView and application dependencies plus remaining unsupported UI/source constructs.'), ('Alkitab/src/main/java/yuku/alkitab/songs/SongViewActivity.kt', 'MediaState captures activity state and calls a private outer method; whole file requires remaining Android, lifecycle and application semantics.'), ('Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt', 'Inner adapter captures generic outer state and lambda callbacks; generic enclosing classes remain unsupported.')]
++ORIGINALS = [('innerNested/innerSimple.kt', True), ('innerNested/innerLabeledThis.kt', True), ('innerNested/kt3132.kt', True), ('innerNested/innerGeneric.kt', False), ('innerNested/innerWithDefaultArgument.kt', False), ('innerNested/innerImplicitParameter.kt', False)]
++
++
++
++def sha(path): return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++def relative(path):
++    path = Path(path).resolve()
++    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
++def cp(*paths): return os.pathsep.join(map(str, paths))
++def signatures(output):
++    result = []
++    active = None
++    def flush():
++        if active and not active['excluded']: result.extend(active['lines'])
++    for line in output.splitlines():
++        line = line.strip()
++        if line.startswith(('public ', 'protected ')) and ' #' not in line:
++            flush()
++            active = {'lines': [line] if ';' in line or line.endswith('{') else [], 'header': line, 'excluded': False}
++        elif line == '}':
++            flush()
++            active = None
++        elif line.startswith('descriptor:') and active:
++            active['lines'].append(line)
++        elif line.startswith('flags:') and active:
++            active['excluded'] = '(' in active['header'] and ' access$' in active['header'] and 'ACC_STATIC' in line and 'ACC_SYNTHETIC' in line and 'ACC_BRIDGE' not in line
++        elif line.startswith('Signature:') and '// ' in line:
++            signature = 'Signature: ' + line.split('// ', 1)[1]
++            if active: active['lines'].append(signature)
++            else: result.append(signature)
++    flush()
++    return sorted(result)
++
++
++
++class Check:
++    def __init__(self, args):
++        self.args = args; self.compiler = args.compiler.resolve(); now = datetime.now(timezone.utc)
++        self.ident = now.strftime('%Y-%m-%dT%H%M%S%fZ') + '-inner-classes'
++        self.work = ROOT / 'target/checks' / self.ident; self.logs = ROOT / 'reports/correctness' / self.ident
++        self.work.mkdir(parents=True); self.logs.mkdir(parents=True)
++        pin = json.loads((ROOT / 'references/compiler.json').read_text()); self.kotlin = ROOT / pin['path'] / 'bin/kotlinc'; self.stdlib = ROOT / pin['path'] / 'lib/kotlin-stdlib.jar'; self.compiler_jar = ROOT / pin['path'] / 'lib/kotlin-compiler.jar'
++        home = Path(os.environ['JAVA_HOME']); self.java, self.javac, self.javap = [home / 'bin' / name for name in ['java', 'javac', 'javap']]
++        self.options = ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8', '-module-name', 'inner_classes']
++        frozen = [*args.source_root.glob('src/**/*.rs'), args.source_root / 'Cargo.toml', args.source_root / 'Cargo.lock', *FIXTURES.glob('*'), Path(__file__), ROOT / 'tests/test_check_inner_classes.py', ROOT / 'tests/inner_classes.rs', ROOT / 'tools/upstream_jvm.py', ROOT / 'base-manifest.json', *[UPSTREAM / name for name, _ in ORIGINALS], *[ROOT / 'benchmarks/sources/androidbible' / name for name, _ in APPS]]
++        self.frozen = {relative(path): sha(path) for path in sorted(frozen) if path.is_file()}
++        self.report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', environment={'platform': platform.platform(), 'java_home': str(home)}, compiler={'binary': relative(self.compiler), 'binary_sha256': sha(self.compiler), 'frozen_source_root': relative(args.source_root)}, reference_compiler={'version': pin['version'], 'archive_sha256': pin['archive_sha256'], 'compiler_jar_sha256': sha(self.compiler_jar), 'options': self.options}, inputs={'files_sha256': self.frozen, 'stdlib_sha256': sha(self.stdlib)}, commands=[], cases=[], evidence=[], reproduction_commands=[['python3', 'tools/check_inner_classes.py', '--compiler', relative(self.compiler), '--source-root', relative(args.source_root)]], limitations=['One bounded family: named inner classes capturing the enclosing instance. Existing static nested classes, ordinary inheritance, extension methods and lambdas are prerequisites.', 'Nongeneric ordinary outer classes and final inner classes. Captured outer identity, state access, method calls, initialization, qualified construction, source/compiled constructors, Kotlin consumers and JVM metadata are checked. Generic/chained source inner classes, secondary/default constructors, open/abstract source inner classes, enum outers, reserved capture-field collisions and local classes remain explicit unsupported boundaries. Nongeneric bound and unbound inner constructor references use ordinary closure lowering. Invalid static nested declarations within inner classes remain invalid Kotlin.', 'Fixed Java callers compile once against official output and execute against both outputs with full JVM verification. Relevant public ABI and decoded Kotlin metadata are compared. No unchanged whole AndroidBible file, APK/device/full-app, optimization, or complete Kotlin compatibility claim.'])
++
++
++    def run(self, label, command, accepted=(0,)):
++        started = time.monotonic(); result = subprocess.run(list(map(str, command)), cwd=ROOT, capture_output=True, text=True, timeout=300)
++        entry = {'label': label, 'argv': list(map(str, command)), 'cwd': '.', 'exit_code': result.returncode, 'wall_time_seconds': time.monotonic() - started}
++        for stream in ['stdout', 'stderr']:
++            path = self.logs / f'{len(self.report["commands"]):03d}-{stream}.txt'; path.write_text(getattr(result, stream)); entry[stream] = relative(path)
++        self.report['commands'].append(entry)
++        if result.returncode not in accepted: raise AssertionError(label + '\n' + result.stdout + result.stderr)
++        return result
++
++    def case(self, ident, passed, **fields): self.report['cases'].append({'id': ident, 'outcome': 'pass' if passed else 'correctness_failure', **fields})
++
++    def compile(self, label, sources, output, dependencies=()):
++        self.run(label + '/official', [self.kotlin, *sources, *self.options, '-cp', cp(*dependencies, self.stdlib), '-d', output['official']])
++        self.run(label + '/candidate', [self.compiler, *sources, '--module-name', 'inner_classes', '--diagnostic-format', 'json', '-cp', cp(*dependencies, self.stdlib), '-d', output['candidate']])
++
++    def exercise(self, name, source, driver, consumer=None, dependencies=()):
++        directory = self.work / name; outputs = {provider: directory / provider for provider in ['official', 'candidate']}
++        self.compile(name, source if isinstance(source, list) else [source], outputs, dependencies)
++        callers = directory / 'callers'; consumer_outputs = {}
++        if consumer:
++            for provider, output in outputs.items():
++                for consumer_compiler in ['official', 'candidate']:
++                    target = directory / f'{provider}-{consumer_compiler}-consumer'
++                    if consumer_compiler == 'official': self.run(f'{name}/consumer/{provider}/official', [self.kotlin, consumer, *self.options, '-cp', cp(output, *dependencies, self.stdlib), '-d', target])
++                    else: self.run(f'{name}/consumer/{provider}/candidate', [self.compiler, consumer, '--module-name', 'inner_classes', '--diagnostic-format', 'json', '-cp', cp(output, *dependencies, self.stdlib), '-d', target])
++                    consumer_outputs[provider, consumer_compiler] = target
++        self.run(name + '/fixed-java', [self.javac, '-cp', cp(outputs['official'], consumer_outputs.get(('official', 'official'), outputs['official']), *dependencies, self.stdlib), '-d', callers, driver])
++        fixed_callers = {relative(file): sha(file) for file in callers.rglob('*.class')}
++        self.report.setdefault('fixed_java_callers_sha256', {})[name] = fixed_callers
++        candidate_callers = directory / 'candidate-java-source'
++        self.run(name + '/candidate-java-source', [self.javac, '-cp', cp(outputs['candidate'], consumer_outputs.get(('candidate', 'official'), outputs['candidate']), *dependencies, self.stdlib), '-d', candidate_callers, driver])
++        self.case(name + '/candidate_java_source_compiles', True)
++        for provider, output in outputs.items():
++            for consumer_compiler in (['official', 'candidate'] if consumer else ['none']):
++                result = self.run(f'{name}/verified/{provider}/{consumer_compiler}', [self.java, '-Xverify:all', '-cp', cp(callers, output, consumer_outputs.get((provider, consumer_compiler), output), *dependencies, self.stdlib), driver.stem])
++                self.case(f'{name}/runtime/{provider}/{consumer_compiler}', result.stdout == '', reused_official_java_bytecodes=True)
++        self.case(name + '/fixed_java_callers_unchanged', fixed_callers == {relative(file): sha(file) for file in callers.rglob('*.class')})
++        for file in sorted(outputs['official'].rglob('*.class')):
++            owner = str(file.relative_to(outputs['official']).with_suffix('')).replace(os.sep, '.')
++            if '$' in owner and owner not in DECLARED_INNERS: continue
++            expected = self.run(name + '/abi/official/' + owner, [self.javap, '-protected', '-s', '-v', '-classpath', outputs['official'], owner]).stdout
++            actual = self.run(name + '/abi/candidate/' + owner, [self.javap, '-protected', '-s', '-v', '-classpath', outputs['candidate'], owner]).stdout
++            self.case(name + '/abi/' + owner, signatures(expected) == signatures(actual), expected=signatures(expected), actual=signatures(actual))
++            for provider in ['official', 'candidate']: self.run(name + '/raw-all-members/' + provider + '/' + owner, [self.javap, '-p', '-s', '-v', '-classpath', outputs[provider], owner])
++        self.report.setdefault('emitted_classes_sha256', {})[name] = {provider: {relative(file): sha(file) for file in output.rglob('*.class')} for provider, output in outputs.items()}
++        return outputs
++
++    def boundary(self, item):
++        directory = self.work / 'boundaries' / item['id']; directory.mkdir(parents=True); source = directory / 'Boundary.kt'; source.write_text(item['source'])
++        expected = self.run('boundary/official/' + item['id'], [self.kotlin, source, *self.options, '-cp', self.stdlib, '-d', directory / 'official'], (0, 1))
++        actual = self.run('boundary/candidate/' + item['id'], [self.compiler, source, '--diagnostic-format', 'json', '-cp', self.stdlib, '-d', directory / 'candidate'], (0, 1))
++        diagnostics = [json.loads(line) for line in actual.stderr.splitlines() if line.startswith('{')]; category = 'invalid_kotlin' if item['official'] == 'reject' else 'unsupported_language'
++        passed = (expected.returncode == 0) == (item['official'] == 'accept') and actual.returncode != 0 and any(error.get('category') == category and error.get('code') == item['code'] for error in diagnostics)
++        self.report['cases'].append({'id': 'boundary/' + item['id'], 'outcome': ('invalid_rejected' if item['official'] == 'reject' else 'unsupported_language') if passed else 'correctness_failure', 'official_accepted': expected.returncode == 0, 'diagnostics': diagnostics, 'source_sha256': sha(source)})
++
++    def original(self, name, supported):
++        original = UPSTREAM / name; fixture = parse_fixture(original); state, reasons = assess(fixture, 'box')
++        if state != 'ready': self.report['cases'].append({'id': 'upstream/' + name, 'outcome': state, 'reasons': reasons}); return
++        if len(fixture['modules']) != 1 or len(fixture['modules'][0]['files']) != 1: raise AssertionError('Unexpected upstream module structure: ' + name)
++        module = fixture['modules'][0]; file = module['files'][0]; directory = self.work / 'upstream' / Path(name).stem; source = directory / file['name']; source.parent.mkdir(parents=True); source.write_text(file['text'])
++        self.report.setdefault('upstream_materializations', []).append({'original': relative(original), 'sha256': fixture['sha256'], 'module': {key: value for key, value in module.items() if key != 'files'}, 'materialized': relative(source), 'materialized_sha256': sha(source), 'original_char_offsets': file['original_char_offsets']})
++        expected = self.run('upstream/official/' + name, [self.kotlin, source, *options_for(module), '-module-name', module['name'], '-cp', self.stdlib, '-d', directory / 'official'])
++        actual = self.run('upstream/candidate/' + name, [self.compiler, source, '--diagnostic-format', 'json', '--module-name', module['name'], '-cp', self.stdlib, '-d', directory / 'candidate'], (0, 1))
++        if not supported:
++            diagnostics = [json.loads(line) for line in actual.stderr.splitlines() if line.startswith('{')]
++            valid = actual.returncode != 0 and diagnostics and diagnostics[0].get('category') == 'unsupported_language'
++            self.report['cases'].append({'id': 'upstream/' + name, 'outcome': 'unsupported_language' if valid else 'correctness_failure', 'diagnostics': diagnostics, 'original_sha256': fixture['sha256']}); return
++        if actual.returncode: self.case('upstream/' + name, False, diagnostics=actual.stderr); return
++        facade = Path(file['name']).stem; facade = facade[0].upper() + facade[1:] + 'Kt'; package = re.search(r'^package\s+([\w.]+)', file['text'], re.M); owner = (package.group(1) + '.' if package else '') + facade
++        driver = directory / 'OriginalCheck.java'; driver.write_text('public final class OriginalCheck { public static void main(String[] args) { if (!' + owner + '.box().equals("OK")) throw new AssertionError(); } }')
++        self.run('upstream/fixed-java/' + name, [self.javac, '-cp', cp(directory / 'official', self.stdlib), '-d', directory / 'callers', driver])
++        fixed_callers = {relative(file): sha(file) for file in (directory / 'callers').rglob('*.class')}
++        self.report.setdefault('fixed_java_callers_sha256', {})['upstream/' + name] = fixed_callers
++        self.report.setdefault('generated_sources_sha256', {})[relative(driver)] = sha(driver)
++        for provider in ['official', 'candidate']:
++            result = self.run('upstream/verified/' + provider + '/' + name, [self.java, '-Xverify:all', '-cp', cp(directory / 'callers', directory / provider, self.stdlib), 'OriginalCheck'])
++            self.case('upstream/' + name + '/' + provider, result.stdout == '', original_sha256=fixture['sha256'], reused_official_java_bytecodes=True)
++
++        self.case('upstream/' + name + '/fixed_java_callers_unchanged', fixed_callers == {relative(file): sha(file) for file in (directory / 'callers').rglob('*.class')})
++        for file in sorted((directory / 'official').rglob('*.class')):
++            owner = str(file.relative_to(directory / 'official').with_suffix('')).replace(os.sep, '.')
++            expected = self.run('upstream/abi/official/' + name + '/' + owner, [self.javap, '-protected', '-s', '-v', '-classpath', directory / 'official', owner]).stdout
++            actual = self.run('upstream/abi/candidate/' + name + '/' + owner, [self.javap, '-protected', '-s', '-v', '-classpath', directory / 'candidate', owner]).stdout
++            self.case('upstream/' + name + '/abi/' + owner, signatures(expected) == signatures(actual), expected=signatures(expected), actual=signatures(actual))
++
++    def execute(self):
++        self.report['abi_policy'] = {'required': 'Public/protected declared methods, constructors, fields, signatures, generic bridges and default helpers are compared. Static synthetic access$ private-access helpers are excluded using method identity and JVM modifiers together; source methods are not excluded by name alone.', 'known_difference': 'Korrust retains its existing package-private synthetic lexical bridge names/visibility. Kotlin uses public final synthetic private-access helpers. Raw all-member javap output is preserved.', 'provider_replacement_scope': 'Each provider supplies the complete related outer and inner class set. Official generated inner classes are not mixed with candidate outer classes. No reflection-exact claim.'}
++        self.report['inputs']['androidbible_sources_reviewed'] = [{'path': 'benchmarks/sources/androidbible/' + name, 'sha256': sha(ROOT / 'benchmarks/sources/androidbible' / name), 'whole_file_status': 'not_assessed', 'reason': reason, 'new_unchanged_file_claim': False} for name, reason in APPS]
++        self.run('JDK identity', [self.java, '-version'])
++        outer = self.exercise('outer', FIXTURES / 'Outer.kt', FIXTURES / 'InnerCheck.java', FIXTURES / 'Consumer.kt')
++        self.exercise('batch_import', [FIXTURES / 'Outer.kt', FIXTURES / 'BatchConsumer.kt'], FIXTURES / 'BatchCheck.java')
++        dependency = self.work / 'java-parent'
++        self.run('Java superclass dependency', [self.javac, '-d', dependency, FIXTURES / 'JavaParent.java'])
++        initialization = self.exercise('initialization', FIXTURES / 'Initialization.kt', FIXTURES / 'InitializationCheck.java', dependencies=(dependency,))
++        tool = self.work / 'metadata-tool'
++        self.run('Metadata decoder', [self.javac, '-cp', cp(self.compiler_jar, self.stdlib), '-d', tool, FIXTURES / 'MetadataDump.java'])
++        decoded = {}
++        for provider in ['official', 'candidate']:
++            result = self.run('Decoded inner metadata/' + provider, [self.java, '-cp', cp(tool, outer[provider], initialization[provider], dependency, self.compiler_jar, self.stdlib), 'MetadataDump', 'innerprobe.Outer$Inner', 'innerprobe.Initialization$Child', 'innerprobe.Shadow$Item', 'innerprobe.PairOuter$Pair', 'innerprobe.ReferenceOuter$Entry'])
++            decoded[provider] = sorted(result.stdout.splitlines())
++        self.case('metadata/inner_receiver_and_constructor_facts', decoded['official'] == decoded['candidate'], expected=decoded['official'], actual=decoded['candidate'])
++        for item in json.loads((FIXTURES / 'Rejections.json').read_text()): self.boundary(item)
++        for name, supported in ORIGINALS: self.original(name, supported)
++
++    def finish(self):
++        changed = [path for path, digest in self.frozen.items() if sha(ROOT / path) != digest]; self.case('frozen_inputs', not changed and sha(self.compiler) == self.report['compiler']['binary_sha256'], changed=changed)
++        counts = dict(Counter(case['outcome'] for case in self.report['cases'])); self.report['counts'] = counts; failed = sum(count for outcome, count in counts.items() if outcome not in ['pass', 'invalid_rejected', 'unsupported_language'])
++        self.report['feature_acceptance'] = {'family': 'named_inner_classes_with_enclosing_instance', 'status': 'failed' if failed else 'passed', 'derived_counts': counts}
++        self.report['status'] = 'failed' if failed else 'completed'; path = ROOT / 'reports/correctness' / (self.ident + '.json'); path.write_text(json.dumps(self.report, indent=2) + '\n')
++        subprocess.run(['python3', 'tools/reports.py'], cwd=ROOT, check=True, capture_output=True, text=True); print(relative(path)); print(json.dumps(counts, sort_keys=True)); return int(bool(failed))
++
++
++def main():
++    parser = argparse.ArgumentParser(); parser.add_argument('--compiler', type=Path, required=True); parser.add_argument('--source-root', type=Path, default=ROOT); args = parser.parse_args(); args.source_root = args.source_root.resolve(); check = Check(args)
++    try: check.execute()
++    except Exception as error: check.report['cases'].append({'id': 'harness', 'outcome': 'correctness_failure', 'error': str(error)})
++    return check.finish()
++
++
++if __name__ == '__main__': raise SystemExit(main())
+diff --git a/tests/inner_classes/BatchCheck.java b/tests/inner_classes/BatchCheck.java
+new file mode 100644
+index 000000000..9ea2b9cd7
+--- /dev/null
++++ b/tests/inner_classes/BatchCheck.java
+@@ -0,0 +1,11 @@
++import innerprobe.Outer;
++import innerconsumer.BatchConsumerKt;
++public final class BatchCheck {
++    public static void main(String[] args) {
++        Outer outer = new Outer(11);
++        Outer.Inner inner = BatchConsumerKt.batchMake(outer);
++        if (BatchConsumerKt.batchRead(inner) != 13 || inner.outer() != outer) throw new AssertionError();
++        outer.setValue(20);
++        if (BatchConsumerKt.batchRead(inner) != 22) throw new AssertionError();
++    }
++}
+diff --git a/tests/inner_classes/BatchConsumer.kt b/tests/inner_classes/BatchConsumer.kt
+new file mode 100644
+index 000000000..cd7061437
+--- /dev/null
++++ b/tests/inner_classes/BatchConsumer.kt
+@@ -0,0 +1,5 @@
++package innerconsumer
++import innerprobe.Outer.Inner as ImportedInner
++import innerprobe.Outer
++fun batchRead(inner: ImportedInner): Int = inner.read()
++fun batchMake(outer: Outer): ImportedInner = outer.Inner(2)
+diff --git a/tests/inner_classes/Consumer.kt b/tests/inner_classes/Consumer.kt
+new file mode 100644
+index 000000000..c0c890497
+--- /dev/null
++++ b/tests/inner_classes/Consumer.kt
+@@ -0,0 +1,7 @@
++package innerconsumer
++import innerprobe.Outer
++fun consume(): Int {
++    val first = Outer(9)
++    val inner = first.Inner(4)
++    return inner.read() + inner.outer().value + inner.delta
++}
+diff --git a/tests/inner_classes/ConsumerCheck.java b/tests/inner_classes/ConsumerCheck.java
+new file mode 100644
+index 000000000..77bd6072b
+--- /dev/null
++++ b/tests/inner_classes/ConsumerCheck.java
+@@ -0,0 +1 @@
++public final class ConsumerCheck { public static void main(String[] args) { if (innerconsumer.ConsumerKt.consume() != 26) throw new AssertionError(); } }
+diff --git a/tests/inner_classes/Initialization.kt b/tests/inner_classes/Initialization.kt
+new file mode 100644
+index 000000000..39e32012c
+--- /dev/null
++++ b/tests/inner_classes/Initialization.kt
+@@ -0,0 +1,35 @@
++package innerprobe
++class Initialization(var value: Int) {
++    inner class Child(val delta: Int) : JavaParent(value) {
++        val initialized: Int = read()
++        override fun read(): Int = this@Initialization.value + delta
++    }
++    fun make(delta: Int): Child = Child(delta)
++}
++class Shadow(val value: Int) {
++    inner class Item(val value: Int) {
++        fun sum(): Int = value + this@Shadow.value
++        fun local(value: Int): Int = value + this.value + this@Shadow.value
++    }
++}
++class PairOuter(val start: Int) {
++    inner class Pair(val first: Int, val second: Int) {
++        fun sum(): Int = start + first + second
++    }
++}
++var order: Int = 0
++fun record(value: Int): Int { order = order * 10 + value; return value }
++fun factory(): PairOuter { record(1); return PairOuter(100) }
++fun ordered(): Int = factory().Pair(second = record(2), first = record(3)).sum()
++fun nullable(): PairOuter? { record(1); return null }
++fun failsBeforeArguments(): Int = nullable()!!.Pair(record(2), record(3)).sum()
++fun bound(outer: PairOuter): (Int, Int) -> PairOuter.Pair = outer::Pair
++fun unbound(): (PairOuter, Int, Int) -> PairOuter.Pair = PairOuter::Pair
++
++fun safeFactory(outer: PairOuter?): PairOuter.Pair? = outer?.Pair(record(2), record(3))
++class ReferenceOuter(val label: String?) {
++    inner class Entry(val name: String, val count: Long, val weight: Double, val maybe: String?) {
++        fun text(): String = (this@ReferenceOuter.label ?: "none") + ":" + name + ":" + (maybe ?: "null")
++        fun score(): Double = count.toDouble() + weight
++    }
++}
+diff --git a/tests/inner_classes/InitializationCheck.java b/tests/inner_classes/InitializationCheck.java
+new file mode 100644
+index 000000000..4acd1a164
+--- /dev/null
++++ b/tests/inner_classes/InitializationCheck.java
+@@ -0,0 +1,29 @@
++import innerprobe.*;
++public final class InitializationCheck {
++    private static void eq(int expected, int actual) { if (expected != actual) throw new AssertionError(expected + " != " + actual); }
++    public static void main(String[] args) throws Exception {
++        Initialization outer = new Initialization(6);
++        Initialization.Child child = outer.make(4);
++        eq(12, child.during); eq(10, child.getInitialized()); eq(10, child.read());
++        outer.setValue(10); eq(14, child.read()); eq(10, child.getInitialized());
++        Shadow.Item item = new Shadow(20).new Item(3); eq(23, item.sum()); eq(27, item.local(4));
++        InitializationKt.setOrder(0); eq(105, InitializationKt.ordered()); eq(123, InitializationKt.getOrder());
++        InitializationKt.setOrder(0);
++        try { InitializationKt.failsBeforeArguments(); throw new AssertionError("expected null failure"); } catch (NullPointerException expected) {}
++        eq(1, InitializationKt.getOrder());
++        InitializationKt.setOrder(0);
++        if (InitializationKt.safeFactory(null) != null) throw new AssertionError("safe null");
++        eq(0, InitializationKt.getOrder());
++        PairOuter pairOuter = new PairOuter(8);
++        eq(13, InitializationKt.safeFactory(pairOuter).sum()); eq(23, InitializationKt.getOrder());
++        eq(13, InitializationKt.bound(pairOuter).invoke(2, 3).sum());
++        eq(15, InitializationKt.unbound().invoke(pairOuter, 3, 4).sum());
++        ReferenceOuter.Entry reference = new ReferenceOuter(null).new Entry("x", 4L, 2.5d, null);
++        if (!reference.text().equals("none:x:null") || reference.score() != 6.5d) throw new AssertionError("reference and wide constructor parameters");
++        Class<?> type = Initialization.Child.class;
++        if (type.getDeclaringClass() != Initialization.class || java.lang.reflect.Modifier.isStatic(type.getModifiers())) throw new AssertionError("inner nesting");
++        var field = type.getDeclaredField("this$0");
++        if (!field.isSynthetic() || !java.lang.reflect.Modifier.isFinal(field.getModifiers())) throw new AssertionError("capture field");
++        if (type.getDeclaredConstructors()[0].getParameterTypes()[0] != Initialization.class) throw new AssertionError("enclosing parameter");
++    }
++}
+diff --git a/tests/inner_classes/InnerCheck.java b/tests/inner_classes/InnerCheck.java
+new file mode 100644
+index 000000000..5f5c246c4
+--- /dev/null
++++ b/tests/inner_classes/InnerCheck.java
+@@ -0,0 +1,17 @@
++import innerprobe.Outer;
++public final class InnerCheck {
++    private static void eq(int expected, int actual) { if (expected != actual) throw new AssertionError(expected + " != " + actual); }
++    public static void main(String[] args) {
++        eq(26, innerconsumer.ConsumerKt.consume());
++        Outer outer = new Outer(10);
++        Outer.Inner first = outer.new Inner(2);
++        Outer.Inner second = outer.make(5);
++        Outer.Inner third = innerprobe.OuterKt.qualified(outer, 3);
++        eq(12, first.getAtInit()); eq(15, second.read()); eq(13, third.read());
++        if (first.outer() != outer) throw new AssertionError("outer identity");
++        kotlin.jvm.functions.Function0<Integer> callback = first.callback();
++        eq(20, first.update(20)); eq(25, second.read()); eq(22, callback.invoke());
++        eq(9, first.reveal()); eq(9, second.readSecret()); eq(14, second.reveal()); eq(14, first.readSecret());
++        Outer other = new Outer(100); eq(103, other.new Inner(3).read()); eq(22, first.read());
++    }
++}
+diff --git a/tests/inner_classes/JavaParent.java b/tests/inner_classes/JavaParent.java
+new file mode 100644
+index 000000000..cd690a386
+--- /dev/null
++++ b/tests/inner_classes/JavaParent.java
+@@ -0,0 +1,6 @@
++package innerprobe;
++public abstract class JavaParent {
++    public final int during;
++    protected JavaParent(int base) { during = base + read(); }
++    public abstract int read();
++}
+diff --git a/tests/inner_classes/MetadataDump.java b/tests/inner_classes/MetadataDump.java
+new file mode 100644
+index 000000000..58765e923
+--- /dev/null
++++ b/tests/inner_classes/MetadataDump.java
+@@ -0,0 +1,27 @@
++import java.util.*;
++import org.jetbrains.kotlin.metadata.deserialization.Flags;
++import org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil;
++public final class MetadataDump {
++    public static void main(String[] args) throws Exception {
++        for (String owner : args) {
++            Class<?> type = Class.forName(owner, false, MetadataDump.class.getClassLoader());
++            kotlin.Metadata metadata = type.getAnnotation(kotlin.Metadata.class);
++            if (metadata == null || metadata.k() != 1) throw new AssertionError("class metadata absent");
++            var decoded = JvmProtoBufUtil.readClassDataFrom(metadata.d1(), metadata.d2());
++            var proto = decoded.getSecond();
++            if (!Flags.IS_INNER.get(proto.getFlags())) throw new AssertionError("inner metadata absent");
++            System.out.println(owner + " INNER=true");
++            for (var constructor : proto.getConstructorList()) {
++                var names = new ArrayList<String>();
++                for (var parameter : constructor.getValueParameterList()) names.add(decoded.getFirst().getString(parameter.getName()));
++                if (names.contains("this$0")) throw new AssertionError("synthetic receiver became value parameter");
++                System.out.println(owner + " CONSTRUCTOR=" + names);
++            }
++            var names = new ArrayList<String>();
++            for (var property : proto.getPropertyList()) names.add(decoded.getFirst().getString(property.getName()));
++            Collections.sort(names);
++            if (names.contains("this$0")) throw new AssertionError("synthetic receiver became property");
++            System.out.println(owner + " PROPERTIES=" + names);
++        }
++    }
++}
+diff --git a/tests/inner_classes/Outer.kt b/tests/inner_classes/Outer.kt
+new file mode 100644
+index 000000000..391284e50
+--- /dev/null
++++ b/tests/inner_classes/Outer.kt
+@@ -0,0 +1,16 @@
++package innerprobe
++class Outer(var value: Int) {
++    private var secret: Int = 7
++    private fun hidden(delta: Int): Int { secret = secret + delta; return secret }
++    fun make(delta: Int): Inner = Inner(delta)
++    inner class Inner(val delta: Int) {
++        val atInit: Int = value + delta
++        fun read(): Int = value + delta
++        fun update(next: Int): Int { value = next; return this@Outer.value }
++        fun reveal(): Int = hidden(delta)
++        fun readSecret(): Int = secret
++        fun callback(): () -> Int = { value + delta }
++        fun outer(): Outer = this@Outer
++    }
++}
++fun qualified(outer: Outer, delta: Int): Outer.Inner = outer.Inner(delta)
+diff --git a/tests/inner_classes/Rejections.json b/tests/inner_classes/Rejections.json
+new file mode 100644
+index 000000000..53aeb5c0e
+--- /dev/null
++++ b/tests/inner_classes/Rejections.json
+@@ -0,0 +1,146 @@
++[
++  {
++    "id": "nested_class",
++    "source": "class Outer { inner class Inner { class Nested } }\n",
++    "official": "reject",
++    "code": "INNER_CLASS_CONTEXT_INVALID"
++  },
++  {
++    "id": "nested_object",
++    "source": "class Outer { inner class Inner { object Nested } }\n",
++    "official": "reject",
++    "code": "INNER_CLASS_CONTEXT_INVALID"
++  },
++  {
++    "id": "companion",
++    "source": "class Outer { inner class Inner { companion object } }\n",
++    "official": "reject",
++    "code": "INNER_CLASS_CONTEXT_INVALID"
++  },
++  {
++    "id": "storage_collision",
++    "source": "class Outer { inner class Inner(val `this$0`: Outer) }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  },
++  {
++    "id": "property_collision",
++    "source": "class Outer { inner class Inner { val `this$0`: Int = 1 } }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  },
++  {
++    "id": "toplevel",
++    "source": "inner class Inner\n",
++    "official": "reject",
++    "code": "INNER_CLASS_CONTEXT_INVALID"
++  },
++  {
++    "id": "object",
++    "source": "object Outer { inner class Inner }\n",
++    "official": "reject",
++    "code": "INNER_CLASS_CONTEXT_INVALID"
++  },
++  {
++    "id": "interface",
++    "source": "interface Outer { inner class Inner }\n",
++    "official": "reject",
++    "code": "INNER_CLASS_CONTEXT_INVALID"
++  },
++  {
++    "id": "data",
++    "source": "class Outer { inner data class Inner(val x: Int) }\n",
++    "official": "reject",
++    "code": "INNER_CLASS_CONTEXT_INVALID"
++  },
++  {
++    "id": "sealed",
++    "source": "class Outer { inner sealed class Inner }\n",
++    "official": "reject",
++    "code": "INNER_CLASS_CONTEXT_INVALID"
++  },
++  {
++    "id": "outer_generic",
++    "source": "class Outer<T> { inner class Inner }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  },
++  {
++    "id": "inner_generic",
++    "source": "class Outer { inner class Inner<T> }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  },
++  {
++    "id": "chain",
++    "source": "class Outer { inner class Inner { inner class Further } }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  },
++  {
++    "id": "secondary",
++    "source": "class Outer { inner class Inner { constructor(x: Int) {} } }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  },
++  {
++    "id": "default",
++    "source": "class Outer { inner class Inner(val x: Int = 3) }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  },
++  {
++    "id": "abstract",
++    "source": "class Outer { inner abstract class Inner }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  },
++  {
++    "id": "open",
++    "source": "class Outer { inner open class Inner }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  },
++  {
++    "id": "local",
++    "source": "fun f(): Int { class Local(val x: Int); return Local(3).x }\n",
++    "official": "accept",
++    "code": "LOCAL_CLASS_UNSUPPORTED"
++  },
++  {
++    "id": "missing_receiver",
++    "source": "class Outer { inner class Inner }\nfun bad(): Outer.Inner = Outer.Inner()\n",
++    "official": "reject",
++    "code": "INNER_CONSTRUCTOR_RECEIVER_REQUIRED"
++  },
++  {
++    "id": "nullable_receiver",
++    "source": "class Outer { inner class Inner }\nfun bad(outer: Outer?): Outer.Inner = outer.Inner()\n",
++    "official": "reject",
++    "code": "INNER_CONSTRUCTOR_RECEIVER_INVALID"
++  },
++  {
++    "id": "local_inner",
++    "source": "fun bad(): Int { inner class Inner; return 0 }\n",
++    "official": "reject",
++    "code": "INNER_CLASS_CONTEXT_INVALID"
++  },
++  {
++    "id": "imported_missing_receiver",
++    "source": "import Outer.Inner\nclass Outer { inner class Inner }\nclass Other { fun bad(): Outer.Inner = Inner() }\n",
++    "official": "reject",
++    "code": "INNER_CONSTRUCTOR_RECEIVER_REQUIRED"
++  },
++  {
++    "id": "bridge_collision",
++    "source": "class Outer { private val secret: Int = 1; fun `access$get$secret$p`(outer: Outer): Int = 1; inner class Inner { fun read(): Int = secret } }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  },
++  {
++    "id": "constructor_annotations",
++    "source": "annotation class Ann\nclass Outer { inner class Inner(@Ann val value: Int) }\n",
++    "official": "accept",
++    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
++  }
++]
+diff --git a/tests/test_check_inner_classes.py b/tests/test_check_inner_classes.py
+new file mode 100644
+index 000000000..e41dfc14b
+--- /dev/null
++++ b/tests/test_check_inner_classes.py
+@@ -0,0 +1,31 @@
++import sys
++from pathlib import Path
++import unittest
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
++from check_inner_classes import signatures
++
++
++class ConsumerAbiPolicyTest(unittest.TestCase):
++    def test_compiler_private_access_helpers_require_synthetic_static_modifiers(self):
++        text = '''public final class Sample {
++  public static final int access$hidden(Sample);
++    descriptor: (LSample;)I
++    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC
++}'''
++        self.assertEqual(signatures(text), ['public final class Sample {'])
++
++    def test_source_members_constructors_fields_default_helpers_and_bridges_are_retained(self):
++        for header, flags, descriptor in [
++            ('public int access$source();', 'ACC_PUBLIC', '()I'),
++            ('public static int source$default();', 'ACC_PUBLIC, ACC_STATIC, ACC_SYNTHETIC', '()I'),
++            ('public Sample(Sample);', 'ACC_PUBLIC, ACC_SYNTHETIC', '(LSample;)V'),
++            ('public static int access$field;', 'ACC_PUBLIC, ACC_STATIC, ACC_SYNTHETIC', 'I'),
++            ('public int access$bridge();', 'ACC_PUBLIC, ACC_SYNTHETIC, ACC_BRIDGE', '()I'),
++        ]:
++            with self.subTest(header=header):
++                self.assertEqual(signatures(header + '\n descriptor: ' + descriptor + '\n flags: ' + flags), sorted([header, 'descriptor: ' + descriptor]))
++
++
++if __name__ == '__main__':
++    unittest.main()

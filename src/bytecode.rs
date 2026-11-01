@@ -1776,7 +1776,11 @@ impl Code<'_> {
                     self.adapt_value(&result, &value.ty)?;
                     return Ok(());
                 }
-                if self.in_lambda && method.access & 2 != 0 {
+                if (self.in_lambda
+                    || self.owner != method.owner
+                        && self.owner.starts_with(&format!("{}$", method.owner)))
+                    && method.access & 2 != 0
+                {
                     self.method_reference(
                         0xb8,
                         &method.owner,
@@ -2082,7 +2086,11 @@ impl Code<'_> {
                             .map_err(|_| failure("Too many interface call arguments"))?,
                         0,
                     ]);
-                } else if self.in_lambda && method.access & 2 != 0 {
+                } else if (self.in_lambda
+                    || self.owner != method.owner
+                        && self.owner.starts_with(&format!("{}$", method.owner)))
+                    && method.access & 2 != 0
+                {
                     self.method_reference(
                         0xb8,
                         &method.owner,
@@ -4057,12 +4065,15 @@ fn emit_class_with(
             &mut pool,
             &field.name,
             &field.ty,
-            class
-                .exposed_fields
-                .get(&field.name)
-                .copied()
-                .unwrap_or(0x0002)
-                | if field.mutable { 0 } else { 0x0010 },
+            if class.inner && field.name == "this$0" {
+                0x1000
+            } else {
+                class
+                    .exposed_fields
+                    .get(&field.name)
+                    .copied()
+                    .unwrap_or(0x0002)
+            } | if field.mutable { 0 } else { 0x0010 },
         )?);
     }
     for (name, value) in &class.delegated_properties {
@@ -4077,7 +4088,7 @@ fn emit_class_with(
         )?);
     }
     let mut methods = Vec::new();
-    if !lambdas.is_empty() {
+    if !lambdas.is_empty() || class.lexical_bridges {
         for function in class.methods.iter().filter(|function| function.private) {
             methods.push(private_method_bridge(&mut pool, owner, function, false)?);
         }
@@ -4133,7 +4144,7 @@ fn emit_class_with(
             .into_iter()
             .zip(&class.params)
         {
-            if !class.sealed_ && nonnull(ty) {
+            if !class.sealed_ && !(class.inner && name == "this$0") && nonnull(ty) {
                 code.bytes.extend([0x19, slot as u8]);
                 let name = code.pool.string(name)?;
                 code.reference(0x13, name);
@@ -4144,6 +4155,10 @@ fn emit_class_with(
                     "(Ljava/lang/Object;Ljava/lang/String;)V",
                 )?;
             }
+        }
+        if class.inner {
+            code.bytes.extend([0x2a, 0x2b]);
+            code.field_reference(0xb5, owner, "this$0", &class.params[0].1.descriptor())?;
         }
         code.bytes.push(0x2a);
         let super_descriptor = format!(
@@ -4177,6 +4192,9 @@ fn emit_class_with(
         }
         let slots = parameter_slots(&class.params, 1);
         for field in &class.fields {
+            if class.inner && field.name == "this$0" {
+                continue;
+            }
             if field.param.is_none() && field.initializer.is_none() {
                 continue;
             }
@@ -4204,17 +4222,24 @@ fn emit_class_with(
             enum_data
                 .map(enums::constructor_signature)
                 .or_else(|| {
-                    if enum_entry {
+                    let hidden = if enum_entry {
+                        2
+                    } else {
+                        usize::from(class.inner)
+                    };
+                    if hidden != 0 {
                         Some(
-                            generic_method(&class.params[2..], &Type::Unit).unwrap_or_else(|| {
-                                format!(
-                                    "({})V",
-                                    class.params[2..]
-                                        .iter()
-                                        .map(|(_, ty)| ty.descriptor())
-                                        .collect::<String>()
-                                )
-                            }),
+                            generic_method(&class.params[hidden..], &Type::Unit).unwrap_or_else(
+                                || {
+                                    format!(
+                                        "({})V",
+                                        class.params[hidden..]
+                                            .iter()
+                                            .map(|(_, ty)| ty.descriptor())
+                                            .collect::<String>()
+                                    )
+                                },
+                            ),
                         )
                     } else {
                         generic_method(&class.params, &Type::Unit)
@@ -4228,6 +4253,8 @@ fn emit_class_with(
             &mut constructor,
             if enum_data.is_some() {
                 &class.params[2..]
+            } else if class.inner {
+                &class.params[1..]
             } else {
                 &class.params
             },

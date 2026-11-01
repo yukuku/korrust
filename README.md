@@ -172,6 +172,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 132. Bounded source inline functions with reified type tests, casts and class literals, inline parameter modes, and non-local returns.
 133. Member and companion extensions with distinct dispatch and extension receivers, computed extension properties, and bounded generic receiver substitution.
 134. Enum entry-specific subclasses, abstract/open method and interface dispatch, constructor defaults and named arguments, with JVM signatures and Kotlin metadata.
+135. Named inner classes with a stored enclosing instance, outer-state access, qualified construction, bounded constructor references, and JVM/Kotlin consumer metadata.
 
 ## Project contract
 

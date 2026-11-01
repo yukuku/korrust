@@ -419,6 +419,9 @@ impl Checker<'_> {
                 .transpose()?
                 .flatten();
             receivers.push(dispatch);
+            if let Some(outer) = self.enclosing_receiver(offset)? {
+                receivers.push(outer);
+            }
             if let Some(companion) = companion {
                 receivers.push(companion);
             }

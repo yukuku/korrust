@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T18:15:44.283442+00:00",
+  "status": "failed",
+  "environment": {
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "java_home": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "compiler": {
+    "binary": "target/resume-inner/target/korrust-final",
+    "binary_sha256": "8830e551c1376a9c65f74e764c86d88f2d980ae34824be43a50af80d76dd9574",
+    "frozen_source_root": "target/resume-inner",
+    "base_source_commit": "a404f53775fe3ed937464a33e95d29baa9d69322",
+    "source_manifest": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/freeze.json",
+    "source_changes_patch": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/source-changes.patch",
+    "source_changes_patch_sha256": "0374bcbdefecdfcb04c7275c6d57538a77609979c6568721b77f9100a3955542"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "inner_classes"
+    ]
+  },
+  "inputs": {
+    "files_sha256": {
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/ProgressMarkListDialog.kt": "690d7329dbe77501878390ef8d388e8474b4e9bf5e137dc6986fbe159054dd8b",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt": "8d020890054d7f277d4eb9dd6931d58ec559493bbcaccfe3e6caab08dd060431",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongViewActivity.kt": "745cbad6821dc332f76abe977b924006235fb5535959dc01e3079fba655642e6",
+      "references/kotlin/compiler/testData/codegen/box/innerNested/innerGeneric.kt": "ffcef1cce95fc9a2cfeecfee22f77786f9bad1b9186ee8a01dbe15fe4d534fe2",
+      "references/kotlin/compiler/testData/codegen/box/innerNested/innerImplicitParameter.kt": "7f495406e73e1f4448e8ee4c025313b53ee0eddeaea5275709f52ce14e99be50",
+      "references/kotlin/compiler/testData/codegen/box/innerNested/innerLabeledThis.kt": "27a0eb85b70af651ea0c82ffb561cb075445dffce00db7ed0585d1b305c894ab",
+      "references/kotlin/compiler/testData/codegen/box/innerNested/innerSimple.kt": "1e2204759891a4ebb03c341487b64a2cd963b5d00047753a53d438f1c03cb85f",
+      "references/kotlin/compiler/testData/codegen/box/innerNested/innerWithDefaultArgument.kt": "9fe79dc1166c9cdd1e745caadc422bcd510e677c7644801c79bdaabdcf95437f",
+      "references/kotlin/compiler/testData/codegen/box/innerNested/kt3132.kt": "e2eeab605f9d770523b0869c7ebcaf19256a0baeebafb2000c001c991ad269fe",
+      "target/resume-inner/src/annotation_declarations.rs": "eeceb4147f17677e93217ddd50024c4bda8e78a4cb5c3cd9e91f23e3db7eb4b8",
+      "target/resume-inner/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "target/resume-inner/src/bytecode/annotation_files.rs": "8a245914527e0c6f69e4ac8b158f6d8ad4c72ae327596664417a1b95c25fbd31",
+      "target/resume-inner/src/bytecode/annotations.rs": "3a8a701cfbcd205509c6e41d3893c370d6dbe957b340aec70bc8295f0b576075",
+      "target/resume-inner/src/bytecode/class_companion.rs": "5a2a3e7d7464473d406d012f4805d1776a6ba3980589f5cb8332c0e7fdb326e7",
+      "target/resume-inner/src/bytecode/data.rs": "102f79d3db5a0894e4da310757756f6c8c646bec68670e8327b24d6ac8dc4c4d",
+      "target/resume-inner/src/bytecode/defaults.rs": "e8077816b4ef84a78c8b6515d690e5df10f4dc379e5de18705da1949fc8e8b8a",
+      "target/resume-inner/src/bytecode/enums.rs": "1c2d8aca0d2ac22092fea8d587879d74dd0e1956e8577a50bbdc994118abd8ef",
+      "target/resume-inner/src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "target/resume-inner/src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+      "target/resume-inner/src/bytecode/interfaces.rs": "431f7fe20c2b40eada768f0103eb6c4f8552ebe67761c5646dfd5f7d64640d34",
+      "target/resume-inner/src/bytecode/lambdas.rs": "9ad745acc30498f417c247a7576d8bd5e4649fe5b7de8d54a3fcd09fc6b45611",
+      "target/resume-inner/src/bytecode/objects.rs": "c4bfee42d5d0839ec66d5192688a8b9922e26474e11ca242b055a1f13e0f6139",
+      "target/resume-inner/src/bytecode.rs": "63e65d648ff1b4dd3a35de32f9960d6e37a9eb8f1ab7eca89f8d1d33a194fc01",
+      "target/resume-inner/src/check.rs": "e16fb5e9cbf34f23c50ef7b731f167a2ae7ecc1e87f53f0c81ac63700e2177c1",
+      "target/resume-inner/src/check_annotation_placements.rs": "003f33a33ee64b2fc939e07f6c54f3e1e0acee4138582c186de258499698c840",
+      "target/resume-inner/src/check_annotations.rs": "6f3509f695ac6283a0db471b4811b7ee8c851e3a53564cadfe134431144efa8b",
+      "target/resume-inner/src/check_captures.rs": "d1bc5a311e720072df4eb38bef24ff253a01c4bee4d6ca5690f51455024ff1ba",
+      "target/resume-inner/src/check_class_delegation.rs": "4865b9e2f979bc564efd56073684bd6f50f0507f36a192ef7cb61be5cc27c24e",
+      "target/resume-inner/src/check_classes.rs": "a1f83cc6ade810a6227503cd7fe88f9f6d69af0e86784d0e47d4dc0c8737e473",
+      "target/resume-inner/src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+      "target/resume-inner/src/check_declarations.rs": "d9253b32e1d214c5c7457e7084cd2e2e85a41ca7a8deb9f5de0917b6e132d7b2",
+      "target/resume-inner/src/check_delegates.rs": "60c4f8e759ad7823d12a3a5de6dc38379ec84fa02d54973d9941a96a689500e7",
+      "target/resume-inner/src/check_enums.rs": "6dd54af17a25e6b16231f0da227522c19ddce09def7872f6100b643c376188eb",
+      "target/resume-inner/src/check_functions.rs": "93d5cac8d9d235040475bbb66358263ac66785e3762b1ba1901b8e5959aac08c",
+      "target/resume-inner/src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+      "target/resume-inner/src/check_interfaces.rs": "68d547c2bf813ade11bfe751e29976496a2e1ed4cd4faf015f9b5e04f9a45382",
+      "target/resume-inner/src/check_ir_walk.rs": "704da687aa1ec0f386dcb54850e153f61caccb0524e4614189f126047abb089e",
+      "target/resume-inner/src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "target/resume-inner/src/check_library.rs": "f816288432316daa3f2da423681faf6423da1057626e5613fb56421b9207929e",
+      "target/resume-inner/src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+      "target/resume-inner/src/check_objects.rs": "c3f6607e79e0b5ba26f21cb133f737a1bb49a321145e0de860f27fe96f9525cc",
+      "target/resume-inner/src/check_operations.rs": "0224510bfa70bc6cf40b73e62a1a4c254d2190ce79f336813ea03d1dc8adfc10",
+      "target/resume-inner/src/check_overloads.rs": "1ef7076a63672e2b7a6343034324e29082716f5ab0e27d31b3df6adf615ebdfa",
+      "target/resume-inner/src/check_references.rs": "967e51e223eef7c01b9270e0030f90ec69a40717acbef70cde04b3904e83910a",
+      "target/resume-inner/src/check_relations.rs": "02e8784642f3533fc5b0539306484828f1edc0cf4c9decdb466ef70bdd194438",
+      "target/resume-inner/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "target/resume-inner/src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "target/resume-inner/src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "target/resume-inner/src/classpath/aliases.rs": "f28a407ee6d461b9a0127fe8adeadb0f1b908336fa70bf96c2c528da513d1c2f",
+      "target/resume-inner/src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "target/resume-inner/src/classpath/jvm_builtins.rs": "f5c03f8f022fc1cb7bd2fe9cc38c22c60305a8c5482ccaa7c9d6e06efccda7a0",
+      "target/resume-inner/src/classpath/metadata.rs": "dea0f1b471eb7acb018037baf8a588267e2bf85f84cb5596c3c208bc8503941b",
+      "target/resume-inner/src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "target/resume-inner/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "target/resume-inner/src/classpath/signature.rs": "df9eb2a4366325dcd7ea37467ffdc8c97e3304917bcb86feec5bd1cc43575765",
+      "target/resume-inner/src/classpath/source.rs": "c4c4053e5f79a49ac19cb6cbded2f62ecc76dd60da8a6610cab366f2cfa21ee9",
+      "target/resume-inner/src/classpath/source_enums.rs": "73c92cfe9a1ff461bd0b09b6c8c0636af143f31552cc5b0e723d4804c1264b38",
+      "target/resume-inner/src/classpath/value_names.rs": "80e84a5a3414a1052d7c5e43edd89f71446d41163241fbbd0684a150e2f8fff4",
+      "target/resume-inner/src/classpath.rs": "7a096432651b6a5fe86320472154a613961034e623fd6f93037bffd5af5b89b8",
+      "target/resume-inner/src/compiled_inline.rs": "934bc403f7ded02a406c8b9cf6e1c72651b5e71c99c00b05b2667fa17d68b5ba",
+      "target/resume-inner/src/const_eval.rs": "044fc1cd3f1a40c951f7456baeab58608a259244f57668b20036db29b2691ce0",
+      "target/resume-inner/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "target/resume-inner/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "target/resume-inner/src/jvm_descriptor.rs": "a665e290c4777ceacb0a986f03975491d8d5e51bcaed3a322606b65d8d571dfb",
+      "target/resume-inner/src/lib.rs": "8ae515b07bf6a6b0f276276eb06c7a2e9ab0be1c231fea3fec18528ebe33031f",
+      "target/resume-inner/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "target/resume-inner/src/metadata/enums.rs": "386887db6ac81fe6b1d9b6258783793d7abd0c913725a85f237a61943d914cad",
+      "target/resume-inner/src/metadata.rs": "e7938db666c9a1070584472c1d6e8ea92c311de53b5a17e58769764d6d32ee6c",
+      "target/resume-inner/src/object_lowering.rs": "ead1b3e529533d441e08d57b5252a0ea04bfbbe2015d9e3ff820418b9cbc771d",
+      "target/resume-inner/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "target/resume-inner/src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "target/resume-inner/src/syntax.rs": "1f232efbafa8ed1944dc9db110c69d0eda92df85e8849fe7f002d59adcec4cc6",
+      "target/resume-inner/src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+      "target/resume-inner/tests/inner_classes/BatchCheck.java": "a6b10725c122e6c263a3fdd4fdfe2bafb196f7ab2f3b1c297a91a6a02c858a11",
+      "target/resume-inner/tests/inner_classes/BatchConsumer.kt": "a35e2413515b2e7d3ee13d50ead250cf5fdd8855b0ba9ef1cd8305784a66991b",
+      "target/resume-inner/tests/inner_classes/Consumer.kt": "b02ab1c4a63fe4322193559db49a4377e3aadb0b914776e934bd15fa35cb45d1",
+      "target/resume-inner/tests/inner_classes/ConsumerCheck.java": "4aca35dd1c4192bc1e573bafbd562d89b1477ec54617afb37c622a976e967aaa",
+      "target/resume-inner/tests/inner_classes/Initialization.kt": "7ed7185c37b0d09d434e3ea353ac4b4a4ca1fb1f1db662c87b18827102619617",
+      "target/resume-inner/tests/inner_classes/InitializationCheck.java": "51bad519ed77677ac68e44fc68e7c3da2368ab12fe2f8348b53966aec2299d05",
+      "target/resume-inner/tests/inner_classes/InnerCheck.java": "21b6706578e19e5d1d967406fd61df604fe2b4b62b8ccef1533e5dffcb445886",
+      "target/resume-inner/tests/inner_classes/JavaParent.java": "061ef11cd8549164e56b6bd65044b693a26799be6f7f07675be6fec8b45019a5",
+      "target/resume-inner/tests/inner_classes/MetadataDump.java": "68d59cc45fa9e1ad46d93f259652208203a40023cfdadc91631ad329c6665bd5",
+      "target/resume-inner/tests/inner_classes/Outer.kt": "7f53ee5e6fed8907f095159b7c41bfc5822495724c652fa92ff36c547261a708",
+      "target/resume-inner/tests/inner_classes/Rejections.json": "7e658263051c42a58ff928e50535074ef4ee14b3707e210cc5ccda9607572f12",
+      "target/resume-inner/tools/check_inner_classes.py": "2f01c4a16b761a157fdd9294c18e6682f74aa5254f7d450d24de11f83c82a02d",
+      "target/resume-inner/tools/upstream_jvm.py": "e7d7973250b3255234683fa6756410ddb3c3947101fa582e1ec394170c6f0f11"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "androidbible_sources_reviewed": [
+      {
+        "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/dialog/ProgressMarkListDialog.kt",
+        "sha256": "690d7329dbe77501878390ef8d388e8474b4e9bf5e137dc6986fbe159054dd8b",
+        "whole_file_status": "not_assessed",
+        "reason": "Inner adapter uses Android RecyclerView and application dependencies plus remaining unsupported UI/source constructs.",
+        "new_unchanged_file_claim": false
+      },
+      {
+        "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongViewActivity.kt",
+        "sha256": "745cbad6821dc332f76abe977b924006235fb5535959dc01e3079fba655642e6",
+        "whole_file_status": "not_assessed",
+        "reason": "MediaState captures activity state and calls a private outer method; whole file requires remaining Android, lifecycle and application semantics.",
+        "new_unchanged_file_claim": false
+      },
+      {
+        "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt",
+        "sha256": "8d020890054d7f277d4eb9dd6931d58ec559493bbcaccfe3e6caab08dd060431",
+        "whole_file_status": "not_assessed",
+        "reason": "Inner adapter captures generic outer state and lambda callbacks; generic enclosing classes remain unsupported.",
+        "new_unchanged_file_claim": false
+      }
+    ]
+  },
+  "commands": [
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-version"
+      ],
+      "cwd": "target/resume-inner",
+      "exit_code": 0,
+      "wall_time_seconds": 0.08073383296141401,
+      "stdout": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/000-stderr.txt"
+    },
+    {
+      "label": "outer/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/Outer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "inner_classes",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/official"
+      ],
+      "cwd": "target/resume-inner",
+      "exit_code": 0,
+      "wall_time_seconds": 4.089749375008978,
+      "stdout": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/001-stderr.txt"
+    },
+    {
+      "label": "outer/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/korrust-final",
+        "/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/Outer.kt",
+        "--module-name",
+        "inner_classes",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/candidate"
+      ],
+      "cwd": "target/resume-inner",
+      "exit_code": 0,
+      "wall_time_seconds": 30.10325650003506,
+      "stdout": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/002-stderr.txt"
+    },
+    {
+      "label": "outer/consumer/official/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "inner_classes",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/official:/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/official-official-consumer"
+      ],
+      "cwd": "target/resume-inner",
+      "exit_code": 0,
+      "wall_time_seconds": 3.0427401670021936,
+      "stdout": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/003-stderr.txt"
+    },
+    {
+      "label": "outer/consumer/official/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/korrust-final",
+        "/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/Consumer.kt",
+        "--module-name",
+        "inner_classes",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/official:/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/official-candidate-consumer"
+      ],
+      "cwd": "target/resume-inner",
+      "exit_code": 0,
+      "wall_time_seconds": 1.7474412089795806,
+      "stdout": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/004-stderr.txt"
+    },
+    {
+      "label": "outer/consumer/candidate/official",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "inner_classes",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/candidate:/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/candidate-official-consumer"
+      ],
+      "cwd": "target/resume-inner",
+      "exit_code": 0,
+      "wall_time_seconds": 2.8702287500491366,
+      "stdout": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/005-stderr.txt"
+    },
+    {
+      "label": "outer/consumer/candidate/candidate",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/korrust-final",
+        "/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/Consumer.kt",
+        "--module-name",
+        "inner_classes",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/candidate:/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/candidate-candidate-consumer"
+      ],
+      "cwd": "target/resume-inner",
+      "exit_code": 0,
+      "wall_time_seconds": 1.3564515420002863,
+      "stdout": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/006-stderr.txt"
+    },
+    {
+      "label": "outer/fixed-java",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/official:/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/official-official-consumer:/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/callers",
+        "/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java"
+      ],
+      "cwd": "target/resume-inner",
+      "exit_code": 0,
+      "wall_time_seconds": 0.5021201249910519,
+      "stdout": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/007-stderr.txt"
+    },
+    {
+      "label": "outer/candidate-java-source",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/candidate:/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/candidate-official-consumer:/Users/yuku/f/git/korrust/target/resume-inner/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/candidate-java-source",
+        "/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java"
+      ],
+      "cwd": "target/resume-inner",
+      "exit_code": 1,
+      "wall_time_seconds": 0.4468004169757478,
+      "stdout": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/008-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "harness",
+      "outcome": "correctness_failure",
+      "error": "outer/candidate-java-source\n/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java:7: error: cannot access Inner\n        Outer.Inner first = outer.new Inner(2);\n             ^\n  bad class file: /Users/yuku/f/git/korrust/target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/candidate/innerprobe/Outer$Inner.class\n    bad RuntimeInvisibleParameterAnnotations attribute: Inner(int)\n    Please remove or make sure it appears in the correct subdirectory of the classpath.\n/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java:7: error: cannot find symbol\n        Outer.Inner first = outer.new Inner(2);\n                                      ^\n  symbol:   class Inner\n  location: class Outer\n/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java:8: error: cannot find symbol\n        Outer.Inner second = outer.make(5);\n             ^\n  symbol:   class Inner\n  location: class Outer\n/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java:9: error: cannot find symbol\n        Outer.Inner third = innerprobe.OuterKt.qualified(outer, 3);\n             ^\n  symbol:   class Inner\n  location: class Outer\n/Users/yuku/f/git/korrust/target/resume-inner/tests/inner_classes/InnerCheck.java:15: error: cannot find symbol\n        Outer other = new Outer(100); eq(103, other.new Inner(3).read()); eq(22, first.read());\n                                                        ^\n  symbol:   class Inner\n  location: class Outer\n5 errors\n"
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/freeze.json",
+    "reports/correctness/2026-11-02-resume-inner-classes-v1-failed/source-changes.patch"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "target/resume-inner/tools/check_inner_classes.py",
+      "--compiler",
+      "target/resume-inner/target/korrust-final",
+      "--source-root",
+      "target/resume-inner"
+    ]
+  ],
+  "limitations": [
+    "One bounded family: named inner classes capturing the enclosing instance. Existing static nested classes, ordinary inheritance, extension methods and lambdas are prerequisites.",
+    "Nongeneric ordinary outer classes and final inner classes. Captured outer identity, state access, method calls, initialization, qualified construction, source/compiled constructors, Kotlin consumers and JVM metadata are checked. Generic/chained source inner classes, secondary/default constructors, open/abstract source inner classes, enum outers, reserved capture-field collisions and local classes remain explicit unsupported boundaries. Nongeneric bound and unbound inner constructor references use ordinary closure lowering. Invalid static nested declarations within inner classes remain invalid Kotlin.",
+    "Fixed Java callers compile once against official output and execute against both outputs with full JVM verification. Relevant public ABI and decoded Kotlin metadata are compared. No unchanged whole AndroidBible file, APK/device/full-app, optimization, or complete Kotlin compatibility claim."
+  ],
+  "fixed_java_callers_sha256": {
+    "outer": {
+      "target/resume-inner/target/checks/2026-11-01T181544283442Z-inner-classes/outer/callers/InnerCheck.class": "9c1260ab775f4e0d645d8ed3e6b91a3201d6f24ada64f1c20432c91acd4af255"
+    }
+  },
+  "counts": {
+    "correctness_failure": 1,
+    "pass": 1
+  },
+  "feature_acceptance": {
+    "family": "named_inner_classes_with_enclosing_instance",
+    "status": "failed",
+    "derived_counts": {
+      "correctness_failure": 1,
+      "pass": 1
+    }
+  },
+  "original_harness_report": "target/resume-inner/reports/correctness/2026-11-01T181544283442Z-inner-classes.json"
+}

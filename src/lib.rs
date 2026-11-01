@@ -4,6 +4,7 @@ mod check;
 mod classpath;
 mod compiled_inline;
 mod const_eval;
+mod inner_classes;
 mod jvm_descriptor;
 mod metadata;
 mod object_lowering;
@@ -266,6 +267,8 @@ pub fn compile_batch_with_options(
             }
         }
     }
+    inner_classes::validate(&units, &lexical_parents)
+        .map_err(|(owner, error)| error.for_source(&sources[owner_sources[&owner]].identity))?;
     validate_alias_classifiers(&modules, &sources)?;
     let type_locations = units
         .iter()
@@ -330,6 +333,27 @@ pub fn compile_batch_with_options(
                 .map(|name| (name, owner.clone()))
         })
         .collect::<Vec<_>>();
+    let normalize_imports = |module: &mut syntax::Module| {
+        for (_, path, _) in &mut module.imports {
+            if let Some((_, owner)) = source_names.iter().find(|(_, owner)| {
+                lexical_parents.contains_key(owner) && owner.replace('$', "/") == *path
+            }) {
+                *path = owner.clone();
+            }
+        }
+    };
+    for module in &mut modules {
+        normalize_imports(module);
+    }
+    for (owner, unit) in &mut units {
+        normalize_imports(unit);
+        if lexical_parents.contains_key(owner) {
+            if let Some((name, _)) = source_names.iter().find(|(_, path)| path == owner) {
+                unit.imports
+                    .retain(|(alias, path, _)| alias != name || path != owner);
+            }
+        }
+    }
     for (owner, unit) in &units {
         let lexical_values =
             std::iter::successors(Some(owner), |parent| lexical_parents.get(*parent))
@@ -1317,6 +1341,11 @@ fn add_nested_attributes(
                 9
             } else {
                 0x19
+            };
+            let access = if unit.class_decl.as_ref().is_some_and(|class| class.inner) {
+                access & !8
+            } else {
+                access
             };
             Some((owner.clone(), outer.to_owned(), short.to_owned(), access))
         })

@@ -127,6 +127,15 @@ pub(crate) struct JavaClass {
     pub kotlin_interface: bool,
 }
 
+impl JavaClass {
+    pub(crate) fn enclosing_instance(&self) -> Option<&str> {
+        self.fields
+            .iter()
+            .find(|field| field.name == "this$0" && field.access & 0x1018 == 0x1010)
+            .and_then(|field| field.descriptor.strip_prefix('L')?.strip_suffix(';'))
+    }
+}
+
 #[derive(Clone, Debug)]
 pub(crate) struct JavaField {
     pub kotlin: Option<KotlinField>,

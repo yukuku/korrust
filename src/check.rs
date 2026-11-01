@@ -31,6 +31,8 @@ mod classes;
 mod control;
 #[path = "check_functions.rs"]
 mod function_values;
+#[path = "check_inner_classes.rs"]
+mod inner_classes;
 #[path = "check_ir_walk.rs"]
 pub(crate) mod ir_walk;
 #[path = "check_java_properties.rs"]
@@ -224,6 +226,8 @@ pub struct InterfaceDelegatedMember {
     pub jvm_descriptor: String,
 }
 pub struct ClassDecl {
+    pub lexical_bridges: bool,
+    pub inner: bool,
     pub interface_delegate_storage: Vec<InterfaceDelegateStorage>,
     pub interface_delegated_members: Vec<InterfaceDelegatedMember>,
     pub sealed_: bool,
@@ -704,6 +708,13 @@ impl Checker<'_> {
     fn labeled_receiver_value(&self, label: &str, offset: usize) -> Result<Value> {
         if let Some(receiver) = self.receiver_labels.get(label) {
             return Ok(Self::local_receiver(receiver));
+        }
+        if let Some(receiver) = self.enclosing_receiver(offset)? {
+            if library::type_owner(&receiver.ty).and_then(|owner| owner.rsplit(['/', '$']).next())
+                == Some(label)
+            {
+                return Ok(receiver);
+            }
         }
         if self.lambda_owner.rsplit(['/', '$']).next() == Some(label) {
             return self.dispatch_receiver_value(offset);
@@ -1579,6 +1590,9 @@ impl Checker<'_> {
                 "Enum constructors can only be called by enum entry initialization",
             ));
         }
+        if let Some(value) = self.implicit_inner_constructor(owner, args, offset)? {
+            return Ok(value);
+        }
         self.construct_value(owner, params, defaults, args, named, offset)
     }
     fn construct_value(
@@ -1878,7 +1892,39 @@ impl Checker<'_> {
         } else {
             receiver
         };
-        let result = if field.companion_bridge {
+        let result = if let Some(receiver) = receiver.as_ref().filter(|_| {
+            self.lambda_owner != field.owner
+                && self.lambda_owner.starts_with(&format!("{}$", field.owner))
+        }) {
+            let mut values = vec![receiver.clone()];
+            values.extend(args);
+            Value {
+                ty: if setter { Type::Unit } else { logical.clone() },
+                kind: ValueKind::StaticCall {
+                    owner: field.owner.clone(),
+                    name: format!(
+                        "access${}${}$p",
+                        if setter { "set" } else { "get" },
+                        field.name
+                    ),
+                    descriptor: format!(
+                        "(L{};{}){}",
+                        field.owner,
+                        if setter {
+                            field.ty.descriptor()
+                        } else {
+                            String::new()
+                        },
+                        if setter {
+                            "V".into()
+                        } else {
+                            field.ty.descriptor()
+                        }
+                    ),
+                    args: values,
+                },
+            }
+        } else if field.companion_bridge {
             Value {
                 ty: if setter { Type::Unit } else { logical.clone() },
                 kind: ValueKind::StaticCall {
@@ -2606,6 +2652,20 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        if self
+            .classpath
+            .load(&format!("{owner}${name}"))
+            .is_ok_and(|class| class.enclosing_instance().is_some())
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Inner constructor requires an enclosing instance",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "INNER_CONSTRUCTOR_RECEIVER_REQUIRED",
+            ));
+        }
         let methods = self
             .classpath
             .methods(owner)?
@@ -3224,6 +3284,12 @@ impl Checker<'_> {
                     }
                 }
                 StatementKind::Assign(name, expr) => {
+                    if name != "field" {
+                        if let Some(value) = self.outer_assignment(name, expr, offset)? {
+                            body.push(value);
+                            continue;
+                        }
+                    }
                     if name == "field" {
                         if let Some(backing) = self.members.get("#backing") {
                             let name = backing.name.clone();
@@ -4251,7 +4317,9 @@ impl Checker<'_> {
                     if let Some(value) = self.imported_value(name, offset)? {
                         return Ok(value);
                     }
-                    if self.dispatch_receiver.is_some() {
+                    if self.dispatch_receiver.is_some()
+                        || self.enclosing_receiver(offset)?.is_some()
+                    {
                         return self.receiver_property(name, offset);
                     }
                     return Err(Diagnostic::new(offset, format!("Unresolved local: {name}")));
@@ -4994,7 +5062,10 @@ impl Checker<'_> {
                         let receiver = self.dispatch_receiver_value(offset)?;
                         return self.member_call(method, receiver, args, offset);
                     }
-                    if self.dispatch_receiver.is_some() && !self.functions.contains_key(name) {
+                    if (self.dispatch_receiver.is_some()
+                        || self.enclosing_receiver(offset)?.is_some())
+                        && !self.functions.contains_key(name)
+                    {
                         if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
                             return Ok(call);
                         }
@@ -5046,7 +5117,10 @@ impl Checker<'_> {
                         let function = self.value(target)?;
                         return self.function_invoke(function, args, offset);
                     }
-                    if self.dispatch_receiver.is_some() && !self.functions.contains_key(name) {
+                    if (self.dispatch_receiver.is_some()
+                        || self.enclosing_receiver(offset)?.is_some())
+                        && !self.functions.contains_key(name)
+                    {
                         if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
                             return Ok(call);
                         }
@@ -5054,6 +5128,29 @@ impl Checker<'_> {
                     return self.source_call(name, args, &[], offset);
                 }
                 ExprKind::Property(receiver, name) => {
+                    if self.qualified_java_class(receiver).is_none() {
+                        let saved_next = self.next;
+                        let saved_initialized = self.initialized.clone();
+                        let saved_refinements = self.refinements.clone();
+                        let saved_lambdas = self.lambdas.borrow().len();
+                        if let Ok(value) = self.value(receiver) {
+                            let receiver_type = match value.ty.base() {
+                                Type::Nullable(inner) => inner.as_ref(),
+                                ty => ty,
+                            };
+                            if let Some(owner) = library::type_owner(receiver_type) {
+                                if let Ok(class) = self.classpath.load(&format!("{owner}${name}")) {
+                                    if class.enclosing_instance().is_some() {
+                                        return self.inner_constructor(&class, value, args, offset);
+                                    }
+                                }
+                            }
+                        }
+                        self.next = saved_next;
+                        self.initialized = saved_initialized;
+                        self.refinements = saved_refinements;
+                        self.lambdas.borrow_mut().truncate(saved_lambdas);
+                    }
                     if let Some(owner) = self.qualified_java_class(receiver) {
                         return self.java_static(&owner, name, args, offset);
                     }

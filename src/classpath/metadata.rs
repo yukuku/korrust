@@ -904,6 +904,11 @@ fn attach_member(
         all.push(ty.descriptor());
     }
     all.extend(params.iter().map(|(_, ty, _)| ty.descriptor()));
+    if name == "<init>" {
+        if let Some(outer) = class.enclosing_instance() {
+            all.insert(0, format!("L{outer};"));
+        }
+    }
     let descriptor = format!("({}){}", all.concat(), result.descriptor());
     let (jvm_name, jvm_descriptor, explicit_descriptor) = if let Some(bytes) = signature {
         let p = Proto::parse(bytes)?;
@@ -960,7 +965,11 @@ fn attach_member(
                 .collect::<String>(),
             signature_result.descriptor()
         );
-        if erased != jvm_descriptor {
+        let inner_signature = name == "<init>"
+            && class
+                .enclosing_instance()
+                .is_some_and(|outer| jvm_descriptor == format!("(L{outer};{}", &erased[1..]));
+        if erased != jvm_descriptor && !inner_signature {
             return Err(invalid());
         }
     }
@@ -1270,7 +1279,7 @@ pub(super) fn attach(
     class.kotlin_fun_interface = kind == 1 && class.kotlin_interface && class_flags & 16384 != 0;
     class.unsupported = kind == 1
         && (class_flags & 14 == 0
-            || class_flags & (512 | 2048 | 4096 | 8192) != 0
+            || class_flags & (2048 | 4096 | 8192) != 0
             || !matches!((class_flags >> 6) & 7, 0 | 1 | 2 | 5 | 6)
             || (class_flags >> 6) & 7 == 2
                 && (class.access & 0x4000 == 0

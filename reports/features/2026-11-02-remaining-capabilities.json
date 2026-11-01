@@ -45,10 +45,17 @@
     },
     {
       "name": "inner_classes",
-      "status": "partial",
-      "scope": "Named inner classes capturing a nongeneric enclosing instance; local classes excluded.",
+      "status": "supported",
+      "scope": "Named final inner classes in nongeneric outer classes, enclosing identity/state, initialization, private outer access, source/compiled qualified constructors and bounded constructor references, JVM signatures and Kotlin metadata.",
       "restrictions": [
-        "Implementation and acceptance are in progress; no validated-family count yet."
+        "Local classes, generic/chained inner classes or generic outer classes, open/abstract inner classes, secondary/default/annotated constructors and enum outers remain explicitly unsupported.",
+        "Complete related outer/inner class sets are swapped as providers. Synthetic private-access helper names/visibility may differ; public consumer ABI is checked and raw all-member output retained.",
+        "No unchanged whole AndroidBible file or full-app pass is claimed."
+      ],
+      "evidence_report": "reports/correctness/2026-11-01T183844319464Z-inner-classes.json",
+      "additional_evidence": [
+        "reports/correctness/2026-11-01T183844319464Z-inner-classes/rust.log",
+        "reports/correctness/2026-11-01T183844319464Z-inner-classes/clippy.log"
       ]
     },
     {
@@ -69,14 +76,15 @@
     }
   ],
   "accepted_carryover_families": 1,
-  "accepted_new_families": 1,
-  "remaining_new_families": 4,
+  "accepted_new_families": 2,
+  "remaining_new_families": 3,
   "limitations": [
     "Final combined validation is pending. Supported labels refer to bounded feature acceptance, not unrestricted Kotlin or Android compatibility."
   ],
   "evidence": [
     "reports/correctness/2026-11-02-resume-member-extensions.json",
     "reports/correctness/2026-11-02-expanded-enums-v3.json",
-    "reports/correctness/2026-11-02-expanded-enums-upstream-v3.json"
+    "reports/correctness/2026-11-02-expanded-enums-upstream-v3.json",
+    "reports/correctness/2026-11-01T183844319464Z-inner-classes.json"
   ]
 }

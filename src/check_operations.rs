@@ -1818,19 +1818,44 @@ impl Checker<'_> {
 
 impl Checker<'_> {
     pub(super) fn receiver_property(&mut self, name: &str, offset: usize) -> Result<Value> {
-        if self.dispatch_receiver.is_none() {
-            return Err(Diagnostic::new(offset, format!("Unresolved name: {name}")));
+        let result = if self.dispatch_receiver.is_none() {
+            Err(Diagnostic::new(offset, format!("Unresolved name: {name}")))
+        } else {
+            self.value(&Expr {
+                offset,
+                kind: ExprKind::Property(
+                    Box::new(Expr {
+                        offset,
+                        kind: ExprKind::Name("this".into()),
+                    }),
+                    name.into(),
+                ),
+            })
+        };
+        if let Err(error) = &result {
+            if error.message.starts_with("Unresolved")
+                || error.message.starts_with("Unsupported property")
+            {
+                if let Some(outer) = self.enclosing_receiver(offset)? {
+                    let label = library::type_owner(&outer.ty)
+                        .unwrap()
+                        .rsplit(['/', '$'])
+                        .next()
+                        .unwrap();
+                    return self.value(&Expr {
+                        offset,
+                        kind: ExprKind::Property(
+                            Box::new(Expr {
+                                offset,
+                                kind: ExprKind::Name(format!("this@{label}")),
+                            }),
+                            name.into(),
+                        ),
+                    });
+                }
+            }
         }
-        self.value(&Expr {
-            offset,
-            kind: ExprKind::Property(
-                Box::new(Expr {
-                    offset,
-                    kind: ExprKind::Name("this".into()),
-                }),
-                name.into(),
-            ),
-        })
+        result
     }
 
     pub(super) fn implicit_receiver_call(
@@ -1839,7 +1864,10 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
-        let receiver = self.default_receiver_value(offset)?;
+        let receiver = match self.default_receiver_value(offset) {
+            Ok(receiver) => receiver,
+            Err(error) => self.enclosing_receiver(offset)?.ok_or(error)?,
+        };
         let next = self.next;
         let initialized = self.initialized.clone();
         let refinements = self.refinements.clone();
@@ -1850,6 +1878,9 @@ impl Checker<'_> {
             self.initialized = initialized;
             self.refinements = refinements;
             self.lambdas.borrow_mut().truncate(count);
+            if let Some(outer) = self.enclosing_receiver(offset)? {
+                return self.java_call(outer, name, args, offset);
+            }
         }
         result
     }

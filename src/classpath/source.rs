@@ -406,13 +406,33 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 )
             })
             .collect::<Vec<_>>();
+        if source.inner {
+            let outer = owner
+                .rsplit_once('$')
+                .map(|(outer, _)| outer)
+                .ok_or_else(invalid)?;
+            class.fields.push(JavaField {
+                kotlin: None,
+                constant: None,
+                owner: owner.into(),
+                name: "this$0".into(),
+                descriptor: format!("L{outer};"),
+                access: 0x1010,
+                unsupported: false,
+            });
+        }
         if source.primary_constructor {
             class.methods.push(JavaMethod {
                 library: None,
                 owner: owner.into(),
                 name: "<init>".into(),
                 descriptor: format!(
-                    "({})V",
+                    "({}{})V",
+                    if source.inner {
+                        format!("L{};", owner.rsplit_once('$').unwrap().0)
+                    } else {
+                        String::new()
+                    },
                     params
                         .iter()
                         .map(|(_, t, _)| t.descriptor())

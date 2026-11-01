@@ -968,6 +968,7 @@ fn class_metadata(
             6
         }) | u32::from(!class.annotations.is_empty())
             | if class.data { 1024 } else { 0 }
+            | if class.inner { 512 } else { 0 }
             | if class.sealed_ {
                 48
             } else if class.abstract_ {
@@ -1031,6 +1032,9 @@ fn class_metadata(
         let mut constructor = Proto::default();
         constructor.number(1, if class.sealed_ { 4 } else { 6 });
         let mut constructor_desc = String::from("(");
+        if class.inner {
+            constructor_desc.push_str(&format!("L{};", internal_name.rsplit_once('$').unwrap().0));
+        }
         if let Some(checked) = checked {
             interface_delegation_members(&mut proto, checked, imports, &mut strings)?;
         }
@@ -1699,7 +1703,11 @@ pub(crate) fn for_checked_class(
             bind(source, checked, &mut bindings);
         }
     }
-    for ((_, source), (_, checked)) in source.params.iter().zip(&checked.params) {
+    for ((_, source), (_, checked)) in source
+        .params
+        .iter()
+        .zip(checked.params.iter().skip(usize::from(source.inner)))
+    {
         bind(source, checked, &mut bindings);
     }
     for property in &source.properties {

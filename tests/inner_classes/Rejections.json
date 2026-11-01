@@ -1,0 +1,146 @@
+[
+  {
+    "id": "nested_class",
+    "source": "class Outer { inner class Inner { class Nested } }\n",
+    "official": "reject",
+    "code": "INNER_CLASS_CONTEXT_INVALID"
+  },
+  {
+    "id": "nested_object",
+    "source": "class Outer { inner class Inner { object Nested } }\n",
+    "official": "reject",
+    "code": "INNER_CLASS_CONTEXT_INVALID"
+  },
+  {
+    "id": "companion",
+    "source": "class Outer { inner class Inner { companion object } }\n",
+    "official": "reject",
+    "code": "INNER_CLASS_CONTEXT_INVALID"
+  },
+  {
+    "id": "storage_collision",
+    "source": "class Outer { inner class Inner(val `this$0`: Outer) }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "property_collision",
+    "source": "class Outer { inner class Inner { val `this$0`: Int = 1 } }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "toplevel",
+    "source": "inner class Inner\n",
+    "official": "reject",
+    "code": "INNER_CLASS_CONTEXT_INVALID"
+  },
+  {
+    "id": "object",
+    "source": "object Outer { inner class Inner }\n",
+    "official": "reject",
+    "code": "INNER_CLASS_CONTEXT_INVALID"
+  },
+  {
+    "id": "interface",
+    "source": "interface Outer { inner class Inner }\n",
+    "official": "reject",
+    "code": "INNER_CLASS_CONTEXT_INVALID"
+  },
+  {
+    "id": "data",
+    "source": "class Outer { inner data class Inner(val x: Int) }\n",
+    "official": "reject",
+    "code": "INNER_CLASS_CONTEXT_INVALID"
+  },
+  {
+    "id": "sealed",
+    "source": "class Outer { inner sealed class Inner }\n",
+    "official": "reject",
+    "code": "INNER_CLASS_CONTEXT_INVALID"
+  },
+  {
+    "id": "outer_generic",
+    "source": "class Outer<T> { inner class Inner }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "inner_generic",
+    "source": "class Outer { inner class Inner<T> }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "chain",
+    "source": "class Outer { inner class Inner { inner class Further } }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "secondary",
+    "source": "class Outer { inner class Inner { constructor(x: Int) {} } }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "default",
+    "source": "class Outer { inner class Inner(val x: Int = 3) }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "abstract",
+    "source": "class Outer { inner abstract class Inner }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "open",
+    "source": "class Outer { inner open class Inner }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "local",
+    "source": "fun f(): Int { class Local(val x: Int); return Local(3).x }\n",
+    "official": "accept",
+    "code": "LOCAL_CLASS_UNSUPPORTED"
+  },
+  {
+    "id": "missing_receiver",
+    "source": "class Outer { inner class Inner }\nfun bad(): Outer.Inner = Outer.Inner()\n",
+    "official": "reject",
+    "code": "INNER_CONSTRUCTOR_RECEIVER_REQUIRED"
+  },
+  {
+    "id": "nullable_receiver",
+    "source": "class Outer { inner class Inner }\nfun bad(outer: Outer?): Outer.Inner = outer.Inner()\n",
+    "official": "reject",
+    "code": "INNER_CONSTRUCTOR_RECEIVER_INVALID"
+  },
+  {
+    "id": "local_inner",
+    "source": "fun bad(): Int { inner class Inner; return 0 }\n",
+    "official": "reject",
+    "code": "INNER_CLASS_CONTEXT_INVALID"
+  },
+  {
+    "id": "imported_missing_receiver",
+    "source": "import Outer.Inner\nclass Outer { inner class Inner }\nclass Other { fun bad(): Outer.Inner = Inner() }\n",
+    "official": "reject",
+    "code": "INNER_CONSTRUCTOR_RECEIVER_REQUIRED"
+  },
+  {
+    "id": "bridge_collision",
+    "source": "class Outer { private val secret: Int = 1; fun `access$get$secret$p`(outer: Outer): Int = 1; inner class Inner { fun read(): Int = secret } }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "constructor_annotations",
+    "source": "annotation class Ann\nclass Outer { inner class Inner(@Ann val value: Int) }\n",
+    "official": "accept",
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED"
+  }
+]

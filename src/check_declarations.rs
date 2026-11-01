@@ -36,6 +36,25 @@ pub(super) fn check_class_with_constants(
     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
     constants: &HashMap<String, (Type, Expr)>,
 ) -> Result<ClassDecl> {
+    let mut captured_source;
+    let source = if source.inner {
+        captured_source = source.clone();
+        let outer = owner_override
+            .and_then(|owner| owner.rsplit_once('$'))
+            .map(|(outer, _)| outer)
+            .ok_or_else(|| {
+                Diagnostic::new(source.offset, "Inner class requires an enclosing class")
+            })?;
+        captured_source
+            .params
+            .insert(0, ("this$0".into(), Type::Java(outer.into())));
+        captured_source.param_properties.insert(0, "this$0".into());
+        captured_source.param_annotations.insert(0, Vec::new());
+        captured_source.defaults.insert(0, None);
+        &captured_source
+    } else {
+        source
+    };
     if source.sealed_
         && (!source.secondary_constructors.is_empty()
             || source.defaults.iter().any(Option::is_some))
@@ -123,6 +142,25 @@ pub(super) fn check_class_with_constants(
         .iter()
         .map(|t| resolve_type_checked(t, imports, source.offset, classpath, classes))
         .collect::<Result<Vec<_>>>()?;
+    if source.inner
+        && super_types
+            .iter()
+            .filter_map(library::type_owner)
+            .any(|owner| {
+                classpath
+                    .load(owner)
+                    .is_ok_and(|class| class.enclosing_instance().is_some())
+            })
+    {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Inner superclasses require unsupported enclosing instance delegation",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "INNER_SUPERCLASS_OUTER_UNSUPPORTED",
+        ));
+    }
     if !source.type_params.is_empty()
         && source
             .methods
@@ -1861,6 +1899,10 @@ pub(super) fn check_class_with_constants(
     }
     let abstract_methods = method_keys(|m| !m.has_body);
     Ok(ClassDecl {
+        lexical_bridges: source.nested.iter().any(
+            |declaration| matches!(declaration, syntax::Declaration::Class(class) if class.inner),
+        ),
+        inner: source.inner,
         interface_delegate_storage,
         interface_delegated_members,
         sealed_: source.sealed_,
