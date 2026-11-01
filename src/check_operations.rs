@@ -990,11 +990,26 @@ impl Checker<'_> {
                     applicable_groups.push(applicable);
                     continue;
                 }
-                for method in normalized {
+                for mut method in normalized {
                     if operator && !method.library.as_ref().is_some_and(|l| l.operator) {
                         continue;
                     }
                     let is_infix = method.library.as_ref().is_some_and(|library| library.infix);
+                    let generic_value = method.unsupported
+                        && method
+                            .library
+                            .as_ref()
+                            .and_then(|library| library.receiver.as_ref())
+                            .and_then(library::type_owner)
+                            .filter(|owner| Some(*owner) == library::type_owner(&receiver.ty))
+                            .and_then(|owner| self.classpath.load(owner).ok())
+                            .and_then(|class| class.library)
+                            .is_some_and(|library| {
+                                library.value_class.is_some() && !library.type_parameters.is_empty()
+                            });
+                    if generic_value {
+                        method.unsupported = false;
+                    }
                     match self.select_method_types(
                         std::slice::from_ref(&method),
                         &all_args,
@@ -1002,6 +1017,10 @@ impl Checker<'_> {
                         offset,
                     ) {
                         Ok(_) if infix && !is_infix => non_infix_applicable = true,
+                        Ok(_) if generic_value => {
+                            method.unsupported = true;
+                            applicable.push(method);
+                        }
                         Ok(_) => applicable.push(method),
                         Err(error) => failures.push(error),
                     }
@@ -1009,13 +1028,16 @@ impl Checker<'_> {
                 applicable_groups.push(applicable);
             }
             if !applicable_groups[0].is_empty()
-                && applicable_groups[1].iter().any(|local| {
-                    !applicable_groups[0].iter().any(|imported| {
-                        imported.owner == local.owner
-                            && imported.name == local.name
-                            && imported.descriptor == local.descriptor
+                && applicable_groups[1]
+                    .iter()
+                    .filter(|local| !local.unsupported)
+                    .any(|local| {
+                        !applicable_groups[0].iter().any(|imported| {
+                            imported.owner == local.owner
+                                && imported.name == local.name
+                                && imported.descriptor == local.descriptor
+                        })
                     })
-                })
             {
                 return Err(Diagnostic::new(
                     offset,
@@ -1053,6 +1075,10 @@ impl Checker<'_> {
                     return Err(Diagnostic::new(
                         offset,
                         format!("The infix modifier is required on {name}"),
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "INFIX_MODIFIER_REQUIRED",
                     ));
                 }
                 if failures.len() == 1 {
@@ -1066,6 +1092,16 @@ impl Checker<'_> {
                     ),
                 ));
             };
+            if candidates.iter().any(|method| method.unsupported) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Imported generic value-class extension ABI is unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "GENERIC_VALUE_EXTENSION_ABI_UNSUPPORTED",
+                ));
+            }
             let method = self.select_method_types(candidates, &all_args, types, offset)?;
             self.library_static_call(method, &all_args, offset)
         })();

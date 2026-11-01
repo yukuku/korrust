@@ -1,0 +1,40 @@
+{
+  "status": "ready_for_root_review_and_integration",
+  "base": "accepted nested V2 integrated root58",
+  "base_manifest": "callee-base-manifest.json",
+  "base_sources": "callee-integration-base/",
+  "changed_files": "callee-changed-files.json",
+  "patch": "callee-final.patch",
+  "production_files": [
+    "src/check_library.rs"
+  ],
+  "proof": "callee-evidence-v1/report.json",
+  "compiler": {
+    "path": "/Users/yuku/f/git/korrust/target/resume-java-nested-repair/target/release/korrust",
+    "sha256": "15a1ceb1d1278d9c0e50fb4d3c9c46dfe569f51e461ab2326e48a815a3696546"
+  },
+  "counts": {
+    "pass": 12,
+    "invalid_rejected": 12,
+    "unsupported_language": 2
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "runtime_assertions_per_provider": 51,
+  "new_callee_runtime_assertions_per_provider": 24,
+  "public_jvm_signature_owners": 8,
+  "implementation": "Constructor and same-named enclosing Java static method candidates enter existing select_method; actual enclosing/member metadata drives lookup. Ambiguities receive InvalidKotlin AMBIGUOUS_JAVA_CALLEE. Applicable private-constructor/nonstatic/private-class factory methods remain reachable. Unknown potentially applicable metadata/visibility explicitly unsupported.",
+  "replay": [
+    "JAVA_HOME=/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home python3 tools/check_java_nested.py --root . --candidate FINAL_BINARY --output FRESH_OUTPUT"
+  ],
+  "validation_note": "Release build and frozen paired JVM proof complete. Root will run combined Rust/fmt/Clippy after integration; isolated clippy is supplementary.",
+  "root_edits": false,
+  "preserved_history": [
+    "evidence-final-v1/",
+    "evidence-final-v2/",
+    "callee-evidence-v1/",
+    "reports/correctness/2026-11-02-postrepair-java-nested-callee-probe.json"
+  ]
+}

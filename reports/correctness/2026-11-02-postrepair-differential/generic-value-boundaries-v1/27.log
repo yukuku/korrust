@@ -1,0 +1,10 @@
+tests/fixtures/diagnostic_boundaries/named/Original.kt:3:26: error: unresolved reference 'Visible'.
+fun original(): String = Visible::class.java.simpleName
+                         ^^^^^^^
+tests/fixtures/diagnostic_boundaries/named/Original.kt:3:41: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+fun original(): String = Visible::class.java.simpleName
+                                        ^^^^
+tests/fixtures/diagnostic_boundaries/named/Original.kt:3:41: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+val <T> KClass<T>.java: Class<T>
+fun original(): String = Visible::class.java.simpleName
+                                        ^^^^

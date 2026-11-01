@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T21:12:32.572783+00:00",
+  "status": "complete",
+  "compiler": {
+    "frozen_binary": "target/resume-repair-final/frozen-root/target/release/korrust",
+    "sha256": "58ee34b1866ca7a9a5cd0ce838730856bef745907e159f93a2a4a8a00249b784",
+    "frozen_input_count": 944,
+    "root_input_comparison": "943 root source/tool/fixture inputs match; relocated frozen candidate matches binary entry",
+    "binary_mapping": {
+      "target/release/korrust": "target/resume-repair-final/frozen-root/target/release/korrust"
+    },
+    "setup_note": "Initial direct comparison found active root target/release/korrust differs; all four commands explicitly use the verified frozen binary. No source mismatch.",
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "source_freeze": {
+    "manifest": "reports/correctness/2026-11-02-postrepair-differential/freeze-before.json",
+    "after": "reports/correctness/2026-11-02-postrepair-differential/freeze-after.json",
+    "archive": "reports/correctness/2026-11-02-postrepair-differential/frozen-sources.zip",
+    "archive_sha256": "48f92d927dee421b470061106b8b248a3f9323a08dc509b0ef01a072372efd6c"
+  },
+  "suites": [
+    {
+      "name": "upstream-full36-v1",
+      "status": "complete",
+      "counts": {
+        "pass": 19,
+        "unsupported_language": 12,
+        "harness_unsupported": 5
+      },
+      "report": "reports/correctness/2026-11-02-postrepair-differential/upstream-full36-v1/report.json"
+    },
+    {
+      "name": "value-classes-v1",
+      "status": "complete",
+      "counts": {
+        "pass": 31,
+        "unsupported_language": 32,
+        "invalid_kotlin": 11,
+        "harness_unsupported": 2
+      },
+      "report": "reports/correctness/2026-11-02-postrepair-differential/value-classes-v1/report.json"
+    },
+    {
+      "name": "diagnostic-boundaries-v1",
+      "status": "complete",
+      "counts": {
+        "pass": 4,
+        "unsupported_language": 6,
+        "invalid_rejected": 3
+      },
+      "report": "reports/correctness/2026-11-02-postrepair-differential/diagnostic-boundaries-v1/report.json"
+    },
+    {
+      "name": "generic-value-boundaries-v1",
+      "status": "complete",
+      "counts": {
+        "pass": 7,
+        "unsupported_language": 1,
+        "invalid_rejected": 3
+      },
+      "report": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/report.json"
+    }
+  ],
+  "publication": {
+    "policy": "Text, source, command logs and source archives only; original JSON and command argv preserved.",
+    "excluded_generated_files": 577
+  },
+  "limitations": [
+    "Counts remain separate by suite; suite completion does not turn unsupported language or harness outcomes into passes.",
+    "No new feature-family, full Android app, Android runtime or performance claim.",
+    "The value-suite raw limitations contain its historical unsigned-family status wording; this run only validates value-class behavior and does not reset the separately accepted unsigned checkpoint."
+  ],
+  "reproduction": {
+    "cwd": "Korrust repository root",
+    "environment": {
+      "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+    },
+    "commands": [
+      [
+        "python3",
+        "tools/upstream_jvm.py",
+        "--candidate",
+        "target/resume-repair-final/frozen-root/target/release/korrust",
+        "--matrix",
+        "tools/upstream_feature_matrix.json",
+        "--output",
+        "target/resume-postrepair-differential/upstream-full36-fresh"
+      ],
+      [
+        "python3",
+        "tools/check_value_classes.py",
+        "--candidate",
+        "target/resume-repair-final/frozen-root/target/release/korrust",
+        "--output",
+        "target/resume-postrepair-differential/value-classes-fresh"
+      ],
+      [
+        "python3",
+        "tools/check_diagnostic_boundaries.py",
+        "--root",
+        ".",
+        "--fixtures",
+        "tests/fixtures/diagnostic_boundaries",
+        "--candidate",
+        "target/resume-repair-final/frozen-root/target/release/korrust",
+        "--output",
+        "target/resume-postrepair-differential/diagnostic-boundaries-fresh"
+      ],
+      [
+        "python3",
+        "tools/check_generic_value_extension_boundaries.py",
+        "--root",
+        ".",
+        "--fixtures",
+        "tests/fixtures/diagnostic_boundaries",
+        "--candidate",
+        "target/resume-repair-final/frozen-root/target/release/korrust",
+        "--output",
+        "target/resume-postrepair-differential/generic-value-boundaries-fresh"
+      ]
+    ],
+    "note": "Use new output directories; the candidate must retain the recorded frozen hash. Fresh later-source runs belong in new reports."
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "created_at": "2026-11-01T21:03:05.032271+00:00",
+  "old_report": "reports/correctness/2026-11-02-resume-final-modules-six-source-assessment.json",
+  "old_report_sha256": "18bd60aec4dbd43dca5479c93c96510c43b96976777a3b0f8deb5897e33cd580",
+  "new_report": "reports/correctness/2026-11-02-postrepair-app-diagnostics.json",
+  "new_report_sha256": "2d1f3017f3ae7fdb1356a8301d5a59259d15620c7df2adf9fd5ae0b6f01d7591",
+  "model_sha256": "0284875decce71dcda40c438bd6ac61ba6a08bfc73f2a187fcec28118b7e8c92",
+  "same_unique_input_paths": 181,
+  "scope": "Only explicit diagnostic classification rechecked; no added source emission or family count. Earlier module/Gid/Rpp evidence remains tied to the 362e12 compiler.",
+  "cases": [
+    {
+      "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt",
+      "source_sha256": "1e610f1399fb388b5c1f70dea178c69f429ad92be79a57fea83952e3ad29dde8",
+      "all_input_context_and_hashes_match": true,
+      "actual_argv_difference": "Candidate compiler path intentionally changed to new frozen hash; output directories differ. All remaining candidate arguments and all official arguments except output directory match.",
+      "old_compiler_sha256": "362e12fd88ea493a1132d85a618a656f916242ef7ba4f48d002ea64fb054105b",
+      "new_compiler_sha256": "58ee34b1866ca7a9a5cd0ce838730856bef745907e159f93a2a4a8a00249b784",
+      "old_outcome": "unsupported_language",
+      "old_diagnostic": {
+        "source_identity": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt",
+        "offset": 731,
+        "category": "unclassified",
+        "code": "UNCLASSIFIED",
+        "message": "Only public interface properties, functions, nested interfaces, and companion objects are supported",
+        "path": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt",
+        "line": 22,
+        "column": 5
+      },
+      "old_classification_basis": "legacy_or_unclassified_fallback",
+      "new_outcome": "unsupported_language",
+      "new_diagnostic": {
+        "source_identity": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt",
+        "offset": 731,
+        "category": "unsupported_language",
+        "code": "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
+        "message": "Source suspend interface declarations are unsupported",
+        "path": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttp.kt",
+        "line": 22,
+        "column": 5
+      },
+      "new_classification_basis": "structured_category_code",
+      "official_output_classes_unchanged": true
+    },
+    {
+      "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt",
+      "source_sha256": "8d020890054d7f277d4eb9dd6931d58ec559493bbcaccfe3e6caab08dd060431",
+      "all_input_context_and_hashes_match": true,
+      "actual_argv_difference": "Candidate compiler path intentionally changed to new frozen hash; output directories differ. All remaining candidate arguments and all official arguments except output directory match.",
+      "old_compiler_sha256": "362e12fd88ea493a1132d85a618a656f916242ef7ba4f48d002ea64fb054105b",
+      "new_compiler_sha256": "58ee34b1866ca7a9a5cd0ce838730856bef745907e159f93a2a4a8a00249b784",
+      "old_outcome": "unsupported_language",
+      "old_diagnostic": {
+        "source_identity": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt",
+        "offset": 1878,
+        "category": "unclassified",
+        "code": "UNCLASSIFIED",
+        "message": "Unsupported class visibility; use public or internal",
+        "path": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt",
+        "line": 49,
+        "column": 5
+      },
+      "old_classification_basis": "legacy_or_unclassified_fallback",
+      "new_outcome": "unsupported_language",
+      "new_diagnostic": {
+        "source_identity": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt",
+        "offset": 1886,
+        "category": "unsupported_language",
+        "code": "CLASS_VISIBILITY_UNSUPPORTED",
+        "message": "Unsupported class visibility; use public or internal",
+        "path": "/Users/yuku/f/git/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt",
+        "line": 49,
+        "column": 13
+      },
+      "new_classification_basis": "structured_category_code",
+      "official_output_classes_unchanged": true
+    }
+  ]
+}

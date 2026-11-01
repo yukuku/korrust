@@ -1,0 +1,99 @@
+{
+  "status": "ready_for_root_review",
+  "base_manifest": "target/resume-java-nested-repair/base-manifest.json",
+  "base_compiler_sha256": "362e12fd88ea493a1132d85a618a656f916242ef7ba4f48d002ea64fb054105b",
+  "source_manifest": "target/resume-java-nested-repair/changed-files.json",
+  "integration_base": "target/resume-java-nested-repair/integration-base",
+  "changed_source_files": [
+    {
+      "path": "src/check.rs",
+      "base_sha256": "7a2c66bb6210f61d6062f2230f5d1b87f87d5bcf1773fdb3ca74f9e51c940b13",
+      "sha256": "417eef7ebc23b56aad840da371dc4582a8fdcf97b6c010ddca2dd7d0c472b9a1"
+    },
+    {
+      "path": "src/check_library.rs",
+      "base_sha256": "f84ed384f7c93a10bb0d44cacb01f8e8569f776606252680f12d64e9efe738a6",
+      "sha256": "fa3ad43229b02d0175464de09e65cd9252e53bf878835c0722f64b48b2572ef8"
+    },
+    {
+      "path": "src/classpath.rs",
+      "base_sha256": "e9948e6ce0b3879c13313078295c41c0aed9ba12304d608acba1eb63dd87e691",
+      "sha256": "a6f97db76bef3b657fe004140d812b01cf9a0d683db8192f2fb50e982356f4c8"
+    }
+  ],
+  "tracked_artifacts": [
+    "tests/java_nested/AliasPackage.kt",
+    "tests/java_nested/Check.java",
+    "tests/java_nested/DefaultAlias.kt",
+    "tests/java_nested/DefaultCheck.java",
+    "tests/java_nested/OriginalCheck.java",
+    "tests/java_nested/Reads.kt",
+    "tests/java_nested/SamePackage.kt",
+    "tests/java_nested/boundaries/cases.json",
+    "tests/java_nested/boundaries/cross_package.kt",
+    "tests/java_nested/boundaries/fake_member_class.kt",
+    "tests/java_nested/boundaries/inner_ctor.kt",
+    "tests/java_nested/boundaries/inner_ctor_outer_arg.kt",
+    "tests/java_nested/boundaries/instance_field.kt",
+    "tests/java_nested/boundaries/instance_method.kt",
+    "tests/java_nested/boundaries/missing.kt",
+    "tests/java_nested/boundaries/package_constructor.kt",
+    "tests/java_nested/boundaries/private_class.kt",
+    "tests/java_nested/boundaries/private_field.kt",
+    "tests/java_nested/boundaries/protected.kt",
+    "tests/java_nested/boundaries/renamed_original.kt",
+    "tests/java_nested/dependency/PlainDepot.java",
+    "tests/java_nested/dependency/Probe.java",
+    "tests/java_nested/dependency/Warehouse$Phantom.java",
+    "tests/java_nested/dependency/Warehouse.java",
+    "tools/check_java_nested.py"
+  ],
+  "compiler": {
+    "path": "target/resume-java-nested-repair/target/release/korrust",
+    "sha256": "373846896af41bc4ed11cc836aa568238412897d0bca7327ff81026bd8e90630"
+  },
+  "final_report": "target/resume-java-nested-repair/evidence-final-v2/report.json",
+  "counts": {
+    "pass": 10,
+    "invalid_rejected": 10,
+    "unsupported_language": 2
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "validation": {
+    "fixed_java_assertions_per_provider": {
+      "general": 21,
+      "unchanged_original": 2,
+      "default_package_alias": 4
+    },
+    "abi_owners": 7,
+    "rust_nested": 10,
+    "rust_call_resolution": 1,
+    "rust_value_resolution": 1,
+    "all_target_release_clippy": "pass -D warnings",
+    "fmt": "pass"
+  },
+  "replay": [
+    "JAVA_HOME=/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "python3 tools/check_java_nested.py --root /ABS/ROOT --candidate /ABS/FROZEN/BINARY --output /ABS/FRESH/OUTPUT"
+  ],
+  "scope": [
+    "Direct Java member-class namespaces use real InnerClasses rows, including canonical binary owner and access flags. No $-name guess or API/file-specific path.",
+    "Same-package package-private nested class static fields are accessible; cross-package/package-private and private classifiers are rejected.",
+    "Classifier qualifier role can choose nested class over same-named static object field; value role, lexical shadows and explicit aliases retain their own priority. Both field/class routes are runtime asserted with independent mutations.",
+    "Nonstatic qualified constructor calls are rejected using actual InnerClasses flags even if javac omitted this$0. Protected nested access and nonpublic constructor visibility remain explicit boundaries."
+  ],
+  "integration_notes": [
+    "Only src/check.rs, src/check_library.rs, src/classpath.rs changed; preserve root enum-agent generic metadata unit appended in classpath.rs during three-way merge.",
+    "The new attrs field is private Attributes.inner_classes, with no JavaClass struct changes.",
+    "Replay harness and fixtures are proposed tools/check_java_nested.py and tests/java_nested/*; root source/fixtures/tools were never edited by this lane.",
+    "Existing public nested/source/import controls are exercised by 10 nested Rust tests plus call_resolution and value_resolution integration tests.",
+    "No new feature-family count, source-inner expansion, full Java interop or performance claim."
+  ],
+  "history": {
+    "index": "target/resume-java-nested-repair/history-index.json",
+    "archive": "target/resume-java-nested-repair/text-and-source-history.zip"
+  }
+}

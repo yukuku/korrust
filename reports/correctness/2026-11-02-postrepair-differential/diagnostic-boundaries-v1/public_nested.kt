@@ -1,0 +1,1 @@
+class Outer { class Entry(val text: String) }

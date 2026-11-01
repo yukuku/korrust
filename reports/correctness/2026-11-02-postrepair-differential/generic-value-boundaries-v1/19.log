@@ -1,0 +1,10 @@
+tests/fixtures/diagnostic_boundaries/ForeignAliasHidden.kt:2:33: error: unresolved reference 'Remote'.
+fun missingOriginal(): String = Remote::class.java.simpleName
+                                ^^^^^^
+tests/fixtures/diagnostic_boundaries/ForeignAliasHidden.kt:2:47: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+fun missingOriginal(): String = Remote::class.java.simpleName
+                                              ^^^^
+tests/fixtures/diagnostic_boundaries/ForeignAliasHidden.kt:2:47: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+val <T> KClass<T>.java: Class<T>
+fun missingOriginal(): String = Remote::class.java.simpleName
+                                              ^^^^

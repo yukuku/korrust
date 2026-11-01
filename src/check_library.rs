@@ -1298,6 +1298,97 @@ impl Checker<'_> {
 }
 
 impl Checker<'_> {
+    pub(super) fn qualified_java_classifier(
+        &self,
+        expression: &Expr,
+        offset: usize,
+    ) -> Result<Option<(JavaClass, Option<u16>)>> {
+        fn parts<'a>(expression: &'a Expr, names: &mut Vec<&'a str>) -> bool {
+            match &expression.kind {
+                ExprKind::Name(name) => {
+                    names.push(name);
+                    true
+                }
+                ExprKind::Property(receiver, name) if parts(receiver, names) => {
+                    names.push(name);
+                    true
+                }
+                _ => false,
+            }
+        }
+        let mut names = Vec::new();
+        if !parts(expression, &mut names) || names.len() < 2 || self.value_name_is_bound(names[0]) {
+            return Ok(None);
+        }
+        let symbol = self
+            .classpath
+            .value_symbol(&self.lambda_owner, names[0], offset)?;
+        let (mut class, mut cursor) = match symbol {
+            Some(crate::classpath::ValueSymbol::Classifier(class)) if !class.kotlin_class => {
+                (*class, 1)
+            }
+            Some(_) => return Ok(None),
+            None => {
+                if !self.unshadowed(names[0]) {
+                    return Ok(None);
+                }
+                let found = (1..=names.len()).rev().find_map(|end| {
+                    self.classpath
+                        .load(&names[..end].join("/"))
+                        .ok()
+                        .filter(|class| {
+                            class.access & 1 != 0 && !class.kotlin_class && !class.unsupported
+                        })
+                        .map(|class| (class, end))
+                });
+                let Some(found) = found else {
+                    return Ok(None);
+                };
+                found
+            }
+        };
+        let mut access = None;
+        while cursor < names.len() {
+            let Some((nested, flags)) = self
+                .classpath
+                .java_member_class(&class.name, names[cursor])?
+            else {
+                return Ok(None);
+            };
+            let caller_package = self
+                .lambda_owner
+                .rsplit_once('/')
+                .map_or("", |(package, _)| package);
+            let owner_package = class
+                .name
+                .rsplit_once('/')
+                .map_or("", |(package, _)| package);
+            if flags & 2 != 0
+                || flags & 7 == 0 && caller_package != owner_package
+                || nested.access & 1 == 0 && caller_package != owner_package
+            {
+                return Err(
+                    Diagnostic::new(offset, "Nested Java classifier is inaccessible")
+                        .with_kind(crate::DiagnosticKind::InvalidKotlin, "INVISIBLE_REFERENCE"),
+                );
+            }
+            if flags & 4 != 0 || nested.unsupported {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Protected or unsupported nested Java classifier metadata",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "JAVA_NESTED_CLASS_UNSUPPORTED",
+                ));
+            }
+            class = nested;
+            access = Some(flags);
+            cursor += 1;
+        }
+        Ok(Some((class, access)))
+    }
+
     pub(super) fn qualified_classifier(&self, expression: &Expr) -> Option<JavaClass> {
         fn parts(expression: &Expr, names: &mut Vec<String>) -> bool {
             match &expression.kind {
@@ -1346,13 +1437,168 @@ impl Checker<'_> {
             .ok()
             .filter(|class| class.access & 1 != 0 && !class.unsupported)
     }
+    fn java_callee_collision(
+        &mut self,
+        expression: &Expr,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        let ExprKind::Property(receiver, name) = &expression.kind else {
+            return Ok(None);
+        };
+        let parent = self.value_classifier(receiver)?.or(self
+            .qualified_java_classifier(receiver, offset)?
+            .map(|(class, _)| class));
+        let Some(parent) = parent.filter(|class| !class.kotlin_class) else {
+            return Ok(None);
+        };
+        let Some((nested, flags)) = self.classpath.java_member_class(&parent.name, name)? else {
+            return Ok(None);
+        };
+        let methods = self
+            .classpath
+            .methods(&parent.name)?
+            .into_iter()
+            .filter(|method| {
+                method.source_name() == name
+                    && method.access & 8 != 0
+                    && (method.owner == parent.name
+                        || self
+                            .classpath
+                            .load(&method.owner)
+                            .is_ok_and(|class| class.access & 0x200 == 0))
+            })
+            .collect::<Vec<_>>();
+        if methods.is_empty() {
+            return Ok(None);
+        }
+        let package = |owner: &str| {
+            owner
+                .rsplit_once('/')
+                .map_or("", |(package, _)| package)
+                .to_owned()
+        };
+        let same_package = package(&self.lambda_owner) == package(&nested.name);
+        let arity_may_match = |method: &JavaMethod| {
+            method.access & 0x80 != 0
+                || class_method_types(method)
+                    .is_ok_and(|(parameters, _)| parameters.len() == args.len())
+        };
+        let unhandled_method = methods.iter().any(|method| {
+            arity_may_match(method)
+                && (method.unsupported
+                    || method.access & 3 == 0
+                        && (package(&self.lambda_owner) == package(&method.owner)
+                            || method.access & 4 != 0))
+        });
+        if unhandled_method {
+            return Err(Diagnostic::new(
+                offset,
+                "Java callee collision has unsupported candidate visibility or metadata",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "JAVA_CALLEE_CANDIDATE_UNSUPPORTED",
+            ));
+        }
+        let class_visible = flags & 2 == 0
+            && (flags & 7 != 0 || same_package)
+            && (nested.access & 1 != 0 || same_package);
+        let constructors = nested
+            .methods
+            .iter()
+            .filter(|method| method.name == "<init>")
+            .cloned()
+            .collect::<Vec<_>>();
+        let unhandled_constructor = class_visible
+            && flags & 8 != 0
+            && (nested.unsupported
+                || flags & 4 != 0
+                || nested.access & 0x2000 != 0
+                || nested
+                    .library
+                    .as_ref()
+                    .is_some_and(|library| !library.type_parameters.is_empty())
+                || constructors
+                    .iter()
+                    .any(|method| method.access & 3 == 0 && same_package || method.unsupported))
+            && constructors.iter().any(arity_may_match);
+        if unhandled_constructor {
+            return Err(Diagnostic::new(
+                offset,
+                "Java callee collision has unsupported constructor visibility or metadata",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "JAVA_CALLEE_CANDIDATE_UNSUPPORTED",
+            ));
+        }
+        let mut candidates = methods
+            .into_iter()
+            .filter(|method| method.access & 1 != 0 && !method.unsupported)
+            .collect::<Vec<_>>();
+        if class_visible && flags & 8 != 0 {
+            candidates.extend(
+                constructors
+                    .into_iter()
+                    .filter(|method| method.access & 1 != 0 && !method.unsupported),
+            );
+        }
+        if candidates.is_empty() {
+            return Ok(None);
+        }
+        let mut method = self
+            .select_method(&candidates, args, offset)
+            .map_err(|error| {
+                if error.message.contains("Ambiguous") {
+                    error.with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "AMBIGUOUS_JAVA_CALLEE",
+                    )
+                } else {
+                    error
+                }
+            })?;
+        if method.name == "<init>" {
+            return Ok(None);
+        }
+        if self
+            .classpath
+            .load(&method.owner)
+            .is_ok_and(|class| !class.kotlin_class && class.access & 1 == 0)
+        {
+            method.owner = parent.name;
+        }
+        self.library_static_call(method, args, offset).map(Some)
+    }
+
     pub(super) fn qualified_constructor(
         &mut self,
         expression: &Expr,
         args: &[Expr],
         offset: usize,
     ) -> Result<Option<Value>> {
-        let Some(class) = self.qualified_classifier(expression) else {
+        if let Some(value) = self.java_callee_collision(expression, args, offset)? {
+            return Ok(Some(value));
+        }
+        let java = self.qualified_java_classifier(expression, offset)?;
+        if java
+            .as_ref()
+            .is_some_and(|(_, access)| access.is_some_and(|access| access & 8 == 0))
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Inner constructor requires an enclosing instance",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "INNER_CONSTRUCTOR_RECEIVER_REQUIRED",
+            ));
+        }
+        let Some(class) = java.map(|(class, _)| class).or_else(|| {
+            self.qualified_classifier(expression)
+                .filter(|class| class.kotlin_class)
+        }) else {
             return Ok(None);
         };
         if class
@@ -1402,6 +1648,29 @@ impl Checker<'_> {
             .filter(|m| m.name == "<init>" && m.access & 1 != 0 && !m.unsupported)
             .cloned()
             .collect::<Vec<_>>();
+        if constructors.is_empty() && !class.kotlin_class {
+            let private = class
+                .methods
+                .iter()
+                .filter(|method| method.name == "<init>")
+                .all(|method| method.access & 2 != 0);
+            return Err(Diagnostic::new(
+                offset,
+                "Qualified Java constructor is inaccessible or requires unsupported visibility",
+            )
+            .with_kind(
+                if private {
+                    crate::DiagnosticKind::InvalidKotlin
+                } else {
+                    crate::DiagnosticKind::UnsupportedLanguage
+                },
+                if private {
+                    "INVISIBLE_REFERENCE"
+                } else {
+                    "JAVA_CONSTRUCTOR_VISIBILITY_UNSUPPORTED"
+                },
+            ));
+        }
         let method = self.select_method(&constructors, args, offset)?;
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let (params, defaults) = Self::method_parameters(&method)?;

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "kind": "features",
   "created_at": "2026-11-01T19:40:07.206962+00:00",
-  "status": "in_progress",
+  "status": "completed",
   "selection": "One carryover acceptance plus five remaining original families; infrastructure and repairs are uncounted.",
   "features": [
     {
@@ -144,7 +144,8 @@
   "accepted_new_families": 5,
   "remaining_new_families": 0,
   "limitations": [
-    "All selected bounded families have checkpoint acceptance. Final combined regression, app/module assessment and diagnostic repairs are still in progress; support is not unrestricted Kotlin or Android compatibility."
+    "Five bounded new families and one carryover acceptance are complete. Shared diagnostic and Java lookup repairs are uncounted; all final selected checks passed or reached their documented explicit boundaries.",
+    "Test and module results retain their exact compiler identities; passing suites are not unrestricted Kotlin or full-app compatibility claims."
   ],
   "evidence": [
     "reports/correctness/2026-11-02-resume-member-extensions.json",
@@ -161,5 +162,17 @@
     "reports/correctness/2026-11-02-suspend-foundation/clippy-v1.log",
     "reports/correctness/2026-11-02-suspend-isolated-history/index.json",
     "reports/correctness/2026-11-02-unsigned-scalars.json"
-  ]
+  ],
+  "validation": {
+    "feature_freeze": "reports/correctness/2026-11-02-resume-final-checks.json",
+    "modules": "reports/correctness/2026-11-02-resume-final-modules-contract.json",
+    "app_emission_retry": "reports/correctness/2026-11-02-resume-final-modules-six-source-assessment-gid-rpp-retry.json",
+    "postrepair_checks": "reports/correctness/2026-11-02-postrepair-checks.json",
+    "postrepair_matrix": "reports/correctness/2026-11-02-postrepair-differential/index.json",
+    "postrepair_app_diagnostics": "reports/correctness/2026-11-02-postrepair-app-diagnostics.json",
+    "historical_callee_failure": "reports/correctness/2026-11-02-postrepair-java-nested-callee-probe.json",
+    "final_checks": "reports/correctness/2026-11-02-final-callee-checks.json",
+    "final_java_callee": "reports/correctness/2026-11-02-final-java-callee.json",
+    "final_upstream_matrix": "reports/correctness/2026-11-02-final-callee-differential/index.json"
+  }
 }

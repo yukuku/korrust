@@ -1,0 +1,50 @@
+{
+  "status": "ready_for_root_review",
+  "base_revision": "79ce5bd74a4bfbc017136fc14bf679989138bfe6",
+  "patch_manifest": "target/resume-result-boundary/patch-manifest.json",
+  "patches": [
+    "generic-value-boundary.patch",
+    "app-parser-boundaries.patch",
+    "same-package-class-literals.patch"
+  ],
+  "proofs": {
+    "proof-v7": {
+      "pass": 4,
+      "unsupported_language": 6,
+      "invalid_rejected": 3
+    },
+    "adversarial-v4": {
+      "pass": 7,
+      "unsupported_language": 1,
+      "invalid_rejected": 3
+    },
+    "upstream-v4": {
+      "unsupported_language": 2
+    },
+    "extra-v2": {
+      "invalid_rejection_unchanged": 2,
+      "unsupported_language": 2
+    }
+  },
+  "validation": "target/resume-result-boundary/validation-final3.json",
+  "rust_tests": {
+    "syntax": 71,
+    "metadata": 28,
+    "pinned_unsupported_metadata": 1,
+    "renamed_imports": 1,
+    "ordinary_class_literal": 1
+  },
+  "clippy": "release all targets -D warnings passed",
+  "formatting": "pass",
+  "candidate_sha256": "3a4311cfc7e519fa7fe04755cca649dc9146958448dcafb8eefb9861cba8aec4",
+  "replay": "target/resume-result-boundary/boundary-replay.zip",
+  "root_files_edited": [],
+  "scope": "General diagnostic repairs only; no additional family or generic value/runtime compatibility claim.",
+  "generic_patch_sha256": "f0428a9ea33a5125bf59e003c7d3992ff3c2817d3d4be91501be6d5a2fdfe838",
+  "replay_sha256": "f7b49c41d467c515813b361f948216dd24409a93552f3947a7369d21e5a49811",
+  "already_integrated_by_root": [
+    "app-parser-boundaries",
+    "same-package-class-literals"
+  ],
+  "generic_review": "Unsupported generic candidates stay in applicability groups. Winning-group unsupported declarations reject; lower same-package sentinels cannot trigger imported-vs-local competition; non-infix legality precedes unsupported generic classification."
+}

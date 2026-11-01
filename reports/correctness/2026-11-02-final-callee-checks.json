@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T21:34:38.952038+00:00",
+  "status": "completed",
+  "compiler": {
+    "path": "target/resume-callee-final/frozen-root/target/release/korrust",
+    "sha256": "c1b961219c91349b8aedb36aa3ce961cb91e64ddb6716dbb0cff273d1c5bca45"
+  },
+  "checks": [
+    {
+      "name": "rust-lib",
+      "status": "passed",
+      "test_binaries": 1,
+      "tests": 276,
+      "log": "reports/correctness/2026-11-02-final-callee-checks/rust-lib.log"
+    },
+    {
+      "name": "rust-integration",
+      "status": "passed",
+      "test_binaries": 5,
+      "tests": 10,
+      "log": "reports/correctness/2026-11-02-final-callee-checks/rust-integration.log"
+    },
+    {
+      "name": "python",
+      "status": "passed",
+      "tests": 178,
+      "log": "reports/correctness/2026-11-02-final-callee-checks/python.log"
+    },
+    {
+      "name": "release all-target Clippy -D warnings",
+      "status": "passed",
+      "log": "reports/correctness/2026-11-02-final-callee-checks/clippy.log"
+    },
+    {
+      "name": "formatting",
+      "status": "passed",
+      "log": "reports/correctness/2026-11-02-final-callee-checks/fmt.log"
+    }
+  ],
+  "input_integrity": {
+    "status": "unchanged",
+    "entries": 949,
+    "changed_paths": []
+  },
+  "frozen_input_manifest": "reports/correctness/2026-11-02-final-callee-checks/freeze.json",
+  "source_archive": "reports/correctness/2026-11-02-final-callee-checks/frozen-sources.zip",
+  "reproduction": {
+    "environment": {
+      "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+      "RUST_MIN_STACK": "16777216",
+      "KORRUST_COMPILER": "target/resume-callee-final/frozen-root/target/release/korrust"
+    },
+    "commands": [
+      "cargo test --release --locked --offline --lib",
+      "cargo test --release --locked --offline --test call_resolution --test value_resolution --test static_import_diagnostics --test inner_classes --test value_classes",
+      "cargo clippy --release --locked --offline --all-targets -- -D warnings",
+      "cargo fmt --check",
+      "python3 -m unittest discover -s tests -p 'test_*.py'"
+    ]
+  },
+  "scope": "Final combined compiler after Java constructor/static-method collision repair. Earlier whole-suite and AndroidBible module results retain their original compiler identities.",
+  "prior_full_suite": "reports/correctness/2026-11-02-resume-final-checks.json",
+  "prior_postrepair": "reports/correctness/2026-11-02-postrepair-checks.json",
+  "fixed_historical_probe": "reports/correctness/2026-11-02-postrepair-java-nested-callee-probe.json"
+}

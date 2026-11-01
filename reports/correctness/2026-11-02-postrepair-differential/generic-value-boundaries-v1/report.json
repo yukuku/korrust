@@ -1,0 +1,659 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T21:06:46.513667+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/resume-postrepair-differential/generic-value-boundaries-v1/korrust",
+    "sha256": "58ee34b1866ca7a9a5cd0ce838730856bef745907e159f93a2a4a8a00249b784"
+  },
+  "commands": [
+    {
+      "label": "oracle Packet dependency",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/Dependency.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/0.log"
+    },
+    {
+      "label": "oracle extension overloads",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/FallbackDependency.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/HigherDependency.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/LowerDependency.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/LocalDependency.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/extensions",
+        "-Xallow-kotlin-package",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/1.log"
+    },
+    {
+      "label": "oracle fallback probe",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/Fallback.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/extensions",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/fallback-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/2.log"
+    },
+    {
+      "label": "official-only fallback Java caller",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/fallback-official",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/fallback-caller",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/FallbackCalls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/3.log"
+    },
+    {
+      "label": "oracle chooses Packet overload",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/extensions:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/fallback-official:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/fallback-caller",
+        "FallbackCalls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/4.log"
+    },
+    {
+      "label": "candidate rejects applicable unsupported overload",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/korrust",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/Fallback.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/extensions",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/fallback-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/5.log"
+    },
+    {
+      "label": "official earlier import priority",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/Priority.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/LocalPriority.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/extensions",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/priority-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/6.log"
+    },
+    {
+      "label": "candidate earlier import priority",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/korrust",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/Priority.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/LocalPriority.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/extensions",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/priority-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/7.log"
+    },
+    {
+      "label": "fixed Java priority caller official only",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/priority-official",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/priority-caller",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/PriorityCalls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/8.log"
+    },
+    {
+      "label": "earlier import executes official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/extensions:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/priority-official:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/priority-caller",
+        "PriorityCalls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/9.log"
+    },
+    {
+      "label": "earlier import executes candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/extensions:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/priority-candidate:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/priority-caller",
+        "PriorityCalls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/10.log"
+    },
+    {
+      "label": "oracle non-infix invalid",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/InvalidInfix.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/extensions",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/non-infix-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/11.log"
+    },
+    {
+      "label": "candidate non-infix invalid",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/korrust",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/InvalidInfix.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/dependency:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/extensions",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/non-infix-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/12.log"
+    },
+    {
+      "label": "Java classifier",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/java",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/Visible.java",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/Alias.java",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/Remote.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/13.log"
+    },
+    {
+      "label": "official explicit alias classifier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/AliasLiteral.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/AliasHidden.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/java",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/alias-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/14.log"
+    },
+    {
+      "label": "candidate explicit alias classifier",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/korrust",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/AliasLiteral.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/AliasHidden.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/java",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/alias-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/15.log"
+    },
+    {
+      "label": "official-only alias Java caller",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/java:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/alias-official",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/alias-caller",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/AliasCalls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/16.log"
+    },
+    {
+      "label": "same-package original and alias official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/java:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/alias-official:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/alias-caller",
+        "AliasCalls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/17.log"
+    },
+    {
+      "label": "same-package original and alias candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/java:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/alias-candidate:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/alias-caller",
+        "AliasCalls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/18.log"
+    },
+    {
+      "label": "oracle hidden foreign original",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/ForeignAliasHidden.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/java",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/foreign-original-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/19.log"
+    },
+    {
+      "label": "candidate hidden foreign original",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/korrust",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/ForeignAliasHidden.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/java",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/foreign-original-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/20.log"
+    },
+    {
+      "label": "Java named classifier",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-java",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/named/Visible.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/21.log"
+    },
+    {
+      "label": "official named aliases and plain lookup",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/named/Alias.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/named/Plain.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-java",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/22.log"
+    },
+    {
+      "label": "candidate named aliases and plain lookup",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/korrust",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/named/Alias.kt",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/named/Plain.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-java",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/23.log"
+    },
+    {
+      "label": "official-only named Java caller",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-java:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-official",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-caller",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/named/NamedCalls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/24.log"
+    },
+    {
+      "label": "named alias and plain runtime official",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-java:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-official:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-caller",
+        "named.NamedCalls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/25.log"
+    },
+    {
+      "label": "named alias and plain runtime candidate",
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-java:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-candidate:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-caller",
+        "named.NamedCalls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/26.log"
+    },
+    {
+      "label": "oracle named original hidden",
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/named/Original.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-java",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-original-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/27.log"
+    },
+    {
+      "label": "candidate named original hidden",
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/korrust",
+        "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/named/Original.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-java",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-differential/generic-value-boundaries-v1/named-original-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/28.log"
+    }
+  ],
+  "cases": [
+    {
+      "id": "oracle_prefers_generic_value_receiver",
+      "outcome": "pass"
+    },
+    {
+      "id": "no_Any_fallback_emission",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/Fallback.kt",
+          "offset": 84,
+          "category": "unsupported_language",
+          "code": "GENERIC_VALUE_EXTENSION_ABI_UNSUPPORTED",
+          "message": "Imported generic value-class extension ABI is unsupported",
+          "path": "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/Fallback.kt",
+          "line": 3,
+          "column": 31
+        }
+      ]
+    },
+    {
+      "id": "earlier_import_official",
+      "outcome": "pass"
+    },
+    {
+      "id": "earlier_import_candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "known_non_infix_stays_invalid",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/InvalidInfix.kt",
+          "offset": 80,
+          "category": "invalid_kotlin",
+          "code": "INFIX_MODIFIER_REQUIRED",
+          "message": "The infix modifier is required on notInfix",
+          "path": "/Users/yuku/f/git/korrust/tests/fixtures/diagnostic_boundaries/InvalidInfix.kt",
+          "line": 3,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "id": "alias_binding_and_same_package_original_official",
+      "outcome": "pass"
+    },
+    {
+      "id": "alias_binding_and_same_package_original_candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "different_package_original_stays_hidden",
+      "outcome": "invalid_rejected",
+      "scope": "Unresolved-name rejection only; diagnostic equivalence unassessed"
+    },
+    {
+      "id": "named_alias_and_plain_official",
+      "outcome": "pass"
+    },
+    {
+      "id": "named_alias_and_plain_candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "named_package_original_stays_hidden",
+      "outcome": "invalid_rejected",
+      "scope": "Unresolved-name rejection only; diagnostic equivalence unassessed"
+    }
+  ],
+  "counts": {
+    "pass": 7,
+    "unsupported_language": 1,
+    "invalid_rejected": 3
+  },
+  "fixed_java_caller_hashes": {
+    "target/resume-postrepair-differential/generic-value-boundaries-v1/fallback-caller/FallbackCalls.class": "9fca3859f862d3e52dff84eb4b4870aa6563be7192c2be1cff7c23cbe2b70ed9",
+    "target/resume-postrepair-differential/generic-value-boundaries-v1/priority-caller/PriorityCalls.class": "67e63460cc97aba247cd71d3341e588b8569cc9d980cadefd304141bc0044b99",
+    "target/resume-postrepair-differential/generic-value-boundaries-v1/alias-caller/AliasCalls.class": "a75c11ec3450cc83be418168f33f660151b225e5b14ca7824408f883e047735e",
+    "target/resume-postrepair-differential/generic-value-boundaries-v1/named-caller/named/NamedCalls.class": "02efc3ff1970aa83474b68820e601f48e48a7977f7baae4cb91db7f3a62ede38"
+  },
+  "frozen_input_hashes": {
+    "src/check_declarations.rs": "bdc6377e186d0a9f71561e33d238e9d042eddea14f77405d9daf417be58cf1b4",
+    "src/check_captures.rs": "d1bc5a311e720072df4eb38bef24ff253a01c4bee4d6ca5690f51455024ff1ba",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/const_eval.rs": "bd03e7339e107ee39f061225d9e838c24bbad37a012d3c2dc8d3cbed8779980d",
+    "src/check_class_delegation.rs": "05355235cd6de1998c890c17fe9615c1a020f6e8faee704af48a243e8e957741",
+    "src/check_interfaces.rs": "8c31ef564cf99b24fd0e6a9416886e60abc0c96e9214834c1501692d883b6de5",
+    "src/check_relations.rs": "3915c7cc3637126fb82acd68714025ea81e1289663a0b4cfce9840483b2b13a5",
+    "src/check_objects.rs": "a4cd8542a749e0dc670f571363df5fe260e83fa7c2cd6ccd9e1ed5bb79cbf5d3",
+    "src/classpath.rs": "f0265746eb254c77bdf8dbb06ed644f9ba1619e31ebf9a62d7395574bb2d720d",
+    "src/annotation_declarations.rs": "1c50fb5e94df8a4d48d14d03a00d411c33b402bbc847d0df45ac622d39b7be01",
+    "src/check_references.rs": "dd677362351c02d61f48ff4466ff0418ab9eb33a3152f5947640fc14ee12b5b2",
+    "src/compiled_inline.rs": "06250c79ae618989985360ced0235cca4628f0f7c4d92630a00295d217310102",
+    "src/check_classes.rs": "ad71c23f08740d5c0f87906c5843b947add77076f04e540ade6536da0ec2df72",
+    "src/check.rs": "417eef7ebc23b56aad840da371dc4582a8fdcf97b6c010ddca2dd7d0c472b9a1",
+    "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "src/check_functions.rs": "ce6c57f2a6b5e0765aa1e20efbe5f0d5ac0825d4353e1f1d4501698c26435834",
+    "src/metadata.rs": "8ba7c67e78229b4626f1cc32539d24e6fcf6f6026d5e658cc0537dddea66c8f7",
+    "src/check_annotations.rs": "862647750f7f11a048d9cfae0df11cb931078fb56409939a902222d6b5f336be",
+    "src/lib.rs": "edfca3d553ee9bfd6232863b3df7b807f20f23d71a68b5e822d2b8900a6373e3",
+    "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+    "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "src/jvm_descriptor.rs": "a665e290c4777ceacb0a986f03975491d8d5e51bcaed3a322606b65d8d571dfb",
+    "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "src/check_operations.rs": "dfe81706b7d75204f342744512ccee643e7500ed02daff8906984986808daa39",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/bytecode.rs": "433fd46a2ca3c7c0a2bf3de0d62ea3eb761cdcaee91bcb1ce9eb81bbbe54a757",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "src/syntax.rs": "b649338823375a01072cdd7c88f022fe619e1a044a6f017a9b7aa32dc110a79b",
+    "src/check_annotation_placements.rs": "003f33a33ee64b2fc939e07f6c54f3e1e0acee4138582c186de258499698c840",
+    "src/check_library.rs": "fa3ad43229b02d0175464de09e65cd9252e53bf878835c0722f64b48b2572ef8",
+    "src/check_ir_walk.rs": "358a447f20e6957785a582f3a2842e937b1db7bf204afcac9ee5fc1ba1779e68",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/check_delegates.rs": "094b9bdc43d4cecb0fb3dcef1681181f8e7737804f3808582192b3190d01dc92",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/value_names.rs": "a13518357c7c68a8e9df0ee09dc114fbc51de37d1cf12407ba84a77b6a93a2ba",
+    "src/classpath/metadata.rs": "9276a513eb746b86d24fca6e225b0054be4a1c77bafff09c8b1f544fe86b0f06",
+    "src/classpath/source.rs": "b70e8ea77a4c689dbe3164efb5217fa298e2d99f535c7dad6147f79a10a684ee",
+    "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+    "src/classpath/signature.rs": "8b9017fa76bb300363825f6db7057c7f67218da83ebac6a27568b792d58e1142",
+    "src/classpath/source_enums.rs": "3366b5ad4fc96e61e95b398e72dbb6c6a3de8e734247b6e7cdba7d937ef527f4",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/bytecode/class_companion.rs": "a5756a0c46cc33fa449bebe330ef5748789da70b4b941c21c7f72aa923802fc2",
+    "src/bytecode/interfaces.rs": "1cfee2e8d5d0847eb719dedde5b429953c3f9d24697fcee653aa278efa1d4c49",
+    "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+    "src/bytecode/lambdas.rs": "50d5de628118856e96b21d69b555b626e23608838dc4fca1eef22acca96fcc65",
+    "src/bytecode/data.rs": "703ed86a9cda8f219aa57869043e0537d20e1e6866bace28049f01467afd133b",
+    "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotations.rs": "397e6b298ce180be4f6e733e2240da2f23f36bc975be46e5700ced1162d9741c",
+    "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "src/bytecode/defaults.rs": "f8eb6d73077c057a293d676723c2801007d9d0fa21dd6784ae16730b1637e0d9",
+    "src/bytecode/suspend.rs": "ec4fb43e1402edeb4e85b60ed3a360408ad2dccdb408caca5e27287115a1e0c4",
+    "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "tests/fixtures/diagnostic_boundaries/Dependency.kt": "1d3766220c52de3e6b84515889ac8170ea8c0496a6d65988ac16a48827490d17",
+    "tests/fixtures/diagnostic_boundaries/ForeignAliasHidden.kt": "19f7cb6ce6b5041f57749365981a7407f13a6bad8e1b12093d8fbde8d748644a",
+    "tests/fixtures/diagnostic_boundaries/Calls.java": "ed374f8edfeae9b7d5bf9f3e476a97a355fcf7ba010d3f0690774dcc0643861d",
+    "tests/fixtures/diagnostic_boundaries/VisibleLiteral.kt": "999d2e897e1765f1232336debe4c7adbed36e5fb0e79aea3f52c7547a24f445e",
+    "tests/fixtures/diagnostic_boundaries/Alias.java": "3736075557f9cbcfac6e405d87d4e7cf20e5e8007cca6d374b78937c9f0e03c1",
+    "tests/fixtures/diagnostic_boundaries/Supported.kt": "1386ea8d0234f03937cf5cd237595ef1061539bed9643d1a82b02c209af47eeb",
+    "tests/fixtures/diagnostic_boundaries/Unknown.kt": "9322108337bf998e8d08239425668fb285d0e74b0e423ad9e51adbf7f38fce42",
+    "tests/fixtures/diagnostic_boundaries/Remote.java": "719a4ec2c0b49c13300e8693bd98ddabb094b04f8b50fbfcc64965046e79c3f8",
+    "tests/fixtures/diagnostic_boundaries/Fallback.kt": "1e1198bbb3adc65dcf116cd6a5eb292422a3cdf927fcf9ec0cc9b31c3c44ddb0",
+    "tests/fixtures/diagnostic_boundaries/UnsupportedPacket.kt": "3939894f8bdd8b183c8b44ead1c0fc1d99e6085b7698a1f452b37edd417f6255",
+    "tests/fixtures/diagnostic_boundaries/InvalidInfix.kt": "1b9b592aeb7cdb8112eba2edc8e0905d1b6cfc415cbf8e4859c55421943e4e89",
+    "tests/fixtures/diagnostic_boundaries/LowerDependency.kt": "e181c6ff06995e985d9215c63bac075ac07378ffa9c3a632755a0bc1cd451e64",
+    "tests/fixtures/diagnostic_boundaries/FallbackDependency.kt": "a735c8274a6f6a1a6c1cc465fad232c491382b21848c10063b58be849294c568",
+    "tests/fixtures/diagnostic_boundaries/AliasLiteral.kt": "ccc1be3def5d44098cb8903097407d23eab7859803450d486e659b2f25586206",
+    "tests/fixtures/diagnostic_boundaries/LocalDependency.kt": "6f38483bb5002627ca22150939e9b9fcc2e45a389483999adb5b282018f8109f",
+    "tests/fixtures/diagnostic_boundaries/HigherDependency.kt": "ff6a804feaef665c6efe2939f17cd823fb1bed66ade85027ad6a303f14f8cf0c",
+    "tests/fixtures/diagnostic_boundaries/AliasHidden.kt": "068874a1d6ee8105d0a1b519b929e68528e3388e798d6a75d2f3118c6d1f3f9b",
+    "tests/fixtures/diagnostic_boundaries/FallbackCalls.java": "49e14e0a4860069e8f6760f57802e8a4e9b4a6dd5fc1bf2b5895d7eb292ddfff",
+    "tests/fixtures/diagnostic_boundaries/Hidden.java": "a90e281e33462a4adb03b04e477efe59d4b02cd372ad63c0c734db7cb11b3262",
+    "tests/fixtures/diagnostic_boundaries/Priority.kt": "f1aa8e338372a79ecca2ec5a971d30e6f4c7fa3b6c51738ec3071f8345fe47c4",
+    "tests/fixtures/diagnostic_boundaries/LocalPriority.kt": "70d463adbeb8f3eaa931546504377fdf650a3d2100754d4093c223b3a8d885ff",
+    "tests/fixtures/diagnostic_boundaries/PriorityCalls.java": "03bf03e3498876e1a8da0a5b58524870cf9e03100caa6792034acec819f3f0dc",
+    "tests/fixtures/diagnostic_boundaries/Invalid.kt": "9260eca6710d1e4066082552a467c10b9adc2f1a9b13acf4b3d88bd2afa8a13e",
+    "tests/fixtures/diagnostic_boundaries/AliasCalls.java": "4af9809c3040c14d6adbcd2587012dbac2848065b548fc4bc96d4758660916a9",
+    "tests/fixtures/diagnostic_boundaries/Visible.java": "472cc2d91e117b537926466e311bb24129eed4d3015b250652c25d52012913d2",
+    "tests/fixtures/diagnostic_boundaries/HiddenLiteral.kt": "343e399bf2c7670804da296f979ee1feea4f838ca211c0f925c49ed662fe9641",
+    "tests/fixtures/diagnostic_boundaries/named/Original.kt": "033e099feed6bba9103bec7707dfd0405a7ab0cb26dc2be2d098187b8a2c2eb9",
+    "tests/fixtures/diagnostic_boundaries/named/Plain.kt": "c2b3ed8b3f6381d2af1ff7eaa07c32c577ae98128b5c16acd696f49ba21d830e",
+    "tests/fixtures/diagnostic_boundaries/named/Alias.kt": "9eeaf8ee3e4c00571e370944ff158a910941cd6211c314124407115b6a5842b3",
+    "tests/fixtures/diagnostic_boundaries/named/NamedCalls.java": "680e29e221a6b164f7a7956bf5089045ede35279214b57d041ec3592b74c3aac",
+    "tests/fixtures/diagnostic_boundaries/named/Visible.java": "bb8cdaecf9b2d79184b481d99c7143ac03c0e6b76a0dabae388eb073a7009371",
+    "tools/check_generic_value_extension_boundaries.py": "de01c17b2588e90dd5c50fea9b22fb7d1ee6d27f775481b34efecb607154a4d2",
+    "target/resume-postrepair-differential/generic-value-boundaries-v1/korrust": "58ee34b1866ca7a9a5cd0ce838730856bef745907e159f93a2a4a8a00249b784",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "target/resume-postrepair-differential/generic-value-boundaries-v1/fallback-caller/FallbackCalls.class": "9fca3859f862d3e52dff84eb4b4870aa6563be7192c2be1cff7c23cbe2b70ed9",
+    "target/resume-postrepair-differential/generic-value-boundaries-v1/priority-caller/PriorityCalls.class": "67e63460cc97aba247cd71d3341e588b8569cc9d980cadefd304141bc0044b99",
+    "target/resume-postrepair-differential/generic-value-boundaries-v1/alias-caller/AliasCalls.class": "a75c11ec3450cc83be418168f33f660151b225e5b14ca7824408f883e047735e",
+    "target/resume-postrepair-differential/generic-value-boundaries-v1/named-caller/named/NamedCalls.class": "02efc3ff1970aa83474b68820e601f48e48a7977f7baae4cb91db7f3a62ede38"
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "scope": "Diagnostic and import-priority regressions only. Generic value support is unchanged; unsupported candidate is never emitted or run.",
+  "archived_from": {
+    "path": "target/resume-postrepair-differential/generic-value-boundaries-v1/report.json",
+    "sha256": "33fe8dece14ae18597ccc1bda9fb263c381cbda07db7f87e87ee00ade5bec52b",
+    "original_report": "reports/correctness/2026-11-02-postrepair-differential/generic-value-boundaries-v1/original-report.json",
+    "policy": "Only published evidence paths rebased; exact command argv and raw report retained. Generated outputs excluded."
+  }
+}

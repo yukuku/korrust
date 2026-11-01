@@ -3554,9 +3554,14 @@ impl Parser {
                 }
                 value_ = true;
                 offset = self.tokens[self.pos - 1].offset;
-            } else if matches!(self.token().text.as_str(), "public" | "internal") {
+            } else if matches!(
+                self.token().text.as_str(),
+                "public" | "internal" | "private" | "protected"
+            ) {
                 if visibility.is_some() {
-                    return Err(self.error("Conflicting or repeated class visibility modifiers"));
+                    return Err(self
+                        .error("Conflicting or repeated class visibility modifiers")
+                        .with_kind(DiagnosticKind::InvalidKotlin, "CLASS_VISIBILITY_INVALID"));
                 }
                 visibility = Some(self.token().text.clone());
                 self.pos += 1;
@@ -3598,8 +3603,18 @@ impl Parser {
                 .with_kind(DiagnosticKind::InvalidKotlin, "SEALED_MODIFIER_INVALID"));
         }
         abstract_ |= sealed_;
-        if matches!(self.token().text.as_str(), "private" | "protected") {
-            return Err(self.error("Unsupported class visibility; use public or internal"));
+        if visibility.as_deref() == Some("protected") && self.depth == 0 {
+            return Err(self
+                .error("Top-level classes cannot be protected")
+                .with_kind(DiagnosticKind::InvalidKotlin, "CLASS_VISIBILITY_INVALID"));
+        }
+        if matches!(visibility.as_deref(), Some("private" | "protected")) {
+            return Err(self
+                .error("Unsupported class visibility; use public or internal")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "CLASS_VISIBILITY_UNSUPPORTED",
+                ));
         }
         if !self.take("class") {
             return Err(self.error("Only ordinary final classes are supported"));
@@ -4704,7 +4719,13 @@ impl Parser {
                             "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
                         ));
                 }
-                if self.at("fun") {
+                if self.at("fun")
+                    || self.at("suspend")
+                        && self.tokens[self.pos + 1..]
+                            .iter()
+                            .find(|token| token.text != "\n")
+                            .is_some_and(|token| token.text == "fun")
+                {
                     let (mut function, has_body) = self.function_body(true)?;
                     if function.suspend_ {
                         return Err(Diagnostic::new(

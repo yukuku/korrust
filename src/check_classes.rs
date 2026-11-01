@@ -283,7 +283,24 @@ impl Checker<'_> {
         if matches!(expanded, Type::Array(_) | Type::StringArray) {
             array_literal_shape(&expanded, offset, 0)?;
         }
-        let imports = library::default_type_imports(&expanded, self.imports, self.classpath);
+        let mut imports = library::default_type_imports(&expanded, self.imports, self.classpath);
+        if let Type::Java(name) = &expanded
+            && !name.contains('/')
+            && !imports.contains_key(name)
+        {
+            let owner = self
+                .lambda_owner
+                .rsplit_once('/')
+                .map_or_else(|| name.clone(), |(package, _)| format!("{package}/{name}"));
+            let renamed = self.lambda_owner.contains('/')
+                && self
+                    .imports
+                    .iter()
+                    .any(|(alias, path)| alias != name && path == &owner);
+            if !renamed && let Ok(class) = self.classpath.load(&owner) {
+                imports.insert(name.clone(), class.name);
+            }
+        }
         let ty = self.class_literal_classifier_type(
             resolve_type(&expanded, &imports, offset)?,
             true,

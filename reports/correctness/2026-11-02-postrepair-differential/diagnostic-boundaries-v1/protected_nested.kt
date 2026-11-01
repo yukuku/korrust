@@ -1,0 +1,1 @@
+open class Outer { protected class Entry }

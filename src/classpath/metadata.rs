@@ -1016,6 +1016,33 @@ struct MemberTypes<'a> {
     flags: u64,
 }
 
+fn retain_unsupported_extension(
+    method: &mut JavaMethod,
+    receiver: &Option<Type>,
+    params: &[(String, Type, bool)],
+    result: &Type,
+    type_parameters: &[TypeParameter],
+    flags: u64,
+) {
+    if !method.unsupported
+        || !matches!(
+            receiver.as_ref().map(Type::base),
+            Some(Type::Parameterized { .. })
+        )
+    {
+        return;
+    }
+    method.kotlin_params = Some(params.to_vec());
+    method.kotlin_result = Some(result.clone());
+    if let Some(library) = &mut method.library {
+        library.receiver = receiver.clone();
+        library.type_parameters = type_parameters.to_vec();
+        library.inline = flags & 1024 != 0;
+        library.infix = flags & 512 != 0;
+        library.operator = flags & 256 != 0;
+    }
+}
+
 fn attach_member(
     class: &mut JavaClass,
     attributes: &[Attributes],
@@ -1078,6 +1105,25 @@ fn attach_member(
         .map(|(i, _)| i)
         .collect::<Vec<_>>();
     let [index] = matching.as_slice() else {
+        if !explicit_descriptor {
+            let named = class
+                .methods
+                .iter()
+                .enumerate()
+                .filter(|(_, method)| method.name == jvm_name)
+                .map(|(index, _)| index)
+                .collect::<Vec<_>>();
+            if let [index] = named.as_slice() {
+                retain_unsupported_extension(
+                    &mut class.methods[*index],
+                    &receiver,
+                    &params,
+                    &result,
+                    &type_parameters,
+                    flags,
+                );
+            }
+        }
         return Err(invalid());
     };
     let own = class
@@ -1119,6 +1165,14 @@ fn attach_member(
             || result == Type::Unit
             || physical_result != Type::Nullable(Box::new(result.clone())).descriptor()
         {
+            retain_unsupported_extension(
+                &mut class.methods[*index],
+                &receiver,
+                &params,
+                &result,
+                &type_parameters,
+                flags,
+            );
             return Err(invalid());
         }
     }

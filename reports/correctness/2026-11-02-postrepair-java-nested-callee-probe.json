@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T21:09:12.323829+00:00",
+  "status": "failed",
+  "compiler": {
+    "path": "target/resume-repair-final/frozen-root/target/release/korrust",
+    "sha256": "58ee34b1866ca7a9a5cd0ce838730856bef745907e159f93a2a4a8a00249b784"
+  },
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home"
+  },
+  "scope": "Read-only Java callee-role collision probe added after the completed static-member proof; no code, fixture or tool repair applied.",
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": [],
+    "root_source_matches_frozen_root": true
+  },
+  "frozen_input_hashes": {
+    "target/resume-postrepair-java-nested/callee-probe/Outer.java": "f61430fd49ccc5ce5b37218f2c0616451249c28ca2cebda20ef6d36e6bd9f00a",
+    "target/resume-postrepair-java-nested/callee-probe/Choice.kt": "4d9b8971dee78b449e7a549184cf77dd06178bc6fc680d6b97fa2e033db755fe",
+    "target/resume-postrepair-java-nested/callee-probe/Check.java": "a1b1f52c7657e33ea355aa160687fd2fa09dd5759b86ae06bdbfd771445fffdb"
+  },
+  "cases": [
+    {
+      "id": "constructor_static_method_same_name",
+      "outcome": "correctness_failure",
+      "oracle": {
+        "accepts": false,
+        "exit_code": 1,
+        "diagnostic": "Overload resolution ambiguity between static fun Named(): String! and constructor(): Outer.Named",
+        "log": "reports/correctness/2026-11-02-postrepair-java-nested-callee-probe/official.log"
+      },
+      "candidate": {
+        "accepts": true,
+        "exit_code": 0,
+        "emitted_signature": "public static final collision.Outer$Named f(); ()Lcollision/Outer$Named;",
+        "log": "reports/correctness/2026-11-02-postrepair-java-nested-callee-probe/candidate.log",
+        "signature_evidence": "reports/correctness/2026-11-02-postrepair-java-nested-callee-probe/candidate-signatures.txt"
+      },
+      "runtime": "not_run: oracle rejects source"
+    }
+  ],
+  "counts": {
+    "correctness_failure": 1
+  },
+  "prior_completed_proof": "reports/correctness/2026-11-02-postrepair-java-nested.json",
+  "commands": [
+    {
+      "argv": [
+        "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home/bin/javac",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-java-nested/callee-probe/dependency",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-java-nested/callee-probe/Outer.java"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/Users/yuku/f/git/korrust/references/kotlinc/bin/kotlinc",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-java-nested/callee-probe/Choice.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-java-nested/callee-probe/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-java-nested/callee-probe/official"
+      ],
+      "exit_code": 1
+    },
+    {
+      "argv": [
+        "/Users/yuku/f/git/korrust/target/resume-repair-final/frozen-root/target/release/korrust",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-java-nested/callee-probe/Choice.kt",
+        "-cp",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-java-nested/callee-probe/dependency:/Users/yuku/f/git/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/Users/yuku/f/git/korrust/target/resume-postrepair-java-nested/callee-probe/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "publication_scope": "Source, logs and signature text only; generated binaries excluded."
+}

@@ -1,0 +1,3 @@
+
+val referenceFromOtherFile = O.A
+

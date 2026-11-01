@@ -1011,6 +1011,43 @@ impl Classpath {
         }))
     }
 
+    pub(crate) fn java_member_class(
+        &self,
+        owner: &str,
+        short: &str,
+    ) -> Result<Option<(JavaClass, u16)>> {
+        let resource = format!("{owner}.class");
+        let mut bytes = None;
+        for path in &self.paths {
+            if let Some(found) = archive::read(path, &resource)? {
+                bytes = Some(found);
+                break;
+            }
+        }
+        if bytes.is_none() && (owner.starts_with("java/") || owner.starts_with("javax/")) {
+            if let Some(home) = std::env::var_os("JAVA_HOME") {
+                bytes = archive::read(
+                    &PathBuf::from(home).join("jmods/java.base.jmod"),
+                    &format!("classes/{resource}"),
+                )?;
+            }
+        }
+        let Some(bytes) = bytes else {
+            return Ok(None);
+        };
+        let (_, attributes, _) = parse_details(&bytes, owner)?;
+        let entries = attributes
+            .inner_classes
+            .iter()
+            .filter(|(_, outer, name, _)| outer == owner && name == short)
+            .collect::<Vec<_>>();
+        match entries.as_slice() {
+            [] => Ok(None),
+            [(name, _, _, access)] => Ok(Some((self.load(name)?, *access))),
+            _ => Err(invalid()),
+        }
+    }
+
     pub fn package_classes(&self, package: &str) -> Result<Vec<JavaClass>> {
         let package = package.replace('.', "/");
         let builtin = self.builtin_array_class(&package)?;
@@ -1342,6 +1379,7 @@ struct Attributes {
     code: Option<JavaCode>,
     annotation_default: bool,
     annotation_default_payload: Option<Vec<u8>>,
+    inner_classes: Vec<(String, String, String, u16)>,
 }
 
 fn annotation_value(
@@ -1591,6 +1629,25 @@ fn attributes(
                 result.annotation_default_payload = Some(data.bytes.to_vec());
                 annotation_value(&mut data, pool, 0)?;
                 result.annotation_default = true;
+            }
+            "InnerClasses" => {
+                if !type_attribute_names.insert(name) {
+                    return Err(invalid());
+                }
+                for _ in 0..data.u2()? {
+                    let inner = class_name(pool, data.u2()?)?.to_owned();
+                    let outer = data.u2()?;
+                    let short = data.u2()?;
+                    let access = data.u2()?;
+                    if outer != 0 && short != 0 {
+                        result.inner_classes.push((
+                            inner,
+                            class_name(pool, outer)?.to_owned(),
+                            utf8(pool, short)?.to_owned(),
+                            access,
+                        ));
+                    }
+                }
             }
             "ConstantValue" => {
                 if result.constant.is_some() {
@@ -4384,5 +4441,31 @@ mod tests {
                 expected
             );
         }
+    }
+    #[test]
+    fn pinned_generic_value_extensions_retain_unsupported_logical_metadata() {
+        let standard = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("references/kotlinc/lib/kotlin-stdlib.jar");
+        if !standard.is_file() {
+            return;
+        }
+        let cp = Classpath::new(&[standard]).unwrap();
+        let value = cp.load("kotlin/Result").unwrap();
+        let metadata = value.library.as_ref().unwrap();
+        assert!(metadata.value_class.is_some());
+        assert!(!metadata.type_parameters.is_empty());
+        let methods = cp.package_methods("kotlin", "getOrThrow").unwrap();
+        let method = methods
+            .iter()
+            .find(|method| method.source_name() == "getOrThrow")
+            .unwrap();
+        assert!(method.unsupported);
+        assert!(method.library.as_ref().unwrap().inline);
+        assert!(matches!(
+            method.library.as_ref().unwrap().receiver,
+            Some(Type::Parameterized { .. })
+        ));
+        assert_eq!(method.kotlin_params.as_ref().unwrap().len(), 0);
+        assert!(matches!(method.kotlin_result, Some(Type::Parameter { .. })));
     }
 }

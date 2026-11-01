@@ -2705,30 +2705,10 @@ impl Checker<'_> {
         }
         self.member_call(method, receiver, args, offset)
     }
-    fn qualified_java_class(&self, expression: &Expr) -> Option<String> {
-        fn parts<'a>(expression: &'a Expr, names: &mut Vec<&'a str>) -> bool {
-            match &expression.kind {
-                ExprKind::Name(name) => {
-                    names.push(name);
-                    true
-                }
-                ExprKind::Property(receiver, name) if parts(receiver, names) => {
-                    names.push(name);
-                    true
-                }
-                _ => false,
-            }
-        }
-        let mut names = Vec::new();
-        if !parts(expression, &mut names) || names.len() < 2 || !self.unshadowed(names[0]) {
-            return None;
-        }
-        let owner = names.join("/");
-        self.classpath
-            .load(&owner)
-            .ok()
-            .filter(|class| class.access & 1 != 0 && !class.kotlin_class)
-            .map(|_| owner)
+    fn qualified_java_class(&self, expression: &Expr) -> Result<Option<String>> {
+        Ok(self
+            .qualified_java_classifier(expression, expression.offset)?
+            .map(|(class, _)| class.name))
     }
     fn java_static(
         &mut self,
@@ -2765,6 +2745,20 @@ impl Checker<'_> {
                             .is_ok_and(|declaring| declaring.access & 0x0200 == 0))
             })
             .collect::<Vec<_>>();
+        if methods.is_empty()
+            && self
+                .classpath
+                .methods(owner)?
+                .iter()
+                .any(|method| method.source_name() == name && method.access & 9 == 1)
+        {
+            return Err(
+                Diagnostic::new(offset, "Java instance method requires a receiver").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "JAVA_METHOD_RECEIVER_REQUIRED",
+                ),
+            );
+        }
         let mut method = self.select_method(&methods, args, offset)?;
         if self
             .classpath
@@ -3028,7 +3022,12 @@ impl Checker<'_> {
         let candidates = self.classpath.field_candidates(&class.name, name)?;
         let field = match candidates.as_slice() {
             [field] => field,
-            [] => return Err(Diagnostic::new(offset, "Unresolved Java field")),
+            [] => {
+                return Err(Diagnostic::new(offset, "Unresolved Java field").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "UNRESOLVED_JAVA_FIELD",
+                ));
+            }
             _ => {
                 return Err(Diagnostic::new(offset, "Ambiguous inherited Java field")
                     .with_kind(crate::DiagnosticKind::InvalidKotlin, "AMBIGUOUS_JAVA_FIELD"));
@@ -3041,9 +3040,18 @@ impl Checker<'_> {
             return Err(Diagnostic::new(offset, "Field is inaccessible")
                 .with_kind(crate::DiagnosticKind::InvalidKotlin, "INVISIBLE_REFERENCE"));
         }
+        if (field.access & 8 != 0) != receiver.is_none() {
+            return Err(Diagnostic::new(
+                offset,
+                "Java field requires the appropriate instance or classifier receiver",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "JAVA_FIELD_RECEIVER_MISMATCH",
+            ));
+        }
         if field.unsupported
             || field.access & 1 == 0 && !field.kotlin.as_ref().is_some_and(|field| field.constant)
-            || (field.access & 8 != 0) != receiver.is_none()
         {
             return Err(Diagnostic::new(
                 offset,
@@ -4618,6 +4626,9 @@ impl Checker<'_> {
                 (ty, ValueKind::Binary(op.clone(), Box::new(a), Box::new(b)))
             }
             ExprKind::Property(receiver, name) => {
+                if let Some((class, _)) = self.qualified_java_classifier(receiver, offset)? {
+                    return self.java_field(&class.name, name, None, offset);
+                }
                 if let Some(class) = self.qualified_classifier(receiver) {
                     if class.access & 0x4000 != 0
                         && class
@@ -4637,9 +4648,6 @@ impl Checker<'_> {
                             kind: ValueKind::ObjectInstance(class.name),
                         });
                     }
-                }
-                if let Some(owner) = self.qualified_java_class(receiver) {
-                    return self.java_field(&owner, name, None, offset);
                 }
                 if let ExprKind::Name(primitive) = &receiver.kind {
                     if matches!(primitive.as_str(), "Float" | "Double")
@@ -5256,7 +5264,7 @@ impl Checker<'_> {
                     return self.source_call(name, args, &[], offset);
                 }
                 ExprKind::Property(receiver, name) => {
-                    if self.qualified_java_class(receiver).is_none() {
+                    if self.qualified_java_class(receiver)?.is_none() {
                         let saved_next = self.next;
                         let saved_initialized = self.initialized.clone();
                         let saved_refinements = self.refinements.clone();
@@ -5279,7 +5287,7 @@ impl Checker<'_> {
                         self.refinements = saved_refinements;
                         self.lambdas.borrow_mut().truncate(saved_lambdas);
                     }
-                    if let Some(owner) = self.qualified_java_class(receiver) {
+                    if let Some(owner) = self.qualified_java_class(receiver)? {
                         return self.java_static(&owner, name, args, offset);
                     }
                     if self

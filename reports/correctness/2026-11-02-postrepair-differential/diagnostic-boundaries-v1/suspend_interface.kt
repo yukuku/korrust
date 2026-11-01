@@ -1,0 +1,1 @@
+fun interface Reader { suspend fun read(): String }

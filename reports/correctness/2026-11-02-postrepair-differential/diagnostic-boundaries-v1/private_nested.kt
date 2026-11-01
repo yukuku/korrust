@@ -1,0 +1,1 @@
+class Outer { private data class Entry(val text: String) }

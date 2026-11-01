@@ -1,0 +1,203 @@
+--- a/src/classpath/metadata.rs
++++ b/src/classpath/metadata.rs
+@@ -1016,6 +1016,33 @@
+     flags: u64,
+ }
+ 
++fn retain_unsupported_extension(
++    method: &mut JavaMethod,
++    receiver: &Option<Type>,
++    params: &[(String, Type, bool)],
++    result: &Type,
++    type_parameters: &[TypeParameter],
++    flags: u64,
++) {
++    if !method.unsupported
++        || !matches!(
++            receiver.as_ref().map(Type::base),
++            Some(Type::Parameterized { .. })
++        )
++    {
++        return;
++    }
++    method.kotlin_params = Some(params.to_vec());
++    method.kotlin_result = Some(result.clone());
++    if let Some(library) = &mut method.library {
++        library.receiver = receiver.clone();
++        library.type_parameters = type_parameters.to_vec();
++        library.inline = flags & 1024 != 0;
++        library.infix = flags & 512 != 0;
++        library.operator = flags & 256 != 0;
++    }
++}
++
+ fn attach_member(
+     class: &mut JavaClass,
+     attributes: &[Attributes],
+@@ -1078,6 +1105,25 @@
+         .map(|(i, _)| i)
+         .collect::<Vec<_>>();
+     let [index] = matching.as_slice() else {
++        if !explicit_descriptor {
++            let named = class
++                .methods
++                .iter()
++                .enumerate()
++                .filter(|(_, method)| method.name == jvm_name)
++                .map(|(index, _)| index)
++                .collect::<Vec<_>>();
++            if let [index] = named.as_slice() {
++                retain_unsupported_extension(
++                    &mut class.methods[*index],
++                    &receiver,
++                    &params,
++                    &result,
++                    &type_parameters,
++                    flags,
++                );
++            }
++        }
+         return Err(invalid());
+     };
+     let own = class
+@@ -1119,6 +1165,14 @@
+             || result == Type::Unit
+             || physical_result != Type::Nullable(Box::new(result.clone())).descriptor()
+         {
++            retain_unsupported_extension(
++                &mut class.methods[*index],
++                &receiver,
++                &params,
++                &result,
++                &type_parameters,
++                flags,
++            );
+             return Err(invalid());
+         }
+     }
+--- a/src/check_operations.rs
++++ b/src/check_operations.rs
+@@ -990,11 +990,26 @@
+                     applicable_groups.push(applicable);
+                     continue;
+                 }
+-                for method in normalized {
++                for mut method in normalized {
+                     if operator && !method.library.as_ref().is_some_and(|l| l.operator) {
+                         continue;
+                     }
+                     let is_infix = method.library.as_ref().is_some_and(|library| library.infix);
++                    let generic_value = method.unsupported
++                        && method
++                            .library
++                            .as_ref()
++                            .and_then(|library| library.receiver.as_ref())
++                            .and_then(library::type_owner)
++                            .filter(|owner| Some(*owner) == library::type_owner(&receiver.ty))
++                            .and_then(|owner| self.classpath.load(owner).ok())
++                            .and_then(|class| class.library)
++                            .is_some_and(|library| {
++                                library.value_class.is_some() && !library.type_parameters.is_empty()
++                            });
++                    if generic_value {
++                        method.unsupported = false;
++                    }
+                     match self.select_method_types(
+                         std::slice::from_ref(&method),
+                         &all_args,
+@@ -1002,6 +1017,10 @@
+                         offset,
+                     ) {
+                         Ok(_) if infix && !is_infix => non_infix_applicable = true,
++                        Ok(_) if generic_value => {
++                            method.unsupported = true;
++                            applicable.push(method);
++                        }
+                         Ok(_) => applicable.push(method),
+                         Err(error) => failures.push(error),
+                     }
+@@ -1009,13 +1028,16 @@
+                 applicable_groups.push(applicable);
+             }
+             if !applicable_groups[0].is_empty()
+-                && applicable_groups[1].iter().any(|local| {
+-                    !applicable_groups[0].iter().any(|imported| {
+-                        imported.owner == local.owner
+-                            && imported.name == local.name
+-                            && imported.descriptor == local.descriptor
++                && applicable_groups[1]
++                    .iter()
++                    .filter(|local| !local.unsupported)
++                    .any(|local| {
++                        !applicable_groups[0].iter().any(|imported| {
++                            imported.owner == local.owner
++                                && imported.name == local.name
++                                && imported.descriptor == local.descriptor
++                        })
+                     })
+-                })
+             {
+                 return Err(Diagnostic::new(
+                     offset,
+@@ -1053,6 +1075,10 @@
+                     return Err(Diagnostic::new(
+                         offset,
+                         format!("The infix modifier is required on {name}"),
++                    )
++                    .with_kind(
++                        crate::DiagnosticKind::InvalidKotlin,
++                        "INFIX_MODIFIER_REQUIRED",
+                     ));
+                 }
+                 if failures.len() == 1 {
+@@ -1066,6 +1092,16 @@
+                     ),
+                 ));
+             };
++            if candidates.iter().any(|method| method.unsupported) {
++                return Err(Diagnostic::new(
++                    offset,
++                    "Imported generic value-class extension ABI is unsupported",
++                )
++                .with_kind(
++                    crate::DiagnosticKind::UnsupportedLanguage,
++                    "GENERIC_VALUE_EXTENSION_ABI_UNSUPPORTED",
++                ));
++            }
+             let method = self.select_method_types(candidates, &all_args, types, offset)?;
+             self.library_static_call(method, &all_args, offset)
+         })();
+--- a/src/classpath.rs
++++ b/src/classpath.rs
+@@ -4385,4 +4385,30 @@
+             );
+         }
+     }
+-}
++    #[test]
++    fn pinned_generic_value_extensions_retain_unsupported_logical_metadata() {
++        let standard = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
++            .join("references/kotlinc/lib/kotlin-stdlib.jar");
++        if !standard.is_file() {
++            return;
++        }
++        let cp = Classpath::new(&[standard]).unwrap();
++        let value = cp.load("kotlin/Result").unwrap();
++        let metadata = value.library.as_ref().unwrap();
++        assert!(metadata.value_class.is_some());
++        assert!(!metadata.type_parameters.is_empty());
++        let methods = cp.package_methods("kotlin", "getOrThrow").unwrap();
++        let method = methods
++            .iter()
++            .find(|method| method.source_name() == "getOrThrow")
++            .unwrap();
++        assert!(method.unsupported);
++        assert!(method.library.as_ref().unwrap().inline);
++        assert!(matches!(
++            method.library.as_ref().unwrap().receiver,
++            Some(Type::Parameterized { .. })
++        ));
++        assert_eq!(method.kotlin_params.as_ref().unwrap().len(), 0);
++        assert!(matches!(method.kotlin_result, Some(Type::Parameter { .. })));
++    }
++}

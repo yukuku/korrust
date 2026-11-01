@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "scope": "Diagnostic repair development and final proofs; no feature count or generic-value compatibility claim",
+  "final_reports": [
+    "proof-v7/report.json",
+    "adversarial-v4/report.json",
+    "upstream-v4/report.json"
+  ],
+  "history": [
+    {
+      "path": "proof-v1/report.json",
+      "status": "interrupted",
+      "counts": {},
+      "input_integrity": null
+    },
+    {
+      "path": "proof-v2/report.json",
+      "status": "failed",
+      "counts": {
+        "pass": 4,
+        "correctness_failure": 1,
+        "invalid_rejected": 3,
+        "unsupported_language": 5
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "proof-v3/report.json",
+      "status": "failed",
+      "counts": {
+        "pass": 4,
+        "correctness_failure": 1,
+        "invalid_rejected": 3,
+        "unsupported_language": 5
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "proof-v4/report.json",
+      "status": "failed",
+      "counts": {
+        "pass": 4,
+        "correctness_failure": 1,
+        "invalid_rejected": 3,
+        "unsupported_language": 5
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "proof-v5/report.json",
+      "status": "complete",
+      "counts": {
+        "pass": 4,
+        "unsupported_language": 6,
+        "invalid_rejected": 3
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "proof-v6/report.json",
+      "status": "complete",
+      "counts": {
+        "pass": 4,
+        "unsupported_language": 6,
+        "invalid_rejected": 3
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "proof-v7/report.json",
+      "status": "complete",
+      "counts": {
+        "pass": 4,
+        "unsupported_language": 6,
+        "invalid_rejected": 3
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "adversarial-v1/report.json",
+      "status": "failed",
+      "counts": {
+        "pass": 1,
+        "correctness_failure": 1
+      },
+      "input_integrity": null
+    },
+    {
+      "path": "adversarial-v2/report.json",
+      "status": "complete",
+      "counts": {
+        "pass": 5,
+        "unsupported_language": 1,
+        "invalid_rejected": 1
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "adversarial-v3/report.json",
+      "status": "complete",
+      "counts": {
+        "pass": 7,
+        "unsupported_language": 1,
+        "invalid_rejected": 2
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "adversarial-v4/report.json",
+      "status": "complete",
+      "counts": {
+        "pass": 7,
+        "unsupported_language": 1,
+        "invalid_rejected": 3
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "upstream-v1/report.json",
+      "status": "complete",
+      "counts": {
+        "unsupported_language": 2
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "upstream-v2/report.json",
+      "status": "complete",
+      "counts": {
+        "unsupported_language": 2
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "upstream-v3/report.json",
+      "status": "complete",
+      "counts": {
+        "unsupported_language": 2
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "upstream-v4/report.json",
+      "status": "complete",
+      "counts": {
+        "unsupported_language": 2
+      },
+      "input_integrity": {
+        "status": "unchanged",
+        "changed_paths": []
+      }
+    },
+    {
+      "path": "extra-v1/report.json",
+      "status": "complete",
+      "counts": {
+        "invalid_rejection_unchanged": 2,
+        "unsupported_language": 2
+      },
+      "input_integrity": null
+    },
+    {
+      "path": "extra-v2/report.json",
+      "status": "complete",
+      "counts": {
+        "invalid_rejection_unchanged": 2,
+        "unsupported_language": 2
+      },
+      "input_integrity": null
+    }
+  ],
+  "gaps": [
+    "Historical adversarial harness source was overwritten between versions; preserve its recorded hash, exact command argv and logs without claiming its old harness text is retained. Final harness text is retained in boundary-replay.zip.",
+    "Main proof V1 was interrupted for metadata inspection and has no complete acceptance outcome.",
+    "Main V2/V3/V4 failed because authored probes reached earlier explicit-import/name/cast boundaries; V5 onward reached the intended extension layer via nullable boxed factory.",
+    "V5/V6 and earlier adversarial passes preceded later import-priority/infix review corrections and named-package alias controls; only final reports validate the complete submitted patch."
+  ],
+  "exclusions": [
+    "classfiles",
+    "Kotlin module files",
+    "compiler binaries",
+    "JARs",
+    "duplicate reference trees"
+  ]
+}

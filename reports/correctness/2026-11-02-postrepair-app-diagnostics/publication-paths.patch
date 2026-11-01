@@ -1,0 +1,30 @@
+--- target/resume-repair-final/frozen-root/tools/assess_androidbible.py
++++ target/resume-postrepair-app-diagnostics/assess_androidbible_owned.py
+@@ -24,7 +24,7 @@
+ 
+ from classpath_policy import validate_classpath
+ 
+-ROOT = Path(__file__).resolve().parents[1]
++ROOT = Path('/Users/yuku/f/git/korrust')
+ SNAPSHOT = ROOT / 'benchmarks/sources/androidbible'
+ HISTORICAL = ROOT / 'reports/correctness/2026-10-26T073039Z-androidbible-source-assessment.json'
+ DIAGNOSTIC_CATEGORIES = {'unclassified', 'unsupported_language', 'missing_dependency', 'invalid_kotlin', 'setup', 'io'}
+@@ -277,7 +277,7 @@
+         self.output.parent.mkdir(parents=True, exist_ok=True)
+         self.evidence = self.output.with_suffix('')
+         self.evidence.mkdir(parents=True, exist_ok=False)
+-        self.work = ROOT / 'target/checks' / self.output.stem
++        self.work = ROOT / 'target/resume-postrepair-app-diagnostics/assessment-work'
+         self.work.mkdir(parents=True, exist_ok=False)
+         self.commands = []
+         self.lock = threading.Lock()
+@@ -523,8 +523,4 @@
+ 
+ 
+ if __name__ == '__main__':
+-    try:
+-        sys.exit(main())
+-    finally:
+-        from reports import generate
+-        print('HTML report: ' + str(generate(ROOT)), flush=True)
++    sys.exit(main())
