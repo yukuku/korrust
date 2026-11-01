@@ -331,7 +331,30 @@ pub fn compile_batch_with_options(
         })
         .collect::<Vec<_>>();
     for (owner, unit) in &units {
-        classpath.register_value_scope(owner, &modules[owner_sources[owner]]);
+        let lexical_values =
+            std::iter::successors(Some(owner), |parent| lexical_parents.get(*parent))
+                .map(|parent| {
+                    let mut values = source_names
+                        .iter()
+                        .filter(|(_, path)| lexical_parents.get(path) == Some(parent))
+                        .cloned()
+                        .collect::<Vec<_>>();
+                    if let Some(declaration) = units
+                        .iter()
+                        .find(|(path, _)| path == parent)
+                        .and_then(|(_, unit)| unit.enum_decl.as_ref())
+                    {
+                        values.extend(
+                            declaration
+                                .entries
+                                .iter()
+                                .map(|(name, _)| (name.clone(), format!("{parent}/{name}"))),
+                        );
+                    }
+                    values
+                })
+                .collect();
+        classpath.register_value_scope(owner, &modules[owner_sources[owner]], lexical_values);
         classpath.register_source_file(
             owner,
             &sources[owner_sources[owner]].identity,
@@ -347,6 +370,24 @@ pub fn compile_batch_with_options(
             .iter()
             .find(|(_, path)| path == owner)
             .map(|(name, _)| name.as_str());
+        let mut lexical_classifiers = std::collections::BTreeMap::new();
+        for parent in std::iter::successors(Some(&*owner), |parent| lexical_parents.get(*parent)) {
+            for (name, path) in &source_names {
+                if lexical_parents.get(path) == Some(parent) {
+                    lexical_classifiers
+                        .entry(name.clone())
+                        .or_insert_with(|| path.clone());
+                }
+            }
+        }
+        unit.imports
+            .retain(|(alias, _, _)| !lexical_classifiers.contains_key(alias));
+        unit.imports.extend(
+            lexical_classifiers
+                .into_iter()
+                .filter(|(name, _)| Some(name.as_str()) != own_name)
+                .map(|(name, path)| (name, path, 0)),
+        );
         for (name, path) in &source_names {
             let lexical = lexical_parents.get(path).map(String::as_str);
             let visible = (lexical.is_none()

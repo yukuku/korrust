@@ -113,6 +113,10 @@ fun defaultShadow(Charsets: Holder): Int = Charsets.code
             "package near\nimport imported.selected as alternate\nimport imported.Signal as OtherSignal\nfun renamed(): Int = alternate\nfun original(): Int = selected\nfun objectRenamed(): Int = OtherSignal.code\n",
         ),
         (
+            "Lexical.kt",
+            "package near\nimport imported.Signal\nclass Outer { object Signal { var code: Int = 7 }; fun value(): Int = Signal.code; fun mutate(): Int { Signal.code = Signal.code + 1; return Signal.code }; fun captured(): Int { val read: () -> Int = { Signal.code }; return read() }; class Nested { fun value(): Int = Signal.code }; class Deeper { object Signal { val code: Int = 11 }; fun value(): Int = Signal.code } }\nclass OtherOuter { object Signal { val code: Int = 13 }; fun value(): Int = Signal.code }\nfun unrelated(): Int = Signal.code\nfun localNested(Signal: near.Outer): Int = Signal.value()\n",
+        ),
+        (
             "DefaultImport.kt",
             "package named\nimport four as count\nfun defaultPackageImport(): Int = count\n",
         ),
@@ -162,6 +166,9 @@ fun defaultShadow(Charsets: Holder): Int = Charsets.code
   if (near.PriorityKt.explicitValue() != 23 || near.PriorityKt.explicitObject() != 43) throw new AssertionError("explicit imports");
   if (near.StarKt.samePackage() != 17 || near.StarKt.sameObject() != 41) throw new AssertionError("same package");
   if (near.AliasKt.renamed() != 23 || near.AliasKt.original() != 17 || near.AliasKt.objectRenamed() != 43 || named.DefaultImportKt.defaultPackageImport() != 4) throw new AssertionError("renamed imports");
+  near.Outer outer = new near.Outer();
+  if (outer.value() != 7 || outer.mutate() != 8 || outer.captured() != 8 || new near.Outer.Nested().value() != 8) throw new AssertionError("nested singleton state");
+  if (new near.Outer.Deeper().value() != 11 || new near.OtherOuter().value() != 13 || near.LexicalKt.unrelated() != 43 || near.LexicalKt.localNested(outer) != 8) throw new AssertionError("nested lexical priority");
   System.out.println("value-resolution-ok");
  }
 }"#).unwrap();
@@ -191,6 +198,8 @@ fun defaultShadow(Charsets: Holder): Int = Charsets.code
         "near.StarKt",
         "near.AliasKt",
         "named.DefaultImportKt",
+        "near.LexicalKt",
+        "near.Outer",
     ] {
         let reference = run(Command::new("javap")
             .arg("-public")

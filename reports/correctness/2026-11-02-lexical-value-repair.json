@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-01T18:05:22.789326+00:00",
+  "status": "completed",
+  "scope": "Repair lexical nested classifier and enum-entry resolution, including import shadowing and consistent qualified assignment; no new feature family",
+  "compiler": {
+    "source_base": "8896908d1",
+    "source_manifest": "reports/correctness/2026-11-02-lexical-value-repair/freeze.json",
+    "source_archive": "reports/correctness/2026-11-02-lexical-value-repair/sources.zip",
+    "source_archive_sha256": "d46aa1307941574422c17735a5b1e4713545217951631b46ccf42be0c811be26"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "cases": [
+    {
+      "id": "original_nested_declaration_regression",
+      "outcome": "pass",
+      "evidence": "reports/correctness/2026-11-02-lexical-value-repair/nested-final-release.log"
+    },
+    {
+      "id": "original_enum_companion_entry_regression",
+      "outcome": "pass",
+      "evidence": "reports/correctness/2026-11-02-lexical-value-repair/enum-final-release.log"
+    },
+    {
+      "id": "value_resolution_differential",
+      "outcome": "pass",
+      "evidence": "reports/correctness/2026-11-02-lexical-value-repair/nested-runtime-v4.log",
+      "scope": "Official-compiled Java caller runs unchanged on both providers with JVM verification; Kotlin consumers and signatures checked by tests/value_resolution.rs. Lexical/import priority, captures, sibling scopes and mutable singleton state asserted."
+    },
+    {
+      "id": "all_targets_clippy",
+      "outcome": "pass",
+      "evidence": "reports/correctness/2026-11-02-lexical-value-repair/lexical-final-clippy.log"
+    }
+  ],
+  "historical_failures": [
+    "reports/correctness/2026-11-02-lexical-value-repair/baseline-rust-failure.log",
+    "reports/correctness/2026-11-02-lexical-value-repair/nested-repair-test.log",
+    "reports/correctness/2026-11-02-lexical-value-repair/nested-runtime-v1.log",
+    "reports/correctness/2026-11-02-lexical-value-repair/nested-runtime-v2.log",
+    "reports/correctness/2026-11-02-lexical-value-repair/nested-runtime-v3.log"
+  ],
+  "limitations": [
+    "Full resumed baseline still has separate stale test expectations and String.length() false acceptance being repaired; this is not an overall clean regression claim.",
+    "The initial added differential probe used unsupported qualified compound assignment. Its preserved failed run does not pass; the final authored fixture exercises ordinary assignment. No upstream fixture was reduced or changed."
+  ],
+  "reproduction_commands": [
+    "cargo test --release --locked --offline --test declarations_syntax initialized_state_and_nested_declarations_use_uniform_bodies",
+    "cargo test --release --locked --offline --test enum_frontend enum_constructors_members_and_companions_use_ordinary_types",
+    "cargo test --locked --offline --test value_resolution",
+    "cargo clippy --locked --offline --all-targets -- -D warnings"
+  ],
+  "environment": {
+    "JAVA_HOME": "/Users/yuku/Library/Java/JavaVirtualMachines/jbr-21.0.8/Contents/Home",
+    "CARGO_HOME": "target/cargo-home",
+    "RUSTUP_HOME": "target/rustup",
+    "CARGO_TARGET_DIR": "target/resume-root-build",
+    "RUST_MIN_STACK": 16777216
+  }
+}

@@ -1,0 +1,30 @@
+   Compiling crc32fast v1.5.3
+   Compiling simd-adler32 v0.3.10
+   Compiling cfg-if v1.0.5
+   Compiling adler2 v2.0.1
+   Compiling byteorder v1.5.0
+   Compiling miniz_oxide v0.9.1
+   Compiling flate2 v1.1.10
+   Compiling zip v0.6.6
+   Compiling korrust v0.1.0 (/Users/yuku/f/git/korrust)
+error[E0061]: this method takes 3 arguments but 2 arguments were supplied
+    --> src/check.rs:5874:15
+     |
+5874 |     classpath.register_value_scope(owner, source);
+     |               ^^^^^^^^^^^^^^^^^^^^--------------- argument #3 of type `Vec<Vec<(String, String)>>` is missing
+     |
+note: method defined here
+    --> src/classpath/value_names.rs:18:19
+     |
+  18 |     pub(crate) fn register_value_scope(
+     |                   ^^^^^^^^^^^^^^^^^^^^
+...
+  22 |         lexical_classifiers: Vec<Vec<(String, String)>>,
+     |         -----------------------------------------------
+help: provide the argument
+     |
+5874 |     classpath.register_value_scope(owner, source, /* Vec<Vec<(String, String)>> */);
+     |                                                 ++++++++++++++++++++++++++++++++++
+
+For more information about this error, try `rustc --explain E0061`.
+error: could not compile `korrust` (lib) due to 1 previous error

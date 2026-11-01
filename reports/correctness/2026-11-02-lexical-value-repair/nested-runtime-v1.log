@@ -1,0 +1,22 @@
+   Compiling korrust v0.1.0 (/Users/yuku/f/git/korrust)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.88s
+     Running tests/value_resolution.rs (target/resume-root-build/debug/deps/value_resolution-af882bac3b3bee41)
+
+running 1 test
+test value_names_use_kotlin_import_priority_and_constant_visibility ... FAILED
+
+failures:
+
+---- value_names_use_kotlin_import_priority_and_constant_visibility stdout ----
+
+thread 'value_names_use_kotlin_import_priority_and_constant_visibility' (10403880) panicked at tests/value_resolution.rs:152:93:
+called `Result::unwrap()` on an `Err` value: Diagnostic { offset: 151, message: "Compound assignments currently require a local variable target", source_identity: Some("/var/folders/5c/7dwzx4ls4x17yymwjv9pfpk00000gp/T/korrust-value-names-13346-1793555468153569000/Lexical.kt"), kind: Unclassified, code: "UNCLASSIFIED", type_name: None }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    value_names_use_kotlin_import_priority_and_constant_visibility
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.67s
+
+error: test failed, to rerun pass `--test value_resolution`

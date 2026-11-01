@@ -4,6 +4,7 @@ use super::*;
 pub(super) struct ValueScope {
     package: String,
     imports: Vec<(String, String, usize)>,
+    lexical_values: Vec<Vec<(String, String)>>,
 }
 
 #[derive(Clone)]
@@ -14,13 +15,19 @@ pub(crate) enum ValueSymbol {
 }
 
 impl Classpath {
-    pub(crate) fn register_value_scope(&self, owner: &str, module: &crate::syntax::Module) {
+    pub(crate) fn register_value_scope(
+        &self,
+        owner: &str,
+        module: &crate::syntax::Module,
+        lexical_values: Vec<Vec<(String, String)>>,
+    ) {
         self.value_scopes
             .borrow_mut()
             .entry(owner.into())
             .or_insert_with(|| ValueScope {
                 package: module.package.replace('.', "/"),
                 imports: module.imports.clone(),
+                lexical_values,
             });
     }
 
@@ -52,6 +59,7 @@ impl Classpath {
                         .map_or("", |(package, _)| package)
                         .into(),
                     imports: Vec::new(),
+                    lexical_values: Vec::new(),
                 };
             };
             owner = parent;
@@ -80,7 +88,19 @@ impl Classpath {
                     .iter()
                     .any(|(alias, imported, _)| imported == path && alias == name)
         };
-        let mut groups = vec![explicit, vec![qualified(&scope.package, name)]];
+        let mut groups = scope
+            .lexical_values
+            .iter()
+            .map(|classifiers| {
+                classifiers
+                    .iter()
+                    .filter(|(alias, _)| alias == name)
+                    .map(|(_, path)| path.clone())
+                    .collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>();
+        let import_priority = groups.len();
+        groups.extend([explicit, vec![qualified(&scope.package, name)]]);
         groups.push(
             scope
                 .imports
@@ -99,10 +119,10 @@ impl Classpath {
         );
         let mut inaccessible = false;
         for (priority, paths) in groups.into_iter().enumerate() {
-            let explicit = priority == 0 && !paths.is_empty();
+            let explicit = priority == import_priority && !paths.is_empty();
             let mut symbols = std::collections::BTreeMap::new();
             for path in paths {
-                if priority != 0 && renamed(&path) {
+                if priority > import_priority && renamed(&path) {
                     continue;
                 }
                 if let Ok(class) = self.load(&path) {
@@ -134,7 +154,7 @@ impl Classpath {
                     }
                 }
                 let (package, member) = path.rsplit_once('/').unwrap_or(("", &path));
-                if priority == 0 {
+                if priority <= import_priority {
                     if let Ok(class) = self.load(package) {
                         if class.access & 1 != 0 && !class.unsupported {
                             for field in self.field_candidates(package, member)? {

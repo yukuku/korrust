@@ -2661,8 +2661,8 @@ impl Checker<'_> {
                 && !self.object_fields.contains_key(alias)
                 && !self.constants.contains_key(alias)
             {
-                if let Some(owner) = self.imports.get(alias) {
-                    (owner.clone(), None)
+                if let Some(class) = self.value_classifier(receiver)? {
+                    (class.name, None)
                 } else {
                     let value = self.value(receiver)?;
                     let Some(owner) = library::type_owner(&value.ty) else {
@@ -5871,7 +5871,7 @@ pub fn check_with_owner(
     classpath: &Classpath,
     owner: &str,
 ) -> Result<Module> {
-    classpath.register_value_scope(owner, source);
+    classpath.register_value_scope(owner, source, Vec::new());
     annotation_placements::preflight_property_visibility(source, classpath)?;
     if source.object_decl.as_ref().is_some_and(|object| {
         !object.annotations.is_empty()
