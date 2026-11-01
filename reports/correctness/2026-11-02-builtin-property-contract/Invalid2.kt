@@ -1,0 +1,1 @@
+fun f(x: java.lang.StringBuilder): Int = x.length()

@@ -2470,6 +2470,9 @@ impl Checker<'_> {
                     .as_ref()
                     .is_some_and(|library| library.receiver.is_some())
         });
+        let has_property = inherited
+            .iter()
+            .any(|method| method.source_property.as_deref() == Some(name));
         let methods = inherited
             .into_iter()
             .filter(|m| {
@@ -2503,6 +2506,11 @@ impl Checker<'_> {
                     .with_kind(
                         crate::DiagnosticKind::InvalidKotlin,
                         "MEMBER_EXTENSION_DISPATCH_REQUIRED",
+                    )
+                } else if has_property {
+                    Diagnostic::new(offset, "Property is not callable").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "PROPERTY_NOT_CALLABLE",
                     )
                 } else {
                     Diagnostic::new(

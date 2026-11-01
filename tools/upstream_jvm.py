@@ -18,11 +18,18 @@ SUPPORTED = {
     'WITH_STDLIB', 'FULL_JDK', 'WITH_RUNTIME', 'TARGET_BACKEND', 'JVM_TARGET',
     'LANGUAGE', 'LANGUAGE_VERSION', 'API_VERSION', 'FILE', 'MODULE',
     'WITH_COROUTINES', 'CHECK_STATE_MACHINE', 'CHECK_TAIL_CALL_OPTIMIZATION',
+    'WORKS_WHEN_VALUE_CLASS',
 }
 EXCLUDED = {'IGNORE_BACKEND', 'IGNORE_BACKEND_K1', 'IGNORE_BACKEND_K2'}
 METADATA = {'FIR_IDENTICAL', 'RUN_PIPELINE_TILL'}
 COROUTINE_HELPERS = Path('references/kotlin/compiler/testData/diagnostics/helpers/coroutines')
 COROUTINE_PROVIDER = Path('references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/services/sourceProviders/CoroutineHelpersSourceFilesProvider.kt')
+VALUE_PREPROCESSORS = [
+    Path('references/kotlin/compiler/tests-common-new/testFixtures/org/jetbrains/kotlin/test/preprocessors/JvmInlineSourceTransformer.kt'),
+    Path('references/kotlin/compiler/test-infrastructure-utils/testFixtures/org/jetbrains/kotlin/test/utils/TransformersFunctions.kt'),
+    Path('references/kotlin/compiler/test-infrastructure-utils/testFixtures/org/jetbrains/kotlin/test/utils/ReplacingSourceTransformer.kt'),
+]
+
 
 
 def sha(path):
@@ -74,6 +81,53 @@ def module_header(value):
     lists.extend([[] for _ in range(3 - len(lists))])
     return {'name': match.group(1), 'dependencies': lists[0], 'friends': lists[1],
             'depends_on': lists[2], 'files': [], 'directives': []}
+
+
+def preprocess_value_annotations(modules):
+    if not any(item['name'] == 'WORKS_WHEN_VALUE_CLASS' for module in modules for item in module['directives']):
+        return []
+    marker = 'OPTIONAL_JVM_INLINE_ANNOTATION'
+    replacement = '@JvmInline/* KtJvm1 */'
+    for module in modules:
+        for source in module['files']:
+            text = source['text']
+            edits = list(re.finditer(marker, text))
+            if not edits:
+                continue
+            origins = source['original_char_offsets']
+            parts, mapped, records = [], [], []
+            cursor = 0
+            for edit in edits:
+                parts.append(text[cursor:edit.start()])
+                mapped.extend(origins[cursor:edit.start()])
+                records.append({'kind': 'optional_jvm_inline_annotation',
+                                'original_start': origins[edit.start()],
+                                'original_end': origins[edit.end() - 1] + 1,
+                                'materialized_start': len(mapped),
+                                'replacement': replacement})
+                parts.append(replacement)
+                mapped.extend([origins[edit.start()]] * len(replacement))
+                cursor = edit.end()
+            parts.append(text[cursor:])
+            mapped.extend(origins[cursor:])
+
+            def changed_offset(offset):
+                delta = 0
+                for edit in edits:
+                    if offset < edit.start():
+                        break
+                    if offset < edit.end():
+                        return edit.start() + delta
+                    delta += len(replacement) - len(marker)
+                return offset + delta
+
+            for diagnostic in source['expected_diagnostics']:
+                diagnostic['start'] = changed_offset(diagnostic['start'])
+                diagnostic['end'] = changed_offset(diagnostic['end'])
+            source['text'] = ''.join(parts)
+            source['original_char_offsets'] = mapped
+            source['transformations'] = records
+    return [{'path': str(path), 'sha256': sha(ROOT / path)} for path in VALUE_PREPROCESSORS]
 
 
 def parse_fixture(path):
@@ -132,7 +186,8 @@ def parse_fixture(path):
         item['directives'] = global_directives + item['directives']
         if len({file['name'] for file in item['files']}) != len(item['files']):
             raise ValueError('Duplicate FILE names in module ' + item['name'])
-    return {'path': relative(path), 'sha256': sha(path), 'original': original, 'modules': modules}
+    preprocessors = preprocess_value_annotations(modules)
+    return {'path': relative(path), 'sha256': sha(path), 'original': original, 'modules': modules, 'preprocessors': preprocessors}
 
 
 def coroutine_helpers(module):
@@ -314,7 +369,8 @@ def write_sources(fixture, directory):
             mapping_path.write_text(json.dumps({'original': origin['path'], 'original_sha256': origin['sha256'],
                 'materialized': relative(path), 'sha256': sha(path),
                 'original_char_offsets': source['original_char_offsets'],
-                'expected_diagnostics': source['expected_diagnostics']}, indent=2) + '\n')
+                'expected_diagnostics': source['expected_diagnostics'],
+                'transformations': source.get('transformations', [])}, indent=2) + '\n')
             mappings.append(relative(mapping_path))
         modules[module['name']] = {'paths': paths, 'source_maps': mappings}
     return modules
@@ -354,6 +410,8 @@ def run_case(entry, context):
         case.update(outcome='harness_unsupported', reasons=['Original fixture differs from frozen matrix hash'])
         return case
     case['source'] = {'path': fixture['path'], 'sha256': fixture['sha256']}
+    if fixture['preprocessors']:
+        case['preprocessors'] = fixture['preprocessors']
     case['modules'] = [{key: value for key, value in module.items() if key != 'files'}
                        for module in fixture['modules']]
     outcome, reasons = assess(fixture, entry['kind'])
@@ -635,6 +693,7 @@ def main():
             frozen_paths.add(sibling.resolve())
         frozen_paths.update((ROOT / helper).resolve() for helper in entry.get('helpers', []))
         fixture = parse_fixture(ROOT / entry['path'])
+        frozen_paths.update((ROOT / item['path']).resolve() for item in fixture['preprocessors'])
         for module in fixture['modules']:
             helpers = coroutine_helpers(module)
             if helpers:

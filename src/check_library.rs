@@ -26,6 +26,21 @@ pub(super) fn ordinary_member_methods(
             Ok(method)
         })
         .collect::<Result<Vec<_>>>()?;
+    for mapping in crate::classpath::jvm_builtins::PROPERTY_MAPPINGS
+        .iter()
+        .filter(|mapping| mapping.jvm_name == name)
+    {
+        if relations::as_supertype(classpath, &Type::Java(owner.into()), mapping.owner).is_none() {
+            continue;
+        }
+        for method in methods.iter_mut().filter(|method| {
+            method.name == mapping.jvm_name
+                && method.descriptor == mapping.descriptor
+                && method.access & 9 == 1
+        }) {
+            method.source_property = Some(mapping.source_name.into());
+        }
+    }
     for mapping in crate::classpath::jvm_builtins::MAPPINGS
         .iter()
         .filter(|mapping| mapping.source_name == name)

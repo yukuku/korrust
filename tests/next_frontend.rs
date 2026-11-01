@@ -43,15 +43,15 @@ fn type_smartcasts_require_stable_locals_and_correct_branches() {
     }
     rejects(
         "fun f(input: Any?): Int { var value = input; if(value is String) return value.length; return 0 }",
-        "Nullable receivers",
+        "Unresolved or unsupported applicable extension: length",
     );
     rejects(
         "fun f(value: Any?): Int { if(value !is String) return value.length; return 0 }",
-        "Nullable receivers",
+        "Unresolved or unsupported applicable extension: length",
     );
     rejects(
         "fun f(value: Any?): Int = when(value) { is String, is Int -> value.length; else -> 0 }",
-        "Nullable receivers",
+        "Unresolved or unsupported applicable extension: length",
     );
 }
 

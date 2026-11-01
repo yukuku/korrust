@@ -26,9 +26,27 @@ pub(crate) const MAPPINGS: &[Mapping] = &[
     },
 ];
 
+pub(crate) const PROPERTY_MAPPINGS: &[Mapping] = &[Mapping {
+    owner: "java/lang/CharSequence",
+    classifier: "kotlin/CharSequence",
+    source_name: "length",
+    descriptor: "()I",
+    jvm_name: "length",
+    inherited_only: false,
+}];
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn special_property_contract_matches_the_pinned_table() {
+        let reference = include_str!(
+            "../../references/kotlin/core/compiler.common.jvm/src/org/jetbrains/kotlin/load/java/BuiltinSpecialProperties.kt"
+        );
+        assert!(reference.contains("StandardNames.FqNames.charSequence.childSafe(\"length\") to Name.identifier(\"length\")"));
+        assert_eq!(PROPERTY_MAPPINGS[0].descriptor, "()I");
+    }
 
     #[test]
     fn supported_mappings_match_the_pinned_jvm_contract_table() {

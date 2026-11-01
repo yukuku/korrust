@@ -56,6 +56,35 @@ class UpstreamAdapterTests(unittest.TestCase):
         fixture = self.fixture('// WITH_CONTINUATION\nfun box() = "OK"\n')
         self.assertEqual(adapter.assess(fixture, 'box')[0], 'harness_unsupported')
 
+    def test_value_annotation_preprocessor_preserves_original_identity(self):
+        text = '// WORKS_WHEN_VALUE_CLASS\nOPTIONAL_JVM_INLINE_ANNOTATION\nvalue class V(val λ: <!UNRESOLVED_REFERENCE!>Missing<!>)\n'
+        fixture = self.fixture(text)
+        source = fixture['modules'][0]['files'][0]
+        self.assertIn('@JvmInline/* KtJvm1 */', source['text'])
+        self.assertEqual(fixture['original'], text)
+        self.assertEqual(len(fixture['preprocessors']), 3)
+        for item in fixture['preprocessors']:
+            self.assertEqual(item['sha256'], adapter.sha(adapter.ROOT / item['path']))
+        start = source['text'].index('Missing')
+        self.assertEqual(source['expected_diagnostics'][0]['start'], start)
+        self.assertEqual(source['expected_diagnostics'][0]['end'], start + len('Missing'))
+        location = adapter.source_location(fixture, source, start)
+        self.assertEqual(location['char_offset'], text.index('Missing'))
+        self.assertEqual(location['byte_offset'], len(text[:text.index('Missing')].encode()))
+        position = source['text'].index('@JvmInline') + 2
+        self.assertEqual(adapter.source_location(fixture, source, position)['char_offset'], text.index('OPTIONAL_JVM_INLINE_ANNOTATION'))
+        self.assertEqual(source['transformations'][0]['original_end'], text.index('OPTIONAL_JVM_INLINE_ANNOTATION') + len('OPTIONAL_JVM_INLINE_ANNOTATION'))
+
+    def test_value_annotation_preprocessor_obeys_all_module_directives(self):
+        fixture = self.fixture('// MODULE: lib\n// WORKS_WHEN_VALUE_CLASS\nOPTIONAL_JVM_INLINE_ANNOTATION value class V(val x: Int)\n// MODULE: main(lib)\nOPTIONAL_JVM_INLINE_ANNOTATION value class W(val x: Int)\n')
+        for module in fixture['modules']:
+            self.assertIn('@JvmInline/* KtJvm1 */', module['files'][0]['text'])
+        fixture = self.fixture('OPTIONAL_JVM_INLINE_ANNOTATION value class V(val x: Int)\n')
+        self.assertEqual(fixture['preprocessors'], [])
+        self.assertIn('OPTIONAL_JVM_INLINE_ANNOTATION', fixture['modules'][0]['files'][0]['text'])
+        fixture = self.fixture('// WORKS_WHEN_VALUE_CLASS\n// LANGUAGE: +ValueClasses\nOPTIONAL_JVM_INLINE_ANNOTATION value class V(val x: Int)\n')
+        self.assertTrue(adapter.candidate_options(fixture['modules'][0])[1])
+
     def test_unknown_directives_are_not_silently_ignored(self):
         fixture = self.fixture('// SOME_FUTURE_SETTING: true\nfun box() = "OK"\n')
         status, reasons = adapter.assess(fixture, 'box')

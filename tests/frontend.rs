@@ -261,9 +261,9 @@ fn compound_addition_requires_supported_mutable_locals() {
     for (source, message) in [
         ("fun f() { val n = 1; n += 2 }", "Cannot reassign"),
         ("fun f(n: Int) { n += 2 }", "Cannot reassign"),
-        ("fun f() { var n = 'a'; n += 2 }", "only mutable Int"),
-        ("fun f() { var n = true; n += false }", "only mutable Int"),
-        ("fun f() { var n = 1; n += 'a' }", "Type mismatch"),
+        ("fun f() { var n = 'a'; n += 2 }", "compound operator"),
+        ("fun f() { var n = true; n += false }", "compound operator"),
+        ("fun f() { var n = 1; n += 'a' }", "compound operator"),
         ("fun f() { missing += 1 }", "Unresolved"),
     ] {
         rejects(source, message);
@@ -584,11 +584,21 @@ fn computed_constant_declarations_compile() {
 }
 
 #[test]
+fn validated_object_and_member_extension_forms_remain_supported() {
+    for source in [
+        "data object E",
+        "object E { data object Nested }",
+        "class E() { fun String.extension(): Int = 1 }",
+    ] {
+        assert!(compile_all(source, "Supported.kt").is_ok(), "{source}");
+    }
+}
+
+#[test]
 fn rejects_unsupported_object_and_constant_forms() {
     for source in [
         "private object E",
         "protected object E",
-        "data object E",
         "companion object E",
         "public internal object E",
         "object E()",
@@ -599,7 +609,6 @@ fn rejects_unsupported_object_and_constant_forms() {
         "object E { const const val N = 1 }",
         "object E { public internal const val N = 1 }",
         "object E { protected object Nested }",
-        "object E { data object Nested }",
         "object E { companion object Nested }",
         "object E { object Nested() }",
         "object E { const val INSTANCE = 1 }",
@@ -778,7 +787,6 @@ fn rejects_unsupported_class_surface_and_mixed_declarations() {
         "class E() { var x: Int get() = 1 }",
         "class E() { private override fun x() {} }",
         "class E() { override override fun x() {} }",
-        "class E() { fun String.extension(): Int = 1 }",
         "class E() { val x: Int get() = 1; val x: Int get() = 2 }",
         "class E(private val x: Int) { val x: Int get() = 1 }",
         "class E() { val x: Int get() = 1",

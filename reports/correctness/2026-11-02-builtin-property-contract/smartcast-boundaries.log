@@ -1,0 +1,22 @@
+   Compiling korrust v0.1.0 (/Users/yuku/f/git/korrust)
+    Finished `release` profile [optimized] target(s) in 0.88s
+     Running tests/next_frontend.rs (target/resume-root-build/release/deps/next_frontend-fcae0ab795ab4eed)
+
+running 1 test
+test type_smartcasts_require_stable_locals_and_correct_branches ... FAILED
+
+failures:
+
+---- type_smartcasts_require_stable_locals_and_correct_branches stdout ----
+
+thread 'type_smartcasts_require_stable_locals_and_correct_branches' (10535481) panicked at tests/next_frontend.rs:42:9:
+fun f(value: Any?): Int { if (value is String) return value.length; return 0 }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    type_smartcasts_require_stable_locals_and_correct_branches
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--test next_frontend`

@@ -1,0 +1,1 @@
+fun f(x: CharSequence): Int = x.length()
