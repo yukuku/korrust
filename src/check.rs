@@ -266,6 +266,7 @@ pub struct ClassDecl {
     pub methods: Vec<Function>,
     pub bridges: Vec<JavaMethod>,
 }
+#[derive(Clone)]
 pub struct Function {
     pub suspend_: bool,
     pub extension_receiver: bool,

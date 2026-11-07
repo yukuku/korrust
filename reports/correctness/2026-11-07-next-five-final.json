@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-07T18:07:42.845977+00:00",
+  "status": "completed",
+  "selection": "Final combined compiler full release Rust regression, complete Python unit suite, warnings-denied all-target Clippy, formatting, source/dependency integrity and suspend-member differential proof.",
+  "compiler": {
+    "path": "target/next5-integrated/release/korrust",
+    "binary_sha256": "e7a1117c34adc40b4bec275319ea3f68ec242be88ed3fe936d374336247a7062",
+    "base_commit": "d02d1372eb03cbcaab692f60a2c06cb61d8bcb2a"
+  },
+  "toolchain": {
+    "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+    "java": "openjdk version \"21.0.12.1\" 2026-08-18 LTS\nOpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)\nOpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)"
+  },
+  "inputs": "reports/correctness/2026-11-07-next-five-final/frozen-inputs.json",
+  "source_archive": {
+    "path": "reports/correctness/2026-11-07-next-five-final/frozen-sources.zip",
+    "sha256": "1ffee97a50a64f3ca9b31a947b9a81b032edc3ec23d0dd3db4460e8df8b79eea"
+  },
+  "cases": [
+    {
+      "id": "full_release_rust",
+      "outcome": "pass",
+      "tests": 492,
+      "test_groups": 45
+    },
+    {
+      "id": "full_python",
+      "outcome": "pass",
+      "tests": 179
+    },
+    {
+      "id": "release_all_target_clippy_warnings_denied",
+      "outcome": "pass"
+    },
+    {
+      "id": "format",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen_input_integrity",
+      "outcome": "pass",
+      "files": 1046,
+      "changed": []
+    },
+    {
+      "id": "suspend_member_differential",
+      "outcome": "pass",
+      "derived_outcomes": {
+        "pass": 11,
+        "invalid_rejected": 5,
+        "unsupported_language": 13
+      }
+    }
+  ],
+  "counts": {
+    "pass": 6
+  },
+  "logs_sha256": {
+    "rust.log": "55d33271ac2c365f87f186b594e45f178d497e998ac29035a9fdaeb657c08d36",
+    "build.log": "5df20f3535de5a228a35631c96fe804b865feba99fa2f62726a4a1ae6ef8edb6",
+    "python.log": "4b2c372c69d5b62de194b3d0cbec6f9126ca568ae2b0b4b77d0bd3ea9ce0997b",
+    "clippy.log": "7ec82d984fa81c34943b715f8a2f49c661c07cd8bf2127dcef4d76f764295111"
+  },
+  "evidence": [
+    "reports/correctness/2026-11-07-next-five-final/rust.log",
+    "reports/correctness/2026-11-07-next-five-final/build.log",
+    "reports/correctness/2026-11-07-next-five-final/python.log",
+    "reports/correctness/2026-11-07-next-five-final/clippy.log",
+    "reports/correctness/2026-11-07-suspend-members.json",
+    "reports/correctness/2026-11-07-next-five-final/frozen-inputs.json"
+  ],
+  "reproduction_commands": [
+    "source /workspace/korrust-setup/env.sh",
+    "cargo fmt --all -- --check",
+    "CARGO_TARGET_DIR=target/next5-integrated cargo clippy --release --all-targets --locked --offline -- -D warnings",
+    "CARGO_TARGET_DIR=target/next5-integrated cargo build --release --locked --offline",
+    "RUST_MIN_STACK=16777216 CARGO_TARGET_DIR=target/next5-integrated cargo test --release --locked --offline",
+    "python3 -m unittest discover -s tests -p 'test_*.py'",
+    "python3 tools/check_suspend_members.py --candidate target/next5-integrated/release/korrust"
+  ],
+  "limitations": [
+    "Earlier family differential reports retain their exact tested compiler identities. This record supplies the fresh full regression on the final combined compiler.",
+    "No full Android application/device, complete coroutine-library, unrestricted Kotlin-language or performance claim."
+  ]
+}

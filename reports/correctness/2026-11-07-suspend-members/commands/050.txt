@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/target/checks/2026-11-07T173727396788Z-suspend-members/invalid_kotlin3.kt -cp /workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-07T173727396788Z-suspend-members/oracle-invalid_kotlin-3 -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+target/checks/2026-11-07T173727396788Z-suspend-members/invalid_kotlin3.kt:1:71: error: non-suspend function 'read' cannot override suspend function 'suspend fun read(): String' defined in 'R'.
+interface R { suspend fun read(): String }; class C: R { override fun read(): String = "x" }
+                                                                      ^^^^

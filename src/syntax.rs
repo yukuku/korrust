@@ -2776,6 +2776,26 @@ impl Parser {
                     "ENUM_SECONDARY_CONSTRUCTOR_UNSUPPORTED",
                 ));
         }
+        if body
+            .methods
+            .iter()
+            .chain(
+                entry_bodies
+                    .iter()
+                    .flatten()
+                    .flat_map(|entry| entry.methods.iter()),
+            )
+            .any(|method| method.function.suspend_)
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Suspend enum member declarations are unsupported",
+            )
+            .with_kind(
+                DiagnosticKind::UnsupportedLanguage,
+                "SUSPEND_ENUM_MEMBER_UNSUPPORTED",
+            ));
+        }
         Ok(EnumDecl {
             body,
             entry_arguments,
@@ -4031,14 +4051,6 @@ impl Parser {
                     return Err(self.error("Conflicting open/abstract and final modifiers"));
                 }
                 open = !final_ && (open || is_override);
-                if self.at("suspend") {
-                    return Err(self
-                        .error("Source suspend member declarations are unsupported")
-                        .with_kind(
-                            DiagnosticKind::UnsupportedLanguage,
-                            "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
-                        ));
-                }
                 if self.at("inline") {
                     return Err(self
                         .error("Source member inline functions are unsupported")
@@ -4047,7 +4059,7 @@ impl Parser {
                             "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
                         ));
                 }
-                if self.at("fun") {
+                if self.at("fun") || self.at("suspend") {
                     if lateinit {
                         return Err(self.error("The lateinit modifier applies only to properties"));
                     }
@@ -4786,16 +4798,6 @@ impl Parser {
                             .is_some_and(|token| token.text == "fun")
                 {
                     let (mut function, has_body) = self.function_body(true)?;
-                    if function.suspend_ {
-                        return Err(Diagnostic::new(
-                            function.offset,
-                            "Source suspend interface declarations are unsupported",
-                        )
-                        .with_kind(
-                            DiagnosticKind::UnsupportedLanguage,
-                            "SUSPEND_MEMBER_DECLARATION_UNSUPPORTED",
-                        ));
-                    }
                     function.annotations = annotations;
                     function.infix = infix;
                     function.operator = operator;

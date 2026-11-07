@@ -171,7 +171,7 @@ def main():
         'suspend fun bounded(step: suspend () -> String): String = try { step() } finally { }',
         'suspend fun <T> bounded(value: T): T = value',
         'suspend fun bounded(value: Int = 1): Int = value',
-        'class Member { suspend fun bounded(): String = "x" }',
+        'class Member { private suspend fun bounded(): String = "x" }',
         'suspend fun bounded(step: suspend () -> String): String { val value: suspend () -> String = { "x" }; return step() }',
         'suspend fun original(): String = "x"\nfun bounded(): suspend () -> String = ::original',
         'suspend fun bounded(step: suspend () -> String): String = step() + step()',

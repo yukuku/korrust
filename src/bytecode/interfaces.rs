@@ -258,19 +258,41 @@ fn abstract_method(pool: &mut Pool, function: &crate::check::Function) -> Result
     let signature = generic_function(function);
     u2(
         &mut method,
-        u16::from(nonnull(&function.result)) + u16::from(signature.is_some()),
+        u16::from(nonnull(function.physical_result())) + u16::from(signature.is_some()),
     );
     if let Some(signature) = signature {
         u2(&mut method, pool.utf8("Signature")?);
         u4(&mut method, 2);
         u2(&mut method, pool.utf8(&signature)?);
     }
-    if nonnull(&function.result) {
+    if nonnull(function.physical_result()) {
         method.extend(not_null(pool)?);
     }
-    nullable_result(pool, &mut method, &function.result)?;
-    parameter_annotations(pool, &mut method, &function.params)?;
+    nullable_result(pool, &mut method, function.physical_result())?;
+    parameter_annotations(pool, &mut method, &physical_params(function))?;
     Ok(method)
+}
+
+fn physical_params(function: &crate::check::Function) -> Vec<(String, Type)> {
+    let mut params = function.params.clone();
+    if function.suspend_ {
+        params.push((
+            "$completion".into(),
+            Type::continuation(&function.result, crate::syntax::Variance::In),
+        ));
+    }
+    params
+}
+
+fn helper_function(
+    interface: &InterfaceDecl,
+    function: &crate::check::Function,
+) -> crate::check::Function {
+    let mut helper = function.clone();
+    helper
+        .params
+        .insert(0, ("$this".into(), Type::Java(interface.owner.clone())));
+    helper
 }
 
 fn default_forward(
@@ -278,23 +300,15 @@ fn default_forward(
     interface: &InterfaceDecl,
     function: &crate::check::Function,
 ) -> Result<Vec<u8>> {
+    let params = physical_params(function);
     let mut code = SimpleCode::new(
-        (function
-            .params
-            .iter()
-            .map(|(_, ty)| ty.slots())
-            .sum::<usize>()
-            + 1)
-        .max(2) as u16,
-        (function
-            .params
-            .iter()
-            .map(|(_, ty)| ty.slots())
-            .sum::<usize>()
-            + 1) as u16,
+        (params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() + 1).max(2) as u16,
+        (params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() + 1) as u16,
     );
-    parameter_checks(pool, &mut code, &function.params)?;
-    arguments(&mut code, &function.params);
+    if !function.suspend_ {
+        parameter_checks(pool, &mut code, &function.params)?;
+    }
+    arguments(&mut code, &params);
     code.reference(
         0xb8,
         pool.method(
@@ -303,7 +317,7 @@ fn default_forward(
             &static_descriptor(&interface.owner, &function.descriptor()),
         )?,
     );
-    code.bytes.push(return_opcode(&function.result));
+    code.bytes.push(return_opcode(function.physical_result()));
     let mut method = simple_method(
         pool,
         0x0001,
@@ -311,10 +325,46 @@ fn default_forward(
         &function.descriptor(),
         code,
         generic_function(function).as_deref(),
-        nonnull(&function.result),
+        nonnull(function.physical_result()),
     )?;
-    parameter_annotations(pool, &mut method, &function.params)?;
-    nullable_result(pool, &mut method, &function.result)?;
+    parameter_annotations(pool, &mut method, &params)?;
+    nullable_result(pool, &mut method, function.physical_result())?;
+    Ok(method)
+}
+
+fn suspend_default_impl(
+    pool: &mut Pool,
+    interface: &InterfaceDecl,
+    function: &crate::check::Function,
+) -> Result<Vec<u8>> {
+    let mut helper = helper_function(interface, function);
+    helper.jvm_name = Some(format!("{}$suspendImpl", function.jvm_name()));
+    let params = physical_params(&helper);
+    let slots = params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
+    let mut code = SimpleCode::new(slots as u16, slots as u16);
+    for (slot, (_, ty)) in parameter_slots(&params, 0).into_iter().zip(&params) {
+        code.bytes.extend([load_opcode(ty), slot as u8]);
+    }
+    code.reference(
+        0xb8,
+        pool.method(
+            &format!("{}$DefaultImpls", interface.owner),
+            function.jvm_name(),
+            &static_descriptor(&interface.owner, &function.descriptor()),
+        )?,
+    );
+    code.bytes.push(0xb0);
+    let mut method = simple_method(
+        pool,
+        0x1009,
+        helper.jvm_name(),
+        &helper.descriptor(),
+        code,
+        generic_function(&helper).as_deref(),
+        false,
+    )?;
+    parameter_annotations(pool, &mut method, &params)?;
+    nullable_result(pool, &mut method, helper.physical_result())?;
     Ok(method)
 }
 
@@ -378,7 +428,26 @@ fn helper_body(
     interface: &InterfaceDecl,
     function: &crate::check::Function,
     lambdas: &[crate::check::LambdaDecl],
+    index: usize,
 ) -> Result<()> {
+    if function.suspend_ {
+        let helper = helper_function(interface, function);
+        let helpers = interface
+            .methods
+            .iter()
+            .map(|method| helper_function(interface, &method.function))
+            .collect::<Vec<_>>();
+        builder.methods.push(suspend::emit_method(
+            &mut builder.pool,
+            &helpers,
+            lambdas,
+            &builder.owner,
+            &helper,
+            index,
+            None,
+        )?);
+        return Ok(());
+    }
     let mut prefix = helper_prefix(&mut builder.pool, interface, &function.params)?;
     parameter_checks(&mut builder.pool, &mut prefix, &function.params)?;
     let mut code = Code {
@@ -432,7 +501,15 @@ fn helper_inherited(
     interface: &InterfaceDecl,
     inherited: &crate::classpath::JavaMethod,
 ) -> Result<()> {
-    let (types, result) = crate::check::class_method_types(inherited)?;
+    let (types, result) = if inherited
+        .library
+        .as_ref()
+        .is_some_and(|library| library.suspend_)
+    {
+        invocation_types(&inherited.descriptor)?
+    } else {
+        crate::check::class_method_types(inherited)?
+    };
     let params: Vec<_> = types.into_iter().map(|ty| (String::new(), ty)).collect();
     let mut code = helper_prefix(&mut builder.pool, interface, &params)?;
     code.max_stack = code
@@ -976,6 +1053,17 @@ fn interface_classes(
         };
         builder.methods.push(method);
     }
+    for method in interface
+        .methods
+        .iter()
+        .filter(|method| method.has_body && method.function.suspend_)
+    {
+        builder.methods.push(suspend_default_impl(
+            &mut builder.pool,
+            interface,
+            &method.function,
+        )?);
+    }
     let has_defaults =
         interface.methods.iter().any(|method| method.has_body) || !interface.defaults.is_empty();
     for method in interface.methods.iter().filter(|method| method.has_body) {
@@ -985,12 +1073,20 @@ fn interface_classes(
             &interface.owner,
             function.jvm_name(),
             &function.descriptor(),
-            &function.params,
-            &function.result,
+            &physical_params(function),
+            function.physical_result(),
         )?);
     }
     for inherited in &interface.defaults {
-        let (types, result) = crate::check::class_method_types(inherited)?;
+        let (types, result) = if inherited
+            .library
+            .as_ref()
+            .is_some_and(|library| library.suspend_)
+        {
+            invocation_types(&inherited.descriptor)?
+        } else {
+            crate::check::class_method_types(inherited)?
+        };
         let params: Vec<_> = types.into_iter().map(|ty| (String::new(), ty)).collect();
         builder.methods.push(default_access(
             &mut builder.pool,
@@ -1044,9 +1140,20 @@ fn interface_classes(
     output.push(builder.finish(file, metadata(all, &interface.owner)?, &relations)?);
     if has_defaults {
         let mut builder = Builder::new(&helper_owner, 49, 0x0031, &[])?;
-        for method in interface.methods.iter().filter(|method| method.has_body) {
-            helper_body(&mut builder, interface, &method.function, lambdas)?;
+        for (index, method) in interface
+            .methods
+            .iter()
+            .enumerate()
+            .filter(|(_, method)| method.has_body)
+        {
+            helper_body(&mut builder, interface, &method.function, lambdas, index)?;
         }
+        let helpers = interface
+            .methods
+            .iter()
+            .map(|method| helper_function(interface, &method.function))
+            .collect::<Vec<_>>();
+        output.extend(suspend::emit_frames(&helpers, &helper_owner, file, false)?);
         for inherited in &interface.defaults {
             helper_inherited(&mut builder, interface, inherited)?;
         }

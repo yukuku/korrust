@@ -461,6 +461,17 @@ pub(super) fn forwarders(
         }) {
             continue;
         }
+        if declaration
+            .library
+            .as_ref()
+            .is_some_and(|library| library.suspend_)
+        {
+            return Err(unsupported(
+                offset,
+                "SUSPEND_INTERFACE_DELEGATION_UNSUPPORTED",
+                "Delegation of suspend interface members is unsupported",
+            ));
+        }
         let key = declarations::logical_member_key(declaration)?;
         if !generated.insert(key) {
             return Err(Diagnostic::new(

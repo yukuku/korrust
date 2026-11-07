@@ -312,10 +312,10 @@ fn register_classes(
             &mut methods,
             &mut names,
             JavaMethod {
-                library: (function.infix || function.operator).then(|| {
+                library: (function.suspend_ || function.infix || function.operator).then(|| {
                     crate::classpath::LibraryMethod {
                         value_dispatch: false,
-                        suspend_: false,
+                        suspend_: function.suspend_,
                         kotlin_declared: true,
                         has_annotations: false,
                         parameter_modes: Vec::new(),
@@ -351,7 +351,19 @@ fn register_classes(
                 kotlin_internal: false,
                 owner: owner.into(),
                 name: function.name.clone(),
-                descriptor: format!("({parameters}){}", result.descriptor()),
+                descriptor: format!(
+                    "({parameters}{}){}",
+                    if function.suspend_ {
+                        "Lkotlin/coroutines/Continuation;"
+                    } else {
+                        ""
+                    },
+                    if function.suspend_ {
+                        "Ljava/lang/Object;".into()
+                    } else {
+                        result.descriptor()
+                    }
+                ),
                 access: if method.has_body { 1 } else { 0x0401 },
                 unsupported: false,
                 source_property: None,
@@ -635,6 +647,7 @@ fn check_interface(
             &[],
             &property.ty,
             property.body.as_deref(),
+            false,
             property.is_override,
             property.offset,
             owner,
@@ -660,6 +673,7 @@ fn check_interface(
                     &[("value".into(), property.ty.clone())],
                     &Type::Unit,
                     None,
+                    false,
                     is_override,
                     property.offset,
                     owner,
@@ -690,6 +704,7 @@ fn check_interface(
             &source_function.params,
             &source_function.result,
             method.has_body.then_some(source_function.body.as_slice()),
+            source_function.suspend_,
             method.is_override,
             source_function.offset,
             owner,
@@ -707,6 +722,12 @@ fn check_interface(
             source_function.offset,
             classes,
         )?;
+        function.suspend_ = source_function.suspend_;
+        if function.suspend_ {
+            function.jvm_result = Some(Type::Nullable(Box::new(Type::Java(
+                "java/lang/Object".into(),
+            ))));
+        }
         methods.push(InterfaceMethod {
             function,
             has_body: method.has_body,
@@ -860,6 +881,7 @@ fn check_function(
     source_params: &[(String, Type)],
     result: &Type,
     body: Option<&[syntax::Statement]>,
+    suspend_: bool,
     is_override: bool,
     offset: usize,
     owner: &str,
@@ -932,6 +954,9 @@ fn check_function(
         }
         checker.declare(param, ty.clone(), false, offset)?;
         params.push((param.clone(), ty));
+    }
+    if suspend_ {
+        checker.next += 1;
     }
     let body = if let Some(body) = body {
         let (mut body, returns) = checker.block(body)?;

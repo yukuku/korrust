@@ -1,0 +1,15 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -s -p -classpath /workspace/korrust/target/checks/2026-11-07T173727396788Z-suspend-members/official members.Boundary
+Compiled from "Models.kt"
+public interface members.Boundary {
+  public abstract java.lang.Object read(java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>);
+    descriptor: (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+
+  public default java.lang.Object retry(java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>);
+    descriptor: (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+
+  public static java.lang.Object retry$suspendImpl(members.Boundary, java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>);
+    descriptor: (Lmembers/Boundary;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+
+  public static java.lang.Object access$retry$jd(members.Boundary, java.lang.String, kotlin.coroutines.Continuation);
+    descriptor: (Lmembers/Boundary;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}

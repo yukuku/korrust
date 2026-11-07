@@ -1008,7 +1008,22 @@ pub(super) fn check_class_with_constants(
             .collect::<Result<Vec<_>>>()?
             .concat();
         let result = resolve_type_checked(result, imports, *offset, classpath, classes)?;
-        let descriptor = format!("({params}){}", result.descriptor());
+        let suspend_ = source.methods.iter().any(|m| {
+            m.function.offset == *offset && m.function.name == *name && m.function.suspend_
+        });
+        let descriptor = format!(
+            "({params}{}){}",
+            if suspend_ {
+                "Lkotlin/coroutines/Continuation;"
+            } else {
+                ""
+            },
+            if suspend_ {
+                "Ljava/lang/Object;".into()
+            } else {
+                result.descriptor()
+            }
+        );
         members.retain(|_, m| m.name != *name || m.descriptor != descriptor);
         members.insert(
             format!("{name}({params})"),
@@ -1019,7 +1034,7 @@ pub(super) fn check_class_with_constants(
                     .find(|m| m.function.offset == *offset && m.function.name == *name)
                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
             value_dispatch: false,
-                suspend_: false,
+                suspend_: m.function.suspend_,
                 kotlin_declared: true,
                         has_annotations: false,
                 parameter_modes: Vec::new(),
@@ -1063,7 +1078,7 @@ pub(super) fn check_class_with_constants(
                 kotlin_internal: source.properties.iter().find(|p| p.offset == *offset).is_some_and(|p| if *name == getter_name(&p.name) { p.getter_visibility() } else { p.setter_visibility() } == syntax::PropertyVisibility::Internal),
                 owner: owner.clone(),
                 name: name.clone(),
-                descriptor: format!("({params}){}", result.descriptor()),
+                descriptor,
                 access: if *private {
                     2
                 } else if source
@@ -1296,6 +1311,9 @@ pub(super) fn check_class_with_constants(
         if source_defaults.iter().any(Option::is_some) {
             checker.next += 2;
         }
+        if source_method.is_some_and(|method| method.function.suspend_) {
+            checker.next += 1;
+        }
         let checked_defaults =
             checker.checked_defaults(&source_defaults, &method_params, offset)?;
         let has_body = source
@@ -1331,11 +1349,13 @@ pub(super) fn check_class_with_constants(
             .iter()
             .find(|method| method.function.offset == offset && method.function.name == name);
         let method = Function {
-            suspend_: false,
+            suspend_: source_method.is_some_and(|method| method.function.suspend_),
             extension_receiver: source_method
                 .is_some_and(|method| method.function.receiver.is_some()),
             class_type_params: Vec::new(),
-            jvm_result: None,
+            jvm_result: source_method
+                .filter(|method| method.function.suspend_)
+                .map(|_| Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))),
             jvm_name: None,
             annotations: annotations::declaration_annotations(
                 source_method.map_or(&[], |method| method.function.annotations.as_slice()),
@@ -1568,6 +1588,9 @@ pub(super) fn check_class_with_constants(
     methods.extend(forwarders);
     for method in &mut methods {
         method.class_type_params = type_params.iter().map(|p| p.name.clone()).collect();
+        if method.suspend_ {
+            continue;
+        }
         let probe = function_method(method, &owner, 0, None);
         method.jvm_result = source_jvm_result(classpath, &super_types, &probe)?;
         if let Some(storage) = method.jvm_result.clone() {
@@ -1604,6 +1627,11 @@ pub(super) fn check_class_with_constants(
         }
         if let Some(target) = methods.iter().find(|m| {
             m.name == method.name
+                && m.suspend_
+                    == method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| library.suspend_)
                 && override_signature(
                     &method,
                     &m.params.iter().map(|p| p.1.clone()).collect::<Vec<_>>(),
@@ -1612,6 +1640,16 @@ pub(super) fn check_class_with_constants(
                 .unwrap_or(false)
         }) {
             if target.descriptor() != method.descriptor {
+                if target.suspend_ {
+                    return Err(Diagnostic::new(
+                        source.offset,
+                        "Generic suspend override bridges are unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "SUSPEND_GENERIC_OVERRIDE_UNSUPPORTED",
+                    ));
+                }
                 generic_bridges.push(GenericBridge {
                     erased: method.clone(),
                     target_params: target.params.iter().map(|p| p.1.clone()).collect(),
@@ -4091,8 +4129,17 @@ pub(super) fn logical_member_key(method: &JavaMethod) -> Result<String> {
     Ok(member_key(
         &method.name,
         &format!(
-            "({}){}",
+            "({}{}){}",
             parameters.iter().map(Type::descriptor).collect::<String>(),
+            if method
+                .library
+                .as_ref()
+                .is_some_and(|library| library.suspend_)
+            {
+                "Lkotlin/coroutines/Continuation;"
+            } else {
+                ""
+            },
             result.descriptor()
         ),
     ))

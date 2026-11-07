@@ -953,8 +953,15 @@ fn function_with_jvm_name(
         proto.message(6, &param);
         desc.push_str(&descriptor(ty, imports)?);
     }
+    if function.suspend_ {
+        desc.push_str("Lkotlin/coroutines/Continuation;");
+    }
     desc.push(')');
-    desc.push_str(&descriptor(&function.result, imports)?);
+    desc.push_str(&if function.suspend_ {
+        "Ljava/lang/Object;".into()
+    } else {
+        descriptor(&function.result, imports)?
+    });
     let desc = strings
         .jvm_descriptors
         .get(&(jvm_name.into(), desc.clone()))

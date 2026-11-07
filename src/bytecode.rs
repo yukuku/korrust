@@ -3464,7 +3464,15 @@ fn interface_bridge(pool: &mut Pool, bridge: &crate::classpath::JavaMethod) -> R
         pool.interface_method(&bridge.owner, &bridge.name, &bridge.descriptor)?,
     );
     code.bytes.push(return_opcode(&result));
-    let (params, result) = crate::check::class_method_types(bridge)?;
+    let (mut params, mut result) = crate::check::class_method_types(bridge)?;
+    if bridge
+        .library
+        .as_ref()
+        .is_some_and(|library| library.suspend_)
+    {
+        params.push(Type::continuation(&result, crate::syntax::Variance::In));
+        result = Type::Nullable(Box::new(Type::Java("java/lang/Object".into())));
+    }
     let mut method = simple_method(
         pool,
         0x0041,
@@ -4149,6 +4157,7 @@ pub fn emit_class_files(
             |_| Ok(Vec::new()),
         )?,
     }];
+    files.extend(suspend::emit_frames(&class.methods, owner, file, true)?);
     if let Some(companion) = &class.companion {
         files.push(class_companion::emit(
             companion,
@@ -4656,10 +4665,40 @@ fn emit_class_with(
                 u4(&mut method, 2);
                 u2(&mut method, pool.utf8(&signature)?);
             }
-            parameter_annotations(&mut pool, &mut method, &function.params)?;
+            let mut params = function.params.clone();
+            if function.suspend_ {
+                params.push((
+                    "$completion".into(),
+                    Type::continuation(&function.result, crate::syntax::Variance::In),
+                ));
+            }
+            parameter_annotations(&mut pool, &mut method, &params)?;
             annotations::append_annotations(&mut pool, &mut method, &function.annotations)?;
             nullable_result(&mut pool, &mut method, function.physical_result())?;
             methods.push(method);
+            continue;
+        }
+        if function.suspend_ {
+            let index = class
+                .methods
+                .iter()
+                .position(|candidate| std::ptr::eq(candidate, function))
+                .unwrap();
+            let flags = access
+                | if class.open_methods.contains(&key) || function.is_override {
+                    0
+                } else {
+                    0x0010
+                };
+            methods.push(suspend::emit_method(
+                &mut pool,
+                &class.methods,
+                lambdas,
+                owner,
+                function,
+                index,
+                Some(flags),
+            )?);
             continue;
         }
         let mut code = Code {

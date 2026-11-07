@@ -1,0 +1,14 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -s -p -classpath /workspace/korrust/target/checks/2026-11-07T173727396788Z-suspend-members/candidate members.ExternalReader
+Compiled from "Models.kt"
+public final class members.ExternalReader implements suspend_dependency.External {
+  private final kotlin.jvm.functions.Function2<java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>, java.lang.Object> callback;
+    descriptor: Lkotlin/jvm/functions/Function2;
+  public members.ExternalReader(kotlin.jvm.functions.Function2<? super java.lang.String, ? super kotlin.coroutines.Continuation<? super java.lang.String>, ? extends java.lang.Object>);
+    descriptor: (Lkotlin/jvm/functions/Function2;)V
+
+  public java.lang.Object read(java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>);
+    descriptor: (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+
+  public final kotlin.jvm.functions.Function2<java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>, java.lang.Object> getCallback();
+    descriptor: ()Lkotlin/jvm/functions/Function2;
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-07T18:07:46.528834+00:00",
+  "status": "completed",
+  "compiler": {
+    "path": "target/checks/2026-11-07T173727396788Z-suspend-members/korrust-frozen",
+    "sha256": "e7a1117c34adc40b4bec275319ea3f68ec242be88ed3fe936d374336247a7062",
+    "source_revision": "d02d1372eb03cbcaab692f60a2c06cb61d8bcb2a"
+  },
+  "features": [
+    {
+      "name": "suspend_members_and_interface_dispatch",
+      "status": "supported",
+      "scope": "Bounded suspend interface/abstract signatures and final-class methods with real saved receivers, delayed resumption, default dispatch, exception identity, physical Continuation slots, JVM verification and logical Kotlin metadata.",
+      "restrictions": [
+        "Private/generic/defaulted/extension/inheritable concrete members, object/companion forms and unsupported control-flow shapes remain bounded.",
+        "Custom parameter annotations on suspend declarations reject explicitly; existing value-class and suspension-state limits remain.",
+        "No complete coroutine-library, Android runtime, full-app or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-07-suspend-members.json",
+      "checks_report": "reports/correctness/2026-11-07-suspend-members-checks.json",
+      "counts": {
+        "pass": 11,
+        "invalid_rejected": 5,
+        "unsupported_language": 13
+      }
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-07-suspend-members.json",
+    "reports/correctness/2026-11-07-suspend-members-checks.json"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_suspend_members.py",
+      "--candidate",
+      "target/next5-integrated/release/korrust",
+      "--output",
+      "target/checks/2026-11-07T173727396788Z-suspend-members",
+      "--evidence-directory",
+      "reports/correctness/2026-11-07-suspend-members"
+    ]
+  ]
+}

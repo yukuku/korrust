@@ -1,0 +1,30 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -s -p -classpath /workspace/korrust/target/checks/2026-11-07T173727396788Z-suspend-members/official members.Reader
+Compiled from "Models.kt"
+public final class members.Reader implements members.Boundary {
+  private final java.lang.String prefix;
+    descriptor: Ljava/lang/String;
+  private final kotlin.jvm.functions.Function2<java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>, java.lang.Object> callback;
+    descriptor: Lkotlin/jvm/functions/Function2;
+  private int visits;
+    descriptor: I
+  public members.Reader(java.lang.String, kotlin.jvm.functions.Function2<? super java.lang.String, ? super kotlin.coroutines.Continuation<? super java.lang.String>, ? extends java.lang.Object>);
+    descriptor: (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
+
+  public final java.lang.String getPrefix();
+    descriptor: ()Ljava/lang/String;
+
+  public final kotlin.jvm.functions.Function2<java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>, java.lang.Object> getCallback();
+    descriptor: ()Lkotlin/jvm/functions/Function2;
+
+  public final int getVisits();
+    descriptor: ()I
+
+  public final void setVisits(int);
+    descriptor: (I)V
+
+  public java.lang.Object read(java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>);
+    descriptor: (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+
+  public java.lang.Object retry(java.lang.String, kotlin.coroutines.Continuation<? super java.lang.String>);
+    descriptor: (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}

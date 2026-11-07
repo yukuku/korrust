@@ -29,7 +29,9 @@ fn unsupported(message: &str) -> Diagnostic {
 pub(super) fn suspension(value: &Value, functions: &[crate::check::Function]) -> bool {
     match &value.kind {
         ValueKind::Call(index, _) => functions[*index].suspend_,
-        ValueKind::JavaCall { method, .. } | ValueKind::MemberCall { method, .. } => method
+        ValueKind::JavaCall { method, .. }
+        | ValueKind::MemberCall { method, .. }
+        | ValueKind::SuperCall { method, .. } => method
             .library
             .as_ref()
             .is_some_and(|method| method.suspend_),
@@ -111,9 +113,6 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
                         ),
                 );
             }
-            if matches!(value.kind, ValueKind::MemberCall { .. }) {
-                return Err(unsupported("Imported suspend member calls are unsupported"));
-            }
             if matches!(&value.kind, ValueKind::JavaCall { method, .. } if method.name.ends_with("$default"))
             {
                 return Err(unsupported(
@@ -175,6 +174,9 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
                 segment.push(Statement::Return(boxed_return(value)))
             }
             Statement::Expression(_)
+            | Statement::FieldStore { .. }
+            | Statement::JavaFieldStore { .. }
+            | Statement::IndexStore(..)
             | Statement::ThrowValue(_)
             | Statement::ThrowException { .. }
             | Statement::Return(_) => segment.push(statement.clone()),
@@ -306,12 +308,108 @@ fn forbidden_value(value: &Value, owners: &std::collections::BTreeSet<String>) -
         }
 }
 
+fn validate_parameter_annotations(function: &crate::syntax::Function) -> Result<()> {
+    if function.suspend_
+        && function
+            .param_annotations
+            .iter()
+            .any(|annotations| !annotations.is_empty())
+    {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Custom parameter annotations on suspend declarations are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "SUSPEND_PARAMETER_ANNOTATION_UNSUPPORTED",
+        ));
+    }
+    Ok(())
+}
+
+fn validate_member_shape(
+    function: &crate::syntax::Function,
+    generic_owner: bool,
+    inheritable_body: bool,
+) -> Result<()> {
+    validate_parameter_annotations(function)?;
+    if function.suspend_
+        && (function.private
+            || generic_owner
+            || inheritable_body
+            || function.receiver.is_some()
+            || !function.type_params.is_empty()
+            || function.inline
+            || function.vararg
+            || function.defaults.iter().any(Option::is_some))
+    {
+        return Err(Diagnostic::new(function.offset, "Private, generic, value-class, extension, inline, vararg, defaulted, and inheritable concrete suspend members are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SUSPEND_MEMBER_SHAPE_UNSUPPORTED"));
+    }
+    Ok(())
+}
+
+fn validate_function(
+    function: &crate::check::Function,
+    functions: &[crate::check::Function],
+    forbidden_owners: &std::collections::BTreeSet<String>,
+) -> Result<()> {
+    if function.suspend_ {
+        if function
+            .params
+            .iter()
+            .any(|(_, ty)| unsupported_unit_type(ty))
+            || unsupported_unit_type(&function.result)
+        {
+            return Err(unsupported(
+                "Nullable Unit and Unit-valued suspend callback parameters are unsupported",
+            ));
+        }
+        if function
+            .params
+            .iter()
+            .map(|(_, ty)| ty.slots())
+            .sum::<usize>()
+            > 253
+        {
+            return Err(unsupported(
+                "Suspend member parameters exceed the JVM limit including receiver and continuation",
+            ));
+        }
+        let mut forbidden = function
+            .params
+            .iter()
+            .any(|(_, ty)| forbidden_type(ty, forbidden_owners))
+            || forbidden_type(&function.result, forbidden_owners);
+        crate::check::ir_walk::statements(
+            &mut function.body.clone(),
+            "",
+            &mut |value: &mut Value, _: &str| {
+                forbidden |= forbidden_value(value, forbidden_owners);
+            },
+        );
+        if forbidden {
+            return Err(
+                Diagnostic::new(0, "Value-class types in suspend members are unsupported")
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "SUSPEND_VALUE_CLASS_INTERACTION_UNSUPPORTED",
+                    ),
+            );
+        }
+    }
+    if function.suspend_ || contains_suspension(&function.body, functions) {
+        plan(function, functions)?;
+    }
+    Ok(())
+}
+
 pub(crate) fn validate(
     module: &Module,
     source: &crate::syntax::Module,
     forbidden_owners: &std::collections::BTreeSet<String>,
 ) -> Result<()> {
     for function in &source.functions {
+        validate_parameter_annotations(function)?;
         if function.suspend_
             && (function.receiver.is_some()
                 || !function.type_params.is_empty()
@@ -321,6 +419,46 @@ pub(crate) fn validate(
         {
             return Err(Diagnostic::new(function.offset, "Generic, extension, inline, vararg, and defaulted suspend declarations are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SUSPEND_DECLARATION_SHAPE_UNSUPPORTED"));
         }
+    }
+    if let Some(class) = &source.class_decl {
+        for method in &class.methods {
+            validate_member_shape(
+                &method.function,
+                !class.type_params.is_empty() || class.value_,
+                method.has_body && (class.open || class.abstract_),
+            )?;
+        }
+    }
+    fn interface_shapes(interface: &crate::syntax::InterfaceDecl) -> Result<()> {
+        for method in &interface.methods {
+            validate_member_shape(&method.function, !interface.type_params.is_empty(), false)?;
+        }
+        for nested in &interface.nested {
+            interface_shapes(nested)?;
+        }
+        Ok(())
+    }
+    if let Some(interface) = &source.interface_decl {
+        interface_shapes(interface)?;
+    }
+    let mut members = Vec::new();
+    if let Some(class) = &module.class_decl {
+        members.extend(class.methods.iter());
+    }
+    fn interface_functions<'a>(
+        interface: &'a crate::check::InterfaceDecl,
+        members: &mut Vec<&'a crate::check::Function>,
+    ) {
+        members.extend(interface.methods.iter().map(|method| &method.function));
+        for nested in &interface.nested {
+            interface_functions(nested, members);
+        }
+    }
+    if let Some(interface) = &module.interface_decl {
+        interface_functions(interface, &mut members);
+    }
+    for function in members {
+        validate_function(function, &module.functions, forbidden_owners)?;
     }
     let mut signatures = std::collections::BTreeSet::new();
     for function in &module.functions {
@@ -406,11 +544,16 @@ fn frame_owner(owner: &str, index: usize) -> String {
     format!("{owner}$suspend${index}")
 }
 
-fn code<'a>(pool: &'a mut Pool, module: &'a Module, owner: &'a str) -> Code<'a> {
+fn code<'a>(
+    pool: &'a mut Pool,
+    functions: &'a [crate::check::Function],
+    lambdas: &'a [crate::check::LambdaDecl],
+    owner: &'a str,
+) -> Code<'a> {
     Code {
         coroutine: true,
         pool,
-        functions: &module.functions,
+        functions,
         owner,
         bytes: Vec::new(),
         labels: Vec::new(),
@@ -423,7 +566,7 @@ fn code<'a>(pool: &'a mut Pool, module: &'a Module, owner: &'a str) -> Code<'a> 
         exceptions: Vec::new(),
         temporary_count: 0,
         temporary_patches: Vec::new(),
-        lambdas: &module.lambdas,
+        lambdas,
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
         in_lambda: false,
@@ -454,8 +597,12 @@ fn call(
     temporary: u8,
 ) -> Result<()> {
     let (receiver, args) = match &point.value.kind {
-        ValueKind::Call(_, args) | ValueKind::JavaCall { args, .. } => (None, args),
-        ValueKind::FunctionInvoke { function, args } => (Some(function.as_ref()), args),
+        ValueKind::Call(_, args) => (None, args.as_slice()),
+        ValueKind::JavaCall { method, args } if method.access & 8 != 0 => (None, args.as_slice()),
+        ValueKind::JavaCall { args, .. } | ValueKind::MemberCall { args, .. } => {
+            (Some(&args[0]), &args[1..])
+        }
+        ValueKind::FunctionInvoke { function, args } => (Some(function.as_ref()), args.as_slice()),
         _ => return Err(unsupported("Unsupported suspension invocation")),
     };
     let mut next = temporary as u16;
@@ -493,7 +640,9 @@ fn call(
     }
     let physical = match &point.value.kind {
         ValueKind::Call(index, _) => invocation_types(&code.functions[*index].descriptor())?.0,
-        ValueKind::JavaCall { method, .. } => invocation_types(&method.descriptor)?.0,
+        ValueKind::JavaCall { method, .. } | ValueKind::MemberCall { method, .. } => {
+            invocation_types(&method.descriptor)?.0
+        }
         ValueKind::FunctionInvoke { .. } => {
             vec![Type::Java("java/lang/Object".into()); args.len() + 1]
         }
@@ -520,7 +669,34 @@ fn call(
             )?;
         }
         ValueKind::JavaCall { method, .. } => {
-            code.method_reference(0xb8, &method.owner, &method.name, &method.descriptor)?;
+            code.method_reference(
+                if method.access & 8 != 0 {
+                    0xb8
+                } else if method.access & 2 != 0 {
+                    0xb7
+                } else {
+                    0xb6
+                },
+                &method.owner,
+                &method.name,
+                &method.descriptor,
+            )?;
+        }
+        ValueKind::MemberCall {
+            method, interface, ..
+        } => {
+            if *interface {
+                let reference =
+                    code.pool
+                        .interface_method(&method.owner, &method.name, &method.descriptor)?;
+                code.reference(0xb9, reference);
+                code.bytes.extend([
+                    (physical.iter().map(Type::slots).sum::<usize>() + 1) as u8,
+                    0,
+                ]);
+            } else {
+                code.method_reference(0xb6, &method.owner, &method.name, &method.descriptor)?;
+            }
         }
         ValueKind::FunctionInvoke { args, .. } => {
             let arity = args.len() + 1;
@@ -549,14 +725,43 @@ pub(super) fn method(
     owner: &str,
     index: usize,
 ) -> Result<Vec<u8>> {
-    let function = &module.functions[index];
-    let plan = plan(function, &module.functions)?;
-    let mut code = code(pool, module, owner);
+    emit_method(
+        pool,
+        &module.functions,
+        &module.lambdas,
+        owner,
+        &module.functions[index],
+        index,
+        None,
+    )
+}
+
+fn with_receiver(function: &crate::check::Function, owner: &str) -> crate::check::Function {
+    let mut planned = function.clone();
+    planned
+        .params
+        .insert(0, ("$this".into(), Type::Java(owner.into())));
+    planned
+}
+
+pub(super) fn emit_method(
+    pool: &mut Pool,
+    functions: &[crate::check::Function],
+    lambdas: &[crate::check::LambdaDecl],
+    owner: &str,
+    function: &crate::check::Function,
+    index: usize,
+    member_flags: Option<u16>,
+) -> Result<Vec<u8>> {
+    let planned = member_flags.map(|_| with_receiver(function, owner));
+    let planned = planned.as_ref().unwrap_or(function);
+    let plan = plan(planned, functions)?;
+    let mut code = code(pool, functions, lambdas, owner);
     let mut locals = function.locals;
     if plan.points.is_empty() {
         code.block(&plan.segments[0])?;
     } else {
-        let incoming = function
+        let incoming = planned
             .params
             .iter()
             .map(|(_, ty)| ty.slots())
@@ -566,6 +771,10 @@ pub(super) fn method(
             .iter()
             .map(|point| match &point.value.kind {
                 ValueKind::Call(_, args) | ValueKind::JavaCall { args, .. } => args
+                    .iter()
+                    .map(|argument| argument.ty.slots())
+                    .sum::<usize>(),
+                ValueKind::MemberCall { args, .. } => args
                     .iter()
                     .map(|argument| argument.ty.slots())
                     .sum::<usize>(),
@@ -701,7 +910,7 @@ pub(super) fn method(
     let code = code.into_simple(locals, stack)?;
     let mut method = simple_method(
         pool,
-        if function.private { 0x001a } else { 0x0019 },
+        member_flags.unwrap_or(if function.private { 0x001a } else { 0x0019 }),
         function.jvm_name(),
         &function.descriptor(),
         code,
@@ -716,6 +925,9 @@ pub(super) fn method(
     parameter_annotations(pool, &mut method, &params)?;
     annotations::append_annotations(pool, &mut method, &function.annotations)?;
     nullable_result(pool, &mut method, function.physical_result())?;
+    if member_flags.is_some() {
+        frames::attach(pool, &mut method, owner, &params, function.locals, false)?;
+    }
     Ok(method)
 }
 
@@ -752,14 +964,23 @@ pub(super) fn access_bridge(
 }
 
 pub(crate) fn frames(module: &Module, owner: &str, file: &str) -> Result<Vec<crate::ClassFile>> {
+    emit_frames(&module.functions, owner, file, false)
+}
+
+pub(super) fn emit_frames(
+    functions: &[crate::check::Function],
+    owner: &str,
+    file: &str,
+    member: bool,
+) -> Result<Vec<crate::ClassFile>> {
     let mut files = Vec::new();
-    for (index, function) in module
-        .functions
+    for (index, function) in functions
         .iter()
         .enumerate()
         .filter(|(_, function)| function.suspend_)
     {
-        let plan = plan(function, &module.functions)?;
+        let planned = member.then(|| with_receiver(function, owner));
+        let plan = plan(planned.as_ref().unwrap_or(function), functions)?;
         if plan.points.is_empty() {
             continue;
         }
@@ -816,6 +1037,13 @@ pub(crate) fn frames(module: &Module, owner: &str, file: &str) -> Result<Vec<cra
         invoke.reference(0x13, pool.add(Constant::Integer(i32::MIN))?);
         invoke.bytes.push(0x80);
         invoke.reference(0xb5, pool.field(&frame_owner, "label", "I")?);
+        if member {
+            invoke.bytes.push(0x2a);
+            invoke.reference(
+                0xb4,
+                pool.field(&frame_owner, "spill$0", &format!("L{owner};"))?,
+            );
+        }
         for (_, ty) in &function.params {
             invoke.bytes.push(if ty.is_reference() {
                 0x01
@@ -835,7 +1063,10 @@ pub(crate) fn frames(module: &Module, owner: &str, file: &str) -> Result<Vec<cra
         } else {
             function.jvm_name().to_owned()
         };
-        invoke.reference(0xb8, pool.method(owner, &callable, &function.descriptor())?);
+        invoke.reference(
+            if member { 0xb6 } else { 0xb8 },
+            pool.method(owner, &callable, &function.descriptor())?,
+        );
         invoke.bytes.push(0xb0);
         let invoke = simple_method(
             &mut pool,

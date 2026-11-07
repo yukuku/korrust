@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-07T18:07:46.527697+00:00",
+  "status": "completed",
+  "selection": "Integrated release checks for suspend-members",
+  "compiler": {
+    "path": "target/checks/2026-11-07T173727396788Z-suspend-members/korrust-frozen",
+    "sha256": "e7a1117c34adc40b4bec275319ea3f68ec242be88ed3fe936d374336247a7062",
+    "source_revision": "d02d1372eb03cbcaab692f60a2c06cb61d8bcb2a"
+  },
+  "inputs": {
+    "source_and_fixture_freeze": "reports/correctness/2026-11-07-suspend-members.json",
+    "logs_sha256": {
+      "rust.log": "55d33271ac2c365f87f186b594e45f178d497e998ac29035a9fdaeb657c08d36",
+      "build.log": "5df20f3535de5a228a35631c96fe804b865feba99fa2f62726a4a1ae6ef8edb6",
+      "clippy.log": "7ec82d984fa81c34943b715f8a2f49c661c07cd8bf2127dcef4d76f764295111",
+      "report-tests.log": "9582b633fd676b606d6436092a213bb14581b0ea2ecdb96151ba67f9c66f8cb3"
+    }
+  },
+  "cases": [
+    {
+      "id": "rust_release",
+      "outcome": "pass",
+      "tests": 492,
+      "test_groups": 45
+    },
+    {
+      "id": "clippy_release_all_targets",
+      "outcome": "pass"
+    },
+    {
+      "id": "format",
+      "outcome": "pass"
+    },
+    {
+      "id": "report_generator",
+      "outcome": "pass",
+      "tests": 8
+    }
+  ],
+  "counts": {
+    "pass": 4
+  },
+  "evidence": [
+    "reports/correctness/2026-11-07-suspend-members-checks/rust.log",
+    "reports/correctness/2026-11-07-suspend-members-checks/build.log",
+    "reports/correctness/2026-11-07-suspend-members-checks/clippy.log",
+    "reports/correctness/2026-11-07-suspend-members-checks/report-tests.log"
+  ],
+  "reproduction_commands": [
+    "source /workspace/korrust-setup/env.sh",
+    "cargo fmt --all -- --check",
+    "CARGO_TARGET_DIR=target/next5-integrated cargo clippy --release --all-targets --locked --offline -- -D warnings",
+    "CARGO_TARGET_DIR=target/next5-integrated cargo build --release --locked --offline",
+    "RUST_MIN_STACK=16777216 CARGO_TARGET_DIR=target/next5-integrated cargo test --release --locked --offline",
+    "python3 -m unittest discover -s tests -p test_reports.py"
+  ]
+}
