@@ -3,9 +3,9 @@ use crate::classpath::AnnotationRetention;
 
 pub(crate) fn unsupported_lowering(owner: &str) -> Option<&'static str> {
     match owner {
-        "kotlinx/serialization/Serializable" | "androidx/compose/runtime/Composable" => {
-            Some("COMPILER_PLUGIN_UNSUPPORTED")
-        }
+        "kotlinx/serialization/Serializable"
+        | "androidx/compose/runtime/Composable"
+        | "kotlinx/parcelize/Parcelize" => Some("COMPILER_PLUGIN_UNSUPPORTED"),
         "kotlin/jvm/JvmName"
         | "kotlin/jvm/JvmSynthetic"
         | "kotlin/jvm/Synchronized"
@@ -81,17 +81,27 @@ pub(super) fn declaration_annotations(
             owner.as_str(),
             "kotlin/jvm/JvmOverloads" | "kotlin/jvm/JvmStatic"
         ) {
-            if target != "METHOD" || use_site.is_some() || !annotation.arguments.is_empty() {
+            if (target != "METHOD"
+                && !(target == "CONSTRUCTOR" && owner == "kotlin/jvm/JvmOverloads"))
+                || use_site.is_some()
+                || !annotation.arguments.is_empty()
+            {
                 return Err(Diagnostic::new(
                     annotation.offset,
                     "JVM method annotation requires a function without annotation arguments",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "JVM_ANNOTATION_PLACEMENT_INVALID",
                 ));
             }
             if !seen.insert(owner.clone()) {
-                return Err(Diagnostic::new(
-                    annotation.offset,
-                    "Repeated JVM method annotation",
-                ));
+                return Err(
+                    Diagnostic::new(annotation.offset, "Repeated JVM method annotation").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "REPEATED_ANNOTATION_INVALID",
+                    ),
+                );
             }
             result.push(DeclarationAnnotation {
                 descriptor: format!("L{owner};"),

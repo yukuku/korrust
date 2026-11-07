@@ -178,6 +178,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 138. UInt and ULong scalar literals, arithmetic, comparisons, bitwise operations, integral conversions and nullable/generic boxing through Kotlin value-class metadata and JVM carriers.
 139. Ordinary file annotations with argument and FILE-target validation, facade-only retention, and imported annotation definitions.
 140. Private nested ordinary and data classes with lexical access checks, public-exposure diagnostics, JVM nesting visibility and Kotlin metadata.
+141. JVM overloads for supported primary constructors, with interleaved defaults, checked signatures, annotation retention and Java/Kotlin consumers.
 
 ## Project contract
 

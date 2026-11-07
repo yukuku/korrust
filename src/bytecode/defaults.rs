@@ -222,53 +222,94 @@ pub(super) fn constructors_with_offset(
     )?;
     frames::attach_constructor(pool, &mut method, owner, &params, locals)?;
     let mut methods = vec![method];
-    if class.defaults.len() == class.params.len() && class.defaults.iter().all(Option::is_some) {
-        let mut body = Code {
-            coroutine: false,
-            pool,
-            functions: &[],
-            owner,
-            bytes: vec![0x2a],
-            labels: Vec::new(),
-            branches: Vec::new(),
-            loops: Vec::new(),
-            loop_finally_depths: Vec::new(),
-            loop_names: Vec::new(),
-            pending_loop_name: None,
-            finalizers: Vec::new(),
-            exceptions: Vec::new(),
-            temporary_count: 0,
-            temporary_patches: Vec::new(),
-            lambdas,
-            inline_local_maps: Vec::new(),
-            inline_returns: Vec::new(),
-            in_lambda: false,
-            max_stack: slots + 2,
-        };
-        for (_, ty) in &class.params {
-            body.bytes.push(if ty.is_reference() {
-                0x01
-            } else if ty == &Type::Long {
-                0x09
-            } else if ty == &Type::Double {
-                0x0e
-            } else if ty == &Type::Float {
-                0x0b
-            } else {
-                0x03
-            });
+    let overloads = class
+        .constructor_annotations
+        .iter()
+        .any(|annotation| annotation.descriptor == "Lkotlin/jvm/JvmOverloads;");
+    let mut omitted = HashSet::new();
+    let mut omissions = Vec::new();
+    if overloads {
+        for index in (0..class.params.len()).rev() {
+            if class.defaults.get(index).is_some_and(Option::is_some) {
+                omitted.insert(index);
+                omissions.push(omitted.clone());
+            }
         }
-        body.integer(if class.params.len() == 32 {
-            -1
-        } else {
-            ((1u32 << class.params.len()) - 1) as i32
-        })?;
+    } else if class.defaults.len() == class.params.len()
+        && class.defaults.iter().all(Option::is_some)
+    {
+        omissions.push((0..class.params.len()).collect());
+    }
+    for omitted in omissions {
+        let params = class
+            .params
+            .iter()
+            .enumerate()
+            .filter(|(index, _)| !omitted.contains(index))
+            .map(|(_, param)| param.clone())
+            .collect::<Vec<_>>();
+        let locals = 1 + params.iter().map(|(_, ty)| ty.slots()).sum::<usize>();
+        let mut body = SimpleCode::new((slots + 2) as u16, locals as u16);
+        for (slot, (name, ty)) in parameter_slots(&params, 1).into_iter().zip(&params) {
+            if nonnull(ty) {
+                body.bytes.extend([0x19, slot as u8]);
+                body.reference(0x13, pool.string(name)?);
+                body.reference(
+                    0xb8,
+                    pool.method(
+                        "kotlin/jvm/internal/Intrinsics",
+                        "checkNotNullParameter",
+                        "(Ljava/lang/Object;Ljava/lang/String;)V",
+                    )?,
+                );
+            }
+        }
+        body.bytes.push(0x2a);
+        let mut slot = 1;
+        for (index, (_, ty)) in class.params.iter().enumerate() {
+            if omitted.contains(&index) {
+                body.bytes.push(if ty.is_reference() {
+                    0x01
+                } else if ty == &Type::Long {
+                    0x09
+                } else if ty == &Type::Double {
+                    0x0e
+                } else if ty == &Type::Float {
+                    0x0b
+                } else {
+                    0x03
+                });
+            } else {
+                body.bytes.extend([load_opcode(ty), slot as u8]);
+                slot += ty.slots();
+            }
+        }
+        let mask = omitted
+            .iter()
+            .fold(0u32, |mask, index| mask | (1u32 << index));
+        body.reference(0x13, pool.add(Constant::Integer(mask as i32))?);
         body.bytes.push(0x01);
-        body.method_reference(0xb7, owner, "<init>", &descriptor)?;
+        body.reference(0xb7, pool.method(owner, "<init>", &descriptor)?);
         body.bytes.push(0xb1);
-        let code = body.into_simple(1, (slots + 2) as u16)?;
-        let mut method = simple_method(pool, 0x0001, "<init>", "()V", code, None, false)?;
-        frames::attach_constructor(pool, &mut method, owner, &[], 1)?;
+        let reduced_descriptor = format!(
+            "({})V",
+            params
+                .iter()
+                .map(|(_, ty)| ty.descriptor())
+                .collect::<String>()
+        );
+        let mut method = simple_method(
+            pool,
+            0x0001,
+            "<init>",
+            &reduced_descriptor,
+            body,
+            generic_method(&params, &Type::Unit).as_deref(),
+            false,
+        )?;
+        parameter_annotations(pool, &mut method, &params)?;
+        annotations::append_annotations(pool, &mut method, &class.constructor_annotations)?;
+        frames::attach_constructor(pool, &mut method, owner, &params, locals as u16)?;
         methods.push(method);
     }
     Ok(methods)

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "collision",
+    "source": "class C @JvmOverloads constructor(val a: Int, val b: Int = 1) { constructor(a: Int) : this(a, 2) }",
+    "official_accepts": false,
+    "code": "JVM_SIGNATURE_CLASH",
+    "category": "invalid_kotlin"
+  },
+  {
+    "id": "inner",
+    "source": "class Outer { inner class C @JvmOverloads constructor(val a: Int = 1) }",
+    "official_accepts": true,
+    "code": "INNER_CLASS_SHAPE_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "generic",
+    "source": "class C<T> @JvmOverloads constructor(val a: Int = 1)",
+    "official_accepts": true,
+    "code": "CONSTRUCTOR_OVERLOAD_CLASS_SHAPE_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "sealed",
+    "source": "sealed class C @JvmOverloads constructor(val a: Int = 1)",
+    "official_accepts": true,
+    "code": "SEALED_CONSTRUCTOR_DEFAULTS_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "enum",
+    "source": "enum class C @JvmOverloads constructor(val a: Int = 1) { A }",
+    "official_accepts": true,
+    "code": "CONSTRUCTOR_OVERLOAD_CLASS_SHAPE_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "value",
+    "source": "@JvmInline value class C @JvmOverloads constructor(val a: Int)",
+    "official_accepts": true,
+    "code": "CONSTRUCTOR_OVERLOAD_CLASS_SHAPE_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "private",
+    "source": "class C @JvmOverloads private constructor(val a: Int = 1)",
+    "official_accepts": true,
+    "code": "CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "protected",
+    "source": "open class C @JvmOverloads protected constructor(val a: Int = 1)",
+    "official_accepts": true,
+    "code": "CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "internal",
+    "source": "class C @JvmOverloads internal constructor(val a: Int = 1)",
+    "official_accepts": true,
+    "code": "CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
+    "category": "unsupported_language"
+  },
+  {
+    "id": "parcelize",
+    "source": "@kotlinx.parcelize.Parcelize class C @JvmOverloads constructor(val a: Int = 1)",
+    "official_accepts": true,
+    "code": "COMPILER_PLUGIN_UNSUPPORTED",
+    "category": "unsupported_language",
+    "parcelize_runtime": true
+  },
+  {
+    "id": "arguments",
+    "source": "class C @JvmOverloads(1) constructor(val a: Int = 1)",
+    "official_accepts": false,
+    "message": "without annotation arguments",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID",
+    "category": "invalid_kotlin"
+  },
+  {
+    "id": "repeat",
+    "source": "class C @JvmOverloads @JvmOverloads constructor(val a: Int = 1)",
+    "official_accepts": false,
+    "message": "Repeated JVM",
+    "code": "REPEATED_ANNOTATION_INVALID",
+    "category": "invalid_kotlin"
+  },
+  {
+    "id": "static",
+    "source": "class C @JvmStatic constructor(val a: Int = 1)",
+    "official_accepts": false,
+    "message": "without annotation arguments",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID",
+    "category": "invalid_kotlin"
+  },
+  {
+    "id": "no_keyword",
+    "source": "class C @JvmOverloads public (val a: Int = 1)",
+    "official_accepts": false,
+    "message": "Expected constructor",
+    "code": "CONSTRUCTOR_KEYWORD_REQUIRED",
+    "category": "invalid_kotlin"
+  },
+  {
+    "id": "value_parameter",
+    "source": "@JvmInline value class V(val value: Int)\nclass C @JvmOverloads constructor(val required: V, val n: Int = 1)",
+    "official_accepts": true,
+    "code": "CONSTRUCTOR_OVERLOAD_VALUE_PARAMETER_UNSUPPORTED",
+    "category": "unsupported_language"
+  }
+]

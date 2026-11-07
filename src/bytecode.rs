@@ -4458,6 +4458,11 @@ fn emit_class_with(
             &class.params,
             constructor_locals,
         )?;
+        annotations::append_annotations(
+            &mut pool,
+            &mut constructor,
+            &class.constructor_annotations,
+        )?;
         methods.push(constructor);
         if class.sealed_
             || enum_data.is_some_and(|enumeration| {

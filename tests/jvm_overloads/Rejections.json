@@ -42,15 +42,6 @@
     "diagnostic": "JVM method annotation requires a function without annotation arguments"
   },
   {
-    "id": "constructor_annotation_boundary",
-    "source": "package rejected\nclass Value @JvmOverloads constructor(val a: Int = 1)",
-    "official": "accept",
-    "candidate": "reject",
-    "diagnostic": "constructor annotations are unsupported",
-    "code": "CONSTRUCTOR_ANNOTATION_UNSUPPORTED",
-    "category": "unsupported_language"
-  },
-  {
     "id": "interface_default_boundary",
     "source": "package rejected\ninterface Value { @JvmOverloads fun value(a: Int = 1): Int = a }",
     "official": "reject",

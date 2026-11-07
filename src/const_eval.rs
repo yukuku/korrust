@@ -1728,6 +1728,7 @@ fn visit_class_annotations(
     visit: &mut AnnotationVisitor<'_>,
 ) -> Result<()> {
     visit_annotations(&mut class.annotations, outer, visit)?;
+    visit_annotations(&mut class.constructor_annotations, outer, visit)?;
     let scope = qualified(outer, &class.name);
     let header_scope = qualified(&scope, "$constructor");
     for values in &mut class.param_annotations {

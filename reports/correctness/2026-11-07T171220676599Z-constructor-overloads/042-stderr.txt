@@ -1,0 +1,10 @@
+target/checks/2026-11-07T171220676599Z-constructor-overloads/rejections/collision/Rejected.kt:1:23: error: platform declaration clash: The following declarations have the same JVM signature (<init>(I)V):
+    constructor C(a: Int) defined in C
+    constructor C(a: Int) defined in C
+class C @JvmOverloads constructor(val a: Int, val b: Int = 1) { constructor(a: Int) : this(a, 2) }
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-07T171220676599Z-constructor-overloads/rejections/collision/Rejected.kt:1:65: error: platform declaration clash: The following declarations have the same JVM signature (<init>(I)V):
+    constructor C(a: Int) defined in C
+    constructor C(a: Int) defined in C
+class C @JvmOverloads constructor(val a: Int, val b: Int = 1) { constructor(a: Int) : this(a, 2) }
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

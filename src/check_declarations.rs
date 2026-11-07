@@ -36,6 +36,36 @@ pub(super) fn check_class_with_constants(
     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
     constants: &HashMap<String, (Type, Expr)>,
 ) -> Result<ClassDecl> {
+    let constructor_annotations = annotations::declaration_annotations(
+        &source.constructor_annotations,
+        classpath,
+        imports,
+        "CONSTRUCTOR",
+        None,
+        owner_override,
+    )?;
+    if constructor_annotations
+        .iter()
+        .any(|a| a.descriptor == "Lkotlin/jvm/JvmOverloads;")
+        && (source.inner
+            || source.value_
+            || source.sealed_
+            || !source.type_params.is_empty()
+            || owner_override.is_some_and(|owner| {
+                classpath
+                    .load(owner)
+                    .is_ok_and(|class| class.access & 0x4000 != 0)
+            }))
+    {
+        return Err(Diagnostic::new(
+            source.offset,
+            "JvmOverloads primary constructors require an ordinary nongeneric class",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "CONSTRUCTOR_OVERLOAD_CLASS_SHAPE_UNSUPPORTED",
+        ));
+    }
     let mut captured_source;
     let source = if source.inner {
         captured_source = source.clone();
@@ -256,6 +286,22 @@ pub(super) fn check_class_with_constants(
             fields.insert(name.clone(), ty.clone());
         }
         params.push((name.clone(), ty));
+    }
+    if constructor_annotations
+        .iter()
+        .any(|annotation| annotation.descriptor == "Lkotlin/jvm/JvmOverloads;")
+        && params
+            .iter()
+            .any(|(_, ty)| crate::value_abi::value_parameter(ty, &classpath.value_classes()))
+    {
+        return Err(Diagnostic::new(
+            source.offset,
+            "JvmOverloads constructors with value class parameter carriers are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "CONSTRUCTOR_OVERLOAD_VALUE_PARAMETER_UNSUPPORTED",
+        ));
     }
     if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > 254 {
         return Err(Diagnostic::new(
@@ -1963,6 +2009,7 @@ pub(super) fn check_class_with_constants(
             .collect(),
         delegated_properties,
         primary_constructor: source.primary_constructor,
+        constructor_annotations,
         abstract_: source.abstract_,
         open_methods,
         protected_methods,

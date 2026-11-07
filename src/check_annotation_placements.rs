@@ -645,7 +645,36 @@ fn constructor_parameters(
                 .collect::<Result<Vec<_>>>()?
                 .concat()
         );
-        member(&mut output.methods, "<init>", &descriptor).parameters = parameters;
+        member(&mut output.methods, "<init>", &descriptor).parameters = parameters.clone();
+        if class.constructor_annotations.iter().any(|annotation| {
+            annotations::annotation_owner(&annotation.name, classpath, imports)
+                == "kotlin/jvm/JvmOverloads"
+        }) {
+            let mut omitted = HashSet::new();
+            for index in (0..class.params.len()).rev() {
+                if class.defaults.get(index).is_some_and(Option::is_some) {
+                    omitted.insert(index);
+                    let descriptor = format!(
+                        "({})V",
+                        class
+                            .params
+                            .iter()
+                            .enumerate()
+                            .filter(|(index, _)| !omitted.contains(index))
+                            .map(|(_, (_, ty))| resolve_type(ty, imports, class.offset)
+                                .map(|ty| ty.descriptor()))
+                            .collect::<Result<Vec<_>>>()?
+                            .concat()
+                    );
+                    member(&mut output.methods, "<init>", &descriptor).parameters = parameters
+                        .iter()
+                        .enumerate()
+                        .filter(|(index, _)| !omitted.contains(index))
+                        .map(|(_, value)| value.clone())
+                        .collect();
+                }
+            }
+        }
     }
     Ok(())
 }

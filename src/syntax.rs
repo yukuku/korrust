@@ -503,6 +503,7 @@ pub struct ClassDecl {
     pub param_annotations: Vec<Vec<AnnotationUse>>,
     pub annotations: Vec<AnnotationUse>,
     pub primary_constructor: bool,
+    pub constructor_annotations: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
     pub internal: bool,
@@ -3679,29 +3680,64 @@ impl Parser {
         self.pos = before_visibility;
         let after_name = self.pos;
         self.lines();
+        let mut constructor_annotations = Vec::new();
         if self.at("@") {
             let annotation_start = self.pos;
             let depth = self.depth;
             let type_location_count = self.type_locations.len();
-            let parsed = self.annotations().is_ok();
+            let parsed = self.annotations()?;
             while matches!(
                 self.token().text.as_str(),
-                "public" | "private" | "protected" | "internal"
+                "public" | "internal" | "private" | "protected"
             ) {
                 self.pos += 1;
                 self.lines();
             }
-            let constructor = parsed && matches!(self.token().text.as_str(), "constructor" | "(");
+            let constructor = self.at("constructor");
             self.pos = annotation_start;
             self.depth = depth;
             self.type_locations.truncate(type_location_count);
             if annotation_start == after_name || constructor {
+                constructor_annotations = parsed;
+                self.annotations()?;
+            }
+        }
+        let constructor_start = self.pos;
+        while matches!(
+            self.token().text.as_str(),
+            "public" | "private" | "protected" | "internal"
+        ) {
+            self.pos += 1;
+            self.lines();
+        }
+        let explicit_constructor = self.at("constructor");
+        self.pos = constructor_start;
+        if !constructor_annotations.is_empty() || explicit_constructor {
+            if self.take("public") {
+                self.lines();
+            }
+            if matches!(
+                self.token().text.as_str(),
+                "private" | "protected" | "internal"
+            ) {
                 return Err(self
-                    .error("Primary constructor annotations are unsupported")
+                    .error("Nonpublic primary constructor visibility is unsupported")
                     .with_kind(
                         DiagnosticKind::UnsupportedLanguage,
-                        "CONSTRUCTOR_ANNOTATION_UNSUPPORTED",
+                        "CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
                     ));
+            }
+            if !self.take("constructor") {
+                return Err(self
+                    .error("Expected constructor after primary constructor annotations")
+                    .with_kind(
+                        DiagnosticKind::InvalidKotlin,
+                        "CONSTRUCTOR_KEYWORD_REQUIRED",
+                    ));
+            }
+            self.lines();
+            if !self.at("(") {
+                return Err(self.error("Expected primary constructor parameters"));
             }
         }
         let has_constructor = self.take("(");
@@ -3866,6 +3902,7 @@ impl Parser {
             annotations,
             param_annotations,
             primary_constructor: true,
+            constructor_annotations,
             name,
             offset,
             internal: visibility.as_deref() == Some("internal"),
@@ -4484,6 +4521,7 @@ impl Parser {
             annotations: Vec::new(),
             param_annotations: Vec::new(),
             primary_constructor: true,
+            constructor_annotations: Vec::new(),
             name: "Companion".into(),
             offset: self.token().offset,
             internal: false,
@@ -5051,6 +5089,7 @@ impl Parser {
                     annotations: Vec::new(),
                     param_annotations: Vec::new(),
                     primary_constructor: true,
+                    constructor_annotations: Vec::new(),
                     name: String::new(),
                     offset,
                     internal: false,
@@ -7485,14 +7524,21 @@ mod tests {
     #[test]
     fn constructor_annotation_guards_preserve_separate_annotated_declarations() {
         assert!(parse("class Empty\n@Ann class Next").is_ok());
+        assert!(parse("class Empty\npublic class Next").is_ok());
+        assert!(parse("class Empty\ninternal class Next").is_ok());
+        assert!(parse("class Empty\npublic fun after(): Int = 1").is_ok());
+        assert!(parse("class Empty\nprivate fun after(): Int = 1").is_ok());
+        assert!(parse("class Empty\ninternal fun after(): Int = 1").is_ok());
         assert!(parse("class Empty\n@Suppress(\"unused\") public class Next").is_ok());
         for source in [
             "class Bad @Ann constructor()",
             "class Bad\n@Ann\nconstructor()",
         ] {
-            let error = parse(source).err().unwrap();
-            assert_eq!(error.code, "CONSTRUCTOR_ANNOTATION_UNSUPPORTED");
-            assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
+            let module = parse(source).unwrap();
+            assert_eq!(
+                module.class_decl.unwrap().constructor_annotations[0].name,
+                "Ann"
+            );
         }
     }
 

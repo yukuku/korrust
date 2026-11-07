@@ -176,6 +176,7 @@ pub(crate) fn annotation_source(
         }
         fn class(&self, class: &mut ClassDecl) -> Result<()> {
             self.uses(&mut class.annotations, false)?;
+            self.uses(&mut class.constructor_annotations, false)?;
             for annotations in &mut class.param_annotations {
                 self.uses(annotations, true)?;
             }
@@ -1053,7 +1054,11 @@ fn class_metadata(
     }
     if !anonymous && class.primary_constructor {
         let mut constructor = Proto::default();
-        constructor.number(1, if class.sealed_ { 4 } else { 6 });
+        constructor.number(
+            1,
+            (if class.sealed_ { 4 } else { 6 })
+                | u32::from(!class.constructor_annotations.is_empty()),
+        );
         let mut constructor_desc = String::from("(");
         if class.inner {
             constructor_desc.push_str(&format!("L{};", internal_name.rsplit_once('$').unwrap().0));

@@ -1186,6 +1186,7 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
                     ty(supertype, names);
                 }
                 annotations(&value.annotations, names);
+                annotations(&value.constructor_annotations, names);
                 for parameter in &value.param_annotations {
                     annotations(parameter, names);
                 }
