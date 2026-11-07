@@ -179,6 +179,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 139. Ordinary file annotations with argument and FILE-target validation, facade-only retention, and imported annotation definitions.
 140. Private nested ordinary and data classes with lexical access checks, public-exposure diagnostics, JVM nesting visibility and Kotlin metadata.
 141. JVM overloads for supported primary constructors, with interleaved defaults, checked signatures, annotation retention and Java/Kotlin consumers.
+142. Single-interface anonymous object expressions with fresh instances, multiple methods, shared mutable captures, own/outer receivers and bounded inline method returns.
 
 ## Project contract
 

@@ -206,6 +206,11 @@ fn function(node: &mut Function, owner: &str, visitor: &mut impl Visitor) {
 pub(crate) fn lambdas(nodes: &mut [LambdaDecl], visitor: &mut impl Visitor) {
     for node in nodes {
         function(&mut node.function, &node.owner, visitor);
+        if let Some(methods) = &mut node.anonymous_methods {
+            for method in methods {
+                function(method, &node.owner, visitor);
+            }
+        }
     }
 }
 
@@ -473,6 +478,7 @@ mod tests {
             constants: Vec::new(),
             functions: vec![top_function],
             lambdas: vec![LambdaDecl {
+                anonymous_methods: None,
                 defaults: Vec::new(),
                 owner: "FileKt$lambda$1".into(),
                 captures: Vec::new(),

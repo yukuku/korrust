@@ -31,7 +31,7 @@ pub(super) fn emit(
     values: &crate::value_abi::Registry,
 ) -> Result<crate::ClassFile> {
     let function = &lambda.function;
-    if function.params.len() > 22 {
+    if lambda.anonymous_methods.is_none() && function.params.len() > 22 {
         return Err(failure("Lambda arities greater than 22 are unsupported"));
     }
     if function
@@ -99,62 +99,65 @@ pub(super) fn emit(
         None,
         false,
     )?;
-    let mut code = Code {
-        coroutine: false,
-        pool: &mut pool,
-        functions,
-        owner: facade,
-        bytes: Vec::new(),
-        labels: Vec::new(),
-        branches: Vec::new(),
-        loops: Vec::new(),
-        loop_finally_depths: Vec::new(),
-        loop_names: Vec::new(),
-        pending_loop_name: None,
-        finalizers: Vec::new(),
-        exceptions: Vec::new(),
-        temporary_count: 0,
-        temporary_patches: Vec::new(),
-        lambdas,
-        inline_local_maps: Vec::new(),
-        inline_returns: Vec::new(),
-        in_lambda: true,
-        max_stack: 2,
-    };
-    for ((name, ty), slot) in function
-        .params
-        .iter()
-        .zip(parameter_slots(&function.params, 1))
-    {
-        if nonnull(ty) {
-            code.bytes.extend([load_opcode(ty), slot as u8]);
-            let name = code.pool.string(name)?;
-            code.reference(0x13, name);
-            code.method_reference(
-                0xb8,
-                "kotlin/jvm/internal/Intrinsics",
-                "checkNotNullParameter",
-                "(Ljava/lang/Object;Ljava/lang/String;)V",
-            )?;
+    let mut methods = vec![constructor];
+    for function in std::iter::once(function).chain(lambda.anonymous_methods.iter().flatten()) {
+        let mut code = Code {
+            coroutine: false,
+            pool: &mut pool,
+            functions,
+            owner: facade,
+            bytes: Vec::new(),
+            labels: Vec::new(),
+            branches: Vec::new(),
+            loops: Vec::new(),
+            loop_finally_depths: Vec::new(),
+            loop_names: Vec::new(),
+            pending_loop_name: None,
+            finalizers: Vec::new(),
+            exceptions: Vec::new(),
+            temporary_count: 0,
+            temporary_patches: Vec::new(),
+            lambdas,
+            inline_local_maps: Vec::new(),
+            inline_returns: Vec::new(),
+            in_lambda: true,
+            max_stack: 2,
+        };
+        for ((name, ty), slot) in function
+            .params
+            .iter()
+            .zip(parameter_slots(&function.params, 1))
+        {
+            if nonnull(ty) {
+                code.bytes.extend([load_opcode(ty), slot as u8]);
+                let name = code.pool.string(name)?;
+                code.reference(0x13, name);
+                code.method_reference(
+                    0xb8,
+                    "kotlin/jvm/internal/Intrinsics",
+                    "checkNotNullParameter",
+                    "(Ljava/lang/Object;Ljava/lang/String;)V",
+                )?;
+            }
         }
+        if lambda.anonymous_methods.is_none() && inline::contains_nonlocal(function, lambdas) {
+            code.bytes.extend([0x01, 0xbf]);
+        } else {
+            code.block(&function.body)?;
+        }
+        let stack = code.max_stack as u16;
+        let completed = code.into_simple(function.locals, stack)?;
+        let implementation = simple_method(
+            &mut pool,
+            0x0011,
+            function.jvm_name(),
+            &function.descriptor(),
+            completed,
+            generic_function(function).as_deref(),
+            nonnull(&function.result),
+        )?;
+        methods.push(implementation);
     }
-    if inline::contains_nonlocal(function, lambdas) {
-        code.bytes.extend([0x01, 0xbf]);
-    } else {
-        code.block(&function.body)?;
-    }
-    let stack = code.max_stack as u16;
-    let completed = code.into_simple(function.locals, stack)?;
-    let implementation = simple_method(
-        &mut pool,
-        0x0011,
-        function.jvm_name(),
-        &function.descriptor(),
-        completed,
-        generic_function(function).as_deref(),
-        nonnull(&function.result),
-    )?;
-    let mut methods = vec![constructor, implementation];
     let (bridge_name, bridge_descriptor) = lambda.interface.as_ref().map_or_else(
         || {
             (
@@ -167,7 +170,9 @@ pub(super) fn emit(
         },
         |method| (method.name.clone(), method.descriptor.clone()),
     );
-    if bridge_name != function.jvm_name() || bridge_descriptor != function.descriptor() {
+    if lambda.anonymous_methods.is_none()
+        && (bridge_name != function.jvm_name() || bridge_descriptor != function.descriptor())
+    {
         let (params, result) = invocation_types(&bridge_descriptor)?;
         if params.len() != function.params.len() {
             return Err(failure("SAM bridge parameter count mismatch"));
@@ -517,6 +522,7 @@ mod tests {
     #[test]
     fn generated_bridges_execute_with_jvm_verification() {
         let long = crate::check::LambdaDecl {
+            anonymous_methods: None,
             defaults: Vec::new(),
             owner: "CaptureLong".into(),
             captures: vec![("base".into(), Type::Long)],
@@ -546,6 +552,7 @@ mod tests {
             interface: None,
         };
         let unit = crate::check::LambdaDecl {
+            anonymous_methods: None,
             defaults: Vec::new(),
             owner: "ReturnUnit".into(),
             captures: Vec::new(),
@@ -561,6 +568,7 @@ mod tests {
             interface: None,
         };
         let sam = crate::check::LambdaDecl {
+            anonymous_methods: None,
             defaults: Vec::new(),
             owner: "StringSam".into(),
             captures: Vec::new(),

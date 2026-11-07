@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-07T17:32:47.430621+00:00",
+  "status": "completed",
+  "selection": "Integrated release checks for anonymous-objects",
+  "compiler": {
+    "path": "target/next5-integrated/release/korrust",
+    "sha256": "562d723146dfc6b28ed11670247b8c549248a6f4f9f7d7e48788ebaeced0a65b"
+  },
+  "inputs": {
+    "source_and_fixture_freeze": "reports/correctness/2026-11-07T172556195083Z-anonymous-objects.json",
+    "logs_sha256": {
+      "rust.log": "d6810dc2c6ef70f96412fd219a7f9ea1892923a3d666a329aca15a9f721b5a3f",
+      "build.log": "7968d7dc5d3299252e853fe1c006d80474786618970f350f29e17e7fa3d3409a",
+      "clippy.log": "ac08fc61bfb5e6b40ad0f010957b3113e76d2f7a3c7a3843ca0eeac56ce00348",
+      "report-tests.log": "b296cec33bbbfedac3d31ac5fd4c405471ca215e5a9257e34177c06c1ff1bc2e"
+    }
+  },
+  "cases": [
+    {
+      "id": "rust_release",
+      "outcome": "pass",
+      "tests": 4,
+      "test_groups": 1
+    },
+    {
+      "id": "clippy_release_all_targets",
+      "outcome": "pass"
+    },
+    {
+      "id": "format",
+      "outcome": "pass"
+    },
+    {
+      "id": "report_generator",
+      "outcome": "pass",
+      "tests": 8
+    }
+  ],
+  "counts": {
+    "pass": 4
+  },
+  "evidence": [
+    "reports/correctness/2026-11-07-anonymous-objects-checks/rust.log",
+    "reports/correctness/2026-11-07-anonymous-objects-checks/build.log",
+    "reports/correctness/2026-11-07-anonymous-objects-checks/clippy.log",
+    "reports/correctness/2026-11-07-anonymous-objects-checks/report-tests.log"
+  ],
+  "reproduction_commands": [
+    "source /workspace/korrust-setup/env.sh",
+    "cargo fmt --all -- --check",
+    "CARGO_TARGET_DIR=target/next5-integrated cargo clippy --release --all-targets --locked --offline -- -D warnings",
+    "CARGO_TARGET_DIR=target/next5-integrated cargo build --release --locked --offline",
+    "RUST_MIN_STACK=16777216 CARGO_TARGET_DIR=target/next5-integrated cargo test --release --locked --offline --test anonymous_objects",
+    "python3 -m unittest discover -s tests -p test_reports.py"
+  ]
+}

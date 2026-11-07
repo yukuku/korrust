@@ -25,6 +25,8 @@ use declarations::check_class;
 pub use declarations::{
     infer_source_results, source_inference_error, unresolved_source_dependencies,
 };
+#[path = "check_anonymous.rs"]
+mod anonymous;
 #[path = "check_captures.rs"]
 mod captures;
 #[path = "check_classes.rs"]
@@ -93,6 +95,7 @@ pub struct DeclarationAnnotation {
 }
 
 pub struct LambdaDecl {
+    pub anonymous_methods: Option<Vec<Function>>,
     pub defaults: Vec<JavaMethod>,
     pub owner: String,
     pub captures: Vec<(String, Type)>,
@@ -658,6 +661,7 @@ struct Local {
 type ConstructorSignature<'a> = (&'a str, &'a Vec<(String, Type)>, &'a Vec<Option<Expr>>);
 type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u64);
 type CallableParameters = (Vec<(String, Type)>, Vec<bool>);
+#[derive(Clone)]
 struct Checker<'a> {
     inline_argument_modes: Vec<syntax::InlineParameterMode>,
     inline_analysis: bool,
@@ -3382,6 +3386,19 @@ impl Checker<'_> {
                     }
                 }
                 StatementKind::Assign(name, expr) => {
+                    if self.local(name).is_none()
+                        && self.captured.contains_key(name)
+                        && !self.captured_cells.contains_key(name)
+                    {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Cannot reassign an immutable lexical capture",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "IMMUTABLE_CAPTURE_ASSIGNMENT",
+                        ));
+                    }
                     if name != "field" {
                         if let Some(value) = self.outer_assignment(name, expr, offset)? {
                             body.push(value);
@@ -3982,6 +3999,9 @@ impl Checker<'_> {
                 }
                 (inner, ValueKind::RequireNotNull(Box::new(value)))
             }
+            ExprKind::AnonymousObject { interface, methods } => {
+                return self.anonymous_object(interface, methods, offset);
+            }
             ExprKind::Lambda(_)
             | ExprKind::LambdaWithParams { .. }
             | ExprKind::CallableReference { .. } => {
@@ -4310,7 +4330,11 @@ impl Checker<'_> {
                     }
                     return Ok(self.cell_read(cell, ty));
                 }
-                if let Some((owner, ty)) = self.captured.get(name) {
+                if let Some((owner, ty)) = self
+                    .captured
+                    .get(name)
+                    .filter(|_| self.local(name).is_none())
+                {
                     return Ok(Value {
                         ty: ty.clone(),
                         kind: ValueKind::JavaField {
@@ -5045,6 +5069,18 @@ impl Checker<'_> {
                     }
                     if self.local(name).is_some() || self.captured.contains_key(name) {
                         let function = self.value(target)?;
+                        if !matches!(
+                            function.ty.base(),
+                            Type::Function { .. }
+                                | Type::ReceiverFunction { .. }
+                                | Type::SuspendFunction { .. }
+                        ) {
+                            if let Some(value) =
+                                self.implicit_extension_receiver_call(name, args, &[], offset)?
+                            {
+                                return Ok(value);
+                            }
+                        }
                         return self.function_invoke(function, args, offset);
                     }
                     if let Some(value) = self.lexical_call(name, args, &[], None, offset)? {
@@ -5909,6 +5945,11 @@ fn loses_member_type(_ty: &Type) -> bool {
 }
 fn call_names(expr: &Expr, names: &mut HashSet<String>) {
     match &expr.kind {
+        ExprKind::AnonymousObject { methods, .. } => {
+            for method in methods {
+                body_call_names(&method.body, names);
+            }
+        }
         ExprKind::AnnotationConstant { value, .. } => call_names(value, names),
         ExprKind::AnnotationArray(elements) | ExprKind::VarargArray { elements, .. } => {
             for element in elements {

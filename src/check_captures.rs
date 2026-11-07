@@ -2,6 +2,19 @@ use super::*;
 
 pub(super) fn expression_names(expr: &Expr, names: &mut HashSet<String>) {
     match &expr.kind {
+        ExprKind::AnonymousObject { methods, .. } => {
+            for method in methods {
+                names.extend(free_names(
+                    &method.body,
+                    &method
+                        .params
+                        .iter()
+                        .map(|p| p.0.clone())
+                        .chain(std::iter::once("this".into()))
+                        .collect::<Vec<_>>(),
+                ));
+            }
+        }
         ExprKind::Name(name) => {
             names.insert(name.clone());
         }
@@ -182,9 +195,9 @@ pub(super) fn lambda_capture_names(statements: &[syntax::Statement]) -> HashSet<
                 }
                 visit(finally, names);
             }
-            ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. } => {
-                expression_names(expr, names)
-            }
+            ExprKind::AnonymousObject { .. }
+            | ExprKind::Lambda(_)
+            | ExprKind::LambdaWithParams { .. } => expression_names(expr, names),
             ExprKind::Call(target, args) => {
                 expr_visit(target, names);
                 for arg in args {
@@ -380,6 +393,14 @@ pub(super) fn free_names(
 ) -> HashSet<String> {
     fn expression(expr: &Expr, bound: &HashSet<String>, free: &mut HashSet<String>) {
         match &expr.kind {
+            ExprKind::AnonymousObject { methods, .. } => {
+                for method in methods {
+                    let mut bound = bound.clone();
+                    bound.insert("this".into());
+                    bound.extend(method.params.iter().map(|p| p.0.clone()));
+                    body_names(&method.body, &mut bound, free);
+                }
+            }
             ExprKind::Name(name) => {
                 if !bound.contains(name) {
                     free.insert(name.clone());

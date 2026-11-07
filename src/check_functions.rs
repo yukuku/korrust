@@ -526,6 +526,7 @@ impl Checker<'_> {
             Vec::new()
         };
         self.lambdas.borrow_mut().push(LambdaDecl {
+            anonymous_methods: None,
             defaults,
             owner: owner.clone(),
             captures: fields,

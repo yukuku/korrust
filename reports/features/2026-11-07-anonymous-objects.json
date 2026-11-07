@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-07T17:32:47.431444+00:00",
+  "status": "completed",
+  "compiler": {
+    "path": "target/next5-integrated/release/korrust",
+    "sha256": "562d723146dfc6b28ed11670247b8c549248a6f4f9f7d7e48788ebaeced0a65b"
+  },
+  "features": [
+    {
+      "name": "anonymous_interface_objects",
+      "status": "supported",
+      "scope": "Single-interface anonymous objects with multiple methods, fresh allocation, immutable/shared mutable captures, own/outer receivers, bounded inline method returns and official Java/Kotlin consumers.",
+      "restrictions": [
+        "Class/multiple/generic supertypes, properties and unsupported covariant/erased bridges remain explicit boundaries.",
+        "Generated anonymous-class reflection/debugging/name metadata is outside the accepted runtime/interface-consumer scope.",
+        "Exact abrupt Nothing-result inference remains unsupported; no unchanged whole-app or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-07T172556195083Z-anonymous-objects.json",
+      "checks_report": "reports/correctness/2026-11-07-anonymous-objects-checks.json",
+      "counts": {
+        "pass": 24,
+        "unsupported_language": 12,
+        "invalid_rejected": 9,
+        "not_run": 3
+      }
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-07T172556195083Z-anonymous-objects.json",
+    "reports/correctness/2026-11-07-anonymous-objects-checks.json",
+    "reports/correctness/2026-11-07T172331062745Z-anonymous-objects.json"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_anonymous_objects.py",
+      "--compiler",
+      "target/next5-integrated/release/korrust",
+      "--source-root",
+      "."
+    ]
+  ],
+  "history": {
+    "supersedes_failed_reports": [
+      "reports/correctness/2026-11-07T172331062745Z-anonymous-objects.json"
+    ],
+    "reason": "Fresh frozen acceptance follows the recorded fixes; historical outcomes and their source archives remain unchanged."
+  }
+}

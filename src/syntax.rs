@@ -910,6 +910,10 @@ pub(crate) fn normalize_result_tail(body: &mut [Statement]) {
 
 #[derive(Clone, Debug)]
 pub enum ExprKind {
+    AnonymousObject {
+        interface: Type,
+        methods: Vec<Function>,
+    },
     AnnotationConstant {
         value: Box<Expr>,
         integer_literal: bool,
@@ -986,6 +990,12 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
     while let Some(expression) = pending.pop() {
         expression.offset += offset;
         match &mut expression.kind {
+            ExprKind::AnonymousObject { methods, .. } => {
+                for method in methods {
+                    method.offset += offset;
+                    shift_statement_offsets(&mut method.body, offset);
+                }
+            }
             ExprKind::Block(body) => shift_statement_offsets(body, offset),
             ExprKind::Try {
                 body,
@@ -5958,13 +5968,62 @@ impl Parser {
         Ok(result)
     }
     fn prefix(&mut self) -> Result<Expr> {
-        if self.at("object") {
-            return Err(self
-                .error("General anonymous object expressions are unsupported")
-                .with_kind(
-                    DiagnosticKind::UnsupportedLanguage,
-                    "ANONYMOUS_OBJECT_EXPRESSION_UNSUPPORTED",
-                ));
+        if self.take("object") {
+            let offset = self.tokens[self.pos - 1].offset;
+            self.lines();
+            if !self.take(":") {
+                return Err(self
+                    .error("Anonymous objects require one interface in this subset")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+                    ));
+            }
+            self.lines();
+            let interface = self.ty()?;
+            self.lines();
+            if self.at("(") || self.at(",") {
+                return Err(self
+                    .error("Anonymous class supertypes and multiple interfaces are unsupported")
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+                    ));
+            }
+            self.expect("{")?;
+            self.separators();
+            let mut methods = Vec::new();
+            while !self.take("}") {
+                let public = self.take("public");
+                if !self.take("override") {
+                    return Err(self
+                        .error("Anonymous objects support only override methods")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "ANONYMOUS_OBJECT_MEMBER_UNSUPPORTED",
+                        ));
+                }
+                self.lines();
+                if !public {
+                    self.take("public");
+                    self.lines();
+                }
+                if !self.at("fun") {
+                    return Err(self
+                        .error("Anonymous object properties and modifiers are unsupported")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "ANONYMOUS_OBJECT_MEMBER_UNSUPPORTED",
+                        ));
+                }
+                methods.push(self.function()?);
+                self.end()?;
+                self.separators();
+            }
+            return Self::bounded(Expr {
+                offset,
+                kind: ExprKind::AnonymousObject { interface, methods },
+            });
         }
         let offset = self.token().offset;
         if self.annotation_context && self.take("[") {
