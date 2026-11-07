@@ -528,10 +528,18 @@ pub fn compile_batch_with_options(
             }
         }
     }
+    for (index, module) in modules.iter().enumerate() {
+        check::preflight_file_annotation_semantics(module, &classpath, None)
+            .map_err(|error| error.for_source(&sources[index].identity))?;
+    }
     for (owner, unit) in &units {
         classpath
             .source_header(unit, owner)
             .map_err(|error| locate(error, owner))?;
+    }
+    for (index, module) in modules.iter().enumerate() {
+        check::file_annotations(module, &classpath, None)
+            .map_err(|error| error.for_source(&sources[index].identity))?;
     }
     for (index, module) in modules.iter().enumerate() {
         let mut external = module.clone();
@@ -1108,6 +1116,7 @@ fn declaration_units(
         );
     }
     let mut unit = syntax::Module {
+        file_annotations: Vec::new(),
         annotation_decl: None,
         type_locations: context.type_locations.clone(),
         type_aliases: context.type_aliases.clone(),

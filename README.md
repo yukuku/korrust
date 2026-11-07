@@ -176,6 +176,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 136. Nongeneric single-field JVM value classes with Int, Long, String and nullable String carriers, nullable/generic/interface boxing, mangled JVM signatures, and Kotlin metadata.
 137. Bounded top-level suspend functions and suspend function parameters with real continuation state, up to eight sequential suspension points, delayed resumption and exception propagation, JVM signatures and Kotlin metadata.
 138. UInt and ULong scalar literals, arithmetic, comparisons, bitwise operations, integral conversions and nullable/generic boxing through Kotlin value-class metadata and JVM carriers.
+139. Ordinary file annotations with argument and FILE-target validation, facade-only retention, and imported annotation definitions.
 
 ## Project contract
 

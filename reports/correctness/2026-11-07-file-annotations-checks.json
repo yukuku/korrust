@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-07T16:55:35.321960+00:00",
+  "status": "completed",
+  "selection": "Integrated release checks for ordinary file annotations; the failed initial diagnostic proof is preserved separately.",
+  "compiler": {
+    "binary_sha256": "f89452719db150ba5b8033b7f1551561e8d799285c1cab90904ba44718ebd5bc",
+    "source_revision": "0cf4e6302e8fa5d87a832ebc1f05f61860d14e11"
+  },
+  "cases": [
+    {
+      "id": "rust/file_annotations",
+      "outcome": "pass",
+      "tests": 5
+    },
+    {
+      "id": "rust/source_filenames",
+      "outcome": "pass",
+      "tests": 4
+    },
+    {
+      "id": "rust/unsupported_syntax_diagnostics",
+      "outcome": "pass",
+      "tests": 8
+    },
+    {
+      "id": "clippy_release_all_targets",
+      "outcome": "pass"
+    },
+    {
+      "id": "format",
+      "outcome": "pass"
+    },
+    {
+      "id": "report_generator",
+      "outcome": "pass",
+      "tests": 8
+    }
+  ],
+  "counts": {
+    "pass": 6
+  },
+  "inputs": {
+    "source_and_fixture_freeze": "reports/correctness/2026-11-07-file-annotations-v2.json",
+    "logs_sha256": {
+      "rust.log": "413baf3246fdf1f554dc51bf38a5bb2ce40bbef90d2d54eaa667268d05403555",
+      "reports.log": "dd17a8b5213f42d21cae7379274706a89741c281e653d504b2759bca21b56a94",
+      "build.log": "e8023a1727172de999b43a9f92adb90e4cc598b9ba1a71d6c5570be884555a08",
+      "clippy.log": "489efab724b529343ec0a991cf68bc33ee6ce7ed66836811f2f3ae7026f14df0"
+    }
+  },
+  "evidence": [
+    "reports/correctness/2026-11-07-file-annotations-checks/rust.log",
+    "reports/correctness/2026-11-07-file-annotations-checks/reports.log",
+    "reports/correctness/2026-11-07-file-annotations-checks/build.log",
+    "reports/correctness/2026-11-07-file-annotations-checks/clippy.log"
+  ],
+  "reproduction_commands": [
+    "source /workspace/korrust-setup/env.sh",
+    "cargo fmt --all -- --check",
+    "CARGO_TARGET_DIR=target/next5-integrated cargo build --release --locked --offline",
+    "RUST_MIN_STACK=16777216 CARGO_TARGET_DIR=target/next5-integrated cargo test --release --locked --offline --test file_annotations --test source_filenames --test unsupported_syntax_diagnostics",
+    "CARGO_TARGET_DIR=target/next5-integrated cargo clippy --release --all-targets --locked --offline -- -D warnings",
+    "python3 -m unittest discover -s tests -p test_reports.py"
+  ],
+  "limitations": [
+    "This checkpoint uses affected Rust tests; full integrated Rust regression is reserved for the final feature."
+  ]
+}

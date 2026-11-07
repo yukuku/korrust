@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-07T16:31:32.872328+00:00",
+  "status": "assessed",
+  "selection": "Environment baseline and uncounted Rust 1.90 lint maintenance before five bounded features. Partial and failed runs remain distinct from passes.",
+  "compiler": {
+    "baseline_commit": "0cf4e6302e8fa5d87a832ebc1f05f61860d14e11",
+    "baseline_release_binary_sha256": "5d5e5fe7b25e77a505276afc2c6c19bc1226cf655e6b75226adff944d9670597"
+  },
+  "environment": {
+    "rust": "1.90.0",
+    "java_home": "/workspace/korrust-setup/jdk-21"
+  },
+  "cases": [
+    {
+      "id": "python_baseline",
+      "outcome": "pass",
+      "tests": 178,
+      "command": "python3 -m unittest discover -s tests -p test_*.py"
+    },
+    {
+      "id": "rust_default_stack",
+      "outcome": "setup_failure",
+      "command": "cargo test --locked --offline",
+      "reason": "Existing object_buffers_and_exact_overloads_share_regular_expression_checking overflows the default Rust test thread stack."
+    },
+    {
+      "id": "rust_expanded_stack_focused",
+      "outcome": "pass",
+      "tests": 1,
+      "command": "RUST_MIN_STACK=16777216 cargo test --locked --offline --lib check::objects::tests::object_buffers_and_exact_overloads_share_regular_expression_checking"
+    },
+    {
+      "id": "rust_expanded_stack_full",
+      "outcome": "cancelled",
+      "command": "RUST_MIN_STACK=16777216 cargo test --locked --offline",
+      "reason": "Intentionally terminated partial debug baseline to reserve CPU for final integrated release regression. This is not a passing full suite."
+    },
+    {
+      "id": "clippy_baseline",
+      "outcome": "lint_failure",
+      "reason": "Two existing nonminimal_bool findings in bytecode.rs and check_operations.rs under Rust 1.90."
+    },
+    {
+      "id": "clippy_after_maintenance",
+      "outcome": "pass",
+      "command": "cargo clippy --release --all-targets --locked --offline -- -D warnings",
+      "scope": "Equivalent Boolean simplifications only; no added feature."
+    },
+    {
+      "id": "format_after_maintenance",
+      "outcome": "pass",
+      "command": "cargo fmt --all -- --check"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-07-next-five-baseline/python.log",
+    "reports/correctness/2026-11-07-next-five-baseline/rust.log",
+    "reports/correctness/2026-11-07-next-five-baseline/stack-retry.log",
+    "reports/correctness/2026-11-07-next-five-baseline/rust-expanded-stack.log",
+    "reports/correctness/2026-11-07-next-five-baseline/clippy.log",
+    "reports/correctness/2026-11-07-next-five-baseline/clippy-repaired.log"
+  ],
+  "inputs": {
+    "logs_sha256": {
+      "python.log": "d939ecd5c5953eeeb172d93da7b3eb8ee1f5f9243002edd1dfc959d0908a808e",
+      "rust.log": "a3dedc157e44b6c7e3b19ca4f3cd4ffb931db3e7438d9dd171621e2acfee9c66",
+      "stack-retry.log": "4fb999ffdd39e47908912375e7ffcf0e4dd7a8df0e7d92c33883c5a9fcc20b76",
+      "rust-expanded-stack.log": "09151f425b32d916a255a6786e4990dae5fe21ad700c1506abdd623d701c2ea0",
+      "clippy.log": "e67ee3e8bf783ec35f780e64e27cd4bbd577b7cafe7f3f7cb0403d10cba3e3c6",
+      "clippy-repaired.log": "80f3ed95ecb198f256bd994d8d98914e7c1f83ffa7d67425847d347cb820a3bd"
+    }
+  },
+  "reproduction_commands": [
+    "source /workspace/korrust-setup/env.sh",
+    "cargo fetch --locked",
+    "python3 tools/setup_reference.py"
+  ],
+  "limitations": [
+    "The full integrated Rust regression remains required before final delivery.",
+    "No Android SDK or captured app dependency outputs are present in this workspace; existing macOS evidence paths cannot establish a new app build."
+  ],
+  "counts": {
+    "pass": 4,
+    "setup_failure": 1,
+    "cancelled": 1,
+    "lint_failure": 1
+  }
+}

@@ -71,6 +71,10 @@ pub(super) fn declaration_annotations(
             return Err(Diagnostic::new(
                 annotation.offset,
                 "Annotation use-site target is not valid for this declaration",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "ANNOTATION_USE_SITE_INVALID",
             ));
         }
         if matches!(

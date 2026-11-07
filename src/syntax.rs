@@ -273,6 +273,7 @@ impl Type {
 
 #[derive(Clone, Debug)]
 pub struct Module {
+    pub file_annotations: Vec<AnnotationUse>,
     pub annotation_decl: Option<AnnotationDecl>,
     pub type_locations: Vec<(String, usize)>,
     pub type_aliases: Vec<TypeAliasDecl>,
@@ -7289,7 +7290,8 @@ pub fn parse(source: &str) -> Result<Module> {
         annotation_context: false,
     };
     p.separators();
-    if p.at("@")
+    let mut file_annotations = Vec::new();
+    while p.at("@")
         && p.tokens
             .get(p.pos + 1)
             .is_some_and(|token| token.text == "file")
@@ -7297,12 +7299,19 @@ pub fn parse(source: &str) -> Result<Module> {
             .get(p.pos + 2)
             .is_some_and(|token| token.text == ":")
     {
-        return Err(p
-            .error("File annotations require unsupported package-header annotation semantics")
-            .with_kind(
-                DiagnosticKind::UnsupportedLanguage,
-                "FILE_ANNOTATION_UNSUPPORTED",
-            ));
+        if p.tokens
+            .get(p.pos + 3)
+            .is_some_and(|token| token.text == "[")
+        {
+            return Err(p
+                .error("Grouped file annotations are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "FILE_ANNOTATION_GROUP_UNSUPPORTED",
+                ));
+        }
+        file_annotations.push(p.annotation()?);
+        p.separators();
     }
     let mut package = String::new();
     if p.take("package") {
@@ -7418,9 +7427,18 @@ pub fn parse(source: &str) -> Result<Module> {
         && interface_decl.is_none()
         && annotation_decl.is_none()
     {
+        if !file_annotations.is_empty() {
+            return Err(p
+                .error("Annotation-only source files are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "FILE_ANNOTATION_EMPTY_FILE_UNSUPPORTED",
+                ));
+        }
         return Err(p.error("Expected at least one function, enum class, object, or class"));
     }
     Ok(Module {
+        file_annotations,
         annotation_decl,
         type_locations: p.type_locations,
         type_aliases,

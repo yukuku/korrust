@@ -1,0 +1,1758 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-07T16:51:33.525111+00:00",
+  "status": "pass",
+  "selection": "Ordinary @file annotations: Kotlin FILE target, arguments, retention, source facade isolation, class-only files, fixed Java caller, official Kotlin consumers, signatures, invalid and unsupported boundaries. OptIn, Suppress and JVM file lowering remain unsupported; actual AndroidBible source checks record their first unsupported blocker, not compiled app coverage.",
+  "compiler": {
+    "binary_sha256": "f89452719db150ba5b8033b7f1551561e8d799285c1cab90904ba44718ebd5bc",
+    "source_revision": "0cf4e6302e8fa5d87a832ebc1f05f61860d14e11"
+  },
+  "effective_options": {
+    "jvm_target": "1.8",
+    "language_version": "2.3",
+    "api_version": "2.3",
+    "module_name": "file_annotations"
+  },
+  "reference_compiler": {
+    "pin": {
+      "schema_version": 1,
+      "installed_at": "2026-10-23T02:43:55.924832+00:00",
+      "version": "2.3.21",
+      "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+      "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+      "path": "references/kotlinc",
+      "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+    }
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/annotation_declarations.rs": "1c50fb5e94df8a4d48d14d03a00d411c33b402bbc847d0df45ac622d39b7be01",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+      "src/bytecode/annotations.rs": "397e6b298ce180be4f6e733e2240da2f23f36bc975be46e5700ced1162d9741c",
+      "src/bytecode/class_companion.rs": "a5756a0c46cc33fa449bebe330ef5748789da70b4b941c21c7f72aa923802fc2",
+      "src/bytecode/data.rs": "703ed86a9cda8f219aa57869043e0537d20e1e6866bace28049f01467afd133b",
+      "src/bytecode/defaults.rs": "f8eb6d73077c057a293d676723c2801007d9d0fa21dd6784ae16730b1637e0d9",
+      "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+      "src/bytecode/interfaces.rs": "1cfee2e8d5d0847eb719dedde5b429953c3f9d24697fcee653aa278efa1d4c49",
+      "src/bytecode/lambdas.rs": "50d5de628118856e96b21d69b555b626e23608838dc4fca1eef22acca96fcc65",
+      "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+      "src/bytecode/suspend.rs": "ec4fb43e1402edeb4e85b60ed3a360408ad2dccdb408caca5e27287115a1e0c4",
+      "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+      "src/bytecode.rs": "407b5bbac05e46766b5f44f0ef051cf46fdfd00070f16d385942ad94c67fbbcc",
+      "src/check.rs": "8528aeae2244b507fd8f9161ecb92f535655aae9a0b0c75ad2d7c21bad2c1dfa",
+      "src/check_annotation_placements.rs": "30e8ee0dfd870926107eb01130e4c7b1b315acbe66161a7f40e984ad76277162",
+      "src/check_annotations.rs": "d8cf152398cdb3c98edfe1cf1cb8a71eb4087e573a9d50f0119923a3be3c17f4",
+      "src/check_captures.rs": "d1bc5a311e720072df4eb38bef24ff253a01c4bee4d6ca5690f51455024ff1ba",
+      "src/check_class_delegation.rs": "05355235cd6de1998c890c17fe9615c1a020f6e8faee704af48a243e8e957741",
+      "src/check_classes.rs": "ad71c23f08740d5c0f87906c5843b947add77076f04e540ade6536da0ec2df72",
+      "src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+      "src/check_declarations.rs": "bdc6377e186d0a9f71561e33d238e9d042eddea14f77405d9daf417be58cf1b4",
+      "src/check_delegates.rs": "094b9bdc43d4cecb0fb3dcef1681181f8e7737804f3808582192b3190d01dc92",
+      "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+      "src/check_functions.rs": "ce6c57f2a6b5e0765aa1e20efbe5f0d5ac0825d4353e1f1d4501698c26435834",
+      "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+      "src/check_interfaces.rs": "8c31ef564cf99b24fd0e6a9416886e60abc0c96e9214834c1501692d883b6de5",
+      "src/check_ir_walk.rs": "358a447f20e6957785a582f3a2842e937b1db7bf204afcac9ee5fc1ba1779e68",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_library.rs": "c0591bfece7c2c86c93a5fb4fb83fb9862c0707049563673b220f4e32057e177",
+      "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+      "src/check_objects.rs": "a4cd8542a749e0dc670f571363df5fe260e83fa7c2cd6ccd9e1ed5bb79cbf5d3",
+      "src/check_operations.rs": "6354812c520125ef7e6f70f27f9ce435f2e381a77ef888db033070c2c3e8726b",
+      "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+      "src/check_references.rs": "dd677362351c02d61f48ff4466ff0418ab9eb33a3152f5947640fc14ee12b5b2",
+      "src/check_relations.rs": "3915c7cc3637126fb82acd68714025ea81e1289663a0b4cfce9840483b2b13a5",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/classpath/metadata.rs": "9276a513eb746b86d24fca6e225b0054be4a1c77bafff09c8b1f544fe86b0f06",
+      "src/classpath/nested.rs": "c81c5d8fb2cf9745c1835aa0694d21eec547dfa55de8c9e36105eba467a3c9bc",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "8b9017fa76bb300363825f6db7057c7f67218da83ebac6a27568b792d58e1142",
+      "src/classpath/source.rs": "b70e8ea77a4c689dbe3164efb5217fa298e2d99f535c7dad6147f79a10a684ee",
+      "src/classpath/source_enums.rs": "3366b5ad4fc96e61e95b398e72dbb6c6a3de8e734247b6e7cdba7d937ef527f4",
+      "src/classpath/value_names.rs": "a13518357c7c68a8e9df0ee09dc114fbc51de37d1cf12407ba84a77b6a93a2ba",
+      "src/classpath.rs": "f0265746eb254c77bdf8dbb06ed644f9ba1619e31ebf9a62d7395574bb2d720d",
+      "src/compiled_inline.rs": "06250c79ae618989985360ced0235cca4628f0f7c4d92630a00295d217310102",
+      "src/const_eval.rs": "93753149d7a3931919382b26a3dfd621c333edc621a889f1221c13f880b7a1aa",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "a665e290c4777ceacb0a986f03975491d8d5e51bcaed3a322606b65d8d571dfb",
+      "src/lib.rs": "a1fbd09019790b8c17d4cc4f89daa883afa94cec60155b751ca12d7deca1cf13",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "8ba7c67e78229b4626f1cc32539d24e6fcf6f6026d5e658cc0537dddea66c8f7",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "src/syntax.rs": "3ab9676b89d152e0ea17a6bee72c98e8f09caabf5e4f9e43e6c94ba2ab83b90e",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+      "tests/file_annotations/Check.java": "22ebc1a683081139fafcb54d4ce374796684a3c153f87bcb16dfdf137b94399d",
+      "tests/file_annotations/ClassFile.kt": "fba4fff010542c3070a28e06f11e9ab3622a3da45d1e6a68faa85b39aad134eb",
+      "tests/file_annotations/Consumer.kt": "2dbadadcdff6fc7b2941132893c6fc74c721079e5149018dd3708eeb658c7a2b",
+      "tests/file_annotations/Definitions.kt": "2e3e91e9f45ea87451ad70f82ac4d819b134b52290c54426f8ccb99675d7cbbf",
+      "tests/file_annotations/Other.kt": "30cec5adf65cef550a828c6f99f41c0d69f72c53de8548f7ea9dc89d4c0b71b8",
+      "tests/file_annotations/Shadow.kt": "c6ad64457f660b85895ea3d807f28ecc8ee5162def6b50f0992ffb68476c13cf",
+      "tests/file_annotations/SourceOnly.kt": "8930e37cf11ca60b2f4ec24862f0cf5cb8d2162aeda56e5fe523b10d691fe34c",
+      "tests/file_annotations/Uses.kt": "7f89bbd294bfadffeaed882e5849500641d3c44c7047e5ddcf6e443fa6da04c3",
+      "tests/file_annotations/cases.json": "9bda22faa42fbb61d1fb60588ffd8f68349a0f09ea231a643ed2051fb1300887",
+      "tests/file_annotations/invalid/Duplicate.kt": "9058bee597666cfcc236e06b555ceecde73715e35cf73a2d8a90042b60bc1dd5",
+      "tests/file_annotations/invalid/Misplaced.kt": "da3b4d4d9ceac7fa2697a727851b1a81f7895c22d99341e6899d38f4224db9d2",
+      "tests/file_annotations/invalid/MissingArgument.kt": "246c6c4511549ef708ce554326b65013ec77a1dae32f4704cf26719e80b5d2be",
+      "tests/file_annotations/invalid/OptInArgument.kt": "6a7871052ca20e6f3dabb3cb059070c514423307c8c33d5bca2b4899837c8cef",
+      "tests/file_annotations/invalid/SourceDuplicate.kt": "fadbc19a2ea70b23198c60f3350ad3004625c2bdc8cdf2fe22bb7ab99dc8b804",
+      "tests/file_annotations/invalid/SuppressArgument.kt": "ec2cdf6a7c59421c4b397af0bd1d096fe018772761fb80310a81ad8ae020e628",
+      "tests/file_annotations/invalid/WrongSourceArgument.kt": "6a878f8dc00bc9c72973aa12b6d05e6383dfa587e90fc5650899be6663b831d9",
+      "tests/file_annotations/invalid/WrongTarget.kt": "90e07cf6638f842bf2dcae00605ba35e3436a17a3c6c9123f680621da6e9b8fb",
+      "tests/file_annotations/unsupported/EmptyHeader.kt": "0c79b41c33c513111b300f8058bc76c516bc7df0b630d637bb0c0b387e9865df",
+      "tests/file_annotations/unsupported/Grouped.kt": "9f058623f086b6aec6c740346d1d799fde05dce10fe0a1090c13d8dd51a840f8",
+      "tests/file_annotations/unsupported/JvmName.kt": "deeb42dc25e17b678af1052217a5a0f8ce77fd20aca641dd8b09f46b9a205673",
+      "tests/file_annotations/unsupported/OptIn.kt": "60f2245e241f889bfb1636e4edb11941805c08140d1595b32c2822f5368fcbab",
+      "tests/file_annotations/unsupported/OptInAlias.kt": "98363932d360fb24365707949c0484d8ed40a9b809fb76f3671e7e4854db1195",
+      "tools/check_file_annotations.py": "e97d0c0529ca23d2f6181338c19deb3a3582e7f5fb55c83a7cd3afa3cca509bf",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tests/file_annotations.rs": "846f964d93bdd34c6a526f0919399c415c6f131e7f1e7b829caa9b5d7e1af126",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSerializers.kt": "a09ecef5a2f15cbaace011001ab670cfa0c360e5cfd3a01f75153b8b54eb5943",
+      "benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt": "32031fe3f0d2a7f21013405c7999be11310a2176b9e1d6ef8d57679f1f40d603"
+    }
+  },
+  "dependencies": {
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "reproduction_commands": [
+    "python3 tools/check_file_annotations.py --compiler target/next5-integrated/release/korrust"
+  ],
+  "commands": [
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/Definitions.kt",
+        "/workspace/korrust/tests/file_annotations/Uses.kt",
+        "/workspace/korrust/tests/file_annotations/ClassFile.kt",
+        "/workspace/korrust/tests/file_annotations/Other.kt",
+        "/workspace/korrust/tests/file_annotations/SourceOnly.kt",
+        "/workspace/korrust/tests/file_annotations/Shadow.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0000-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/Definitions.kt",
+        "/workspace/korrust/tests/file_annotations/Uses.kt",
+        "/workspace/korrust/tests/file_annotations/ClassFile.kt",
+        "/workspace/korrust/tests/file_annotations/Other.kt",
+        "/workspace/korrust/tests/file_annotations/SourceOnly.kt",
+        "/workspace/korrust/tests/file_annotations/Shadow.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0001-stderr.txt"
+    },
+    {
+      "id": "fixed-java-caller",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "--release",
+        "8",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/caller",
+        "/workspace/korrust/tests/file_annotations/Check.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0002-stderr.txt"
+    },
+    {
+      "id": "official/java-runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/caller:/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "filecheck.Check"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0003-stderr.txt"
+    },
+    {
+      "id": "official/official-consumer",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/Consumer.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official-consumer",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0004-stderr.txt"
+    },
+    {
+      "id": "official/kotlin-consumer-run",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official-consumer:/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "fileconsumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0005-stderr.txt"
+    },
+    {
+      "id": "official/facade-attributes",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official",
+        "fileuses.UsesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0006-stderr.txt"
+    },
+    {
+      "id": "official/signature/fileuses.UsesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official",
+        "fileuses.UsesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0007-stderr.txt"
+    },
+    {
+      "id": "official/signature/fileuses.OtherKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official",
+        "fileuses.OtherKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0008-stderr.txt"
+    },
+    {
+      "id": "official/signature/fileuses.SourceOnlyKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official",
+        "fileuses.SourceOnlyKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0009-stderr.txt"
+    },
+    {
+      "id": "official/signature/fileuses.Neighbor",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official",
+        "fileuses.Neighbor"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0010-stderr.txt"
+    },
+    {
+      "id": "official/signature/fileuses.Standalone",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official",
+        "fileuses.Standalone"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0011-stderr.txt"
+    },
+    {
+      "id": "official/signature/filemarks.Visible",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official",
+        "filemarks.Visible"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0012-stderr.txt"
+    },
+    {
+      "id": "official/signature/filemarks.Binary",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official",
+        "filemarks.Binary"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0013-stderr.txt"
+    },
+    {
+      "id": "official/signature/filemarks.Source",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official",
+        "filemarks.Source"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0014-stderr.txt"
+    },
+    {
+      "id": "official/official-imported",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/Uses.kt",
+        "/workspace/korrust/tests/file_annotations/ClassFile.kt",
+        "/workspace/korrust/tests/file_annotations/Other.kt",
+        "/workspace/korrust/tests/file_annotations/SourceOnly.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official-imported",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0015-stderr.txt"
+    },
+    {
+      "id": "official/imported-annotations-runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/caller:/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official-imported:/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "filecheck.Check"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0016-stderr.txt"
+    },
+    {
+      "id": "candidate/java-runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/caller:/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "filecheck.Check"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0017-stderr.txt"
+    },
+    {
+      "id": "official/candidate-consumer",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/Consumer.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate-consumer",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0018-stderr.txt"
+    },
+    {
+      "id": "candidate/kotlin-consumer-run",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate-consumer:/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "fileconsumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0019-stderr.txt"
+    },
+    {
+      "id": "candidate/facade-attributes",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate",
+        "fileuses.UsesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0020-stderr.txt"
+    },
+    {
+      "id": "candidate/signature/fileuses.UsesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate",
+        "fileuses.UsesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0021-stderr.txt"
+    },
+    {
+      "id": "candidate/signature/fileuses.OtherKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate",
+        "fileuses.OtherKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0022-stderr.txt"
+    },
+    {
+      "id": "candidate/signature/fileuses.SourceOnlyKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate",
+        "fileuses.SourceOnlyKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0023-stderr.txt"
+    },
+    {
+      "id": "candidate/signature/fileuses.Neighbor",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate",
+        "fileuses.Neighbor"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0024-stderr.txt"
+    },
+    {
+      "id": "candidate/signature/fileuses.Standalone",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate",
+        "fileuses.Standalone"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0025-stderr.txt"
+    },
+    {
+      "id": "candidate/signature/filemarks.Visible",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate",
+        "filemarks.Visible"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0026-stderr.txt"
+    },
+    {
+      "id": "candidate/signature/filemarks.Binary",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate",
+        "filemarks.Binary"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0027-stderr.txt"
+    },
+    {
+      "id": "candidate/signature/filemarks.Source",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate",
+        "filemarks.Source"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0028-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate-imported",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/Uses.kt",
+        "/workspace/korrust/tests/file_annotations/ClassFile.kt",
+        "/workspace/korrust/tests/file_annotations/Other.kt",
+        "/workspace/korrust/tests/file_annotations/SourceOnly.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate-imported",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0029-stderr.txt"
+    },
+    {
+      "id": "candidate/imported-annotations-runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/caller:/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/candidate-imported:/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "filecheck.Check"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0030-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/invalid/WrongTarget.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/WrongTarget/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0031-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/invalid/WrongTarget.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/WrongTarget/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0032-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/invalid/WrongSourceArgument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/WrongSourceArgument/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0033-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/invalid/WrongSourceArgument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/WrongSourceArgument/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0034-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/invalid/Duplicate.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/Duplicate/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0035-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/invalid/Duplicate.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/Duplicate/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0036-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/invalid/Misplaced.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/Misplaced/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0037-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/invalid/Misplaced.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/Misplaced/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0038-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/invalid/MissingArgument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/MissingArgument/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0039-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/invalid/MissingArgument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/MissingArgument/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0040-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/unsupported/OptIn.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/OptIn/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0041-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/unsupported/OptIn.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/OptIn/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0042-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/unsupported/OptInAlias.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/OptInAlias/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0043-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/unsupported/OptInAlias.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/OptInAlias/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0044-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/unsupported/JvmName.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/JvmName/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0045-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/unsupported/JvmName.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/JvmName/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0046-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/unsupported/Grouped.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/Grouped/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0047-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/unsupported/Grouped.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/Grouped/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0048-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0048-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/invalid/OptInArgument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/OptInArgument/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0049-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0049-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/invalid/OptInArgument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/OptInArgument/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0050-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0050-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/invalid/SuppressArgument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/SuppressArgument/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0051-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0051-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/invalid/SuppressArgument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/SuppressArgument/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0052-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0052-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/invalid/SourceDuplicate.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/SourceDuplicate/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0053-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0053-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/invalid/SourceDuplicate.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/SourceDuplicate/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0054-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0054-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/file_annotations/unsupported/EmptyHeader.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/EmptyHeader/official",
+        "-module-name",
+        "file_annotations",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0055-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0055-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/tests/file_annotations/unsupported/EmptyHeader.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/boundaries/EmptyHeader/candidate",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0056-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0056-stderr.txt"
+    },
+    {
+      "id": "candidate/SongDocumentSerializers",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSerializers.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/app-boundaries/SongDocumentSerializers",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0057-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0057-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsignedBinarySearchKtTest",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/korrust-frozen",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T165133525111Z-file-annotations/app-boundaries/UnsignedBinarySearchKtTest",
+        "--module-name",
+        "file_annotations",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07-file-annotations-v2/0058-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07-file-annotations-v2/0058-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "official/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java-caller",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/java-runtime",
+      "outcome": "pass",
+      "observed": "OK:42:hello:7"
+    },
+    {
+      "id": "official/kotlin-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/kotlin-consumer-run",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/retention",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/no-class-only-facade",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/fileuses.UsesKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/fileuses.OtherKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/fileuses.SourceOnlyKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/fileuses.Neighbor",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/fileuses.Standalone",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/filemarks.Visible",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/filemarks.Binary",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/signature-read/filemarks.Source",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/imported-annotations-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/imported-annotations-runtime",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/java-runtime",
+      "outcome": "pass",
+      "observed": "OK:42:hello:7"
+    },
+    {
+      "id": "candidate/kotlin-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/kotlin-consumer-run",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/retention",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/no-class-only-facade",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/signature-read/fileuses.UsesKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/signature-read/fileuses.OtherKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/signature-read/fileuses.SourceOnlyKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/signature-read/fileuses.Neighbor",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/signature-read/fileuses.Standalone",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/signature-read/filemarks.Visible",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/signature-read/filemarks.Binary",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/signature-read/filemarks.Source",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/imported-annotations-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/imported-annotations-runtime",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/emitted-class-set",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/WrongTarget",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/invalid/WrongTarget.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "ANNOTATION_TARGET_INVALID",
+          "message": "Annotation filemarks/ClassOnly cannot target FILE",
+          "path": "/workspace/korrust/tests/file_annotations/invalid/WrongTarget.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "oracle_expected": "reject",
+      "limitation": null
+    },
+    {
+      "id": "boundary/WrongSourceArgument",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/invalid/WrongSourceArgument.kt",
+          "offset": 23,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Annotation argument type mismatch",
+          "path": "/workspace/korrust/tests/file_annotations/invalid/WrongSourceArgument.kt",
+          "line": 1,
+          "column": 24
+        }
+      ],
+      "official_accepted": false,
+      "oracle_expected": "reject",
+      "limitation": null
+    },
+    {
+      "id": "boundary/Duplicate",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/invalid/Duplicate.kt",
+          "offset": 34,
+          "category": "invalid_kotlin",
+          "code": "REPEATED_ANNOTATION_INVALID",
+          "message": "Repeated annotations require a repeatable declaration",
+          "path": "/workspace/korrust/tests/file_annotations/invalid/Duplicate.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "oracle_expected": "reject",
+      "limitation": null
+    },
+    {
+      "id": "boundary/Misplaced",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/invalid/Misplaced.kt",
+          "offset": 18,
+          "category": "invalid_kotlin",
+          "code": "ANNOTATION_USE_SITE_INVALID",
+          "message": "Annotation use-site target is not valid for this declaration",
+          "path": "/workspace/korrust/tests/file_annotations/invalid/Misplaced.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "oracle_expected": "reject",
+      "limitation": null
+    },
+    {
+      "id": "boundary/MissingArgument",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/invalid/MissingArgument.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Missing required annotation argument",
+          "path": "/workspace/korrust/tests/file_annotations/invalid/MissingArgument.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "oracle_expected": "reject",
+      "limitation": null
+    },
+    {
+      "id": "boundary/OptIn",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/unsupported/OptIn.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "FILE_ANNOTATION_SEMANTICS_UNSUPPORTED",
+          "message": "File annotation requires unsupported Kotlin compiler semantics",
+          "path": "/workspace/korrust/tests/file_annotations/unsupported/OptIn.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "oracle_expected": "accept",
+      "limitation": null
+    },
+    {
+      "id": "boundary/OptInAlias",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/unsupported/OptInAlias.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "FILE_ANNOTATION_SEMANTICS_UNSUPPORTED",
+          "message": "File annotation requires unsupported Kotlin compiler semantics",
+          "path": "/workspace/korrust/tests/file_annotations/unsupported/OptInAlias.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "oracle_expected": "accept",
+      "limitation": null
+    },
+    {
+      "id": "boundary/JvmName",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/unsupported/JvmName.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "ANNOTATION_JVM_LOWERING_UNSUPPORTED",
+          "message": "File annotation requires unsupported compiler lowering",
+          "path": "/workspace/korrust/tests/file_annotations/unsupported/JvmName.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "oracle_expected": "accept",
+      "limitation": null
+    },
+    {
+      "id": "boundary/Grouped",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/unsupported/Grouped.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "FILE_ANNOTATION_GROUP_UNSUPPORTED",
+          "message": "Grouped file annotations are unsupported",
+          "path": "/workspace/korrust/tests/file_annotations/unsupported/Grouped.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "oracle_expected": "accept",
+      "limitation": null
+    },
+    {
+      "id": "boundary/OptInArgument",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/invalid/OptInArgument.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "FILE_ANNOTATION_SEMANTICS_UNSUPPORTED",
+          "message": "File annotation requires unsupported Kotlin compiler semantics",
+          "path": "/workspace/korrust/tests/file_annotations/invalid/OptInArgument.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "oracle_expected": "reject",
+      "limitation": "Oracle-invalid argument remains blocked before validation: bounded Class<? extends Annotation>[] annotation definitions are unsupported."
+    },
+    {
+      "id": "boundary/SuppressArgument",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/invalid/SuppressArgument.kt",
+          "offset": 15,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Annotation argument type mismatch",
+          "path": "/workspace/korrust/tests/file_annotations/invalid/SuppressArgument.kt",
+          "line": 1,
+          "column": 16
+        }
+      ],
+      "official_accepted": false,
+      "oracle_expected": "reject",
+      "limitation": null
+    },
+    {
+      "id": "boundary/SourceDuplicate",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/invalid/SourceDuplicate.kt",
+          "offset": 30,
+          "category": "invalid_kotlin",
+          "code": "REPEATED_ANNOTATION_INVALID",
+          "message": "Repeated annotations require a repeatable declaration",
+          "path": "/workspace/korrust/tests/file_annotations/invalid/SourceDuplicate.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false,
+      "oracle_expected": "reject",
+      "limitation": null
+    },
+    {
+      "id": "boundary/EmptyHeader",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/file_annotations/unsupported/EmptyHeader.kt",
+          "offset": 56,
+          "category": "unsupported_language",
+          "code": "FILE_ANNOTATION_EMPTY_FILE_UNSUPPORTED",
+          "message": "Annotation-only source files are unsupported",
+          "path": "/workspace/korrust/tests/file_annotations/unsupported/EmptyHeader.kt",
+          "line": 3,
+          "column": 1
+        }
+      ],
+      "official_accepted": true,
+      "oracle_expected": "accept",
+      "limitation": null
+    },
+    {
+      "id": "app-boundary/SongDocumentSerializers",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSerializers.kt",
+          "offset": 1863,
+          "category": "unsupported_language",
+          "code": "PARAMETERIZED_SUPERTYPE_UNSUPPORTED",
+          "message": "Parameterized supertypes require unsupported source-supertype substitution",
+          "path": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSerializers.kt",
+          "line": 41,
+          "column": 36
+        }
+      ],
+      "first_blocker": "PARAMETERIZED_SUPERTYPE_UNSUPPORTED",
+      "oracle": "not_run: app dependencies and additional language features outside this bounded harness"
+    },
+    {
+      "id": "app-boundary/UnsignedBinarySearchKtTest",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "FILE_ANNOTATION_SEMANTICS_UNSUPPORTED",
+          "message": "File annotation requires unsupported Kotlin compiler semantics",
+          "path": "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/test/java/yuku/alkitab/yes2/util/UnsignedBinarySearchKtTest.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "first_blocker": "FILE_ANNOTATION_SEMANTICS_UNSUPPORTED",
+      "oracle": "not_run: app dependencies and additional language features outside this bounded harness"
+    },
+    {
+      "id": "abi/fixed-java-caller-unchanged",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": {
+    "frozen_inputs": "reports/correctness/2026-11-07-file-annotations-v2/frozen-inputs.zip",
+    "work_directory": "target/checks/2026-11-07T165133525111Z-file-annotations"
+  },
+  "fixed_java_caller_hashes": {
+    "filecheck/Check.class": "73f9673abdab54d837792d04981eb630a1df343f13170f737f24fdf66a6222ef"
+  },
+  "official_classes": [
+    "filemarks/Binary.class",
+    "filemarks/ClassOnly.class",
+    "filemarks/Source.class",
+    "filemarks/Visible.class",
+    "fileshadow/OptIn.class",
+    "fileshadow/ShadowKt.class",
+    "fileuses/Neighbor.class",
+    "fileuses/OtherKt.class",
+    "fileuses/SourceOnlyKt.class",
+    "fileuses/Standalone.class",
+    "fileuses/UsesKt.class"
+  ],
+  "candidate_classes": [
+    "filemarks/Binary.class",
+    "filemarks/ClassOnly.class",
+    "filemarks/Source.class",
+    "filemarks/Visible.class",
+    "fileshadow/OptIn.class",
+    "fileshadow/ShadowKt.class",
+    "fileuses/Neighbor.class",
+    "fileuses/OtherKt.class",
+    "fileuses/SourceOnlyKt.class",
+    "fileuses/Standalone.class",
+    "fileuses/UsesKt.class"
+  ],
+  "signatures": {
+    "official": {
+      "fileuses.UsesKt": [
+        "public final class fileuses.UsesKt {",
+        "public static final int answer();",
+        "descriptor: ()I",
+        "public static final java.lang.String getLabel();",
+        "descriptor: ()Ljava/lang/String;",
+        "}"
+      ],
+      "fileuses.OtherKt": [
+        "public final class fileuses.OtherKt {",
+        "public static final int other();",
+        "descriptor: ()I",
+        "}"
+      ],
+      "fileuses.SourceOnlyKt": [
+        "public final class fileuses.SourceOnlyKt {",
+        "public static final int sourceAnswer();",
+        "descriptor: ()I",
+        "}"
+      ],
+      "fileuses.Neighbor": [
+        "public final class fileuses.Neighbor {",
+        "public fileuses.Neighbor();",
+        "descriptor: ()V",
+        "}"
+      ],
+      "fileuses.Standalone": [
+        "public final class fileuses.Standalone {",
+        "public fileuses.Standalone();",
+        "descriptor: ()V",
+        "}"
+      ],
+      "filemarks.Visible": [
+        "public interface filemarks.Visible extends java.lang.annotation.Annotation {",
+        "public abstract java.lang.String text();",
+        "descriptor: ()Ljava/lang/String;",
+        "public abstract int number();",
+        "descriptor: ()I",
+        "}"
+      ],
+      "filemarks.Binary": [
+        "public interface filemarks.Binary extends java.lang.annotation.Annotation {",
+        "public abstract boolean flag();",
+        "descriptor: ()Z",
+        "}"
+      ],
+      "filemarks.Source": [
+        "public interface filemarks.Source extends java.lang.annotation.Annotation {",
+        "public abstract java.lang.String text();",
+        "descriptor: ()Ljava/lang/String;",
+        "}"
+      ]
+    },
+    "candidate": {
+      "fileuses.UsesKt": [
+        "public final class fileuses.UsesKt {",
+        "public static final int answer();",
+        "descriptor: ()I",
+        "public static final java.lang.String getLabel();",
+        "descriptor: ()Ljava/lang/String;",
+        "}"
+      ],
+      "fileuses.OtherKt": [
+        "public final class fileuses.OtherKt {",
+        "public static final int other();",
+        "descriptor: ()I",
+        "}"
+      ],
+      "fileuses.SourceOnlyKt": [
+        "public final class fileuses.SourceOnlyKt {",
+        "public static final int sourceAnswer();",
+        "descriptor: ()I",
+        "}"
+      ],
+      "fileuses.Neighbor": [
+        "public final class fileuses.Neighbor {",
+        "public fileuses.Neighbor();",
+        "descriptor: ()V",
+        "}"
+      ],
+      "fileuses.Standalone": [
+        "public final class fileuses.Standalone {",
+        "public fileuses.Standalone();",
+        "descriptor: ()V",
+        "}"
+      ],
+      "filemarks.Visible": [
+        "public interface filemarks.Visible extends java.lang.annotation.Annotation {",
+        "public abstract java.lang.String text();",
+        "descriptor: ()Ljava/lang/String;",
+        "public abstract int number();",
+        "descriptor: ()I",
+        "}"
+      ],
+      "filemarks.Binary": [
+        "public interface filemarks.Binary extends java.lang.annotation.Annotation {",
+        "public abstract boolean flag();",
+        "descriptor: ()Z",
+        "}"
+      ],
+      "filemarks.Source": [
+        "public interface filemarks.Source extends java.lang.annotation.Annotation {",
+        "public abstract java.lang.String text();",
+        "descriptor: ()Ljava/lang/String;",
+        "}"
+      ]
+    }
+  },
+  "input_integrity": {
+    "status": "unchanged"
+  },
+  "counts": {
+    "pass": 36,
+    "invalid_rejected": 7,
+    "unsupported_language": 8
+  }
+}

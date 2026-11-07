@@ -81,7 +81,7 @@ fn unsupported_filename_forms_and_file_annotations_reject_explicitly() {
             .err()
             .unwrap();
         assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
-        assert_eq!(error.code, "FILE_ANNOTATION_UNSUPPORTED");
+        assert_eq!(error.code, "ANNOTATION_JVM_LOWERING_UNSUPPORTED");
     }
 }
 

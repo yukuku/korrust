@@ -528,10 +528,10 @@ impl Checker<'_> {
             };
             let source = nonnull(&value.ty);
             let tested = nonnull(&target);
-            if !matches!(tested, Type::Parameter { .. })
-                && !(self.subtype(&source, &tested)
-                    || self.subtype(&tested, &source)
-                    || value.ty.is_nullable() && target.is_nullable())
+            if !(matches!(tested, Type::Parameter { .. })
+                || self.subtype(&source, &tested)
+                || self.subtype(&tested, &source)
+                || value.ty.is_nullable() && target.is_nullable())
             {
                 return Err(Diagnostic::new(
                     offset,

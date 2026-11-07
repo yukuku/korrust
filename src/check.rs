@@ -9,7 +9,9 @@ use crate::{
     Diagnostic, Result,
     syntax::{self, Expr, ExprKind, StatementKind, Type},
 };
-pub(crate) use annotation_placements::annotation_placements;
+pub(crate) use annotation_placements::{
+    annotation_placements, file_annotations, preflight_file_annotation_semantics,
+};
 use std::collections::{HashMap, HashSet};
 use std::{cell::RefCell, rc::Rc};
 

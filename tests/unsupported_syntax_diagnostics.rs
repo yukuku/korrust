@@ -120,8 +120,12 @@ fn ordinary_class_literals_compile_with_an_explicit_kotlin_runtime() {
 #[test]
 fn unsigned_sources_retain_explicit_unsupported_boundaries() {
     let file = "@file:OptIn(ExperimentalUnsignedTypes::class)\nfun unsignedValues(): UIntArray = uintArrayOf(1u)";
-    assert_unsupported(file, "@file", "FILE_ANNOTATION_UNSUPPORTED");
-    assert_unsupported(UNSIGNED_TEST_SOURCE, "@file", "FILE_ANNOTATION_UNSUPPORTED");
+    assert_unsupported(file, "@file", "FILE_ANNOTATION_SEMANTICS_UNSUPPORTED");
+    assert_unsupported(
+        UNSIGNED_TEST_SOURCE,
+        "@file",
+        "FILE_ANNOTATION_SEMANTICS_UNSUPPORTED",
+    );
 }
 
 #[test]
@@ -149,7 +153,7 @@ fn unsigned_test_cli_reports_the_file_annotation_boundary_without_outputs() {
     let diagnostic = String::from_utf8(result.stderr).unwrap();
     for expected in [
         "\"category\":\"unsupported_language\"",
-        "\"code\":\"FILE_ANNOTATION_UNSUPPORTED\"",
+        "\"code\":\"FILE_ANNOTATION_SEMANTICS_UNSUPPORTED\"",
         "\"offset\":0",
         "\"line\":1",
         "\"column\":1",

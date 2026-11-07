@@ -4317,7 +4317,7 @@ fn emit_class_with(
             .into_iter()
             .zip(&class.params)
         {
-            if !class.sealed_ && !(class.inner && name == "this$0") && nonnull(ty) {
+            if !(class.sealed_ || class.inner && name == "this$0") && nonnull(ty) {
                 code.bytes.extend([0x19, slot as u8]);
                 let name = code.pool.string(name)?;
                 code.reference(0x13, name);

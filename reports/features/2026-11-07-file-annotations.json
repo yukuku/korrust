@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-07T16:55:35.322535+00:00",
+  "status": "completed",
+  "compiler": {
+    "binary_sha256": "f89452719db150ba5b8033b7f1551561e8d799285c1cab90904ba44718ebd5bc",
+    "source_revision": "0cf4e6302e8fa5d87a832ebc1f05f61860d14e11"
+  },
+  "features": [
+    {
+      "name": "ordinary_file_annotations",
+      "status": "supported",
+      "scope": "Ordinary Kotlin FILE annotations with imported/canonical resolution, argument and target checking, SOURCE/BINARY/RUNTIME retention, facade-only emission, class-only validation and official Java/Kotlin consumers.",
+      "restrictions": [
+        "Compiler-semantic annotations including OptIn/Suppress and JVM file lowering remain explicit unsupported boundaries; grouped and annotation-only headers remain unsupported.",
+        "Bounded annotation-definition support prevents argument validation for one oracle-invalid OptIn input. It is recorded as unsupported with official_accepted:false, not an invalid-input rejection pass.",
+        "Actual AndroidBible files remain explicitly blocked; no whole-file/app, Android runtime or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-07-file-annotations-v2.json",
+      "checks_report": "reports/correctness/2026-11-07-file-annotations-checks.json",
+      "counts": {
+        "pass": 36,
+        "invalid_rejected": 7,
+        "unsupported_language": 8
+      }
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-07-file-annotations-v2.json",
+    "reports/correctness/2026-11-07-file-annotations-checks.json",
+    "reports/correctness/2026-11-07-file-annotations.json",
+    "reports/correctness/2026-11-07-next-five-baseline.json"
+  ],
+  "history": "The first file-annotation report failed four diagnostic expectations. Fresh v2 evidence supersedes it; historical cases remain unchanged.",
+  "reproduction_commands": [
+    "python3 tools/check_file_annotations.py --compiler target/next5-integrated/release/korrust"
+  ]
+}

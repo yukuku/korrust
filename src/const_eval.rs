@@ -1838,6 +1838,7 @@ fn visit_module_annotations(
     scope: &str,
     visit: &mut AnnotationVisitor<'_>,
 ) -> Result<()> {
+    visit_annotations(&mut module.file_annotations, scope, visit)?;
     if let Some(value) = &mut module.annotation_decl {
         visit_annotations(&mut value.annotations, scope, visit)?;
     }

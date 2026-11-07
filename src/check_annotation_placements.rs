@@ -46,6 +46,93 @@ pub(super) fn preflight_property_visibility(
     Ok(())
 }
 
+pub(crate) fn preflight_file_annotation_semantics(
+    module: &syntax::Module,
+    classpath: &Classpath,
+    scope: Option<&str>,
+) -> Result<()> {
+    if module.file_annotations.is_empty() {
+        return Ok(());
+    }
+    let imports = crate::annotation_declarations::imports(module, classpath)?;
+    for annotation in &module.file_annotations {
+        let canonical = annotations::annotation_owner(&annotation.name, classpath, &imports);
+        let canonical = if canonical == annotation.name
+            && !canonical.contains('/')
+            && classpath.load(&canonical).is_err()
+        {
+            match canonical.as_str() {
+                "OptIn" | "RequiresOptIn" | "Suppress" | "MustUseReturnValues" => {
+                    format!("kotlin/{canonical}")
+                }
+                "JvmName" | "JvmMultifileClass" => format!("kotlin/jvm/{canonical}"),
+                _ => canonical,
+            }
+        } else {
+            canonical
+        };
+        if matches!(
+            canonical.as_str(),
+            "kotlin/OptIn"
+                | "kotlin/RequiresOptIn"
+                | "kotlin/Suppress"
+                | "kotlin/MustUseReturnValues"
+                | "kotlin/internal/JvmBuiltin"
+                | "kotlin/internal/SuppressBytecodeGeneration"
+        ) {
+            if classpath
+                .load(&canonical)
+                .is_ok_and(|class| class.annotation_definition.is_some())
+            {
+                annotations::declaration_annotations(
+                    std::slice::from_ref(annotation),
+                    classpath,
+                    &imports,
+                    "FILE",
+                    Some("file"),
+                    scope,
+                )?;
+            }
+            return Err(Diagnostic::new(
+                annotation.offset,
+                "File annotation requires unsupported Kotlin compiler semantics",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "FILE_ANNOTATION_SEMANTICS_UNSUPPORTED",
+            ));
+        }
+        if let Some(code) = annotations::unsupported_lowering(&canonical) {
+            return Err(Diagnostic::new(
+                annotation.offset,
+                "File annotation requires unsupported compiler lowering",
+            )
+            .with_kind(crate::DiagnosticKind::UnsupportedLanguage, code));
+        }
+    }
+    Ok(())
+}
+
+pub(crate) fn file_annotations(
+    module: &syntax::Module,
+    classpath: &Classpath,
+    scope: Option<&str>,
+) -> Result<Vec<DeclarationAnnotation>> {
+    preflight_file_annotation_semantics(module, classpath, scope)?;
+    if module.file_annotations.is_empty() {
+        return Ok(Vec::new());
+    }
+    let imports = crate::annotation_declarations::imports(module, classpath)?;
+    annotations::declaration_annotations(
+        &module.file_annotations,
+        classpath,
+        &imports,
+        "FILE",
+        Some("file"),
+        scope,
+    )
+}
+
 pub(crate) fn annotation_placements(
     module: &syntax::Module,
     classpath: &Classpath,
@@ -53,7 +140,10 @@ pub(crate) fn annotation_placements(
 ) -> Result<std::collections::BTreeMap<String, ClassAnnotations>> {
     let mut imports = crate::annotation_declarations::imports(module, classpath)?;
     let mut result = std::collections::BTreeMap::new();
-    let mut output = ClassAnnotations::default();
+    let mut output = ClassAnnotations {
+        annotations: file_annotations(module, classpath, Some(owner))?,
+        ..ClassAnnotations::default()
+    };
     if let Some(class) = &module.class_decl {
         imports.insert(class.name.clone(), owner.into());
         output.annotations = checked(owner, &class.annotations, classpath, &imports, "TYPE", None)?;
