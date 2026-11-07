@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-07T17:07:08.812458+00:00",
+  "status": "completed",
+  "compiler": {
+    "binary": "target/next5-integrated/release/korrust",
+    "binary_sha256": "4540246e927e37f2d0949acaf5104103ab936e225a96da61bcfe9f5bf7b7b79c",
+    "frozen_source_root": "."
+  },
+  "features": [
+    {
+      "name": "private_static_nested_classes",
+      "status": "supported",
+      "scope": "Private nested ordinary and data classes with lexical source/compiled visibility, checked public exposure, JVM nesting and Kotlin metadata; fixed Java and cross-provider Kotlin consumers.",
+      "restrictions": [
+        "Private inner, generic enclosing, open/abstract/sealed/value shapes and private enums remain bounded or unsupported.",
+        "Application source shapes motivate the feature; unchanged whole-file/app compilation and Android runtime are not claimed."
+      ],
+      "evidence_report": "reports/correctness/2026-11-07T170028503792Z-private-nested.json",
+      "checks_report": "reports/correctness/2026-11-07-private-nested-checks.json",
+      "counts": {
+        "pass": 20,
+        "invalid_rejected": 25,
+        "unsupported_language": 6
+      }
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-07T170028503792Z-private-nested.json",
+    "reports/correctness/2026-11-07-private-nested-checks.json"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_private_nested.py",
+      "--compiler",
+      "target/next5-integrated/release/korrust",
+      "--source-root",
+      "."
+    ]
+  ]
+}

@@ -2312,6 +2312,8 @@ impl Checker<'_> {
         let imports = library::default_type_imports(&expanded, self.imports, self.classpath);
         let ty = resolve_type(&expanded, &imports, offset)?;
         self.validate_type_arguments(&ty, offset)?;
+        self.classpath
+            .check_type_visibility(&self.lambda_owner, &ty, offset)?;
         Ok(ty)
     }
     #[allow(clippy::only_used_in_recursion)]
@@ -4631,7 +4633,7 @@ impl Checker<'_> {
                 if let Some((class, _)) = self.qualified_java_classifier(receiver, offset)? {
                     return self.java_field(&class.name, name, None, offset);
                 }
-                if let Some(class) = self.qualified_classifier(receiver) {
+                if let Some(class) = self.qualified_classifier(receiver)? {
                     if class.access & 0x4000 != 0
                         && class
                             .fields
@@ -4641,7 +4643,7 @@ impl Checker<'_> {
                         return self.java_field(&class.name, name, None, offset);
                     }
                 }
-                if let Some(class) = self.qualified_classifier(expr) {
+                if let Some(class) = self.qualified_classifier(expr)? {
                     if class.fields.iter().any(|f| {
                         f.name == "INSTANCE" && f.descriptor == format!("L{};", class.name)
                     }) {
@@ -6156,6 +6158,7 @@ pub fn check_with_owner(
     classpath: &Classpath,
     owner: &str,
 ) -> Result<Module> {
+    let lexical_owner = owner;
     classpath.register_value_scope(owner, source, Vec::new());
     annotation_placements::preflight_property_visibility(source, classpath)?;
     if source.object_decl.as_ref().is_some_and(|object| {
@@ -6346,6 +6349,7 @@ pub fn check_with_owner(
             .with_kind(crate::DiagnosticKind::UnsupportedLanguage, code));
         }
         let class = classpath.load(name)?;
+        classpath.check_classifier_visibility(owner, &class.name, *offset)?;
         let supported_jvm_marker = matches!(
             name.as_str(),
             "kotlin/jvm/JvmOverloads" | "kotlin/jvm/JvmStatic"
@@ -6552,7 +6556,7 @@ pub fn check_with_owner(
         let resolved_owner = resolve_type(&Type::Java(name.clone()), &imports, 0)
             .ok()
             .and_then(|ty| match ty {
-                Type::Java(owner) if owner.contains('/') => Some(owner),
+                Type::Java(owner) => Some(owner),
                 _ => None,
             });
         if let std::collections::hash_map::Entry::Vacant(entry) = imports.entry(name.clone()) {
@@ -6573,6 +6577,7 @@ pub fn check_with_owner(
                 error.offset = type_offset;
                 error
             })?;
+            classpath.check_classifier_visibility(lexical_owner, &class.name, type_offset)?;
             if class.access & 1 == 0 || class.unsupported {
                 return Err(Diagnostic::new(
                     type_offset,

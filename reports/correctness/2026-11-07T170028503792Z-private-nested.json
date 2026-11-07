@@ -1,0 +1,2906 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-07T17:00:28.503792+00:00",
+  "status": "completed",
+  "environment": {
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "java_home": "/workspace/korrust-setup/jdk-21"
+  },
+  "compiler": {
+    "binary": "target/next5-integrated/release/korrust",
+    "binary_sha256": "4540246e927e37f2d0949acaf5104103ab936e225a96da61bcfe9f5bf7b7b79c",
+    "frozen_source_root": "."
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "private_nested"
+    ]
+  },
+  "inputs": {
+    "files_sha256": {
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt": "8d020890054d7f277d4eb9dd6931d58ec559493bbcaccfe3e6caab08dd060431",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt": "a4e4177e9fad6c0be4ac15947e0d14b9cb8e0a0fa83a1617dba880e0c0b32c31",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+      "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "src/annotation_declarations.rs": "1c50fb5e94df8a4d48d14d03a00d411c33b402bbc847d0df45ac622d39b7be01",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+      "src/bytecode/annotations.rs": "397e6b298ce180be4f6e733e2240da2f23f36bc975be46e5700ced1162d9741c",
+      "src/bytecode/class_companion.rs": "a5756a0c46cc33fa449bebe330ef5748789da70b4b941c21c7f72aa923802fc2",
+      "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+      "src/bytecode/defaults.rs": "f8eb6d73077c057a293d676723c2801007d9d0fa21dd6784ae16730b1637e0d9",
+      "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+      "src/bytecode/interfaces.rs": "1cfee2e8d5d0847eb719dedde5b429953c3f9d24697fcee653aa278efa1d4c49",
+      "src/bytecode/lambdas.rs": "50d5de628118856e96b21d69b555b626e23608838dc4fca1eef22acca96fcc65",
+      "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+      "src/bytecode/suspend.rs": "ec4fb43e1402edeb4e85b60ed3a360408ad2dccdb408caca5e27287115a1e0c4",
+      "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+      "src/bytecode.rs": "407b5bbac05e46766b5f44f0ef051cf46fdfd00070f16d385942ad94c67fbbcc",
+      "src/check.rs": "fa1d2737afc78fcb1824ed1a19c1e2e361b140b017fb6a97fa7d9ac636c19c0b",
+      "src/check_annotation_placements.rs": "30e8ee0dfd870926107eb01130e4c7b1b315acbe66161a7f40e984ad76277162",
+      "src/check_annotations.rs": "d8cf152398cdb3c98edfe1cf1cb8a71eb4087e573a9d50f0119923a3be3c17f4",
+      "src/check_captures.rs": "d1bc5a311e720072df4eb38bef24ff253a01c4bee4d6ca5690f51455024ff1ba",
+      "src/check_class_delegation.rs": "05355235cd6de1998c890c17fe9615c1a020f6e8faee704af48a243e8e957741",
+      "src/check_classes.rs": "92e3a58a8e54d633e05be6b542d210ebe1c2b4461adcb92ab67857340d66c002",
+      "src/check_control.rs": "e636cb4b79ffa632d050dedfb7fdb2a6e7dd5d0e23374126cdbf167e1c4c6436",
+      "src/check_declarations.rs": "bdc6377e186d0a9f71561e33d238e9d042eddea14f77405d9daf417be58cf1b4",
+      "src/check_delegates.rs": "094b9bdc43d4cecb0fb3dcef1681181f8e7737804f3808582192b3190d01dc92",
+      "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+      "src/check_functions.rs": "ce6c57f2a6b5e0765aa1e20efbe5f0d5ac0825d4353e1f1d4501698c26435834",
+      "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+      "src/check_interfaces.rs": "8c31ef564cf99b24fd0e6a9416886e60abc0c96e9214834c1501692d883b6de5",
+      "src/check_ir_walk.rs": "358a447f20e6957785a582f3a2842e937b1db7bf204afcac9ee5fc1ba1779e68",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_library.rs": "fce71470baecc1c2e751ccd927d94a7b5cb8dbdec9fb25ee3af35cfe5acab8b9",
+      "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+      "src/check_objects.rs": "a4cd8542a749e0dc670f571363df5fe260e83fa7c2cd6ccd9e1ed5bb79cbf5d3",
+      "src/check_operations.rs": "6354812c520125ef7e6f70f27f9ce435f2e381a77ef888db033070c2c3e8726b",
+      "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+      "src/check_references.rs": "dd677362351c02d61f48ff4466ff0418ab9eb33a3152f5947640fc14ee12b5b2",
+      "src/check_relations.rs": "3915c7cc3637126fb82acd68714025ea81e1289663a0b4cfce9840483b2b13a5",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/classpath/metadata.rs": "9276a513eb746b86d24fca6e225b0054be4a1c77bafff09c8b1f544fe86b0f06",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "8b9017fa76bb300363825f6db7057c7f67218da83ebac6a27568b792d58e1142",
+      "src/classpath/source.rs": "a08a41eec0d60ec80c8079eff142074b96750d0debfe96aaf2b450ca84ab8262",
+      "src/classpath/source_enums.rs": "3366b5ad4fc96e61e95b398e72dbb6c6a3de8e734247b6e7cdba7d937ef527f4",
+      "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "src/classpath.rs": "df0772f4280f3d1d2e60f83001e74469a7cb2e2d0cd86183c79ad0ce1cc24fab",
+      "src/compiled_inline.rs": "06250c79ae618989985360ced0235cca4628f0f7c4d92630a00295d217310102",
+      "src/const_eval.rs": "93753149d7a3931919382b26a3dfd621c333edc621a889f1221c13f880b7a1aa",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "a665e290c4777ceacb0a986f03975491d8d5e51bcaed3a322606b65d8d571dfb",
+      "src/lib.rs": "1f376250139e9f155259f75de9bac35e4862a4404bb2b4ed99be53d424482fef",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "1a3d9bd06a739747924c955bcdc9b9dd3011f4583a5bccb30aa71a8180b183e4",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "src/syntax.rs": "b33aee3d821aa22ae50f97f55f30821e96889908781579b6bdd760fd7be00926",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+      "target/next5-integrated/release/korrust": "4540246e927e37f2d0949acaf5104103ab936e225a96da61bcfe9f5bf7b7b79c",
+      "tests/private_nested/Boundaries.json": "734171a1392a36c1941419f1a5facbe3b57d323c9695fce0df5cad665701c00b",
+      "tests/private_nested/Consumer.kt": "7c2a193dfae7cd9f5123de5d3d320bc38e0a9a57e08ffdcc859ea9f69f04108d",
+      "tests/private_nested/ConsumerDriver.java": "5ca495c6e470ad02df398a5fc5863b90f9bd30e9926531879d10e5cdb1874b25",
+      "tests/private_nested/Driver.java": "670ebe22758a9f0937d07f8139166c7b15cb832159e75733a32a55f532b21c3a",
+      "tests/private_nested/MetadataDump.java": "90ec2ce9af18a222120d812223212adb5dc437cdb807a65f08f600d277a106ed",
+      "tests/private_nested/ObjectOwner.kt": "e2d0b563e17aaacf683d5394bc7333feb8d1a059a6a9385f867520d2ebe4f6f7",
+      "tests/private_nested/Vault.kt": "6c34ce8e94154dac1206350c40a1bebcd29e93843d4f401aae02c38a2b09e72a",
+      "tests/private_nested.rs": "0075e32530a34263914772d122ff66935b63262cb617849ba1257db08161e3ed",
+      "tests/test_check_private_nested.py": "fc81175a3d92c7c29f0bee072686605d37737d56ac302065f683c2cbe7e83079",
+      "tools/check_inner_classes.py": "f6245b0fc9884920ec4063ec1201bca34a359f48bb69e337c368c6b314f4c75d",
+      "tools/check_private_nested.py": "514a6e2b34f8cb26d739d3a74f2c52db00ba8df745586454d65856844b81797f",
+      "tools/upstream_jvm.py": "10a550964853b0b4bfdcbdc48f3522b6b3122d36dde2bb5d5bda26a9855a6674"
+    },
+    "androidbible_sources_reviewed": [
+      {
+        "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt",
+        "sha256": "8d020890054d7f277d4eb9dd6931d58ec559493bbcaccfe3e6caab08dd060431",
+        "whole_file_status": "not_assessed",
+        "new_unchanged_file_claim": false,
+        "reason": "DisplayEntry private nested class shape is covered by Vault.Entry. Generic enclosing instance capture and Android/UI dependencies retain independent blockers."
+      },
+      {
+        "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt",
+        "sha256": "a4e4177e9fad6c0be4ac15947e0d14b9cb8e0a0fa83a1617dba880e0c0b32c31",
+        "whole_file_status": "not_assessed",
+        "new_unchanged_file_claim": false,
+        "reason": "Reader private nested class shape is covered by ObjectOwner.Reader. Private enum Format, Android/app model dependencies and decoder constructs retain independent blockers."
+      }
+    ]
+  },
+  "source_archive": {
+    "path": "reports/correctness/2026-11-07T170028503792Z-private-nested/frozen-sources.zip",
+    "sha256": "01a7d915ae15452970c836fea3890bc1a03653bfbae8a066bb0b67e760cf2817"
+  },
+  "commands": [
+    {
+      "label": "java-version",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/000-stderr.txt"
+    },
+    {
+      "label": "library/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/private_nested/Vault.kt",
+        "/workspace/korrust/tests/private_nested/ObjectOwner.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/001-stderr.txt"
+    },
+    {
+      "label": "library/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/tests/private_nested/Vault.kt",
+        "/workspace/korrust/tests/private_nested/ObjectOwner.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/002-stderr.txt"
+    },
+    {
+      "label": "fixed-java/compile-once-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/fixed-java",
+        "/workspace/korrust/tests/private_nested/Driver.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/003-stderr.txt"
+    },
+    {
+      "label": "runtime/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/fixed-java:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Driver"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/004-stderr.txt"
+    },
+    {
+      "label": "runtime/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/fixed-java:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Driver"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/005-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.Depth$Hidden$Public",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Depth$Hidden$Public"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/006-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.Depth$Hidden$Public",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Depth$Hidden$Public"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/007-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.Depth$Hidden$Public",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Depth$Hidden$Public"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/008-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.Depth$Hidden$Public",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Depth$Hidden$Public"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/009-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.Depth$Hidden",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Depth$Hidden"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/010-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.Depth$Hidden",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Depth$Hidden"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/011-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.Depth$Hidden",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Depth$Hidden"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/012-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.Depth$Hidden",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Depth$Hidden"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/013-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.Depth",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Depth"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/014-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.Depth",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Depth"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/015-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.Depth",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Depth"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/016-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.Depth",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Depth"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/017-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.ObjectOwner$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.ObjectOwner$Reader"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/018-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.ObjectOwner$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.ObjectOwner$Reader"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/019-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.ObjectOwner$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.ObjectOwner$Reader"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/020-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.ObjectOwner$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.ObjectOwner$Reader"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/021-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.ObjectOwner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.ObjectOwner"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/022-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.ObjectOwner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.ObjectOwner"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/023-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.ObjectOwner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.ObjectOwner"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/024-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.ObjectOwner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.ObjectOwner"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/025-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.Vault$Companion",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault$Companion"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/026-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.Vault$Companion",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault$Companion"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/027-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.Vault$Companion",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault$Companion"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/028-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.Vault$Companion",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault$Companion"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/029-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.Vault$Entry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault$Entry"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/030-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.Vault$Entry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault$Entry"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/031-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.Vault$Entry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault$Entry"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/032-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.Vault$Entry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault$Entry"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/033-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.Vault$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault$Reader"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/034-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.Vault$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault$Reader"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/035-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.Vault$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault$Reader"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/036-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.Vault$Reader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault$Reader"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/037-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.Vault$Record",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault$Record"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/038-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.Vault$Record",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault$Record"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/039-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.Vault$Record",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault$Record"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/040-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.Vault$Record",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault$Record"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/041-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.Vault$Sibling",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault$Sibling"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/042-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.Vault$Sibling",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault$Sibling"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/043-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.Vault$Sibling",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault$Sibling"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/044-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.Vault$Sibling",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault$Sibling"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/045-stderr.txt"
+    },
+    {
+      "label": "abi/official/privateprobe.Vault",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/046-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/official/privateprobe.Vault",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official",
+        "privateprobe.Vault"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/047-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/privateprobe.Vault",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/048-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/048-stderr.txt"
+    },
+    {
+      "label": "raw-all-members/candidate/privateprobe.Vault",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate",
+        "privateprobe.Vault"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/049-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/049-stderr.txt"
+    },
+    {
+      "label": "metadata/compile-decoder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-compiler.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/metadata-tool",
+        "/workspace/korrust/tests/private_nested/MetadataDump.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/050-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/050-stderr.txt"
+    },
+    {
+      "label": "metadata/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/metadata-tool:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-compiler.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "MetadataDump",
+        "privateprobe.Vault$Entry",
+        "privateprobe.Vault$Record",
+        "privateprobe.Vault$Reader",
+        "privateprobe.ObjectOwner$Reader",
+        "privateprobe.Depth$Hidden"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/051-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/051-stderr.txt"
+    },
+    {
+      "label": "metadata/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/metadata-tool:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-compiler.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "MetadataDump",
+        "privateprobe.Vault$Entry",
+        "privateprobe.Vault$Record",
+        "privateprobe.Vault$Reader",
+        "privateprobe.ObjectOwner$Reader",
+        "privateprobe.Depth$Hidden"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/052-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/052-stderr.txt"
+    },
+    {
+      "label": "consumer/official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/private_nested/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/consumer-official-official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/053-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/053-stderr.txt"
+    },
+    {
+      "label": "consumer/fixed-java/compile-once-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/consumer-official-official:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/fixed-java",
+        "/workspace/korrust/tests/private_nested/ConsumerDriver.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/054-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/054-stderr.txt"
+    },
+    {
+      "label": "consumer/verified/official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/fixed-java:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/consumer-official-official:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerDriver"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/055-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/055-stderr.txt"
+    },
+    {
+      "label": "consumer/official/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/tests/private_nested/Consumer.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/consumer-official-candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/056-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/056-stderr.txt"
+    },
+    {
+      "label": "consumer/verified/official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/fixed-java:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/consumer-official-candidate:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerDriver"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/057-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/057-stderr.txt"
+    },
+    {
+      "label": "consumer/candidate/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/private_nested/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/consumer-candidate-official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/058-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/058-stderr.txt"
+    },
+    {
+      "label": "consumer/verified/candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/fixed-java:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/consumer-candidate-official:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerDriver"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/059-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/059-stderr.txt"
+    },
+    {
+      "label": "consumer/candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/tests/private_nested/Consumer.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/consumer-candidate-candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/060-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/060-stderr.txt"
+    },
+    {
+      "label": "consumer/verified/candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/fixed-java:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/consumer-candidate-candidate:/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerDriver"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/061-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/061-stderr.txt"
+    },
+    {
+      "label": "boundary/outside_constructor/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_constructor/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_constructor/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/062-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/062-stderr.txt"
+    },
+    {
+      "label": "boundary/outside_constructor/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_constructor/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_constructor/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/063-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/063-stderr.txt"
+    },
+    {
+      "label": "boundary/outside_type/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_type/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_type/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/064-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/064-stderr.txt"
+    },
+    {
+      "label": "boundary/outside_type/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_type/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_type/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/065-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/065-stderr.txt"
+    },
+    {
+      "label": "boundary/sibling_private_child/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/sibling_private_child/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/sibling_private_child/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/066-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/066-stderr.txt"
+    },
+    {
+      "label": "boundary/sibling_private_child/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/sibling_private_child/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/sibling_private_child/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/067-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/067-stderr.txt"
+    },
+    {
+      "label": "boundary/enclosing_private/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/enclosing_private/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/enclosing_private/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/068-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/068-stderr.txt"
+    },
+    {
+      "label": "boundary/enclosing_private/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/enclosing_private/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/enclosing_private/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/069-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/069-stderr.txt"
+    },
+    {
+      "label": "boundary/exposed_return/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_return/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_return/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/070-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/070-stderr.txt"
+    },
+    {
+      "label": "boundary/exposed_return/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_return/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_return/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/071-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/071-stderr.txt"
+    },
+    {
+      "label": "boundary/exposed_inferred_return/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_inferred_return/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_inferred_return/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/072-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/072-stderr.txt"
+    },
+    {
+      "label": "boundary/exposed_inferred_return/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_inferred_return/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_inferred_return/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/073-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/073-stderr.txt"
+    },
+    {
+      "label": "boundary/exposed_parameter/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_parameter/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_parameter/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/074-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/074-stderr.txt"
+    },
+    {
+      "label": "boundary/exposed_parameter/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_parameter/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_parameter/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/075-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/075-stderr.txt"
+    },
+    {
+      "label": "boundary/exposed_property/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_property/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_property/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/076-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/076-stderr.txt"
+    },
+    {
+      "label": "boundary/exposed_property/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_property/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_property/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/077-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/077-stderr.txt"
+    },
+    {
+      "label": "boundary/exposed_nested_member/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_nested_member/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_nested_member/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/078-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/078-stderr.txt"
+    },
+    {
+      "label": "boundary/exposed_nested_member/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_nested_member/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_nested_member/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/079-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/079-stderr.txt"
+    },
+    {
+      "label": "boundary/private_inner/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_inner/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_inner/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/080-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/080-stderr.txt"
+    },
+    {
+      "label": "boundary/private_inner/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_inner/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_inner/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/081-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/081-stderr.txt"
+    },
+    {
+      "label": "boundary/private_open/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_open/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_open/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/082-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/082-stderr.txt"
+    },
+    {
+      "label": "boundary/private_open/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_open/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_open/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/083-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/083-stderr.txt"
+    },
+    {
+      "label": "boundary/private_generic_inner/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_generic_inner/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_generic_inner/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/084-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/084-stderr.txt"
+    },
+    {
+      "label": "boundary/private_generic_inner/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_generic_inner/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_generic_inner/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/085-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/085-stderr.txt"
+    },
+    {
+      "label": "boundary/top_level_private/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/top_level_private/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/top_level_private/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/086-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/086-stderr.txt"
+    },
+    {
+      "label": "boundary/top_level_private/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/top_level_private/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/top_level_private/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/087-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/087-stderr.txt"
+    },
+    {
+      "label": "boundary/dollar_classifier/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/dollar_classifier/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/dollar_classifier/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/088-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/088-stderr.txt"
+    },
+    {
+      "label": "boundary/dollar_classifier/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/dollar_classifier/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/dollar_classifier/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/089-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/089-stderr.txt"
+    },
+    {
+      "label": "boundary/generic_outer/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/generic_outer/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/generic_outer/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/090-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/090-stderr.txt"
+    },
+    {
+      "label": "boundary/generic_outer/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/generic_outer/Boundary.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/generic_outer/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/091-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/091-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/official/constructor/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/constructor/Invalid.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/constructor/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/092-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/092-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/official/constructor/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/constructor/Invalid.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/constructor/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/093-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/093-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/official/type/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/type/Invalid.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/type/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/094-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/094-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/official/type/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/type/Invalid.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/type/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/095-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/095-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/official/import/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/import/Invalid.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/import/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/096-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/096-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/official/import/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/import/Invalid.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/import/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/097-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/097-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/official/nested_public/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/nested_public/Invalid.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/nested_public/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/098-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/098-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/official/nested_public/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/nested_public/Invalid.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/nested_public/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/099-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/099-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/candidate/constructor/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/constructor/Invalid.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/constructor/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/100-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/100-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/candidate/constructor/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/constructor/Invalid.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/constructor/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/101-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/101-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/candidate/type/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/type/Invalid.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/type/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/102-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/102-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/candidate/type/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/type/Invalid.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/type/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/103-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/103-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/candidate/import/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/import/Invalid.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/import/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/104-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/104-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/candidate/import/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/import/Invalid.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/import/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/105-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/105-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/candidate/nested_public/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/nested_public/Invalid.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "private_nested",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/nested_public/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/106-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/106-stderr.txt"
+    },
+    {
+      "label": "invalid-consumer/candidate/nested_public/candidate",
+      "argv": [
+        "/workspace/korrust/target/next5-integrated/release/korrust",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/nested_public/Invalid.kt",
+        "--module-name",
+        "private_nested",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/nested_public/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-07T170028503792Z-private-nested/107-stdout.txt",
+      "stderr": "reports/correctness/2026-11-07T170028503792Z-private-nested/107-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "runtime/independent_expected",
+      "outcome": "pass",
+      "expected": "Record(id=9, text=ok):42\n13\n11\n17\n31\n23\n23\nEntry:private static final\nRecord:private static final\nReader:private static final\n",
+      "actual": "Record(id=9, text=ok):42\n13\n11\n17\n31\n23\n23\nEntry:private static final\nRecord:private static final\nReader:private static final\n"
+    },
+    {
+      "id": "runtime/same_java_bytecode",
+      "outcome": "pass",
+      "expected": "Record(id=9, text=ok):42\n13\n11\n17\n31\n23\n23\nEntry:private static final\nRecord:private static final\nReader:private static final\n",
+      "actual": "Record(id=9, text=ok):42\n13\n11\n17\n31\n23\n23\nEntry:private static final\nRecord:private static final\nReader:private static final\n",
+      "verified": true
+    },
+    {
+      "id": "runtime/fixed_java_unchanged",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/privateprobe.Depth$Hidden$Public",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: (I)V",
+        "public final int getX();",
+        "public privateprobe.Depth$Hidden$Public(int);"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: (I)V",
+        "public final int getX();",
+        "public privateprobe.Depth$Hidden$Public(int);"
+      ]
+    },
+    {
+      "id": "abi/privateprobe.Depth$Hidden",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: ()V",
+        "public final int read();",
+        "public privateprobe.Depth$Hidden();"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: ()V",
+        "public final int read();",
+        "public privateprobe.Depth$Hidden();"
+      ]
+    },
+    {
+      "id": "abi/privateprobe.Depth",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()V",
+        "public final int read();",
+        "public final int viaPrivate();",
+        "public privateprobe.Depth();"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()V",
+        "public final int read();",
+        "public final int viaPrivate();",
+        "public privateprobe.Depth();"
+      ]
+    },
+    {
+      "id": "abi/privateprobe.ObjectOwner$Reader",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: ([B)V",
+        "public final int read();",
+        "public privateprobe.ObjectOwner$Reader(byte[]);"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: ([B)V",
+        "public final int read();",
+        "public privateprobe.ObjectOwner$Reader(byte[]);"
+      ]
+    },
+    {
+      "id": "abi/privateprobe.ObjectOwner",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: Lprivateprobe/ObjectOwner;",
+        "public final int read();",
+        "public static final privateprobe.ObjectOwner INSTANCE;"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: Lprivateprobe/ObjectOwner;",
+        "public final int read();",
+        "public static final privateprobe.ObjectOwner INSTANCE;"
+      ]
+    },
+    {
+      "id": "abi/privateprobe.Vault$Companion",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+        "public final int read();",
+        "public privateprobe.Vault$Companion(kotlin.jvm.internal.DefaultConstructorMarker);"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+        "public final int read();",
+        "public privateprobe.Vault$Companion(kotlin.jvm.internal.DefaultConstructorMarker);"
+      ]
+    },
+    {
+      "id": "abi/privateprobe.Vault$Entry",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: (ILjava/lang/String;)V",
+        "public final int getIndex();",
+        "public final java.lang.String getText();",
+        "public privateprobe.Vault$Entry(int, java.lang.String);"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: (ILjava/lang/String;)V",
+        "public final int getIndex();",
+        "public final java.lang.String getText();",
+        "public privateprobe.Vault$Entry(int, java.lang.String);"
+      ]
+    },
+    {
+      "id": "abi/privateprobe.Vault$Reader",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: ([B)V",
+        "public final int read();",
+        "public privateprobe.Vault$Reader(byte[]);"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: ([B)V",
+        "public final int read();",
+        "public privateprobe.Vault$Reader(byte[]);"
+      ]
+    },
+    {
+      "id": "abi/privateprobe.Vault$Record",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: (ILjava/lang/String;)Lprivateprobe/Vault$Record;",
+        "descriptor: (ILjava/lang/String;)V",
+        "descriptor: (Ljava/lang/Object;)Z",
+        "descriptor: (Lprivateprobe/Vault$Record;ILjava/lang/String;ILjava/lang/Object;)Lprivateprobe/Vault$Record;",
+        "public boolean equals(java.lang.Object);",
+        "public final int component1();",
+        "public final int getId();",
+        "public final java.lang.String component2();",
+        "public final java.lang.String getText();",
+        "public final privateprobe.Vault$Record copy(int, java.lang.String);",
+        "public int hashCode();",
+        "public java.lang.String toString();",
+        "public privateprobe.Vault$Record(int, java.lang.String);",
+        "public static privateprobe.Vault$Record copy$default(privateprobe.Vault$Record, int, java.lang.String, int, java.lang.Object);"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: (ILjava/lang/String;)Lprivateprobe/Vault$Record;",
+        "descriptor: (ILjava/lang/String;)V",
+        "descriptor: (Ljava/lang/Object;)Z",
+        "descriptor: (Lprivateprobe/Vault$Record;ILjava/lang/String;ILjava/lang/Object;)Lprivateprobe/Vault$Record;",
+        "public boolean equals(java.lang.Object);",
+        "public final int component1();",
+        "public final int getId();",
+        "public final java.lang.String component2();",
+        "public final java.lang.String getText();",
+        "public final privateprobe.Vault$Record copy(int, java.lang.String);",
+        "public int hashCode();",
+        "public java.lang.String toString();",
+        "public privateprobe.Vault$Record(int, java.lang.String);",
+        "public static privateprobe.Vault$Record copy$default(privateprobe.Vault$Record, int, java.lang.String, int, java.lang.Object);"
+      ]
+    },
+    {
+      "id": "abi/privateprobe.Vault$Sibling",
+      "outcome": "pass",
+      "expected": [
+        "descriptor: ()I",
+        "descriptor: ()V",
+        "public final int read();",
+        "public privateprobe.Vault$Sibling();"
+      ],
+      "actual": [
+        "descriptor: ()I",
+        "descriptor: ()V",
+        "public final int read();",
+        "public privateprobe.Vault$Sibling();"
+      ]
+    },
+    {
+      "id": "abi/privateprobe.Vault",
+      "outcome": "pass",
+      "expected": [
+        "Signature: ()Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Lkotlin/jvm/functions/Function0;",
+        "descriptor: ()V",
+        "descriptor: Lprivateprobe/Vault$Companion;",
+        "public final java.lang.String read();",
+        "public final kotlin.jvm.functions.Function0<java.lang.Integer> closure();",
+        "public privateprobe.Vault();",
+        "public static final privateprobe.Vault$Companion Companion;"
+      ],
+      "actual": [
+        "Signature: ()Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;",
+        "descriptor: ()Ljava/lang/String;",
+        "descriptor: ()Lkotlin/jvm/functions/Function0;",
+        "descriptor: ()V",
+        "descriptor: Lprivateprobe/Vault$Companion;",
+        "public final java.lang.String read();",
+        "public final kotlin.jvm.functions.Function0<java.lang.Integer> closure();",
+        "public privateprobe.Vault();",
+        "public static final privateprobe.Vault$Companion Companion;"
+      ]
+    },
+    {
+      "id": "metadata/private_data_and_constructor_flags",
+      "outcome": "pass",
+      "expected": "privateprobe.Vault$Entry VISIBILITY=PRIVATE DATA=false INNER=false\nprivateprobe.Vault$Entry CONSTRUCTOR=PUBLIC[index, text]\nprivateprobe.Vault$Entry PROPERTIES=[index:PUBLIC, text:PUBLIC]\nprivateprobe.Vault$Record VISIBILITY=PRIVATE DATA=true INNER=false\nprivateprobe.Vault$Record CONSTRUCTOR=PUBLIC[id, text]\nprivateprobe.Vault$Record PROPERTIES=[id:PUBLIC, text:PUBLIC]\nprivateprobe.Vault$Reader VISIBILITY=PRIVATE DATA=false INNER=false\nprivateprobe.Vault$Reader CONSTRUCTOR=PUBLIC[bytes]\nprivateprobe.Vault$Reader PROPERTIES=[bytes:PRIVATE]\nprivateprobe.ObjectOwner$Reader VISIBILITY=PRIVATE DATA=false INNER=false\nprivateprobe.ObjectOwner$Reader CONSTRUCTOR=PUBLIC[bytes]\nprivateprobe.ObjectOwner$Reader PROPERTIES=[bytes:PRIVATE]\nprivateprobe.Depth$Hidden VISIBILITY=PRIVATE DATA=false INNER=false\nprivateprobe.Depth$Hidden CONSTRUCTOR=PUBLIC[]\nprivateprobe.Depth$Hidden PROPERTIES=[]\n",
+      "actual": "privateprobe.Vault$Entry VISIBILITY=PRIVATE DATA=false INNER=false\nprivateprobe.Vault$Entry CONSTRUCTOR=PUBLIC[index, text]\nprivateprobe.Vault$Entry PROPERTIES=[index:PUBLIC, text:PUBLIC]\nprivateprobe.Vault$Record VISIBILITY=PRIVATE DATA=true INNER=false\nprivateprobe.Vault$Record CONSTRUCTOR=PUBLIC[id, text]\nprivateprobe.Vault$Record PROPERTIES=[id:PUBLIC, text:PUBLIC]\nprivateprobe.Vault$Reader VISIBILITY=PRIVATE DATA=false INNER=false\nprivateprobe.Vault$Reader CONSTRUCTOR=PUBLIC[bytes]\nprivateprobe.Vault$Reader PROPERTIES=[bytes:PRIVATE]\nprivateprobe.ObjectOwner$Reader VISIBILITY=PRIVATE DATA=false INNER=false\nprivateprobe.ObjectOwner$Reader CONSTRUCTOR=PUBLIC[bytes]\nprivateprobe.ObjectOwner$Reader PROPERTIES=[bytes:PRIVATE]\nprivateprobe.Depth$Hidden VISIBILITY=PRIVATE DATA=false INNER=false\nprivateprobe.Depth$Hidden CONSTRUCTOR=PUBLIC[]\nprivateprobe.Depth$Hidden PROPERTIES=[]\n"
+    },
+    {
+      "id": "consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/outside_constructor",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_constructor/Boundary.kt",
+          "offset": 66,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: Outer$Hidden",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_constructor/Boundary.kt",
+          "line": 2,
+          "column": 18
+        }
+      ],
+      "source_sha256": "c44e83fede56377195f5030182c212193a18385fb78d429e7bb8d92a5e0b981c"
+    },
+    {
+      "id": "boundary/outside_type",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_type/Boundary.kt",
+          "offset": 37,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: Outer$Hidden",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/outside_type/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "source_sha256": "ff5f29f6722effe9598f35bc30b4addc1da5121403db8ac85d54a5ebcc7b8566"
+    },
+    {
+      "id": "boundary/sibling_private_child",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/sibling_private_child/Boundary.kt",
+          "offset": 84,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: Outer$First$Hidden",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/sibling_private_child/Boundary.kt",
+          "line": 1,
+          "column": 85
+        }
+      ],
+      "source_sha256": "1eab0cd2972ccd43335e48a7aed256ba90d70223b80894d875622d299dbb5dd2"
+    },
+    {
+      "id": "boundary/enclosing_private",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/enclosing_private/Boundary.kt",
+          "offset": 83,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: Outer$Hidden$Public",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/enclosing_private/Boundary.kt",
+          "line": 2,
+          "column": 18
+        }
+      ],
+      "source_sha256": "9b2ba9a8298a54ee1e56031d55c144aaff88bcb2f11b3871e1c8137c1be78146"
+    },
+    {
+      "id": "boundary/exposed_return",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_return/Boundary.kt",
+          "offset": 36,
+          "category": "invalid_kotlin",
+          "code": "EXPOSED_PRIVATE_CLASSIFIER",
+          "message": "Declaration exposes a private nested classifier",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_return/Boundary.kt",
+          "line": 1,
+          "column": 37
+        }
+      ],
+      "source_sha256": "c7bf499c1a9c41b7cceda7cf7c8eaa82e97c16c38649e9bbb089e7669757e6c4"
+    },
+    {
+      "id": "boundary/exposed_inferred_return",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_inferred_return/Boundary.kt",
+          "offset": 36,
+          "category": "invalid_kotlin",
+          "code": "EXPOSED_PRIVATE_CLASSIFIER",
+          "message": "Declaration exposes a private nested classifier",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_inferred_return/Boundary.kt",
+          "line": 1,
+          "column": 37
+        }
+      ],
+      "source_sha256": "f09fe33c1890c9b954ee39d92e6c0bd33bb8ff22975a98d81c60eecccf20f772"
+    },
+    {
+      "id": "boundary/exposed_parameter",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_parameter/Boundary.kt",
+          "offset": 36,
+          "category": "invalid_kotlin",
+          "code": "EXPOSED_PRIVATE_CLASSIFIER",
+          "message": "Declaration exposes a private nested classifier",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_parameter/Boundary.kt",
+          "line": 1,
+          "column": 37
+        }
+      ],
+      "source_sha256": "92dd89290a9564f809156830cd79db1e2d681de7b539d11ac9d7e3055fb76e0b"
+    },
+    {
+      "id": "boundary/exposed_property",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_property/Boundary.kt",
+          "offset": 36,
+          "category": "invalid_kotlin",
+          "code": "EXPOSED_PRIVATE_CLASSIFIER",
+          "message": "Declaration exposes a private nested classifier",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_property/Boundary.kt",
+          "line": 1,
+          "column": 37
+        }
+      ],
+      "source_sha256": "3bb2577ca05e635ea69a90d7724bd6a28fa7eca48b68153aaf9c5435a752b91a"
+    },
+    {
+      "id": "boundary/exposed_nested_member",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_nested_member/Boundary.kt",
+          "offset": 51,
+          "category": "invalid_kotlin",
+          "code": "EXPOSED_PRIVATE_CLASSIFIER",
+          "message": "Declaration exposes a private nested classifier",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/exposed_nested_member/Boundary.kt",
+          "line": 1,
+          "column": 52
+        }
+      ],
+      "source_sha256": "d86d5db9ae84f12626ca5ad77073cedd76a494631d30092e595b64b7474fe946"
+    },
+    {
+      "id": "boundary/private_inner",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_inner/Boundary.kt",
+          "offset": 28,
+          "category": "unsupported_language",
+          "code": "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
+          "message": "Private nested inner, value, sealed, open and abstract classes are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_inner/Boundary.kt",
+          "line": 1,
+          "column": 29
+        }
+      ],
+      "source_sha256": "aafa9f664a7433c35151d61e71f4f017146cb645489d5c3f8d7812ca9210948f"
+    },
+    {
+      "id": "boundary/private_open",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_open/Boundary.kt",
+          "offset": 27,
+          "category": "unsupported_language",
+          "code": "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
+          "message": "Private nested inner, value, sealed, open and abstract classes are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_open/Boundary.kt",
+          "line": 1,
+          "column": 28
+        }
+      ],
+      "source_sha256": "f1664cc77708d9d91ac4562ac104a920730da02d587378cfc12843d2dadd344d"
+    },
+    {
+      "id": "boundary/private_generic_inner",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_generic_inner/Boundary.kt",
+          "offset": 31,
+          "category": "unsupported_language",
+          "code": "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
+          "message": "Private nested inner, value, sealed, open and abstract classes are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/private_generic_inner/Boundary.kt",
+          "line": 1,
+          "column": 32
+        }
+      ],
+      "source_sha256": "1babc590cd5f81aa4e6bfaeebaee505e6176f22b2939a605ceaebeb7c1c417a1"
+    },
+    {
+      "id": "boundary/top_level_private",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/top_level_private/Boundary.kt",
+          "offset": 8,
+          "category": "unsupported_language",
+          "code": "CLASS_VISIBILITY_UNSUPPORTED",
+          "message": "Unsupported class visibility; use public or internal",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/top_level_private/Boundary.kt",
+          "line": 1,
+          "column": 9
+        }
+      ],
+      "source_sha256": "27a3cb10673dc641ee161c3253ecdbeed7746d6fbba6ca4f9bfd22dd0bbe60b2"
+    },
+    {
+      "id": "boundary/dollar_classifier",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/dollar_classifier/Boundary.kt",
+          "offset": 19,
+          "category": "unsupported_language",
+          "code": "CLASSIFIER_DOLLAR_NAME_UNSUPPORTED",
+          "message": "Escaped classifier names containing '$' require unsupported JVM nesting disambiguation",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/dollar_classifier/Boundary.kt",
+          "line": 1,
+          "column": 20
+        }
+      ],
+      "source_sha256": "0f54899aea11e967195668d4d7a1986344ebc1d649ffddbde80d738f8799ad81"
+    },
+    {
+      "id": "boundary/generic_outer",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/generic_outer/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "GENERIC_CLASS_NESTED_UNSUPPORTED",
+          "message": "Generic data classes, companions, and nested declarations are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/boundary/generic_outer/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "source_sha256": "87e907a0f046984feac1cd1101b67ac4df5af02fc4445677b31e2c4e3461d38f"
+    },
+    {
+      "id": "invalid-consumer/official/constructor/official",
+      "outcome": "invalid_rejected",
+      "diagnostics": [],
+      "source_sha256": "d2f3dcf880ec53a291b43dfd4e0860313641f65e4255870b3e3208f20e96225c"
+    },
+    {
+      "id": "invalid-consumer/official/constructor/candidate",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/constructor/Invalid.kt",
+          "offset": 17,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: privateprobe/Vault$Entry",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/constructor/Invalid.kt",
+          "line": 1,
+          "column": 18
+        }
+      ],
+      "source_sha256": "d2f3dcf880ec53a291b43dfd4e0860313641f65e4255870b3e3208f20e96225c"
+    },
+    {
+      "id": "invalid-consumer/official/type/official",
+      "outcome": "invalid_rejected",
+      "diagnostics": [],
+      "source_sha256": "6a2b646e35fed8aa3f314317d145e82e59a63f768b2a804e5daf4da10db3a3e1"
+    },
+    {
+      "id": "invalid-consumer/official/type/candidate",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/type/Invalid.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: privateprobe/Vault$Entry",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/type/Invalid.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "source_sha256": "6a2b646e35fed8aa3f314317d145e82e59a63f768b2a804e5daf4da10db3a3e1"
+    },
+    {
+      "id": "invalid-consumer/official/import/official",
+      "outcome": "invalid_rejected",
+      "diagnostics": [],
+      "source_sha256": "804a1e47857434105ec9fd6b4adab44639bfe2f8e84ba5b8aa8d5ece7fa15a5c"
+    },
+    {
+      "id": "invalid-consumer/official/import/candidate",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/import/Invalid.kt",
+          "offset": 7,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: privateprobe/Vault$Entry",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/import/Invalid.kt",
+          "line": 1,
+          "column": 8
+        }
+      ],
+      "source_sha256": "804a1e47857434105ec9fd6b4adab44639bfe2f8e84ba5b8aa8d5ece7fa15a5c"
+    },
+    {
+      "id": "invalid-consumer/official/nested_public/official",
+      "outcome": "invalid_rejected",
+      "diagnostics": [],
+      "source_sha256": "e8ab9ba64a91c5c13bda498cac1685a30fe932399aef4853629a6416a93064da"
+    },
+    {
+      "id": "invalid-consumer/official/nested_public/candidate",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/nested_public/Invalid.kt",
+          "offset": 17,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: privateprobe/Depth$Hidden$Public",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/official/nested_public/Invalid.kt",
+          "line": 1,
+          "column": 18
+        }
+      ],
+      "source_sha256": "e8ab9ba64a91c5c13bda498cac1685a30fe932399aef4853629a6416a93064da"
+    },
+    {
+      "id": "invalid-consumer/candidate/constructor/official",
+      "outcome": "invalid_rejected",
+      "diagnostics": [],
+      "source_sha256": "d2f3dcf880ec53a291b43dfd4e0860313641f65e4255870b3e3208f20e96225c"
+    },
+    {
+      "id": "invalid-consumer/candidate/constructor/candidate",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/constructor/Invalid.kt",
+          "offset": 17,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: privateprobe/Vault$Entry",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/constructor/Invalid.kt",
+          "line": 1,
+          "column": 18
+        }
+      ],
+      "source_sha256": "d2f3dcf880ec53a291b43dfd4e0860313641f65e4255870b3e3208f20e96225c"
+    },
+    {
+      "id": "invalid-consumer/candidate/type/official",
+      "outcome": "invalid_rejected",
+      "diagnostics": [],
+      "source_sha256": "6a2b646e35fed8aa3f314317d145e82e59a63f768b2a804e5daf4da10db3a3e1"
+    },
+    {
+      "id": "invalid-consumer/candidate/type/candidate",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/type/Invalid.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: privateprobe/Vault$Entry",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/type/Invalid.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "source_sha256": "6a2b646e35fed8aa3f314317d145e82e59a63f768b2a804e5daf4da10db3a3e1"
+    },
+    {
+      "id": "invalid-consumer/candidate/import/official",
+      "outcome": "invalid_rejected",
+      "diagnostics": [],
+      "source_sha256": "804a1e47857434105ec9fd6b4adab44639bfe2f8e84ba5b8aa8d5ece7fa15a5c"
+    },
+    {
+      "id": "invalid-consumer/candidate/import/candidate",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/import/Invalid.kt",
+          "offset": 7,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: privateprobe/Vault$Entry",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/import/Invalid.kt",
+          "line": 1,
+          "column": 8
+        }
+      ],
+      "source_sha256": "804a1e47857434105ec9fd6b4adab44639bfe2f8e84ba5b8aa8d5ece7fa15a5c"
+    },
+    {
+      "id": "invalid-consumer/candidate/nested_public/official",
+      "outcome": "invalid_rejected",
+      "diagnostics": [],
+      "source_sha256": "e8ab9ba64a91c5c13bda498cac1685a30fe932399aef4853629a6416a93064da"
+    },
+    {
+      "id": "invalid-consumer/candidate/nested_public/candidate",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/nested_public/Invalid.kt",
+          "offset": 17,
+          "category": "invalid_kotlin",
+          "code": "INACCESSIBLE_CLASSIFIER",
+          "message": "Classifier is inaccessible: privateprobe/Depth$Hidden$Public",
+          "path": "/workspace/korrust/target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/nested_public/Invalid.kt",
+          "line": 1,
+          "column": 18
+        }
+      ],
+      "source_sha256": "e8ab9ba64a91c5c13bda498cac1685a30fe932399aef4853629a6416a93064da"
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_private_nested.py",
+      "--compiler",
+      "target/next5-integrated/release/korrust",
+      "--source-root",
+      "."
+    ]
+  ],
+  "limitations": [
+    "One bounded feature family: private static nested final ordinary/data classes. Existing public nested declarations are prerequisites and are not a new feature count.",
+    "Private inner, open, abstract, sealed and value classes, generic enclosing classes, escaped dollar classifier names and top-level private classes remain unsupported. Individual members retain existing visibility limitations; this feature does not add access to private sibling members.",
+    "No unchanged whole AndroidBible source, Android build, APK/device, or full-app compatibility claim. Both reviewed files retain independent blockers."
+  ],
+  "fixed_java_callers_sha256": {
+    "target/checks/2026-11-07T170028503792Z-private-nested/fixed-java/Driver.class": "097f49f41fab83e861da1bf4edebeb718710192830f2ab973f0b47f843f19186"
+  },
+  "emitted_classes_sha256": {
+    "official": {
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/Vault$Record.class": "bca6568d33100c0f3ea68a6b97e8e040ab28a92813c6e722e593b13160133484",
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/Vault$Companion.class": "15f07e3db9d2e75a8b5ef521c49acbffcc90d9bc7ead2283607ef2cda1b4fc66",
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/ObjectOwner.class": "0fd26e193086382c3ce3d19fef9f9389ae4eee786fcef628a0cb9b149825a473",
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/Vault.class": "6a184a8ee5ef0653be4a757155293650682a68d4280d3daf1efeecc7dcccf53c",
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/Depth$Hidden.class": "4d6966e713709779c99af3f134b79649e857d73a255232853543ccf95223c41a",
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/Depth.class": "da1d9a3211b0b5ba06c62d1b62ab3b2a20eb7247d0c9e4d265bb61e50a1c74dd",
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/Depth$Hidden$Public.class": "ec65df6cfd3ebc53d335a489cb7a2a0fa6cfd4634717bb72dbee996a2af8c834",
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/Vault$Entry.class": "466629a08af6e5b9b64a477633d73f37a3c572db50312d74bed69328e3675ac7",
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/ObjectOwner$Reader.class": "67592b4217c901114e7c7ecf5b8c4b6e146ea0da8adc8b99c00e60743e165836",
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/Vault$Sibling.class": "f33ccb5d0d6db6c451fba71151e928637abc7f722c13e9852b457c62eb87059d",
+      "target/checks/2026-11-07T170028503792Z-private-nested/official/privateprobe/Vault$Reader.class": "3718c770b008dd5a76bd7451894bcac55d4bd3e06d437147ca0e6cb56ed864aa"
+    },
+    "candidate": {
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/Vault$Record.class": "699e6c41efef6f000522acd8b4f06e4142b5680bcfbbf7e72016c85ab1b6a2e0",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/Vault$Companion.class": "263c2c2e2681078f8aebdaf80f489077653df11eb7b1509c70a6d66d1189161d",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/ObjectOwner.class": "5f28ce19c07f33dfa4fb25c49aa34805f947cfabeebefb0f158a3e090ecb5c20",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/Vault.class": "2ebe356e5419b51a9abc43b99ad34ab4fbfabbf9b383e9c25d244e35f0dcf3f4",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/Vault$lambda$527$0.class": "623c96c11d3348e1b2d64cffe2ef0ee63c6c0f5252d300eaa41345256e6c961d",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/Depth$Hidden.class": "76e452ab4b7be0051ec7de473ef13a893584887792eb309ad9f4b99af271fb36",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/Depth.class": "3b9da324e82ae9a07bcf039ab05764b3e41f77f96e5a62908e658df89e0fd4d1",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/Depth$Hidden$Public.class": "4e3e53c3cf7f626e50d6e90ef5bbc9ada685b148a8441eeda1c2b4c0b6a25d2a",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/Vault$Entry.class": "89aab4a3c4a6668e93c6c42dc0cc6932ebe00a8a57e62ee58744ed54e64a7d5f",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/ObjectOwner$Reader.class": "eae086e4360eb055dc8980880518e622e82300e26b8a8015934a93995e885b45",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/Vault$Sibling.class": "d75063f854b0b5426a04757b0da4f282e8032070f5160ab3810bdd40271b2171",
+      "target/checks/2026-11-07T170028503792Z-private-nested/candidate/privateprobe/Vault$Reader.class": "3535b40cd59d63a022917cb09c8f0613e14bb5a385b3149c59898bafe79466a0"
+    }
+  },
+  "counts": {
+    "pass": 20,
+    "invalid_rejected": 25,
+    "unsupported_language": 6
+  },
+  "feature_acceptance": {
+    "family": "private_static_nested_classes",
+    "status": "passed",
+    "derived_counts": {
+      "pass": 20,
+      "invalid_rejected": 25,
+      "unsupported_language": 6
+    }
+  }
+}

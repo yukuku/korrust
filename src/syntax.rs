@@ -493,6 +493,7 @@ pub enum ConstValue {
 }
 #[derive(Clone, Debug)]
 pub struct ClassDecl {
+    pub private: bool,
     pub inner: bool,
     pub value_: bool,
     pub interface_delegates: Vec<InterfaceDelegate>,
@@ -3609,13 +3610,20 @@ impl Parser {
                 .error("Top-level classes cannot be protected")
                 .with_kind(DiagnosticKind::InvalidKotlin, "CLASS_VISIBILITY_INVALID"));
         }
-        if matches!(visibility.as_deref(), Some("private" | "protected")) {
+        if visibility.as_deref() == Some("protected")
+            || visibility.as_deref() == Some("private") && self.depth == 0
+        {
             return Err(self
                 .error("Unsupported class visibility; use public or internal")
                 .with_kind(
                     DiagnosticKind::UnsupportedLanguage,
                     "CLASS_VISIBILITY_UNSUPPORTED",
                 ));
+        }
+        if visibility.as_deref() == Some("private")
+            && (inner || value_ || sealed_ || open || abstract_)
+        {
+            return Err(self.error("Private nested inner, value, sealed, open and abstract classes are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PRIVATE_NESTED_SHAPE_UNSUPPORTED"));
         }
         if !self.take("class") {
             return Err(self.error("Only ordinary final classes are supported"));
@@ -3848,6 +3856,7 @@ impl Parser {
                 ));
         }
         let declaration = ClassDecl {
+            private: visibility.as_deref() == Some("private"),
             inner,
             value_,
             interface_delegates,
@@ -4465,6 +4474,7 @@ impl Parser {
                 ));
         }
         let mut declaration = ClassDecl {
+            private: false,
             inner: false,
             value_: false,
             interface_delegates: Vec::new(),
@@ -5031,6 +5041,7 @@ impl Parser {
                 self.lines();
                 self.expect("{")?;
                 let mut object = ClassDecl {
+                    private: false,
                     inner: false,
                     value_: false,
                     interface_delegates: Vec::new(),

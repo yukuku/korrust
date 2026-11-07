@@ -44,7 +44,17 @@ pub(crate) fn attributes(
         index += 1;
     }
     let pool_end = reader.offset;
-    reader.take(6)?;
+    let access = reader.u2()?;
+    let this = reader.u2()?;
+    reader.take(2)?;
+    let private = classes
+        .get(&this)
+        .and_then(|id| names.get(id))
+        .is_some_and(|name| {
+            entries
+                .iter()
+                .any(|(entry, _, _, flags)| entry == name && flags & 2 != 0)
+        });
     let interfaces = usize::from(reader.u2()?);
     reader.take(interfaces * 2)?;
     for _ in 0..2 {
@@ -142,7 +152,8 @@ pub(crate) fn attributes(
     result.extend(count.to_be_bytes());
     result.extend(&bytes[10..pool_end]);
     result.extend(pool);
-    result.extend(&bytes[pool_end..attr_start]);
+    result.extend((if private { access & !1 } else { access }).to_be_bytes());
+    result.extend(&bytes[pool_end + 2..attr_start]);
     result.extend(
         u16::try_from(kept.len() + 1)
             .map_err(|_| invalid())?

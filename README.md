@@ -177,6 +177,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 137. Bounded top-level suspend functions and suspend function parameters with real continuation state, up to eight sequential suspension points, delayed resumption and exception propagation, JVM signatures and Kotlin metadata.
 138. UInt and ULong scalar literals, arithmetic, comparisons, bitwise operations, integral conversions and nullable/generic boxing through Kotlin value-class metadata and JVM carriers.
 139. Ordinary file annotations with argument and FILE-target validation, facade-only retention, and imported annotation definitions.
+140. Private nested ordinary and data classes with lexical access checks, public-exposure diagnostics, JVM nesting visibility and Kotlin metadata.
 
 ## Project contract
 

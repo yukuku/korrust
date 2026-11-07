@@ -978,6 +978,8 @@ fn class_metadata(
         1,
         (if anonymous {
             10
+        } else if class.private {
+            2
         } else if class.internal {
             0
         } else {

@@ -908,7 +908,9 @@ pub(super) fn default_type_imports(
         match ty {
             Type::Java(name) => {
                 if !imports.contains_key(name) {
-                    if let Some(class) = default_class(classpath, name) {
+                    if let Some(class) =
+                        default_class(classpath, name).or_else(|| classpath.kotlin_classifier(name))
+                    {
                         imports.insert(name.clone(), class.name);
                     }
                 }
@@ -1031,6 +1033,8 @@ impl Checker<'_> {
         let Some(class) = class else {
             return Ok(None);
         };
+        self.classpath
+            .check_classifier_visibility(&self.lambda_owner, &class.name, offset)?;
         if class.access & 0x2000 != 0 {
             return Err(Diagnostic::new(
                 offset,
@@ -1182,6 +1186,8 @@ impl Checker<'_> {
         } else {
             return Ok(None);
         };
+        self.classpath
+            .check_classifier_visibility(&self.lambda_owner, &class.name, offset)?;
         if class.access & 1 == 0 {
             return Err(
                 Diagnostic::new(offset, "Constructor classifier is inaccessible").with_kind(
@@ -1220,6 +1226,8 @@ impl Checker<'_> {
             ));
         }
         relations::validate_type_arguments_with_classes(&ty, self.classpath, self.classes, offset)?;
+        self.classpath
+            .check_classifier_visibility(&self.lambda_owner, &class.name, offset)?;
         if class.access & 0x2000 != 0 {
             return Err(Diagnostic::new(
                 offset,
@@ -1389,7 +1397,7 @@ impl Checker<'_> {
         Ok(Some((class, access)))
     }
 
-    pub(super) fn qualified_classifier(&self, expression: &Expr) -> Option<JavaClass> {
+    pub(super) fn qualified_classifier(&self, expression: &Expr) -> Result<Option<JavaClass>> {
         fn parts(expression: &Expr, names: &mut Vec<String>) -> bool {
             match &expression.kind {
                 ExprKind::Name(name) => {
@@ -1405,7 +1413,7 @@ impl Checker<'_> {
         }
         let mut names = Vec::new();
         if !parts(expression, &mut names) || names.len() < 2 {
-            return None;
+            return Ok(None);
         }
         let root = &names[0];
         if self.local(root).is_some()
@@ -1419,7 +1427,7 @@ impl Checker<'_> {
                 .values()
                 .any(|method| method.source_property.as_ref() == Some(root))
         {
-            return None;
+            return Ok(None);
         }
         let qualified = names.join("/");
         let owner = self
@@ -1432,10 +1440,19 @@ impl Checker<'_> {
                     .map(|root| format!("{root}${}", names[1..].join("$")))
             })
             .unwrap_or(qualified);
-        self.classpath
+        let class = self
+            .classpath
             .load(&owner)
             .ok()
-            .filter(|class| class.access & 1 != 0 && !class.unsupported)
+            .or_else(|| self.classpath.kotlin_classifier(&owner));
+        if let Some(class) = &class {
+            self.classpath.check_classifier_visibility(
+                &self.lambda_owner,
+                &class.name,
+                expression.offset,
+            )?;
+        }
+        Ok(class.filter(|class| class.access & 1 != 0 && !class.unsupported))
     }
     fn java_callee_collision(
         &mut self,
@@ -1595,10 +1612,13 @@ impl Checker<'_> {
                 "INNER_CONSTRUCTOR_RECEIVER_REQUIRED",
             ));
         }
-        let Some(class) = java.map(|(class, _)| class).or_else(|| {
-            self.qualified_classifier(expression)
+        let class = if let Some((class, _)) = java {
+            Some(class)
+        } else {
+            self.qualified_classifier(expression)?
                 .filter(|class| class.kotlin_class)
-        }) else {
+        };
+        let Some(class) = class else {
             return Ok(None);
         };
         if class
@@ -1608,6 +1628,8 @@ impl Checker<'_> {
         {
             return Ok(None);
         }
+        self.classpath
+            .check_classifier_visibility(&self.lambda_owner, &class.name, offset)?;
         if class.access & 0x2000 != 0 {
             return Err(Diagnostic::new(
                 offset,

@@ -136,16 +136,19 @@ impl Classpath {
                         return Err(Diagnostic::new(offset, "Compiled internal classifier values require unsupported class metadata")
                             .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "INTERNAL_CLASSIFIER_VALUE_UNSUPPORTED"));
                     }
+                    let classifier_visible = self.classifier_visible(caller, &class.name);
                     if class.access & 1 == 0
+                        || !classifier_visible
                         || !internal_visible
-                        || matches!(visibility, Some(1 | 2 | 4 | 5))
+                        || matches!(visibility, Some(2 | 5))
                     {
                         inaccessible = true;
                     }
                     if class.access & 1 != 0
                         && !class.unsupported
                         && internal_visible
-                        && !matches!(visibility, Some(1 | 2 | 4 | 5))
+                        && classifier_visible
+                        && !matches!(visibility, Some(2 | 5))
                     {
                         symbols.insert(
                             format!("class:{}", class.name),

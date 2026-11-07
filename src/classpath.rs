@@ -64,6 +64,7 @@ pub(crate) struct Classpath {
     module_name: String,
     friends: std::collections::HashSet<PathBuf>,
     value_scopes: std::cell::RefCell<std::collections::HashMap<String, value_names::ValueScope>>,
+    lexical_parents: std::cell::RefCell<std::collections::HashMap<String, String>>,
     source_files: std::cell::RefCell<std::collections::HashMap<String, (String, bool)>>,
     source_default_accessors:
         std::cell::RefCell<std::collections::HashMap<(String, String), SourceBackingField>>,
@@ -591,6 +592,165 @@ impl Classpath {
             && self.same_source_file(caller, &method.owner)
     }
 
+    pub(crate) fn kotlin_classifier(&self, name: &str) -> Option<JavaClass> {
+        if let Ok(class) = self.load(name) {
+            return class.kotlin_class.then_some(class);
+        }
+        let parts = name.split('/').collect::<Vec<_>>();
+        for split in (1..parts.len()).rev() {
+            let candidate = format!("{}${}", parts[..split].join("/"), parts[split..].join("$"));
+            if let Ok(class) = self.load(&candidate) {
+                if class.kotlin_class {
+                    return Some(class);
+                }
+            }
+        }
+        None
+    }
+
+    pub(crate) fn register_lexical_parent(&self, child: &str, parent: &str) {
+        self.lexical_parents
+            .borrow_mut()
+            .insert(child.into(), parent.into());
+    }
+
+    pub(crate) fn lexically_within(&self, caller: &str, outer: &str) -> bool {
+        let parents = self.lexical_parents.borrow();
+        let mut current = caller;
+        for _ in 0..64 {
+            if current == outer {
+                return true;
+            }
+            let Some(parent) = parents.get(current) else {
+                return false;
+            };
+            current = parent;
+        }
+        false
+    }
+
+    pub(crate) fn classifier_visible(&self, caller: &str, owner: &str) -> bool {
+        let mut current = owner.to_owned();
+        for _ in 0..64 {
+            if let Ok(class) = self.load(&current) {
+                match class
+                    .library
+                    .as_ref()
+                    .and_then(|library| library.kotlin_visibility)
+                {
+                    Some(1 | 4) => {
+                        let parent = self.lexical_parents.borrow().get(&current).cloned();
+                        let Some(outer) = parent else {
+                            return false;
+                        };
+                        if !self.lexically_within(caller, &outer) {
+                            return false;
+                        }
+                    }
+                    Some(0) if !self.internal_visible(&current) => return false,
+                    _ => {}
+                }
+            }
+            let parent = self.lexical_parents.borrow().get(&current).cloned();
+            let Some(outer) = parent else {
+                return true;
+            };
+            current = outer;
+        }
+        false
+    }
+
+    pub(crate) fn private_domain(&self, owner: &str) -> Option<String> {
+        let mut current = owner.to_owned();
+        for _ in 0..64 {
+            let private = self.load(&current).ok().is_some_and(|class| {
+                class
+                    .library
+                    .as_ref()
+                    .is_some_and(|library| matches!(library.kotlin_visibility, Some(1 | 4)))
+            });
+            let parent = self.lexical_parents.borrow().get(&current).cloned();
+            if private {
+                return parent;
+            }
+            current = parent?;
+        }
+        None
+    }
+
+    pub(crate) fn validate_private_signatures(
+        &self,
+        module: &crate::syntax::Module,
+        owner: &str,
+    ) -> Result<()> {
+        source::validate_private_signatures(module, owner, self)
+    }
+
+    pub(crate) fn check_classifier_visibility(
+        &self,
+        caller: &str,
+        owner: &str,
+        offset: usize,
+    ) -> Result<()> {
+        if self.classifier_visible(caller, owner) {
+            return Ok(());
+        }
+        Err(
+            Diagnostic::new(offset, format!("Classifier is inaccessible: {owner}")).with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "INACCESSIBLE_CLASSIFIER",
+            ),
+        )
+    }
+
+    pub(crate) fn check_type_visibility(
+        &self,
+        caller: &str,
+        ty: &Type,
+        offset: usize,
+    ) -> Result<()> {
+        match ty {
+            Type::Java(owner) | Type::Parameterized { name: owner, .. } => {
+                self.check_classifier_visibility(caller, owner, offset)?;
+                if let Type::Parameterized { arguments, .. } = ty {
+                    for argument in arguments {
+                        if let Some(ty) = &argument.ty {
+                            self.check_type_visibility(caller, ty, offset)?;
+                        }
+                    }
+                }
+            }
+            Type::Nullable(ty)
+            | Type::Platform(ty)
+            | Type::List(ty)
+            | Type::MutableList(ty)
+            | Type::Array(ty)
+            | Type::ThreadLocal(ty) => self.check_type_visibility(caller, ty, offset)?,
+            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+                for ty in params {
+                    self.check_type_visibility(caller, ty, offset)?;
+                }
+                self.check_type_visibility(caller, result, offset)?;
+            }
+            Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => {
+                self.check_type_visibility(caller, receiver, offset)?;
+                for ty in params {
+                    self.check_type_visibility(caller, ty, offset)?;
+                }
+                self.check_type_visibility(caller, result, offset)?;
+            }
+            Type::Parameter { upper_bound, .. } => {
+                self.check_type_visibility(caller, upper_bound, offset)?
+            }
+            _ => {}
+        }
+        Ok(())
+    }
+
     pub(crate) fn internal_visible(&self, owner: &str) -> bool {
         self.is_source(owner)
             || self
@@ -720,6 +880,7 @@ impl Classpath {
             module_name: options.module_name.clone(),
             friends,
             value_scopes: Default::default(),
+            lexical_parents: Default::default(),
             source_files: Default::default(),
             source_default_accessors: Default::default(),
             origins: Default::default(),
@@ -899,6 +1060,9 @@ impl Classpath {
 
     fn parse_with_declarations(&self, bytes: &[u8], expected: &str) -> Result<JavaClass> {
         let (mut class, attrs, method_attrs) = parse_details(bytes, expected)?;
+        for (child, parent, _, _) in &attrs.inner_classes {
+            self.register_lexical_parent(child, parent);
+        }
         if let Some(annotation) = attrs
             .annotations
             .iter()

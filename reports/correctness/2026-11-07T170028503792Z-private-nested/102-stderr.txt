@@ -1,0 +1,6 @@
+target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/type/Invalid.kt:1:9: error: 'public' function exposes its 'private-in-class' parameter type 'Entry'.
+fun bad(value: privateprobe.Vault.Entry): Int = 1
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/type/Invalid.kt:1:35: error: cannot access 'class Entry : Any': it is private in 'privateprobe.Vault'.
+fun bad(value: privateprobe.Vault.Entry): Int = 1
+                                  ^^^^^

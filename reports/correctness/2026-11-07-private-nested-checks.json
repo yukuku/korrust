@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-07T17:07:08.811763+00:00",
+  "status": "completed",
+  "selection": "Integrated release checks for private-nested",
+  "compiler": {
+    "binary": "target/next5-integrated/release/korrust",
+    "binary_sha256": "4540246e927e37f2d0949acaf5104103ab936e225a96da61bcfe9f5bf7b7b79c",
+    "frozen_source_root": "."
+  },
+  "inputs": {
+    "source_and_fixture_freeze": "reports/correctness/2026-11-07T170028503792Z-private-nested.json",
+    "logs_sha256": {
+      "rust.log": "c29605cb0472647212768ee34eeb5370a1e2af1cff77b2d27f232900cb4c501b",
+      "build.log": "b5ecbffd5ea06bc134f19fcc67b576e699fe1b4ae17ecc6e1792150d7d3a19b4",
+      "clippy.log": "d56219ae8d50ae17668337240672a137043831b212f668fec2dd6134c101a51f",
+      "report-tests.log": "70927b572011a2ed19a4d415c4ce2788892810f545aad667eaa4847eb06cc5de"
+    }
+  },
+  "cases": [
+    {
+      "id": "rust_release",
+      "outcome": "pass",
+      "tests": 16,
+      "test_groups": 6
+    },
+    {
+      "id": "clippy_release_all_targets",
+      "outcome": "pass"
+    },
+    {
+      "id": "format",
+      "outcome": "pass"
+    },
+    {
+      "id": "report_generator",
+      "outcome": "pass",
+      "tests": 8
+    }
+  ],
+  "counts": {
+    "pass": 4
+  },
+  "evidence": [
+    "reports/correctness/2026-11-07-private-nested-checks/rust.log",
+    "reports/correctness/2026-11-07-private-nested-checks/build.log",
+    "reports/correctness/2026-11-07-private-nested-checks/clippy.log",
+    "reports/correctness/2026-11-07-private-nested-checks/report-tests.log"
+  ],
+  "reproduction_commands": [
+    "source /workspace/korrust-setup/env.sh",
+    "cargo fmt --all -- --check",
+    "CARGO_TARGET_DIR=target/next5-integrated cargo clippy --release --all-targets --locked --offline -- -D warnings",
+    "CARGO_TARGET_DIR=target/next5-integrated cargo build --release --locked --offline",
+    "RUST_MIN_STACK=16777216 CARGO_TARGET_DIR=target/next5-integrated cargo test --release --locked --offline --test private_nested --test inner_classes --test call_resolution --test static_import_diagnostics --test value_classes --test value_resolution",
+    "python3 -m unittest discover -s tests -p test_reports.py"
+  ]
+}

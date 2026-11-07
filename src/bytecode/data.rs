@@ -204,7 +204,7 @@ pub(super) fn methods(
     body.class_reference(0xbb, "java/lang/StringBuilder")?;
     body.bytes.push(0x59);
     body.method_reference(0xb7, "java/lang/StringBuilder", "<init>", "()V")?;
-    let simple_name = owner.rsplit('/').next().unwrap_or(owner);
+    let simple_name = owner.rsplit(['/', '$']).next().unwrap_or(owner);
     for (index, (name, ty)) in class.params.iter().enumerate() {
         let prefix = if index == 0 {
             format!("{simple_name}({name}=")

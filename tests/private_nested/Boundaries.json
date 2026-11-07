@@ -1,0 +1,92 @@
+[
+  {
+    "id": "outside_constructor",
+    "official": "reject",
+    "code": "INACCESSIBLE_CLASSIFIER",
+    "source": "class Outer { private class Hidden(val x: Int) }\nfun bad(): Int = Outer.Hidden(1).x"
+  },
+  {
+    "id": "outside_type",
+    "official": "reject",
+    "code": "INACCESSIBLE_CLASSIFIER",
+    "source": "class Outer { private class Hidden }\nfun bad(value: Outer.Hidden): Int = 1"
+  },
+  {
+    "id": "sibling_private_child",
+    "official": "reject",
+    "code": "INACCESSIBLE_CLASSIFIER",
+    "source": "class Outer { class First { private class Hidden }; class Second { fun bad(): Int = First.Hidden().hashCode() } }"
+  },
+  {
+    "id": "enclosing_private",
+    "official": "reject",
+    "code": "INACCESSIBLE_CLASSIFIER",
+    "source": "class Outer { private class Hidden { class Public(val x: Int) } }\nfun bad(): Int = Outer.Hidden.Public(1).x"
+  },
+  {
+    "id": "exposed_return",
+    "official": "reject",
+    "code": "EXPOSED_PRIVATE_CLASSIFIER",
+    "source": "class Outer { private class Hidden; fun bad(): Hidden = Hidden() }"
+  },
+  {
+    "id": "exposed_inferred_return",
+    "official": "reject",
+    "code": "EXPOSED_PRIVATE_CLASSIFIER",
+    "source": "class Outer { private class Hidden; fun bad() = Hidden() }"
+  },
+  {
+    "id": "exposed_parameter",
+    "official": "reject",
+    "code": "EXPOSED_PRIVATE_CLASSIFIER",
+    "source": "class Outer { private class Hidden; fun bad(value: Hidden): Int = 1 }"
+  },
+  {
+    "id": "exposed_property",
+    "official": "reject",
+    "code": "EXPOSED_PRIVATE_CLASSIFIER",
+    "source": "class Outer { private class Hidden; val bad: Hidden = Hidden() }"
+  },
+  {
+    "id": "exposed_nested_member",
+    "official": "reject",
+    "code": "EXPOSED_PRIVATE_CLASSIFIER",
+    "source": "class Outer { private class Hidden; class Public { fun bad(): Hidden = Hidden() } }"
+  },
+  {
+    "id": "private_inner",
+    "official": "accept",
+    "code": "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
+    "source": "class Outer { private inner class Hidden }"
+  },
+  {
+    "id": "private_open",
+    "official": "accept",
+    "code": "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
+    "source": "class Outer { private open class Hidden }"
+  },
+  {
+    "id": "private_generic_inner",
+    "official": "accept",
+    "code": "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
+    "source": "class Outer<T> { private inner class Hidden }"
+  },
+  {
+    "id": "top_level_private",
+    "official": "accept",
+    "code": "CLASS_VISIBILITY_UNSUPPORTED",
+    "source": "private class Hidden(val x: Int)\nfun value(): Int = Hidden(1).x"
+  },
+  {
+    "id": "dollar_classifier",
+    "official": "accept",
+    "code": "CLASSIFIER_DOLLAR_NAME_UNSUPPORTED",
+    "source": "class Outer; class `Outer$Intruder` { fun read(): Int = 1 }"
+  },
+  {
+    "id": "generic_outer",
+    "official": "accept",
+    "code": "GENERIC_CLASS_NESTED_UNSUPPORTED",
+    "source": "class Outer<T> { private data class Hidden(val x: Int); fun read(): Int = Hidden(4).x }"
+  }
+]

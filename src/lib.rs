@@ -270,6 +270,26 @@ pub fn compile_batch_with_options(
     }
     inner_classes::validate(&units, &lexical_parents)
         .map_err(|(owner, error)| error.for_source(&sources[owner_sources[&owner]].identity))?;
+    for (child, parent) in &lexical_parents {
+        classpath.register_lexical_parent(child, parent);
+    }
+    for (owner, unit) in &units {
+        if unit
+            .class_decl
+            .as_ref()
+            .is_some_and(|d| d.companion.is_some())
+            || unit
+                .interface_decl
+                .as_ref()
+                .is_some_and(|d| d.companion.is_some())
+            || unit
+                .enum_decl
+                .as_ref()
+                .is_some_and(|d| d.body.companion.is_some())
+        {
+            classpath.register_lexical_parent(&format!("{owner}$Companion"), owner);
+        }
+    }
     validate_alias_classifiers(&modules, &sources)?;
     let type_locations = units
         .iter()
@@ -334,12 +354,19 @@ pub fn compile_batch_with_options(
                 .map(|name| (name, owner.clone()))
         })
         .collect::<Vec<_>>();
+    let private_owners = units
+        .iter()
+        .filter(|(_, unit)| unit.class_decl.as_ref().is_some_and(|d| d.private))
+        .map(|(owner, _)| owner.clone())
+        .collect::<Vec<_>>();
     let normalize_imports = |module: &mut syntax::Module| {
         for (_, path, _) in &mut module.imports {
             if let Some((_, owner)) = source_names.iter().find(|(_, owner)| {
                 lexical_parents.contains_key(owner) && owner.replace('$', "/") == *path
             }) {
                 *path = owner.clone();
+            } else if let Some(class) = classpath.kotlin_classifier(path) {
+                *path = class.name;
             }
         }
     };
@@ -418,8 +445,7 @@ pub fn compile_batch_with_options(
             let visible = (lexical.is_none()
                 && path.rsplit_once('/').map_or("", |(package, _)| package)
                     == unit.package.replace('.', "/"))
-                || lexical
-                    .is_some_and(|outer| owner == outer || owner.starts_with(&format!("{outer}$")));
+                || lexical.is_some_and(|outer| classpath.lexically_within(owner, outer));
             if path != owner
                 && Some(name.as_str()) != own_name
                 && visible
@@ -428,6 +454,12 @@ pub fn compile_batch_with_options(
                 unit.imports.push((name.clone(), path.clone(), 0));
             }
             if lexical_parents.contains_key(path)
+                && !private_owners.iter().any(|hidden| {
+                    (path == hidden || path.starts_with(&format!("{hidden}$")))
+                        && hidden
+                            .rsplit_once('$')
+                            .is_some_and(|(outer, _)| !classpath.lexically_within(owner, outer))
+                })
                 && path.rsplit_once('/').map_or("", |(package, _)| package)
                     == unit.package.replace('.', "/")
             {
@@ -785,6 +817,11 @@ pub fn compile_batch_with_options(
                 ));
             }
         }
+    }
+    for (owner, unit) in &units {
+        classpath
+            .validate_private_signatures(unit, owner)
+            .map_err(|error| locate(error, owner))?;
     }
     let mut checked = units
         .iter()
@@ -1747,6 +1784,11 @@ fn add_nested_attributes(
                 9
             } else {
                 0x19
+            };
+            let access = if unit.class_decl.as_ref().is_some_and(|class| class.private) {
+                (access & !1) | 2
+            } else {
+                access
             };
             let access = if unit.class_decl.as_ref().is_some_and(|class| class.inner) {
                 access & !8

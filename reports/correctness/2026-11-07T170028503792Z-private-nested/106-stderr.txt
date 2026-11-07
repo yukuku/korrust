@@ -1,0 +1,6 @@
+target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/nested_public/Invalid.kt:1:37: error: cannot access 'class Hidden : Any': it is private in 'privateprobe.Depth'.
+fun bad(): Int = privateprobe.Depth.Hidden.Public(1).x
+                                    ^^^^^^
+target/checks/2026-11-07T170028503792Z-private-nested/invalid-consumer/candidate/nested_public/Invalid.kt:1:44: error: unresolved reference 'Public'.
+fun bad(): Int = privateprobe.Depth.Hidden.Public(1).x
+                                           ^^^^^^

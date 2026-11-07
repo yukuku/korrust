@@ -1,0 +1,9 @@
+target/checks/2026-11-07T170028503792Z-private-nested/boundary/enclosing_private/Boundary.kt:2:24: error: cannot access 'class Hidden : Any': it is private in 'Outer'.
+fun bad(): Int = Outer.Hidden.Public(1).x
+                       ^^^^^^
+target/checks/2026-11-07T170028503792Z-private-nested/boundary/enclosing_private/Boundary.kt:2:31: error: cannot access 'class Hidden : Any': it is private in 'Outer'.
+fun bad(): Int = Outer.Hidden.Public(1).x
+                              ^^^^^^
+target/checks/2026-11-07T170028503792Z-private-nested/boundary/enclosing_private/Boundary.kt:2:41: error: cannot access 'class Hidden : Any': it is private in 'Outer'.
+fun bad(): Int = Outer.Hidden.Public(1).x
+                                        ^

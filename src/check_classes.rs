@@ -460,6 +460,8 @@ impl Checker<'_> {
         let mut owner = owner;
         for _ in 0..64 {
             let class = self.classpath.load(owner)?;
+            self.classpath
+                .check_classifier_visibility(&self.lambda_owner, owner, offset)?;
             if class
                 .library
                 .as_ref()
@@ -477,7 +479,7 @@ impl Checker<'_> {
                     .library
                     .as_ref()
                     .and_then(|library| library.kotlin_visibility)
-                    != Some(3)
+                    .is_none_or(|visibility| visibility != 3 && visibility != 1)
             {
                 return Err(literal_error(offset, "Nonpublic or anonymous source classifier literals require unsupported public API exposure approximation", false)
                     .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "CLASS_LITERAL_VISIBILITY_UNSUPPORTED"));
